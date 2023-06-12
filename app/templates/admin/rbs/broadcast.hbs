@@ -4,7 +4,8 @@
 </p>
 
 {{#if (or this.config.sms_sandbox this.config.email_sandbox this.config.clubhouse_message_sandbox)}}
-  <div class="border rounded p-2 text-danger mb-2">Sandboxed delivery mechanisms:
+  <div class="border rounded p-2 text-danger mb-2">
+    Sandboxed delivery mechanisms:
     {{#if this.config.sms_sandbox}}
       Text/SMS messages,
     {{/if}}

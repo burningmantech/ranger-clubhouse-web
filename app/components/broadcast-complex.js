@@ -12,14 +12,23 @@
  */
 
 import Component from '@glimmer/component';
-import {action} from '@ember/object';
+import EmberObject, {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {isEmpty} from '@ember/utils';
 import {service} from '@ember/service';
-import {validatePresence} from 'ember-changeset-validations/validators';
+import {validatePresence, validateLength} from 'ember-changeset-validations/validators';
 import validatePresenceIf from 'clubhouse/validators/presence-if';
 import {Broadcasts} from 'clubhouse/constants/broadcast';
 import dayjs from 'dayjs';
+import {
+  ACTIVE,
+  ALPHA,
+  AUDITOR,
+  INACTIVE,
+  INACTIVE_EXTENSION,
+  PROSPECTIVE,
+  RETIRED
+} from "clubhouse/constants/person_status";
 
 export default class BroadcastComplexComponent extends Component {
   @service ajax;
@@ -28,7 +37,7 @@ export default class BroadcastComplexComponent extends Component {
   @tracked broadcastForm;
   @tracked broadcastAlert = null;
   @tracked broadcastSlot = null;
-  @tracked broadcastPosition = null;
+  @tracked broadcastPositions = null;
 
   @tracked isReviewing = false;
   @tracked isSubmitting = false;
@@ -42,26 +51,26 @@ export default class BroadcastComplexComponent extends Component {
   @tracked slotOptions = [];
 
   statusOptions = [
-    'active',
-    'alpha',
-    'auditor',
-    'inactive extension',
-    'inactive',
-    'prospective',
-    'retired'
+    ACTIVE,
+    ALPHA,
+    AUDITOR,
+    INACTIVE,
+    INACTIVE_EXTENSION,
+    PROSPECTIVE,
+    RETIRED,
   ];
 
   signedUpOptions = [
-    ['Who are signed up for a team shift', 'signed-up'],
-    ['Who are NOT signed up for a team shift', 'not-signed-up'],
-    ['Who are on the team and does not matter if they are signed up or not', 'any']
+    ['Who are signed up for a position shift', 'signed-up'],
+    ['Who are NOT signed up for a position shift', 'not-signed-up'],
+    ['Who have the position(s) and does not matter if they are signed up or not', 'any']
   ];
 
   trainingOptions = [
-    ['Does not matter if they are Dirt Trained or not', 'any'],
-    ['Who have passed Dirt Training', 'passed'],
-    ['Who are signed up for OR passed Dirt Training', 'registered'],
-    ['Who are NOT signed up for Dirt Training', 'no-training']
+    ['Does not matter if they are In-Person Trained or not', 'any'],
+    ['Who have passed In-Person Training', 'passed'],
+    ['Who are signed up for OR passed In-Person Training', 'registered'],
+    ['Who are NOT signed up for In-Person Training', 'no-training']
   ];
 
   constructor() {
@@ -71,22 +80,28 @@ export default class BroadcastComplexComponent extends Component {
     const message = defaults.message;
     const subject = defaults.subject;
 
-    this.broadcastForm ={
+    this.broadcastForm = EmberObject.create({
       alert_id: '',
       attending: true,
       message: isEmpty(message) ? '' : message,
       on_site: true,
-      position_id: '',
+      position_ids: [],
       position_signed_up: 'any',
       send_clubhouse: true,
       send_email: true,
       send_sms: true,
       slot_id: '',
       slotPositionId: null,
-      statuses: ['active'],
+      statuses: [ACTIVE],
       subject: isEmpty(subject) ? '' : subject,
       training: 'any',
-    };
+    });
+
+    if (this.args.broadcast.has_position) {
+      // Build up the basic position options
+      this.positionOptions = this.args.broadcast.positions.map((p) => [p.title, p.id.toString()]);
+      this.positionOptions.sort((a, b) => a[0].localeCompare(b[0]));
+    }
   }
 
   // Build up a validation object based on the broadcast type
@@ -95,14 +110,14 @@ export default class BroadcastComplexComponent extends Component {
 
     // The basics - subject and messages
     const validations = {
-      sms_message: [ validatePresenceIf({if_set: 'send_sms', message: 'Enter a text message.'}) ],
-      subject: [ validatePresenceIf({if_set: ['send_clubhouse', 'send_email'], message: 'Enter a subject.'}) ],
-      message: [ validatePresenceIf({if_set: ['send_clubhouse', 'send_email'], message: 'Enter a message.'}) ]
+      sms_message: [validatePresenceIf({if_set: 'send_sms', message: 'Enter a text message.'})],
+      subject: [validatePresenceIf({if_set: ['send_clubhouse', 'send_email'], message: 'Enter a subject.'})],
+      message: [validatePresenceIf({if_set: ['send_clubhouse', 'send_email'], message: 'Enter a message.'})]
     };
 
     // Need to select a team/position
     if (broadcast.has_position) {
-      validations.position_id = validatePresence({presence: true, message: 'Select a team'});
+      validations.position_ids = validateLength({min: 1, message: 'Select one ore more positions'});
     }
 
     // Need to select a position, and then a slot
@@ -138,25 +153,16 @@ export default class BroadcastComplexComponent extends Component {
       }
     });
 
-    options.sort((a,b) => a.title.localeCompare(b.title));
+    options.sort((a, b) => a.title.localeCompare(b.title));
     options.unshift({id: '', title: '----'});
 
     return options;
   }
 
-  // Build up the basic position options
-  get positionOptions() {
-    const positions = this.args.broadcast.positions.slice();
-    positions.sort((a,b) => a.title.localeCompare(b.title));
-    positions.unshift({id: '', title: '----'});
-
-    return positions;
-  }
-
 
   @action
   positionChange(name, id, model) {
-     model.slotPositionId = id;
+    model.slotPositionId = id;
     if (!id) {
       this.slotOptions = [];
     }
@@ -192,8 +198,8 @@ export default class BroadcastComplexComponent extends Component {
     }
 
     if (broadcast.has_position) {
-      data.position_id = form.position_id;
-      this.broadcastPosition = this.positionOptions.find((p) => p.id == form.position_id).title;
+      data.position_ids = form.position_ids;
+      this.broadcastPositions = broadcast.positions.filter((p) => form.position_ids.includes(p.id.toString())).map((p) => p.title);
       data.position_signed_up = form.position_signed_up;
 
     }
@@ -211,32 +217,34 @@ export default class BroadcastComplexComponent extends Component {
   }
 
   @action
-  reviewAction(model, isValid) {
+  async reviewAction(model, isValid) {
     if (!isValid) {
       return;
     }
 
     model.execute(); // commit to backing object
+
     this.isReviewing = true;
     this.isSubmitting = true;
     this.noPeople = false;
 
     const data = this._buildParams();
 
-    this.ajax.request(`rbs/recipients`, {data})
-      .then((result) => {
-        this.people = result.people;
+    try {
+      const {people} = await this.ajax.request(`rbs/recipients`, {data});
+      this.people = people;
 
-        if (!this.people.length) {
-          this.isReviewing = false;
-          this.noPeople = true;
-        }
-      }).catch((response) => {
+      if (!this.people.length) {
+        this.isReviewing = false;
+        this.noPeople = true;
+      }
+    } catch (response) {
       this.house.handleErrorResponse(response);
       // Kill the review
       this.isReviewing = false;
-    })
-      .finally(() => this.isSubmitting = false);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action
@@ -245,7 +253,7 @@ export default class BroadcastComplexComponent extends Component {
   }
 
   @action
-  transmitAction() {
+  async transmitAction() {
     this.isSubmitting = true;
 
     const data = this._buildParams();
@@ -259,11 +267,13 @@ export default class BroadcastComplexComponent extends Component {
       data.message = this.broadcastForm.message;
     }
 
-    this.ajax.request('rbs/transmit', {method: 'POST', data})
-      .then((result) => {
-        this.result = result;
-        this.didTransmit = true;
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    try {
+      this.result = await this.ajax.request('rbs/transmit', {method: 'POST', data});
+      this.didTransmit = true;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 }

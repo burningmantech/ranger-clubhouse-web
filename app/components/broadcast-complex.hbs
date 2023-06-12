@@ -32,15 +32,21 @@
     {{/if}}
     {{#if @broadcast.has_position}}
       <tr>
-        <th>Team/Position:</th>
-        <td>{{this.broadcastPosition}} -
-          {{#if (eq this.broadcastForm.position_signed_up "any")}}
-            anyone - signed up or not
-          {{else if (eq this.broadcastForm.position_signed_up "")}}
-            signed up for team shift
-          {{else if (eq this.broadcastForm.position_signed_up "not-signed-up")}}
-            NOT signed up for a team shift
-          {{/if}}
+        <th>Positions</th>
+        <td>
+          <p>
+            {{#if (eq this.broadcastForm.position_signed_up "any")}}
+              Anyone - signed up or not
+            {{else if (eq this.broadcastForm.position_signed_up "")}}
+              Signed up for position shift
+            {{else if (eq this.broadcastForm.position_signed_up "not-signed-up")}}
+              NOT signed up for a position shift
+            {{/if}}
+          </p>
+          {{pluralize this.broadcastPositions.length "position"}}:<br>
+          {{#each this.broadcastPositions as |title|}}
+            {{title}}<br>
+          {{/each}}
         </td>
       </tr>
     {{/if}}
@@ -57,20 +63,21 @@
         <th>Training</th>
         <td>
           {{#if (eq this.broadcastForm.training "passed")}}
-            passed Dirt Training
+            passed In-Person Training
           {{else if (eq this.broadcastForm.training "registered")}}
-            signed up for OR passed Dirt Training
+            signed up for OR passed In-Person Training
           {{else if (eq this.broadcastForm.training "no-training")}}
-            NOT signed up for Dirt Training
+            NOT signed up for In-Person Training
           {{else}}
-            anyone regardless of being trained or not
+            anyone regardless of being In-Person trained or not
           {{/if}}
         </td>
       </tr>
     {{/if}}
     <tr>
       <th>Send Text/SMS</th>
-      <td>{{if this.broadcastForm.send_sms "YES" "NO"}}<br>
+      <td>
+        {{if this.broadcastForm.send_sms "YES" "NO"}}<br>
         {{#if this.broadcastForm.send_sms}}
           Text message: {{this.broadcastForm.sms_message}}
         {{/if}}
@@ -96,8 +103,10 @@
     </tbody>
   </table>
 
-  <UiButton @type="success" @size="lg" @onClick={{this.transmitAction}}>SEND MESSAGE</UiButton>
-  <UiButton @type="secondary" @size="lg" @onClick={{this.editMessageAction}}>EDIT</UiButton>
+  <div class="my-4">
+    <UiButton @type="success" @size="lg" @onClick={{this.transmitAction}}>SEND MESSAGE</UiButton>
+    <UiButton @type="secondary" @size="lg" @onClick={{this.editMessageAction}}>EDIT</UiButton>
+  </div>
 
   <BroadcastCandidatesTable @people={{this.people}} />
 {{else}}
@@ -106,9 +115,11 @@
       No accounts were found matching the criteria.
     </UiNotice>
   {{/if}}
-  <ChForm @formId="broadcastForm" @formFor={{this.broadcastForm}}
+  <ChForm @formId="broadcastForm"
+          @formFor={{this.broadcastForm}}
           @validator={{this.broadcastValidations}}
           @onSubmit={{this.reviewAction}} as |f|>
+
     {{#if
       (or @broadcast.alerts @broadcast.has_status @broadcast.has_slot @broadcast.has_position @broadcast.has_restrictions)}}
       <UiSection>
@@ -116,23 +127,24 @@
         <:body>
           {{#if @broadcast.alerts}}
             <FormRow>
-              <f.select
-                @name="alert_id"
-                @label="Alert type:"
-                @options={{this.alertOptions}} />
+              <f.select @name="alert_id"
+                        @label="Alert type:"
+                        @options={{this.alertOptions}} />
             </FormRow>
           {{/if}}
           {{#if @broadcast.has_status}}
             <FormRow>
               <f.checkboxGroup @name="statuses"
-                               @label="Ranger Status:"
-                               @options={{this.statusOptions}}/>
+                               @label="Account Status:"
+                               @options={{this.statusOptions}}
+                               @cols={{4}}
+              />
             </FormRow>
           {{/if}}
           {{#if @broadcast.has_slot}}
             <FormRow>
               <f.select @name="slotPositionId"
-                        @label="Select on the team to show available shifts"
+                        @label="Select on the positions to show available shifts"
                         @options={{this.slotPositionOptions}}
                         @onChange={{this.positionChange}}/>
             </FormRow>
@@ -146,13 +158,16 @@
           {{/if}}
           {{#if @broadcast.has_position}}
             <FormRow>
-              <f.select @name="position_id"
-                        @label="Team:"
-                        @options={{this.positionOptions}} />
+              <f.select @name="position_ids"
+                        @label="Select multiple positions to send to"
+                        @options={{this.positionOptions}}
+                        @size={{15}}
+                        @multiple={{true}}
+              />
             </FormRow>
             <FormRow>
               <f.select @name="position_signed_up"
-                        @label="Team Shift Sign Ups"
+                        @label="Shift Sign Ups"
                         @options={{this.signedUpOptions}}/>
             </FormRow>
           {{/if}}
@@ -223,10 +238,10 @@
         </FormRow>
         <FormRow>
           <f.textarea @name="message"
-                   @label="Message to send to email and/or Clubhouse Message"
-                   @rows={{10}}
-                   @cols={{100}}
-                   @disabled={{not (or f.model.send_email f.model.send_clubhouse)}}
+                      @label="Message to send to email and/or Clubhouse Message"
+                      @rows={{10}}
+                      @cols={{100}}
+                      @disabled={{not (or f.model.send_email f.model.send_clubhouse)}}
           />
         </FormRow>
       </:body>

@@ -74,7 +74,7 @@ export default class BroadcastSimpleComponent extends Component {
     const data = {type: this.args.type};
 
     if (this.args.broadcast.has_muster_position) {
-      data.position_id = this.broadcastForm.position_id;
+      data.position_ids = [this.broadcastForm.position_id];
       data.position_signed_up = 'any';
     }
 
@@ -108,7 +108,7 @@ export default class BroadcastSimpleComponent extends Component {
     };
 
     if (this.args.broadcast.has_muster_position) {
-      data.position_id = this.broadcastForm.position_id;
+      data.position_ids = [this.broadcastForm.position_id];
       data.position_signed_up = 'any';
     }
 
