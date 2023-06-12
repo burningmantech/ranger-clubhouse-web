@@ -28,28 +28,25 @@
       This will send a text and email message to
       <b>ALL {{@broadcast.receivers}} ON-PLAYA Rangers who are not already on duty</b>.<br>
       It should ONLY be used in emergencies (mass mobilization for fire, fatality, plane crash, etc.).<br>
-      <br>
-      <b class="text-danger">Please be brief and choose your words carefully as they may end up on the front page of the
-        New York Times.</b>
     </p>
+    <h4 class="text-danger">
+      Please be brief and choose your words carefully as they may end up on the front page of the
+      New York Times.
+    </h4>
   {{else if (eq @type "onshift")}}
     <h3>Text Message ONLY to {{pluralize @broadcast.receivers "ON SHIFT Ranger"}}</h3>
-    <p>
-      This will send only a TEXT message to {{@broadcast.receivers}} ON SHIFT Rangers.
-      Only Rangers who have opted-in to receive On Shift messages AND who are
-      carrying their cellphones might receive this message. Delivery is
-      not guaranteed.<br>
-      <br>
-      <b class="text-danger">If you need to send an emergency message to EVERYONE, you're in the wrong place.</b>
-    </p>
+    This will send only a TEXT message to {{@broadcast.receivers}} ON SHIFT Rangers.
+    Only Rangers who have opted-in to receive On Shift messages AND who are
+    carrying their cellphones might receive this message. Delivery is
+    not guaranteed.<br>
+    <br>
+    <h4 class="text-danger">If you need to send an emergency message to EVERYONE, you're in the wrong place.</h4>
   {{else}}
     <h3>Text And Email Off-Duty Ranger</h3>
-    <p>
-      This will send a text and email to {{if (eq @type "recruit-dirt") @broadcast.receivers}} off-duty
-      Rangers who have indicated they might be willing to come in and work some extra shifts when needed.
-      You can use this if your shift is low on people.<br>
-      <b class="text-danger">If you need to send an emergency message to EVERYONE, you're in the wrong place.</b>
-    </p>
+    This will send a text and email to {{if (eq @type "recruit-dirt") @broadcast.receivers}} off-duty
+    Rangers who have indicated they might be willing to come in and work some extra shifts when needed.
+    You can use this if your shift is low on people.<br>
+    <h4 class="text-danger">If you need to send an emergency message to EVERYONE, you're in the wrong place.</h4>
   {{/if}}
 
   <UiSection>
@@ -68,12 +65,12 @@
         <h4>Message to send (limited to {{@config.sms_limit}} characters)</h4>
         <FormRow>
           <f.textarea @name="message"
-                   @maxlength={{@config.sms_limit}}
-                   @autofocus={{not @broadcast.has_muster_position}}
-                   @rows={{2}}
-                   @cols={{80}}
-                   @showCharCount={{true}}
-                   @fieldSize="lg"
+                      @maxlength={{@config.sms_limit}}
+                      @autofocus={{not @broadcast.has_muster_position}}
+                      @rows={{2}}
+                      @cols={{80}}
+                      @showCharCount={{true}}
+                      @fieldSize="lg"
           />
         </FormRow>
         <f.submit @label="REVIEW MESSAGE & RECIPIENTS" @submitClass="btn-lg"/>
