@@ -222,7 +222,14 @@ export default class HouseService extends Service {
         if (typeof column == 'string') {
           value = line[column];
         } else {
-          value = line[column.key];
+          if ('value' in column) {
+            value = column.value;
+          } else if (column.blank) {
+            value = '';
+          } else {
+            value = line[column.key];
+          }
+
           if (column.yesno) {
             yesno = true;
           } else if (column.format) {

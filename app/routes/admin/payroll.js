@@ -12,8 +12,8 @@ export default class AdminPayrollRoute extends ClubhouseRoute {
   setupController(controller, model) {
     controller.positionOptions = model.position.map((p) => [ `${p.title} (code ${p.paycode})`, p.id ]);
     controller.datesForm = EmberObject.create({
-      start_time: '',
-      end_time: '',
+      start_time: '2022-08-17 00:00',
+      end_time: '2022-08-20 23:00',
       break_duration: 60,
       position_ids: model.position.map((p) => p.id),
       hour_cap: 8,
