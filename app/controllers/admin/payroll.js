@@ -71,6 +71,7 @@ export default class AdminPayrollController extends ClubhouseController {
   breakDurationOptions = [
     ["30 mins", 30],
     ["60 mins", 60],
+    ["75 mins", 75],
     ["90 mins", 90],
   ];
 
@@ -205,8 +206,8 @@ export default class AdminPayrollController extends ClubhouseController {
         if (adjustEntries) {
           if (adj) {
             // The entry has meals breaks.
-            this._punchTheClock(person, rows, entry, adj.first_half.on_duty, adj.first_half.off_day, PUNCH_IN_DAY, PUNCH_IN_LUNCH);
-            this._punchTheClock(person, rows, entry, adj.second_half.on_duty, adj.second_half.off_day, PUNCH_OUT_LUNCH, PUNCH_OUT_DAY);
+            this._punchTheClock(person, rows, entry, adj.first_half.on_duty, adj.first_half.off_duty, PUNCH_IN_DAY, PUNCH_OUT_LUNCH);
+            this._punchTheClock(person, rows, entry, adj.second_half.on_duty, adj.second_half.off_duty, PUNCH_IN_LUNCH, PUNCH_OUT_DAY);
           } else {
             // No meal breaks, although entry might have a daily hour cap applied.
             this._punchTheClock(person, rows, entry, entry.on_duty, entry.off_duty, PUNCH_IN_DAY, PUNCH_OUT_DAY);
