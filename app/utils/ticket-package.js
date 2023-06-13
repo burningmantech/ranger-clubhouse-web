@@ -26,6 +26,7 @@ export default class TicketPackage {
     this.lsdTickets = lsdItems.filter((i) => i.isLSDTicket);
     this.lsdVPs = lsdItems.filter((i) => i.isVehiclePassLSD);
 
+    this.provision_records = pkg.provision_records.map((p) => house.pushPayload('provision', p));
     this.provisions = pkg.provisions;
     this.provisionsBankable = pkg.provisions_bankable;
     this.provisionsBanked = pkg.provisions_banked;
@@ -39,6 +40,7 @@ export default class TicketPackage {
           expires: dayjs(stuff.meals_expire).format('YYYY-MM-DD'),
         });
       }
+
       if (stuff.showers) {
         this.provisionItems.push({
           icon: 'shower',
@@ -116,6 +118,18 @@ export default class TicketPackage {
 
     // Nothing claimed yet, or not needing address
     return true;
+  }
+
+  /**
+   * Does the person have an earned event radio, and none allocated?
+   *
+   * @returns {boolean}
+   */
+
+  get haveEventRadio() {
+    return !!(
+      !this.provision_records.find((p) => p.isEventRadio && p.is_allocated)
+      && this.provision_records.find((p) => p.isEventRadio && p.isAvailable && !p.is_allocated));
   }
 }
 

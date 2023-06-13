@@ -35,6 +35,11 @@
       You may bank the provision(s) to use in a future event if you are taking
       this year off or are planning to have a "light" Ranger schedule.
     </p>
+    {{#if @ticketPackage.haveEventRadio}}
+      <p>
+        <EventRadioDisclaimer/>
+      </p>
+    {{/if}}
     <UiButton @class="btn-responsive" @onClick={{fn this.updateItems "bank"}} @disabled={{this.isSubmitting}}>
       Bank the provision(s)
       {{#if this.isSubmitting}}

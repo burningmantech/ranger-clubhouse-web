@@ -142,12 +142,15 @@
             <h3 class="border-bottom mt-2">{{fa-icon "broadcast-tower"}} Radios</h3>
             {{#if this.eventInfo.radio_info_available}}
               {{#if this.eventInfo.radio_eligible}}
-                {{badge "success" "Event Radio"}}
-                {{#if (eq this.eventInfo.radio_max 1)}}
-                  You may check out an Event radio for the duration of the event.
-                {{else}}
-                  You may check out up to {{this.eventInfo.radio_max}} Event radios for the duration of the event.
-                {{/if}}
+                <p>
+                  {{badge "success" "Event Radio"}}
+                  {{#if (eq this.eventInfo.radio_max 1)}}
+                    You may check out an Event radio for the duration of the event.
+                  {{else}}
+                    You may check out up to {{this.eventInfo.radio_max}} Event radios for the duration of the event.
+                  {{/if}}
+                </p>
+                <EventRadioDisclaimer/>
               {{else}}
                 {{badge "success" "Shift Radio"}} You will need to check out a radio each time you show up to Ranger HQ
                 for shift (and check it in at the end of your shift!).

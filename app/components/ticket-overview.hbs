@@ -95,7 +95,8 @@
       <p>
         If you would like your Gift Ticket to be held at Will Call under someone else’s name you can transfer it to them
         after you have completed the checkout process by following
-        <ExtLink @href="https://help.burningman.org/hc/en-us/articles/360024827111-How-do-I-transfer-my-tickets-vehicle-pass-to-someone-else-">
+        <ExtLink
+          @href="https://help.burningman.org/hc/en-us/articles/360024827111-How-do-I-transfer-my-tickets-vehicle-pass-to-someone-else-">
           these steps.
         </ExtLink>
         (The link will open in a new page.)
@@ -197,6 +198,11 @@
           {{fa-icon item.icon right=2 fixed=true}} {{item.name}}<br>
         {{/each}}
       </div>
+      {{#if @ticketPackage.haveEventRadio}}
+        <div class="mt-2">
+          <EventRadioDisclaimer/>
+        </div>
+      {{/if}}
     </TicketOverviewItem>
   {{/if}}
   <TicketOverviewBanked @ticketPackage={{@ticketPackage}} />

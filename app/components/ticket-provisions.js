@@ -37,4 +37,14 @@ export default class TicketProvisionsComponent extends Component {
       this.isSubmitting = false;
     }
   }
+
+  /**
+   * Does the person have an event radio?
+   *
+   * @returns {boolean}
+   */
+
+  get haveEventRadio() {
+    return !!this.args.ticketPackage.provisionItems.find((p) => p.isEventRadio);
+  }
 }
