@@ -7,7 +7,7 @@
   {{/unless}}
   <ChForm @formId="datesform" @formFor={{this.datesForm}} as |f|>
     <FormRow>
-      <FormLabel>Positions To Export</FormLabel>
+      <FormLabel>Positions to export</FormLabel>
       <f.checkboxGroup @name="position_ids" @options={{this.positionOptions}} />
     </FormRow>
     <FormRow>
@@ -38,27 +38,22 @@
 
   {{#if this.reportWasRun}}
     {{#if this.people}}
-      <p>
-        {{fa-icon "check" color="success"}} = Entry has been verified, or has an approved correction.<br>
-        {{fa-icon "times" color="danger"}} = Entry is unverified, or correction denied.<br>
-        {{fa-icon "person-walking"}} = Person is still on duty.
-      </p>
       Showing {{pluralize this.entryCount "timesheet entry"}} for {{pluralize this.people.length "person"}}.
-      <UiButton @onClick={{this.exportTable}} @size="sm">
-        Export Table
+      <UiButton @onClick={{fn this.exportPayroll true}} @size="sm">
+        Export Adjusted Payroll
       </UiButton>
-      <UiButton @onClick={{this.exportUnadjustPayroll}} @size="sm">
+       <UiButton @onClick={{fn this.exportPayroll false}} @size="sm">
         Export Unadjusted Payroll
       </UiButton>
-      <UiButton @onClick={{this.exportAdjustedPayroll}} @size="sm">
-        Export Adjusted Payroll
+      <UiButton @onClick={{this.exportTable}} @size="sm">
+        Export Table
       </UiButton>
       <table class="table table-width-auto table-sm table-striped table-hover mt-2">
         <thead>
         <tr>
-          <th>&nbsp;</th>
-          <th>Callsign</th>
-          <th>Position</th>
+          <th>Callsign / Employee ID</th>
+          <th>Position / Sub-Dept ID</th>
+          <th>Entry Status</th>
           <th>Original Time</th>
           <th>Adjusted</th>
           <th>Notes</th>
@@ -69,18 +64,22 @@
           {{#each person.shifts as |row|}}
             <tr class={{if row.still_on_duty "table-warning"}}>
               <td>
-                {{#if row.still_on_duty}}
-                  {{fa-icon "person-walking"}}
-                {{else if row.verified}}
-                  {{fa-icon "check" color="success"}}
-                {{else}}
-                  {{fa-icon "times" color="danger"}}
-                {{/if}}
+                <PersonLink @person={{person}} /><br>
+                 {{person.employee_id}}
               </td>
               <td>
-                <PersonLink @person={{person}} />
+                {{row.position_title}}<br>
+                {{row.paycode}}
               </td>
-              <td>{{row.position_title}}</td>
+              <td>
+                {{#if row.still_on_duty}}
+                  {{badge "warning" "still on duty"}}
+                {{else if row.verified}}
+                  {{badge "success" "verified"}}
+                {{else}}
+                  {{badge "danger" "unverified"}}
+                {{/if}}
+              </td>
               <td>
                 {{shift-format row.orig_on_duty row.orig_off_duty}}<br>
                 Orig. duration: {{hour-minute-format row.orig_duration}}
