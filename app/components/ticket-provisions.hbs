@@ -12,7 +12,9 @@
       <td>{{fa-icon item.icon}}</td>
       <td>
         {{item.name}}
-        <div class="text-muted">Expires {{item.expires}}</div>
+        {{#if item.expires}}
+          <div class="text-muted">Expires {{item.expires}}</div>
+        {{/if}}
       </td>
     </tr>
   {{/each}}
