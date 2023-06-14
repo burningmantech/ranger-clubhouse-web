@@ -207,7 +207,7 @@
         <div class="trainee-callsign">Callsign</div>
         <div class="trainee-passed">Passed?</div>
         <div class="trainee-rank">Rank</div>
-        <div class="trainee-notes">Notes</div>
+        <div class="trainee-notes">Signed-Up At (Pacific) / Notes</div>
       </div>
     </div>
 
@@ -246,6 +246,9 @@
                 <b class="text-danger">Personnel Flag raised. Take no actions until resolved.</b>
               </div>
             {{/if}}
+            <div class="mb-2">
+              {{shift-format student.signed_up_at}}
+            </div>
             {{#each student.notes as |note|}}
               {{#unless note.is_log}}
                 <div class="mb-2">
