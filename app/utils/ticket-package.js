@@ -37,7 +37,7 @@ export default class TicketPackage {
         this.provisionItems.push({
           icon: 'utensils',
           name: `${MealMatrixLabel[stuff.meals]} Meal Pass`,
-          expires: dayjs(stuff.meals_expire).format('YYYY-MM-DD'),
+          expires: stuff.meals_expire ? dayjs(stuff.meals_expire).format('YYYY') : '',
         });
       }
 
@@ -45,7 +45,7 @@ export default class TicketPackage {
         this.provisionItems.push({
           icon: 'shower',
           name: 'Access to The Wet Spot (Org Showers)',
-          expires: dayjs(stuff.showers_expire).format('YYYY-MM-DD'),
+          expires: stuff.showers_expire ? dayjs(stuff.showers_expire).format('YYYY') : '',
         });
       }
 
@@ -53,7 +53,7 @@ export default class TicketPackage {
         this.provisionItems.push({
           icon: 'broadcast-tower',
           name: stuff.radios === 1 ? 'An Event Radio' : `${stuff.radios} Event Radios`,
-          expires: dayjs(stuff.radio_expire).format('YYYY-MM-DD'),
+          expires: stuff.radio_expire ? dayjs(stuff.radio_expire).format('YYYY') : '',
         });
       }
     }
