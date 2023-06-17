@@ -572,6 +572,10 @@ legend {
   max-width: 1300px;
 }
 
+.callsign-width {
+  width: 20ch;
+}
+
 .callsign-list {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(8em, 10em));

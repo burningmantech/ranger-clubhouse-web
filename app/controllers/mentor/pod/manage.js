@@ -4,6 +4,7 @@ import {tracked} from '@glimmer/tracking';
 import dayjs from 'dayjs';
 import {TYPE_MENTOR} from "clubhouse/models/pod";
 import EmberObject from '@ember/object';
+import { movePod } from 'clubhouse/utils/pod';
 
 export default class MentorPodManageController extends ClubhouseController {
   @tracked slot;
@@ -21,6 +22,12 @@ export default class MentorPodManageController extends ClubhouseController {
   @tracked showSortControls = false;
 
   @tracked isLead;
+
+  constructor() {
+    super(...arguments);
+
+    this.movePod = movePod.bind(this);
+  }
 
   @action
   toggleShowSortControls() {
@@ -246,7 +253,6 @@ export default class MentorPodManageController extends ClubhouseController {
       return;
     }
 
-
     this.isSubmitting = true;
 
     try {
@@ -329,52 +335,6 @@ export default class MentorPodManageController extends ClubhouseController {
     } finally {
       this.isSubmitting = false;
     }
-  }
-
-  /**
-   * Move (reorder) a pod.
-   *
-   * @param pod
-   * @param direction
-   * @returns {Promise<void>}
-   */
-
-  @action
-  async movePod(pod, direction) {
-    const idx = this.pods.findIndex((p) => p.id === pod.id);
-    const pods = this.pods.filter((p) => p.id !== pod.id);
-
-    this.isSubmitting = true;
-
-    if (direction < 0) {
-      if (idx === 1) {
-        pods.unshift(pod);
-      } else if (idx > 0) {
-        pods.splice(idx - 1, 0, pod);
-      }
-    } else {
-      if (idx < (pods.length - 1)) {
-        pods.splice(idx + 1, 0, pod);
-      } else {
-        pods.push(pod);
-      }
-    }
-
-    for (let i = 0; i < pods.length; i++) {
-      const sortIdx = i + 1;
-      const p = pods[i];
-      if (p.sort_index !== sortIdx) {
-        try {
-          p.sort_index = sortIdx;
-          await p.save();
-        } catch (response) {
-          this.house.handleErrorResponse(response);
-        }
-      }
-    }
-
-    this.pods = pods;
-    this.isSubmitting = false;
   }
 
   @action

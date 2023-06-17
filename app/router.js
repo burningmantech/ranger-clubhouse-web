@@ -230,6 +230,7 @@ Router.map(function () {
     this.route('vehicle-paperwork');
     this.route('vehicle-registry');
     this.route('swag-distribution');
+    this.route('cruise-direction');
   });
 
   this.route('vc', function () {
