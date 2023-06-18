@@ -51,6 +51,11 @@ export default class ApplicationRoute extends ClubhouseRoute {
       return;
     }
 
+    if (!('sendBeacon' in navigator)) {
+      // Too old of browser, or api is blocked by a "security" browser extension.
+      return;
+    }
+
     try {
       const analytics = new FormData;
       let pathname = window.location.pathname;
@@ -126,7 +131,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
 
       const results = await RSVP.hash({
         config: this.ajax.request('config'),
-        user: this.session.loadUser()
+        user: this.session.loadUser(true)
       });
 
       ENV['clientConfig'] = results.config;

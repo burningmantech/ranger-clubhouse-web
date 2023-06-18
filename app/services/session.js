@@ -14,6 +14,9 @@ import BrowserDetector from "../utils/browser-detect";
 const MOBILE_MAX_WIDTH = 960;
 const RESIZE_DEBOUNCE_DELAY = 250;
 
+// Use to signal other browser windows of session updates.
+const MAILBOX_KEY = 'clubhouse_mailbox';
+
 export default class extends SessionService {
   @service ajax;
   @service house;
@@ -64,10 +67,39 @@ export default class extends SessionService {
     window.addEventListener('resize', this._bounceResizeEvent, false);
 
     this.isDevelopment = ENV.environment === 'development';
-
     this.isMac = navigator.userAgent.indexOf("Mac") !== -1;
-
     this.browserDetect = new BrowserDetector();
+
+    // Setup browser window to browser window signalling.
+    try {
+      const item = window.localStorage.getItem(MAILBOX_KEY);
+      if (!item) {
+        window.localStorage.setItem(MAILBOX_KEY, Date.now().toString());
+      }
+      window.addEventListener('storage', (event) => this._mailboxUpdated(event))
+    } catch {
+      /* empty */
+    }
+  }
+
+  /**
+   * Reload the user when the mailbox has been updated.
+   *
+   * @params {StorageEvent} event
+   * @private
+   */
+
+  async _mailboxUpdated(event) {
+    if (event.key !== MAILBOX_KEY) {
+      return;
+    }
+
+    if (!this.isAuthenticated) {
+      return; // Not logged in yet.
+    }
+
+    await this.loadUser(true);
+    await this.loadConfig(false);
   }
 
   /**
@@ -120,7 +152,7 @@ export default class extends SessionService {
    */
 
   handleAuthentication() {
-    return this.loadUser().then(() => {
+    return this.loadUser(true).then(() => {
       if (this.tempLoginToken) {
         // Go to the PNV Welcome Page or password reset page.
         this.router.transitionTo(this.isWelcome ? 'me.welcome' : 'me.password');
@@ -154,27 +186,70 @@ export default class extends SessionService {
    * @returns {Promise<void>|PromiseLike<void>|Promise<void>}
    */
 
-  loadUser() {
+  async loadUser(isAuthenticating = false) {
     if (!this.isAuthenticated) {
       return Promise.resolve();
     }
 
     const person_id = this.data.authenticated.tokenData.sub;
-    return this.ajax.request(`person/${person_id}/user-info`)
-      .then(({user_info}) => {
-        this.user = new User(user_info);
-        this.unreadMessageCount = user_info.unread_message_count;
-      });
+    const {user_info} = await this.ajax.request(`person/${person_id}/user-info`);
+    this.user = new User(user_info);
+    this.unreadMessageCount = user_info.unread_message_count;
+
+    if (isAuthenticating) {
+      return;
+    }
+
+    this._signalMailbox();
   }
 
   /**
    * Update the signed in position.
    */
 
-  updateOnDuty() {
-    return this.ajax.request(`person/${this.userId}/onduty`)
-      .then(({onduty}) => this.user.onduty_position = onduty)
-      .catch((response) => this.house.handleErrorResponse(response))
+  async updateOnDuty() {
+    try {
+      const {onduty} = await this.ajax.request(`person/${this.userId}/onduty`);
+      const didChange = onduty?.id !== this.user.onduty_position?.id;
+      this.user.onduty_position = onduty;
+      if (didChange) {
+        this._signalMailbox();
+      }
+    } catch (response) {
+      this.house.handleErrorResponse(response)
+    }
+  }
+
+  /**
+   * Load the configuration.
+   *
+   * @param didUpdate
+   * @returns {Promise<void>}
+   */
+
+  async loadConfig(didUpdate = false) {
+    try {
+      ENV['clientConfig'] = await this.ajax.request('config');
+      if (didUpdate) {
+        this._signalMailbox();
+      }
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
+  }
+
+  /**
+   * Signal the other browser instances the user's permissions or setting might have changed.
+   *
+   * @private
+   */
+
+  _signalMailbox() {
+    try {
+      window.localStorage.setItem(MAILBOX_KEY, Date.now().toString());
+    } catch {
+      /* empty */
+    }
   }
 
   /**
