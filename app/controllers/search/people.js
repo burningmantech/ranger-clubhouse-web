@@ -14,6 +14,7 @@ export default class SearchPeopleController extends ClubhouseController {
   @tracked includePhotoStatus = false;
   @tracked includeOnlineCourse = false;
   @tracked includeTrainingStatus = false;
+  @tracked includeTicketingInfo = false;
 
   @tracked currentQuery = {};
 
@@ -47,6 +48,14 @@ export default class SearchPeopleController extends ClubhouseController {
     ['Not Passed/No Show', 'failed'],
   ];
 
+  ticketingOptions = [
+    ['-', ''],
+    ['Started Ticketing', 'started'],
+    ['Not Started Ticketing', 'not-started'],
+    ['Finished Ticketing', 'finished'],
+    ['Not Finished Ticketing', 'not-finished'],
+  ];
+
   constructor() {
     super(...arguments);
     const currentYear = this.house.currentYear();
@@ -65,7 +74,7 @@ export default class SearchPeopleController extends ClubhouseController {
     this.currentQuery = query;
     if (model.statuses.length) {
       query.statuses = model.statuses.join(',');
-     }
+    }
 
     const status_year = +model.status_year;
     if (status_year) {
@@ -123,6 +132,18 @@ export default class SearchPeopleController extends ClubhouseController {
       query.training_status = model.training_status;
       this.includeTrainingStatus = true;
     }
+
+    this.includeTicketingInfo = false;
+    if (model.ticketing_status !== '') {
+      query.ticketing_status = model.ticketing_status;
+      this.includeTicketingInfo = true;
+    }
+
+    if (model.include_ticketing_info) {
+      query.include_ticketing_info = 1;
+      this.includeTicketingInfo = true;
+    }
+
 
     this._checkQuery();
   }

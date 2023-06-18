@@ -57,7 +57,13 @@
       <f.select @name="year_created"
                 @label="Year Account Created"
                 @options={{this.yearCreatedOptions}}
-                @fieldSize="sm"/>
+                @fieldSize="sm"
+      />
+      <f.select @name="ticketing_status"
+                @label="Ticketing Status"
+                @options={{this.ticketingOptions}}
+                @fieldSize="sm"
+      />
       <div class="col-auto">
         <FormLabel @class="mb-2">Include columns for (column will be automatically included if searching on
           corresponding fields)
@@ -70,6 +76,8 @@
                     @name="include_online_course"/>
         <f.checkbox @label="{{this.year}} In-Person Training Status"
                     @name="include_training_status"/>
+        <f.checkbox @label="{{this.year}} Ticketing Info"
+                    @name="include_ticketing_info"/>
       </div>
     </FormRow>
   </fieldset>
@@ -117,6 +125,10 @@
           <th>Training Status</th>
           <th>Training Date</th>
           <th>Signed-Up At</th>
+        {{/if}}
+        {{#if this.includeTicketingInfo}}
+          <th>Ticketing Started</th>
+          <th>Ticketing Finished</th>
         {{/if}}
         <th>Create Date</th>
       </tr>
@@ -167,6 +179,22 @@
             <td>
               {{#if person.training_signed_up_at}}
                 {{ymd-format person.training_signed_up_at}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+          {{/if}}
+          {{#if this.includeTicketingInfo}}
+            <td>
+              {{#if person.ticketing_started_at}}
+                {{ymd-format person.ticketing_started_at}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            <td>
+              {{#if person.ticketing_finished_at}}
+                {{ymd-format person.ticketing_finished_at}}
               {{else}}
                 -
               {{/if}}
