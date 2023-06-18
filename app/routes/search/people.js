@@ -20,6 +20,8 @@ export default class SearchPeopleRoute extends ClubhouseRoute {
       online_course_status: '',
       include_training_status: false,
       training_status: '',
+      include_ticketing_info: false,
+      ticketing_status: '',
     });
   }
 }
