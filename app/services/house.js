@@ -439,6 +439,11 @@ export default class HouseService extends Service {
    */
 
   actionRecord(event, data = null, message = null) {
+    if (!('sendBeacon' in navigator)) {
+      // Too old of browser, or api is blocked by a "security" browser extension.
+      return;
+    }
+
     const record = new FormData;
 
     record.append('event', event);

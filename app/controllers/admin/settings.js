@@ -2,7 +2,6 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { isEmpty } from '@ember/utils';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import ENV from 'clubhouse/config/environment';
 import {TECH_NINJA} from 'clubhouse/constants/roles';
 
 export default class AdminSettingsController extends ClubhouseController {
@@ -55,7 +54,7 @@ export default class AdminSettingsController extends ClubhouseController {
   }
 
   @action
-  save(model, isValid) {
+  async save(model, isValid) {
     if (!isValid)
       return;
 
@@ -64,11 +63,14 @@ export default class AdminSettingsController extends ClubhouseController {
       return;
     }
 
-    model.save().then(() => {
+    try {
+      await model.save();
       this.editSetting = null;
       this.toast.success(`The setting value has been successfully update.`);
-      return this.ajax.request('config').then((config) => ENV['clientConfig'] = config);
-    }).catch((response) => this.house.handleErrorResponse(response, model));
+      this.session.loadConfig(true);
+    } catch (response) {
+      this.house.handleErrorResponse(response, model);
+    }
   }
 
   @action
