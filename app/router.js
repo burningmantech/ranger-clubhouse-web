@@ -29,10 +29,8 @@ Router.map(function () {
     this.route('mentees');
     this.route('mentors');
     this.route('messages');
-    this.route('motorpool-policy');
     this.route('password');
     this.route('personal-info');
-    this.route('radio-checkout');
     this.route('schedule');
     this.route('survey');
     this.route('tickets');

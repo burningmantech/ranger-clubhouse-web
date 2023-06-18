@@ -24,7 +24,6 @@ module('Acceptance | auditor', function (hooks) {
       ['/me/timesheet', false, 'Timesheet'],
       ['/me/event-info', false, 'Event Info'],
       ['/me/tickets', false, 'Tickets and Stuff'],
-      ['/me/motorpool-policy', false, 'Motorpool Policy'],
       ['/me/messages', false, 'Messages'],
       ['/me/alerts', true, 'Alerts'],
       ['/me/contact', false, 'Ranger Contact'],
