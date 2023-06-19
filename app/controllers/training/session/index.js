@@ -245,11 +245,8 @@ export default class TrainingSessionController extends ClubhouseController {
       id: student.id,
       note,
       passed: +passed ? 1 : 0,
+      rank,
     };
-
-    if (rank) {
-      score.rank = rank;
-    }
 
     if (!this.training.is_art) {
       if (!rank && passed && student.need_ranking) {
