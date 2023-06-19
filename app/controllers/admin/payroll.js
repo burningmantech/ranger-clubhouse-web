@@ -21,7 +21,6 @@ const CSV_TABLE_COLUMNS = [
   {title: 'Orig Duration', key: 'orig_duration'},
   {title: 'First Half Start', key: 'first_on_duty'},
   {title: 'First Half End', key: 'first_off_duty'},
-  {title: 'Meal Break', key: 'meal'},
   {title: 'Second Half Start', key: 'second_on_duty'},
   {title: 'Second Half End', key: 'second_off_duty'},
   {title: 'Total Adj. Duration', key: 'adj_duration'},
@@ -73,6 +72,14 @@ export default class AdminPayrollController extends ClubhouseController {
     ["60 mins", 60],
     ["75 mins", 75],
     ["90 mins", 90],
+  ];
+
+  breakAfterOptions = [
+    ["None", ''],
+    ["4 hours", 4],
+    ["5 hours", 5],
+    ["6 hours", 6],
+    ["7 hours", 7],
   ];
 
   hourCapOptions = [
@@ -129,6 +136,7 @@ export default class AdminPayrollController extends ClubhouseController {
           break_duration: model.break_duration,
           hour_cap: model.hour_cap,
           position_ids: model.position_ids,
+          break_after: +model.break_after,
         }
       });
       this.people = people;
@@ -177,7 +185,6 @@ export default class AdminPayrollController extends ClubhouseController {
           row.first_off_duty = adj.first_half.off_duty;
           row.second_on_duty = adj.second_half.on_duty;
           row.second_off_duty = adj.second_half.off_duty;
-          row.meal = adj.meal;
         } else {
           row.first_on_duty = entry.on_duty;
           row.first_off_duty = entry.off_duty;
