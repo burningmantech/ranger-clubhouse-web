@@ -17,6 +17,7 @@ export default class AdminPayrollRoute extends ClubhouseRoute {
       break_duration: 60,
       position_ids: model.position.map((p) => p.id),
       hour_cap: 8,
+      break_after: 4,
     });
     controller.people = [];
     controller.reportWasRun = false;

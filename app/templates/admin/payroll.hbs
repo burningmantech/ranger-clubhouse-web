@@ -19,6 +19,10 @@
                   @label="Ending Date & Time:"
                   @size={{20}}
       />
+      <f.select @name="break_after"
+                @label="Enforced Break After"
+                @options={{this.breakAfterOptions}}
+      />
       <f.select @name="break_duration"
                 @label="Lunch/Dinner Break Duration"
                 @options={{this.breakDurationOptions}}
@@ -88,8 +92,8 @@
                 {{#if row.meal_adjusted}}
                   {{#let row.meal_adjusted.first_half as |first|}}
                     {{shift-format first.on_duty first.off_duty}}
-                  {{/let}}<br>
-                  <div class="text-center"><i>- {{row.meal_adjusted.meal}} -</i></div>
+                  {{/let}}
+                  <div class="text-center my-1"><i>- meal break -</i></div>
                   {{#let row.meal_adjusted.second_half as |second|}}
                     {{shift-format second.on_duty second.off_duty}}
                   {{/let}}
