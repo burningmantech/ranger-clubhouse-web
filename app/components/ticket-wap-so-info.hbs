@@ -57,6 +57,6 @@
 <div class="mt-4">
   If you need more than {{pluralize @ticketingInfo.wap_so_max "pass"}} or
   need the Significant Others to arrive before {{mdy-format this.defaultDate full=true}},
-  email {{mail-to @ticketingInfo.ranger_ticketing_email}}
+  email <MailTo @to={{@ticketingInfo.ranger_ticketing_email}} />
   and plead your case.
 </div>

@@ -1,0 +1,7 @@
+<a href="mailto:{{@to}}" class="d-inline-block">
+  {{#if (has-block)}}
+    {{yield}}
+  {{else}}
+    {{@to}}
+  {{/if}}
+</a>

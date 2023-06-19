@@ -4,7 +4,7 @@
     <dd class="col-sm-12 col-lg-9">
       <PersonalInfoWarning/>
       {{#if @person.email}}
-        email {{mail-to @person.email}}
+        email <MailTo @to={{@person.email}} />
       {{else}}
         <i class="text-muted">email missing</i>
       {{/if}}
@@ -66,7 +66,7 @@
     <dt class="col-sm-12 col-lg-2">Personnel Note</dt>
     <dd class="col-sm-12 col-lg-9">
       <b class="text-danger">Has note on file</b>. Contact the Personnel Manager for more information:
-      {{mail-to (setting "PersonnelEmail")}}
+      <PersonnelEmail />
     </dd>
   {{/if}}
   {{#if (has-role "manage")}}

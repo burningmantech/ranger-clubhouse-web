@@ -401,7 +401,7 @@
                 <PersonLink @person={{ad.person}} />
               </td>
               <td>{{ad.person.status}}</td>
-              <td>{{#if ad.person.email}}{{mail-to ad.person.email}}{{else}}<i>no email</i>{{/if}}</td>
+              <td>{{#if ad.person.email}}<MailTo @to={{ad.person.email}} />{{else}}<i>no email</i>{{/if}}</td>
             </tr>
           {{/each}}
           </tbody>
@@ -443,7 +443,7 @@
                 <PersonLink @person={{prov.person}} />
               </td>
               <td>{{prov.person.status}}</td>
-              <td>{{#if prov.person.email}}{{mail-to prov.person.email}}{{else}}<i>no email</i>{{/if}}</td>
+              <td>{{#if prov.person.email}}<MailTo @to={{prov.person.email}} />{{else}}<i>no email</i>{{/if}}</td>
             </tr>
           {{/each}}
           </tbody>

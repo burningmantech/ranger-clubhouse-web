@@ -11,7 +11,7 @@
           {{else}}
             .. uh, sometime?!?
             <span class="text-danger">Oops! We forgot to write down when you may enter the event! Please contact
-              {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.</span>
+              <MailTo @to={{@ticketingInfo.ranger_ticketing_email}} /> for help.</span>
           {{/if}}
         {{/if}}
       </b>
@@ -62,7 +62,7 @@
   </p>
   <p>
     If you need a separate Work Access Pass for yourself and Significant Others, please contact
-    {{mail-to @ticketingInfo.ranger_ticketing_email}}
+    <MailTo @to={{@ticketingInfo.ranger_ticketing_email}} />
   </p>
 {{else if @ticket.isStaffCredential}}
   <p>
@@ -87,7 +87,7 @@
         <b class="text-danger">Oops! We forgot to write down when you may enter the event!</b>
       </p>
       <p>
-        <b class="text-danger">Contact {{mail-to @ticketingInfo.ranger_ticketing_email}} for help.</b>
+        <b class="text-danger">Contact <MailTo @to={{@ticketingInfo.ranger_ticketing_email}} /> for help.</b>
       </p>
     {{/if}}
    {{else}}
@@ -97,7 +97,7 @@
 {{else if this.allTicketsBanked}}
   <p>
     You have banked all your tickets. Contact the Ranger Ticketing Team
-    {{mail-to @ticketingInfo.ranger_ticketing_email}}
+    <MailTo @to={{@ticketingInfo.ranger_ticketing_email}} />
     if you intend to Ranger this event, not use your tickets, and require a WAP.
   </p>
 {{else if this.noTicketsTouched}}
@@ -111,5 +111,5 @@
     <b>Uh oh, you do not have a Work Access Pass. Mostly likely this is a mistake.</b>
   </p>
   All returning Rangers in good standing qualify for a Work Access Pass for arrival on Thursday @ 00:01.
-  Contact {{mail-to @ticketingInfo.ranger_ticketing_email}} and let us know something is wrong.
+  Contact <MailTo @to={{@ticketingInfo.ranger_ticketing_email}} /> and let us know something is wrong.
 {{/if}}

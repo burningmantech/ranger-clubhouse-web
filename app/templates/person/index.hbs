@@ -3,14 +3,14 @@
   <UiNotice @icon="ban"
             @type="danger"
             @title="Account has status {{this.person.status}} and may not be logged into.">
-    For more information, contact the Personnel Manager: {{mail-to (setting "PersonnelEmail")}}
+    For more information, contact the Personnel Manager: <PersonnelEmail />
   </UiNotice>
 {{else if this.person.needsBpguid}}
   <UiNotice @icon="hand-point-right" @title="Missing BPGUID" @type="danger">
     <p>
       Account does not have a Burner Profile ID (BPGUID) on file. Signups and ticketing are disabled.
     </p>
-    Contact the Volunteer Coordinators at {{vc-email}} for assistance with obtaining a BPGUID.
+    Contact the Volunteer Coordinators at <VcEmail /> for assistance with obtaining a BPGUID.
   </UiNotice>
 {{/if}}
 
@@ -21,7 +21,7 @@
       experiencing
       issues, or the address is no longer valid.
     </p>
-    Contact the Ranger Tech Ninjas at {{admin-email}} for assistance.
+    Contact the Ranger Tech Ninjas at <TechSupportEmail /> for assistance.
   </UiNotice>
 {{/if}}
 

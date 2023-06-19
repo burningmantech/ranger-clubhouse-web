@@ -26,7 +26,7 @@
           <PersonLink @person={{person}} />
         </td>
         <td>{{person.status}}</td>
-        <td>{{mail-to person.email}}</td>
+        <td><MailTo @to={{person.email}} /></td>
         <td>{{person.first_name}} {{person.last_name}}</td>
       </tr>
     {{else}}

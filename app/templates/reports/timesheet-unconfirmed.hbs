@@ -36,7 +36,7 @@ Showing {{pluralize this.unconfirmed_people.length "person"}}
         <PersonLink @person={{person}} />
       </td>
       <td>{{person.first_name}} {{person.last_name}}</td>
-      <td>{{mail-to person.email}}</td>
+      <td><MailTo @to={{person.email}} /></td>
       <td>{{phone-link person.home_phone}}</td>
       <td class="text-end">{{person.unverified_count}}</td>
     </tr>

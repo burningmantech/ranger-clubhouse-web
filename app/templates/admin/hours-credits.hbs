@@ -38,7 +38,7 @@
           <td>
             <PersonLink @person={{person}} />
           </td>
-          <td>{{mail-to person.email}}</td>
+          <td><MailTo @to={{person.email}} /></td>
           <td>{{person.first_name}} {{person.last_name}}</td>
           <td>{{person.status}}</td>
           <td class="text-end">{{hour-format person.counted_duration}}</td>

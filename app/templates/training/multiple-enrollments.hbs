@@ -26,7 +26,7 @@ Showing {{pluralize this.enrollments.length "trainee"}}
       <td>
         <PersonLink @personId={{person.person_id}} @callsign={{person.callsign}} />
       </td>
-      <td>{{mail-to person.email}}</td>
+      <td><MailTo @to={{person.email}} /></td>
       <td>
         {{#each person.enrollments as |slot|}}
           {{shift-format slot.date}}<br>

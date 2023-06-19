@@ -49,7 +49,7 @@
     {{/if}}
 
     {{#if @step.email}}
-      <div>{{mail-to @step.email}}</div>
+      <div><MailTo @to={{@step.email}} /></div>
     {{/if}}
 
     {{#if @step.survey}}
