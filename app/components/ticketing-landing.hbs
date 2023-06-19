@@ -1,9 +1,7 @@
 <p>
   <b>Ticketing questions? </b> Scroll to the <a href {{action this.scrollToFAQs}}>ticketing FAQs</a> below.
 </p>
-{{#if this.ticketPackage.specialTickets}}
-  <TicketSpecialTickets @ticketingInfo={{@ticketingInfo}} @ticketPackage={{this.ticketPackage}} />
-{{/if}}
+
 {{#if this.ticketComponent}}
   <this.ticketComponent @ticketingInfo={{@ticketingInfo}}
                         @ticketPackage={{this.ticketPackage}}
