@@ -237,23 +237,29 @@ export default class TrainingSessionController extends ClubhouseController {
   @action
   saveStudentAction(model) {
     const student = this.editStudent;
-    const {rank, note, passed} = model;
+    const {note, passed} = model;
+
+    const rank = +model.rank;
 
     const score = {
       id: student.id,
       note,
-      rank: !isEmpty(rank) ? +rank : rank,
       passed: +passed ? 1 : 0,
     };
 
+    if (rank) {
+      score.rank = rank;
+    }
+
     if (!this.training.is_art) {
       if (!rank && passed && student.need_ranking) {
-        model.pushErrors('rank', ['Please enter a rank.']);
+        model.pushErrors('rank', ['Trainee needs a rank.']);
         return;
       }
 
+      const existingNotes = student.notes.filter((n) => !n.is_log);
       // Only require a note if the rank set was not 2 (aka normal, average, etc.)
-      if ((rank > 0 && rank !== 2) && (isEmpty(note) && !student.notes.length)) {
+      if ((rank > 0 && rank !== 2) && (isEmpty(note) && !existingNotes.length)) {
         model.addError('note', ['A note needs to be entered if a rank is given.']);
         return;
       }
