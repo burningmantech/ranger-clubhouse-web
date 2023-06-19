@@ -23,8 +23,6 @@ export default class PersonCertificationsComponent extends Component {
   @tracked frontBlob;
   @tracked backBlob;
 
-  @tracked uploadCardSide = null;
-
   validations = {
     certification_id: [validatePresence(true)]
   };
