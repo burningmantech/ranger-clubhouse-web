@@ -46,7 +46,7 @@
                 {{#if this.session.canViewEmail}}
                   <td>
                     {{#if entry.person.email}}
-                      {{mail-to entry.person.email}}
+                      <MailTo @to={{entry.person.email}} />
                     {{else}}
                       -
                     {{/if}}

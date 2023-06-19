@@ -43,7 +43,7 @@
             <b class="text-danger">
               Oops! We haven't set the pickup locations yet! Email the ticketing team and let us know about this
               problem:<br>
-              {{mail-to @ticketingInfo.ranger_ticketing_email}}
+              <MailTo @to={{@ticketingInfo.ranger_ticketing_email}} />
             </b>
           {{/if}}
         {{else}}
@@ -146,7 +146,7 @@
         {{/if}}
         {{#unless this.usingStaffCredential}}
           <div class="mt-2">
-            The WAP will be emailed to you at {{mail-to @person.email}}.<br>
+            The WAP will be emailed to you at <MailTo @to={{@person.email}} />.<br>
             WAPs are emailed after the Ranger ticketing deadline closes and up to a week before the start of the event.
           </div>
         {{/unless}}
@@ -165,7 +165,7 @@
   {{#if this.wapSOList}}
     <TicketOverviewItem @icon="people-group" @title="WAPs For Significant Other Claimed" @type="secondary">
       {{pluralize this.wapSOList.length "Significant Other WAP"}} will be emailed to you at
-      {{mail-to @person.email}} as a PDF. The SO WAP PDF will have your name on it. The names of your SOs are stored
+      <MailTo @to={{@person.email}} /> as a PDF. The SO WAP PDF will have your name on it. The names of your SOs are stored
       elsewhere in the ticketing system.
       <br>
       <ul class="mt-2">

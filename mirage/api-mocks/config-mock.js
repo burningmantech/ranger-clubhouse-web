@@ -21,7 +21,7 @@ export default function configMock(server) {
       RpTicketThreshold: 19,
       ScTicketThreshold: 38,
       TrainingAcademyEmail: 'ranger-training-academy@burningman.org',
-      VCEmail: 'ranger-vc@burningman.org',
+      VcEmail: 'ranger-vc@burningman.org',
     };
   });
 }

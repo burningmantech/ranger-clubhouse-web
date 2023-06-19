@@ -230,7 +230,7 @@
                     {{/if}}
                   </td>
                   <td>{{account.first_name}} {{account.last_name}}</td>
-                  <td>{{mail-to account.email}}</td>
+                  <td><MailTo @to={{account.email}} /></td>
                   <td>{{account.applicant_type}}</td>
                   <td>{{account.vc_status}}</td>
                   <td>

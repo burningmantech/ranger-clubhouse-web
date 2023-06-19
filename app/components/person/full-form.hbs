@@ -8,7 +8,7 @@ Everyone else will see person/simple-form
   <div class="row mb-1">
     <div class="col-sm-6 col-lg-auto">
       email {{#if @person.email}}
-      {{mail-to @person.email}}
+      <MailTo @to={{@person.email}} />
     {{else}}
       <i class="text-muted">missing</i>
     {{/if}}

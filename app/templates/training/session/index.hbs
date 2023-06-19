@@ -84,7 +84,7 @@
                 <PersonLink @person={{trainer}} />
               </td>
               <td class="align-middle">{{trainerType.position_title}}</td>
-              <td class="align-middle">{{mail-to trainer.email}}</td>
+              <td class="align-middle"><MailTo @to={{trainer.email}} /></td>
               <td>
                 <ChForm::Select @name="trainer-{{trainer.id}}-status"
                                 @value={{trainer.status}}

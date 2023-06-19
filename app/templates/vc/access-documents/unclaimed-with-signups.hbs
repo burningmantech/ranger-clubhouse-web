@@ -28,7 +28,7 @@
         {{ticket.status}}
       </td>
       <td>
-        {{mail-to ticket.email}}
+        <MailTo @to={{ticket.email}} />
       </td>
       <td>
         {{ticket-type-human ticket.type}}

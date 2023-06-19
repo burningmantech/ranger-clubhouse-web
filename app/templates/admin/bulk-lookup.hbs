@@ -55,7 +55,7 @@
                 </td>
                 <td>{{person.status}}</td>
                 <td>{{person.first_name}} {{person.last_name}}</td>
-                <td>{{mail-to person.email}}</td>
+                <td><MailTo @to={{person.email}} /></td>
                 <td>
                   {{#if person.last_worked}}
                     {{person.last_worked}}

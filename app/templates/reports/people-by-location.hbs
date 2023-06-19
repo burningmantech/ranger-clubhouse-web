@@ -61,7 +61,7 @@ Showing {{this.viewPeople.length}} of {{this.people.length}}.
               {{~#if this.session.canViewEmail~}}
                 <td>
                   {{~#if person.email~}}
-                    {{mail-to person.email}}
+                    <MailTo @to={{person.email}} />
                     {{~else~}}
                     -
                   {{~/if~}}

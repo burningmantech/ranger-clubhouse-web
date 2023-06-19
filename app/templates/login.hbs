@@ -40,7 +40,7 @@
         <p>
           You can use the "Forgot Your Password" link below if you cannot remember your password.
         </p>
-        Contact the Volunteer Coordinators at {{vc-email}} if you continue to have problems.
+        Contact the Volunteer Coordinators at <VcEmail /> if you continue to have problems.
       </UiNotice>
     {{else}}
       <UiNotice @title="Reset Password Issue" @icon="exclamation" @type="danger">
@@ -57,7 +57,7 @@
     {{else}}
       <UiNotice @type="danger" @icon="ban" @title="Login disabled">
         This account has been disabled and cannot be logged into.
-        Contact the Ranger Personnel Manager at {{mail-to (setting "PersonnelEmail")}} for more
+        Contact the Ranger Personnel Manager at <PersonnelEmail /> for more
         information.
       </UiNotice>
     {{/if}}
@@ -136,11 +136,11 @@
   <hr>
   <p>
     <b>Questions? </b>
-    Email the Ranger Volunteer Coordinators at {{vc-email}}
+    Email the Ranger Volunteer Coordinators at <VcEmail />
   </p>
   <p>
     <b>Need help logging in or registering?</b>
-    Email the Rangers Tech Ninjas at {{admin-email}}
+    Email the Rangers Tech Ninjas at <TechSupportEmail />
   </p>
 </main>
 {{#if this.session.isAuthenticated}}

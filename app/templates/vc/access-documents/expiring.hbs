@@ -27,7 +27,7 @@ Showing {{pluralize this.expiring.length "person"}}
         <tr>
           <td><PersonLink @person={{person.person}} @page="tickets-provisions" /></td>
           <td>{{person.person.status}}</td>
-          <td>{{mail-to person.person.email}}</td>
+          <td><MailTo @to={{person.person.email}} /></td>
           <td>RAD-{{ticket.id}}</td>
           <td>{{ticket-type-human ticket.type}}</td>
           <td>{{ticket.status}}</td>

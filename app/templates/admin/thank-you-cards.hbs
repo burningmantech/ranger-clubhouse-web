@@ -47,7 +47,7 @@
             <PersonLink @person={{person}} />
           </td>
           <td>{{person.first_name}} {{person.last_name}}</td>
-          <td>{{mail-to person.email}}</td>
+          <td><MailTo @to={{person.email}} /></td>
           <td>{{person.street1}}</td>
           <td>{{person.apt}}</td>
           <td>{{person.street2}}</td>

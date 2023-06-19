@@ -40,7 +40,7 @@ Potential Alpha position: {{this.positionEligibleCount}}.
             <PersonLink @person={{person}} />
         </td>
         <td>{{person.first_name}} {{person.last_name}}</td>
-        <td>{{mail-to person.email}}</td>
+        <td><MailTo @to={{person.email}} /></td>
         <td>{{person.status}}</td>
         <td>
             {{#if person.have_mentor_flags}}

@@ -57,7 +57,7 @@
             <td class="text-end">{{person.years}}</td>
             <td class="text-end">{{person.alpha_year}}</td>
           {{/unless}}
-          <td>{{mail-to person.email}}</td>
+          <td><MailTo @to={{person.email}} /></td>
           {{#unless this.isVintage}}
             <td class="text-center">{{if person.vintage "Y" "-"}}</td>
           {{/unless}}

@@ -69,7 +69,7 @@
           {{fa-icon "bell" fixed=true}} Alert when slot becomes empty of signups.<br>
         {{/if}}
         {{#if position.contact_email}}
-          {{mail-to position.contact_email}}
+          <MailTo @to={{position.contact_email}} />
         {{/if}}
       </td>
       <td>
