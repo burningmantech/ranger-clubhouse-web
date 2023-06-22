@@ -44,7 +44,9 @@
     {{#unless this.isLoading}}
       <Person::Provisions @person={{this.person}}
                           @provisions={{this.provisions}}
-                          @ticketingInfo={{this.ticketingInfo}} />
+                          @ticketingInfo={{this.ticketingInfo}}
+                          @bmid={{this.bmid}}
+      />
     {{/unless}}
   </tab.pane>
   <tab.pane @title="Tickets & Stuff" @id="tickets-stuff">

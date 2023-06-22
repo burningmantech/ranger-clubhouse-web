@@ -47,13 +47,13 @@ export const BmidStatusOptions = [
 ];
 
 export const MealLabels = {
-  [MEALS_PRE]: 'Pre',
-  [MEALS_POST]: 'Post',
-  [MEALS_EVENT]: 'Event',
-  [MEALS_ALL]: 'All',
-  [MEALS_PRE_PLUS_POST]: 'Pre+Post',
-  [MEALS_PRE_PLUS_EVENT]: 'Pre+Event',
-  [MEALS_EVENT_PLUS_POST]: 'Event+Post',
+  [MEALS_PRE]: 'Pre-Event',
+  [MEALS_POST]: 'Post-Event',
+  [MEALS_EVENT]: 'Event Week',
+  [MEALS_ALL]: 'All Eats',
+  [MEALS_PRE_PLUS_POST]: 'Pre-Event / Post-Event',
+  [MEALS_PRE_PLUS_EVENT]: 'Pre-Event / Event Week',
+  [MEALS_EVENT_PLUS_POST]: 'Event Week / Post-Event',
 };
 
 export const MealOptions = [
