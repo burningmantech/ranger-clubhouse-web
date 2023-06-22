@@ -16,16 +16,10 @@
 <p>
   All shift times are in the Pacific Timezone unless otherwise noted.<br>
   {{fa-icon "check" color="success"}} = The shift is activated, and available for sign ups.<br>
-  {{fa-icon "times" color="danger"}} = The shift has not been activated yet, is not visible to users, and cannot be signed up for.
+  {{fa-icon "times" color="danger"}} = The shift has not been activated yet, is not visible to users, and cannot be
+  signed up for.
 </p>
-<p>
-  Jump to a position starting with the letter:<br>
-  {{#each this.letterOptions as |letter|}}
-    <a href {{on "click" (fn this.scrollToPosition letter.id)}} class="d-inline-block border p-2 me-2 mb-2">
-      {{letter.letter}}
-    </a>
-  {{/each}}
-</p>
+<DropdownScrollList @items={{this.positionScrollItems}} @openAccordion={{true}} @thing="position"/>
 <p>
   Showing {{this.viewPositions.length}} of {{pluralize this.positions.length "position"}} for year {{this.year}}.
 </p>
@@ -40,12 +34,14 @@
     <accordion.body>
       {{#if accordion.isOpen}}
         {{#if (and (eq this.activeFilter "active") position.inactiveCount)}}
-          <p class="text-danger">{{pluralize position.inactiveCount "inactive shift"}} {{is-are position.inactiveCount}} not shown.</p>
+          <p class="text-danger">{{pluralize position.inactiveCount "inactive shift"}} {{is-are position.inactiveCount}}
+            not shown.</p>
         {{else if (eq this.activeFtiler "inactive")}}
-          <p class="text-danger">{{pluralize position.activeCount "active shift"}} {{is-are position.activeCount}} not shown.</p>
+          <p class="text-danger">{{pluralize position.activeCount "active shift"}} {{is-are position.activeCount}} not
+            shown.</p>
         {{/if}}
         <p>
-          <UiExportToCSVButton  @onClick={{fn this.exportByShift position}} />
+          <UiExportToCSVButton @onClick={{fn this.exportByShift position}} />
         </p>
         <table class="table table-sm table-hover table-striped">
           <thead>
@@ -69,7 +65,7 @@
                 {{/if}}
               </td>
               <td class="w-25">
-                 {{shift-format slot.begins slot.ends timezone=slot.tz}}<br>
+                {{shift-format slot.begins slot.ends timezone=slot.tz}}<br>
                 <PresentOrNot @value={{slot.description}} @empty="-"/>
               </td>
               <td class="w-5 text-end">

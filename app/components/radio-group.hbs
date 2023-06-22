@@ -3,7 +3,7 @@
     <input type="radio"
            id="radio-opt-{{idx}}"
            class="form-check-input"
-           checked={{opt.isSelected}} {{on "click" (fn this.changeEvent opt)}}
+           checked={{opt.selected}} {{on "click" (fn this.changeEvent opt)}}
     />
     <label class="form-check-label" for="radio-opt-{{idx}}">
       {{opt.label}}

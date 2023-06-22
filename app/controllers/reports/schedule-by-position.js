@@ -65,29 +65,16 @@ export default class ReportsScheduleByPositionController extends ClubhouseContro
   }
 
   @cached
-  get letterOptions() {
-    let letters = {};
-    this.viewPositions.forEach((p) => {
-      const letter = p.title.charAt(0).toUpperCase();
-      if (!letters[letter]) {
-        letters[letter] = p.id;
-      }
-    });
-
-    return Object.keys(letters).sort().map((letter) => {
-      return {id: letters[letter], letter};
-    });
-  }
-
-  @cached
   get positionOptions() {
     return this.viewPositions.map((p) => ({id: p.id, title: p.title}));
   }
 
-  @action
-  scrollToPosition(id, event) {
-    event.preventDefault();
-    this.house.scrollToElement(`#position-${id}`, true, true);
+  @cached
+  get positionScrollItems() {
+    return this.viewPositions.map((p) => ({
+      id: `position-${p.id}`,
+      title: p.title,
+    }));
   }
 
   @action

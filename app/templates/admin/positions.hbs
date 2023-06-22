@@ -3,7 +3,7 @@
   {{#if this.canManagePositions}}
     <UiNotice @type="secondary" @icon="hand-point-right" @title="Need Position Help?">
       Contact the Tech Team about creating new positions or adjusting existing ones.<br>
-      <TechSupportEmail />
+      <TechSupportEmail/>
     </UiNotice>
   {{/if}}
   <FormRow>
@@ -36,6 +36,7 @@
   </FormRow>
 
   {{#if (eq this.viewAs "list")}}
+    <DropdownScrollList @items={{this.positionScrollItems}} @thing="position"/>
     Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
     <div class="overflow-y-auto">
       <PositionTable @viewPositions={{this.viewPositions}}
@@ -47,9 +48,10 @@
       />
     </div>
   {{else}}
-    Showing {{this.viewByTeams.length}} teams
+    <DropdownScrollList @items={{this.teamScrollList}} @thing="team"/>
+    Showing {{pluralize this.viewByTeams.length "team"}}
     {{#each this.viewByTeams as |team|}}
-      <UiSection>
+      <UiSection id="team-{{team.id}}">
         <:title>
           {{team.title}} ({{pluralize team.team_positions.length "position"}})
         </:title>

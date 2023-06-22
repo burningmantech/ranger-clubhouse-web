@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {schedule, later} from '@ember/runloop';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 
 export default class ReportsScheduleByCallsignController extends ClubhouseController {
   queryParams = ['year'];
@@ -9,18 +9,12 @@ export default class ReportsScheduleByCallsignController extends ClubhouseContro
   @tracked isExpanding = false;
   @tracked expandAll = false;
 
-  get letterOptions() {
-    let letters = {};
-    this.people.forEach((person) => {
-      const letter = person.callsign.charAt(0).toUpperCase();
-      if (!letters[letter]) {
-        letters[letter] = person.id;
-      }
-    });
-
-    return Object.keys(letters).sort().map((letter) => {
-      return {id: letters[letter], letter};
-    });
+  @cached
+  get callsignScrollItems() {
+    return this.people.map((p) => ({
+      id: `person-${p.id}`,
+      title: p.callsign
+    }));
   }
 
   @action
@@ -36,11 +30,5 @@ export default class ReportsScheduleByCallsignController extends ClubhouseContro
       });
     }, 10);
 
-  }
-
-  @action
-  scrollToCallsign(id, event) {
-    event.preventDefault();
-    this.house.scrollToElement(`#person-${id}`, false, true);
   }
 }
