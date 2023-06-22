@@ -1,10 +1,13 @@
 <UiSection>
   <:title>Provisions (Meals, Showers, Radios)</:title>
   <:body>
-    <span class="me-2"><b>Meals:</b> {{this.effectiveMeals}}</span>
-    <span class="me-2"><b>Showers:</b> {{if this.hasShowers "Yes" "No"}}</span>
+    <span class="me-2"><b>BMID + Provision Meals:</b> {{@bmid.effectiveMealsHuman}}</span>
+    <b>BMID + Shower Provision:</b> {{if @bmid.effectiveShowers "Yes" "No"}}<br>
+    <span class="me-2"><b>Only Meal Provisions:</b> {{this.effectiveMeals}}</span>
+    <span class="me-2"><b>Only Shower Provision:</b> {{if this.hasShowers "Yes" "No"}}</span>
     <b>Event Radios:</b> {{this.eventRadioCount}}
     <div class="text-muted mb-2">The above is calculated from available, claimed, and/or submitted provisions</div>
+
     <p>
       <EarnedProvisionIcon/>
       = awarded based on prior event work.<br>
