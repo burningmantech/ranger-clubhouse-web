@@ -1,8 +1,9 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
-import {typeOf} from '@ember/utils';
+import {isEmpty, typeOf} from '@ember/utils';
 import {assert} from '@ember/debug';
 import {tracked} from '@glimmer/tracking';
+import {isArray} from '@ember/array';
 
 export default class ChFormSelectComponent extends Component {
   @tracked isGrouped = false;
@@ -14,7 +15,7 @@ export default class ChFormSelectComponent extends Component {
   }
 
   get controlClass() {
-    const {fieldSize,controlClass} = this.args;
+    const {fieldSize, controlClass} = this.args;
     return controlClass ?? (fieldSize ? `form-select form-select-${fieldSize}` : `form-select`);
   }
 
@@ -48,6 +49,7 @@ export default class ChFormSelectComponent extends Component {
       return value;
     }
   }
+
   _buildSingleOption(opt) {
     const type = typeOf(opt);
     let label, value, disabled = false;
@@ -79,7 +81,7 @@ export default class ChFormSelectComponent extends Component {
   }
 
   get selectOptions() {
-    const { options } = this.args;
+    const {options} = this.args;
     if (!options) {
       return [];
     }
@@ -94,5 +96,28 @@ export default class ChFormSelectComponent extends Component {
         return this._buildSingleOption(opt);
       }
     });
+  }
+
+  hasValue(haystack, value) {
+    if (isArray(haystack)) {
+      return haystack.includes(value);
+    }
+    // Handle comparing a selected value which is a boolean string and the
+    // option value is an actual Boolean type.
+    if (typeOf(value) === "boolean" && typeOf(haystack) === "string") {
+      haystack = /^(true|t|1)$/i.test(haystack);
+      return haystack == value;
+    }
+
+    const haystackEmpty = isEmpty(haystack);
+    const valueEmpty = isEmpty(value);
+
+    // Avoids ('' == 0) is true scenario
+    if ((haystackEmpty && !valueEmpty)
+      || (!haystackEmpty && valueEmpty)) {
+      return false;
+    }
+
+    return haystack == value;
   }
 }

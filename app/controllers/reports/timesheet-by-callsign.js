@@ -4,23 +4,11 @@ import {action} from '@ember/object';
 export default class ReportsTimesheetByCallsignController extends ClubhouseController {
   queryParams = ['year'];
 
-  @action
-  scrollToCallsign(id) {
-    this.house.scrollToElement(`#person-${id}`, false, true);
-  }
-
-  get letterOptions() {
-    let letters = {};
-    this.people.forEach((person) => {
-      const letter = person.callsign.charAt(0).toUpperCase();
-      if (!letters[letter]) {
-        letters[letter] = person.id;
-      }
-    });
-
-    return Object.keys(letters).sort().map((letter) => {
-      return {id: letters[letter], letter};
-    });
+  get callsignScrollItems() {
+    return this.people.map((p) => ({
+      id: `person-${p.id}`,
+      title: p.callsign,
+    }))
   }
 
   @action

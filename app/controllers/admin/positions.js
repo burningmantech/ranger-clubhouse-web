@@ -63,6 +63,7 @@ export default class PositionController extends ClubhouseController {
     const groups = _.groupBy(this.positions.toArray(), 'team_id');
 
     const teams = this.teams.map((team) => ({
+      id: team.id,
       title: team.title,
       team_positions: groups[team.id] ?? [],
     }));
@@ -100,6 +101,14 @@ export default class PositionController extends ClubhouseController {
   }
 
   @cached
+  get positionScrollItems() {
+    return this.viewPositions.map((p) => ({
+      id: `position-${p.id}`,
+      title: p.title
+    }));
+  }
+
+  @cached
   get teamPositionOptions() {
     const options = [
       ['-', null]
@@ -107,6 +116,22 @@ export default class PositionController extends ClubhouseController {
 
     this.teams.forEach((team) => options.push([team.title, team.id]));
     return options;
+  }
+
+  @cached
+  get teamScrollList() {
+    const list = [];
+
+    this.viewByTeams.forEach((t) => {
+      if (t.id) {
+        list.push({
+          id: `team-${t.id}`,
+          title: t.title
+        });
+      }
+    });
+
+    return list;
   }
 
   @cached

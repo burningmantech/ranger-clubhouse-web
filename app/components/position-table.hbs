@@ -16,7 +16,7 @@
   </thead>
   <tbody>
   {{#each @viewPositions key="id" as |position|}}
-    <tr>
+    <tr id="position-{{position.id}}">
       <td class="text-end">{{position.id}}</td>
       <td class="text-center">
         <BooleanIcon @value={{position.active}} @falseIcon="times" @falseClass="text-danger"/>

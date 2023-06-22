@@ -1,20 +1,12 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
-import {tracked} from '@glimmer/tracking';
-
-class RadioButton {
-  @tracked isSelected;
-
-  constructor(obj) {
-    Object.assign(this, obj);
-  }
-}
+import Selectable from 'clubhouse/utils/selectable';
 
 export default class RadioGroupComponent extends Component {
   get options() {
     const {value} = this.args;
-    return this.args.options.map((opt) => new RadioButton({
-      isSelected: (value === opt.value),
+    return this.args.options.map((opt) => new Selectable({
+      selected: (value === opt.value),
       value: opt.value,
       label: opt.label
     }));
@@ -23,7 +15,7 @@ export default class RadioGroupComponent extends Component {
   @action
   changeEvent(optClicked, event) {
     event.preventDefault();
-    this.options.forEach((opt) => opt.isSelected = (opt === optClicked));
+    this.options.forEach((opt) => opt.selected = (opt === optClicked));
     this.args.onChange(optClicked.value);
   }
 }

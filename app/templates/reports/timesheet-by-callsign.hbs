@@ -5,14 +5,7 @@
             @skipPandemic={{true}}
 />
 
-<p>
-  Jump to callsigns starting with the letter:<br>
-  {{#each this.letterOptions as |letter|}}
-    <a href {{action this.scrollToCallsign letter.id}} class="d-inline-block border p-2 me-2 mb-2">
-      {{letter.letter}}
-    </a>
-  {{/each}}
-</p>
+<DropdownScrollList @items={{this.callsignScrollItems}} @openAccordion={{true}} @thing="callsign"/>
 <p>
   <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
 </p>

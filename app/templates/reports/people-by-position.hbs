@@ -27,7 +27,7 @@
 
 <FormRow>
   <FormLabel @fixed={{true}}>Statuses</FormLabel>
-  <div class="col-sm-12 col-lg-auto mt-2">
+  <div class="col-sm-12 col-lg-10 mt-2">
     {{#each this.statuses as |status idx|}}
       <div class="form-check form-check-inline">
         <Input @type="checkbox" id="status-{{idx}}" class="form-check-input" @checked={{status.selected}}/>
@@ -39,9 +39,10 @@
   </div>
 </FormRow>
 
+
 {{#each this.visiblePositions key="id" as |position|}}
   <UiAccordion as |accordion|>
-    <accordion.title>
+    <accordion.title id="position-{{position.id}}">
       {{position-label position}}
       {{#if position.allRangers}}
         &ndash; all rangers
