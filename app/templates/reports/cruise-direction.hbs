@@ -11,9 +11,10 @@
     @formatSelected={{this.formatSelected}}
     @groups={{this.periodOptions}}
     @onSelect={{this.changeShift}}
+    class="btn-responsive mb-2"
   />
   {{#if this.suggestedSlot}}
-    <UiButton @onClick={{this.useSuggestedSlot}}>
+    <UiButton @onClick={{this.useSuggestedSlot}}  @class="btn-responsive mb-2">
       Select {{shift-format this.suggestedSlot.begins}}
     </UiButton>
   {{/if}}
@@ -21,11 +22,11 @@
 {{#if this.selectedShift}}
   <h3>Shift {{shift-format this.selectedShift.begins}}</h3>
   <p>
-    <UiButton @onClick={{this.createPod}}>
+    <UiButton @onClick={{this.createPod}} @class="btn-responsive mb-2">
       {{fa-icon "user-group" right=1}} Create Pod
     </UiButton>
     {{#if (gt this.pods.length 1)}}
-      <UiButton @onClick={{this.toggleShowSortControls}} @type="secondary">
+      <UiButton @onClick={{this.toggleShowSortControls}} @type="secondary" @class="btn-responsive mb-2">
         {{fa-icon "sort" right=1}} {{if this.showSortControls "Hide" "Show"}} Sorting Controls
       </UiButton>
     {{/if}}
@@ -34,12 +35,27 @@
     <p>Click on the person to remove them from the pod.</p>
     <div class="d-flex flex-wrap">
       {{#each this.pods key="id" as |pod idx|}}
-        <div class="me-3">
+        <div class="me-3 min-width-300 mb-2">
           <div class="p-2 d-flex justify-content-between align-items-center text-bg-gray">
             <div class="fs-5 fw-medium">
               Pod #{{pod.sort_index}}
             </div>
+            <div>
+              <a href {{action this.editExistingPod pod}} class="d-print-none">{{fa-icon "edit" right=1}} Edit</a>
+            </div>
             <a href {{action this.removePod pod}} class="d-print-none small">{{fa-icon "trash" right=1}} Delete</a>
+          </div>
+          <div class="p-2 d-flex justify-content-between">
+            <div>
+              {{#if pod.location}}
+                {{pod.location}}
+              {{else}}
+                <i class="text-muted">unknown</i>
+              {{/if}}
+            </div>
+            <div>
+              {{fa-icon pod.transportIcon right=1}} {{pod.transportLabel}}
+            </div>
           </div>
           {{#if this.showSortControls}}
             <div class="d-flex justify-content-between my-2">
@@ -95,7 +111,7 @@
 
   {{#if this.pods}}
     <div class="mt-4">
-      <UiButton @onClick={{this.createPod}}>
+      <UiButton @onClick={{this.createPod}} @class="btn-responsive mb-4">
         {{fa-icon "user-group" right=1}} Create Pod
       </UiButton>
     </div>
@@ -103,6 +119,31 @@
 
 {{else}}
   <h3>No shift selected.</h3>
+{{/if}}
+
+{{#if this.editPod}}
+  <ModalDialog @onEscape={{this.cancelPod}} as |Modal|>
+    <ChForm @formId="pod" @formFor={{this.editPod}} @onSubmit={{this.savePod}} as |f|>
+      <Modal.title>{{if this.editPod.isNew "Create" "Update"}} Pod</Modal.title>
+      <Modal.body>
+        <FormRow>
+          <FormLabel @auto={{true}}>Transportation</FormLabel>
+          <div class="col-auto mt-2">
+            <f.radioGroup @name="transport"
+                          @options={{this.transportOptions}}
+                          @inline={{true}} />
+          </div>
+        </FormRow>
+        <FormRow>
+          <f.text @name="location" @label="Deployment Location" @size={{30}} @maxlength={{80}} />
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Save"/>
+        <UiCancelButton @onClick={{this.cancelPod}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
 {{/if}}
 
 {{#if this.showAddDialog}}
