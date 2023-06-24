@@ -4,7 +4,7 @@ import {tracked} from '@glimmer/tracking';
 import _ from "lodash";
 import Selectable from "clubhouse/utils/selectable";
 import dayjs from 'dayjs';
-import {TYPE_SHIFT} from "clubhouse/models/pod";
+import {TYPE_SHIFT, TransportOptions} from "clubhouse/models/pod";
 import {movePod} from 'clubhouse/utils/pod';
 import {htmlSafe} from '@ember/template';
 
@@ -24,6 +24,10 @@ export default class ReportsCruiseDirectionController extends ClubhouseControlle
   @tracked showSortControls = false;
 
   @tracked showPriorShift;
+
+  @tracked editPod;
+
+  transportOptions = TransportOptions;
 
   constructor() {
     super(...arguments);
@@ -109,22 +113,40 @@ export default class ReportsCruiseDirectionController extends ClubhouseControlle
    */
 
   @action
-  async createPod() {
+  createPod() {
+    this.editPod = this.store.createRecord(`pod`, {
+      slot_id: this.selectedShift.id,
+      type: TYPE_SHIFT,
+      sort_index: this.pods.length + 1,
+    });
+  }
+
+  @action
+  editExistingPod(pod) {
+    this.editPod = pod;
+  }
+
+  @action
+  async savePod(model) {
+    const {isNew} = this.editPod;
     this.isSubmitting = true;
     try {
-      const pod = await this.store.createRecord(`pod`, {
-        slot_id: this.selectedShift.id,
-        type: TYPE_SHIFT,
-        sort_index: this.pods.length + 1,
-      });
-      await pod.save();
-      this.pods = [...this.pods, pod];
-      this.toast.success('Pod successfully created.');
+      await model.save();
+      if (isNew) {
+        this.pods = [...this.pods, this.editPod];
+      }
+      this.editPod = null;
+      this.toast.success('Pod successfully saved.');
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
+  }
+
+  @action
+  cancelPod() {
+    this.editPod = null;
   }
 
   /**
