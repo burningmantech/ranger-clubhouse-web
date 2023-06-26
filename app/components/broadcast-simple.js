@@ -51,7 +51,7 @@ export default class BroadcastSimpleComponent extends Component {
       });
     } else {
       groupOptions.push({
-        groupName: 'No In Progress Shifts Founnd',
+        groupName: 'No In-Progress Shifts Found',
         options: []
       });
     }
