@@ -89,7 +89,7 @@
               <div>
                 <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
               </div>
-              {{#if (and slot.trainer_slot_id (eq slot.slot_max 0))}}
+              {{#if (and slot.trainer_slot_id (eq slot.trainer_count 0))}}
                 <div class="text-danger">No trainers / mentors signed up yet.<br>Check back later.</div>
               {{/if}}
               {{#if slot.is_overlapping}}
