@@ -81,13 +81,13 @@
     "ember-simple-auth": "^5.0.0",
     "ember-simple-auth-token": "^5.3.2",
     "ember-source": "~4.12.0",
-    "ember-template-lint": "^5.10.3",
+    "ember-template-lint": "^5.11.0",
     "ember-truth-helpers": "^3.1.1",
     "eslint": "^8.43.0",
     "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-ember": "^11.8.0",
-    "eslint-plugin-n": "^16.0.0",
-    "eslint-plugin-qunit": "^7.3.4",
+    "eslint-plugin-ember": "^11.9.0",
+    "eslint-plugin-n": "^16.0.1",
+    "eslint-plugin-qunit": "^8.0.0",
     "global": "^4.4.0",
     "ical-generator": "^5.0.0",
     "jscodeshift": "^0.15.0",
@@ -98,10 +98,10 @@
     "mobile-detect": "^1.4.5",
     "qunit": "^2.19.4",
     "qunit-dom": "^2.0.0",
-    "sass": "^1.63.4",
-    "tinymce": "^6.5.0",
+    "sass": "^1.63.6",
+    "tinymce": "^6.5.1",
     "tracked-built-ins": "^3.1.1",
-    "webpack": "^5.87.0"
+    "webpack": "^5.88.1"
   },
   "engines": {
     "node": "14.* || 16.* || >= 18"
