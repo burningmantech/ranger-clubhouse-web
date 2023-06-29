@@ -50,15 +50,14 @@
             {{else}}
               {{#each position.shifts as |shift shiftidx|}}
                 <div class="{{if shiftidx "mt-1"}}">
-                  {{#if (gt position.shifts.length 1)}}
+                  {{#if position.shifts.length}}
                     <small class="d-inline-block">
                       {{dayjs-format shift.begins "HH:mm"}} - {{dayjs-format shift.ends "HH:mm"}}
                     </small><br>
                   {{/if}}
                   {{#each shift.people key="id" as |person|~}}
-                    <PersonLink @person={{person}} />
-                    {{~#if person.parenthetical}} ({{person.parenthetical}}){{/if~}}
-                    <br>
+                    <PersonLink @person={{person}} /><br>
+                    {{~#if person.parenthetical}}<div class="text-muted small">({{person.parenthetical}})</div>{{/if~}}
                   {{/each}}
                 </div>
               {{else}}
