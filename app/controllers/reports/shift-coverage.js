@@ -16,7 +16,8 @@ export default class ReportsShiftCoveragController extends ClubhouseController {
     [ 'HQ Window', 'hq' ],
     [ 'Intercept', 'intercept' ],
     [ 'Mentors', 'mentor' ],
-    [ 'Pre-event', 'pre-event' ],
+    [ 'Pre-Event', 'pre-event' ],
+    [ 'Post-Event', 'post-event' ],
     [ 'RSCI Mentor/Mentee', 'rsci-mentor' ],
   ];
 
