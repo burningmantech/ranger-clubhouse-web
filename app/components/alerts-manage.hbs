@@ -16,7 +16,9 @@
         <li>The pre-event number {{this.numbers.off_playa.phone}} is stopped</li>
       {{/if}}
     </ul>
-    Contact <TechSupportEmail /> for help.
+    Contact
+    <TechSupportEmail/>
+    for help.
   </UiNotice>
 {{/if}}
 
@@ -72,7 +74,7 @@
         <LoadingDialog>
           Processing the phone number
         </LoadingDialog>
-       {{/if}}
+      {{/if}}
     </ChForm>
   </UiNotice>
 {{/if}}
@@ -82,7 +84,10 @@
   <:body>
     <p>
       <b>For non-USA phone numbers:</b> Include your country code when entering a phone number.<br>
-      Australia: +61, Canada: +1, France: +33, Mexico: +52, New Zealand: +64, UK: +44.
+      Australia: +61, Canada: +1, France: +33, Mexico: +52, New Zealand: +64
+    </p>
+    <p>
+      <span class="text-danger">Note: due to recent United Kingdom telecom regulatory changes, UK phone numbers cannot be used at this time.</span>
     </p>
 
     <ChForm @formId="numbers"
