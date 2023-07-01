@@ -4,10 +4,10 @@
 
 // prettier-ignore
 const browsers = [
-  'safari >= 11',
-  'chrome >= 82',
-  'edge >= 18',
-  'firefox >= 76',
+  'safari >= 12',
+  'chrome >= 100',
+  'edge >= 103',
+  'firefox >= 100',
   '>= 0.6%',
 ];
 

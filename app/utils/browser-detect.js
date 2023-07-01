@@ -14,11 +14,11 @@ export default class BrowserDetector {
     this.browser = {};
     // Ensure this is in sync with config/targets.js
     this.unsupportedBrowsers = {
-      Chrome: 82,
-      Firefox: 76,
-      Edge: 18,
-      Opera: 50,
-      Safari: 11
+      Chrome: 100,
+      Firefox: 100,
+      Edge: 103,
+      Opera: 90,
+      Safari: 12
     };
 
     this._detectBrowser();
