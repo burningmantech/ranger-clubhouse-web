@@ -27,7 +27,7 @@
       <div class="me-2">
         Showing {{this.viewSlots.length}} of {{pluralize @slots.length "sign-up"}}.
       </div>
-      <div>
+      <div class="d-print-none">
         {{#if (and this.isCurrentYear (not this.showAllShifts) this.previousSlotCount)}}
           <UiButton @onClick={{this.toggleAll}}  @size="sm" @type="secondary">
             {{fa-icon "clock" type="far"}} Show {{if this.showAllShifts "Upcoming Shifts" "All Shifts"}}

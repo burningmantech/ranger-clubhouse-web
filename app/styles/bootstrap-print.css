@@ -66,3 +66,9 @@
     border-color: #dee2e6;
   }
 }
+
+@media print {
+  .nav-tabs {
+    display: none !important;
+  }
+}
