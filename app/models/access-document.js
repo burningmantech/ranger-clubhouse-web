@@ -71,7 +71,6 @@ export const StatusLabels = {
   [USED]: 'used',
 };
 
-
 export default class AccessDocumentModel extends Model {
   @attr('number') person_id;
   @attr('string') type;
