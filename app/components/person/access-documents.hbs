@@ -147,10 +147,55 @@
           Last Modified: {{this.entry.modified_date}}
           Created: {{this.entry.create_date}}
         {{/unless}}
+        {{#if this.showingChanges}}
+          <div class="mt-2">
+            {{#if this.entryChanges}}
+              <table class="table table-sm table-width-auto table-striped table-hover">
+                <thead>
+                <tr>
+                  <th>Timestamp (UTC-7)</th>
+                  <th>Who</th>
+                  <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each this.entryChanges as |row|}}
+                  <tr>
+                    <td>{{row.timestamp}}</td>
+                    <td>
+                      <PersonLink @personId={{row.person_id}} @callsign={{row.callsign}} />
+                    </td>
+                    <td>
+                      <b>{{row.operation}}</b>
+                      {{#each (this.changeArray row) as |change|}}
+                        <div>
+                          {{change.column}}: <i>{{change.oldValue}}</i> <span class="text-muted">{{fa-icon "arrow-right"}}</span>
+                          <i>{{change.newValue}}</i>
+                        </div>
+                      {{/each}}
+                    </td>
+                  </tr>
+                {{/each}}
+                </tbody>
+              </table>
+            {{else}}
+              <span class="text-danger">No changes have been recorded.</span>
+            {{/if}}
+          </div>
+        {{/if}}
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.entry.isNew "Create" "Update"}}
                   @disabled={{this.entry.isSaving}} />
+        {{#unless this.entry.isNew}}
+          <UiButton @onClick={{this.toggleChanges}} @type="secondary">
+            {{#if this.showingChanges}}
+              Hide Changes
+            {{else}}
+              Show Changes
+            {{/if}}
+          </UiButton>
+        {{/unless}}
         <UiCancelButton @disabled={{this.entry.isSaving}}
                         @onClick={{this.cancelAccessDocument}} />
         {{#if this.entry.isSaving}}

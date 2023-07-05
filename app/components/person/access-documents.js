@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
+import {isEmpty} from '@ember/utils';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import {StateOptions} from 'clubhouse/constants/countries';
 import {
@@ -28,6 +29,7 @@ import {
 } from 'clubhouse/models/access-document';
 
 export default class PersonAccessDocumentsComponent extends Component {
+  @service ajax;
   @service house;
   @service modal;
   @service store;
@@ -38,6 +40,8 @@ export default class PersonAccessDocumentsComponent extends Component {
 
   @tracked documents = null;
   @tracked entry = null;
+  @tracked entryChanges = null;
+  @tracked showingChanges = false;
 
   typeOptions = [
     {
@@ -108,6 +112,7 @@ export default class PersonAccessDocumentsComponent extends Component {
   newAccessDocument() {
     const currentYear = this.house.currentYear();
 
+    this.showingChanges = null;
     this.entry = this.store.createRecord('access-document', {
       person_id: this.args.person.id,
       type: RPT,
@@ -119,11 +124,15 @@ export default class PersonAccessDocumentsComponent extends Component {
   }
 
   @action
-  editAccessDocument(document) {
-    document.reload().then(() => {
-      this.entry = document;
+  async editAccessDocument(document) {
+    try {
+      this.showingChanges = false;
+      await document.reload();
       document.set('additional_comments', '');
-    }).catch((response) => this.house.handleErrorResponse(response));
+      this.entry = document;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
   }
 
   @action
@@ -132,20 +141,23 @@ export default class PersonAccessDocumentsComponent extends Component {
   }
 
   @action
-  saveAccessDocument(model, isValid) {
+  async saveAccessDocument(model, isValid) {
     if (!isValid) {
       return;
     }
 
     const {isNew} = model;
 
-    model.save().then(() => {
+    try {
+      await model.save();
       this.entry = null;
       this.toast.success(`The access document was successfully ${isNew ? 'created' : 'updated'}.`);
       if (isNew) {
         this.documents.update();
       }
-    }).catch((response) => this.house.handleErrorResponse(response, model));
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
   }
 
   /**
@@ -155,34 +167,108 @@ export default class PersonAccessDocumentsComponent extends Component {
    */
 
   @action
-  deleteAccessDocument(document) {
+  async deleteAccessDocument(document) {
     this.modal.confirm('Confirm Delete Document',
       'Are you sure you want to delete this document? This operation cannot be undone.',
-      () => {
-        document.destroyRecord().then(() => {
+      async () => {
+        try {
+          await document.destroyRecord();
           this.entry = null;
           this.toast.success('The document was successfully deleted.');
-        }).catch((response) => this.house.handleErrorResponse(response));
+        } catch (response) {
+          this.house.handleErrorResponse(response)
+        }
       });
   }
 
   @action
-  showAction() {
+  async showAction() {
     this.isLoading = true;
 
     const data = {person_id: this.args.person.id};
     if (!this.isShowingAll) {
       data.status = 'all';
     }
-    this.store.query('access-document', data)
-      .then((documents) => {
-        this.documents = documents;
-        this.isShowingAll = !this.isShowingAll;
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isLoading = false);
+
+    try {
+      this.documents = await this.store.query('access-document', data);
+      this.isShowingAll = !this.isShowingAll;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  @action
+  async toggleChanges() {
+    if (this.showingChanges) {
+      this.showingChanges = false;
+      return;
+    }
+
+    this.isLoading = true;
+    try {
+      this.entryChanges = (await this.ajax.request(`access-document/${this.entry.id}/changes`)).changes;
+      this.showingChanges = true;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   get isTicketingOpen() {
     return this.args.ticketingInfo.period === 'open';
+  }
+
+  humanizeColumn(column) {
+    return column.split(/_+/g)
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
+  }
+
+  valueChange(value) {
+    return isEmpty(value) ? 'blank' : value;
+  }
+
+  @action
+  changeArray(row) {
+    if (row.operation !== 'modify') {
+      return [];
+    }
+
+    const columns = [];
+    const {changes} = row;
+    if (Array.isArray(changes)) {
+      // Old style
+
+      changes.forEach((c) => {
+        if (c[0] === 'id' || c[0] === 'comments') {
+          return;
+        }
+        columns.push({
+          column: this.humanizeColumn(c[0]),
+          oldValue: this.valueChange(c[1]),
+          newValue: this.valueChange(c[2])
+        });
+
+      });
+    } else {
+      // New style
+      Object.keys(changes).forEach((key) => {
+          if (key === 'id' || key === 'comments') {
+            return;
+          }
+          columns.push({
+            column: this.humanizeColumn(key),
+            oldValue: this.valueChange(changes[key][0]),
+            newValue: this.valueChange(changes[key][1])
+          });
+        }
+      );
+    }
+
+    return columns;
   }
 }
