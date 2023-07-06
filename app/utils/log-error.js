@@ -21,6 +21,10 @@ export default function logError(error, type, additionalData = null) {
     return;
   }
 
+  if (!error) {
+    error = {};
+  }
+
   const {message, stack, name, filename} = error.error ?? error;
 
   if (
@@ -50,6 +54,7 @@ export default function logError(error, type, additionalData = null) {
 
   const data = {
     exception: {name, message, stack, filename},
+    details: JSON.stringify(error, Object.getOwnPropertyNames(error)),
     build_timestamp: config.APP.buildTimestamp,
     version: config.APP.version,
   };
