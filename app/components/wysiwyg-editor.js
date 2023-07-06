@@ -68,32 +68,30 @@ export default class WysiwygEditorComponent extends Component {
       const uiCSS = (await import('tinymce/skins/ui/oxide/content.min.css?raw')).default;
 
       editorModule.init({
+        content_css: false,
+        content_style: `${contentCSS}\n${uiCSS}`,
+        contextmenu: 'link image imagetools table configurepermanentpen',
+        image_advtab: true,
+        height: 400,
+        menubar: 'edit view insert format tools table tc help',
+        plugins: 'autoresize preview searchreplace autolink  visualblocks visualchars fullscreen link media table charmap emoticons pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap emoticons',
+        promotion: false,
+        quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+        resize: true,
         selector: 'textarea#' + this.elementId,
+        skin: false,
+        toolbar_mode: 'sliding',
+
         init_instance_callback: (editor) => {
           this.editor = editor;
           editor.on('Change', () => this.args.onChange(editor.getContent()));
         },
-        plugins: 'autoresize preview searchreplace autolink  visualblocks visualchars fullscreen link media table charmap emoticons pagebreak nonbreaking anchor insertdatetime advlist lists wordcount help charmap emoticons',
-        menubar: 'edit view insert format tools table tc help',
-        //toolbar: 'bold italic underline strikethrough | fontselect fontsizeselect formatselect | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor permanentpen formatpainter removeformat | pagebreak | charmap emoticons | fullscreen  preview save print | insertfile image media template link anchor codesamplet',
-        image_advtab: true,
-        //  image_caption: true,
-        max_height: 400,
-        quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
-        toolbar_mode: 'sliding',
-        contextmenu: 'link image imagetools table configurepermanentpen',
-        promotion: false,
-        skin: false,
-        content_css: false,
-        content_style: `${contentCSS}\n${uiCSS}`,
       });
       this.isReady = true;
     } catch (response) {
       this.house.handleErrorResponse(response);
       this.didError = true;
-      if (this.args.onLoadError) {
-        this.args.onLoadError();
-      }
+      this.args.onLoadError?.();
     } finally {
       this.isLoading = false;
     }
