@@ -62,7 +62,9 @@
         <NavbarMenuItem @menu={{menu}} @route="admin.bulk-lookup" @item="Callsign/Email Lookup"/>
         <NavbarMenuItem @menu={{menu}} @route="admin.bulk-positions" @item="Positions Grant/Revoke"/>
         <NavbarMenuItem @menu={{menu}} @route="admin.bulk-grant-awards" @item="Bulk Grant Awards"/>
-        <NavbarMenuItem @menu={{menu}} @route="admin.payroll" @item="Payroll Export"/>
+        {{#if (has-role "payroll")}}
+          <NavbarMenuItem @menu={{menu}} @route="admin.payroll" @item="Payroll Export"/>
+        {{/if}}
       {{/if}}
     </NavbarMenuSection>
   {{/if}}
