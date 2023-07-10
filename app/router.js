@@ -196,6 +196,7 @@ Router.map(function () {
     this.route('asset-history');
     this.route('assets-outstanding');
     this.route('certifications');
+    this.route('cruise-direction');
     this.route('event-stats');
     this.route('flakes');
     this.route('freaking-years');
@@ -204,9 +205,8 @@ Router.map(function () {
     this.route('on-duty');
     this.route('people-by-clubhouse-teams');
     this.route('people-by-location');
-    this.route('people-by-position');
-    this.route('special-teams');
     this.route('people-by-permissions');
+    this.route('people-by-position');
     this.route('people-by-status');
     this.route('position-sanity-checker');
     this.route('potential-shirts');
@@ -220,6 +220,8 @@ Router.map(function () {
     this.route('shift-coverage');
     this.route('shift-lead');
     this.route('shift-signups');
+    this.route('special-teams');
+    this.route('swag-distribution');
     this.route('timesheet-by-callsign');
     this.route('timesheet-by-position');
     this.route('timesheet-correction-requests');
@@ -227,8 +229,6 @@ Router.map(function () {
     this.route('timesheet-unconfirmed');
     this.route('vehicle-paperwork');
     this.route('vehicle-registry');
-    this.route('swag-distribution');
-    this.route('cruise-direction');
   });
 
   this.route('vc', function () {
