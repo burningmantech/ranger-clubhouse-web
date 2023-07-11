@@ -70,7 +70,7 @@ const ALPHA_STEPS = [{
 },
 
   {
-    name: 'Walk your Alpha shift',
+    name: 'Attend your Alpha shift',
     check({milestones, person}) {
       if (person.status === 'bonked') {
         return {
@@ -85,7 +85,7 @@ const ALPHA_STEPS = [{
             result: ACTION_NEEDED,
             message: htmlSafe(`<p>Please read "<a href="${milestones.alpha_shift_prep_link}" target="_blank" rel="noopener noreferrer">Becoming a Ranger: On-playa Alpha Shifts</a>"`
                 +` on the Ranger website.</p>Your Alpha shift starts ${dayjs(milestones.alpha_shift.begins).format('ddd MMM DD [@] HH:mm')}.`
-                +`<p><b class="text-danger">ARRIVE 30 MINUTES EARLY. Late arrivals will NOT be allowed to walk.</b></p>`
+                +`<p><b class="text-danger">ARRIVE 30 MINUTES EARLY. Late arrivals will be turned away.</b></p>`
                 +`<p>Check-in at the Hat Rack located at Ranger HQ, 5:45 &amp; the Esplanda close to Center Camp.</p>`
                 +`If you know you won't be able to make your Alpha shift please email the Mentor Cadre or stop by Ranger HQ on playa.`),
             email: 'MentorEmail'
@@ -111,7 +111,7 @@ const ALPHA_STEPS = [{
 const STEP_GROUPS = [
   {title: 'Setup Your Clubhouse Account', steps: SETUP_ACCOUNT_STEPS},
   {title: 'Train to be a Ranger ', steps: TRAINING_STEPS},
-  {title: 'Walk your Alpha shift', steps: ALPHA_STEPS}
+  {title: 'Attend your Alpha shift', steps: ALPHA_STEPS}
 ];
 
 export default class DashboardPNVComponent extends Component {

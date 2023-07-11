@@ -190,7 +190,7 @@ export default class PersonIndexController extends ClubhouseController {
           case RESIGNED:
           case RETIRED:
           case INACTIVE_EXTENSION:
-            walkCC = '<li>Walk and PASS a Cheetah Cub shift</li>';
+            walkCC = '<li>Attend &amp; PASS a Cheetah Cub shift</li>';
           // eslint-disable-next-line no-fallthrough
           case INACTIVE:
             this.modal.confirm('Confirm updating status to active',

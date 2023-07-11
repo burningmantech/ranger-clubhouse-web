@@ -73,7 +73,7 @@ const STEPS = [
 
       return {
         result: ACTION_NEEDED,
-        message: 'Besides attending Green Dot Training, you must sign up for, walk, and pass a Green Dot Mentee shift in order to become a Green Dot.',
+        message: 'Besides attending Green Dot Training, you must sign up for, attend, and pass a Green Dot Mentee shift in order to become a Green Dot.',
         linkedMessage: {
           route: 'me.schedule',
           prefix: 'Visit',
@@ -85,7 +85,7 @@ const STEPS = [
   },
 
   {
-    name: 'Walk and pass a Green Dot Mentee shift',
+    name: 'Attend & Pass a Green Dot Mentee shift',
     skipPeriod: AFTER_EVENT,
     check({milestones}) {
       const {art_trainings: arts} = milestones;
@@ -208,14 +208,14 @@ const STEPS = [
 
       return {
         result: milestones.online_training_passed ? URGENT : ACTION_NEEDED,
-        message: 'Since you have not Rangered in a while, you will need to walk a Cheetah Cub shift before returning to Active status. Email the Mentor Cadre to sign up for one.',
+        message: 'Since you have not Rangered in a while, you will need to attend a Cheetah Cub shift before returning to Active status. Email the Mentor Cadre to sign up for one.',
         email: 'MentorEmail'
       };
     }
   },
 
   {
-    name: 'Walk your Cheetah Cub shift',
+    name: 'Attend your Cheetah Cub shift',
     skipPeriod: AFTER_EVENT,
     check({milestones}) {
       if (!milestones.is_cheetah_cub) {

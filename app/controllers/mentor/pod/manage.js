@@ -20,6 +20,7 @@ export default class MentorPodManageController extends ClubhouseController {
   @tracked callsignForm;
 
   @tracked showSortControls = false;
+  @tracked showOffDuty = false;
 
   @tracked isLead;
 
@@ -221,6 +222,7 @@ export default class MentorPodManageController extends ClubhouseController {
     this.addPod = pod;
     this.addType = type;
     this.showAddDialog = true;
+    this.showOffDuty = false;
     this.callsignForm = EmberObject.create({
       is_lead: false,
       onduty: [],
@@ -230,6 +232,11 @@ export default class MentorPodManageController extends ClubhouseController {
     this.onDutyOptions = options[0];
     this.offDutyOptions = options[1];
     this.isLead = false;
+  }
+
+  @action
+  toggleOffDuty() {
+    this.showOffDuty = !this.showOffDuty;
   }
 
   @action

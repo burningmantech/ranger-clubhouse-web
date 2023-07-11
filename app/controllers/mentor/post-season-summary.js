@@ -16,7 +16,7 @@ export default class MentorPostSeasonSummaryController extends ClubhouseControll
     {id: 'bonked', title: 'Bonked'},
     {id: 'self-bonked', title: 'Self Bonked'},
     {id: 'uberbonked', title: 'Uber Bonked'},
-    {id: 'no-walk', title: 'Did not walk'},
+    {id: 'no-walk', title: 'Did Not Attend'},
     {id: 'no-shift', title: 'No Alpha shift'},
   ];
 

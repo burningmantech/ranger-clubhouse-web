@@ -148,7 +148,15 @@
 
 {{#if this.showAddDialog}}
   <ModalDialog @onEscape={{this.closeAddDialog}} @position="top" @size="xl" as |Modal|>
-    <Modal.title>Add People to Pod #{{this.addPod.sort_index}}</Modal.title>
+    <Modal.title>
+      Pod #{{this.addPod.sort_index}} {{this.addPod.transportLabel}}.
+      {{#if this.addPod.location}}
+        Location {{this.addPod.location}}.
+      {{else}}
+        No location set.
+      {{/if}}
+    </Modal.title>
+
     <ChForm @formId="people" @formFor={{this.peopleForm}} @onSubmit={{this.addPerson}} as |f|>
       <Modal.body>
         <p>
