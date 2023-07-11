@@ -27,6 +27,8 @@ export default class ReportsCruiseDirectionController extends ClubhouseControlle
 
   @tracked editPod;
 
+  @tracked isNewPod = false;
+
   transportOptions = TransportOptions;
 
   constructor() {
@@ -129,6 +131,7 @@ export default class ReportsCruiseDirectionController extends ClubhouseControlle
   @action
   async savePod(model) {
     const {isNew} = this.editPod;
+    const pod = this.editPod;
     this.isSubmitting = true;
     try {
       await model.save();
@@ -139,8 +142,14 @@ export default class ReportsCruiseDirectionController extends ClubhouseControlle
       this.toast.success('Pod successfully saved.');
     } catch (response) {
       this.house.handleErrorResponse(response);
+      return;
     } finally {
       this.isSubmitting = false;
+    }
+
+    if (isNew) {
+      this.isNewPod = true;
+      this.setupToAdd(pod);
     }
   }
 
@@ -190,7 +199,7 @@ export default class ReportsCruiseDirectionController extends ClubhouseControlle
   }
 
   /**
-   * Setup to select and add Alphas to a pod
+   * Setup to select and add folks to a pod
    *
    * @param pod
    * @returns {Promise<void>}

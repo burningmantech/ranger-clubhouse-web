@@ -370,7 +370,7 @@ export const ATTEND_TRAINING = {
         if (milestones.is_cheetah_cub) {
           return {
             result: COMPLETED,
-            message: 'You still have to walk a Cheetah Cub shift before being allowed to work on playa.'
+            message: 'You still have to attend a Cheetah Cub shift before being allowed to work on playa.'
           }
         } else {
           if (isPNV || isAuditor) {

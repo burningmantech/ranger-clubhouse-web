@@ -255,7 +255,13 @@
             <FormRow>
               <div class="col-auto">
                 {{#if this.offDutyOptions}}
-                  <f.checkboxGroup @name="offduty" @options={{this.offDutyOptions}} @cols={{4}} />
+                  <a href {{action this.toggleOffDuty}} class="d-block mb-2">
+                    {{if this.showOffDuty "Hide" "Show" }} {{pluralize this.offDutyOptions.length (concat "Off Duty " this.addType)}}
+                  </a>
+
+                  {{#if this.showOffDuty}}
+                    <f.checkboxGroup @name="offduty" @options={{this.offDutyOptions}} @cols={{4}} />
+                  {{/if}}
                 {{else}}
                   No off duty {{this.addType}}s were found.
                 {{/if}}
