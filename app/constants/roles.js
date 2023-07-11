@@ -24,7 +24,7 @@ export const CAN_FORCE_SHIFT = 113; // Person can force a shift check in
 
 export const REGIONAL_MANAGEMENT = 114;    // Person can access Regional Ranger liaison features.
 export const PAYROLL = 115;                // Can access payroll features
-export const VEHICLE_MANAGEMENT = 115;     // Can access vehicle fleet management features
+export const VEHICLE_MANAGEMENT = 116;     // Can access vehicle fleet management features
 
 export const Role = {
   ADMIN,
