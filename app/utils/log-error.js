@@ -67,9 +67,11 @@ export default function logError(error, type, additionalData = null) {
 
   try {
     // Grab the logged-in user id if possible.
-    const personId = window.Clubhouse.lookup('service:session')?.user?.id;
+    const personId = window.Clubhouse?.lookup('service:session')?.user?.id;
     if (personId) {
       form.append('person_id', personId);
+    } else {
+      form.append('no_person', "true");
     }
   } catch (exception) {
     console.error('Session user id exception', exception);
