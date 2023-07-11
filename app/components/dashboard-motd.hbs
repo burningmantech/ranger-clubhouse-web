@@ -17,7 +17,8 @@
       </div>
       <BsCollapse @collapsed={{not motd.showing}} class="dashboard-step-description">
         <p class="text-muted">Posted {{dayjs-format motd.created_at "dddd, MMMM Do YYYY"}}</p>
-        {{nl2br motd.message allowHtml=true}}
+        {{!template-lint-disable no-triple-curlies}}
+        {{{motd.message}}}
         {{#unless motd.has_read}}
           <div class="mt-2">
             <UiButton @type="secondary" @class="btn-responsive" @onClick={{fn this.markMotdAsRead motd}} @disabled={{motd.isMarking}}>

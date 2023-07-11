@@ -2,13 +2,10 @@
   <LoadingIndicator/>
 {{else if this.didError}}
   <p>
-    <b class="text-danger">The WYSIWYG editor failed to load</b>
+    <b class="text-danger">The WYSIWYG editor failed to load. Falling back to basic text.</b>
   </p>
 {{/if}}
-{{#unless this.didError}}
-  <textarea
-          id={{this.elementId}}
-          name={{@name}}
-    {{did-insert this.elementInsertedEvent}} disabled={{not this.isReady}}>{{this.initialText}}</textarea>
-{{/unless}}
-
+<textarea
+  id={{this.elementId}}
+  name={{@name}}
+  {{did-insert this.elementInsertedEvent}} disabled={{this.isLoading}}>{{this.initialText}}</textarea>
