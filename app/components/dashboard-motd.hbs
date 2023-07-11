@@ -17,6 +17,7 @@
       </div>
       <BsCollapse @collapsed={{not motd.showing}} class="dashboard-step-description">
         <p class="text-muted">Posted {{dayjs-format motd.created_at "dddd, MMMM Do YYYY"}}</p>
+        {{!template-lint-disable no-triple-curlies}}
         {{{motd.message}}}
         {{#unless motd.has_read}}
           <div class="mt-2">
