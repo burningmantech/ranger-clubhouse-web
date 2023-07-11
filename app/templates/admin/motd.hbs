@@ -96,7 +96,7 @@
   </UiButton>
 
   {{#if this.entry}}
-    <ModalDialog @title={{if this.entry.isNew "New Message" "Edit Message"}} @onEscape={{this.cancelEntry}}  as |Modal|>
+    <ModalDialog @title={{if this.entry.isNew "New Message" "Edit Message"}} @onEscape={{this.cancelEntry}} @size="xl" as |Modal|>
       <ChForm @formId="entry" @formFor={{this.entry}}
               @validator={{this.motdValidations}}
               @onSubmit={{action this.saveEntry}} as |f|>
@@ -126,10 +126,10 @@
                     @size={{80}} />
           </FormRow>
           <FormRow>
-            <f.textarea @name="message"
-                        @label="Message Body"
-                        @rows={{10}}
-                        @cols={{80}}/>
+            <f.editor @name="message"
+                      @label="Message Body"
+                      @rows={{10}}
+                      @cols={{80}}/>
           </FormRow>
         </Modal.body>
         <Modal.footer @noAlign={{true}}>
