@@ -62,13 +62,7 @@
     <accordion.body>
       {{#if accordion.isOpen}}
         {{#if position.people}}
-          {{#if (and position.allRangers position.visiblePeople.length)}}
-            <p>
-              Note: {{position.title}} is granted to all active and inactive rangers.
-              The following list is just people who aren't active/inactive.
-            </p>
-          {{/if}}
-          <div class="callsign-list">
+           <div class="callsign-list">
             {{#each position.visiblePeople key="id" as |person|}}
               <div>
                 <PersonLink @person={{person}} />
