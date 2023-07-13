@@ -13,7 +13,7 @@ module('Integration | Component | slot-info-link', function(hooks) {
     await render(hbs`<SlotInfoLink @description={{this.description}} @info={{this.info}} />`);
 
     assert.dom('a').hasText(' Swing');
-    assert.dom('a i.fas').hasClass('fa-question-circle');
+    assert.dom('a i.fa-solid').hasClass('fa-question-circle');
   });
 
   test('it renders without info link', async function(assert) {
