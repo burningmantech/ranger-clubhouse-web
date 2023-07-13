@@ -6,6 +6,8 @@ import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {htmlSafe} from '@ember/template';
 import {TRAINING} from 'clubhouse/constants/positions';
+import { isEmpty } from '@ember/utils';
+import hyperlinkText from "clubhouse/utils/hyperlink-text";
 
 export default class ScheduleManageComponent extends Component {
   @service ajax;
@@ -147,7 +149,13 @@ export default class ScheduleManageComponent extends Component {
       // And reposition the page so things appear not to move when the sign-up is added
       // to the schedule.
       schedule('afterRender',
-        () => window.scrollTo(window.scrollX, row.getBoundingClientRect().top - currentOffset)
+        () => {
+          window.scrollTo(window.scrollX, row.getBoundingClientRect().top - currentOffset);
+          if (this.isMe && !isEmpty(slot.slot_url)) {
+            this.modal.info('Additional Shift Information',
+              htmlSafe(`<p class="text-success"><i class="fa-solid fa-check"></i> You are signed up for the shift.</p><p>Here's more information about the shift:</p><p>${hyperlinkText(slot.slot_url)}</p>To view this information again, click on the shift description with the <i class="fa-solid fa-question-circle info-icon"></i> icon.`))
+          }
+        }
       );
     });
   }
