@@ -1,15 +1,16 @@
 import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
 import {action} from '@ember/object';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import dayjs from 'dayjs';
 import {TYPE_MENTOR} from "clubhouse/models/pod";
 import EmberObject from '@ember/object';
-import { movePod } from 'clubhouse/utils/pod';
+import {movePod} from 'clubhouse/utils/pod';
+import {ALPHA} from "clubhouse/constants/positions";
+import _ from 'lodash';
 
 export default class MentorPodManageController extends ClubhouseController {
   @tracked slot;
   @tracked pods = [];
-  @tracked alphaTimesheets;
   @tracked isSubmitting = false;
 
   @tracked showAddDialog = false;
@@ -28,6 +29,11 @@ export default class MentorPodManageController extends ClubhouseController {
     super(...arguments);
 
     this.movePod = movePod.bind(this);
+  }
+
+  @cached
+  get podGroups() {
+    return _.chunk(this.pods, 6);
   }
 
   @action
@@ -101,7 +107,15 @@ export default class MentorPodManageController extends ClubhouseController {
 
   @action
   async addMentor(pod) {
-    this._setupCallsignDialog(pod, 'Mentor', this._buildMentorOptions(this.mentors, 'Mentor'));
+    this.isSubmitting = true;
+    try {
+      const {mentors} = await this.ajax.request('mentor/mentors');
+      this._setupCallsignDialog(pod, 'Mentor', this._buildMentorOptions(mentors, 'Mentor'));
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   /**
@@ -113,7 +127,15 @@ export default class MentorPodManageController extends ClubhouseController {
 
   @action
   async addMITten(pod) {
-    this._setupCallsignDialog(pod, 'MITten', this._buildMentorOptions(this.mittens, 'MITten'));
+    this.isSubmitting = true;
+    try {
+      const {mittens} = await this.ajax.request('mentor/mittens');
+      this._setupCallsignDialog(pod, 'MITten', this._buildMentorOptions(mittens, 'MITten'));
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   /**
@@ -125,16 +147,30 @@ export default class MentorPodManageController extends ClubhouseController {
 
   @action
   async addAlpha(pod) {
-    const options = this.alphaTimesheets.map((t) => {
-      const inPod = this._inPod(t.person_id, 'Alpha');
-      return {
-        label: `${t.person.callsign} (${dayjs(t.on_duty).format('HH:mm')}${inPod !== false ? ` Pod #${inPod}` : ''})`,
-        value: t.person_id,
-        disabled: inPod !== false,
-      };
-    });
+    this.isSubmitting = true;
 
-    this._setupCallsignDialog(pod, 'Alpha', [options]);
+    try {
+      const {timesheet: alphaTimesheets} = await this.ajax.request('timesheet', {
+        data: {
+          position_id: ALPHA,
+          is_on_duty: 1
+        }
+      });
+      const options = alphaTimesheets.map((t) => {
+        const inPod = this._inPod(t.person_id, 'Alpha');
+        return {
+          label: `${t.person.callsign} (${dayjs(t.on_duty).format('HH:mm')}${inPod !== false ? ` Pod #${inPod}` : ''})`,
+          value: t.person_id,
+          disabled: inPod !== false,
+        };
+      });
+
+      this._setupCallsignDialog(pod, 'Alpha', [options]);
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   _buildCallsignOption(person, type) {
@@ -345,7 +381,7 @@ export default class MentorPodManageController extends ClubhouseController {
   }
 
   @action
-  isNotLastPod(podIdx) {
-    return podIdx < (this.pods.length - 1);
+  isNotLastPod(pod) {
+    return pod.id !== this.pods[this.pods.length - 1].id;
   }
 }
