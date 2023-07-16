@@ -93,7 +93,7 @@ export default class ReportsCruiseDirectionController extends ClubhouseControlle
    * @private
    */
 
-  async _loadSelectedPod() {
+  async _loadSelectedPod(successCallback = null) {
     this.isSubmitting = true;
     try {
       this.pods = await this.store.query('pod', {
@@ -102,11 +102,17 @@ export default class ReportsCruiseDirectionController extends ClubhouseControlle
         include_people: 1,
         include_photo: 1
       });
+      successCallback?.();
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
+  }
+
+  @action
+  refreshPage() {
+    this._loadSelectedPod(() => this.toast.success('Page was successfully refreshed.'));
   }
 
   /**
