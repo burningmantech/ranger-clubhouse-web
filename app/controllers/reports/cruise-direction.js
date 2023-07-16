@@ -7,6 +7,7 @@ import dayjs from 'dayjs';
 import {TYPE_SHIFT, TransportOptions} from "clubhouse/models/pod";
 import {movePod} from 'clubhouse/utils/pod';
 import {htmlSafe} from '@ember/template';
+import {DIRT, DIRT_GREEN_DOT, DIRT_POST_EVENT, DIRT_PRE_EVENT, DIRT_SHINY_PENNY} from "clubhouse/constants/positions";
 
 export default class ReportsCruiseDirectionController extends ClubhouseController {
   @tracked shifts;
@@ -210,6 +211,23 @@ export default class ReportsCruiseDirectionController extends ClubhouseControlle
     this.priorShiftOptions = [];
     this.currentShiftOptions = [];
     const shiftStart = dayjs(this.selectedShift.begins);
+
+    this.isSubmitting = true;
+    try {
+      this.timesheets = (await this.ajax.request('timesheet', {
+        data: {
+          is_on_duty: 1,
+          position_ids: [DIRT, DIRT_PRE_EVENT, DIRT_POST_EVENT, DIRT_SHINY_PENNY, DIRT_GREEN_DOT],
+          include_photo: 1
+        }
+      })).timesheet;
+    } catch (response){
+      this.house.handleErrorResponse(response);
+      return;
+    } finally {
+      this.isSubmitting = false;
+    }
+
 
     this.timesheets.forEach((t) => {
       const inPod = this._inPod(t.person_id);

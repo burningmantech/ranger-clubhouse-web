@@ -14,25 +14,14 @@ export default class MentorPodManageRoute extends ClubhouseRoute {
     }
 
     const pods = await this.store.query('pod', {slot_id: slot.id, include_people: 1});
-    const {timesheet: alphaTimesheets} = await this.ajax.request('timesheet', {
-      data: {
-        position_id: ALPHA,
-        is_on_duty: 1
-      }
-    });
 
-    const {mentors} = await this.ajax.request('mentor/mentors');
-    const {mittens} = await this.ajax.request('mentor/mittens');
-    return {slot, pods, alphaTimesheets, mentors, mittens};
+    return {slot, pods};
   }
 
   setupController(controller, model) {
     const pods = model.pods;
 
     controller.slot = model.slot;
-    controller.alphaTimesheets = model.alphaTimesheets;
-    controller.mentors = model.mentors;
-    controller.mittens = model.mittens;
     controller.pods = pods.filter((pod) => pod.type === TYPE_MENTOR);
     controller.pods.forEach((mentorPod) => {
       const id = +mentorPod.id;
