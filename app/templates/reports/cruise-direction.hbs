@@ -30,6 +30,9 @@
         {{fa-icon "sort" right=1}} {{if this.showSortControls "Hide" "Show"}} Sorting Controls
       </UiButton>
     {{/if}}
+    <UiButton @onClick={{this.refreshPage}} @type="secondary" @class="btn-responsive mb-2">
+      {{fa-icon "arrows-rotate"}} Refresh Page
+    </UiButton>
   </p>
   {{#if this.pods}}
     <p>Click on the person to remove them from the pod.</p>
