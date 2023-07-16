@@ -21,11 +21,12 @@ export default function logError(error, type, additionalData = null) {
     return;
   }
 
-  if (!error) {
+  let message = '';
+  if (error) {
+    message = error.message;
+  } else {
     error = {};
   }
-
-  const {message, stack, name, filename} = error.error ?? error;
 
   if (
     // ember-model errors
@@ -53,7 +54,7 @@ export default function logError(error, type, additionalData = null) {
   form.append('error_type', type);
 
   const data = {
-    exception: {name, message, stack, filename},
+    exception: message,
     details: JSON.stringify(error, Object.getOwnPropertyNames(error)),
     build_timestamp: config.APP.buildTimestamp,
     version: config.APP.version,
