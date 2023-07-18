@@ -33,7 +33,7 @@ export default class ModalDialogComponent extends Component {
    */
 
   @action
-  adjustClassOnInsert(/*element*/) {
+  adjustClassOnInsert(element) {
     /*
       const dialog = element.querySelector('div.modal-dialog');
       if (!dialog) {
@@ -41,6 +41,8 @@ export default class ModalDialogComponent extends Component {
       }
       dialog.classList.add('modal-fullscreen-xl-down');
      */
+
+    this.args.onInsert?.(element);
   }
 
   /**

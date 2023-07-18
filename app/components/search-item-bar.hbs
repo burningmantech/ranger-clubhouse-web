@@ -1,5 +1,5 @@
 {{#if this.session.showSearchDialog}}
-  <ModalDialog @position="top" @onEscape={{this.hideSearchBoxAction}} as |Modal|>
+  <ModalDialog @position="top" @onEscape={{this.hideSearchBoxAction}} @onInsert={{this.onModalInsert}} as |Modal|>
     <Modal.body>
       {{#if (gt this.modeOptions.length 1)}}
         <FormRow class="align-items-center">
@@ -38,6 +38,7 @@
                          @renderBelow={{true}}
                          @noResultsText={{this.noResultsText}}
                          @fastFocus={{true}}
+                         @onBlur={{this.blurEvent}}
                          autocomplete="off"
                          as |item group|>
         {{#if (eq this.searchType "asset")}}

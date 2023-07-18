@@ -317,6 +317,11 @@ export default class AutocompleteInputComponent extends Component {
 
   @action
   blurEvent(event) {
+    if (this.args.onBlur?.(event) === false) {
+      // Client does not want to clear out the search results.
+      return true;
+    }
+
     setTimeout(() => {
       schedule('afterRender', () => this._handleBlur(event.target))
     }, 100);
