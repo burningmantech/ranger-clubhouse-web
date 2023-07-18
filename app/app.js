@@ -39,9 +39,12 @@ Ember.onerror = (error) => {
  * the exception occurs, the window object may receive the error event.
  */
 
-window.addEventListener('error', (event, source, lineno, colno, error) => {
+window.onerror = (event, source, lineno, colno, error) => {
   if (!isDevelopmentEnvironment) {
-
+    if (!source) {
+      // Errors in browser extensions will cause the error handle to be called yet no information provided.
+      return;
+    }
     logError(event, 'client-uncaught-exception', {
       source, lineno, colno, error
     });
@@ -51,7 +54,7 @@ window.addEventListener('error', (event, source, lineno, colno, error) => {
   alert("Uncaught exception " + event.message);
   // eslint-disable-next-line no-debugger
   debugger;
-});
+}
 
 export default class App extends Application {
   modulePrefix = config.modulePrefix;
