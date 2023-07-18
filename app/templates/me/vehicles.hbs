@@ -144,7 +144,7 @@
             {{else if (or (eq vehicle.amber_light "department") (eq vehicle.amber_light "already-has"))}}
               {{#if vehicle.isApproved}}
                 Approved to use
-                {{#if (eq vehicle.ranger_logo "department")}}
+                {{#if (eq vehicle.amber_light "department")}}
                   an amber light supplied by the Ranger department.
                 {{else}}
                   your personal amber light.
