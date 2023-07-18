@@ -111,6 +111,33 @@ export default class SearchItemBarComponent extends Component {
   }
 
   /**
+   * Let the autocomplete component know if the blur event should result in killing the search results.
+   * We don't want to do that when the new focus is within the modal box.
+   *
+   * @param {FocusEvent} event
+   */
+
+  @action
+  blurEvent(event) {
+    const {relatedTarget} = event;
+
+    if (!relatedTarget || !this.modalElement) {
+      return true;
+    }
+
+    return !this.modalElement.contains(relatedTarget);
+  }
+
+  /**
+   * When the modal element is insert, let's track it to help maintain focus.
+   *
+   * @param element
+   */
+  @action
+  onModalInsert(element) {
+    this.modalElement = element;
+  }
+  /**
    * Build up the options for search type
    *
    * account - redirect to Person Manage
