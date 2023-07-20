@@ -7,7 +7,7 @@
   }
 </style>
 
-<h1>Alpha Pods for {{shift-format this.slot.begins}}</h1>
+<h1>Alpha Pods for {{shift-format this.slot.begins}} - {{this.slot.description}}</h1>
 <div class="d-print-none">
   <p>
     <LinkTo @route="mentor.pod">Back to Alpha Pod Management Listing</LinkTo>
@@ -221,7 +221,7 @@
     </div>
   {{/each}}
 {{else}}
-  <div class="text-danger">No pods are currently setup.</div>
+  <div class="text-danger fs-4">No pods have been created yet.</div>
 {{/if}}
 {{#if this.showAddDialog}}
   <ModalDialog @onEscape={{this.closeAddDialog}} @position="top" @size="xl" as |Modal|>

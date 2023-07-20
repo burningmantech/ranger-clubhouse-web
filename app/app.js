@@ -41,7 +41,7 @@ Ember.onerror = (error) => {
 
 window.onerror = (event, source, lineno, colno, error) => {
   if (!isDevelopmentEnvironment) {
-    if (!source) {
+    if (!source || !error) {
       // Errors in browser extensions will cause the error handle to be called yet no information provided.
       return;
     }
