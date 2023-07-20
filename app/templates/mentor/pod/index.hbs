@@ -12,18 +12,32 @@ Showing {{pluralize this.slots.length "Alpha shift"}}.
   <table class="table table-striped table-hover table-width-auto">
     <thead>
     <tr>
+      <th>&nbsp;</th>
       <th>Time</th>
       <th>Description</th>
+      <th>&nbsp;</th>
     </tr>
     </thead>
     <tbody>
     {{#each this.slots as |slot|}}
-      <tr>
+      <tr class="{{if (this.inProgress slot) "table-warning"}}">
+        <td>
+          {{#if (this.inProgress slot)}}
+            {{fa-icon "arrow-right"}}
+          {{/if}}
+        </td>
         <td>
           <LinkTo @route="mentor.pod.manage" @model={{slot.id}}>{{shift-format slot.begins}}</LinkTo>
         </td>
         <td>
           {{slot.description}}
+        </td>
+        <td>
+          {{#if (this.inProgress slot)}}
+            In progress
+          {{else}}
+            &nbsp;
+          {{/if}}
         </td>
       </tr>
     {{/each}}
