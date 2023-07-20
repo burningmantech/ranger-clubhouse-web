@@ -84,17 +84,19 @@ export default class ScheduleTableComponent extends Component {
       return;
     }
 
-    const calendar = ical({name: 'BRC Ranger Schedule'});
+    const calendar = ical({
+      name: `${this.args.year} BRC Ranger Schedule`,
+    });
     calendar.prodId({
       company: 'Burning Man Project',
       product: 'Ranger Clubhouse',
-      language: 'EN'
+      language: 'EN',
     });
 
     slots.forEach((slot) => {
       calendar.createEvent({
-        start: dayjs.tz(slot.slot_begins, slot.slot_tz).format(),
-        end: dayjs.tz(slot.slot_ends, slot.slot_tz).format(),
+        start: dayjs.tz(slot.slot_begins, slot.slot_tz),
+        end: dayjs.tz(slot.slot_ends, slot.slot_tz),
         summary: slot.position_title,
         detail: `${slot.description} ${slot.url}`,
         timezone: slot.slot_tz,
