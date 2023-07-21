@@ -50,10 +50,11 @@ export default class SearchPeopleController extends ClubhouseController {
 
   ticketingOptions = [
     ['-', ''],
-    ['Started Ticketing', 'started'],
-    ['Not Started Ticketing', 'not-started'],
-    ['Finished Ticketing', 'finished'],
-    ['Not Finished Ticketing', 'not-finished'],
+    ['Started', 'started'],
+    ['Not Started', 'not-started'],
+    ['Finished', 'finished'],
+    ['Not Finished', 'not-finished'],
+    ['Not Finished w/Claimed', 'not-finished-claimed'],
   ];
 
   constructor() {
