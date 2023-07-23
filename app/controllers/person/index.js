@@ -9,7 +9,8 @@ import {
   ACTIVE,
   RETIRED,
   RESIGNED,
-  DISMISSED, ALPHA
+  DISMISSED, ALPHA,
+  STATUS_OPTIONS, SUSPENDED, AUDITOR, PROSPECTIVE, NON_RANGER, PAST_PROSPECTIVE, BONKED, UBERBONKED
 } from 'clubhouse/constants/person_status';
 import {htmlSafe} from '@ember/template';
 
@@ -20,24 +21,7 @@ export default class PersonIndexController extends ClubhouseController {
     ['Not Approved', false]
   ];
 
-  statusOptions = [
-    'active',
-    'alpha',
-    'auditor',
-    'bonked',
-    'deceased',
-    'dismissed',
-    'inactive extension',
-    'inactive',
-    'non ranger',
-    'past prospective',
-    'prospective',
-    'resigned',
-    'retired',
-    'suspended',
-    'uberbonked',
-  ];
-
+  statusOptions = STATUS_OPTIONS;
 
   onSiteOptions = [
     ['On Site', true],
@@ -183,7 +167,13 @@ export default class PersonIndexController extends ClubhouseController {
         switch (oldStatus) {
           case ALPHA:
             this.modal.confirm('Confirm Active Ranger Conversion',
-              '<p>You about to manually convert an Alpha to an Active Ranger. Normally this is done through the Mentor Interfaces.</p> Are you sure you want to do this?',
+              '<p>The conversion from alpha to active status is normally done through the Mentor Interfaces. This ensures the mentors, along with their assessments, who walked with the Alpha were recorded properly.</p>Are you sure you want to do this?',
+              () => this._savePersonModel(model));
+            return;
+
+          case AUDITOR:
+            this.modal.confirm('Confirm Active Status',
+              'You are about to update an auditor account to active status. This is a highly unusual action. Are you sure you want to do this?',
               () => this._savePersonModel(model));
             return;
 
@@ -195,20 +185,134 @@ export default class PersonIndexController extends ClubhouseController {
           case INACTIVE:
             this.modal.confirm('Confirm updating status to active',
               htmlSafe(
-                'The person must have met the following criteria before the person is restored to active status:' +
-                `<ul class="mt-2">${walkCC}<li>Worked at least one shift during the current event.</li></ul>` +
-                '<p>Normally, the status is updated by <b class="text-danger">Council post-event</b> through the People By Status Change admin interface. See the Ranger Status Policy document for more information.</p>' +
+                'Please ensure the following criteria have been met BEFORE the person is restored to active status:' +
+                `<ul class="mt-2"><li>Attend &amp; PASS a full day's In-Person training.</li>${walkCC}</ul>` +
+                '<p>See the Ranger Status Policy for more information.</p>' +
                 `Are you absolutely sure you want to update the status to ${status}?`),
+              () => this._savePersonModel(model));
+            return;
+
+          case SUSPENDED:
+            this.modal.confirm('Confirm restoring a suspended account',
+              htmlSafe(`<b class="text-danger">The account is currently suspended.</b> Only Council and the Personnel Managers are authorized to restore an account. Are you absolutely sure you want to do this?`),
               () => this._savePersonModel(model));
             return;
         }
       } else {
         switch (status) {
+          case ALPHA:
+            if (oldStatus !== PROSPECTIVE) {
+              this.modal.confirm('Confirm Alpha conversion',
+                htmlSafe(`<p>You are about to convert an ${oldStatus} account to an Alpha account. This is highly unusual. Normally, only Prospective accounts are converted to Alpha status.</p>Are you sure you want to do this?`),
+                () => this._savePersonModel(model));
+              return;
+            }
+            break;
+          case AUDITOR:
+            this.modal.confirm('Confirm Auditor conversion',
+              htmlSafe(`<p>You are about to convert a ${oldStatus} account to Auditor. This is highly unusual.</p>Are you sure you want to do this?`),
+              () => this._savePersonModel(model));
+            return;
+
+          case BONKED:
+            if (oldStatus !== PROSPECTIVE && oldStatus !== ALPHA && oldStatus !== PAST_PROSPECTIVE) {
+              this.modal.confirm('Confirm Bonked conversion',
+                htmlSafe(`<p><b class="text-danger">You are about to bonk an account with the status ${oldStatus}.</b> This is highly unusual. Normally only Prospective, Alpha, and Past Prospective accounts are eligible.</p>Are you sure you want to do this?`),
+                () => this._savePersonModel(model));
+              return;
+            }
+            break;
+
           case DECEASED:
           case DISMISSED:
             this.modal.confirm('Confirm Destructive Status Update',
-              `You are about to update the account status to <b class="text-danger">${status}</b>. The person will be removed from all teams &amp positions, and all permissions revoked. Are you sure you want to do this?`,
+              htmlSafe(`<p>You are about to update the account status to <b class="text-danger">${status}</b>. All team memberships will be removed, all positions revoked, and all permissions recended. The account will be locked and no futher logins allowed.</p>Are you sure you want to do this?`),
               () => this._savePersonModel(model));
+            return;
+
+          case INACTIVE:
+            if (oldStatus === RETIRED || oldStatus === RESIGNED) {
+              this.modal.confirm('Confirm Inactive Status',
+                htmlSafe(
+                  `<p>Converting an account from ${oldStatus} status to inactive is highly unusual. Leave the ${oldStatus} status as-is if the Ranger is wishing to return to active duty. See the Ranger Status Policy for more information.</p>` +
+                  `Are you sure you want to this do?`,
+                ),
+                () => this._savePersonModel(model));
+            } else {
+              this.modal.confirm('Confirm Inactive Status',
+                htmlSafe(
+                  `<p>Conversion to inactive status is normally handled through the People By Status Change interface ` +
+                  `run by Council post-event.</p>Are you sure you want to this do?`,
+                ),
+                () => this._savePersonModel(model));
+            }
+            return;
+
+          case INACTIVE_EXTENSION:
+            this.modal.confirm('Confirm Inactive Extension status',
+              `<p>All Intensive Extension updates MUST be approved by Council first.</p>Are you sure you want to do this?`,
+              () => this._savePersonModel(model)
+            );
+            return;
+
+          case NON_RANGER:
+            if (oldStatus !== AUDITOR) {
+              this.modal.confirm('Confirm status update',
+                `<p>You are about to convert an account from ${oldStatus} status to Non-Ranger. Normally only auditor accounts are eligible.</p>Are you sure you want to do this?`,
+                () => this._savePersonModel(model)
+              );
+            }
+            break;
+
+          case RESIGNED:
+            this.modal.confirm('Confirm Resigned Status',
+              htmlSafe('<p>Usually only Council and the Personnel Managers handle a retirement request.</p>Are you sure you want to do this?'),
+              () => this._savePersonModel(model));
+            return;
+
+          case RETIRED:
+            this.modal.confirm('Confirm Retired Status',
+              htmlSafe(
+                `<p>Conversion to retired status is normally done through the People By Status Change interface ` +
+                `run by Council post-event.</p>Are you sure you want to this do?`,
+              ),
+              () => this._savePersonModel(model));
+            return;
+
+          case PROSPECTIVE:
+            if (oldStatus !== AUDITOR && oldStatus !== NON_RANGER && oldStatus !== PAST_PROSPECTIVE) {
+              this.modal.confirm('Confirm Prospective Status',
+                htmlSafe(
+                  `<p>Updating an account from ${oldStatus} status to prospective is highly unusual. Normally only Auditor, Non-Ranger, and Past Prospective accounts are eligible.</p>` +
+                  `Are you sure you want to this do?`,
+                ),
+                () => this._savePersonModel(model));
+              return;
+            }
+            break;
+
+          case PAST_PROSPECTIVE:
+            if (oldStatus !== PROSPECTIVE && oldStatus !== ALPHA) {
+              this.modal.confirm('Confirm Prospective Status',
+                htmlSafe(
+                  `<p>Updating an account from ${oldStatus} status to past prospective is a highly unusual step. Normally, only Prospective or Alpha accounts are eligible to be converted.</p>` +
+                  `Are you sure you want to this do?`,
+                ),
+                () => this._savePersonModel(model));
+              return;
+            }
+
+            break;
+          case SUSPENDED:
+            this.modal.confirm(`Confirm Suspended Status`,
+              htmlSafe(`<p>While suspended, the account will be locked and no logins allowed. Team membership, positions grants, and Clubhouse permissions will not be lost. Only Council and the Personnel Managers are authorized to suspend accounts.</p>Are you sure you want to do this?`),
+              () => this._savePersonModel(model)
+            );
+            return;
+          case UBERBONKED:
+              this.modal.confirm('Confirm Uberbonked conversion',
+                htmlSafe(`<p>You are about to uberbonk an account. The account will be locked and no further logins allowed.</p>Are you sure you want to do this?`),
+                () => this._savePersonModel(model));
             return;
         }
       }

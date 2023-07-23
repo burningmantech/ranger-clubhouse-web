@@ -116,20 +116,33 @@
             {{#unless slot.is_within_start_time}}
               <tr>
                 <td colspan="5">
-                  <p class="text-danger">
-                    <b>
-                      WARNING: Most shifts are recommended to be signed into within {{@upcomingSlots.may_start_minutes}}
-                      minutes of the actual start time.
-                    </b>
-                  </p>
-                  <p>
-                    People working operational shifts, such as a Mentor, Shift Command, On Call, Supervisor, Lead, and
-                    other similar positions, may need to start a shift earlier than expected due to the ever-changing
-                    situation on playa.
-                  </p>
-                  You may choose to sign in {{@person.callsign}} at this time, or suggest they come back in
-                  {{pluralize slot.can_start_in "minute"}} to start the shift. Use your discretion. Being flexible is
-                  okay. Consult with the HQ Short or Lead if you have concerns.
+                  <UiNotice @type="warning" @title="Early Shift Check-In" @icon="hand-point-right" @iconColor="secondary">
+                    <p>
+                      <b>NOTE:</b> The "{{slot.position_title}}" shift starts at {{dayjs-format slot.slot_begins
+                                                                                                "HH:mm"}}
+                      .
+                      The earliest recommended check-in is {{pluralize slot.can_start_in "minute"}} from now.
+                    </p>
+                    Your options are:
+                    <ul>
+                      <li>
+                        Suggest the person come back in <b>{{pluralize slot.can_start_in "minute"}}</b> to check-in.
+                        If the time is pretty close to the recommended check in time, go ahead and signed
+                        them in. Use your judgement. The intent is to prevent Rangers from checking in too early
+                        only to sit around for a long time while waiting to be deployed.
+                      </li>
+                      <li>
+                        If this is a specialized shift (Mentors, Leads, Longs, Supervisors, OODs, On Call, Shift
+                        Command,
+                        etc.), or if the person's cadre/team/manager has requested the person start earlier than
+                        scheduled, check in the person now. Rangers have to adapt to the ever-changing situation on
+                        playa.
+                      </li>
+                    </ul>
+                    <b>The recommendations are guidelines, not a hard set of
+                      rules.</b> Being flexible is okay. Consult with the HQ Short or HQ
+                    Lead if in doubt.
+                  </UiNotice>
                 </td>
               </tr>
             {{/unless}}
@@ -237,19 +250,7 @@
 {{#if this.showEarlyShiftConfirm}}
   <ModalDialog @title="Confirm Early Shift Sign In" @onEscape={{this.closeEarlyShiftAction}} as |Modal|>
     <Modal.body>
-      <p>
-        <b class="text-danger">
-          WARNING: Most shifts may only be signed in to within 25 minutes of the actual start time.
-        </b>
-      </p>
-      <p>
-        The "{{this.earlySlot.position_title}}" shift starts at {{shift-format this.earlySlot.slot_begins}}
-        and can be <b>signed into {{pluralize this.earlySlot.can_start_in "minute"}} from now</b>.
-      </p>
-      <p>
-        Are you absolutely sure you want to sign in this person at this time? Check with the HQ Lead or Short if in
-        doubt.
-      </p>
+      You are about to check in the person early for a shift. Are you sure you wish to do this?
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
       <UiButton @type="warning" @onClick={{this.confirmEarlyShiftAction}}>

@@ -8,4 +8,8 @@ export default class UiNoticeComponent extends Component {
    get color() {
     return (this.args.type ?? 'secondary');
   }
+
+  get iconColor() {
+    return this.args.iconColor ?? this.color;
+  }
 }
