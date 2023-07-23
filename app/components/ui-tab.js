@@ -19,7 +19,7 @@ export default class UiTabComponent extends BsTab {
 
     // Record when the user clicks on a tab.
     const pane = this.childPanes.find((pane) => pane.id === this.isActiveId);
-    const url = this.router.currentURL;
+    const url = window.location.pathname;
     const tab_title = pane ? pane.title : 'unknown';
     this.house.actionRecord('client-route-tab', {
       url,
