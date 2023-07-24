@@ -152,7 +152,7 @@ export default class SearchItemBarComponent extends Component {
     const user = this.session.user;
     const options = [{value: 'account', label: 'Person Manage'}];
 
-    if (user.has_hq_window && setting('HQWindowInterfaceEnabled')) {
+    if (setting('HQWindowInterfaceEnabled')) {
       options.unshift({value: 'hq', label: 'HQ Window'});
     }
 

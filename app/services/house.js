@@ -456,6 +456,20 @@ export default class HouseService extends Service {
     }
 
     if (this.session.isAuthenticated) {
+      const person_id = +this.session.userId;
+
+      if (person_id) {
+        record.append('person_id', person_id);
+      }
+
+      const route = this.router.currentRouteName;
+
+      if (route.startsWith('person.') || route.startsWith('hq.')) {
+        const targetId = +this.router.currentRoute.parent?.params?.person_id;
+        if (!isNaN(targetId)) {
+          record.append('target_person_id', targetId);
+        }
+      }
       record.append('person_id', this.session.userId);
     }
 
