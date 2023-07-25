@@ -129,7 +129,7 @@ export default class PersonTimesheetManageComponent extends Component {
 
   @cached
   get minDate() {
-    return this._restrictCheck(`${this.args.year}-08-01`);
+    return this._restrictCheck(`${this.args.year}-07-01`);
   }
 
   /**

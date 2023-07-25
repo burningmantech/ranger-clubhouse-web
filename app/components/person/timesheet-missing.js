@@ -201,11 +201,11 @@ export default class PersonTimesheetMissingComponent extends Component {
 
 
   get minDate() {
-    return `${this.args.year}-08-01`;
+    return `${this.args.year}-07-01`;
   }
 
   get maxDate() {
-    return `${this.args.year}-09-15`;
+    return `${this.args.year}-09-30`;
   }
 
   /**
