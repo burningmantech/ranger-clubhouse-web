@@ -28,7 +28,7 @@ const TRS_COLUMN = {
   [VEHICLE_PASS_GIFT]: 'vp',
   [VEHICLE_PASS_LSD]: 'lsd_vp',
   [WAP]: 'wap',
-  [WAPSO]: 'sowap'
+  [WAPSO]: 'wap'
 };
 
 const PAID_EXPORT_FORMAT = [
@@ -467,8 +467,9 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
   @action
   exportSelectedAction() {
+    const records = this.viewRecords.filter((r) => r.selected);
     this.modal.confirm('Confirm TRS Export',
-      `A comment will be added to all exported items indicating who performed the export. Are you sure you want to export ${this.viewRecords.length} items? `,
+      `A comment will be added to all exported items indicating who performed the export. Are you sure you want to export ${records.length} items? `,
       () => this._performExport());
   }
 
