@@ -2,10 +2,10 @@ import Component from '@glimmer/component';
 import {set} from '@ember/object';
 import {action} from '@ember/object';
 import {service} from '@ember/service';
-import {DIRT, DIRT_SHINY_PENNY, TRAINING, BURN_PERIMETER} from 'clubhouse/constants/positions';
+import {DIRT, DIRT_SHINY_PENNY, TRAINING, BURN_PERIMETER, NVO_RANGER, DPW_RANGER} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 import {NON_RANGER} from 'clubhouse/constants/person_status';
-import {ADMIN, CAN_FORCE_SHIFT} from 'clubhouse/constants/roles';
+import {ADMIN, CAN_FORCE_SHIFT, TIMECARD_YEAR_ROUND} from 'clubhouse/constants/roles';
 import {TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
 
 export default class ShiftCheckInOutComponent extends Component {
@@ -82,17 +82,14 @@ export default class ShiftCheckInOutComponent extends Component {
     // hack for operator convenience - Dirt is the most common
     // shift, so put that at top.
 
-    const dirt = signins.find((p) => p.id === DIRT);
-    if (dirt) {
-      signins.removeObject(dirt);
-      signins.unshift(dirt);
-    }
+    this._putOnTop(signins, DIRT);
+    this._putOnTop(signins, DIRT_SHINY_PENNY);
 
-    // .. and Shiny Penny shift should also be on top
-    const sp = signins.find((p) => p.id === DIRT_SHINY_PENNY);
-    if (sp) {
-      signins.removeObject(sp);
-      signins.unshift(sp);
+
+    if (+this.args.person.id === this.session.userId && this.session.hasRole(TIMECARD_YEAR_ROUND)) {
+      // Hacks for NVO / DPW Rangers who can sign themselves in and out.
+      this._putOnTop(signins, DPW_RANGER);
+      this._putOnTop(signins, NVO_RANGER);
     }
 
     this.signinPositions = signins;
@@ -116,6 +113,13 @@ export default class ShiftCheckInOutComponent extends Component {
     this.userCanForceCheckIn = this.session.hasRole([ADMIN, CAN_FORCE_SHIFT]);
   }
 
+  _putOnTop(signins, positionId) {
+    const position = signins.find((p) => p.id === positionId);
+    if (position) {
+      signins.removeObject(position);
+      signins.unshift(position);
+    }
+  }
   /**
    * Does the person actually need a radio?
    *

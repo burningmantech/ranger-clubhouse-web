@@ -1,6 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 import currentYear from 'clubhouse/utils/current-year';
+import {TIMECARD_YEAR_ROUND} from "clubhouse/constants/roles";
 
 export default class MeTimesheetRoute extends ClubhouseRoute {
   queryParams = {
@@ -15,10 +16,10 @@ export default class MeTimesheetRoute extends ClubhouseRoute {
     this.store.unloadAll('timesheet');
 
     // Figure out if timesheet corrections are enabled, and for what year.
-    const timesheetInfo = await this.ajax.request('timesheet/info', {
+    const timesheetInfo = (await this.ajax.request('timesheet/info', {
       method: 'GET',
       data: {person_id}
-    }).then(({info}) => info);
+    })).info;
 
     const data = {
       timesheetInfo,
@@ -26,18 +27,24 @@ export default class MeTimesheetRoute extends ClubhouseRoute {
       person: this.session.user
     };
 
-    data.timesheetSummary = await this.ajax.request(`person/${person_id}/timesheet-summary`, {data: {year}}).then(({summary}) => summary);
+    data.timesheetSummary = (await this.ajax.request(`person/${person_id}/timesheet-summary`, {data: {year}})).summary;
     data.timesheets = await this.store.query('timesheet', queryParams);
 
-    // When corrections are enabled, pull in timesheet entries, missing requests,
-    // and person positions (for missing requests)
+    data.timecardYearRound = this.session.hasRole(TIMECARD_YEAR_ROUND);
 
-    if (timesheetInfo.correction_enabled) {
+    // When corrections are enabled or if the person has the Timecard Year Round permission (NVO personnel),
+    // pull in timesheet entries, missing requests,and person positions (for missing requests)
+
+    if (timesheetInfo.correction_enabled || data.timecardYearRound) {
       this.store.unloadAll('timesheet-missing');
 
       data.timesheetsMissing = await this.store.query('timesheet-missing', queryParams);
-      data.positions = await this.ajax.request(`person/${person_id}/positions`, {data: {include_mentee: 1}})
-        .then(({positions}) => positions);
+      data.positions = (await this.ajax.request(`person/${person_id}/positions`, {data: {include_mentee: 1}})).positions;
+
+      if (data.timecardYearRound) {
+        data.eventInfo = (await this.ajax.request(`person/${person_id}/event-info`, { data: { year } })).event_info;
+        timesheetInfo.correction_enabled = true;
+      }
     } else {
       data.positions = [];
       data.timesheetsMissing = [];

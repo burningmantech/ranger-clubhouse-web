@@ -5,6 +5,7 @@ import {service} from '@ember/service';
 import {DIRT} from 'clubhouse/constants/positions';
 import validateDateTime from 'clubhouse/validators/datetime';
 import {tracked} from '@glimmer/tracking';
+import {TIMECARD_YEAR_ROUND} from "clubhouse/constants/roles";
 
 export default class MeTimesheetMissingCommonComponent extends Component {
   @service store;
@@ -46,8 +47,10 @@ export default class MeTimesheetMissingCommonComponent extends Component {
   get startDateForEntry() {
     const entry = this.entry;
 
-    if (entry.isNew) {
-      return `${this.args.timesheetInfo.correction_year}-08-15`;
+    // Timecard Year Round holders may require submitting timesheet entries occurring outside the normal
+    // event periods. E.g., NVO Rangers who start early in the summer.
+    if (entry.isNew && !this.session.hasRole(TIMECARD_YEAR_ROUND)) {
+      return `${this.args.timesheetInfo.correction_year}-08-01`;
     }
 
     return null;

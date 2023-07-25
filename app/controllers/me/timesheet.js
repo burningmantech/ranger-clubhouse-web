@@ -102,4 +102,40 @@ export default class MeTimesheetController extends ClubhouseController {
     }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isSubmitting = false);
   }
+
+  @action
+  async startShiftNotify() {
+    try {
+      await this.timesheets.update();
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
+  }
+
+  @action
+  async endShiftNotify() {
+    try {
+      await this.timesheets.update();
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
+    await this._updateTimesheetSummary();
+  }
+
+  async _updateTimesheetSummary() {
+    try {
+      this.timesheetSummary = (await this.ajax.request(`person/${this.person.id}/timesheet-summary`, {data: {year: this.year}})).summary;
+      this.timesheetInfo = (await this.ajax.request('timesheet/info', {data: {person_id: this.person.id}})).info;
+      if (this.timecardYearRound) {
+        this.timesheetInfo.correction_enabled = true;
+      }
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
+  }
+
+  @cached
+  get onDutyEntry() {
+    return this.timesheets.find((t) => t.off_duty == null)
+  }
 }

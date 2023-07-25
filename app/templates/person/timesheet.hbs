@@ -20,8 +20,7 @@
         <UiNotice @title="Timesheet Confirmed" @icon="check" @type="success">
           The {{this.year}} timesheet was confirmed correct on
           {{shift-format this.timesheetInfo.timesheet_confirmed_at year=true}} (Pacific). Any further updates to the
-          entries
-          will un-confirm the entire timesheet.
+          entries will un-confirm the entire timesheet.
         </UiNotice>
       {{else}}
         <UiNotice @title="Timesheet Not Confirmed" @icon="hand">

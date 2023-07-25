@@ -66,7 +66,8 @@
     </UiNotice>
   {{/if}}
 {{else}}
-  Contact <VcEmail /> if you have questions or concerns about your timesheet.
+  Contact
+  <VcEmail/> if you have questions or concerns about your timesheet.
 {{/if}}
 
 <UiTab as |tab|>
@@ -109,6 +110,23 @@
       <WorkHistory @person={{this.person}} />
     {{/if}}
   </tab.pane>
+  {{#if this.timecardYearRound}}
+    <tab.pane @title="Shift Check In/Out" @id="shift">
+      {{#if (is-current-year this.year)}}
+        <ShiftCheckInOut @positions={{this.positions}}
+                         @timesheets={{this.timesheets}}
+                         @person={{this.person}}
+                         @eventInfo={{this.eventInfo}}
+                         @onDutyEntry={{this.onDutyEntry}}
+                         @startShiftNotify={{this.startShiftNotify}}
+                         @endShiftNotify={{this.endShiftNotify}}
+                         @year={{this.year}}
+        />
+      {{else}}
+        Select the current year to start or end a shift
+      {{/if}}
+    </tab.pane>
+  {{/if}}
 </UiTab>
 
 {{#if this.showFinalConfirmation}}
