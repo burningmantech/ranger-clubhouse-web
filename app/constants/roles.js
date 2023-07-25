@@ -25,6 +25,7 @@ export const CAN_FORCE_SHIFT = 113; // Person can force a shift check in
 export const REGIONAL_MANAGEMENT = 114;    // Person can access Regional Ranger liaison features.
 export const PAYROLL = 115;                // Can access payroll features
 export const VEHICLE_MANAGEMENT = 116;     // Can access vehicle fleet management features
+export const TIMECARD_YEAR_ROUND = 117;    // Paid folks who can self check in/out, and submit timesheet corrections year round.
 
 export const Role = {
   ADMIN,
@@ -46,6 +47,7 @@ export const Role = {
   PAYROLL,
   SURVEY_MANAGEMENT,
   TECH_NINJA,
+  TIMECARD_YEAR_ROUND,
   TIMESHEET_MANAGEMENT,
   TRAINER,
   TRAINER_SEASONAL,
@@ -73,6 +75,7 @@ export const RoleToString = {
   [PAYROLL]: 'payroll',
   [REGIONAL_MANAGEMENT]: 'regional',
   [TECH_NINJA]: 'tech-ninja',
+  [TIMECARD_YEAR_ROUND]: 'timecard-year-round',
   [TIMESHEET_MANAGEMENT]: 'timesheet-management',
   [TRAINER]: 'trainer',
   [TRAINER_SEASONAL]: 'trainer-seasonal',

@@ -66,6 +66,7 @@ export const MENTOR_LEAD = 15;
 export const MENTOR_MITTEN = 67;
 export const MENTOR_RADIO_TRAINER = 72;
 export const MENTOR_SHORT = 35;
+export const NVO_RANGER = 168;
 export const OOD = 10;
 export const OPERATIONS_MANAGER = 37;
 export const OPERATOR = 56;
