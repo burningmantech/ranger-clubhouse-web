@@ -50,7 +50,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     // Timecard Year Round holders may require submitting timesheet entries occurring outside the normal
     // event periods. E.g., NVO Rangers who start early in the summer.
     if (entry.isNew && !this.session.hasRole(TIMECARD_YEAR_ROUND)) {
-      return `${this.args.timesheetInfo.correction_year}-08-01`;
+      return `${this.args.timesheetInfo.correction_year}-07-01`;
     }
 
     return null;
@@ -147,7 +147,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
    */
 
   get minDate() {
-    return `${this.args.timesheetInfo.correction_year}-08-01`;
+    return `${this.args.timesheetInfo.correction_year}-07-01`;
   }
 
   /**
@@ -157,7 +157,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
    */
 
   get maxDate() {
-    return `${this.args.timesheetInfo.correction_year}-09-15`;
+    return `${this.args.timesheetInfo.correction_year}-09-30`;
   }
 
   /**
