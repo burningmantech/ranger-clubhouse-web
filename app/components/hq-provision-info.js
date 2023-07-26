@@ -1,27 +1,9 @@
 import Component from '@glimmer/component';
 import {isEmpty} from '@ember/utils';
-import {
-  MENTOR,
-  MENTOR_APPRENTICE,
-  MENTOR_KHAKI,
-  MENTOR_MITTEN,
-  MENTOR_LEAD,
-  MENTOR_SHORT
-} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
 import {htmlSafe} from '@ember/template';
 import {EventPeriodLabels} from 'clubhouse/models/event-date';
-
-// Who is allowed to receive two pogs during their shift
-const TWO_POGS_POSITIONS = [
-  MENTOR,
-  MENTOR_APPRENTICE,
-  MENTOR_MITTEN,
-  MENTOR_LEAD,
-  MENTOR_KHAKI,
-  MENTOR_SHORT,
-];
 
 export default class HqProvisionInfoComponent extends Component {
   @tracked periodLabel;
@@ -66,19 +48,5 @@ export default class HqProvisionInfoComponent extends Component {
 
   get onlyPogs() {
     return isEmpty(this.args.meals);
-  }
-
-  /**
-   * Is the person allowed to request two meal pogs (i.e., a Mentor Shift)
-   *
-   * @returns {boolean}
-   */
-
-  get mayRequestTwoMealPogs() {
-    const {onDutyEntry, meals} = this.args;
-    if (this.args.meals === 'all' || meals?.match(/event/)) {
-      return false;
-    }
-    return !!(onDutyEntry && TWO_POGS_POSITIONS.includes(onDutyEntry.position_id));
   }
 }

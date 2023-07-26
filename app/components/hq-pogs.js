@@ -14,6 +14,24 @@ import {
 import {EventPeriodLabels} from 'clubhouse/models/event-date';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import {htmlSafe} from '@ember/template';
+import {
+  MENTOR,
+  MENTOR_APPRENTICE,
+  MENTOR_KHAKI,
+  MENTOR_MITTEN,
+  MENTOR_LEAD,
+  MENTOR_SHORT
+} from 'clubhouse/constants/positions';
+
+// Who are the mentors?
+const MENTOR_POSITIONS = [
+  MENTOR,
+  MENTOR_APPRENTICE,
+  MENTOR_MITTEN,
+  MENTOR_LEAD,
+  MENTOR_KHAKI,
+  MENTOR_SHORT,
+];
 
 export default class HqPogsComponent extends Component {
   @service ajax;
@@ -236,4 +254,18 @@ export default class HqPogsComponent extends Component {
     pog.status = STATUS_CANCELLED;
     this._commonPogSave(pog, 'Pog has been cancelled.', () => this.pogToCancel = null);
   }
+
+
+  /**
+   * Is the person on a Mentor shift? Used to alert the worker the Mentor will be picking up their
+   * pogs from the Mentor Cadre in the Mentor Shack.
+   *
+   * @returns {boolean}
+   */
+
+  get isMentor() {
+    const {onDutyEntry} = this.args;
+    return !!(onDutyEntry && MENTOR_POSITIONS.includes(onDutyEntry.position_id));
+  }
+
 }
