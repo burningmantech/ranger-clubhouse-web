@@ -13,11 +13,12 @@
     <th>Callsign</th>
     <th>Status</th>
     <th>Name</th>
-    <th>Email</th>
     <th>Type</th>
-    <th>RAD</th>
     <th>OT Completed?</th>
     <th>Has Signups?</th>
+    <th>Trained?</th>
+    <th>Trainings</th>
+    <th>Training Status</th>
   </tr>
   </thead>
   <tbody>
@@ -30,24 +31,48 @@
         {{person.status}}
       </td>
       <td>
-        {{person.first_name}} {{person.last_name}}
-      </td>
-      <td>
+        {{person.first_name}} {{person.last_name}}<br>
         <MailTo @to={{person.email}} />
       </td>
       <td>
-        {{ticket-type-human person.type}}
-      </td>
-      <td>
+        {{ticket-type-human person.type}}<br>
         RAD-{{person.access_document_id}}
       </td>
-       <td class="text-center">
+      <td class="text-center">
         {{yesno person.ot_completed}}
       </td>
       <td class="text-center">
         {{yesno person.has_signups}}
       </td>
-     </tr>
+      <td>
+        {{yesno person.have_trained}}
+      </td>
+      <td>
+        {{#if (or person.trainings person.teachings)}}
+          {{#each person.trainings as |slot|}}
+            {{ymd-format slot.begins}}<br>
+          {{/each}}
+          {{#each person.teachings as |slot|}}
+            {{ymd-format slot.begins}}<br>
+          {{/each}}
+        {{else}}
+          no training signups
+        {{/if}}
+      </td>
+      <td>
+        {{#if (or person.trainings person.teachings)}}
+          {{#each person.trainings as |slot|}}
+            {{slot.status}}<br>
+          {{/each}}
+          {{#each person.teachings as |slot|}}
+            {{slot.status}} (as trainer)<br>
+          {{/each}}
+        {{else}}
+          -
+        {{/if}}
+      </td>
+
+    </tr>
   {{/each}}
   </tbody>
 </table>
