@@ -24,6 +24,13 @@
       {{@person.callsign}} has a BMID Meal Pass for the {{this.currentPeriodLabel}} period.
     </UiNotice>
    {{else}}
+    {{#if this.isMentor}}
+      <div class="alert alert-danger fs-6">
+        {{fa-icon "hand-point-right" right=1}} {{@person.callsign}} is on a Mentor shift and will receive their meal pogs directly
+        from the Mentor Shack.
+      </div>
+    {{/if}}
+
     <p>
       <b>For the current event period, issue a Full Meal Pog for every 6+ hours worked in a shift.</b>
       {{#if this.config.meal_half_pog_enabled}}
