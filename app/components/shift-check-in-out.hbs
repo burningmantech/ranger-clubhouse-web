@@ -1,343 +1,365 @@
 {{#if this.isReloadingTimesheets}}
-  <LoadingIndicator @text="Reloading Timesheet Entries"/>
+    <LoadingIndicator @text="Reloading Timesheet Entries"/>
 {{else if @onDutyEntry}}
-  <h4 class="text-success">
-    {{fa-icon "person-walking" right=2}} {{@person.callsign}} is on duty.
-  </h4>
-  {{#if this.mayNotNeedRadio}}
-    <UiNotice @icon="hand-point-right" @type="secondary" @title="May not need radio">
-      {{@person.callsign}} is working a Burn Perimeter shift and may not need a radio. Check with
-      the HQ Short or Lead if in doubt.
-    </UiNotice>
-  {{/if}}
-  <table class="table table-width-auto">
-    <thead>
-    <tr>
-      <th>Position</th>
-      <th>On Duty</th>
-      <th class="text-end">Duration</th>
-      <th class="text-end">Credits</th>
-      <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-      <td>
-        {{@onDutyEntry.position.title}}<br>
-        <UiButton @type="secondary"
-                  @onClick={{this.changePositionAction}}
-                  @class="mt-1"
-                  @size="sm"
-                  @disabled={{this.isSubmitting}}>
-          Correct Position
-        </UiButton>
-      </td>
-      <td>{{shift-format @onDutyEntry.on_duty}}</td>
-      <td class="text-end">
-        {{#unless @onDutyEntry.position.count_hours}}
-          <NoAppreciateIcon/>
-        {{/unless}}
-        {{hour-minute-format @onDutyEntry.duration}}
-      </td>
-      <td class="text-end">{{credits-format @onDutyEntry.credits}}</td>
-      <td>
-        <UiButton @type="danger" @onClick={{this.endShiftAction}} @disabled={{this.isSubmitting}}>
-          {{fa-icon "bed" right=2}} End Shift
-        </UiButton>
-        {{#if this.isSubmitting}}
-          <LoadingIndicator/>
-        {{/if}}
-      </td>
-    </tr>
-    </tbody>
-  </table>
-  {{#unless @onDutyEntry.position.count_hours}}
-    Note:
-    <NoAppreciateIcon/> = {{@onDutyEntry.position.title}} hours do not count towards provisions and appreciations.
-  {{/unless}}
-{{else}}
-  {{#if (not @person.canStartShift)}}
-    <UiNotice @icon="hand" @type="danger" @title="Status Issue">
-      {{@person.callsign}} cannot start a shift because their status ({{@person.status}}) does not allow them to work
-      shifts.
-    </UiNotice>
-  {{else if @hasUnverifiedTimesheet}}
-    <UiNotice @icon="hand" @type="danger" @title="Outstanding Tasks">
-      One or more timesheet entries has to be reviewed FIRST before a shift can be started.
-    </UiNotice>
-  {{else}}
-    {{#if this.isPersonDirtTrained}}
-      {{#if @upcomingSlots.imminent}}
-        <p class="text-success">
-          {{pluralize @upcomingSlots.imminent.length "upcoming scheduled shift sign-up"}} found.
-        </p>
-        You may sign {{@person.callsign}} into a scheduled shift OR a different shift / position (see below).
-        <table class="table table-width-auto table-hover table-striped">
-          <thead>
-          <tr>
-            <th>Shift</th>
-            <th>Time</th>
+    <h4 class="text-success">
+        {{fa-icon "person-walking" right=2}} {{@person.callsign}} is on duty.
+    </h4>
+    {{#if this.mayNotNeedRadio}}
+        <UiNotice @icon="hand-point-right" @type="secondary" @title="May not need radio">
+            {{@person.callsign}} is working a Burn Perimeter shift and may not need a radio. Check with
+            the HQ Short or Lead if in doubt.
+        </UiNotice>
+    {{/if}}
+    <table class="table table-width-auto">
+        <thead>
+        <tr>
+            <th>Position</th>
+            <th>On Duty</th>
+            <th class="text-end">Duration</th>
+            <th class="text-end">Credits</th>
             <th>Action</th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#each @upcomingSlots.imminent as |slot|}}
-            <tr>
-              <td class="align-middle">
-                {{slot.position_title}}{{#if slot.slot_description}} - {{slot.slot_description}}{{/if}}
-              </td>
-              <td class="align-middle">{{shift-format slot.slot_begins slot.slot_ends}}</td>
-              <td class="align-middle">
-                {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
-                  <UiButton @type={{if slot.is_within_start_time "primary" "warning"}}
-                            @onClick={{fn this.signinShiftAction slot}}
-                            @disabled={{this.isSubmitting}}>
-                    {{fa-icon "person-walking" right=2}}
-                    {{if slot.is_within_start_time "Start Scheduled Shift" "Start Shift Early"}}
-                  </UiButton>
-                {{else}}
-                  <div class="text-danger">
-                    {{if slot.is_untrained "Not Trained"}}
-                    {{if slot.is_unqualified slot.unqualified_message}}
-                  </div>
-                  {{#if this.userCanForceCheckIn}}
-                    <UiButton @type="warning"
-                              @onClick={{fn this.signinShiftAction slot}}
-                              @disabled={{this.isSubmitting}}>
-                      Force Start Shift
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                {{@onDutyEntry.position.title}}<br>
+                <UiButton @type="secondary"
+                          @onClick={{this.changePositionAction}}
+                          @class="mt-1"
+                          @size="sm"
+                          @disabled={{this.isSubmitting}}>
+                    Correct Position
+                </UiButton>
+            </td>
+            <td>{{shift-format @onDutyEntry.on_duty}}</td>
+            <td class="text-end">
+                {{#unless @onDutyEntry.position.count_hours}}
+                    <NoAppreciateIcon/>
+                {{/unless}}
+                {{hour-minute-format @onDutyEntry.duration}}
+            </td>
+            <td class="text-end">{{credits-format @onDutyEntry.credits}}</td>
+            <td>
+                <UiButton @type="danger" @onClick={{this.endShiftAction}} @disabled={{this.isSubmitting}}>
+                    {{fa-icon "bed" right=2}} End Shift
+                </UiButton>
+                {{#if this.isSubmitting}}
+                    <LoadingIndicator/>
+                {{/if}}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    {{#unless @onDutyEntry.position.count_hours}}
+        Note:
+        <NoAppreciateIcon/> = {{@onDutyEntry.position.title}} hours do not count towards provisions and appreciations.
+    {{/unless}}
+{{else}}
+    {{#if (not @person.canStartShift)}}
+        <UiNotice @icon="hand" @type="danger" @title="Status Issue">
+            {{@person.callsign}} cannot start a shift because their status ({{@person.status}}) does not allow them to
+            work
+            shifts.
+        </UiNotice>
+    {{else if @hasUnverifiedTimesheet}}
+        <UiNotice @icon="hand" @type="danger" @title="Outstanding Tasks">
+            One or more timesheet entries has to be reviewed FIRST before a shift can be started.
+        </UiNotice>
+    {{else}}
+        {{#if this.isPersonDirtTrained}}
+            {{#if @upcomingSlots.imminent}}
+                <p class="text-success">
+                    {{pluralize @upcomingSlots.imminent.length "upcoming scheduled shift sign-up"}} found.
+                </p>
+                You may sign {{@person.callsign}} into a scheduled shift OR a different shift / position (see below).
+                <table class="table table-width-auto table-hover table-striped">
+                    <thead>
+                    <tr>
+                        <th>Shift</th>
+                        <th>Time</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {{#each @upcomingSlots.imminent as |slot|}}
+                        <tr>
+                            <td class="align-middle">
+                                {{slot.position_title}}{{#if slot.slot_description}} - {{slot.slot_description}}{{/if}}
+                            </td>
+                            <td class="align-middle">{{shift-format slot.slot_begins slot.slot_ends}}</td>
+                            <td class="align-middle">
+                                {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
+                                    <UiButton @type={{if slot.is_within_start_time "primary" "warning"}}
+                                              @onClick={{fn this.signinShiftAction slot}}
+                                              @disabled={{this.isSubmitting}}>
+                                        {{fa-icon "person-walking" right=2}}
+                                        {{if slot.is_within_start_time "Start Scheduled Shift" "Start Shift Early"}}
+                                    </UiButton>
+                                {{else}}
+                                    <div class="text-danger">
+                                        {{if slot.is_untrained "Not Trained"}}
+                                        {{if slot.is_unqualified slot.unqualified_message}}
+                                    </div>
+                                    {{#if this.userCanForceCheckIn}}
+                                        <UiButton @type="warning"
+                                                  @onClick={{fn this.signinShiftAction slot}}
+                                                  @disabled={{this.isSubmitting}}>
+                                            Force Start Shift
+                                        </UiButton>
+                                    {{/if}}
+                                {{/if}}
+                                {{#if this.isSubmitting}}
+                                    <LoadingIndicator/>
+                                {{/if}}
+                            </td>
+                        </tr>
+                        {{#unless slot.is_within_start_time}}
+                            <tr>
+                                <td colspan="5">
+                                    <UiNotice @type="warning" @title="Early Shift Check-In" @icon="hand-point-right"
+                                              @iconColor="secondary">
+                                        <p>
+                                            <b>NOTE:</b> The "{{slot.position_title}}" shift starts at
+                                            {{dayjs-format slot.slot_begins "HH:mm"}}.
+                                            The earliest recommended check-in is
+                                            {{pluralize slot.can_start_in "minute"}} from now.
+                                        </p>
+                                        Your options are:
+                                        <ul>
+                                            <li>
+                                                Suggest the person come back in
+                                                <b>{{pluralize slot.can_start_in "minute"}}</b> to
+                                                check-in. If the time is pretty close to the recommended check in time,
+                                                go ahead and signed them in. Use your judgement. The intent is to
+                                                prevent Rangers from checking in too early only to sit around for a long
+                                                time while waiting to be deployed.
+                                            </li>
+                                            <li>
+                                                If this is a specialized shift (Mentors, Leads, Longs, Supervisors,
+                                                OODs, On Call, Shift
+                                                Command,
+                                                etc.), or if the person's cadre/team/manager has requested the person
+                                                start earlier than
+                                                scheduled, check in the person now. Rangers have to adapt to the
+                                                ever-changing situation on
+                                                playa.
+                                            </li>
+                                        </ul>
+                                        <b>The recommendations are guidelines, not a hard set of
+                                            rules.</b> Being flexible is okay. Consult with the HQ Short or HQ
+                                        Lead if in doubt.
+                                    </UiNotice>
+                                </td>
+                            </tr>
+                        {{/unless}}
+                    {{/each}}
+                    </tbody>
+                </table>
+                <p>
+                    <b>
+                        To sign in to a different shift / position, select the position below, and use the
+                        <i>Start Shift</i>button.
+                    </b>
+                </p>
+            {{else if @upcomingSlots}}
+                <UiNotice @title="{{@person.callsign}} Can Still Work A Shift" @icon="thumbs-up">
+                    <p>
+                        No scheduled sign-ups were found starting within the
+                        next {{@upcomingSlots.locate_start_minutes}} minutes. That's okay! Scheduled sign-ups are simply
+                        advisory bits of information to ensure staffing minimums are met.
+                    </p>
+                    {{@person.callsign}} can still work a shift. Ask the position they wish to work, select it below,
+                    and start the shift. Consult with the HQ Short or Lead if you have concerns.
+                </UiNotice>
+            {{/if}}
+        {{else}}
+            {{#if @isSelfServe}}
+                <UiNotice @title="Restricted Check In/Out" @icon="hand" @type="secondary">
+                    Because you have not completed an In-Person Training yet, only a small set of positions are allowed
+                    to be checked into / out of. Talk with your manager if you need to sign in to a position not listed
+                    below.
+                </UiNotice>
+            {{else}}
+                <UiNotice @title="Work Eligibility Issue" @icon="hand" @type="danger">
+                    <p>
+                        {{@person.callsign}} should not start a shift because
+                        {{if this.otOnly "the Online Course" "an In-Person Training"}}
+                        has not been completed.
+                    </p>
+                    <p>
+                        In case the person attended an In-Person Training earlier in the day, the trainers may be
+                        delayed recording who passed the training. Have the HQ Short or Lead contact the trainers to
+                        verify the
+                        person attended and passed the training.
+                    </p>
+                    {{#if this.userCanForceCheckIn}}
+                        You have the privileges to force a shift start.
+                    {{else}}
+                        You do not have the privileges to force a shift start. A HQ Lead may be able to start the shift.
+                    {{/if}}
+                </UiNotice>
+            {{/if}}
+        {{/if}}
+
+        <FormRow>
+            <label class="col-auto col-form-label">
+                <b>Shift / Position</b>
+            </label>
+            <div class="col-auto">
+                <ChForm::Select @name="signin_position_id"
+                                @value={{this.signinPositionId}}
+                                @options={{this.signinPositions}}
+                                @onChange={{this.updateShiftPosition}}/>
+            </div>
+            <div class="col-auto">
+                {{#if (or this.isPersonDirtTrained this.haveNoTrainingRequired)}}
+                    <UiButton @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
+                        {{fa-icon "walking" right=2}} Start Shift
                     </UiButton>
-                  {{/if}}
+                {{else if this.userCanForceCheckIn}}
+                    <UiButton @type="warning" @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
+                        Force Shift Start
+                    </UiButton>
+                {{else}}
+                    <div class="text-danger mt-1">NOT IN-PERSON TRAINED - SHIFT START IS NOT ALLOWED</div>
                 {{/if}}
                 {{#if this.isSubmitting}}
-                  <LoadingIndicator/>
+                    <LoadingIndicator/>
                 {{/if}}
-              </td>
-            </tr>
-            {{#unless slot.is_within_start_time}}
-              <tr>
-                <td colspan="5">
-                  <UiNotice @type="warning" @title="Early Shift Check-In" @icon="hand-point-right" @iconColor="secondary">
-                    <p>
-                      <b>NOTE:</b> The "{{slot.position_title}}" shift starts at {{dayjs-format slot.slot_begins
-                                                                                                "HH:mm"}}
-                      .
-                      The earliest recommended check-in is {{pluralize slot.can_start_in "minute"}} from now.
-                    </p>
-                    Your options are:
-                    <ul>
-                      <li>
-                        Suggest the person come back in <b>{{pluralize slot.can_start_in "minute"}}</b> to check-in.
-                        If the time is pretty close to the recommended check in time, go ahead and signed
-                        them in. Use your judgement. The intent is to prevent Rangers from checking in too early
-                        only to sit around for a long time while waiting to be deployed.
-                      </li>
-                      <li>
-                        If this is a specialized shift (Mentors, Leads, Longs, Supervisors, OODs, On Call, Shift
-                        Command,
-                        etc.), or if the person's cadre/team/manager has requested the person start earlier than
-                        scheduled, check in the person now. Rangers have to adapt to the ever-changing situation on
-                        playa.
-                      </li>
-                    </ul>
-                    <b>The recommendations are guidelines, not a hard set of
-                      rules.</b> Being flexible is okay. Consult with the HQ Short or HQ
-                    Lead if in doubt.
-                  </UiNotice>
-                </td>
-              </tr>
-            {{/unless}}
-          {{/each}}
-          </tbody>
-        </table>
-        <p>
-          <b>To sign in to a different shift / position, select the position below, and use the <i>Start Shift</i>
-            button.</b>
-        </p>
-      {{else if @upcomingSlots}}
-        <UiNotice @title="{{@person.callsign}} Can Still Work A Shift" @icon="thumbs-up">
-          <p>
-            No scheduled sign-ups were found starting within the next {{@upcomingSlots.locate_start_minutes}} minutes.
-            That's okay! Scheduled sign-ups are simply advisory bits of information to ensure staffing minimums are met.
-          </p>
-          {{@person.callsign}} can still work a shift. Ask the position they wish to work, select it below,
-          and start the shift. Consult with the HQ Short or Lead if you have concerns.
-        </UiNotice>
-      {{/if}}
-    {{else}}
-      <UiNotice @title="Work Eligibility Issue" @icon="hand" @type="danger">
-        <p>
-          {{@person.callsign}} should not start a shift because
-          {{if this.otOnly "the Online Course" "an In-Person Training"}}
-          has not been completed.
-        </p>
-        <p>
-          In case the person attended an In-Person Training earlier in the day, the trainers may be delayed
-          recording who passed the training. Have the HQ Short or Lead contact the trainers to verify the person
-          attended and passed the training.
-        </p>
-        {{#if this.userCanForceCheckIn}}
-          You have the privileges to force a shift start.
-        {{else}}
-          You do not have the privileges to force a shift start. A HQ Lead may be able to start the shift.
-        {{/if}}
-      </UiNotice>
+            </div>
+        </FormRow>
     {{/if}}
-
-    <FormRow>
-      <label class="col-auto col-form-label">
-        <b>Shift / Position</b>
-      </label>
-      <div class="col-auto">
-        <ChForm::Select @name="signin_position_id"
-                        @value={{this.signinPositionId}}
-                        @options={{this.signinPositions}}
-                        @onChange={{this.updateShiftPosition}}/>
-      </div>
-      <div class="col-auto">
-        {{#if this.isPersonDirtTrained}}
-          <UiButton @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
-            {{fa-icon "walking" right=2}} Start Shift
-          </UiButton>
-        {{else if this.userCanForceCheckIn}}
-          <UiButton @type="warning" @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
-            Force Shift Start
-          </UiButton>
-        {{else}}
-          <div class="text-danger mt-1">NOT IN-PERSON TRAINED - SHIFT START IS NOT ALLOWED</div>
-        {{/if}}
-        {{#if this.isSubmitting}}
-          <LoadingIndicator/>
-        {{/if}}
-      </div>
-    </FormRow>
-  {{/if}}
 {{/if}}
 
 {{#if this.showPositionDialog}}
-  <ModalDialog @title="Correct Sift Position" @onEscape={{this.cancelUpdatePosition}} as |Modal|>
-    <Modal.body>
-      <p>
-        This action is intended to correct a shift check in where the wrong position was selected.
-      </p>
-      <p>
-        <b>
-          When switching from an on-call shift (such as 007 Standby, Tech On Call, etc.) to a working shift
-          (007, Tech Team, etc) and visa-versa, END THE CURRENT SHIFT and start a new one.
-        </b>
-      </p>
-      Select the new position the shift should be corrected to:
-      <FormRow>
-        <div class="col-auto">
-          <ChForm::Select @name="newPositionId"
-                          @value={{this.newPositionId}}
-                          @options={{this.signinPositions}}
-                          @onChange={{action (mut this.newPositionId)}}/>
-        </div>
-      </FormRow>
-      {{#if this.changePositionError}}
-        <b class="text-danger">{{this.changePositionError}}</b>
-      {{/if}}
-    </Modal.body>
-    <Modal.footer @noAlign={{true}}>
-      <UiButton @onClick={{this.updatePositionAction}} @disabled={{this.isSubmitting}}>
-        Update Position
-      </UiButton>
-      <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelUpdatePosition}} />
-    </Modal.footer>
-  </ModalDialog>
+    <ModalDialog @title="Correct Sift Position" @onEscape={{this.cancelUpdatePosition}} as |Modal|>
+        <Modal.body>
+            <p>
+                This action is intended to correct a shift check in where the wrong position was selected.
+            </p>
+            <p>
+                <b>
+                    When switching from an on-call shift (such as 007 Standby, Tech On Call, etc.) to a working shift
+                    (007, Tech Team, etc) and visa-versa, END THE CURRENT SHIFT and start a new one.
+                </b>
+            </p>
+            Select the new position the shift should be corrected to:
+            <FormRow>
+                <div class="col-auto">
+                    <ChForm::Select @name="newPositionId"
+                                    @value={{this.newPositionId}}
+                                    @options={{this.signinPositions}}
+                                    @onChange={{action (mut this.newPositionId)}}/>
+                </div>
+            </FormRow>
+            {{#if this.changePositionError}}
+                <b class="text-danger">{{this.changePositionError}}</b>
+            {{/if}}
+        </Modal.body>
+        <Modal.footer @noAlign={{true}}>
+            <UiButton @onClick={{this.updatePositionAction}} @disabled={{this.isSubmitting}}>
+                Update Position
+            </UiButton>
+            <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelUpdatePosition}} />
+        </Modal.footer>
+    </ModalDialog>
 {{/if}}
 
 {{#if this.showEarlyShiftConfirm}}
-  <ModalDialog @title="Confirm Early Shift Sign In" @onEscape={{this.closeEarlyShiftAction}} as |Modal|>
-    <Modal.body>
-      You are about to check in the person early for a shift. Are you sure you wish to do this?
-    </Modal.body>
-    <Modal.footer @noAlign={{true}}>
-      <UiButton @type="warning" @onClick={{this.confirmEarlyShiftAction}}>
-        Confirm Early Shift Start
-      </UiButton>
-      <UiCancelButton @onClick={{this.closeEarlyShiftAction}} />
-    </Modal.footer>
-  </ModalDialog>
+    <ModalDialog @title="Confirm Early Shift Sign In" @onEscape={{this.closeEarlyShiftAction}} as |Modal|>
+        <Modal.body>
+            You are about to check in the person early for a shift. Are you sure you wish to do this?
+        </Modal.body>
+        <Modal.footer @noAlign={{true}}>
+            <UiButton @type="warning" @onClick={{this.confirmEarlyShiftAction}}>
+                Confirm Early Shift Start
+            </UiButton>
+            <UiCancelButton @onClick={{this.closeEarlyShiftAction}} />
+        </Modal.footer>
+    </ModalDialog>
 {{/if}}
 
 {{#if this.showForceStartConfirm}}
-  <ModalDialog @title="Confirm Forced Shift Check In" @onEscape={{this.closeForceStartConfirm}} as |Modal|>
-    <Modal.body>
-      <p>
-        <b class="text-danger">
-          WARNING: {{@person.callsign}} has not meet all the qualifications to start a {{this.forcePosition.title}}
-          shift
-        </b>
-      </p>
-      <ul>
-        {{#if
-          (and (not this.isPersonDirtTrained) (not this.forcePosition.is_untrained) (not this.forcePosition.is_unqualified))}}
-          <li>In-Person Training has not been completed.</li>
-        {{/if}}
-        {{#if this.forcePosition.is_untrained}}
-          <li>{{this.forcePosition.training_title}} has not been completed</li>
-        {{/if}}
-        {{#if this.forcePosition.is_unqualified}}
-          <li>{{this.forcePosition.unqualified_message}}</li>
-        {{/if}}
-      </ul>
-      <p>
-        Since you either have the Admin, or Force Shift Start permission, you can force a shift check in.
-      </p>
-      <p>
-        <b class="text-danger">A forced shift start will be logged and subject to review.</b>
-      </p>
-      <p>
-        Are you absolutely sure you want to sign in this person at this time? Check with the HQ Lead or Short if in
-        doubt.
-      </p>
-    </Modal.body>
-    <Modal.footer>
-      <UiCancelButton @onClick={{this.closeForceStartConfirm}} />
-      <UiButton @type="warning" @onClick={{this.confirmForceStart}}>
-        Confirm Force Shift Start
-      </UiButton>
-    </Modal.footer>
-  </ModalDialog>
+    <ModalDialog @title="Confirm Forced Shift Check In" @onEscape={{this.closeForceStartConfirm}} as |Modal|>
+        <Modal.body>
+            <p>
+                <b class="text-danger">
+                    WARNING: {{@person.callsign}} has not meet all the qualifications to start
+                    a {{this.forcePosition.title}}
+                    shift
+                </b>
+            </p>
+            <ul>
+                {{#if
+                        (and (not this.isPersonDirtTrained) (not this.forcePosition.is_untrained) (not this.forcePosition.is_unqualified))}}
+                    <li>In-Person Training has not been completed.</li>
+                {{/if}}
+                {{#if this.forcePosition.is_untrained}}
+                    <li>{{this.forcePosition.training_title}} has not been completed</li>
+                {{/if}}
+                {{#if this.forcePosition.is_unqualified}}
+                    <li>{{this.forcePosition.unqualified_message}}</li>
+                {{/if}}
+            </ul>
+            <p>
+                Since you either have the Admin, or Force Shift Start permission, you can force a shift check in.
+            </p>
+            <p>
+                <b class="text-danger">A forced shift start will be logged and subject to review.</b>
+            </p>
+            <p>
+                Are you absolutely sure you want to sign in this person at this time? Check with the HQ Lead or Short if
+                in
+                doubt.
+            </p>
+        </Modal.body>
+        <Modal.footer>
+            <UiCancelButton @onClick={{this.closeForceStartConfirm}} />
+            <UiButton @type="warning" @onClick={{this.confirmForceStart}}>
+                Confirm Force Shift Start
+            </UiButton>
+        </Modal.footer>
+    </ModalDialog>
 {{/if}}
 
 {{#if this.showTooShortDialog}}
-  <ModalDialog as |Modal|>
-    <Modal.title>
-      Timesheet entry might be too short
-    </Modal.title>
-    <Modal.body>
-      <p>
-        <b class="text-danger">The shift has not been ended. The timesheet entry might be too short at
-          {{hour-minute-words @onDutyEntry.duration}}.</b>
-      </p>
-      <p>
-        Several options can be taken:
-      </p>
-      <p>
-        If you are ending the shift because the position ({{@onDutyEntry.position.title}}) is wrong, just update the
-        position and do not end the shift.<br>
-        <UiButton @onClick={{this.updatePositionInstead}}>
-          Correct Position / Shift
-        </UiButton>
-      </p>
-      <p>
-        If the shift was started by mistake, the entry may be deleted.<br>
-        <UiButton @onClick={{this.deleteEntry}}>
-          Accidental shift start - Delete Entry
-        </UiButton>
-      </p>
-      <p>
-        If the duration is actually correct at {{hour-minute-format @onDutyEntry.duration}}, go ahead and end the shift.<br>
-        <UiButton @onClick={{this.confirmEndShift}}>
-          Duration is correct - End Shift
-        </UiButton>
-      </p>
+    <ModalDialog as |Modal|>
+        <Modal.title>
+            Timesheet entry might be too short
+        </Modal.title>
+        <Modal.body>
+            <p>
+                <b class="text-danger">The shift has not been ended. The timesheet entry might be too short at
+                    {{hour-minute-words @onDutyEntry.duration}}.</b>
+            </p>
+            <p>
+                Several options can be taken:
+            </p>
+            <p>
+                If you are ending the shift because the position ({{@onDutyEntry.position.title}}) is wrong, just update
+                the position and do not end the shift.<br>
+                <UiButton @onClick={{this.updatePositionInstead}}>
+                    Correct Position / Shift
+                </UiButton>
+            </p>
+            <p>
+                If the shift was started by mistake, the entry may be deleted.<br>
+                <UiButton @onClick={{this.deleteEntry}}>
+                    Accidental shift start - Delete Entry
+                </UiButton>
+            </p>
+            <p>
+                If the duration is actually correct at {{hour-minute-format @onDutyEntry.duration}}, go ahead and end
+                the shift.<br>
+                <UiButton @onClick={{this.confirmEndShift}}>
+                    Duration is correct - End Shift
+                </UiButton>
+            </p>
 
-    </Modal.body>
-    <Modal.footer>
-      <UiCancelButton @onClick={{this.closeTooShortDialog}} />
-    </Modal.footer>
-  </ModalDialog>
+        </Modal.body>
+        <Modal.footer>
+            <UiCancelButton @onClick={{this.closeTooShortDialog}} />
+        </Modal.footer>
+    </ModalDialog>
 {{/if}}

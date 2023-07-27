@@ -35,12 +35,21 @@ export default class ShiftCheckInOutComponent extends Component {
   @tracked showForceStartConfirm = false;
   @tracked forcePosition = null;
 
+  @tracked haveNoTrainingRequired = false;
+
   tooShortDuration = TOO_SHORT_DURATION;
 
   constructor() {
     super(...arguments);
 
-    this.activePositions = this.args.positions.filter(position => position.active);
+    const {positions} = this.args;
+
+    this.haveNoTrainingRequired = !!positions.find((p) => p.no_training_required && p.active);
+    if (this.haveNoTrainingRequired && this.args.isSelfServe) {
+      this.activePositions = positions.filter(p => p.no_training_required && p.active);
+    } else {
+      this.activePositions = positions.filter(p => p.active);
+    }
 
     // Mark imminent slots as trained or not.
     const {upcomingSlots} = this.args;
@@ -120,6 +129,7 @@ export default class ShiftCheckInOutComponent extends Component {
       signins.unshift(position);
     }
   }
+
   /**
    * Does the person actually need a radio?
    *
@@ -142,7 +152,8 @@ export default class ShiftCheckInOutComponent extends Component {
     const position = this.activePositions.find((p) => +p.id === +positionId);
 
     if (position.type === 'Training'
-      || (this.isPersonDirtTrained && !position.is_unqualified && !position.is_untrained)) {
+      || (this.isPersonDirtTrained && !position.is_unqualified && !position.is_untrained)
+      || position.no_training_required) {
       this._signInPerson(position, slotId);
       return;
     }
