@@ -5,175 +5,177 @@
 <BackToHome/>
 
 {{#if this.correctionsEnabled}}
-  {{#if this.haveOutstandingTasks}}
-    <UiNotice @title="Action required - Timesheet Entry Review" @type="danger" @icon="hand-point-right">
-      <p>
-        Please carefully review your timesheet so the proper credit can be given for
-        {{this.year}} Ranger volunteer work (i.e., ensure you'll receive a ticket and provisions if you worked enough).
-      </p>
-      <p>
-        <b>Missing a timesheet entry?</b> Use the "Missing Requests" tab to submit one or more missing timesheet entry
-        requests.
-      </p>
-      <p>
-        The following are outstanding tasks:
-      </p>
-      <ul>
-        {{#if this.unverifiedCount}}
-          <li>You need to review {{pluralize this.unverifiedCount "timesheet entry"}}.</li>
-        {{/if}}
-        {{#if this.correctionPendingReviewCount}}
-          <li>
-            {{pluralize this.correctionPendingReviewCount "timesheet entry correction request"}}
-            {{if (eq this.correctionPendingReviewCount 1) "is" "are"}} pending review.
-          </li>
-        {{/if}}
-        {{#if this.missingPendingReviewCount}}
-          <li>
-            {{pluralize this.missingPendingReviewCount "missing timesheet entry request"}}
-            {{if (eq this.missingPendingReviewCount 1) "is" "are"}} pending review.
-          </li>
-        {{/if}}
-      </ul>
-      Once the above have been completed, you will need to indicate no more changes will happen
-      with your {{this.year}} timesheet. The "Final Confirmation Needed" notice will appear once all
-      tasks have been completed with a button "Confirm Final Confirmation". Use the button to state no more changes
-      will happen.
-    </UiNotice>
-  {{else if this.finalConfirmation}}
-    <UiNotice @title="Timesheet Review & Final Confirmation Completed"
-              @icon="thumbs-up"
-              @type="success">
-      <p>
-        All your timesheet entries have been reviewed, there are no outstanding corrections, and
-        you stated no further corrections will be submitted (aka Final Confirmation).
-      </p>
-      <p>
-        Nothing else need to be done. Thank you for being the awesome Ranger that you are!
-      </p>
-      You may submit additional correction requests, however, you will need to go through the Final Confirmation
-      step again after the requests have been reviewed.
-    </UiNotice>
-  {{else}}
-    <UiNotice @type="danger"
-              @icon="hand-point-right"
-              @title="Action Required - Final Confirmation">
-      <p>
-        Please indicate you are done with submitted corrections - aka Final Confirmation. It appears all of your
-        timesheet entries have been verified/corrected and there are no outstanding requests.
-      </p>
-      <UiButton @onClick={{this.showFinalConfirmationAction}}>Confirm Final Confirmation</UiButton>
-    </UiNotice>
-  {{/if}}
+    {{#if this.haveOutstandingTasks}}
+        <UiNotice @title="Action required - Timesheet Entry Review" @type="danger" @icon="hand-point-right">
+            <p>
+                Please carefully review your timesheet so the proper credit can be given for{{this.year}} Ranger
+                volunteer work (i.e., ensure you'll receive a ticket and provisions if you worked
+                enough).
+            </p>
+            <p>
+                <b>Missing a timesheet entry?</b> Use the "Missing Requests" tab to submit one or more missing timesheet
+                entry requests.
+            </p>
+            <p>
+                The following are outstanding tasks:
+            </p>
+            <ul>
+                {{#if this.unverifiedCount}}
+                    <li>You need to review {{pluralize this.unverifiedCount "timesheet entry"}}.</li>
+                {{/if}}
+                {{#if this.correctionPendingReviewCount}}
+                    <li>
+                        {{pluralize this.correctionPendingReviewCount "timesheet entry correction request"}}
+                        {{if (eq this.correctionPendingReviewCount 1) "is" "are"}} pending review.
+                    </li>
+                {{/if}}
+                {{#if this.missingPendingReviewCount}}
+                    <li>
+                        {{pluralize this.missingPendingReviewCount "missing timesheet entry request"}}
+                        {{if (eq this.missingPendingReviewCount 1) "is" "are"}} pending review.
+                    </li>
+                {{/if}}
+            </ul>
+            Once the above have been completed, you will need to indicate no more changes will happen
+            with your {{this.year}} timesheet. The "Final Confirmation Needed" notice will appear once all
+            tasks have been completed with a button "Confirm Final Confirmation". Use the button to state no more
+            changes will happen.
+        </UiNotice>
+    {{else if this.finalConfirmation}}
+        <UiNotice @title="Timesheet Review & Final Confirmation Completed"
+                  @icon="thumbs-up"
+                  @type="success">
+            <p>
+                All your timesheet entries have been reviewed, there are no outstanding corrections, and
+                you stated no further corrections will be submitted (aka Final Confirmation).
+            </p>
+            <p>
+                Nothing else need to be done. Thank you for being the awesome Ranger that you are!
+            </p>
+            You may submit additional correction requests, however, you will need to go through the Final Confirmation
+            step again after the requests have been reviewed.
+        </UiNotice>
+    {{else}}
+        <UiNotice @type="danger"
+                  @icon="hand-point-right"
+                  @title="Action Required - Final Confirmation">
+            <p>
+                Please indicate you are done with submitted corrections - aka Final Confirmation. It appears all of your
+                timesheet entries have been verified/corrected and there are no outstanding requests.
+            </p>
+            <UiButton @onClick={{this.showFinalConfirmationAction}}>Confirm Final Confirmation</UiButton>
+        </UiNotice>
+    {{/if}}
 {{else}}
-  Contact
-  <VcEmail/> if you have questions or concerns about your timesheet.
+    Contact
+    <VcEmail/> if you have questions or concerns about your timesheet.
 {{/if}}
 
 <UiTab as |tab|>
-  <tab.pane @title="{{this.year}} Timesheet" @id="entries">
-    <Me::TimesheetReviewCommon @person={{this.person}}
-                               @timesheets={{this.timesheets}}
-                               @timesheetInfo={{this.timesheetInfo}}
-                               @year={{this.year}}
-                               @onUpdate={{this.onEntryUpdate}}
-                               @onVerified={{this.onEntryVerify}}
-    />
-  </tab.pane>
-  {{#if this.correctionsEnabled}}
-    <tab.pane @title="Missing Requests" @id="missing-requests">
-      <Me::TimesheetMissingCommon @person={{this.person}}
-                                  @timesheetsMissing={{this.timesheetsMissing}}
-                                  @timesheetInfo={{this.timesheetInfo}}
-                                  @positions={{this.positions}}
-      />
-    </tab.pane>
-  {{/if}}
-  <tab.pane @title="{{this.year}} Summary" @id="summary">
-    <TimesheetSummary @summary={{this.timesheetSummary}} />
-    <TimesheetPositionSummary @timesheets={{this.timesheets}} />
-  </tab.pane>
-  <tab.pane @title="Qualifications" @id="progress">
-    <p>
-      This tab shows what tickets and provisions (meals, showers, event radios) you might qualify for.
-    </p>
-    {{#if this.isCurrentYear}}
-      {{#if (eq tab.activeId "progress")}}
-        <PersonTicketProvisionsProgress @person={{this.session.user}} @year={{this.year}} />
-      {{/if}}
-    {{else}}
-      Ticket &amp; Stuff qualification information is only available for the current event.
-    {{/if}}
-  </tab.pane>
-  <tab.pane @title="Work History" @id="work-history">
-    {{#if (eq tab.activeId "work-history")}}
-      <WorkHistory @person={{this.person}} />
-    {{/if}}
-  </tab.pane>
-  {{#if this.timecardYearRound}}
-    <tab.pane @title="Shift Check In/Out" @id="shift">
-      {{#if (is-current-year this.year)}}
-        <ShiftCheckInOut @positions={{this.positions}}
-                         @timesheets={{this.timesheets}}
-                         @person={{this.person}}
-                         @eventInfo={{this.eventInfo}}
-                         @onDutyEntry={{this.onDutyEntry}}
-                         @startShiftNotify={{this.startShiftNotify}}
-                         @endShiftNotify={{this.endShiftNotify}}
-                         @year={{this.year}}
+    <tab.pane @title="{{this.year}} Timesheet" @id="entries">
+        <Me::TimesheetReviewCommon @person={{this.person}}
+                                   @timesheets={{this.timesheets}}
+                                   @timesheetInfo={{this.timesheetInfo}}
+                                   @year={{this.year}}
+                                   @onUpdate={{this.onEntryUpdate}}
+                                   @onVerified={{this.onEntryVerify}}
         />
-      {{else}}
-        Select the current year to start or end a shift
-      {{/if}}
     </tab.pane>
-  {{/if}}
+    {{#if this.correctionsEnabled}}
+        <tab.pane @title="Missing Requests" @id="missing-requests">
+            <Me::TimesheetMissingCommon @person={{this.person}}
+                                        @timesheetsMissing={{this.timesheetsMissing}}
+                                        @timesheetInfo={{this.timesheetInfo}}
+                                        @positions={{this.positions}}
+            />
+        </tab.pane>
+    {{/if}}
+    <tab.pane @title="{{this.year}} Summary" @id="summary">
+        <TimesheetSummary @summary={{this.timesheetSummary}} />
+        <TimesheetPositionSummary @timesheets={{this.timesheets}} />
+    </tab.pane>
+    <tab.pane @title="Qualifications" @id="progress">
+        <p>
+            This tab shows what tickets and provisions (meals, showers, event radios) you might qualify for.
+        </p>
+        {{#if this.isCurrentYear}}
+            {{#if (eq tab.activeId "progress")}}
+                <PersonTicketProvisionsProgress @person={{this.session.user}} @year={{this.year}} />
+            {{/if}}
+        {{else}}
+            Ticket &amp; Stuff qualification information is only available for the current event.
+        {{/if}}
+    </tab.pane>
+    <tab.pane @title="Work History" @id="work-history">
+        {{#if (eq tab.activeId "work-history")}}
+            <WorkHistory @person={{this.person}} />
+        {{/if}}
+    </tab.pane>
+    {{#if this.timecardYearRound}}
+        <tab.pane @title="Shift Check In/Out" @id="shift">
+            {{#if (is-current-year this.year)}}
+                <ShiftCheckInOut @positions={{this.positions}}
+                                 @timesheets={{this.timesheets}}
+                                 @person={{this.person}}
+                                 @eventInfo={{this.eventInfo}}
+                                 @onDutyEntry={{this.onDutyEntry}}
+                                 @startShiftNotify={{this.startShiftNotify}}
+                                 @endShiftNotify={{this.endShiftNotify}}
+                                 @year={{this.year}}
+                                 @isSelfServe={{true}}
+                />
+            {{else}}
+                Select the current year to start or end a shift
+            {{/if}}
+        </tab.pane>
+    {{/if}}
 </UiTab>
 
 {{#if this.showFinalConfirmation}}
-  <ModalDialog @onEscape={{this.cancelFinalConfirmationAction}} as |Modal|>
-    <Modal.title>
-      Final Confirmation Action
-    </Modal.title>
-    <Modal.body>
-      <p>
-        By clicking the "I Agree" button below, you are agreeing to:
-      </p>
-      <ul>
-        <li>All your {{this.timesheetInfo.correction_year}} timesheet entries have been reviewed.</li>
-        <li>All entries are correct.</li>
-        <li>There are no outstanding corrections or missing entry requests waiting for timesheet review.</li>
-        <li>
-          You do not plan to submit any additional corrections and/or missing entry requests for
-          your {{this.timesheetInfo.correction_year}} timesheet.
-        </li>
-      </ul>
-    </Modal.body>
-    <Modal.footer>
-      <UiCancelButton @onClick={{this.cancelFinalConfirmationAction}} />
-      <UiButton @onClick={{this.confirmAction}}>I Agree</UiButton>
-    </Modal.footer>
-  </ModalDialog>
+    <ModalDialog @onEscape={{this.cancelFinalConfirmationAction}} as |Modal|>
+        <Modal.title>
+            Final Confirmation Action
+        </Modal.title>
+        <Modal.body>
+            <p>
+                By clicking the "I Agree" button below, you are agreeing to:
+            </p>
+            <ul>
+                <li>All your {{this.timesheetInfo.correction_year}} timesheet entries have been reviewed.</li>
+                <li>All entries are correct.</li>
+                <li>There are no outstanding corrections or missing entry requests waiting for timesheet review.</li>
+                <li>
+                    You do not plan to submit any additional corrections and/or missing entry requests for
+                    your {{this.timesheetInfo.correction_year}} timesheet.
+                </li>
+            </ul>
+        </Modal.body>
+        <Modal.footer>
+            <UiCancelButton @onClick={{this.cancelFinalConfirmationAction}} />
+            <UiButton @onClick={{this.confirmAction}}>I Agree</UiButton>
+        </Modal.footer>
+    </ModalDialog>
 {{/if}}
 
 {{#if this.askIfDone}}
-  <ModalDialog @onEscape={{this.cancelAskIfDone}} as |Modal|>
-    <Modal.title>
-      No More Outstanding Tasks
-    </Modal.title>
-    <Modal.body>
-      <p>
-        Congratulations! You have marked the last timesheet entry as correct, and there are no pending correction or
-        missing timesheet entry requests. Please confirm no further confirmations will be submitted, and your entire
-        timesheet is correct by the "Confirm Final Confirmation" button.
-      </p>
-      <p>
-        In case you have additional corrections to submit, use the "Cancel" button to clear this dialog,
-        and submit the requests.
-      </p>
-    </Modal.body>
-    <Modal.footer>
-      <UiCancelButton @onClick={{this.cancelAskIfDone}} />
-      <UiButton @onClick={{this.isDoneAction}}>Confirm Final Confirmation</UiButton>
-    </Modal.footer>
-  </ModalDialog>
+    <ModalDialog @onEscape={{this.cancelAskIfDone}} as |Modal|>
+        <Modal.title>
+            No More Outstanding Tasks
+        </Modal.title>
+        <Modal.body>
+            <p>
+                Congratulations! You have marked the last timesheet entry as correct, and there are no pending
+                correction or missing timesheet entry requests. Please confirm no further confirmations will be
+                submitted, and your entire timesheet is correct by the "Confirm Final Confirmation" button.
+            </p>
+            <p>
+                In case you have additional corrections to submit, use the "Cancel" button to clear this dialog,
+                and submit the requests.
+            </p>
+        </Modal.body>
+        <Modal.footer>
+            <UiCancelButton @onClick={{this.cancelAskIfDone}} />
+            <UiButton @onClick={{this.isDoneAction}}>Confirm Final Confirmation</UiButton>
+        </Modal.footer>
+    </ModalDialog>
 {{/if}}
