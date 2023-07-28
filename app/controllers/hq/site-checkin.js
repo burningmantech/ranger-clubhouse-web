@@ -26,10 +26,11 @@ export default class HqSiteCheckinController extends ClubhouseController {
   }
 
   @action
-  saveContactForm(model) {
+  saveContactForm(model, callback) {
     this.isContactSaved = false;
     this._savePerson(model, 'Contact information successfully saved.', () => {
       this.isContactSaved = true;
+      callback();
     });
   }
 
