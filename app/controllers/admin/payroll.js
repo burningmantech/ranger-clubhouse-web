@@ -34,7 +34,7 @@ const PUNCH_OUT_LUNCH = 'OL';
 
 const PAYROLL_CSV = [
   {title: 'Employee No.', key: 'employee_id'},
-  {title: 'Department', value: DEPARTMENT_CODE},
+  {title: 'Department', key: 'department'},
   {title: 'Date', key: 'date'},
   {title: 'Punch Time', key: 'time'},
   {title: 'Punch Type', key: 'type'},
@@ -247,11 +247,12 @@ export default class AdminPayrollController extends ClubhouseController {
 
     rows.push({
       employee_id: person.employee_id,
+      department: DEPARTMENT_CODE,
       date: onDutyDT.format('YYYY-MM-DD'),
       time: onDutyDT.format('HH:mm'),
       type: inCode,
       paycode: entry.paycode,
-      comment: `${person.callsign}\n${entry.position_title}`
+      comment: `${person.callsign} - ${entry.position_title}`
     });
 
     rows.push({
