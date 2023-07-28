@@ -51,20 +51,22 @@
       <NavbarMenuItem @menu={{menu}} @route="admin.top-hour-earners" @item="Top Hour Earners"/>
     </NavbarMenuSection>
   {{/if}}
-  {{#if (has-role "admin" "timesheet-management")}}
+  {{#if (has-role "admin" "timesheet-management" "payroll")}}
     <NavbarMenuSection @section="Bulk Operations">
       {{#if (has-role "admin")}}
         <NavbarMenuItem @menu={{menu}} @route="admin.bulk-upload" @item="Bulk Upload"/>
       {{/if}}
-      <NavbarMenuItem @menu={{menu}} @route="admin.bulk-sign-in-out" @item="Bulk Sign In/Out"/>
+      {{#if (has-role "admin" "timesheet-management")}}
+        <NavbarMenuItem @menu={{menu}} @route="admin.bulk-sign-in-out" @item="Bulk Sign In/Out"/>
+      {{/if}}
       {{#if (has-role "admin")}}
         <NavbarMenuItem @menu={{menu}} @route="admin.bulk-signout" @item="Bulk Signout"/>
         <NavbarMenuItem @menu={{menu}} @route="admin.bulk-lookup" @item="Callsign/Email Lookup"/>
         <NavbarMenuItem @menu={{menu}} @route="admin.bulk-positions" @item="Positions Grant/Revoke"/>
         <NavbarMenuItem @menu={{menu}} @route="admin.bulk-grant-awards" @item="Bulk Grant Awards"/>
-        {{#if (has-role "payroll")}}
-          <NavbarMenuItem @menu={{menu}} @route="admin.payroll" @item="Payroll Export"/>
-        {{/if}}
+      {{/if}}
+      {{#if (has-role "payroll")}}
+        <NavbarMenuItem @menu={{menu}} @route="admin.payroll" @item="Payroll Export"/>
       {{/if}}
     </NavbarMenuSection>
   {{/if}}
