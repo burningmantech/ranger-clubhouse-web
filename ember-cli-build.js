@@ -90,11 +90,13 @@ module.exports = function (defaults) {
 
   // app.import('node_modules/@okta/okta-signin-widget/dist/css/okta-sign-in.min.css');
 
+  /*
   app.import(`node_modules/dayjs/plugin/advancedFormat.js`);
   app.import(`node_modules/dayjs/plugin/objectSupport.js`);
   app.import(`node_modules/dayjs/plugin/utc.js`);
   app.import(`node_modules/dayjs/plugin/timezone.js`);
   app.import('node_modules/dayjs/plugin/dayOfYear.js');
+*/
 
   // If you need to use different assets in different
   // environments, specify an object as the first parameter. That
