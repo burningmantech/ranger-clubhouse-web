@@ -44,7 +44,6 @@ export default class VcAccessDocumentsProvisionsController extends ClubhouseCont
     let {provisions} = this;
 
     if (this.typeFilter !== 'all') {
-      console.log('Filter ', this.typeFilter);
       provisions = provisions.filter((p) => p.type === this.typeFilter);
     }
 
