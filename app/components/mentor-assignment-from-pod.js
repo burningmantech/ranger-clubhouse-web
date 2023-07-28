@@ -109,7 +109,6 @@ export default class MentorAssignmentFromPodComponent extends Component {
           for (let i = 0; i < mentors.length && i < assignment.mentors.length; i++) {
             assignment.mentors[i].mentor_id = mentors[i];
           }
-          console.log(person.callsign, assignment);
           this.assignedAlphas.push(person.callsign);
         });
       });
