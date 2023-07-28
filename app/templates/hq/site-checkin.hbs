@@ -31,7 +31,8 @@
       </h4>
     {{else}}
       <h4 class="text-danger">
-        {{fa-icon "ban" right=1 fixed=true}} Motorpool Agreement NOT SIGNED - Not authorized to drive Ranger gators, UTVs, or
+        {{fa-icon "ban" right=1 fixed=true}} Motorpool Agreement NOT SIGNED - Not authorized to drive Ranger gators,
+        UTVs, or
         golf carts.
       </h4>
       <p>
@@ -47,11 +48,13 @@
     {{#if this.eventInfo.radio_max}}
       {{#if this.personEvent.asset_authorized}}
         <h4 class="text-success">
-          {{fa-icon "tower-broadcast" right=1 fixed=true}} Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}
+          {{fa-icon "tower-broadcast" right=1 fixed=true}} Authorized for {{pluralize this.eventInfo.radio_max
+                                                                                      "Event Radio"}}
         </h4>
       {{else}}
         <h4 class="text-muted">
-          {{fa-icon "ban" right=1 fixed=true}} Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}} &mdash; DO
+          {{fa-icon "ban" right=1 fixed=true}} Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}
+          &mdash; DO
           NOT ISSUE UNTIL Radio Checkout Agreement IS SIGNED.
         </h4>
       {{/if}}
@@ -78,8 +81,10 @@
   <UiWizard @onCancel={{this.cancelSiteCheckIn}}
             @onFinish={{this.finishSiteCheckIn}}
             @finishLabel="Mark As On Site" as |w|>
-    <w.step @title="Verify Camp Information">
-      <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
+    <ChForm @formId="person" @formFor={{this.person}} as |f|>
+      <w.step @title="Verify Camp Information"
+              @nextLabel="Save & Next"
+              @nextAction={{fn this.saveContactForm f.model}}>
         <p>
           Enter the camp's name, the street address, and street side (man-side, mountainside, plaza, etc.).
         </p>
@@ -90,36 +95,34 @@
                       @rows={{6}}
                       @cols={{80}}/>
         </FormRow>
-        <f.submit @label="Save" @disabled={{this.isSubmitting}}  class="btn-block"/>
-      </ChForm>
-    </w.step>
-    <w.step @title="Verify Emergency Contact Information">
-      {{#if this.session.isLMOPEnabled}}
-        <p class="ms-2">
-          <b>Off-Playa:</b>
-          Real world name, relationship (partner, friend, sibling, parent), phone number, &amp; email.<br>
+      </w.step>
+      <w.step @title="Verify Emergency Contact Information"
+              @nextLabel="Save & Next"
+              @nextAction={{fn this.saveContactForm f.model}}>
+        {{#if this.session.isLMOPEnabled}}
+          <p class="ms-2">
+            <b>Off-Playa:</b>
+            Real world name, relationship (partner, friend, sibling, parent), phone number, &amp; email.<br>
 
-          <b>On-Playa:</b>
-          Their playa name, real world name, relationship, camp location &amp; description.<br>
-        </p>
-        <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.saveContactForm}} as |f|>
+            <b>On-Playa:</b>
+            Their playa name, real world name, relationship, camp location &amp; description.<br>
+          </p>
           <FormRow>
             <f.textarea @name="emergency_contact"
                         @label="Emergency Contact Information:"
                         @rows={{6}}
                         @cols={{80}}/>
           </FormRow>
-          <f.submit @label="Save" @disabled={{this.isSubmitting}} class="btn-block"/>
-        </ChForm>
-      {{else}}
-        <UiNotice @type="danger"
-                  @title="Emergency Contact Info access during the off season not allowed"
-                  @icon="exclamation">
-          Sorry, you only have privileges to view and update the Emergency Contact information while the event is
-          happening.
-        </UiNotice>
-      {{/if}}
-    </w.step>
+        {{else}}
+          <UiNotice @type="danger"
+                    @title="Emergency Contact Info access during the off season not allowed"
+                    @icon="exclamation">
+            Sorry, you only have privileges to view and update the Emergency Contact information while the event is
+            happening.
+          </UiNotice>
+        {{/if}}
+      </w.step>
+    </ChForm>
     <w.step @title="Radios">
       {{#unless this.eventInfo.radio_info_available}}
         <UiNotice @type="danger">

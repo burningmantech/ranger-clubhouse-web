@@ -23,14 +23,14 @@
       {{/if}}
       {{#if @isLast}}
         <div>
-          <UiButton @onClick={{this.wizard.finishAction}}>
-            {{this.wizard.finishLabel}}
+          <UiButton @onClick={{this.finishAction}}>
+            {{this.finishLabel}}
           </UiButton>
         </div>
       {{else}}
         <div>
-          <UiButton @onClick={{this.wizard.nextStep}} @type="success">
-            {{this.wizard.nextLabel}} {{fa-icon "arrow-right"}}
+          <UiButton @onClick={{this.nextAction}} @type="success">
+            {{this.nextLabel}} {{fa-icon "arrow-right" left=1}}
           </UiButton>
         </div>
       {{/if}}
