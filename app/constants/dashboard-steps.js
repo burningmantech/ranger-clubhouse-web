@@ -262,7 +262,7 @@ export const ONLINE_TRAINING = {
     if (isPNV && !prevCompleted) {
       return {
         result: NOT_AVAILABLE,
-        message: 'You must complete the steps in the previous section, include awaiting on any photo approvals, before being allowed to take the Online Course.',
+        message: 'You must complete the steps in the previous section, including awaiting on any photo approvals, before being allowed to take the Online Course.',
         name
       };
     }

@@ -18,10 +18,10 @@
       Completed.
     {{/if}}
     {{#if @step.message}}
-      {{@step.message}}
+     {{@step.message}}
     {{/if}}
     {{#if @step.linkedMessage}}
-      {{@step.linkedMessage.prefix}}
+      &nbsp;{{@step.linkedMessage.prefix}}
       <LinkTo @route={{@step.linkedMessage.route}} disabled={{@isNotUser}}>{{@step.linkedMessage.text}}</LinkTo>
       {{@step.linkedMessage.suffix}}
     {{/if}}
