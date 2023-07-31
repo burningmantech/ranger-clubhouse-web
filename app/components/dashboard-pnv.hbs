@@ -4,27 +4,27 @@
     Hello {{@person.callsign}}.
   {{else}}
     Hello {{if @person.isProspective "Prospective Ranger" "Alpha"}} {{@person.callsign}}.
-   {{/if}}
+  {{/if}}
 </p>
 {{#if this.haveUrgentActions}}
-  <p>
-    <b class="text-danger">{{fa-icon "exclamation-circle" size="2x"}} There are one or more URGENT items that need your
-      attention.</b>
-  </p>
-{{else if this.haveActions}}
-  <p>
-    <h4>{{fa-icon "exclamation-circle" type="fas"}} There are one or more items that need your attention.</h4>
-  </p>
+  <div class="alert alert-danger mb-2">
+    {{fa-icon "exclamation-circle"}} There are one or more URGENT items that need your
+    attention.
+  </div>
 {{else if this.haveWaiting}}
-  <p>
-    {{fa-icon "hourglass-half" size="2x"}} You're not done, however there is nothing to be done in the Clubhouse right
+  <div class="alert alert-secondary mb-2">
+    {{fa-icon "hourglass-half" right=1}} You're not done, however there is nothing to be done in the Clubhouse right
     now. Please check back as indicated below.
-  </p>
+  </div>
 {{/if}}
 <p>
-  <b>Questions?</b> Contact the Volunteer Coordinators at <VcEmail />
+  <b>Questions?</b> Contact the Volunteer Coordinators at
+  <VcEmail/>
 </p>
-
+<p>
+  <b>Need to drop your application?</b> Reach out to the Volunteer Coordinators at the email address above. Please note,
+  Ranger applications <span class="text-danger">DO NOT roll over</span> to the next year. A new application must be submitted.
+</p>
 <div class="dashboard-box">
   {{#if @motds}}
     <DashboardMotd @motds={{@motds}} />
@@ -44,8 +44,8 @@
                        @isActive={{and step.isActive group.isActive}}
                        @showBehaviorAgreementAction={{@showBehaviorAgreementAction}}
                        @includePhoto={{or
-                (and (not this.session.isSmallScreen)  (eq idx 0) (eq stepIdx 0))
-                (and step.isPhotoStep this.session.isSmallScreen)}}
+          (and (not this.session.isSmallScreen)  (eq idx 0) (eq stepIdx 0))
+          (and step.isPhotoStep this.session.isSmallScreen)}}
                        @isNotUser={{this.isNotUser}}
                        @photoPosition={{if (and (not this.session.isSmallScreen) (eq idx 0)) "above" "inside"}}
                        @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}}
