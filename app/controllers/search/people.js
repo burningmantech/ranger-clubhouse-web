@@ -15,6 +15,7 @@ export default class SearchPeopleController extends ClubhouseController {
   @tracked includeOnlineCourse = false;
   @tracked includeTrainingStatus = false;
   @tracked includeTicketingInfo = false;
+  @tracked includeCreateDate = false;
 
   @tracked currentQuery = {};
 
@@ -145,6 +146,9 @@ export default class SearchPeopleController extends ClubhouseController {
       this.includeTicketingInfo = true;
     }
 
+    if (model.include_create_date) {
+      this.includeCreateDate = true;
+    }
 
     this._checkQuery();
   }
@@ -217,7 +221,14 @@ export default class SearchPeopleController extends ClubhouseController {
       CSV_COLUMNS.push({title: 'Training Signed-Up On', key: 'training_signed_up_at', format: 'date'});
     }
 
-    CSV_COLUMNS.push({title: 'Create Date', key: 'create_date', format: 'date'});
+    if (this.includeTicketingInfo) {
+      CSV_COLUMNS.push({title: 'Ticketing Started', key: 'ticketing_started_at', format: 'date'});
+      CSV_COLUMNS.push({title: 'Ticketing Finished', key: 'ticketing_finished_at', format: 'date'});
+    }
+
+    if (this.includeCreateDate) {
+      CSV_COLUMNS.push({title: 'Create Date', key: 'create_date', format: 'date'});
+    }
 
     this.house.downloadCsv('people-search.csv', CSV_COLUMNS, this.people);
   }

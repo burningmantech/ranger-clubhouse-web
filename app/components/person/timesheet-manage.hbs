@@ -29,7 +29,7 @@
         <th class="text-end">Duration</th>
         <th class="text-end">Credits</th>
         <th>Position</th>
-        <th>Status</th>
+        <th class="text-center">Status</th>
         <th>Action</th>
       </tr>
       </thead>
@@ -87,7 +87,7 @@
               <br><i>(as non ranger volunteer)</i>
             {{/if}}
           </td>
-          <td>
+          <td class="text-center">
             {{#if (is-empty ts.off_duty)}}
               {{badge "warning" "Still On Duty"}}
             {{else if ts.isVerified}}

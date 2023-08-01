@@ -21,9 +21,13 @@
   </div>
 </FormRow>
 
-{{#unless this.periods}}
+{{#if this.periods}}
+  <p>
+    <UiExportToCSVButton @onClick={{this.exportToCSV}} />
+  </p>
+{{else}}
   <b class="text-danger">No {{this.year}} shifts were found</b>
-{{/unless}}
+{{/if}}
 
 {{! template-lint-disable table-groups}}
 <table class="table table-sm table-hover table-striped table-width-auto">
@@ -56,8 +60,10 @@
                     </small><br>
                   {{/if}}
                   {{#each shift.people key="id" as |person|~}}
-                    <PersonLink @person={{person}} /><br>
-                    {{~#if person.parenthetical}}<div class="text-muted small">({{person.parenthetical}})</div>{{/if~}}
+                    <PersonLink @person={{person}} />
+                    <br>
+                    {{~#if person.parenthetical}}
+                      <div class="text-muted small">({{person.parenthetical}})</div>{{/if~}}
                   {{/each}}
                 </div>
               {{else}}
