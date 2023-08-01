@@ -57,7 +57,7 @@ export default class PersonEventInfoController extends ClubhouseController {
           this.isSubmitting = true;
           await this.ajax.request(`online-training/${this.person.id}/mark-completed`, {method: 'POST'});
           this.toast.success('Person has been marked as completing the online course.');
-          this.eventInfo = await this.ajax.request(`person/${this.person.id}/event-info`, {data: {year: this.year}});
+          this.eventInfo = (await this.ajax.request(`person/${this.person.id}/event-info`, {data: {year: this.year}})).event_info;
         } catch (response) {
           this.house.handleErrorResponse(response);
         } finally {
