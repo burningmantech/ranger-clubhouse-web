@@ -22,6 +22,7 @@ export default class SearchPeopleRoute extends ClubhouseRoute {
       training_status: '',
       include_ticketing_info: false,
       ticketing_status: '',
+      include_create_date: false,
     });
   }
 }
