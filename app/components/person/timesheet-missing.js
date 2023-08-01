@@ -21,12 +21,15 @@ export default class PersonTimesheetMissingComponent extends Component {
 
   @tracked viewEntry = null;
 
+  @tracked isSubmitting = false;
+
   @service ajax;
   @service house;
   @service modal;
   @service session;
   @service store;
   @service toast;
+
 
   hasTimesheetManagement = this.session.hasRole(TIMESHEET_MANAGEMENT);
 
@@ -40,14 +43,16 @@ export default class PersonTimesheetMissingComponent extends Component {
     new_on_duty: [
       validateDateTime({
         before: 'new_off_duty',
-        if_set: 'create_entry'
+        if_set: 'create_entry',
+        message: 'Date/time must be before Off Duty'
       }),
       validatePresence({presence: true})
     ],
     new_off_duty: [
       validateDateTime({
         after: 'new_on_duty',
-        if_set: 'create_entry'
+        if_set: 'create_entry',
+        message: 'Date/time must be after On Duty'
       }),
       validatePresence({presence: true})
     ],
@@ -73,7 +78,10 @@ export default class PersonTimesheetMissingComponent extends Component {
         message: 'Either a requester or reviewer note must be entered.'
       })];
     } else {
-      this.newEntryValidations.additional_notes = [validatePresence({presence: true, message: 'Enter a note from the requester.'})]
+      this.newEntryValidations.additional_notes = [validatePresence({
+        presence: true,
+        message: 'Enter a note from the requester.'
+      })]
     }
   }
 
@@ -86,7 +94,7 @@ export default class PersonTimesheetMissingComponent extends Component {
    * @private
    */
 
-  _setupEdit(timesheet) {
+  async _setupEdit(timesheet) {
     const {timesheetMissing} = this.args;
 
     let idx = timesheetMissing.indexOf(timesheet);
@@ -106,7 +114,8 @@ export default class PersonTimesheetMissingComponent extends Component {
       }
     }
 
-    timesheet.reload().then(() => {
+    try {
+      await timesheet.reload();
       timesheet.set('new_on_duty', timesheet.on_duty);
       timesheet.set('new_off_duty', timesheet.off_duty);
       timesheet.set('new_position_id', timesheet.position_id);
@@ -114,14 +123,18 @@ export default class PersonTimesheetMissingComponent extends Component {
       timesheet.set('additional_notes', '');
       timesheet.set('additional_reviewer_notes', '');
 
+      this.editEntry = timesheet;
       this.nextEntry = nextEntry;
       this.editEntry = timesheet;
       this.partnerInfo = timesheet.partner_info;
       this.havePartnerTimesheet = false;
-    }).catch((response) => {
+
+    } catch (response) {
       this.house.handleErrorResponse(response);
       this.editEntry = null;
-    });
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   /**
@@ -170,23 +183,31 @@ export default class PersonTimesheetMissingComponent extends Component {
 
     const createEntry = model.create_entry;
     this.toast.clear();
-    this.house.saveModel(model, 'Missing timesheet entry has been successfully updated.', () => {
-      this.editEntry = null;
-      this.nextEntry = null;
-      this.havePartnerTimesheet = null;
+    this.house.saveModel(model, 'Missing timesheet entry has been successfully updated.',
+      async () => {
+        this.editEntry = null;
+        this.nextEntry = null;
+        this.havePartnerTimesheet = null;
 
-      const {timesheets, onChange} = this.args;
-      // Refresh the timesheet entries if a new one was created
-      if (createEntry && timesheets) {
-        timesheets.update();
-      }
+        const {timesheets, onChange} = this.args;
+        // Refresh the timesheet entries if a new one was created
+        if (createEntry && timesheets) {
+          try {
+            this.isSubmitting = true;
+            await timesheets.update();
+          } catch (response) {
+            this.house.handleErrorResponse(response);
+          } finally {
+            this.isSubmitting = false;
+          }
+        }
 
-      if (nextEntry) {
-        this._setupEdit(nextEntry);
-      }
+        if (nextEntry) {
+          await this._setupEdit(nextEntry);
+        }
 
-      onChange();
-    });
+        onChange();
+      });
   }
 
   @action
@@ -200,9 +221,21 @@ export default class PersonTimesheetMissingComponent extends Component {
   }
 
 
+  /**
+   * Obtain the earliest start date allowed
+   *
+   * @returns {string}
+   */
+
   get minDate() {
     return `${this.args.year}-07-01`;
   }
+
+  /**
+   * Obtain the latest start date allowed
+   *
+   * @returns {string}
+   */
 
   get maxDate() {
     return `${this.args.year}-09-30`;
@@ -213,6 +246,7 @@ export default class PersonTimesheetMissingComponent extends Component {
    * @param model
    * @param isValid
    */
+
   @action
   saveEntryAction(model, isValid) {
     this._saveEntry(model, isValid);
@@ -224,6 +258,7 @@ export default class PersonTimesheetMissingComponent extends Component {
    * @param model
    * @param {boolean} isValid
    */
+
   @action
   saveAndManageNextEntryAction(model, isValid) {
     this._saveEntry(model, isValid, this.nextEntry);
@@ -238,11 +273,17 @@ export default class PersonTimesheetMissingComponent extends Component {
     const ts = this.editEntry;
     this.modal.confirm('Delete Missing Timesheet',
       `Position: ${ts.position.title}<br>Time: ${ts.on_duty} to ${ts.off_duty}<br> Are you sure you wish to delete this timesheet?`,
-      () => {
-        ts.destroyRecord().then(() => {
+      async () => {
+        try {
+          this.isSubmitting = true;
+          await ts.destroyRecord();
           this.toast.success('The entry has been deleted.');
           this.editEntry = null;
-        }).catch((response) => this.house.handleErrorResponse(response));
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        } finally {
+          this.isSubmitting = false;
+        }
       });
   }
 
@@ -253,13 +294,23 @@ export default class PersonTimesheetMissingComponent extends Component {
    */
 
   @action
-  viewPartnerTimesheetAction(partner) {
-    this.ajax.request('timesheet', {data: {year: this.args.year, person_id: partner.person_id}})
-      .then((result) => {
-        this.havePartnerTimesheet = true;
-        this.partnerTimesheet = result.timesheet;
-        this.partnerCallsign = partner.callsign;
-      }).catch((response) => this.house.handleErrorResponse(response));
+  async viewPartnerTimesheetAction(partner) {
+    try {
+      this.isSubmitting = true;
+      const {timesheet} = await this.ajax.request('timesheet', {
+        data: {
+          year: this.args.year,
+          person_id: partner.person_id
+        }
+      });
+      this.havePartnerTimesheet = true;
+      this.partnerTimesheet = timesheet;
+      this.partnerCallsign = partner.callsign;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   /**
@@ -314,9 +365,16 @@ export default class PersonTimesheetMissingComponent extends Component {
     }
 
     this.house.saveModel(model, 'A new missing timesheet request has been successfully created.',
-      () => {
+      async () => {
         this.newEntry = null;
-        this.args.timesheetMissing.update();
+        try {
+          this.isSubmitting = false;
+          await this.args.timesheetMissing.update();
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        } finally {
+          this.isSubmitting = false;
+        }
       });
   }
 }

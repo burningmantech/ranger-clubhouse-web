@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import { get } from '@ember/object';
-import { isEmpty } from '@ember/utils';
+import {get} from '@ember/object';
+import {isEmpty} from '@ember/utils';
 
 function getProperty(changes, content, name) {
   return (name in changes) ? changes[name] : get(content, name);
@@ -22,7 +22,7 @@ function getDateProperty(changes, content, name) {
 
 export default function validateDateTime(opts = {}) {
   return (key, newValue, oldValue, changes, content) => {
-    const { before, after, if_set, dateOnly } = opts;
+    const {before, after, if_set, dateOnly, message} = opts;
     let date;
 
     if (if_set && !getProperty(changes, content, if_set)) {
@@ -58,7 +58,7 @@ export default function validateDateTime(opts = {}) {
       }
 
       if (!date.isBefore(beforeDate) && !date.isSame(beforeDate)) {
-        return `Date must be before ${before}`;
+        return message ?? `Date must be before ${before}`;
       }
     }
 
@@ -70,7 +70,7 @@ export default function validateDateTime(opts = {}) {
       }
 
       if (!date.isAfter(afterDate) && !date.isSame(afterDate)) {
-        return `Date must be after ${after}`;
+        return message ?? `Date must be after ${after}`;
       }
     }
 
