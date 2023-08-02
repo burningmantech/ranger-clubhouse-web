@@ -10,13 +10,15 @@ export default class ReportsPositionSanityCheckerRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    controller.set('shiny_pennies', this.shinyPennies(model.shiny_pennies))
-    controller.set('shiny_penny_year', model.shiny_penny_year)
-    controller.set('team_positions', this.teamPositions(model.team_positions))
-    controller.set('team_membership', this.teamMembership(model.team_membership))
+    controller.set('deactivated_accounts', this.deactivatedAccounts(model.deactivated_accounts));
     controller.set('deactivated_positions', this.deactivated_positions(model.deactivated_positions));
     controller.set('deactivated_teams', this.deactivated_teams(model.deactivated_teams));
     controller.set('lmyr', this.lmyrRole(model.lmyr));
+    controller.set('retired_accounts', this.retiredAccounts(model.retired_accounts));
+    controller.set('shiny_pennies', this.shinyPennies(model.shiny_pennies))
+    controller.set('shiny_penny_year', model.shiny_penny_year)
+    controller.set('team_membership', this.teamMembership(model.team_membership))
+    controller.set('team_positions', this.teamPositions(model.team_positions))
   }
 
   shinyPennies(shiny_pennies) {
@@ -35,6 +37,17 @@ export default class ReportsPositionSanityCheckerRoute extends ClubhouseRoute {
     this._setChecked(lmyr);
 
     return lmyr;
+  }
+
+  deactivatedAccounts(accounts) {
+    this._setChecked(accounts);
+
+    return accounts;
+  }
+
+  retiredAccounts(accounts){
+    this._setChecked(accounts);
+    return accounts;
   }
 
   teamPositions(people) {
