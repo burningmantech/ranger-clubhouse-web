@@ -117,3 +117,31 @@
 >
   People who have LMYR explicitly granted should have an appropriate position and/or team membership
 </Admin::PositionSanityCheck>
+
+<Admin::PositionSanityCheck
+  @title="Deactivated Accounts With Positions"
+  @caption="{{pluralize this.deactivated_accounts.length "person"}} with granted positions"
+  @sucessMessage="Congratulations! All accounts appear to be in order."
+  @columns={{(array)}}
+  @people={{this.deactivated_accounts}}
+  @repairAction={{this.repairPeople}}
+  @repairType="deactivated_accounts"
+  @canRepair={{this.userCanRepair}}
+  @isSubmitting={{this.isSubmitting}}
+>
+  Deactivated accounts (bonked, deceased, dismissed, past prospective, resigned, uberbonked) should not have any granted positions.
+</Admin::PositionSanityCheck>
+
+<Admin::PositionSanityCheck
+  @title="Retired Accounts With More Than New User Positions"
+  @caption="{{pluralize this.retired_accounts.length "person"}} found"
+  @sucessMessage="Congratulations! All accounts appear to be in order."
+  @columns={{(array)}}
+  @people={{this.retired_accounts}}
+  @repairAction={{this.repairPeople}}
+  @repairType="retired_accounts"
+  @canRepair={{this.userCanRepair}}
+  @isSubmitting={{this.isSubmitting}}
+>
+  Retired accounts should only have positions flagged as new user eligible (similar to a prospective or auditor).
+</Admin::PositionSanityCheck>
