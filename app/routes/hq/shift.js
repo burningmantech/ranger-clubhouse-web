@@ -26,7 +26,7 @@ export default class HqShiftRoute extends ClubhouseRoute {
     const hqModel = this.modelFor('hq');
     controller.setProperties(model);
     controller.setProperties(hqModel);
-    controller.unverifiedTimesheets = controller.timesheets.filter((ts) => ts.isUnverified);
+  //  controller.unverifiedTimesheets = controller.timesheets.filter((ts) => ts.isUnverified);
     controller.endedShiftEntry = null;
     controller._findOnDuty();
 

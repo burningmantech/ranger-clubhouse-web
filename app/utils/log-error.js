@@ -43,6 +43,7 @@ export default function logError(error, type, additionalData = null) {
     || error.name === 'NetworkError'
     || message?.match(/NetworkError/)
     || message?.match(/Network request failed/i)
+    || message?.match(/Load failure/i)
     // Authorization error
     || error.status === 403) {
     // Don't record timeouts, unauthorized requests (aka expired authorization tokens), or offline errors.

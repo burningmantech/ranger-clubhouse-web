@@ -16,7 +16,7 @@ export default class HqShiftController extends ClubhouseController {
   @tracked isMarkingOffSite = false;
 
   @tracked timesheets;
-  @tracked unverifiedTimesheets = [];
+ // @tracked unverifiedTimesheets = [];
   @tracked onDutyEntry;
 
   @tracked assets;
@@ -43,14 +43,19 @@ export default class HqShiftController extends ClubhouseController {
     return this.timesheets.find((t) => t.position_id === ALPHA) && this.person.isActive;
   }
 
+  get unverifiedTimesheets() {
+    return this.timesheets.filter((t) => t.isUnverified);
+  }
+
   /**
    * Are there any unverified and not being ignored timesheet entries?
    * (used to determine if Start Shift can be shown)
    *
    * @returns {boolean}
    */
+
   get hasUnverifiedTimesheet() {
-    return !!this.unverifiedTimesheets.find((t) => (t.isUnverified && !t.isIgnoring));
+    return !!this.unverifiedTimesheets.find((t) =>!t.isIgnoring);
   }
 
   /**
@@ -60,7 +65,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get unverifiedTimesheetCount() {
-    return this.unverifiedTimesheets.filter((t) => (t.isUnverified && !t.isIgnoring)).length;
+    return this.unverifiedTimesheets.filter((t) =>!t.isIgnoring).length;
   }
 
   /**
@@ -201,7 +206,7 @@ export default class HqShiftController extends ClubhouseController {
   async endShiftNotify(timesheet) {
     try {
       await this.timesheets.update();
-      this.unverifiedTimesheets = this.timesheets.filter((t) => t.isUnverified);
+      //this.unverifiedTimesheets = this.timesheets.filter((t) => t.isUnverified);
       this._findOnDuty()
       if (timesheet) {
         this.completeTodo(HQ_TODO_END_SHIFT);
@@ -272,7 +277,7 @@ export default class HqShiftController extends ClubhouseController {
       items++;
     }
 
-    if (this.unverifiedTimesheets.length) {
+    if (this.unverifiedTimesheetCount) {
       items++;
     }
 
