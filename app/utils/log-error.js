@@ -39,11 +39,11 @@ export default function logError(error, type, additionalData = null) {
     || isAbortError(error)
     || isForbiddenResponse(error)
     || isUnauthorizedResponse(error)
-    // Offline errors..
+    // Offline errors / poor signal strength errors.
     || error.name === 'NetworkError'
     || message?.match(/NetworkError/)
     || message?.match(/Network request failed/i)
-    || message?.match(/Load failure/i)
+    || message?.match(/Load fail(ure|ed)/i)
     // Authorization error
     || error.status === 403) {
     // Don't record timeouts, unauthorized requests (aka expired authorization tokens), or offline errors.
