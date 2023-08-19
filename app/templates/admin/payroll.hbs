@@ -8,7 +8,7 @@
   <ChForm @formId="datesform" @formFor={{this.datesForm}} as |f|>
     <FormRow>
       <FormLabel>Positions to export</FormLabel>
-      <f.checkboxGroup @name="position_ids" @options={{this.positionOptions}} />
+      <f.checkboxGroup @name="position_ids" @options={{this.positionOptions}} @includeToggleControls={{true}} />
     </FormRow>
     <FormRow>
       <f.datetime @name="start_time"
@@ -20,23 +20,19 @@
                   @size={{20}}
       />
       <f.select @name="break_after"
-                @label="Enforced Break After"
+                @label="Enforced Meal Break After"
                 @options={{this.breakAfterOptions}}
       />
       <f.select @name="break_duration"
-                @label="Lunch/Dinner Break Duration"
+                @label="Meal Break Duration"
                 @options={{this.breakDurationOptions}}
-      />
-      <f.select @name="hour_cap"
-                @label="Hour Cap "
-                @options={{this.hourCapOptions}}
       />
       <div class="col-auto align-self-end">
         <f.submit @onSubmit={{this.submitReport}} @label="Submit"/>
       </div>
     </FormRow>
     <FormRow>
-      <div class="form-text">Note: hour cap is ignored on positions set to not adjust hours.</div>
+      <div class="form-text">Note: meal break is ignored on positions set to not adjust hours.</div>
     </FormRow>
   </ChForm>
 
@@ -44,13 +40,13 @@
     {{#if this.people}}
       Showing {{pluralize this.entryCount "timesheet entry"}} for {{pluralize this.people.length "person"}}.
       <UiButton @onClick={{fn this.exportPayroll true}} @size="sm">
-        Export Adjusted Payroll
+        Export Payroll w/Meal Breaks
       </UiButton>
-       <UiButton @onClick={{fn this.exportPayroll false}} @size="sm">
+      <UiButton @onClick={{fn this.exportPayroll false}} @size="sm">
         Export Unadjusted Payroll
       </UiButton>
       <UiButton @onClick={{this.exportTable}} @size="sm">
-        Export Table
+        Export On Screen Table
       </UiButton>
       <table class="table table-width-auto table-sm table-striped table-hover mt-2">
         <thead>
@@ -59,6 +55,7 @@
           <th>Position / Sub-Dept ID</th>
           <th>Entry Status</th>
           <th>Original Time</th>
+          <th>Duration</th>
           <th>Adjusted</th>
           <th>Notes</th>
         </tr>
@@ -68,14 +65,15 @@
           {{#each person.shifts as |row|}}
             <tr class={{if row.still_on_duty "table-warning"}}>
               <td>
-                <PersonLink @person={{person}} /><br>
-                 {{person.employee_id}}
+                <PersonLink @person={{person}} />
+                <br>
+                {{person.employee_id}}
               </td>
               <td>
                 {{row.position_title}}<br>
                 {{row.paycode}}
               </td>
-              <td>
+              <td class="text-center">
                 {{#if row.still_on_duty}}
                   {{badge "warning" "still on duty"}}
                 {{else if row.verified}}
@@ -85,22 +83,23 @@
                 {{/if}}
               </td>
               <td>
-                {{shift-format row.orig_on_duty row.orig_off_duty}}<br>
-                Orig. duration: {{hour-minute-format row.orig_duration}}
+                {{shift-format row.orig_on_duty row.orig_off_duty}}
+              </td>
+              <td class="text-end">
+                {{hour-minute-format row.orig_duration}}
               </td>
               <td>
                 {{#if row.meal_adjusted}}
                   {{#let row.meal_adjusted.first_half as |first|}}
                     {{shift-format first.on_duty first.off_duty}}
                   {{/let}}
-                  <div class="text-center my-1"><i>- meal break -</i></div>
+                  <div class="ms-2 my-1"><i>- {{pluralize this.mealBreak "minute"}} meal break -</i></div>
                   {{#let row.meal_adjusted.second_half as |second|}}
                     {{shift-format second.on_duty second.off_duty}}
                   {{/let}}
                 {{else}}
                   {{shift-format row.on_duty row.off_duty}}
-                {{/if}}<br>
-                Adj. total duration: {{hour-minute-format row.duration}}
+                {{/if}}
               </td>
               <td>
                 {{nl2br row.notes}}

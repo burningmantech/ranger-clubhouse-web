@@ -1,5 +1,5 @@
 import ChFormFieldBaseComponent from './field-base';
-import { action} from '@ember/object';
+import {action} from '@ember/object';
 
 export default class ChFormCheckboxGroupFieldComponent extends ChFormFieldBaseComponent {
   wrapClassDefault = '';
@@ -46,6 +46,21 @@ export default class ChFormCheckboxGroupFieldComponent extends ChFormFieldBaseCo
         values.push(checkbox.value)
       }
     })
+
+    this._updateValue(values);
+  }
+
+  @action
+  toggleAll(checkAll) {
+    const values = [];
+    if (checkAll) {
+      this.checkedBoxes.forEach((checkbox) => {
+        checkbox.isChecked = true;
+        values.push(checkbox.value)
+      })
+    } else {
+      this.checkedBoxes.forEach((checkbox) => checkbox.isChecked = false);
+    }
 
     this._updateValue(values);
   }

@@ -18,12 +18,11 @@ const CSV_TABLE_COLUMNS = [
   {title: 'Entry Status', key: 'status'},
   {title: 'Orig Start', key: 'orig_on_duty'},
   {title: 'Orig End', key: 'orig_off_duty'},
-  {title: 'Orig Duration', key: 'orig_duration'},
+  {title: 'Duration', key: 'orig_duration'},
   {title: 'First Half Start', key: 'first_on_duty'},
   {title: 'First Half End', key: 'first_off_duty'},
   {title: 'Second Half Start', key: 'second_on_duty'},
   {title: 'Second Half End', key: 'second_off_duty'},
-  {title: 'Total Adj. Duration', key: 'adj_duration'},
   {title: 'Notes', key: 'notes'}
 ];
 
@@ -55,6 +54,8 @@ export default class AdminPayrollController extends ClubhouseController {
   @tracked positions;
   @tracked positionOptions;
 
+  @tracked mealBreak;
+
   datesValidation = {
     start_time: [
       validatePresence({presence: true, message: 'Enter a starting date and time.'}),
@@ -80,20 +81,6 @@ export default class AdminPayrollController extends ClubhouseController {
     ["5 hours", 5],
     ["6 hours", 6],
     ["7 hours", 7],
-  ];
-
-  hourCapOptions = [
-    ["No cap", 0],
-    ["7 hours", 7],
-    ["8 hours", 8],
-    ["9 hours", 9],
-    ["10 hours", 10],
-    ["11 hours", 11],
-    ["12 hours", 12],
-    ["13 hours", 13],
-    ["14 hours", 14],
-    ["15 hours", 15],
-    ["16 hours", 16],
   ];
 
   /**
@@ -134,13 +121,13 @@ export default class AdminPayrollController extends ClubhouseController {
           start_time: model.start_time,
           end_time: model.end_time,
           break_duration: model.break_duration,
-          hour_cap: model.hour_cap,
           position_ids: model.position_ids,
           break_after: +model.break_after,
         }
       });
       this.people = people;
       this.reportWasRun = true;
+      this.mealBreak = model.break_duration;
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
@@ -166,8 +153,7 @@ export default class AdminPayrollController extends ClubhouseController {
           'code': entry.paycode,
           'orig_on_duty': entry.on_duty,
           'orig_off_duty': entry.off_duty,
-          'orig_duration': hourMinuteFormat([entry.orig_duration]),
-          'adj_duration': hourMinuteFormat([entry.duration]),
+          'duration': hourMinuteFormat([entry.orig_duration]),
           notes: entry.notes,
         };
 
@@ -216,7 +202,7 @@ export default class AdminPayrollController extends ClubhouseController {
             this._punchTheClock(person, rows, entry, adj.first_half.on_duty, adj.first_half.off_duty, PUNCH_IN_DAY, PUNCH_OUT_LUNCH);
             this._punchTheClock(person, rows, entry, adj.second_half.on_duty, adj.second_half.off_duty, PUNCH_IN_LUNCH, PUNCH_OUT_DAY);
           } else {
-            // No meal breaks, although entry might have a daily hour cap applied.
+            // No meal breaks
             this._punchTheClock(person, rows, entry, entry.on_duty, entry.off_duty, PUNCH_IN_DAY, PUNCH_OUT_DAY);
           }
         } else {
