@@ -36,6 +36,7 @@ export default class HqSiteCheckinController extends ClubhouseController {
 
   async _savePerson(model, message, callback) {
     this.isSubmitting = true;
+    this.toast.clear();
     try {
       await model.save();
       this.toast.success(message);
