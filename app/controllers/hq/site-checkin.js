@@ -69,4 +69,19 @@ export default class HqSiteCheckinController extends ClubhouseController {
       this.siteCheckInStarted = false;
     });
   }
+
+  get allowedEventRadio() {
+    return (this.eventInfo.radio_eligible && this.personEvent.asset_authorized && this.eventInfo.radio_max > 0)
+  }
+
+  @action
+  checkForRadio(callback) {
+    if (this.allowedEventRadio && !this.activeAssets.length) {
+      this.modal.confirm('No Event Radios Checked Out',
+        `${this.person.callsign} is allowed an Event Radio, however, no radios where checked out. Use the Confirm button to indicate the person is not receiving a radio at this time. Otherwise, use Cancel and ensure the radio is checked out.`,
+        () => callback());
+    } else {
+      callback();
+    }
+  }
 }
