@@ -166,11 +166,12 @@ export default class PersonTimesheetManageComponent extends Component {
     }
 
     this.house.saveModel(model, 'The timesheet entry has been successfully updated.',
-      () => {
+      async () => {
         // clear out the pseudo fields.
         this.editEntry.additional_notes = '';
         this.editEntry.additional_reviewer_notes = '';
         this.editEntry = null;
+        await this.args.timesheets.update();
         this.args.onChange();
         this._markOverlapping();
       });
