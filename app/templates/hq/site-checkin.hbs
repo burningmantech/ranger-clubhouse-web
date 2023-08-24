@@ -123,7 +123,7 @@
         {{/if}}
       </w.step>
     </ChForm>
-    <w.step @title="Radios"  @nextAction={{fn this.checkForRadio}}>
+    <w.step @title="Radios"  @nextAction={{this.checkForRadio}}>
       {{#unless this.eventInfo.radio_info_available}}
         <UiNotice @type="danger">
           Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
