@@ -333,6 +333,26 @@
             </div>
           </FormRow>
         </fieldset>
+        <fieldset>
+          <legend>{{this.addType}}s not checked in</legend>
+          <FormRow>
+            <div class="col-auto">
+              {{#if this.peoplePositionsOptions}}
+                <a href {{action this.togglePeoplePositions}} class="d-block mb-2">
+                  {{if this.showPeoplePositions "Hide" "Show" }} {{pluralize this.peoplePositionsOptions.length
+                                                                     (concat "Not Checked In " this.addType)}}
+                </a>
+
+                {{#if this.showPeoplePositions}}
+                  <f.checkboxGroup @name="peoplePositions" @options={{this.peoplePositionsOptions}} @cols={{4}} />
+                {{/if}}
+              {{else}}
+                No other {{this.addType}}s with the position(s) granted not found.
+              {{/if}}
+            </div>
+          </FormRow>
+        </fieldset>
+
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Add {{this.addType}}s" @disabled={{and (not f.model.offduty) (not f.model.onduty)}} />

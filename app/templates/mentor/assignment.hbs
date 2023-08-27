@@ -53,12 +53,19 @@
   </p>
 
   <FormRow>
-    <FormLabel @auto={{true}}>Filter</FormLabel>
+    <FormLabel @auto={{true}}>Status Filter</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="filter"
                       @value={{this.filter}}
                       @options={{this.filterOptions}}
                       @onChange={{this.updateFilter}} />
+    </div>
+    <FormLabel @auto={{true}}>Shift</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="shiftFilter"
+                      @value={{this.shiftFilter}}
+                      @options={{this.shiftFilterOptions}}
+                      @onChange={{action (mut this.shiftFilter)}} />
     </div>
     <div class="col-auto">
       <UiButton @type="secondary" @class="mb-2" @onClick={{this.togglePrinting}}>
