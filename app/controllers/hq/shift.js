@@ -119,19 +119,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get shiftRadios() {
-    const radioCount = this.radioCount;
-    const eventInfo = this.eventInfo;
-
-    if (!eventInfo.radio_eligible) {
-      // Not event radio eligible - assume all check-outs are shift radios.
-      return radioCount;
-    }
-
-    if (radioCount > eventInfo.radio_max) {
-      return radioCount - eventInfo.radio_max;
-    }
-
-    return 0;
+   return this.assetsCheckedOut.filter((a) => a.asset.description === TYPE_RADIO && !a.asset.perm_assign).length;
   }
 
   /**
@@ -141,18 +129,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get eventRadios() {
-    const radioCount = this.radioCount;
-    const eventInfo = this.eventInfo;
-
-    if (!eventInfo.radio_eligible) {
-      return 0;
-    }
-
-    if (radioCount < eventInfo.radio_max) {
-      return radioCount;
-    } else {
-      return eventInfo.radio_max;
-    }
+    return this.assetsCheckedOut.filter((a) => a.asset.description === TYPE_RADIO && a.asset.perm_assign).length;
   }
 
   /**

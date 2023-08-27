@@ -12,6 +12,9 @@ export default class MentorAssignmentController extends ClubhouseController {
   @tracked isRendering = false;
   @tracked mentors;
 
+  @tracked shiftOptions;
+  @tracked shiftFilter;
+
   statusOptions = [
     'pending',
     'pass',
@@ -41,25 +44,34 @@ export default class MentorAssignmentController extends ClubhouseController {
   }
 
   get viewAlphas() {
-    const alphas = this.alphas,
-      filter = this.filter;
+    let alphas = this.alphas;
+    const filter = this.filter;
 
     switch (filter) {
       case 'signed-in':
-        return alphas.filter((a) => a.on_alpha_shift);
+        alphas = alphas.filter((a) => a.on_alpha_shift);
+        break;
 
       case 'pending':
-        return alphas.filter((a) => (a.mentor_status === 'pending' && a.mentors[0].mentor_id > 0));
+        alphas = alphas.filter((a) => (a.mentor_status === 'pending' && a.mentors[0].mentor_id > 0));
+        break;
 
       case 'passed':
-        return alphas.filter((a) => (a.mentor_status === 'pass'));
+        alphas = alphas.filter((a) => (a.mentor_status === 'pass'));
+        break;
 
       case 'bonked':
-        return alphas.filter((a) => (a.mentor_status === 'bonked' || a.mentor_status === 'self-bonk'));
-
-      default:
-        return alphas;
+        alphas = alphas.filter((a) => (a.mentor_status === 'bonked' || a.mentor_status === 'self-bonk'));
+        break;
     }
+
+    if (this.shiftFilter === 'not-checked-in') {
+      alphas = alphas.filter((alpha) => !alpha.alpha_slot);
+    } else if (this.shiftFilter !== 'all') {
+        alphas = alphas.filter((alpha) => alpha.alpha_slot?.begins === this.shiftFilter);
+    }
+
+    return alphas;
   }
 
   @action

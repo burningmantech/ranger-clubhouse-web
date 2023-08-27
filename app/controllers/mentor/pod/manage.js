@@ -9,10 +9,10 @@ import {htmlSafe} from '@ember/template';
 
 import {
   ALPHA,
-  MENTOR,
+  MENTOR, MENTOR_APPRENTICE,
   MENTOR_CHEETAH,
   MENTOR_KHAKI,
-  MENTOR_LEAD,
+  MENTOR_LEAD, MENTOR_MITTEN,
   MENTOR_RADIO_TRAINER,
   MENTOR_SHORT,
   MENTOR_WHEEL_OF_MANY_WAYS
@@ -29,10 +29,12 @@ export default class MentorPodManageController extends ClubhouseController {
   @tracked addType;
   @tracked onDutyOptions;
   @tracked offDutyOptions;
+  @tracked peoplePositionsOptions;
   @tracked callsignForm;
 
   @tracked showSortControls = false;
   @tracked showOffDuty = false;
+  @tracked showPeoplePositions = false;
 
   @tracked isLead;
 
@@ -53,6 +55,11 @@ export default class MentorPodManageController extends ClubhouseController {
   @action
   toggleShowSortControls() {
     this.showSortControls = !this.showSortControls;
+  }
+
+  _clearToggles() {
+    this.showOffDuty = false;
+    this.showPeoplePositions = false;
   }
 
   /**
@@ -122,6 +129,7 @@ export default class MentorPodManageController extends ClubhouseController {
   @action
   async addMentor(pod) {
     this.isSubmitting = true;
+    this._clearToggles();
     try {
       const mentors = (await this.ajax.request('timesheet', {
         data: {
@@ -143,6 +151,8 @@ export default class MentorPodManageController extends ClubhouseController {
         position_title: t.position.title
       }));
 
+      const {mentors: allMentors} = await this.ajax.request('mentor/mentors');
+
       mentors.sort((a, b) => a.callsign.localeCompare(b.callsign));
 
       const beforeHour = dayjs(this.slot.begins).subtract(1, 'hour').unix();
@@ -150,6 +160,8 @@ export default class MentorPodManageController extends ClubhouseController {
 
       const currentMentors = [];
       const otherMentors = [];
+
+      const mentorsWithPositions = allMentors.filter((m) => !m.working);
 
       mentors.forEach((mentor) => {
         const ts = dayjs(mentor.on_duty).unix();
@@ -164,6 +176,7 @@ export default class MentorPodManageController extends ClubhouseController {
         [
           currentMentors.map((p) => this._buildCallsignOption(p, 'Mentor')),
           otherMentors.map((p) => this._buildCallsignOption(p, 'Mentor')),
+          mentorsWithPositions.map((p) => ({label: p.callsign, value: p.id}))
         ]);
     } catch (response) {
       this.house.handleErrorResponse(response);
@@ -182,9 +195,45 @@ export default class MentorPodManageController extends ClubhouseController {
   @action
   async addMITten(pod) {
     this.isSubmitting = true;
+    this._clearToggles();
     try {
       const {mittens} = await this.ajax.request('mentor/mittens');
-      this._setupCallsignDialog(pod, 'MITten', this._buildMentorOptions(mittens, 'MITten'));
+      const allMittens = mittens.filter((m) => !m.working);
+      const workingMittens = (await this.ajax.request('timesheet', {
+        data: {
+          is_on_duty: 1,
+          position_ids: [
+            MENTOR_MITTEN,
+            MENTOR_APPRENTICE,
+           ],
+        }
+      })).timesheet.map((t) => ({
+        id: t.person.id,
+        callsign: t.person.callsign,
+        on_duty: t.on_duty,
+        position_title: t.position.title
+      }));
+
+      const beforeHour = dayjs(this.slot.begins).subtract(1, 'hour').unix();
+      const afterHour = dayjs(this.slot.begins).add(1, 'hour').unix();
+
+      const currentMITtens = [];
+      const otherMITtens = [];
+
+      workingMittens.forEach((mitten) => {
+          const ts = dayjs(mitten.on_duty).unix();
+          if (ts >= beforeHour && ts <= afterHour) {
+            currentMITtens.push(mitten);
+          } else {
+            otherMITtens.push(mitten);
+          }
+      })
+
+      this._setupCallsignDialog(pod, 'MITten', [
+        currentMITtens.map((p) => this._buildCallsignOption(p, 'MITten')),
+        otherMITtens.map((p) => this._buildCallsignOption(p, 'MITten')),
+        allMittens.map((p) => ({ label: p.callsign, value: p.id }))
+      ]);
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
@@ -202,6 +251,7 @@ export default class MentorPodManageController extends ClubhouseController {
   @action
   async addAlpha(pod) {
     this.isSubmitting = true;
+    this._clearToggles();
 
     try {
       const alphaTimesheets = (await this.ajax.request('timesheet', {
@@ -215,6 +265,8 @@ export default class MentorPodManageController extends ClubhouseController {
         on_duty: t.on_duty,
         position_title: t.position.title
       }));
+
+      const offDutyAlphas = (await this.ajax.request('mentor/alphas', {data: {off_duty: 1}})).alphas;
 
       const beforeHour = dayjs(this.slot.begins).subtract(1, 'hour').unix();
       const afterHour = dayjs(this.slot.begins).add(1, 'hour').unix();
@@ -232,7 +284,9 @@ export default class MentorPodManageController extends ClubhouseController {
         }
       });
 
-      this._setupCallsignDialog(pod, 'Alpha', [currentAlphas, otherAlphas]);
+      this._setupCallsignDialog(pod, 'Alpha', [
+        currentAlphas, otherAlphas, offDutyAlphas.map((a) => ({label: a.callsign, value: a.id}))
+      ]);
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
@@ -244,7 +298,7 @@ export default class MentorPodManageController extends ClubhouseController {
     const inPod = this._inPod(person.id, type);
 
     let label = `${person.callsign} (${dayjs(person.on_duty).format('HH:mm')}${inPod !== false ? `, Pod #${inPod}` : ''})`;
-    if (type !== 'Alpha') {
+    if (type !== 'Alpha' && person.position_title) {
       label += `<br>${person.position_title}`;
     }
 
@@ -253,21 +307,6 @@ export default class MentorPodManageController extends ClubhouseController {
       value: person.id,
       disabled: inPod !== false,
     }
-  }
-
-  /**
-   * Build the mentor / mitten options. Split into on duty and off duty groups.
-   *
-   * @param people
-   * @param type
-   * @private
-   */
-
-  _buildMentorOptions(people, type) {
-    return [
-      people.filter((p) => p.working).map((p) => this._buildCallsignOption(p, type)),
-      people.filter((p) => !p.working).map((p) => this._buildCallsignOption(p, type))
-    ];
   }
 
   /**
@@ -340,12 +379,18 @@ export default class MentorPodManageController extends ClubhouseController {
 
     this.onDutyOptions = options[0];
     this.offDutyOptions = options[1];
+    this.peoplePositionsOptions = options[2];
     this.isLead = false;
   }
 
   @action
   toggleOffDuty() {
     this.showOffDuty = !this.showOffDuty;
+  }
+
+  @action
+  togglePeoplePositions() {
+    this.showPeoplePositions = !this.showPeoplePositions;
   }
 
   @action

@@ -1,6 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
 import {tracked} from '@glimmer/tracking';
+import dayjs from 'dayjs';
 
 const MENTOR_COUNT = 3;
 
@@ -38,6 +39,8 @@ export default class MentorAssignmentRoute extends ClubhouseRoute {
      * Run thru the alphas and find the current mentor assignments
      */
 
+    const shifts = {};
+
     const alphas = model.alphas.map((person) => {
       const current = person.mentor_history.find((history) => history.year == year);
       const mentors = [];
@@ -61,13 +64,21 @@ export default class MentorAssignmentRoute extends ClubhouseRoute {
       person.mentors = mentors;
       person.error = null;
 
+      if (person.alpha_slot) {
+        shifts[person.alpha_slot.begins] = true;
+      }
       return new Alpha(person);
     });
+
+    const shiftOptions = Object.keys(shifts).sort().map((shift) => [ dayjs(shift).format('ddd MMM DD [@] HH:mm'), shift ]);
+    shiftOptions.unshift([ 'Not Checked In', 'not-checked-in' ]);
+    shiftOptions.unshift([ 'All', 'all']);
 
     controller.set('alphas', alphas);
     controller.set('mentors', model.mentors);
     controller.set('year', year);
     controller.set('filter', 'all');
     controller.set('isPrinting', false);
+    controller.set('shiftFilterOptions', shiftOptions);
   }
 }
