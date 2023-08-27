@@ -21,8 +21,7 @@
     </UiButton>
   </p>
   <p>
-    Only the checked-in (aka currently on duty) Alphas will be available to add into a pod.
-    Click on the callsign to remove it.
+    Only the checked-in Alphas will be available to add into a pod. Click on the callsign to remove it.
   </p>
   <p>
     Use the Alpha Mentor Assignment page to assign mentors to alphas, and mark the Alphas as passed or bonked.
@@ -86,23 +85,34 @@
                     <li class="mb-2">
                       <div class="d-flex">
                         <Popover @title="Update Or Remove Mentor"
-                                 @text="{{mentor.callsign}}"
+                                 @text={{mentor.callsign}}
                                  @onShow={{fn this.onMentorShow pod mentor}}
                                  class="d-block" as |po|>
-                          <div class="d-flex justify-content-center align-items-center">
-                            <div>
+                          <div class="d-flex justify-between">
+                            <div class="border p-2">
+                              <h5>Update Mentor</h5>
                               <p>
                                 <Input @type="checkbox" @checked={{this.isLead}} class="form-check-input" id="islead"/>
                                 <label for="islead">Is Lead Mentor</label>
                               </p>
+                              <FormRow>
+                                <FormLabel>
+                                  Relocate to pod:
+                                </FormLabel>
+                                <div class="col-auto">
+                                  <ChForm::Select @name="relocatePod"
+                                                  @value={{this.podIndex}}
+                                                  @options={{this.podOptions}}
+                                                  @onChange={{action (mut this.podIndex)}}
+                                  />
+                                </div>
+                              </FormRow>
                               <UiButton @onClick={{fn this.updatePerson pod mentor po.close}} @size="sm">
                                 Update
                               </UiButton>
                             </div>
-                            <div class="align-middle px-4">
-                              <b>- OR - </b>
-                            </div>
-                            <div>
+                            <div class="ms-2 border p-2">
+                              <h5>Remove From Pod</h5>
                               <UiButton @onClick={{fn this.removePerson pod mentor po.close}}  @size="sm"
                                         @type="danger">
                                 Remove Mentor
@@ -147,15 +157,35 @@
                   {{#each pod.mittenPod.people key="id" as |mitten mittenIdx|}}
                     <li class="mb-2">
                       <div class="d-flex">
-                        <Popover @title="Confirm MITten Removal"
+                        <Popover @title="Update or Remove MITten"
                                  @text={{mitten.callsign}}
-                                 class="d-block">
-                          <p>
-                            Are you sure you want to remove {{mitten.callsign}} (MITten) from the pod?
-                          </p>
-                          <UiButton @onClick={{fn this.removePerson pod.mittenPod mitten}} @size="sm" @type="danger">
-                            Confirm MITten Removal
-                          </UiButton>
+                                 @onShow={{fn this.onMITtenShow pod.mittenPod mitten}}
+                                 class="d-block" as |po|>
+                          <div class="d-flex justify-between">
+                            <div>
+                              <FormRow>
+                                <FormLabel>
+                                  Relocate to pod:
+                                </FormLabel>
+                                <div class="col-auto">
+                                  <ChForm::Select @name="relocatePod"
+                                                  @value={{this.podIndex}}
+                                                  @options={{this.podOptions}}
+                                                  @onChange={{action (mut this.podIndex)}}
+                                  />
+                                </div>
+                              </FormRow>
+                              <UiButton @onClick={{fn this.updatePerson pod.mittenPod mitten po.close}} @size="sm">
+                                Update
+                              </UiButton>
+                            </div>
+                            <div class="ms-2 border p-2">
+                              <UiButton @onClick={{fn this.removePerson pod.mittenPod mitten}} @size="sm"
+                                        @type="danger">
+                                Remove MITTen From Pod
+                              </UiButton>
+                            </div>
+                          </div>
                         </Popover>
                         <PodSortControls @pod={{pod.mittenPod}}
                                          @person={{mitten}}
@@ -193,14 +223,35 @@
                   {{#each pod.alphaPod.people key="id" as |alpha alphaIdx|}}
                     <li class="mb-3">
                       <div class="d-flex">
-                        <Popover @title="Confirm Alpha Removal"
-                                 @text={{alpha.callsign}}>
-                          <p>
-                            Are you sure you want to remove {{alpha.callsign}} (Alpha) from the pod?
-                          </p>
-                          <UiButton @onClick={{fn this.removePerson pod.alphaPod alpha}} @size="sm" @type="danger">
-                            Confirm Alpha Removal
-                          </UiButton>
+                        <Popover @title="Relocate Or Remove {{alpha.callsign}}"
+                                 @text={{alpha.callsign}}
+                                 @onShow={{fn this.onAlphaShow pod.alphaPod alpha}}
+                                 as |po|
+                        >
+                          <div class="d-flex justify-between">
+                            <div class="border p-2">
+                              <FormRow>
+                                <FormLabel>
+                                  Relocate to pod:
+                                </FormLabel>
+                                <div class="col-auto">
+                                  <ChForm::Select @name="relocatePod"
+                                                  @value={{this.podIndex}}
+                                                  @options={{this.podOptions}}
+                                                  @onChange={{action (mut this.podIndex)}}
+                                  />
+                                </div>
+                              </FormRow>
+                              <UiButton @onClick={{fn this.updatePerson pod.alphaPod alpha po.close}} @size="sm">
+                                Update
+                              </UiButton>
+                            </div>
+                            <div class="ms-2 border p-2">
+                              <UiButton @onClick={{fn this.removePerson pod.alphaPod alpha}} @size="sm" @type="danger">
+                                Remove Alpha
+                              </UiButton>
+                            </div>
+                          </div>
                         </Popover>
                         <PodSortControls @pod={{pod.alphaPod}}
                                          @person={{alpha}}
@@ -244,9 +295,9 @@
         <fieldset>
           <legend>
             {{#if (eq this.addType "Alpha")}}
-              Checked-In (aka On Duty) Alphas
+              Checked-In Alphas with -1 hour and +2 hours of shift start.
             {{else}}
-              On Duty {{this.addType}}s
+              Checked-In {{this.addType}}s within -/+ 1 hour of shift start ({{dayjs-format this.slot.begins "HH:mm"}}).
             {{/if}}
           </legend>
           <FormRow>
@@ -255,33 +306,33 @@
             <div class="col-auto">
               {{#if this.onDutyOptions}}
                 <f.checkboxGroup @name="onduty" @options={{this.onDutyOptions}} @cols={{4}} />
+              {{else if (eq this.addType "Alpha")}}
+                No checked-In Alphas with -1 hour and +2 hours of shift start.
               {{else}}
-                No checked-in (aka on duty) {{this.addType}}s were found.
+                No checked-in {{this.addType}}s were found with -/+ 1 hour of shift.
               {{/if}}
             </div>
           </FormRow>
         </fieldset>
-        {{#if (not-eq this.addType "Alpha")}}
-          <fieldset>
-            <legend>Off Duty {{this.addType}}s</legend>
-            <FormRow>
-              <div class="col-auto">
-                {{#if this.offDutyOptions}}
-                  <a href {{action this.toggleOffDuty}} class="d-block mb-2">
-                    {{if this.showOffDuty "Hide" "Show" }} {{pluralize this.offDutyOptions.length
-                                                                       (concat "Off Duty " this.addType)}}
-                  </a>
+        <fieldset>
+          <legend>Other Checked-In {{this.addType}}s</legend>
+          <FormRow>
+            <div class="col-auto">
+              {{#if this.offDutyOptions}}
+                <a href {{action this.toggleOffDuty}} class="d-block mb-2">
+                  {{if this.showOffDuty "Hide" "Show" }} {{pluralize this.offDutyOptions.length
+                                                                     (concat "Other " this.addType)}}
+                </a>
 
-                  {{#if this.showOffDuty}}
-                    <f.checkboxGroup @name="offduty" @options={{this.offDutyOptions}} @cols={{4}} />
-                  {{/if}}
-                {{else}}
-                  No off duty {{this.addType}}s were found.
+                {{#if this.showOffDuty}}
+                  <f.checkboxGroup @name="offduty" @options={{this.offDutyOptions}} @cols={{4}} />
                 {{/if}}
-              </div>
-            </FormRow>
-          </fieldset>
-        {{/if}}
+              {{else}}
+                No other {{this.addType}}s were found.
+              {{/if}}
+            </div>
+          </FormRow>
+        </fieldset>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Add {{this.addType}}s" @disabled={{and (not f.model.offduty) (not f.model.onduty)}} />
