@@ -355,7 +355,7 @@
 
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
-        <f.submit @label="Add {{this.addType}}s" @disabled={{and (not f.model.offduty) (not f.model.onduty)}} />
+        <f.submit @label="Add {{this.addType}}s" @disabled={{and (not f.model.offduty) (not f.model.onduty) (not f.model.peoplePositions)}} />
         <UiCancelButton @onClick={{this.closeAddDialog}} />
       </Modal.footer>
     </ChForm>

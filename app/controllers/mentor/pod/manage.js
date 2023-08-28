@@ -161,10 +161,10 @@ export default class MentorPodManageController extends ClubhouseController {
       const currentMentors = [];
       const otherMentors = [];
 
-      const mentorsWithPositions = allMentors.filter((m) => !m.working);
-
+      const workingById = {}
       mentors.forEach((mentor) => {
         const ts = dayjs(mentor.on_duty).unix();
+        workingById[mentor.id] = true;
         if (ts >= beforeHour && ts <= afterHour) {
           currentMentors.push(mentor);
         } else {
@@ -176,7 +176,7 @@ export default class MentorPodManageController extends ClubhouseController {
         [
           currentMentors.map((p) => this._buildCallsignOption(p, 'Mentor')),
           otherMentors.map((p) => this._buildCallsignOption(p, 'Mentor')),
-          mentorsWithPositions.map((p) => ({label: p.callsign, value: p.id}))
+          allMentors.filter((m) => !m.working && !workingById[m.id]).map((p) => ({label: p.callsign, value: p.id}))
         ]);
     } catch (response) {
       this.house.handleErrorResponse(response);
@@ -375,6 +375,7 @@ export default class MentorPodManageController extends ClubhouseController {
       is_lead: false,
       onduty: [],
       offduty: [],
+      peoplePositions: []
     });
 
     this.onDutyOptions = options[0];
@@ -406,11 +407,12 @@ export default class MentorPodManageController extends ClubhouseController {
 
   @action
   async addPerson(model) {
-    const personIds = [...model.offduty, ...model.onduty];
+    const personIds = [...model.offduty, ...model.onduty, ...model.peoplePositions];
     if (!personIds.length) {
       const errorMsg = 'Select one or more callsigns to add.';
       model.pushErrors('onduty', errorMsg);
       model.pushErrors('offduty', errorMsg);
+      model.pushErrors('peoplePositions', errorMsg);
       return;
     }
 
