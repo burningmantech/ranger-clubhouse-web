@@ -15,6 +15,8 @@ export default class MentorAssignmentController extends ClubhouseController {
   @tracked shiftOptions;
   @tracked shiftFilter;
 
+  @tracked checkAll;
+
   statusOptions = [
     'pending',
     'pass',
@@ -43,6 +45,27 @@ export default class MentorAssignmentController extends ClubhouseController {
     return options;
   }
 
+  @action
+  toggleAll() {
+    this.selectAll = !this.selectAll;
+
+    this.viewAlphas.forEach((a) => a.selected = this.selectAll);
+  }
+
+  @action
+  updateToPassed() {
+    this.viewAlphas.forEach((a) => {
+      if (a.selected) {
+        a.mentor_status = 'pass';
+      }
+    });
+  }
+
+  @cached
+  get selectedAlphas() {
+    return this.viewAlphas.filter((a) => a.selected).length;
+  }
+
   get viewAlphas() {
     let alphas = this.alphas;
     const filter = this.filter;
@@ -68,7 +91,7 @@ export default class MentorAssignmentController extends ClubhouseController {
     if (this.shiftFilter === 'not-checked-in') {
       alphas = alphas.filter((alpha) => !alpha.alpha_slot);
     } else if (this.shiftFilter !== 'all') {
-        alphas = alphas.filter((alpha) => alpha.alpha_slot?.begins === this.shiftFilter);
+      alphas = alphas.filter((alpha) => alpha.alpha_slot?.begins === this.shiftFilter);
     }
 
     return alphas;

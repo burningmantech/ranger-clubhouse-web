@@ -77,7 +77,7 @@ export default class MentorAssignmentFromPodComponent extends Component {
       }
 
       if (!alphaPods.length) {
-        this.toast.error('No mentor pods were found.');
+        this.toast.error('No alpha pods were found.');
         return;
       }
 
@@ -98,11 +98,6 @@ export default class MentorAssignmentFromPodComponent extends Component {
 
           const mentors = mentorsByPod[pod.mentor_pod_id];
           if (!mentors) {
-            return;
-          }
-
-          if (assignment.mentors.find((m) => m.mentor_id > 0)) {
-            this.ignoredAlphas.push(person.callsign);
             return;
           }
 

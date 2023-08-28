@@ -82,9 +82,15 @@
   <UiSection>
     <:title>Showing {{this.viewAlphas.length}} of {{pluralize this.alphas.length "Alpha"}}</:title>
     <:body>
+      <p>
+        <UiButton @disabled={{not this.selectedAlphas}} @onClick={{this.updateToPassed}}>
+          Mark (but not save) {{pluralize this.selectedAlphas "Alpha"}} as Passed
+        </UiButton>
+      </p>
       <table class="table table-striped table-hover table-sm table-width-auto">
         <thead>
         <tr>
+          <th><Input @type="checkbox" @checked={{this.selectAll}} {{on "change" this.toggleAll}} /></th>
           <th>Callsign</th>
           <th>Name</th>
           <th>Mentor Shift</th>
@@ -99,6 +105,9 @@
         {{#each this.viewAlphas key="id" as |person|}}
           <tr id="person-{{person.id}}"
               class="{{if person.error "invalid-feedback"}} {{if person.mentor_history "no-border"}}">
+            <td>
+              <Input @type="checkbox" @checked={{person.selected}} />
+            </td>
             <td>
               <PersonLink @person={{person}} />
             </td>

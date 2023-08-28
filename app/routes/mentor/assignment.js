@@ -18,6 +18,8 @@ class Mentor {
 class Alpha {
   @tracked error;
   @tracked mentors;
+  @tracked selected;
+  @tracked mentor_status;
 
   constructor(person) {
     Object.assign(this, person);
@@ -80,5 +82,8 @@ export default class MentorAssignmentRoute extends ClubhouseRoute {
     controller.set('filter', 'all');
     controller.set('isPrinting', false);
     controller.set('shiftFilterOptions', shiftOptions);
+    controller.set('shiftFilter', 'all');
+
+    controller.set('selectAll', false);
   }
 }
