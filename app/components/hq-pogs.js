@@ -157,6 +157,9 @@ export default class HqPogsComponent extends Component {
           await pog.save();
           await this.pogs.update();
           this.toast.success('Pog successfully created.');
+          if (type === POG_MEAL || type === POG_HALF_MEAL) {
+            this.args.onPogIssue?.();
+          }
         } catch (response) {
           this.house.handleErrorResponse(response);
         }

@@ -238,6 +238,11 @@ export default class HqShiftController extends ClubhouseController {
     );
   }
 
+  @action
+  onPogIssue() {
+    this.completeTodo(HQ_TODO_MEAL_POG);
+  }
+
   /**
    * Count how many of the following items the person has to deal with:
    * - Unverified timesheet entries
