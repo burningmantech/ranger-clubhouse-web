@@ -178,7 +178,10 @@
                       @label={{if this.entry.isRejected "Supply additional information for an appeal:"
                                   "Provide a BRIEF & CONCISE explanation in 1 to 3 sentences what needs to be corrected:"}}
                       @cols={{80}}
-                      @rows={{3}} />
+                      @rows={{3}}
+                      @maxlength={{1000}}
+                      @showCharCount={{true}}
+          />
         </FormRow>
         <b class="text-danger">The request will be denied if:</b><br>
         {{fa-icon "ban" right=1}} You started late, yet are requesting the start time to updated to the scheduled shift
