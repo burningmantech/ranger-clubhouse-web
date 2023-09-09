@@ -3,7 +3,7 @@
     <label class={{this.labelClass}} for={{this.domId}}>{{@label}}</label>
   {{~/if~}}
   <ChForm::WrapBlock @wrapClass={{this.inputWrapClass}}>
-    <Textarea
+    <textarea
       name={{@name}}
       id={{this.domId}}
       class="{{this.controlClass}} {{if this.errorMessages "is-invalid"}}"
@@ -14,8 +14,8 @@
       maxlength={{@maxlength}}
       onfocus={{@onFocus}}
       {{did-insert this.fieldInserted}}
-      @value={{get @form.model @name}}
-    ></Textarea>
+      oninput={{action this.update value="target.value"}}
+    >{{get @form.model @name}}</textarea>
     {{~#if @hint~}}
       <ChForm::Hint @hint={{@hint}} />
     {{~/if~}}
