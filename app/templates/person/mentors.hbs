@@ -1,9 +1,30 @@
 <h3>Mentors</h3>
 
+{{#if this.canUpdateMentors}}
+  <p>
+    You have the permissions to update the mentors' result. Updating the result will NOT convert the account status.
+  </p>
+{{/if}}
 {{#each this.mentors as |event|}}
   <UiSection>
     <:title>Year {{event.year}} - {{event.status}}</:title>
     <:body>
+      {{#if this.canUpdateMentors}}
+        <div class="row mb-2">
+          <label>Update status:</label>
+          <div class="col-auto">
+          <ChForm::Select @name="status_{{event.year}}"
+                          @value={{event.newStatus}}
+                          @options={{this.statusOptions}}
+                          @onChange={{action (mut event.newStatus)}}/>
+          </div>
+          <div class="col-auto">
+            <UiButton @onClick={{action this.updateStatus event}}>
+              Update
+            </UiButton>
+          </div>
+        </div>
+      {{/if}}
       <div class="d-flex flex-wrap">
         {{#each event.mentors as |mentor|~}}
         {{! template-lint-disable no-inline-styles}}
@@ -27,3 +48,9 @@
 {{else}}
   No mentor records were found.
 {{/each}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Updating result
+  </LoadingDialog>
+{{/if}}
