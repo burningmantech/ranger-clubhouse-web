@@ -6,6 +6,7 @@ import { tracked } from '@glimmer/tracking';
 export default class PersonDashboardComponent extends Component {
   @service ajax;
   @service house;
+  @service modal;
 
   @tracked isLoading = true;
   @tracked milestones;
