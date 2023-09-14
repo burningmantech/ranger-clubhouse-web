@@ -41,7 +41,7 @@
     "@glimmer/tracking": "^1.1.2",
     "@popperjs/core": "^2.11.8",
     "blueimp-load-image": "^5.16.0",
-    "bootstrap": "^5.3.1",
+    "bootstrap": "^5.3.2",
     "broccoli-asset-rev": "^3.0.0",
     "concurrently": "^8.2.1",
     "cropperjs": "^1.6.0",
@@ -98,7 +98,7 @@
     "mobile-detect": "^1.4.5",
     "qunit": "^2.19.4",
     "qunit-dom": "^2.0.0",
-    "sass": "^1.66.1",
+    "sass": "^1.67.0",
     "tinymce": "^6.7.0",
     "tracked-built-ins": "^3.2.0",
     "webpack": "^5.88.2"
