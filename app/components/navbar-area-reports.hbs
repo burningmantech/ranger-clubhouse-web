@@ -24,6 +24,9 @@
     <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-by-position" @item="Timesheet By Position"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-correction-requests" @item="Corrections Requests"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-unconfirmed" @item="Timesheet Unconfirmed"/>
+    {{#if (has-role "timesheet-management")}}
+      <NavbarMenuItem @menu={{menu}} @route="admin.timesheet-sanity-checker" @item="Timesheet Sanity Checker"/>
+    {{/if}}
   </NavbarMenuSection>
   <NavbarMenuSection @section="Assets">
     <NavbarMenuItem @menu={{menu}} @route="reports.assets-outstanding" @item="Assets Outstanding"/>
