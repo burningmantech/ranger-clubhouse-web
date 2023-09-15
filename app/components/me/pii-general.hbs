@@ -1,23 +1,27 @@
+<div class="mb-2">
+  Your legal first and last name will be used for ticketing and other mailing purposes.
+</div>
 <FormRow>
-  <@f.text @name="first_name"
-          @label="First Name"
+   <@f.text @name="first_name"
+          @label="Legal First Name"
           @maxlength={{25}}/>
   <@f.text @name="mi"
-          @label="M.I."
-          @maxlength={{10}}/>
+          @label="Middle Initial"
+          @maxlength={{10}}
+  />
   <@f.text @name="last_name"
-          @label="Last Name"
+          @label="Legal Last Name"
           @maxlength={{25}}/>
 </FormRow>
 <FormRow>
   <@f.text @name="gender"
-          @label="Gender"
+          @label="Gender (optional)"
           @hint="Examples: female, male, non-binary, gender fluid, etc."
           @maxlength={{32}}/>
 </FormRow>
 <FormRow>
   <@f.select @name="pronouns"
-            @label="Pronouns"
+            @label="Pronouns (optional)"
             @options={{@pronounOptions}}/>
   {{#if (eq @f.model.pronouns "custom")}}
     <@f.text
