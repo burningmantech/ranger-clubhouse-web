@@ -107,7 +107,7 @@ export const UPLOAD_PHOTO = {
         return {result: ACTION_NEEDED, isPhotoStep: true};
       case 'submitted':
       case 'approved':
-        return {result: isPNV ? COMPLETED : SKIP, isPhotoStep: (photo.photo_status !== 'approved')};
+        return {result: isPNV ? COMPLETED : SKIP, isPhotoStep: (photo.photo_status !== 'approved'), isUploadPhoto: true};
       default:
         return {
           result: NOT_AVAILABLE,
@@ -587,7 +587,7 @@ export const SIGN_RADIO_CHECKOUT_AGREEMENT = {
       return {result: COMPLETED};
     }
 
-    if (isPNV) {
+    if (isPNV && milestones.training.status !== 'pass') {
       return {
         result: NOT_AVAILABLE,
         message: 'You need to pass In-Person Training first before you may sign the Radio Checkout Agreement.'

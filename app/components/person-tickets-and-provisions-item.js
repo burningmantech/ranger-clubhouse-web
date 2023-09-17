@@ -10,6 +10,6 @@ export default class PersonTicketsAndProvisionsItemComponent extends Component {
   }
 
   get periodMeasure() {
-    return this.args.eventWeek ? `Event Week ${this.args.item.measure}` : this.args.item.measure;
+    return this.args.eventWeek ? `Event Week ${this.args.item?.measure}` : this.args.item?.measure;
   }
 }

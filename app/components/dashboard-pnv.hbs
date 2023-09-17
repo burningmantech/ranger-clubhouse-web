@@ -23,7 +23,8 @@
 </p>
 <p>
   <b>Need to drop your application?</b> Reach out to the Volunteer Coordinators at the email address above. Please note,
-  Ranger applications <span class="text-danger">DO NOT roll over</span> to the next year. A new application must be submitted.
+  Ranger applications <span class="text-danger">DO NOT roll over</span> to the next year. A new application must be
+  submitted.
 </p>
 <div class="dashboard-box">
   {{#if @motds}}
@@ -43,9 +44,7 @@
         <DashboardStep @step={{step}}
                        @isActive={{and step.isActive group.isActive}}
                        @showBehaviorAgreementAction={{@showBehaviorAgreementAction}}
-                       @includePhoto={{or
-          (and (not this.session.isSmallScreen)  (eq idx 0) (eq stepIdx 0))
-          (and step.isPhotoStep this.session.isSmallScreen)}}
+                       @includePhoto={{and (eq stepIdx 0) group.includePhotoStep}}
                        @isNotUser={{this.isNotUser}}
                        @photoPosition={{if (and (not this.session.isSmallScreen) (eq idx 0)) "above" "inside"}}
                        @photo={{@photo}} @person={{@person}} @uploadAction={{@uploadAction}}
