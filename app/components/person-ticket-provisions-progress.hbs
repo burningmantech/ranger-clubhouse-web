@@ -5,12 +5,13 @@
     <:title>{{fa-icon "ticket" right=2}} Ticket Qualifications</:title>
     <:body>
       <p>
-        You may qualify for either a Reduced-Price Ticket (RPT) OR a Staff Credential (SC). If you do qualify for either
-        ticket type, you will automatically qualify for a Vehicle Pass. Only one ticket type will be awarded.
-        (i.e., if you qualify for a SC, you will NOT receive a RPT as well.)
+        You may qualify for either a Special Price Ticket (SPT, formerly known as Reduced-Price Ticket)
+        OR a Staff Credential (SC). If you do qualify for either ticket type, you will automatically qualify
+        for a Vehicle Pass. Only one ticket type will be awarded. (i.e., if you qualify for a SC, you will
+        NOT receive a SPT as well.)
       </p>
       {{#unless this.items.staff_credential.has_earned}}
-        <PersonTicketsAndProvisionsItem @item={{this.items.rpt}} @name="Reduced Price Ticket"/>
+        <PersonTicketsAndProvisionsItem @item={{this.items.spt}} @name="Special Price Ticket"/>
       {{/unless}}
       <PersonTicketsAndProvisionsItem @item={{this.items.staff_credential}} @name="Staff Credential"/>
     </:body>

@@ -5,7 +5,7 @@ import {service} from '@ember/service';
 export default class TicketThresholdComponent extends Component {
   @service house;
 
-  // Reduce price ticket threshold
+  // Specia Price Ticket threshold
   rpThreshold = parseFloat(setting('RpTicketThreshold'));
   // Staff credentials threshold
   scThreshold = parseFloat(setting('ScTicketThreshold'));

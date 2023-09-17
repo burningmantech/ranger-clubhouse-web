@@ -9,7 +9,7 @@ import {
   SUBMITTED,
   QUALIFIED,
   TypeShortLabels,
-  RPT, GIFT_TICKET, LSD_TICKET, VEHICLE_PASS, WAPSO, VEHICLE_PASS_GIFT, VEHICLE_PASS_LSD
+  SPT, GIFT_TICKET, LSD_TICKET, VEHICLE_PASS, WAPSO, VEHICLE_PASS_GIFT, VEHICLE_PASS_LSD
 } from 'clubhouse/models/access-document';
 
 /*
@@ -22,7 +22,7 @@ export default class AccessDocumentsForPersonComponent extends Component {
     const notes = [];
     const {documents} = this.args;
 
-    this.tickets = this._accessDocumentInfo('tickets', [STAFF_CREDENTIAL, RPT], notes);
+    this.tickets = this._accessDocumentInfo('tickets', [STAFF_CREDENTIAL, SPT], notes);
     this.giftTickets = documents.filter((d) => d.type === GIFT_TICKET);
     this.lsdTickets = documents.filter((d) => d.type === LSD_TICKET);
     this.giftVPs = documents.filter((d) => d.type === VEHICLE_PASS_GIFT);

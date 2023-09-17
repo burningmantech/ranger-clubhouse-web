@@ -35,7 +35,7 @@ export default class DashboardDebugComponent extends Component {
   ticketPackages = {
     claimed: {
       tickets: [
-        { type: 'reduced_price_ticket', status: 'claimed' }
+        { type: 'special_price_ticket', status: 'claimed' }
       ],
       vehicle_pass: { type: 'vehicle_pass', status: 'claimed' },
       wap: { type: 'work_access_pass', status: 'claimed' },
@@ -46,7 +46,7 @@ export default class DashboardDebugComponent extends Component {
     },
     banked: {
       tickets: [
-        { type: 'reduced_price_ticket', status: 'banked', expiry_date: '2024-09-15' }
+        { type: 'special_price_ticket', status: 'banked', expiry_date: '2024-09-15' }
       ],
       vehicle_pass: { type: 'vehicle_pass', status: 'qualified' },
       wap: { type: 'work_access_pass', status: 'qualified' },
@@ -55,7 +55,7 @@ export default class DashboardDebugComponent extends Component {
 
     qualified: {
       tickets: [
-        { type: 'reduced_price_ticket', status: 'qualified' }
+        { type: 'special_price_ticket', status: 'qualified' }
       ],
       vehicle_pass: { type: 'vehicle_pass', status: 'qualified' },
       wap: { type: 'work_access_pass', status: 'qualified' },

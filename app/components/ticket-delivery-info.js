@@ -66,7 +66,7 @@ export default class TicketDeliverInfoComponent extends Component {
   }*/
 
   /**
-   * Find all the items which need to be mailed (RPT, Vehicle Pass, Gift Ticket).
+   * Find all the items which need to be mailed (SPT, Vehicle Pass, Gift Ticket).
    *
    * @returns {AccessDocumentModel[]}
    */
@@ -78,7 +78,7 @@ export default class TicketDeliverInfoComponent extends Component {
     const items = [];
     const ticketClaimed = this.ticketClaimed;
 
-    if (ticketClaimed && ticket.isReducedPriceTicket) {
+    if (ticketClaimed && ticket.isSpecialPriceTicket) {
       items.push(ticket);
     }
 
@@ -162,13 +162,13 @@ export default class TicketDeliverInfoComponent extends Component {
     const ticketClaimed = this.ticketClaimed;
 
     /*
-      For 2022 RPT address is collected directly by BM Ticketing.
-      if (ticketClaimed && ticket.type == 'reduced_price_ticket') {
+      For 2022 SPT address is collected directly by BM Ticketing.
+      if (ticketClaimed && ticket.type == 'special_price_ticket') {
         items.push(ticket);
       }
     */
 
-    if (ticketClaimed && ticket.isReducedPriceTicket) {
+    if (ticketClaimed && ticket.isSpecialPriceTicket) {
       items.push(ticket);
     }
 
