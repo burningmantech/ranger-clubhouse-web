@@ -7,10 +7,10 @@
   />
   <p>
     The report will list all active, inactive, inactive extension, and retired
-    Rangers with the last 3 event hours. The Alpha and Training shifts are not included.
+    Rangers with the hours of the last 3 events. The Alpha and Training shifts are not included.
   </p>
   <p>
-    A person is considered a Shift Lead is they currently hold one of the following positions:
+    A person is considered a Shift Lead if they currently hold one of the following positions:
     {{#each this.shift_lead_positions as |position idx|}}
       {{if idx ", "}}{{position.title}}
     {{/each}}

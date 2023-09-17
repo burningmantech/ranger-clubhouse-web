@@ -46,7 +46,7 @@ const TASK_GROUPS = [{
       {
         action: 'grant-vps',
         title: 'Grant Vehicle Passes',
-        description: "Grant Vehicle Passes to anyone with a current staff credential or reduced-price ticket (banked, qualified, or claimed) who doesn't have one already.",
+        description: "Grant Vehicle Passes to anyone with a current Staff Credential or Special Price Ticket (banked, qualified, or claimed) who doesn't have one already.",
         controller: 'access-document'
       },
       {

@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 
 export const GIFT_TICKET = 'gift_ticket';
 export const LSD_TICKET = 'lsd_ticket';
-export const RPT = 'reduced_price_ticket';
+export const SPT = 'special_price_ticket';
 export const STAFF_CREDENTIAL = 'staff_credential';
 export const VEHICLE_PASS = 'vehicle_pass';
 export const VEHICLE_PASS_GIFT = 'vehicle_pass_gift';
@@ -31,7 +31,7 @@ export const DELIVERY_SC = 'staff_credentialing'; // Only used for exports, not 
 export const TypeLabels = {
   [GIFT_TICKET]: 'Gift Ticket',
   [LSD_TICKET]: 'LSD Ticket',
-  [RPT]: 'Reduced-Price Ticket',
+  [SPT]: 'Special Price Ticket',
   [STAFF_CREDENTIAL]: 'Staff Credential',
   [VEHICLE_PASS]: 'Vehicle Pass',
   [VEHICLE_PASS_GIFT]: 'Gift Vehicle Pass',
@@ -42,7 +42,7 @@ export const TypeLabels = {
 
 export const TypeShortLabels = {
   [STAFF_CREDENTIAL]: 'CRED',
-  [RPT]: 'RPT',
+  [SPT]: 'SPT',
   [GIFT_TICKET]: 'GIFT',
   [LSD_TICKET]: 'LSD',
   [VEHICLE_PASS]: 'VP',
@@ -101,7 +101,7 @@ export default class AccessDocumentModel extends Model {
   @attr('', { readOnly: true }) person;
 
   get isRegularTicket() {
-    return (this.type === STAFF_CREDENTIAL || this.type === RPT);
+    return (this.type === STAFF_CREDENTIAL || this.type === SPT);
   }
 
   get isSpecialTicket() {
@@ -112,8 +112,8 @@ export default class AccessDocumentModel extends Model {
     return this.type === STAFF_CREDENTIAL;
   }
 
-  get isReducedPriceTicket() {
-    return this.type === RPT;
+  get isSpecialPriceTicket() {
+    return this.type === SPT;
   }
 
   get isGiftTicket() {

@@ -12,7 +12,7 @@
   {{/if}}
   <HqTicketsAndProvisionsTable @items="Tickets">
     {{#unless this.items.staff_credential.has_earned}}
-      <HqTicketsAndProvisionsRow @item={{this.items.rpt}} @name="Reduced Price Ticket"/>
+      <HqTicketsAndProvisionsRow @item={{this.items.spt}} @name="Special Price Ticket"/>
     {{/unless}}
     <HqTicketsAndProvisionsRow @item={{this.items.staff_credential}} @name="Staff Credential"/>
   </HqTicketsAndProvisionsTable>

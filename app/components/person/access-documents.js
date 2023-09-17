@@ -7,7 +7,7 @@ import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import {StateOptions} from 'clubhouse/constants/countries';
 import {
   STAFF_CREDENTIAL,
-  RPT,
+  SPT,
   GIFT_TICKET,
   LSD_TICKET,
   VEHICLE_PASS,
@@ -47,7 +47,7 @@ export default class PersonAccessDocumentsComponent extends Component {
     {
       groupName: 'Regular Items',
       options: [
-        ["Reduced-Price Ticket", RPT],
+        ["Special Price Ticket", SPT],
         ["Staff Credential", STAFF_CREDENTIAL],
         ["Work Access Pass", WAP],
         ["S.O. Work Access Pass", WAPSO],
@@ -115,7 +115,7 @@ export default class PersonAccessDocumentsComponent extends Component {
     this.showingChanges = null;
     this.entry = this.store.createRecord('access-document', {
       person_id: this.args.person.id,
-      type: RPT,
+      type: SPT,
       status: QUALIFIED,
       source_year: currentYear,
       expiry_date: `${currentYear + 3}-09-15`,

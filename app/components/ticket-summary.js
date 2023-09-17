@@ -8,7 +8,7 @@ export default class TicketSummaryComponent extends Component {
   /**
    * Return a list of unfinished items:
    * - Any qualified ticket (multiple tickets will be either be claimed or banked by the first step)
-   * - Delivery method was not chosen for RPT.
+   * - Delivery method was not chosen for SPT.
    *
    * @returns {*[]}
    */

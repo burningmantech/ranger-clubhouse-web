@@ -8,7 +8,7 @@ import {
   DELIVERY_SC,
   GIFT_TICKET,
   LSD_TICKET,
-  RPT,
+  SPT,
   STAFF_CREDENTIAL,
   VEHICLE_PASS,
   VEHICLE_PASS_GIFT,
@@ -21,7 +21,7 @@ import {ALPHA, PROSPECTIVE} from 'clubhouse/constants/person_status';
 
 const TRS_COLUMN = {
   [STAFF_CREDENTIAL]: 'sc',
-  [RPT]: 'rpt',
+  [SPT]: 'spt',
   [GIFT_TICKET]: 'gift_ticket',
   [LSD_TICKET]: 'lsd',
   [VEHICLE_PASS]: 'vp',   // VP is really a Gift VP since Rangers are not charged for it.
@@ -48,11 +48,11 @@ const PAID_EXPORT_FORMAT = [
   ['Shipping Address (Required if Mail Delivery type selected): State', 'not_used_state'],
   ['Shipping Address (Required if Mail Delivery type selected): Zip', 'not_used_zip'],
   ['Shipping Address (Required if Mail Delivery type selected): Phone', 'not_used_phone'],
-  ['Request: $225 Ticket', 'rpt'],
+  ['Request: $225 Ticket', 'spt'],
   ['Request: $150 Vehicle Pass', 'paid_vp'],
   ['Request: Gift Ticket', 'not_used_gift_ticket'],
   ['Request: Gift Vehicle Pass', 'vp'],
-  ['Request: Transferrable $225 Ticket', 'rpt_xfer'],
+  ['Request: Transferrable $225 Ticket', 'spt_xfer'],
   ['Request: Transferrable $150 Vehicle Pass', 'vp_xfer'],
   ['Request: Transferrable Gift Ticket', 'gift_ticket'],
   ['Request: Transferrable Gift Vehicle Pass', 'vehicle_pass_gift'],
@@ -157,7 +157,7 @@ const LSD_EXPORT_FORMAT = [
 // Filter Options
 const GIFT_TICKET_VP = 'gift_ticket_vp';
 const LSD_TICKET_VP = 'lsd_vp';
-const RPT_VP = 'rpt_vp';
+const SPT_VP = 'spt_vp';
 const STAFF_CREDENTIAL_VP = 'staff_credential_vp';
 
 const WAP_ALL = 'work_access_pass_all';
@@ -186,11 +186,11 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         ]
     },
     {
-      groupName: 'RPTs',
+      groupName: 'SPTs',
       options:
         [
-          ['Reduced-Price Tickets', RPT],
-          ['Reduced-Price Tickets + VP', RPT_VP],
+          ['Special Price Tickets', SPT],
+          ['Special Price Tickets + VP', SPT_VP],
         ]
     },
     {
@@ -342,7 +342,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         return this.accessDocuments.filter((r) => r.type === WAP || r.type === WAPSO);
 
       case STAFF_CREDENTIAL_VP:
-      case RPT_VP:
+      case SPT_VP:
       case GIFT_TICKET_VP:
       case LSD_TICKET_VP: {
         const rows = [];
@@ -352,8 +352,8 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         if (filter === STAFF_CREDENTIAL_VP) {
           ticketType = STAFF_CREDENTIAL;
           vpType = VEHICLE_PASS;
-        } else if (filter === RPT_VP) {
-          ticketType = RPT;
+        } else if (filter === SPT_VP) {
+          ticketType = SPT;
           vpType = VEHICLE_PASS;
         } else if (filter === GIFT_TICKET_VP) {
           ticketType = GIFT_TICKET;
@@ -487,7 +487,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
     if (this.filter === STAFF_CREDENTIAL_VP
       || this.filter === GIFT_TICKET_VP
-      || this.filter === RPT_VP
+      || this.filter === SPT_VP
       || this.filter === LSD_TICKET_VP) {
       rows = [];
       records.forEach((rec) => {
@@ -541,7 +541,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         const isPostal = (doc.delivery_method === DELIVERY_POSTAL);
 
         switch (doc.type) {
-          case RPT:
+          case SPT:
           case GIFT_TICKET:
           case VEHICLE_PASS_GIFT:
           case LSD_TICKET:
@@ -589,8 +589,8 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     let format;
 
     switch (this.filter) {
-      case RPT:
-      case RPT_VP:
+      case SPT:
+      case SPT_VP:
       case GIFT_TICKET:
       case GIFT_TICKET_VP:
       case VEHICLE_PASS_GIFT:

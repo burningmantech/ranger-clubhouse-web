@@ -3,7 +3,7 @@
   <:body>
     <p>
       To qualify for a ticket to the {{this.ticketYear}} event you need {{credits-format this.rpThreshold}} credits
-      for a reduced-price ticket and {{credits-format this.scThreshold}} credits for a staff credential.
+      for a Special Price Ticket and {{credits-format this.scThreshold}} credits for a Staff Credential.
     </p>
     {{#if this.reachedSCThreshold}}
       <b class="text-success">Congratulations!</b> You're signed up for {{credits-format @credits}} credits
@@ -18,16 +18,16 @@
       {{credits-format this.scThreshold}} to qualify for a {{this.ticketYear}} Staff Credential ticket.
     {{else if this.reachedRPThreshold}}
       <b class="text-success">Congratulations!</b> You're signed up for {{credits-format @credits}} credits worth of
-      shifts, which is above the {{credits-format this.rpThreshold}} credits required to qualify for a reduced-price
+      shifts, which is above the {{credits-format this.rpThreshold}} credits required to qualify for a Special Price
       ticket in {{this.ticketYear}}. You need only {{credits-format this.scDelta}} credits more to qualify for a
-      staff credential.
+      Staff Credential.
       {{#if this.withinRPThreshold}}
         Since you are close to the threshold, you may want to sign up for one more shift. (See fine print below.)
       {{/if}}
     {{else if this.almostRPTicket}}
       You're signed up for {{credits-format @credits}} credits
       worth of shifts, and you need {{credits-format this.rpThreshold}} to qualify for a {{this.ticketYear}}
-      reduced-price ticket.
+      Special Price Ticket.
     {{/if}}
 
     {{#if @credits}}
@@ -37,7 +37,7 @@
         the scheduled time, you'll receive more credits -- but more importantly, if a shift runs shorter than the
         scheduled time (which is typical for Burn Perimeter and Art Safety shifts), you'll receive fewer credits. If
         by the end of the event your total credits based on actual shift times are less than the required threshold,
-        then you won't qualify for a (reduced-price or staff credential) ticket in {{this.ticketYear}}. If you're just
+        then you won't qualify for a (Special Price Ticket or Staff Credential) ticket in {{this.ticketYear}}. If you're just
         over a threshold and depending on Burn Perimeter or Art Safety shifts to get you there, you might consider
         adding another shift or two to be on the safe side.
       </div>

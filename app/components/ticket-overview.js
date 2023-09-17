@@ -32,7 +32,7 @@ export default class TicketOverviewComponent extends Component {
     this.usingVehiclePass = (pass && pass.isUsing);
     this.haveVP = (pass && (pass.isUsing || pass.isQualified));
 
-    // Figure out if RPT or VP requires a delivery method?
+    // Figure out if SPT or VP requires a delivery method?
     let item;
     if (ticket && ticket.isUsing) {
       item = ticket;

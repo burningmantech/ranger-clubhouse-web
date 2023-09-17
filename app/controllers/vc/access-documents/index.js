@@ -5,7 +5,7 @@ import {
   BANKED, CLAIMED,
   GIFT_TICKET,
   LSD_TICKET, QUALIFIED,
-  RPT,
+  SPT,
   STAFF_CREDENTIAL, SUBMITTED, TURNED_DOWN,
   VEHICLE_PASS,
   VEHICLE_PASS_GIFT, VEHICLE_PASS_LSD, WAP, WAPSO
@@ -34,7 +34,7 @@ export default class VcAccessDocumentsIndexController extends ClubhouseControlle
     {
       groupName: 'Regular Items',
       options: [
-        ["Reduced-Price Ticket", RPT],
+        ["Special Price Ticket", SPT],
         ["Staff Credential", STAFF_CREDENTIAL],
         ["Work Access Pass", WAP],
         ["S.O. Work Access Pass", WAPSO],

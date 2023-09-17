@@ -7,7 +7,7 @@
     <tr>
       <th>Person</th>
       <th>Status</th>
-      <th>Has RPT?</th>
+      <th>Has SPT?</th>
       <th>Years worked {{this.startYear}} &amp; later</th>
       <th>Schedule</th>
     </tr>
@@ -26,7 +26,7 @@
               RAD-{{ticket.id}} {{or (get this.typeShortLabels ticket.type) ticket.type}} {{ticket.status}}<br>
             {{/each}}
           {{else}}
-            NO RPT
+            NO SPT
           {{/if}}
         </td>
         <td>
