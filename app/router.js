@@ -97,7 +97,6 @@ Router.map(function () {
     });
 
     this.route('permissions');
-    this.route('salesforce');
     this.route('settings');
     this.route('slots');
 
@@ -251,6 +250,7 @@ Router.map(function () {
     this.route('handle-checker');
     this.route('photo-review');
     this.route('photos');
+    this.route('salesforce');
     this.route('shiny-penny-report');
     this.route('spigot');
     this.route('unified-flagging');
