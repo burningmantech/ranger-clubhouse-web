@@ -5,16 +5,19 @@
     <NavbarMenuItem @menu={{menu}} @route="vc.photos" @item="Photos"/>
     <NavbarMenuItem @menu={{menu}} @route="vc.spigot" @item="Spigot Flow"/>
     <NavbarMenuItem @menu={{menu}} @route="vc.shiny-penny-report" @item="Shiny Penny Report"/>
+    {{#if (has-role "admin" "salesforce-import")}}
+      <NavbarMenuItem @menu={{menu}} @route="vc.salesforce" @item="Salesforce Import"/>
+    {{/if}}
     {{#if (has-role "intake")}}
       <NavbarMenuItem @menu={{menu}} @route="vc.unified-flagging" @item="Unified Flagging"/>
     {{/if}}
   {{/if}}
   {{#if (has-role "edit-access-docs")}}
-    <div class="dropdown-item"><hr class="dropdown-divider"></div>
+    <menu.divider />
     <NavbarMenuItem @menu={{menu}} @route="vc.access-documents" @item="Manage Access Docs"/>
   {{/if}}
   {{#if (has-role "edit-bmids")}}
-    <div class="dropdown-item"><hr class="dropdown-divider"></div>
+    <menu.divider />
     <NavbarMenuItem @menu={{menu}} @route="vc.bmid" @item="Manage BMIDs"/>
   {{/if}}
 </NavbarMenu>

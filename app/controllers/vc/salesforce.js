@@ -3,7 +3,7 @@ import {tracked} from '@glimmer/tracking';
 import {action, set} from '@ember/object';
 import groupBy from 'clubhouse/utils/group-by';
 
-export default class AdminSalesforceController extends ClubhouseController {
+export default class VcSalesforceController extends ClubhouseController {
   @tracked commit = false;
   @tracked updateSalesforce = false;
   @tracked nonTestAccounts = false;

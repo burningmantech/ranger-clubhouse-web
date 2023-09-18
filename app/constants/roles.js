@@ -26,6 +26,8 @@ export const REGIONAL_MANAGEMENT = 114;    // Person can access Regional Ranger 
 export const PAYROLL = 115;                // Can access payroll features
 export const VEHICLE_MANAGEMENT = 116;     // Can access vehicle fleet management features
 export const TIMECARD_YEAR_ROUND = 117;    // Paid folks who can self check in/out, and submit timesheet corrections year round.
+export const SALESFORCE_IMPORT = 118;      // Allowed to import new accounts from Salesforce
+
 
 export const Role = {
   ADMIN,
@@ -45,6 +47,7 @@ export const Role = {
   MENTOR,
   REGIONAL_MANAGEMENT,
   PAYROLL,
+  SALESFORCE_IMPORT,
   SURVEY_MANAGEMENT,
   TECH_NINJA,
   TIMECARD_YEAR_ROUND,
@@ -79,6 +82,7 @@ export const RoleToString = {
   [TIMESHEET_MANAGEMENT]: 'timesheet-management',
   [TRAINER]: 'trainer',
   [TRAINER_SEASONAL]: 'trainer-seasonal',
+  [SALESFORCE_IMPORT]: 'salesforce-import',
   [SURVEY_MANAGEMENT]: 'survey-management',
   [VC]: 'vc',
   [VEHICLE_MANAGEMENT]: 'vehicle',

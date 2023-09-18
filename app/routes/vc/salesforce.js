@@ -1,8 +1,8 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import { ADMIN } from 'clubhouse/constants/roles';
+import {ADMIN, SALESFORCE_IMPORT} from 'clubhouse/constants/roles';
 
-export default class AdminSalesforceRoute extends ClubhouseRoute {
-  roleRequired = ADMIN;
+export default class VcSalesforceRoute extends ClubhouseRoute {
+  roleRequired = [ADMIN, SALESFORCE_IMPORT];
 
   model() {
     return this.ajax.request('salesforce/config');
