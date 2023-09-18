@@ -4,7 +4,7 @@ import { ADMIN } from 'clubhouse/constants/roles';
 export default class AdminMaintenanceRoute extends ClubhouseRoute {
   roleRequired = ADMIN;
 
-  setupController(controller, model) {
+  setupController(controller) {
     controller.task =  null;
     controller.taskParam = null;
     controller.isSubmitting = false;
