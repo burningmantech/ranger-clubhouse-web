@@ -1,0 +1,29 @@
+{{#if @results.people}}
+  <p>
+    {{pluralize @results.people.length "person"}} {{if (eq @results.people.length 1) "has" "have"}} been
+    granted WAPs
+  </p>
+  <table class="table table-width-auto table-sm table-striped table-hover">
+    <thead>
+    <tr>
+      <th>Person</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each @results.people as |person|}}
+      <tr>
+        <td>
+          <PersonLink @person={{person}} />
+        </td>
+        <td>{{person.status}}</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p class="text-danger">
+    No qualifying {{if (eq @taskAction "grant-alpha-waps") "Alphas" "active/inactive Rangers"}} were found
+      to grant WAPs to.
+  </p>
+{{/if}}

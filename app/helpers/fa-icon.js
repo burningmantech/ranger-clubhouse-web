@@ -30,7 +30,7 @@ export function faIcon([name], namedParams) {
   if (namedParams.size) {
     attrs.push(`fa-${namedParams.size}`);
   }
-  if (namedParams.spinner) {
+  if (namedParams.spinner || namedParams.spin) {
     attrs.push('fa-spin');
   }
   if (namedParams.fixed) {

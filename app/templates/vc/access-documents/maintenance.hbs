@@ -1,0 +1,69 @@
+<h1 class="mb-4">Access Documents &amp; Provision Maintenance Functions</h1>
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    The task '{{this.task.title}}' is being performed. Hang tight!
+  </LoadingDialog>
+{{else if this.task}}
+  <p>
+    <a href {{action this.showIndex}}>{{fa-icon "angle-double-left"}} Back to Maintenance Tasks</a>
+  </p>
+  <h3>The task "{{this.task.title}}" was completed.</h3>
+  <this.task.component @results={{this.results}} @taskAction={{this.taskAction}} />
+{{else}}
+  {{#each this.taskGroups as |group|}}
+    <UiSection>
+      <:title>{{group.group_title}}</:title>
+      <:body>
+        <div class="row">
+          {{#each group.tasks as |task|}}
+            <div class="mb-3 col-sm-12 col-xl-5 me-2">
+              <div class="card-body">
+                <h4 class="card-title">
+                  {{#if task.route}}
+                    <LinkTo @route={{task.route}} class="btn btn-primary btn-block">{{task.title}}</LinkTo>
+                  {{else}}
+                    {{#if task.param}}
+                      <UiButton @class="btn-block" @onClick={{fn this.askParamAction task}}>
+                        {{task.title}}
+                      </UiButton>
+                    {{else}}
+                      <UiButton @class="btn-block" @onClick={{fn this.executeTask task}}>
+                        {{task.title}}
+                      </UiButton>
+                    {{/if}}
+                  {{/if}}
+                </h4>
+                <div class="card-text">
+                  {{task.description}}
+                  {{#if (eq task.action "set-staff-credentials-access-date")}}
+                    <br>The default access date is {{this.ticketingInfo.wap_default_date}}.
+                  {{/if}}
+                </div>
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </:body>
+    </UiSection>
+  {{/each}}
+{{/if}}
+
+
+{{#if this.taskParam}}
+  <ModalDialog @onEscape={{this.cancelParamAction}} as |Modal|>
+    <Modal.body>
+      <FormRow>
+        <FormLabel>{{this.taskParam.param.title}}</FormLabel>
+      </FormRow>
+      <FormRow>
+        <div class="col-auto">
+          <Input @type="text" size="80" class="form-control" @value={{this.paramValue}}/>
+        </div>
+      </FormRow>
+    </Modal.body>
+    <Modal.footer @noAlign={{true}}>
+      <UiButton @onClick={{fn this.executeTask this.taskParam}}>Submit</UiButton>
+      <UiCancelButton @onClick={{this.cancelParamAction}} />
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
