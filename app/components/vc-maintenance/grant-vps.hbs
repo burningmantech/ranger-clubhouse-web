@@ -1,0 +1,28 @@
+{{#if @results.people}}
+  <p>
+    {{pluralize @results.people.length "person"}} {{if (eq @results.people.length 1) "has" "have"}} been
+    granted a Vehicle Pass.
+  </p>
+  <table class="table table-width-auto table-sm table-striped table-hover">
+    <thead>
+    <tr>
+      <th>Person</th>
+      <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each @results.people as |person|}}
+      <tr>
+        <td>
+          <PersonLink @person={{person}} />
+        </td>
+        <td>{{person.status}}</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p class="text-danger">
+    <b>No qualifying people were found to grant a Vehicle Pass to.</b>
+  </p>
+{{/if}}
