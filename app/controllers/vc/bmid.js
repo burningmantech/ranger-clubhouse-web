@@ -53,7 +53,8 @@ export default class VcBmidController extends ClubhouseController {
     ['BMIDs marked as "Issues" or "Do Not Print"', 'nonprint'],
     ['Submitted BMIDs', 'submitted'],
     ['Printed BMIDs', 'printed'],
-    ['No shift signups', 'no-shifts']
+    ['No shift signups', 'no-shifts'],
+    ['In Prep', 'in_prep']
   ];
 
   @tracked sortColumn = 'callsign';
