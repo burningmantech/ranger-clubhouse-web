@@ -6,6 +6,7 @@ import {tracked} from '@glimmer/tracking';
 import {MealOptions, BmidStatusOptions, ShowerOptions} from 'clubhouse/models/bmid';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import Changeset from 'ember-changeset';
+import {IN_PREP, READY_TO_PRINT, SUBMITTED} from "clubhouse/models/bmid";
 
 /*
  * BMID management controller
@@ -20,9 +21,9 @@ const CSV_COLUMNS = [
   'title2',
   'title3',
   'meals',
-  {title: 'req. meals', key: 'earned_meals' },
+  {title: 'req. meals', key: 'earned_meals'},
   'showers',
-  {title: 'req. showers', key: 'earned_showers' },
+  {title: 'req. showers', key: 'earned_showers'},
   'mvr',
   'team',
   'notes',
@@ -51,10 +52,10 @@ export default class VcBmidController extends ClubhouseController {
     ['Alphas', 'alpha'],
     ['Vets w/shift after 8/10 OR PASSED training; excludes PNVs', 'signedup'],
     ['BMIDs marked as "Issues" or "Do Not Print"', 'nonprint'],
-    ['Submitted BMIDs', 'submitted'],
-    ['Printed BMIDs', 'printed'],
+    ['Submitted BMIDs', SUBMITTED],
     ['No shift signups', 'no-shifts'],
-    ['In Prep', 'in_prep']
+    ['In Prep', IN_PREP],
+    ['Ready To Print', READY_TO_PRINT]
   ];
 
   @tracked sortColumn = 'callsign';
