@@ -2,6 +2,7 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {isEmpty} from '@ember/utils';
+import {IN_PREP, READY_TO_PRINT} from "clubhouse/models/bmid";
 
 export default class VcBmidPrintController extends ClubhouseController {
   queryParams = ['filter'];
@@ -12,7 +13,8 @@ export default class VcBmidPrintController extends ClubhouseController {
     ['Specials (titles, meals, showers, or early arrival)', 'special'],
     ['Alphas', 'alpha'],
     ['Vets w/shift after 8/10 OR PASSED training; excludes PNVs', 'signedup'],
-    ['In-Prep', 'in_prep']
+    ['In-Prep', IN_PREP],
+    ['Ready To Print', READY_TO_PRINT]
   ];
 
   textFilterFields = [
