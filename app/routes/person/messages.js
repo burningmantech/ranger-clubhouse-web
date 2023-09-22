@@ -1,11 +1,11 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {Role} from 'clubhouse/constants/roles';
+import {ADMIN, MESSAGE_MANAGEMENT, VC} from 'clubhouse/constants/roles';
 
 export default class PersonMessagesRoute extends ClubhouseRoute {
   model() {
     const person_id = +this.modelFor('person').id;
 
-    if (this.session.hasRole([Role.ADMIN, Role.VC])
+    if (this.session.hasRole([ADMIN, VC, MESSAGE_MANAGEMENT])
       || person_id === this.session.userId
       || this.session.isLMOPEnabled) {
       this.canAccessMessages = true;
