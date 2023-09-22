@@ -27,7 +27,7 @@ export const PAYROLL = 115;                // Can access payroll features
 export const VEHICLE_MANAGEMENT = 116;     // Can access vehicle fleet management features
 export const TIMECARD_YEAR_ROUND = 117;    // Paid folks who can self check in/out, and submit timesheet corrections year round.
 export const SALESFORCE_IMPORT = 118;      // Allowed to import new accounts from Salesforce
-
+export const MESSAGE_MANAGEMENT = 119;    // Allow access to Clubhouse Messages year round regardless of LMYR/LMOP setting.
 
 export const Role = {
   ADMIN,
@@ -45,6 +45,7 @@ export const Role = {
   MANAGE_ON_PLAYA,
   MEGAPHONE,
   MENTOR,
+  MESSAGE_MANAGEMENT,
   REGIONAL_MANAGEMENT,
   PAYROLL,
   SALESFORCE_IMPORT,
@@ -75,6 +76,7 @@ export const RoleToString = {
   [MANAGE_ON_PLAYA]: 'manage-on-playa',
   [MEGAPHONE]: 'megaphone',
   [MENTOR]: 'mentor',
+  [MESSAGE_MANAGEMENT]: 'message-management',
   [PAYROLL]: 'payroll',
   [REGIONAL_MANAGEMENT]: 'regional',
   [TECH_NINJA]: 'tech-ninja',
