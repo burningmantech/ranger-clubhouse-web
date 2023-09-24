@@ -1,24 +1,24 @@
 <main>
-  <YearSelect @title="Assets (Radios, Gear, Vehicles)"
+  <YearSelect @title="Assets (Radios, Gear, etc)"
               @year={{this.year}}
-              @minYear={{2010}}
+              @minYear={{2009}}
               @skipPandemic={{true}}
               @onChange={{action (mut this.year)}} />
   <FormRow>
+    <FormLabel @auto={{true}}>Type Filter</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="typeFilter"
+                      @value={{this.typeFilter}}
+                      @options={{this.typeOptions}}
+                      @onChange={{action (mut this.typeFilter)}}
+      />
+    </div>
     <FormLabel @auto={{true}}>Description Filter</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="descriptionFilter"
                       @value={{this.descriptionFilter}}
                       @options={{this.descriptionOptions}}
-                      @onChange={{action (mut this.descriptionFilter)}}
-      />
-    </div>
-    <FormLabel @auto={{true}}>Temp ID Filter</FormLabel>
-    <div class="col-auto">
-      <ChForm::Select @name="tempIdFilter"
-                      @value={{this.tempIdFilter}}
-                      @options={{this.tempIdOptions}}
-                      @onChange={{action (mut this.tempIdFilter)}} />
+                      @onChange={{action (mut this.descriptionFilter)}} />
     </div>
     <FormLabel @auto={{true}}>Action</FormLabel>
     <div class="col-auto">
@@ -31,8 +31,8 @@
     <thead>
     <tr>
       <th>Barcode</th>
+      <th>Type</th>
       <th>Description</th>
-      <th>Temp ID</th>
       <th>Assigned</th>
       <th>Actions</th>
     </tr>
@@ -42,9 +42,9 @@
     {{#each this.viewAssets key="id" as |asset|}}
       <tr>
         <td>{{asset.barcode}}</td>
-        <td>{{asset.description}}</td>
+        <td>{{this.typeLabel asset.type}}</td>
         <td>
-          <PresentOrNot @value={{asset.temp_id}} @empty="-"/>
+          <PresentOrNot @value={{asset.description}} @empty="-"/>
         </td>
         <td>{{if asset.perm_assign "Perm" "Temp"}}</td>
         <td>
@@ -77,8 +77,8 @@
               @onSubmit={{action this.saveAsset}} as |f|>
         <Modal.body>
           <FormRow>
-            <f.select @name="description"
-                      @label="Description/Type"
+            <f.select @name="type"
+                      @label="Type"
                       @options={{this.assetDescriptionOptions}}
             />
             <f.text @name="barcode"
@@ -87,11 +87,28 @@
                     @maxlength={{25}}
                     @showCharCount={{true}}
             />
-            <f.text @name="temp_id"
-                    @label="Temp ID (aka secondary description)"
+            <f.text @name="description"
+                    @label="Description"
                     @size={{25}}
                     @maxlength={{25}}
                     @showCharCount={{true}}
+            />
+          </FormRow>
+          <FormRow>
+            <div class="col-auto">
+              <f.radioGroup @name="perm_assign"
+                            @label="Assignment"
+                            @options={{this.permanentOptions}}
+              />
+            </div>
+            <f.select @name="category"
+                      @label="Category"
+                      @options={{this.categoryOptions}}
+            />
+            <f.text @name="year"
+                    @label="Event Year"
+                    @size={{4}}
+                    @maxlength={{4}}
             />
           </FormRow>
           <FormRow>
@@ -99,14 +116,6 @@
                         @label="Notes"
                         @rows={{2}}
                         @cols={{80}}/>
-          </FormRow>
-          <FormRow>
-            <FormLabel @auto={{true}}>Assignment</FormLabel>
-            <div class="col-auto mt-2">
-              <f.radioGroup @name="perm_assign"
-                            @options={{this.permanentOptions}}
-                            @inline={{true}}/>
-            </div>
           </FormRow>
 
           {{#if this.entry.isNew}}
@@ -118,35 +127,6 @@
               />
             </FormRow>
           {{/if}}
-          <fieldset>
-            <legend>Vehicle Information</legend>
-            <FormRow>
-              <f.select @name="category"
-                        @label="Category"
-                        @options={{this.categoryOptions}}
-              />
-            </FormRow>
-            <FormRow>
-              <f.text @name="subtype"
-                      @label="Type"
-                      @size={{25}}
-                      @maxlength={{25}}
-                      @showCharCount={{true}}
-              />
-              <f.text @name="color"
-                      @label="Color"
-                      @size={{25}}
-                      @maxlength={{25}}
-                      @showCharCount={{true}}
-              />
-              <f.text @name="style"
-                      @label="Style"
-                      @size={{25}}
-                      @maxlength={{25}}
-                      @showCharCount={{true}}
-              />
-            </FormRow>
-          </fieldset>
         </Modal.body>
         <Modal.footer @noAlign={{true}}>
           <f.submit @label={{if f.model.isNew "Create" "Update"}} @disabled={{this.isSubmitting}} />

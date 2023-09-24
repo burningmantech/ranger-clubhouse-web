@@ -33,50 +33,72 @@ export default class ReportsRadioAssetsRoute extends ClubhouseRoute {
 
     let currentStartBarcode = null;
     let currentBarcode = 0;
-    let currentTempId = "";
+    let currentDescription = "";
     let currentPermAssign = 0;
     let permCount = 0;
+    let currentPrefix = 0;
+    let currentCount = 0;
 
     assets.forEach((radio) => {
-      const barcode = parseInt(radio.barcode);
-      const tempId = radio.temp_id;
+      const description = radio.description;
       const permAssign = radio.perm_assign;
+      let item = radio.barcode.match(/^(.*?)(\d+)$/);
+      let barcode, prefix;
+
+      if (item) {
+        prefix = item[1];
+        barcode = parseInt(item[2]);
+      } else {
+        barcode = radio.barcode;
+        prefix = null;
+      }
 
       if (permAssign) {
         permCount++;
       }
 
       /* start */
-      if (currentStartBarcode == null) {
+      if (currentStartBarcode === null) {
         currentStartBarcode = currentBarcode = barcode;
-        currentTempId = tempId;
+        currentDescription = description;
         currentPermAssign = permAssign;
+        currentPrefix = prefix;
+        currentCount = 1;
         return;
       }
 
-      if (barcode == currentBarcode + 1 &&
-        tempId == currentTempId &&
-        permAssign == currentPermAssign) {
+      currentCount += 1;
+
+      if (
+        prefix === currentPrefix &&
+        barcode === currentBarcode + 1 &&
+        description === currentDescription &&
+        permAssign === currentPermAssign) {
         currentBarcode = barcode;
         return;
       }
 
-      this._buildSummary(radioSummaries,
-        currentStartBarcode,
+      this._buildSummary(
+        radioSummaries,
+        `${currentPrefix}${currentStartBarcode}`,
         currentBarcode,
-        currentTempId,
-        currentPermAssign
+        currentDescription,
+        currentPermAssign,
+        currentCount,
       );
       currentStartBarcode = currentBarcode = barcode;
-      currentTempId = tempId;
+      currentPrefix = prefix;
+      currentDescription = description;
       currentPermAssign = permAssign;
+      currentCount = 0;
     });
 
     this._buildSummary(radioSummaries,
-      currentStartBarcode,
-      currentBarcode,
-      currentTempId,
-      currentPermAssign
+      `${currentPrefix}${currentStartBarcode}`,
+      `${currentPrefix}${currentBarcode}`,
+      currentDescription,
+      currentPermAssign,
+      currentCount
     );
 
     controller.set('radioSummaries', radioSummaries);
@@ -84,21 +106,20 @@ export default class ReportsRadioAssetsRoute extends ClubhouseRoute {
     controller.set('tempCount', assets.length - permCount);
   }
 
-  _buildSummary(radioSummaries, start, current, temp_id, perm_assign) {
-    let barcode, count;
+  _buildSummary(radioSummaries, start, current, description, perm_assign, count) {
+    let barcode;
 
     if (start == current) {
       barcode = start;
       count = 1;
     } else {
       barcode = `${start} - ${current}`;
-      count =  current - start + 1;
     }
 
     radioSummaries.push({
       barcode,
       count,
-      temp_id,
+      description,
       perm_assign
     });
   }

@@ -42,7 +42,7 @@
                          autocomplete="off"
                          as |item group|>
         {{#if (eq this.searchType "asset")}}
-          {{this.searchYear}} Asset #{{item.barcode}} {{item.description}} {{item.type}}
+          Year {{this.searchYear}} #{{item.barcode}} {{item.type}} {{item.description}}
         {{else if (eq this.searchType "vehicle")}}
           {{item.name}}: {{item.numbers}}
           <span class="ms-4 d-block">&bullet; {{item.description}}</span>

@@ -13,16 +13,19 @@
   <tbody>
   {{#each @assetsCheckedOut as |ap|}}
     <tr>
-      <td>{{ap.asset.description}}</td>
+      <td>{{this.typeLabel ap.asset.type}}</td>
       <td>{{ap.asset.barcode}}</td>
       <td>
-        <PresentOrNot @value={{ap.attachment.description}} @empty="none"/><br>
-        <UiButton @onClick={{fn this.changeAssetAttachment ap}} @type="secondary" @class="mt-1" @size="sm" @disabled={{ap.isSubmitting}}>
+        <PresentOrNot @value={{ap.attachment.description}} @empty="none"/>
+        <br>
+        <UiButton @onClick={{fn this.changeAssetAttachment ap}} @type="secondary" @class="mt-1" @size="sm"
+                  @disabled={{ap.isSubmitting}}>
           Change Attachment
         </UiButton>
       </td>
       <td>
-        <PresentOrNot @value={{ap.asset.temp_id}} @empty="-"/><br>
+        <PresentOrNot @value={{ap.asset.description}} @empty="-"/>
+        <br>
         {{if ap.asset.perm_assign "Permanent" "Temporary"}}
       </td>
       <td>{{shift-format ap.checked_out}}</td>
@@ -57,8 +60,8 @@
       <Modal.body>
         <FormRow>
           <f.select @name="attachment_id"
-                   @label="Choose the new attachment"
-                   @options={{this.attachmentOptions}}/>
+                    @label="Choose the new attachment"
+                    @options={{this.attachmentOptions}}/>
         </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>

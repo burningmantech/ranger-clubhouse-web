@@ -341,8 +341,8 @@ export default class SearchItemBarComponent extends Component {
       const item = asset[0];
       const searchResults = [{
         barcode: item.barcode,
+        type: item.type,
         description: item.description,
-        type: item.temp_id,
       }];
 
       this.searchResults = searchResults;
