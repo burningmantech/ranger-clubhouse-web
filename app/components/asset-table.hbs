@@ -6,7 +6,7 @@
     <th>Barcode</th>
     <th>Attachment</th>
     <th>Assigned</th>
-    <th>Temp ID</th>
+    <th>Description</th>
     <th>Checked Out Time /<br>By Person</th>
     <th>Checked In Time /<br>By Person</th>
     <th>Action</th>
@@ -15,14 +15,14 @@
   <tbody>
   {{#each @assets as |ap|}}
     <tr>
-      <td>{{ap.asset.description}}</td>
+      <td>{{ap.asset.type}}</td>
       <td>{{ap.asset.barcode}}</td>
       <td>
         <PresentOrNot @value={{ap.attachment.description}} @empty="-"/>
       </td>
       <td>{{if ap.asset.perm_assign "Perm" "Temp"}}</td>
       <td>
-        <PresentOrNot @value={{ap.asset.temp_id}} @empty="-"/>
+        <PresentOrNot @value={{ap.asset.description}} @empty="-"/>
       </td>
       <td>
         {{shift-format ap.checked_out}}<br>

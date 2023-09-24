@@ -13,9 +13,9 @@ Showing {{pluralize this.assets.length "non-radio asset entry"}}
   <thead>
   <tr>
     <th>Barcode</th>
+    <th>Type</th>
     <th>Description</th>
     <th>Assigned</th>
-    <th>Temp ID</th>
     <th>Cbecked Out Time /<br>By Person</th>
     <th>Checked In Time /<br>By Person</th>
     <th>Callsign</th>
@@ -26,8 +26,8 @@ Showing {{pluralize this.assets.length "non-radio asset entry"}}
     {{#each asset.asset_history as |history|}}
       <tr>
         <td>{{asset.barcode}}</td>
-        <td>{{asset.description}}</td>
-        <td>{{asset.temp_id}}</td>
+        <td>{{this.typeLabel asset.type}}</td>
+        <td><PresentOrNot @value={{asset.description}} @empty="-" /></td>
         <td>{{if asset.perm_assign "Permanent" "Temporary"}}</td>
         <td>
           {{shift-format history.checked_out}}<br>

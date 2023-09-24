@@ -7,6 +7,7 @@ import {cached, tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {isEmpty} from '@ember/utils';
 import dayjs from 'dayjs';
+import {NON_RANGER} from "clubhouse/constants/person_status";
 
 
 export default class PersonTimesheetManageComponent extends Component {
@@ -165,9 +166,20 @@ export default class PersonTimesheetManageComponent extends Component {
       return;
     }
 
+    const {person} = this.args;
+    if (model._changes['is_non_ranger'] && model.is_non_ranger && person.status !== NON_RANGER) {
+      this.modal.confirm('Department Volunteer Flag Checked',
+        `Warning: The department volunteer (aka non ranger) flag is checked on this timesheet entry, however, ${person.callsign} is status ${person.status}. Normally, the flag is used to indicate the entry is for a non ranger status person and the entry WILL NOT count towards any service years. Are you sure you want to do this?`,
+        () => this._saveCommon(model));
+
+    } else {
+      this._saveCommon(model);
+    }
+  }
+
+  async _saveCommon(model) {
     this.house.saveModel(model, 'The timesheet entry has been successfully updated.',
       async () => {
-        // clear out the pseudo fields.
         this.editEntry.additional_notes = '';
         this.editEntry.additional_reviewer_notes = '';
         this.editEntry = null;

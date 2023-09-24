@@ -32,7 +32,7 @@
   <h3 class="mt-3">
     Asset {{this.asset.barcode}}
     ({{if this.asset.perm_assign "permanent" "temporary"}})
-    {{this.asset.description}} {{this.asset.temp_id}}
+    {{this.asset.type}} {{this.asset.description}}
   </h3>
   <UiSection>
     <:title>Checkout History</:title>
@@ -96,22 +96,22 @@
       <table class="table  mt-4 table-width-auto">
         <thead>
         <tr>
+          <th>Event Year</th>
           <th>Created</th>
           <th>Category</th>
-          <th>Model</th>
           <th>Notes</th>
         </tr>
         </thead>
         <tbody>
         <tr>
-          <td>{{this.asset.create_date}}</td>
+          <td>{{this.asset.year}}</td>
           <td>
             <PresentOrNot @value={{this.asset.category}} @empty="-"/>
           </td>
-          <td>{{this.asset.subtype}} {{this.asset.model}} {{this.asset.color}} {{this.asset.style}}</td>
           <td>
             <PresentOrNot @value={{this.asset.notes}} @empty="-"/>
           </td>
+          <td>{{this.asset.created_at}}</td>
         </tr>
         </tbody>
       </table>

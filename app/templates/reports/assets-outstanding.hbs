@@ -13,10 +13,10 @@ Showing {{pluralize this.assets.length "asset"}} outstanding.
   <tr>
     <th>Barcode</th>
     <th>Callsign</th>
+    <th>Type</th>
     <th>Description</th>
     <th>Attachment</th>
     <th>Assigned</th>
-    <th>Temp ID</th>
     <th>Checked Out /<br>By Person</th>
   </tr>
   </thead>
@@ -30,7 +30,10 @@ Showing {{pluralize this.assets.length "asset"}} outstanding.
         <PersonLink @person={{asset.checked_out.person}} />
       </td>
       <td>
-        {{asset.description}}
+        {{this.typeLabel asset.type}}
+      </td>
+      <td>
+        <PresentOrNot @value={{asset.description}} @empty="-" />
       </td>
       <td>
         {{#if asset.checked_out.attachment}}
@@ -42,14 +45,7 @@ Showing {{pluralize this.assets.length "asset"}} outstanding.
       <td>
         {{if asset.perm_assign "Permanent" "Temporary"}}
       </td>
-      <td>
-        {{#if asset.temp_id}}
-          {{asset.temp_id}}
-        {{else}}
-          -
-        {{/if}}
-      </td>
-      <td>
+       <td>
         {{shift-format asset.checked_out.checked_out}}<br>
         {{#if asset.checked_out.check_out_person}}
           <PersonLink @person={{asset.checked_out.check_out_person}} />

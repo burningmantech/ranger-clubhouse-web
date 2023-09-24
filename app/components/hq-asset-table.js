@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
 import {service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';
+import { TypeLabels} from 'clubhouse/models/asset';
 
 export default class HqAssetTableComponent extends Component {
   @service ajax;
@@ -16,6 +17,10 @@ export default class HqAssetTableComponent extends Component {
     const options = this.args.attachments.map((a) => [a.description, a.id]);
     options.unshift(['-', '']);
     this.attachmentOptions = options;
+  }
+
+  typeLabel(type) {
+    return TypeLabels[type] ?? type;
   }
 
   /**
