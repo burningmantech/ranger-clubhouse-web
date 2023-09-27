@@ -5,6 +5,7 @@ import PersonInfoValidations, {REQUIRED_PII_VALIDATIONS} from 'clubhouse/validat
 import {pronounOptions} from 'clubhouse/constants/pronouns';
 import {ADMIN, VC} from 'clubhouse/constants/roles';
 import {ADDRESS_VALIDATION_NOT_REQUIRED} from 'clubhouse/constants/person_status';
+import { GenderIdentityOptions} from 'clubhouse/models/person';
 
 export default class PersonPersonalInfoController extends ClubhouseController {
   @tracked person;
@@ -13,6 +14,7 @@ export default class PersonPersonalInfoController extends ClubhouseController {
   @tracked shirtsById;
 
   pronounOptions = pronounOptions;
+  genderIdentityOptions = GenderIdentityOptions;
 
   @cached
   get personInfoValidations() {

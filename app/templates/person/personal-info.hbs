@@ -1,18 +1,16 @@
 <h3>Personal Information for {{this.person.callsign}}</h3>
 <p>
-  {{this.person.callsign}}
   {{#if this.person.reviewed_pi_at}}
-    last reviewed their PII on
-    {{timestamp-format this.person.reviewed_pi_at "MMM DD, YYYY @ HH:mm"}} (Pacific)
+    Last updated their PII on {{timestamp-format this.person.reviewed_pi_at "MMM DD, YYYY @ HH:mm"}} (Pacific)
   {{else}}
-    has not updated their PII yet.
+    Has not updated their PII yet.
   {{/if}}
   <br>
   {{#if this.person.pi_reviewed_for_dashboard_at}}
-    Last reviewed for dashboard on
+    Last reviewed their PII for the dashboard PII step on
     {{timestamp-format this.person.pi_reviewed_for_dashboard_at "MMM DD, YYYY @ HH:mm"}} (Pacific).
   {{else}}
-    Has not reviewed for dashboard yet.
+    Has not yet reviewed their PII for the dashboard PII step.
   {{/if}}
 </p>
 {{#if this.canEditPersonalInfo}}
@@ -27,26 +25,39 @@
           <:body>
             <FormRow>
               <f.text @name="first_name"
-                      @label="First Name"
-                      @maxlength={{25}}/>
+                      @label="Legal First Name"
+                      @maxlength={{25}}
+                      @showCharCount={{true}}
+              />
               <f.text @name="mi"
                       @label="M.I."
                       @size={{2}}
-                      @maxlength={{10}}/>
+                      @maxlength={{10}}
+              />
               <f.text @name="last_name"
-                      @label="Last Name"
-                      @maxlength={{25}}/>
+                      @label="Legal Last Name"
+                      @maxlength={{25}}
+                      @showCharCount={{true}}
+
+              />
             </FormRow>
             <FormRow>
-              <f.text @name="gender"
-                      @label="Gender"
-                      @hint="female, male, non-binary, gender fluid, etc."
-                      @maxlength={{32}}
+              <f.select @name="gender_identity"
+                        @label="Gender (optional)"
+                        @options={{this.genderIdentityOptions}}
               />
+              {{#if (eq f.model.gender_identity "custom")}}
+                <f.text @name="gender_custom"
+                        @label="Their Gender"
+                        @size={{25}}
+                        @maxlength={{25}}
+                        @showCharCount={{true}}
+                />
+              {{/if}}
             </FormRow>
             <FormRow class="mb-4">
               <f.select @name="pronouns"
-                        @label="Pronouns"
+                        @label="Pronouns (optional)"
                         @options={{this.pronounOptions}}/>
               {{#if (eq f.model.pronouns "custom")}}
                 <f.text

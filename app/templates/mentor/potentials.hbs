@@ -63,8 +63,7 @@ Showing {{this.viewPotentials.length}} of {{pluralize this.mentees.length "poten
         {{/if}}
         <PersonLink @person={{person}} /> &lt;{{person.status}}&gt;<br>
         {{person.first_name}} {{person.last_name}}<br>
-        <PresentOrNot @value={{person.gender}} @empty="no gender stated"/>
-        <br>
+          {{this.genderIdentityLabel person}}
       </td>
       <td class="w-10">
         {{#each person.mentor_history as |history|}}
