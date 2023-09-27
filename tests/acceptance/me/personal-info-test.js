@@ -14,7 +14,7 @@ module('Acceptance | me/personal info', function(hooks) {
 
     const fields = [
       'first_name', 'mi', 'last_name',
-      'email', 'home_phone', 'alt_phone', 'gender',
+      'email', 'home_phone', 'alt_phone', 'gender_identity',
       'camp_location',
       'street1', 'street2', 'apt', 'city', 'state', 'country',
     ];

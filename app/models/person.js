@@ -2,6 +2,37 @@ import Model, {attr} from '@ember-data/model';
 import {service} from '@ember/service';
 // eslint-disable-next-line ember/no-mixins
 import PersonMixin from 'clubhouse/mixins/models/person';
+import optionsToLabels from "clubhouse/utils/options-to-labels";
+
+export const GENDER_CIS_FEMALE = 'cis-female';
+export const GENDER_CIS_MALE = 'cis-male';
+export const GENDER_CUSTOM = 'custom';     // Used when the person wants to state a gender not listed. gender_custom is used.
+export const GENDER_FEMALE = 'female';
+export const GENDER_FLUID = 'fluid';
+export const GENDER_MALE = 'male';
+export const GENDER_NONE = ''; // Not stated
+export const GENDER_NON_BINARY = 'non-binary';
+export const GENDER_QUEER = 'queer';
+export const GENDER_TRANS_FEMALE = 'trans-female';
+export const GENDER_TRANS_MALE = 'trans-male';
+export const GENDER_TWO_SPIRIT = 'two-spirit';
+
+export const GenderIdentityOptions = [
+  ['Not Stated', GENDER_NONE],
+  ['Cis-Female', GENDER_CIS_FEMALE],
+  ['Cis-Male', GENDER_CIS_MALE],
+  ['Female', GENDER_FEMALE],
+  ['Male', GENDER_MALE],
+  ['Non-Binary', GENDER_NON_BINARY],
+  ['Gender Fluid', GENDER_FLUID],
+  ['Gender Queer', GENDER_QUEER],
+  ['Trans-Female', GENDER_TRANS_FEMALE],
+  ['Trans-Male', GENDER_TRANS_MALE],
+  ['Two Spirit', GENDER_TWO_SPIRIT],
+  ['Something Else', GENDER_CUSTOM],
+];
+
+export const GenderIdentityLabels = optionsToLabels(GenderIdentityOptions);
 
 export default class PersonModel extends PersonMixin(Model) {
   @service ajax;
@@ -53,7 +84,8 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('string') pronouns;
   @attr('string') pronouns_custom;
 
-  @attr('string') gender;
+  @attr('string') gender_identity;
+  @attr('string') gender_custom;
 
   @attr('number') long_sleeve_swag_ig;
   @attr('number') tshirt_swag_id;

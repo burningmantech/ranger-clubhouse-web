@@ -3,6 +3,7 @@ import EmberObject, {action} from '@ember/object';
 import {debounce} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
+import {GENDER_CUSTOM, GenderIdentityLabels} from "clubhouse/models/person";
 
 const SEARCH_RATE_MS = 300;
 
@@ -156,5 +157,14 @@ export default class MentorScheduleController extends ClubhouseController {
   @action
   clearAlphaApparel() {
     this.apparelSlot = null;
+  }
+
+  genderIdentityLabel(person) {
+    switch (person.gender_identity) {
+      case GENDER_CUSTOM:
+        return person.gender_custom;
+      default:
+        return GenderIdentityLabels[person.gender_identity] ?? person.gender_identity;
+    }
   }
 }

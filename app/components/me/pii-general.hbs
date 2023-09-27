@@ -3,32 +3,40 @@
 </div>
 <FormRow>
    <@f.text @name="first_name"
-          @label="Legal First Name"
-          @maxlength={{25}}/>
+            @label="Legal First Name"
+            @maxlength={{25}}/>
   <@f.text @name="mi"
-          @label="Middle Initial"
-          @maxlength={{10}}
+           @label="Middle Initial"
+           @maxlength={{10}}
   />
   <@f.text @name="last_name"
-          @label="Legal Last Name"
-          @maxlength={{25}}/>
+           @label="Legal Last Name"
+           @maxlength={{25}}/>
 </FormRow>
 <FormRow>
-  <@f.text @name="gender"
-          @label="Gender (optional)"
-          @hint="Examples: female, male, non-binary, gender fluid, etc."
-          @maxlength={{32}}/>
+  <@f.select @name="gender_identity"
+             @label="Gender (optional)"
+             @options={{this.genderIdentityOptions}}
+  />
+  {{#if (eq @f.model.gender_identity "custom")}}
+    <@f.text @name="gender_custom"
+             @label="Tell us your gender"
+             @size={{25}}
+             @maxlength={{25}}
+             @showCharCount={{true}}
+    />
+  {{/if}}
 </FormRow>
 <FormRow>
   <@f.select @name="pronouns"
-            @label="Pronouns (optional)"
-            @options={{@pronounOptions}}/>
+             @label="Pronouns (optional)"
+             @options={{@pronounOptions}}/>
   {{#if (eq @f.model.pronouns "custom")}}
-    <@f.text
-      @name="pronouns_custom"
-      @label="Tell us your pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
-      @size={{30}}
-      @maxlength={{30}}
+    <@f.text @name="pronouns_custom"
+             @label="Tell us your pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
+             @size={{30}}
+             @maxlength={{30}}
+             @showCharCount={{true}}
     />
   {{/if}}
 </FormRow>

@@ -11,7 +11,8 @@ export default Factory.extend({
   tshirt_swag_id: null,
   tshirt_secondary_swag_id: null,
   long_sleeve_swag_ig: null,
-  gender: '',
+  gender_identity: 'female',
+  gender_custom: '',
   has_reviewed_pi: false,
 
   callsign() {

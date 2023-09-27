@@ -52,7 +52,7 @@
                 <PersonLink @person={{person}} />
               </td>
               <td class="w-15">{{person.first_name}} {{person.last_name}}</td>
-              <td class="w-5 text-center">{{person.gender}}</td>
+              <td class="w-5 text-center">{{this.genderIdentityLabel person}}</td>
               <td class="w-5 text-center">{{yesno person.on_alpha_shift}}</td>
               <td class="w-10">
                 {{#if person.have_mentor_flags}}
