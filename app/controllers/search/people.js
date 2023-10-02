@@ -64,7 +64,7 @@ export default class SearchPeopleController extends ClubhouseController {
     this.year = currentYear;
     this.yearCreatedOptions = _.range(currentYear, 2010);
     this.yearCreatedOptions.unshift(['Any', 0]);
-    // 1 means find all accounts with a null create_date -- i.e., accounts created prior to 2008.
+    // 1 means find all accounts with a null created_at -- i.e., accounts created prior to 2008.
     this.yearCreatedOptions.push(['Prior to 2010', 1]);
     this.statusYearOptions = _.range(currentYear, 1995, -1);
     this.statusYearOptions.unshift(['Current Status', 0]);
@@ -146,8 +146,8 @@ export default class SearchPeopleController extends ClubhouseController {
       this.includeTicketingInfo = true;
     }
 
-    if (model.include_create_date) {
-      this.includeCreateDate = true;
+    if (model.include_created_at) {
+      this.includeCreatedAt = true;
     }
 
     this._checkQuery();
@@ -227,7 +227,7 @@ export default class SearchPeopleController extends ClubhouseController {
     }
 
     if (this.includeCreateDate) {
-      CSV_COLUMNS.push({title: 'Create Date', key: 'create_date', format: 'date'});
+      CSV_COLUMNS.push({title: 'Created On', key: 'created_at', format: 'date'});
     }
 
     this.house.downloadCsv('people-search.csv', CSV_COLUMNS, this.people);

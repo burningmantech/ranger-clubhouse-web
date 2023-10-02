@@ -92,7 +92,7 @@ export default class PersonAwardsController extends ClubhouseController {
     if (type === 't-shirt') {
       fields.swag_id = person.tshirt_swag_id;
     } else if (type === 'long-sleeve') {
-      fields.swag_id = person.long_sleeve_swag_ig;
+      fields.swag_id = person.long_sleeve_swag_id;
     }
 
     this.swagEntry = this.store.createRecord('person_swag', fields);

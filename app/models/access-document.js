@@ -83,8 +83,8 @@ export default class AccessDocumentModel extends Model {
   // write-only, backend will append to comments
   @attr('string') additional_comments;
   @attr('string') expiry_date;
-  @attr('string', {readOnly: true}) create_date;
-  @attr('string', {readOnly: true}) modified_date;
+  @attr('string', {readOnly: true}) created_at;
+  @attr('string', {readOnly: true}) updated_at;
 
   // Only returned when requesting items available for delivery
   @attr('boolean', {readOnly: true}) has_staff_credential;

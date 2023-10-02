@@ -10,7 +10,7 @@ export default Factory.extend({
   password: 'ineedashower!',
   tshirt_swag_id: null,
   tshirt_secondary_swag_id: null,
-  long_sleeve_swag_ig: null,
+  long_sleeve_swag_id: null,
   gender_identity: 'female',
   gender_custom: '',
   has_reviewed_pi: false,
@@ -59,7 +59,7 @@ export default Factory.extend({
   alt_phone() {
     return faker.phone.number();
   },
-  create_date() {
+  created_at() {
     return dayjs().format('YYYY-MM-DD hh:mm:ss');
   },
   camp_location() {

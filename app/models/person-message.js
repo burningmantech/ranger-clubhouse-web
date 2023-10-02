@@ -19,7 +19,7 @@ export default class PersonMessageModel extends Model {
 
   @attr('string') subject;
   @attr('string') body;
-  @attr('date') sent_at;
+  @attr('date') created_at;
 
   @attr('string') sender_photo_url;
 

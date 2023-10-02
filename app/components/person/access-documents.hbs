@@ -144,8 +144,8 @@
                       @hint="(Your callsign and today's date will be automatically added to any additional comments provided.)"/>
         </FormRow>
         {{#unless this.entry.isNew}}
-          Last Modified: {{this.entry.modified_date}}
-          Created: {{this.entry.create_date}}
+          Last Modified: {{this.entry.updated_at}}
+          Created: {{this.entry.created_at}}
         {{/unless}}
         {{#if this.showingChanges}}
           <div class="mt-2">
@@ -161,7 +161,7 @@
                 <tbody>
                 {{#each this.entryChanges as |row|}}
                   <tr>
-                    <td>{{row.timestamp}}</td>
+                    <td>{{row.created_at}}</td>
                     <td>
                       <PersonLink @personId={{row.person_id}} @callsign={{row.callsign}} />
                     </td>
