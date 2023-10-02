@@ -141,7 +141,7 @@ export default class PersonTimesheetManageComponent extends Component {
 
   @cached
   get maxDate() {
-    return this._restrictCheck(`${this.args.year}-09-30`);
+    return this._restrictCheck(`${this.args.year}-10-31`);
   }
 
   /**
