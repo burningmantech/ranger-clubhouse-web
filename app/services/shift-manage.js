@@ -214,4 +214,51 @@ export default class ShiftManageService extends Service {
         break;
     }
   }
+
+  /**
+   * Check if the given start and finished datetimes are within the scheduled sign-ups for the given position.
+   * Pop up a confirmation model if not.
+   *
+   * @param position_id
+   * @param start
+   * @param finished
+   * @param callback
+   * @returns {Promise<*>}
+   */
+  async checkDateTime(position_id, start, finished, callback) {
+    let status, begins, ends, start_status, finished_status;
+    try {
+      ({ status, begins, ends, start_status, finished_status } = await this.ajax.request('slot/check-datetime', {data: {position_id, start, finished }}));
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+      return;
+    }
+
+    if (status === 'no-slots' || status === 'success') {
+      //Nothing schedule, Don't alert
+      return callback();
+    }
+
+    let message = `<p>The date(s) entered are outside of the scheduled sign-up date ranges. This might indicate the dates were entered incorrectly.<ul>`;
+
+    message += this.alertRange('On Duty', start, start_status, begins, ends);
+    message += this.alertRange('Off Duty', finished, finished_status, begins, ends);
+
+    message += '</ul>Use the Cancel button to correct the dates, or use Confirm to indicate the dates are correct.';
+
+    this.modal.confirm('Date(s) might be out of range', message, callback);
+  }
+
+  alertRange(label, date, status, begins, ends)
+  {
+    if (status === 'success') {
+      return '';
+    }
+
+    if (status === 'before-begins') {
+      return `<li>The ${label} time ${date} is before the first shift starting on ${begins}.</li>`;
+    } else {
+      return `<li>The ${label} time ${date} is after the last shift ending on ${ends}.</li>`;
+    }
+  }
 }

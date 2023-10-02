@@ -3,11 +3,12 @@ import {action} from '@ember/object';
 import {Role} from 'clubhouse/constants/roles';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
-import {cached, tracked} from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {isEmpty} from '@ember/utils';
 import dayjs from 'dayjs';
 import {NON_RANGER} from "clubhouse/constants/person_status";
+import {STATUS_REJECTED} from "clubhouse/models/timesheet";
 
 
 export default class PersonTimesheetManageComponent extends Component {
@@ -15,6 +16,7 @@ export default class PersonTimesheetManageComponent extends Component {
   @service house;
   @service modal;
   @service session;
+  @service shiftManage;
   @service toast;
 
   @tracked editEntry = null;
@@ -123,28 +125,6 @@ export default class PersonTimesheetManageComponent extends Component {
   }
 
   /**
-   * Return the earliest on duty date allowed
-   *
-   * @returns {string|undefined}
-   */
-
-  @cached
-  get minDate() {
-    return this._restrictCheck(`${this.args.year}-07-01`);
-  }
-
-  /**
-   * Return the latest off duty date allowed
-   *
-   * @returns {string|undefined}
-   */
-
-  @cached
-  get maxDate() {
-    return this._restrictCheck(`${this.args.year}-10-31`);
-  }
-
-  /**
    * Cancel an entry edit - i.e. hide the form dialog
    */
 
@@ -170,12 +150,36 @@ export default class PersonTimesheetManageComponent extends Component {
     if (model._changes['is_non_ranger'] && model.is_non_ranger && person.status !== NON_RANGER) {
       this.modal.confirm('Department Volunteer Flag Checked',
         `Warning: The department volunteer (aka non ranger) flag is checked on this timesheet entry, however, ${person.callsign} is status ${person.status}. Normally, the flag is used to indicate the entry is for a non ranger status person and the entry WILL NOT count towards any service years. Are you sure you want to do this?`,
-        () => this._saveCommon(model));
+        () => this._saveCheckTimes(model));
 
+    } else {
+      this._saveCheckTimes(model);
+    }
+  }
+
+  /**
+   * Check to see if the datetime ranges make sense for the position.
+   *
+   * @param model
+   * @returns {Promise<void>}
+   * @private
+   */
+
+  async _saveCheckTimes(model) {
+    if (model._changes['position_id'] || model._changes['on_duty'] || model._changes['off_duty'] || (model._changes['review_status'] && model.review_status !== STATUS_REJECTED)) {
+      await this.shiftManage.checkDateTime(model.position_id, model.on_duty, model.off_duty, () => this._saveCommon(model));
     } else {
       this._saveCommon(model);
     }
   }
+
+  /**
+   * Try to save the entry.
+   *
+   * @param model
+   * @returns {Promise<void>}
+   * @private
+   */
 
   async _saveCommon(model) {
     this.house.saveModel(model, 'The timesheet entry has been successfully updated.',

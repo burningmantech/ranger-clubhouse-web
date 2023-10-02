@@ -7,10 +7,11 @@ import validateDateTime from 'clubhouse/validators/datetime';
 import {tracked} from '@glimmer/tracking';
 
 export default class MeTimesheetMissingCommonComponent extends Component {
-  @service store;
-  @service toast;
   @service house;
   @service modal;
+  @service shiftManage;
+  @service store;
+  @service toast;
 
   @tracked entry = null;
   @tracked isSubmitting = false;
@@ -82,7 +83,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
    */
 
   @action
-  saveAction(model, isValid) {
+  async saveAction(model, isValid) {
     if (!isValid) {
       return;
     }
@@ -95,17 +96,30 @@ export default class MeTimesheetMissingCommonComponent extends Component {
       return;
     }
 
-    this.isSubmitting = true;
+    if (model._changes['position_id'] || model._changes['on_duty'] || model._changes['off_duty']) {
+      await this.shiftManage.checkDateTime(model.position_id, model.on_duty, model.off_duty, () => this._saveCommon(model));
+    } else {
+      await this._saveCommon(model);
+    }
+  }
 
-    model.save().then(() => {
+  async _saveCommon(model) {
+    const isNew = model.isNew;
+
+    try {
+      this.isSubmitting = true;
+      await model.save();
       this.toast.success(`Your request has been successfully ${isNew ? 'submitted' : 'updated'}.`);
       if (isNew) {
         this.args.timesheetsMissing.update();
       }
       this.entry = null;
       set(this.args.timesheetInfo, 'timesheet_confirmed', false);
-    }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    } catch (response) {
+      this.house.handleErrorResponse(response)
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   /**
@@ -122,27 +136,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     );
   }
 
-  /**
-   * Return the min date allowed
-   *
-   * @returns {string}
-   */
-
-  get minDate() {
-    return `${this.args.timesheetInfo.correction_year}-07-01 12:00`;
-  }
-
-  /**
-   * Return the max date allowed
-   *
-   * @returns {string}
-   */
-
-  get maxDate() {
-    return `${this.args.timesheetInfo.correction_year}-10-31 12:00`;
-  }
-
-  /**
+   /**
    * Helper to color the row header. (aka entry status header)
    *
    * @param {TimesheetMissingModel} ts
