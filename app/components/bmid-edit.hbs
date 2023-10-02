@@ -112,9 +112,9 @@
   {{else}}
     <dl class="row mb-2">
       <dt class="col-auto">Created</dt>
-      <dd class="col-auto">{{@entry.create_datetime}}</dd>
+      <dd class="col-auto">{{@entry.created_at}}</dd>
       <dt class="col-auto">Last Modified</dt>
-      <dd class="col-auto">{{@entry.modified_datetime}}</dd>
+      <dd class="col-auto">{{@entry.updated_at}}</dd>
     </dl>
   {{/if}}
   <f.submit @label={{if @entry.isNew "Create" "Update"}} @disabled={{@entry.isSaving}} />

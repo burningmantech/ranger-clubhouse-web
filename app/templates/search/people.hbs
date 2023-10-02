@@ -79,7 +79,7 @@
         <f.checkbox @label="{{this.year}} Ticketing Info"
                     @name="include_ticketing_info"/>
         <f.checkbox @label="Account Creation Date"
-                    @name="include_create_date"/>
+                    @name="include_created_at"/>
       </div>
     </FormRow>
   </fieldset>
@@ -206,8 +206,8 @@
           {{/if}}
           {{#if this.includeCreateDate}}
             <td>
-              {{#if person.create_date}}
-                {{ymd-format person.create_date}}
+              {{#if person.created_at}}
+                {{ymd-format person.created_at}}
               {{else}}
                 -
               {{/if}}

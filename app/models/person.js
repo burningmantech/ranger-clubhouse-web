@@ -52,7 +52,7 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('boolean') vintage;
   @attr('string', {readOnly: true}) status_date;
   @attr('string', {readOnly: true}) date_verified;
-  @attr('string', {readOnly: true}) create_date;
+  @attr('string', {readOnly: true}) created_at;
   @attr('boolean') active_next_event;
   @attr('boolean') on_site;
   @attr('boolean') has_reviewed_pi;   // pseudo field, write only
@@ -87,7 +87,7 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('string') gender_identity;
   @attr('string') gender_custom;
 
-  @attr('number') long_sleeve_swag_ig;
+  @attr('number') long_sleeve_swag_id;
   @attr('number') tshirt_swag_id;
   @attr('number') tshirt_secondary_swag_id;
 
@@ -109,7 +109,7 @@ export default class PersonModel extends PersonMixin(Model) {
 
   @attr('boolean') has_note_on_file;
 
-  @attr('string', {readOnly: true}) timestamp;
+  @attr('string', {readOnly: true}) updated_at;
 
   // a separate table the database and not
   // filled in when retrieving the person

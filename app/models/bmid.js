@@ -85,8 +85,8 @@ export default class BmidModel extends Model {
   @attr('string') batch;
   @attr('string') team;
   @attr('string') notes;
-  @attr('string', {readOnly: true}) create_datetime;
-  @attr('string', {readOnly: true}) modified_datetime;
+  @attr('string', {readOnly: true}) created_at;
+  @attr('string', {readOnly: true}) updated_at;
 
   @attr('', {readOnly: true}) person;
 
