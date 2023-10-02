@@ -64,7 +64,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
   newRequestAction() {
     this.entry = this.store.createRecord('timesheet-missing', {
       person_id: this.args.person.id,
-      position_id:  this.positionOptions[0][1],
+      position_id: this.positionOptions[0][1],
     });
   }
 
@@ -157,7 +157,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
    */
 
   get maxDate() {
-    return `${this.args.timesheetInfo.correction_year}-09-30`;
+    return `${this.args.timesheetInfo.correction_year}-10-31`;
   }
 
   /**
