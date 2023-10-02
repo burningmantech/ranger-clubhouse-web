@@ -5,7 +5,6 @@ import {service} from '@ember/service';
 import {DIRT} from 'clubhouse/constants/positions';
 import validateDateTime from 'clubhouse/validators/datetime';
 import {tracked} from '@glimmer/tracking';
-import {TIMECARD_YEAR_ROUND} from "clubhouse/constants/roles";
 
 export default class MeTimesheetMissingCommonComponent extends Component {
   @service store;
@@ -37,23 +36,6 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     }
 
     this.positionOptions = positions;
-  }
-
-  /**
-   * Suggest a starting date for the datetime picker when creating a new request.
-   * @returns {null|string}
-   */
-
-  get startDateForEntry() {
-    const entry = this.entry;
-
-    // Timecard Year Round holders may require submitting timesheet entries occurring outside the normal
-    // event periods. E.g., NVO Rangers who start early in the summer.
-    if (entry.isNew && !this.session.hasRole(TIMECARD_YEAR_ROUND)) {
-      return `${this.args.timesheetInfo.correction_year}-07-01`;
-    }
-
-    return null;
   }
 
   /**
@@ -147,7 +129,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
    */
 
   get minDate() {
-    return `${this.args.timesheetInfo.correction_year}-07-01`;
+    return `${this.args.timesheetInfo.correction_year}-07-01 12:00`;
   }
 
   /**
@@ -157,7 +139,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
    */
 
   get maxDate() {
-    return `${this.args.timesheetInfo.correction_year}-10-31`;
+    return `${this.args.timesheetInfo.correction_year}-10-31 12:00`;
   }
 
   /**

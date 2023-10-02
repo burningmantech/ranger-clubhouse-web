@@ -17,7 +17,6 @@ class CheckedOption {
 }
 
 export default class ChFormFieldBaseComponent extends Component {
-
   /**
    * DOM Identifier (formId-name)
    *
@@ -179,13 +178,14 @@ export default class ChFormFieldBaseComponent extends Component {
    * @returns {string[]|*|null}
    */
   get errorMessages() {
-    const error = get(this.args.form.model, `error.${this.args.name}.validation`);
+    const error = this.args.form.model.error?.[this.args.name];
 
-    if (!error) {
+    if (!error || !error.validation) {
       return null;
     }
 
-    return (typeof error === 'string') ? [error] : error;
+    const {validation} = error;
+    return (typeof validation === 'string') ? [validation] : validation;
   }
 
   buildCheckedOptions() {
@@ -255,7 +255,11 @@ export default class ChFormFieldBaseComponent extends Component {
       value = value.replace(/ /g, '');
     }
 
-    set(model, name, value);
+    if (model.set) {
+      model.set(name, value);
+    } else {
+      set(model, name, value);
+    }
 
     // Update the value's character length if showing the char count.
     if (showCharCount) {

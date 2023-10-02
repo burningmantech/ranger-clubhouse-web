@@ -18,6 +18,7 @@
                     @onfocus={{@onFocus}}
                     @minDate={{@minDate}}
                     @maxDate={{@maxDate}}
+                    @onInvalidInput={{this.invalidInput}}
     />
     {{~#if @hint~}}
       <ChForm::Hint @hint={{@hint}} />

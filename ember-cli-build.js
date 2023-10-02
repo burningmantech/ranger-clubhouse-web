@@ -98,6 +98,7 @@ module.exports = function (defaults) {
   app.import('node_modules/dayjs/plugin/dayOfYear.js');
 */
 
+  app.import('node_modules/@eonasdan/tempus-dominus/dist/css/tempus-dominus.min.css');
   // If you need to use different assets in different
   // environments, specify an object as the first parameter. That
   // object's keys should be the environment name and the values
