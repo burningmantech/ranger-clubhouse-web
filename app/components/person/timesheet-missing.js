@@ -27,6 +27,7 @@ export default class PersonTimesheetMissingComponent extends Component {
   @service house;
   @service modal;
   @service session;
+  @service shiftManage;
   @service store;
   @service toast;
 
@@ -163,11 +164,19 @@ export default class PersonTimesheetMissingComponent extends Component {
    * @private
    */
 
-  _saveEntry(model, isValid, nextEntry) {
+   _saveEntry(model, isValid, nextEntry) {
     if (!isValid) {
       return;
     }
 
+    if (model.create_entry) {
+      this.shiftManage.checkDateTime(model.position_id, model.new_on_duty, model.new_off_duty, () => this._saveCommon(model, nextEntry));
+    } else {
+      this._saveCommon(model, nextEntry);
+    }
+  }
+
+  _saveCommon(model, nextEntry) {
     const createEntry = model.create_entry;
     this.toast.clear();
     this.house.saveModel(model, 'Missing timesheet entry has been successfully updated.',
@@ -205,27 +214,6 @@ export default class PersonTimesheetMissingComponent extends Component {
   @action
   closeViewEntry() {
     this.viewEntry = null;
-  }
-
-
-  /**
-   * Obtain the earliest start date allowed
-   *
-   * @returns {string}
-   */
-
-  get minDate() {
-    return `${this.args.year}-07-01`;
-  }
-
-  /**
-   * Obtain the latest start date allowed
-   *
-   * @returns {string}
-   */
-
-  get maxDate() {
-    return `${this.args.year}-10-31`;
   }
 
   /**
