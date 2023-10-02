@@ -1,21 +1,13 @@
-  <EmberFlatpickr
-    id={{@id}}
-    name={{@name}}
-    size={{@size}}
-    class={{@classNames}}
-    placeholder={{@placeholder}}
-    maxlength={{@maxlength}}
-    disabled={{@disabled}}
-    @date={{or @value ""}}
-    @dateFormat={{this.dateFormat}}
-    @time_24hr={{true}}
-    @locale="en"
-    @enableTime={{this.enableTime}}
-    @onChange={{null}}
-    @onValueUpdate={{this.onChange}}
-    @allowInput={{true}}
-    @disableMobile={{true}}
-    @minDate={{@minDate}}
-    @maxDate={{@maxDate}}
-    {{did-insert this.elementInserted}}
-  />
+<input type="text"
+       id={{@id}}
+       name={{@name}}
+       size={{@size}}
+       class={{@classNames}}
+       placeholder={{@placeholder}}
+       maxlength={{@maxlength}}
+       disabled={{@disabled}}
+       value={{this.value}}
+  {{did-insert this.elementInserted}}
+  {{on "change" this.changeEvent}}
+  {{on "blur" this.blurEvent}}
+/>
