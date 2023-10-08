@@ -1,0 +1,98 @@
+<main>
+  <YearSelect @title="Online Course Definitions"
+              @year={{this.year}}
+              @onChange={{action (mut this.year)}}
+              @minYear={{2022}}
+  />
+  <p>
+    This page defines the Online Courses for both the Training Academy and ARTs. For the (dirt) Online Course,
+    two different courses may be defined to accommodate both returning and binary/Applicant Rangers.
+  </p>
+  <p>
+    The results will be undefined if two courses are defined for the same position where one has a <i>Course For</i>
+    value of <i>All</i>.
+  </p>
+  <p>
+    <UiButton @type="primary" @onClick={{this.newEntry}}>{{fa-icon "plus"}} New Course</UiButton>
+    <UiButton @type="primary" @onClick={{this.retrieveCourses}}>{{fa-icon "list"}} Available Moodle Courses</UiButton>
+  </p>
+  Showing {{pluralize this.onlineCourses.length "Online Course"}}
+  <table class="table table-width-auto table-striped table-hover">
+    <thead>
+    <tr>
+      <th>Position</th>
+      <th>Course For</th>
+      <th>LMS ID</th>
+      <th>LMS Name</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.onlineCourses as |course|}}
+      <tr>
+        <td>{{course.position.title}}</td>
+        <td>{{course.courseForLabel}}</td>
+        <td class="text-end">{{course.course_id}}</td>
+        <td>
+          <PresentOrNot @value={{course.name}} @empty="-"/>
+        </td>
+        <td>
+          <UiButton @type="secondary" @onClick={{fn this.setName course}} @size="sm">
+            {{fa-icon "rotate"}} Set Name From LMS
+          </UiButton>
+          <UiButton @type="secondary" @onClick={{fn this.retrieveEnrollment course}} @size="sm">
+            {{fa-icon "list"}} Moodle Enrollment
+          </UiButton>
+          <UiButton @type="primary" @onClick={{fn this.editEntry course}} @size="sm">
+            {{fa-icon "edit"}} Edit
+          </UiButton>
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+  {{#if this.haveEnrollment}}
+    <OnlineCourseEnrollment @name="Moodle Enrollment - {{this.enrollmentCourse.name}}" @people={{this.enrollment}} />
+  {{/if}}
+  {{#if this.haveCourseList}}
+    <OnlineCourseList @courses={{this.courseList}} @createFromMoodleCourse={{this.createFromMoodleCourse}} />
+  {{/if}}
+
+</main>
+
+
+{{#if this.entry}}
+  <ModalDialog @title="{{if this.entry.isNew "Create" "Edit"}} Online Course"
+               @onEscape={{this.cancelEntry}} as |Modal|>
+    <ChForm @formFor={{this.entry}} @formId="entry" @onSubmit={{this.saveEntry}} as |f|>
+      <Modal.body>
+        <FormRow>
+          <f.select @label="Position" @name="position_id" @options={{this.positionOptions}} />
+        </FormRow>
+        <FormRow>
+          <f.text @label="LMS Course Id" @name="course_id" @size={{10}} @maxlength={{10}} />
+        </FormRow>
+        <FormRow>
+          <f.select @label="Course For" @name="course_for" @options={{this.courseForOptions}} />
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Save"/>
+        <UiCancelButton @onClick={{this.cancelEntry}} />
+        {{#unless this.entry.isNew}}
+          <div class="ms-auto">
+            <UiButton @type="danger" @onClick={{this.deleteEntry}}>
+              {{fa-icon "trash"}} Delete
+            </UiButton>
+          </div>
+        {{/unless}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting the request
+  </LoadingDialog>
+{{/if}}
