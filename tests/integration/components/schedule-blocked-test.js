@@ -2,7 +2,7 @@ import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
 import { hbs } from 'ember-cli-htmlbars';
-import { OT_MISSING } from 'clubhouse/constants/signup-requirements';
+import { OC_MISSING } from 'clubhouse/constants/signup-requirements';
 
 module('Integration | Component | schedule-blocked', function(hooks) {
   setupRenderingTest(hooks);
@@ -10,7 +10,7 @@ module('Integration | Component | schedule-blocked', function(hooks) {
   test('it renders', async function(assert) {
 
     this.set('person', { id: 1, callsign: 'hubcap'});
-    this.set('requirements', [ OT_MISSING ]);
+    this.set('requirements', [ OC_MISSING ]);
     this.set('overrideAction', () => { });
 
     await render(hbs`<ScheduleBlocked @person={{this.person}}

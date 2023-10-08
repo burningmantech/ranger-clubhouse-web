@@ -26,7 +26,7 @@ const RANGER_INTEREST_STEP = {
 const AUDITOR_STEPS = [
   DashboardStep.VERIFY_PERSONAL_INFO,
 //  DashboardStep.SIGN_BEHAVIORAL_AGREEMENT, TODO: revisit after Council decision.
-  DashboardStep.ONLINE_TRAINING,
+  DashboardStep.ONLINE_COURSE,
   DashboardStep.SIGN_UP_FOR_TRAINING,
   DashboardStep.ATTEND_TRAINING,
   DashboardStep.TAKE_STUDENT_SURVEY,

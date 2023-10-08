@@ -1,0 +1,35 @@
+<UiSection>
+  <:title>Moodle Course Listing</:title>
+  <:body>
+    <table class="table table-width-auto table-striped table-hover">
+      <thead>
+      <tr>
+        <th>Moodle Course</th>
+        <th>Course Id</th>
+        <th>Linked Clubhouse Courses</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each @courses as |course|}}
+        <tr>
+          <td>{{course.fullname}}</td>
+          <td class="text-end">{{course.id}}</td>
+          <td>
+            {{#each course.online_courses as |oc|}}
+              Year {{oc.year}} {{oc.title}} (for {{oc.course_for}})
+            {{else}}
+              <i>- none -</i>
+            {{/each}}
+          </td>
+          <td>
+            <UiButton @type="primary" @onClick={{fn @createFromMoodleCourse course}} @size="sm">
+              Create Online Course
+            </UiButton>
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </:body>
+</UiSection>

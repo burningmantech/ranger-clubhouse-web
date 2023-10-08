@@ -73,14 +73,7 @@ Router.map(function () {
     this.route('mail-log');
     this.route('maintenance');
     this.route('motd');
-
-
-    this.route('online-training', function () {
-      this.route('index', {path: '/'});
-      this.route('courses');
-      this.route('enrollment');
-    });
-
+    this.route('online-course');
     this.route('payroll');
     this.route('people-by-status-change');
     this.route('positions');

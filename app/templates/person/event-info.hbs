@@ -8,35 +8,39 @@
     <UiSection>
       <:title>{{this.year}} Training &amp; ARTs</:title>
       <:body>
-        <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as |f|>
+        <ChForm @formFor={{this.courseForm}} @formId="course" @onSubmit={{this.save}} as |f|>
           <div class="row">
             <div class="col-auto">
-              <b>{{this.year}} Online Course Completion</b><br>
-              {{#if this.eventInfo.online_training_passed}}
-                {{shift-format this.eventInfo.online_training_date year=true}}
+              {{this.year}} Online Course Completion<br>
+              {{#if this.eventInfo.online_course_passed}}
+                {{shift-format this.eventInfo.online_course_date year=true}}
               {{else}}
                 not completed
               {{/if}}
             </div>
-            <div class="col-auto">
-              <b>{{this.year}} Course Id</b><br>
-              {{#if this.canManageOnlineCourse}}
+            {{#if this.canManageOnlineCourse}}
+              <div class="col-auto">
                 <div class="row">
-                  <f.text @name="lms_course_id" @size={{5}} @maxlength={{5}} @inline={{true}} @fieldSize="sm"/>
                   <div class="col-auto">
+                    {{#if this.onlineCourseOptions}}
+                      <f.select @name="id"
+                                @label="Update Course"
+                                @options={{this.onlineCourseOptions}}
+                                @hint="Note: updating the course will not enroll the person under Moodle."
+                      />
+                    {{else}}
+                      No Online Courses defined for {{this.year}}
+                    {{/if}}
                     <f.submit @disabled={{this.personEvent.isSaving}} @submitClass="btn-sm"/>
                   </div>
                 </div>
-                <small>Note: updating the id will not enroll the person.</small>
-              {{else}}
-                <PresentOrNot @value={{this.personEvent.lms_course_id}} @empty="not set"/>
-              {{/if}}
-            </div>
+              </div>
+            {{/if}}
           </div>
         </ChForm>
         {{#if (and this.isCurrentYear this.canManageOnlineCourse)}}
           <div class="mt-2">
-            {{#unless this.eventInfo.online_training_passed}}
+            {{#unless this.eventInfo.online_course_passed}}
               <UiButton @type="secondary" @onClick={{this.markOnlineCourseCompleted}} @size="sm">
                 Force Mark As Completed
               </UiButton>
@@ -54,12 +58,14 @@
           {{#if this.haveUserInfo}}
             <div class="mt-2">
               {{#if this.userInfoInSync}}
-                <div class="text-success">{{fa-icon "check"}} All Online Course account fields appear to be
+                <div class="text-success">{{fa-icon "check"}} All Online Course account fields appear to
+                  be
                   in-sync with the
                   Clubhouse.
                 </div>
               {{else}}
-                <b class="text-danger">{{fa-icon "hand"}} One or more Online Course account fields are not in sync
+                <b class="text-danger">{{fa-icon "hand"}} One or more Online Course account fields are
+                  not in sync
                   with the
                   Clubhouse</b>
               {{/if}}
@@ -83,8 +89,10 @@
                 </tr>
                 </tbody>
               </table>
-              Note: username is the callsign with only alphanumeric characters, lower cased, and no spaces.<br>
-              The email is the Clubhouse's email with plus addressing stripped out (e.g., my+inbox@example.com -&gt;
+              Note: username is the callsign with only alphanumeric characters, lower cased, and no
+              spaces.<br>
+              The email is the Clubhouse's email with plus addressing stripped out (e.g.,
+              my+inbox@example.com -&gt;
               my@example.com).
             </div>
           {{/if}}
@@ -116,7 +124,8 @@
               {{#if this.eventInfo.showers}}
                 {{badge "secondary" "Wet Spot"}} BMID allows access to the Wet Spot.
               {{else}}
-                {{badge "secondary" "Shower Pogs"}} Wet Spot shower pog granted for every 40 hours worked.
+                {{badge "secondary" "Shower Pogs"}} Wet Spot shower pog granted for every 40 hours
+                worked.
               {{/if}}
             </dd>
 
@@ -135,9 +144,11 @@
             <dt>Radio Checkout Agreement</dt>
             <dd>
               {{#if (has-role "admin")}}
-                <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as |f|>
+                <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as
+                        |f|>
                   <div class="text-danger">
-                    Do not sign agreements on someone else's behalf. You may expose the organization to legal
+                    Do not sign agreements on someone else's behalf. You may expose the organization
+                    to legal
                     liability.
                   </div>
                   <f.checkbox @name="asset_authorized"
@@ -167,7 +178,8 @@
         <:body>
           {{#if this.person.vehicle_blacklisted}}
             <UiNotice @title="Vehicle Blacklisted" @icon="car-burst" @type="danger">
-              Person may not drive gators, cars, or trucks on playa for Ranger business. All vehicle flags and
+              Person may not drive gators, cars, or trucks on playa for Ranger business. All vehicle flags
+              and
               agreements are disabled.
             </UiNotice>
           {{/if}}
@@ -192,7 +204,8 @@
                     {{else}}
                       <b class="text-danger">{{fa-icon "times"}} NOT AUTHORIZED</b>
                     {{/if}}
-                    for the {{this.year}} event to drive Ranger vehicles (including own personal vehicle) on playa for
+                    for the {{this.year}} event to drive Ranger vehicles (including own personal
+                    vehicle) on playa for
                     Ranger business. Vehicle must have a valid Burning Man driving sticker.
                   </p>
                   {{#if this.personEvent.may_request_stickers}}
@@ -207,7 +220,8 @@
               <dd>
                 {{#if this.canSignAgreements}}
                   <div class="text-danger">
-                    Do not sign agreements on someone else's behalf. You may expose the organization to legal
+                    Do not sign agreements on someone else's behalf. You may expose the organization
+                    to legal
                     liability.
                   </div>
                   <f.checkbox @name="signed_motorpool_agreement"
@@ -270,9 +284,11 @@
             <dt>Yearly Agreements</dt>
             <dd>
               {{#if this.canSignAgreements}}
-                <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as |f|>
+                <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as
+                        |f|>
                   <div class="text-danger">
-                    Do not sign agreements on someone else's behalf. You may expose the organization to legal liability.
+                    Do not sign agreements on someone else's behalf. You may expose the organization
+                    to legal liability.
                   </div>
                   <p>
                     <f.checkbox @name="sandman_affidavit"
@@ -312,7 +328,8 @@
                   <f.submit/>
                 </ChForm>
               {{else}}
-                Behavioral Standards Agreement {{if @person.behavioral_agreement "signed" "NOT SIGNED"}}<br>
+                Behavioral Standards Agreement {{if @person.behavioral_agreement "signed" "NOT SIGNED"}}
+                <br>
               {{/if}}
             </dd>
           </dl>

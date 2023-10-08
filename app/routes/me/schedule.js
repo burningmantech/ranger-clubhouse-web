@@ -38,7 +38,7 @@ export default class MeScheduleRoute extends ClubhouseRoute {
     const {schedule} = model;
     model.permission = schedule.signup_permission;
 
-    if (user.isAuditor && schedule.signup_permission.online_training_only) {
+    if (user.isAuditor && schedule.signup_permission.online_course_only) {
       this.toast.error('Sorry, auditors are only allowed to take the online course this year.');
       this.router.transitionTo('me.homepage');
       return;

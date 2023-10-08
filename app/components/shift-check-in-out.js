@@ -111,9 +111,9 @@ export default class ShiftCheckInOutComponent extends Component {
       this.isPersonDirtTrained = true;
     } else {
       const {eventInfo} = this.args;
-      if (eventInfo.online_training_only) {
+      if (eventInfo.online_course_only) {
         this.otOnly = true;
-        this.isPersonDirtTrained = eventInfo.online_training_passed;
+        this.isPersonDirtTrained = eventInfo.online_course_passed;
       } else {
         this.isPersonDirtTrained = !!eventInfo.trainings.find((training) => (training.position_id === TRAINING && training.status === 'pass'));
       }

@@ -52,7 +52,7 @@ const STEPS = [
   DashboardStep.VERIFY_TIMESHEETS,
   DashboardStep.TICKETING_OPEN,
   DashboardStep.VERIFY_PERSONAL_INFO,
-  DashboardStep.ONLINE_TRAINING,
+  DashboardStep.ONLINE_COURSE,
   DashboardStep.SIGN_UP_FOR_TRAINING,
   DashboardStep.ATTEND_TRAINING,
 
@@ -117,7 +117,7 @@ const STEPS = [
     skipPeriod: AFTER_EVENT,
     check({milestones}) {
       const {art_trainings: arts} = milestones;
-      if (!arts.length || !milestones.online_training_enabled || !milestones.trainings_available) {
+      if (!arts.length || !milestones.online_course_enabled || !milestones.trainings_available) {
         // For the case where dirt trainings are not available or online training is not available,
         // skip showing any ART info.
         return {result: SKIP};
@@ -207,7 +207,7 @@ const STEPS = [
       }
 
       return {
-        result: milestones.online_training_passed ? URGENT : ACTION_NEEDED,
+        result: milestones.online_course_passed ? URGENT : ACTION_NEEDED,
         message: 'Since you have not Rangered in a while, you will need to attend a Cheetah Cub shift before returning to Active status. Email the Mentor Cadre to sign up for one.',
         email: 'MentorEmail'
       };
@@ -275,7 +275,7 @@ const NON_RANGER_STEPS = [
   DashboardStep.UPLOAD_PHOTO,
   DashboardStep.PHOTO_APPROVAL,
   DashboardStep.MISSING_BPGUID,
-  DashboardStep.ONLINE_TRAINING,
+  DashboardStep.ONLINE_COURSE,
   DashboardStep.TICKETING_OPEN,
   DashboardStep.TICKETING_CLOSED,
   DashboardStep.VEHICLE_REQUESTS,
