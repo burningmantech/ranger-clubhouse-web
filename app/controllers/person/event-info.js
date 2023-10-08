@@ -3,6 +3,7 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {ADMIN, TECH_NINJA, VC} from 'clubhouse/constants/roles';
 import {htmlSafe} from '@ember/template';
+import {TRAINING} from "clubhouse/constants/positions";
 
 export default class PersonEventInfoController extends ClubhouseController {
   queryParams = ['year'];
@@ -14,6 +15,9 @@ export default class PersonEventInfoController extends ClubhouseController {
   @tracked userInfoInSync = false;
   @tracked userInfo;
   @tracked isSubmitting = false;
+  @tracked onlineCourses;
+  @tracked onlineCourseOptions;
+  @tracked courseForm;
 
   get isCurrentYear() {
     return +this.year === this.house.currentYear();
@@ -33,14 +37,24 @@ export default class PersonEventInfoController extends ClubhouseController {
       return;
     }
 
+    if (!model.id) {
+      this.modal.info(null, 'No course selected.');
+      return;
+    }
+
     this.isSubmitting = true;
     try {
-      await model.save();
-      this.toast.success('Person successfully saved.');
-      // Reload the current user
+      await this.ajax.request(`person-online-course/${this.person.id}/change`, {
+        method: 'POST', data: {
+          online_course_id: model.id,
+          position_id: TRAINING,
+          year: this.year,
+        }
+      });
       if (+this.person.id === this.session.userId) {
         this.session.loadUser();
       }
+      this.toast.success('Course successfully updated.');
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
@@ -55,7 +69,10 @@ export default class PersonEventInfoController extends ClubhouseController {
       async () => {
         try {
           this.isSubmitting = true;
-          await this.ajax.request(`online-training/${this.person.id}/mark-completed`, {method: 'POST'});
+          await this.ajax.request(`person-online-course/${this.person.id}/mark-completed`, {
+            method: 'POST',
+            data: {year: this.year, position_id: TRAINING}
+          });
           this.toast.success('Person has been marked as completing the online course.');
           this.eventInfo = (await this.ajax.request(`person/${this.person.id}/event-info`, {data: {year: this.year}})).event_info;
         } catch (response) {
@@ -84,7 +101,7 @@ export default class PersonEventInfoController extends ClubhouseController {
   async syncAccountInfo() {
     this.isSubmitting = true;
     try {
-      const result = await this.ajax.request(`online-training/${this.person.id}/sync-info`, {method: 'POST'});
+      const result = await this.ajax.request(`person-online-course/${this.person.id}/sync-info`, {method: 'POST'});
       if (result.status === 'not-setup') {
         this.modal.info('Missing Account', 'No Online Course account has been setup or account is not linked');
       } else if (result.status === 'success') {
@@ -102,7 +119,7 @@ export default class PersonEventInfoController extends ClubhouseController {
   }
 
   async _retrieveUserInfo() {
-    const result = await this.ajax.request(`online-training/${this.person.id}/info`);
+    const result = await this.ajax.request(`person-online-course/${this.person.id}/info`);
     if (result.status === 'not-setup') {
       this.modal.info('Missing Account', 'No Online Course account has been setup or account is not linked');
     } else if (result.status === 'success') {
@@ -121,7 +138,10 @@ export default class PersonEventInfoController extends ClubhouseController {
       async () => {
         try {
           this.isSubmitting = true;
-          const { status, password} = await this.ajax.request(`online-training/${this.person.id}/reset-password`, {method: 'POST'});
+          const {
+            status,
+            password
+          } = await this.ajax.request(`person-online-course/${this.person.id}/reset-password`, {method: 'POST'});
           if (status === 'success') {
             this.modal.info('Password Successfully Reset', `The new password is ${password}`);
           } else if (status === 'no-account') {

@@ -25,7 +25,7 @@ const SETUP_ACCOUNT_STEPS = [
 ];
 
 const TRAINING_STEPS = [
-  DashboardStep.ONLINE_TRAINING,
+  DashboardStep.ONLINE_COURSE,
   DashboardStep.SIGN_UP_FOR_TRAINING,
   DashboardStep.ATTEND_TRAINING,
   DashboardStep.TAKE_STUDENT_SURVEY

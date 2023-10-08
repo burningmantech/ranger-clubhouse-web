@@ -13,8 +13,6 @@ export default class PersonEventModel extends Model {
   @attr('boolean', { defaultValue: false }) asset_authorized;
   @attr('boolean', { defaultValue: false }) sandman_affidavit;
 
-  @attr('string') lms_course_id;
-
   @attr('string') ticketing_finished_at;
   @attr('string') ticketing_last_visited_at;
   @attr('string') ticketing_started_at;

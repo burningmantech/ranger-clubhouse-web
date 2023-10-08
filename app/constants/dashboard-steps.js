@@ -210,7 +210,7 @@ export const VERIFY_PERSONAL_INFO = {
     if (!isPNV) {
       const isNonRanger = (person.status === NON_RANGER);
       doTheThing = 'Each year, every volunteer is asked to review and verify their personal information in the Clubhouse.';
-      if (!isNonRanger && milestones.online_training_passed) {
+      if (!isNonRanger && milestones.online_course_passed) {
         // C'mon, you haven't done this step yet?!? Sheese.
         immediate = true;
         result = URGENT;
@@ -237,12 +237,12 @@ export const VERIFY_PERSONAL_INFO = {
   }
 };
 
-export const ONLINE_TRAINING = {
+export const ONLINE_COURSE = {
   //name: 'Read the Ranger Manual & Complete The Online Course',
   skipPeriod: AFTER_EVENT,
   check({milestones, isPNV, prevCompleted, person}) {
     let name = `Read the Ranger Manual & Complete The Online Course`;
-    if (milestones.online_training_passed) {
+    if (milestones.online_course_passed) {
       return {
         result: COMPLETED,
         isOnlineTraining: true,
@@ -250,7 +250,7 @@ export const ONLINE_TRAINING = {
       };
     }
 
-    if (!milestones.online_training_enabled) {
+    if (!milestones.online_course_enabled) {
       // Don't tell them to read the ranger manual until online training is available.
       return {
         result: WAITING,
@@ -298,7 +298,7 @@ export const SIGN_UP_FOR_TRAINING = {
   name: 'Sign up for In-Person Training',
   skipPeriod: AFTER_EVENT,
   check({milestones, isPNV, isAuditor}) {
-    if (milestones.online_training_only) {
+    if (milestones.online_course_only) {
       return {result: SKIP};
     }
 
@@ -306,7 +306,7 @@ export const SIGN_UP_FOR_TRAINING = {
       return {result: COMPLETED};
     }
 
-    if (!milestones.online_training_passed) {
+    if (!milestones.online_course_passed) {
       let message = 'You need to complete the Online Course first before being allowed to sign up for In-Person Training.';
       if (!milestones.trainings_available) {
         message += ' Note: the In-Person Training schedule is not opened until mid to late April.'
@@ -349,11 +349,11 @@ export const ATTEND_TRAINING = {
   name: 'Attend In-Person Training',
   skipPeriod: AFTER_EVENT,
   check({milestones, person, isPNV, isAuditor}) {
-    if (milestones.online_training_only) {
+    if (milestones.online_course_only) {
       return {result: SKIP};
     }
 
-    if (!milestones.online_training_passed || milestones.training.status === 'no-shift') {
+    if (!milestones.online_course_passed || milestones.training.status === 'no-shift') {
       if (isPNV || isAuditor) {
         return {
           result: NOT_AVAILABLE,
@@ -462,7 +462,7 @@ export const SIGN_UP_FOR_SHIFTS = {
 
   check({milestones, isPNV, isAuditor, person}) {
     const isNonRanger = (person.status === NON_RANGER);
-    if (!milestones.online_training_passed && (isAuditor || isPNV)) {
+    if (!milestones.online_course_passed && (isAuditor || isPNV)) {
       return {
         result: NOT_AVAILABLE,
         message: `You need to complete the Online Course first before being allowed to sign up shifts.`

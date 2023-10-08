@@ -2,8 +2,9 @@ import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
+import {TRAINING} from "clubhouse/constants/positions";
 
-export default class OnlineTrainingLaunchComponent extends Component {
+export default class OnlineCourseLaunchComponent extends Component {
   @service house;
   @service ajax;
 
@@ -26,7 +27,7 @@ export default class OnlineTrainingLaunchComponent extends Component {
     this.isSubmitting = true;
 
     try {
-      const result = await this.ajax.request(`online-training/${person.id}/setup`, {method: 'POST'});
+      const result = await this.ajax.request(`person-online-course/${person.id}/setup`, {method: 'POST', data: { position_id: TRAINING}});
       if (result.status === 'down-for-maintenance') {
         this.showDownForMaintenanceDialog = true;
       } else {
@@ -71,7 +72,7 @@ export default class OnlineTrainingLaunchComponent extends Component {
       const {
         status,
         password
-      } = await this.ajax.request(`online-training/${this.args.person.id}/reset-password`, {method: 'POST'});
+      } = await this.ajax.request(`person-online-course/${this.args.person.id}/reset-password`, {method: 'POST'});
       if (status === 'no-account') {
         this.toast.error('Account is NOT setup');
       } else if (status === 'success') {

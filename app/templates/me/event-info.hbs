@@ -21,13 +21,13 @@
         {{#if this.person.isNonRanger}}
           <p>Non Rangers are not required to pass training.</p>
         {{/if}}
-        {{#if this.eventInfo.online_training_only}}
+        {{#if this.eventInfo.online_course_only}}
           <p>
             For this event, you are only required to complete online course in order to work a shift.
           </p>
-          {{#if this.eventInfo.online_training_passed}}
+          {{#if this.eventInfo.online_course_passed}}
             <p>
-              The online course was completed on {{mdy-format this.dirtTraining.online_training_date full=true}}.
+              The online course was completed on {{mdy-format this.dirtTraining.online_course_date full=true}}.
             </p>
           {{else}}
             <p class="text-danger">

@@ -208,7 +208,7 @@ function routes() {
       milestones: {
         training: {status: 'pass'},
         alpha_shift: {status: 'pass'},
-        online_training_passed: true,
+        online_course_passed: true,
         behavioral_agreement: true,
         has_reviewed_pi: true,
         photo_upload_enabled: true,
