@@ -1,0 +1,14 @@
+
+.grid-table {
+  display: grid;
+  grid-template-columns: 120px 5fr;
+}
+
+.grid-table > div {
+  padding: 5px;
+}
+
+.grid-table-label {
+  font-weight: 600;
+  padding-right: 15px;
+}

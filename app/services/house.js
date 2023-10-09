@@ -475,4 +475,47 @@ export default class HouseService extends Service {
 
     navigator.sendBeacon(ENV['api-server'] + '/action-log/record', record);
   }
+
+  async copyToClipboard(thing) {
+    const success = 'Copied to the clipboard.';
+
+    const text = typeof thing ===  'string' ? thing : thing.textContent;
+
+    if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(text);
+        this.toast.success(success);
+      } catch (err) {
+        this.toast.error(`Sorry, unable to copy the text to the clipboard. Error: [${err}]`);
+      }
+      return;
+    } else if (window.clipboardData) {
+      window.clipboardData.setData('Text', text);
+      this.toast.success(success);
+      return;
+    }
+
+
+    // Create a Range object used to select the element's text.
+    const range = document.createRange();
+    const selection = window.getSelection();
+
+    // Select the text into the range
+    range.selectNodeContents(thing);
+    // Remove previously selected range
+    selection.removeAllRanges();
+    // And now set the new range
+    selection.addRange(range);
+
+    try {
+      // Copy the selection to the clipboard
+      document.execCommand("copy");
+    } catch (err) {
+      this.toast.error(`Sorry, unable to copy the text to the clipboard. Error: [${err}]`);
+      return;
+    }
+
+    selection.removeAllRanges();
+    this.toast.success(success);
+  }
 }

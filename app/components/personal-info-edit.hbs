@@ -1,0 +1,206 @@
+<ChForm @formId="person"
+        @formFor={{@person}}
+        @validator={{this.personInfoValidations}}
+        @onSubmit={{@savePerson}} as |f|>
+    <UiTab class="mt-4" as |tab|>
+        <tab.pane @title="Name, Gender &amp; Pronouns" @id="name">
+            <UiSection>
+                <:title>Name, Gender &amp; Pronouns</:title>
+                <:body>
+                    <FormRow>
+                        <f.text @name="first_name"
+                                @label="Legal First Name"
+                                @maxlength={{25}}
+                                @showCharCount={{true}}
+                        />
+                        <f.text @name="mi"
+                                @label="M.I."
+                                @size={{2}}
+                                @maxlength={{10}}
+                        />
+                        <f.text @name="last_name"
+                                @label="Legal Last Name"
+                                @maxlength={{25}}
+                                @showCharCount={{true}}
+
+                        />
+                    </FormRow>
+                    <FormRow>
+                        <f.select @name="gender_identity"
+                                  @label="Gender (optional)"
+                                  @options={{this.genderIdentityOptions}}
+                        />
+                        {{#if (eq f.model.gender_identity "custom")}}
+                            <f.text @name="gender_custom"
+                                    @label="Their Gender"
+                                    @size={{25}}
+                                    @maxlength={{25}}
+                                    @showCharCount={{true}}
+                            />
+                        {{/if}}
+                    </FormRow>
+                    <FormRow class="mb-4">
+                        <f.select @name="pronouns"
+                                  @label="Pronouns (optional)"
+                                  @options={{this.pronounOptions}}/>
+                        {{#if (eq f.model.pronouns "custom")}}
+                            <f.text
+                                    @name="pronouns_custom"
+                                    @label="Their pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
+                                    @size={{30}}
+                                    @maxlength={{30}}
+                            />
+                        {{/if}}
+                    </FormRow>
+
+                    <f.submit @label="Save" @disabled={{@person.isSaving}} />
+                    {{#if @person.isSaving}}
+                        <LoadingIndicator/>
+                    {{/if}}
+                </:body>
+            </UiSection>
+        </tab.pane>
+        <tab.pane @title="Email & Phone" @id="contact">
+            <UiSection>
+                <:title>Email &amp; Phone</:title>
+                <:body>
+                    <PersonalInfoWarning/>
+                    <FormRow class="mb-4">
+                        <f.text @name="email"
+                                @label="Email"
+                                @inputmode="email"
+                                @size={{30}}
+                                @maxlength={{50}}
+                                @noSpaces={{true}}/>
+                        <f.text @name="home_phone"
+                                @inputmode="tel"
+                                @label="Primary Phone"
+                                @maxlength={{25}}/>
+                        <f.text @name="alt_phone"
+                                @inputmode="tel"
+                                @label="Alternative Phone"
+                                @maxlength={{25}}/>
+                    </FormRow>
+                    <f.submit @label="Save" @disabled={{@person.isSaving}} />
+                    {{#if @person.isSaving}}
+                        <LoadingIndicator/>
+                    {{/if}}
+                </:body>
+            </UiSection>
+        </tab.pane>
+        <tab.pane @title="Camp Info" @id="camp">
+            <UiSection id="person-camp">
+                <:title>Camp Name &amp; Location</:title>
+                <:body>
+                    <p>
+                        Supply the camp's name, the street address, and street side (man-side, mountainside, plaza, etc.).
+                    </p>
+                    <p>
+                        Example: <b><i>"Camp Specificity, 9:15 &amp; D, Mountainside."</i></b>
+                    </p>
+                    <FormRow class="mb-4">
+                        <f.textarea @name="camp_location"
+                                    @label="Camp Name & Location"
+                                    @cols={{50}}
+                                    @rows={{4}}
+                                    @maxlength={{200}}
+                                    @showCharCount={{true}} />
+                    </FormRow>
+                    <f.submit @label="Save" @disabled={{@person.isSaving}} />
+                    {{#if @person.isSaving}}
+                        <LoadingIndicator/>
+                    {{/if}}
+                </:body>
+            </UiSection>
+        </tab.pane>
+        <tab.pane @title="Callsign Pronunciation" @id="pronounce">
+            <UiSection>
+                <:title>Callsign Pronunciation</:title>
+                <:body>
+                    <p>
+                        For a difficult to pronounce callsign, enter the phonetic spelling below.
+                    </p>
+                    <p>
+                        Example: <b><i>if the callsign is 3pio enter as "Three-Pee-Oh", for Jschool enter as "JAY-school",
+                        etc</i></b>
+                    </p>
+                    <FormRow class="mb-4">
+                        <f.text @name="callsign_pronounce"
+                                @label="Callsign Pronounciation"
+                                @size={{32}}
+                                @maxlength={{32}}
+                        />
+                    </FormRow>
+                    <f.submit @label="Save" @disabled={{@person.isSaving}} />
+                    {{#if @person.isSaving}}
+                        <LoadingIndicator/>
+                    {{/if}}
+                </:body>
+            </UiSection>
+        </tab.pane>
+        <tab.pane @title="Languages" @id="languages">
+            <UiSection>
+                <:title>Languages Spoken</:title>
+                <:body>
+                    <p>
+                        List the English names of the languages they are comfortable speaking with the level of fluency in
+                        parentheses, each separated by a comma.
+                    </p>
+                    <p>
+                        Example: <b><i>"japanese (basic), spanish (fluent)"</i></b>
+                    </p>
+
+                    <FormRow class="mb-4">
+                        <f.text @name="languages"
+                                @label="Languages Spoken"
+                                @size={{80}} />
+                    </FormRow>
+                    <f.submit @label="Save" @disabled={{@person.isSaving}} />
+                    {{#if @person.isSaving}}
+                        <LoadingIndicator/>
+                    {{/if}}
+                </:body>
+            </UiSection>
+        </tab.pane>
+        <tab.pane @title="Clothing" @id="clothing">
+            <UiSection>
+                <:title>Ranger Clothing</:title>
+                <:body>
+                    <FormRow class="mb-4">
+                        <f.select @name="tshirt_swag_id"
+                                  @label="T-Shirt Size"
+                                  @options={{@tshirtOptions}}
+                        />
+                        <f.select @name="tshirt_secondary_swag_id"
+                                  @label="T-Shirt Size (Backup Choice)"
+                                  @options={{@tshirtOptions}}
+                        />
+                        <f.select @name="long_sleeve_swag_id"
+                                  @label="Long Sleeve Shirt Size"
+                                  @options={{@longSleeveOptions}}
+                        />
+                    </FormRow>
+                    <f.submit @label="Save" @disabled={{@person.isSaving}} />
+                    {{#if @person.isSaving}}
+                        <LoadingIndicator/>
+                    {{/if}}
+                </:body>
+            </UiSection>
+        </tab.pane>
+        <tab.pane @title="Home Address" @id="home">
+            <UiSection id="person-address">
+                <:title>Home Address</:title>
+                <:body>
+                    <PersonalInfoWarning/>
+                    <PersonAddressEdit @f={{f}} />
+                    <div class="mt-4">
+                        <f.submit @label="Save" @disabled={{@person.isSaving}} />
+                        {{#if @person.isSaving}}
+                            <LoadingIndicator/>
+                        {{/if}}
+                    </div>
+                </:body>
+            </UiSection>
+        </tab.pane>
+    </UiTab>
+</ChForm>
