@@ -4,232 +4,250 @@ Everyone else will see person/simple-form
 }}
 
 {{#if (has-role "admin" "vc" "view-pii" "view-email")}}
-  <PersonalInfoWarning/>
-  <div class="row mb-1">
-    <div class="col-sm-6 col-lg-auto">
-      email {{#if @person.email}}
-      <MailTo @to={{@person.email}} />
-    {{else}}
-      <i class="text-muted">missing</i>
-    {{/if}}
-    </div>
-    {{#if (has-role "admin" "vc" "view-pii")}}
-      <div class="col-sm-6 col-lg-auto">
-        phone
-        {{#if @person.home_phone}}
-          {{phone-link @person.home_phone}}
-        {{else}}
-          n/a
-        {{/if}}
-      </div>
-      {{#if @person.alt_phone}}
+    <PersonalInfoWarning/>
+    <CopyToClipboardInfo/>
+    <div class="row my-1">
         <div class="col-sm-6 col-lg-auto">
-          alt phone {{phone-link @person.alt_phone}}
+            <span class="me-2">Email</span>
+            {{#if @person.email}}
+                <MailTo @to={{@person.email}} />
+                <CopyToClipboard @text={{@person.email}} />
+            {{else}}
+                <i class="text-muted">missing</i>
+            {{/if}}
         </div>
-      {{/if}}
-    {{/if}}
-  </div>
-  <div class="row mb-1">
-    <div class="col-sm-6 col-lg-auto">
-      Last seen
-      {{#if @person.last_seen_at}}
-        {{dayjs-format @person.last_seen_at "MMM DD, YYYY @ HH:mm"}}
-      {{else}}
-        <b class="text-danger">never</b>
-      {{/if}}
+        {{#if (has-role "admin" "vc" "view-pii")}}
+            <div class="col-sm-6 col-lg-auto">
+                Phone
+                {{#if @person.home_phone}}
+                    <span class="ms-2">{{phone-link @person.home_phone}}</span>
+                    <CopyToClipboard @text={{@person.home_phone}} />
+                {{else}}
+                    n/a
+                {{/if}}
+            </div>
+            {{#if @person.alt_phone}}
+                <div class="col-sm-6 col-lg-auto">
+                    Alt. Phone <span class="ms-2">{{phone-link @person.alt_phone}}</span>
+                    <CopyToClipboard @text={{@person.alt_phone}} />
+                </div>
+            {{/if}}
+        {{/if}}
+        {{#if (has-role "admin" "vc" "view-pii")}}
+            <div class="col-sm-6 col-lg-auto mt-1">
+                <span class="me-2">Legal Name / Address</span>
+                {{@person.first_name}} {{@person.last_name}},
+                {{@person.street1}}{{#if @person.apt}} {{@person.apt}}{{/if}},
+                {{#if @person.street2}}
+                    {{@person.street2}},
+                {{/if}}
+                {{@person.city}} {{@person.state}} {{@person.zip}}, {{@person.country}}
+                <CopyToClipboard @text={{this.homeAddressText}}/>
+            </div>
+        {{/if}}
     </div>
-    <div class="col-sm-6 col-lg-auto">
-      Created
-      {{#if @person.created_at}}
-        {{dayjs-format @person.created_at "MMM DD, YYYY @ HH:mm"}}
-      {{else}}
-        prior to 2010, no date is available.
-      {{/if}}
+    <div class="row mb-1">
+        <div class="col-sm-6 col-lg-auto">
+            Last seen
+            {{#if @person.last_seen_at}}
+                {{dayjs-format @person.last_seen_at "MMM DD, YYYY @ HH:mm"}}
+            {{else}}
+                <b class="text-danger">never</b>
+            {{/if}}
+        </div>
+        <div class="col-sm-6 col-lg-auto">
+            Created
+            {{#if @person.created_at}}
+                {{dayjs-format @person.created_at "MMM DD, YYYY @ HH:mm"}}
+            {{else}}
+                prior to 2010, no date is available.
+            {{/if}}
+        </div>
     </div>
-  </div>
 {{/if}}
 <div class="row mb-3">
-  <div class="col-auto">
-    {{#if @person.non_ranger_years}}
-      Non Ranger volunteer work:
-      {{pluralize @person.non_ranger_years.length 'year'}} [{{year-range @person.non_ranger_years}}]<br>
-      Ranger work:
-      {{#if @person.rangered_years}}
-        {{pluralize @person.rangered_years.length 'year'}} [{{year-range @person.rangered_years}}]
-      {{else}}
-        <i>none</i>
-      {{/if}}
-    {{else if @person.years}}
-      {{pluralize @person.years.length 'year'}} worked [{{year-range @person.years}}]
-    {{else}}
-      Has not worked yet
-    {{/if}}
-  </div>
+    <div class="col-auto">
+        {{#if @person.non_ranger_years}}
+            Non Ranger volunteer work:
+            {{pluralize @person.non_ranger_years.length 'year'}} [{{year-range @person.non_ranger_years}}]<br>
+            Ranger work:
+            {{#if @person.rangered_years}}
+                {{pluralize @person.rangered_years.length 'year'}} [{{year-range @person.rangered_years}}]
+            {{else}}
+                <i>none</i>
+            {{/if}}
+        {{else if @person.years}}
+            {{pluralize @person.years.length 'year'}} worked [{{year-range @person.years}}]
+        {{else}}
+            Has not worked yet
+        {{/if}}
+    </div>
 </div>
 
 <ChForm @formId="person" @formFor={{@person}} @onSubmit={{action @savePersonAction}} as |f|>
-  <FormRow>
-    <FormLabel @fixed={{true}}>Callsign</FormLabel>
-    <f.text @name="callsign"
-            @size={{30}}
-            @maxlength={{100}}/>
-    <f.select @name="callsign_approved"
-              @options={{@callsignApprovedOptions}}/>
-  </FormRow>
-
-  {{#if (has-role "admin" "vc")}}
     <FormRow>
-      <FormLabel @fixed={{true}}>&nbsp;</FormLabel>
-      <div class="col-auto mt-2">
-        <f.checkbox @name="used_vanity_change"
-                    @label="Used one-time vanity change"
-                    @inline={{true}}
-        />
-        {{#if (and @person.used_vanity_change @person.vanity_changed_at)}}
-          <i>(Used on {{mdy-format @person.vanity_changed_at}})</i>
-        {{/if}}
-      </div>
+        <FormLabel @fixed={{true}}>Callsign</FormLabel>
+        <f.text @name="callsign"
+                @size={{30}}
+                @maxlength={{100}}/>
+        <f.select @name="callsign_approved"
+                  @options={{@callsignApprovedOptions}}/>
     </FormRow>
-  {{else if @person.used_vanity_change}}
+
+    {{#if (has-role "admin" "vc")}}
+        <FormRow>
+            <FormLabel @fixed={{true}}>&nbsp;</FormLabel>
+            <div class="col-auto mt-2">
+                <f.checkbox @name="used_vanity_change"
+                            @label="Used one-time vanity change"
+                            @inline={{true}}
+                />
+                {{#if (and @person.used_vanity_change @person.vanity_changed_at)}}
+                    <i>(Used on {{mdy-format @person.vanity_changed_at}})</i>
+                {{/if}}
+            </div>
+        </FormRow>
+    {{else if @person.used_vanity_change}}
+        <FormRow>
+            <FormLabel @fixed={{true}}>&nbsp;</FormLabel>
+            <div class="col-auto mt-2">
+                <i>Used one-time vanity change
+                    {{#if @person.vanity_changed_at}}
+                        on {{mdy-format @person.vanity_changed_at}}
+                    {{/if}}
+                </i>
+            </div>
+        </FormRow>
+    {{/if}}
+
     <FormRow>
-      <FormLabel @fixed={{true}}>&nbsp;</FormLabel>
-      <div class="col-auto mt-2">
-        <i>Used one-time vanity change
-          {{#if @person.vanity_changed_at}}
-            on {{mdy-format @person.vanity_changed_at}}
-          {{/if}}
-        </i>
-      </div>
+        <FormLabel @fixed={{true}}>FKA</FormLabel>
+        <f.text @name="formerly_known_as"
+                @size={{55}}
+                @maxlength={{200}}/>
     </FormRow>
-  {{/if}}
 
-  <FormRow>
-    <FormLabel @fixed={{true}}>FKA</FormLabel>
-    <f.text @name="formerly_known_as"
-            @size={{55}}
-            @maxlength={{200}}/>
-  </FormRow>
+    <FormRow>
+        <FormLabel @fixed={{true}}>Status</FormLabel>
+        <f.select @name="status"
+                  @options={{@statusOptions}}/>
+    </FormRow>
 
-  <FormRow>
-    <FormLabel @fixed={{true}}>Status</FormLabel>
-    <f.select @name="status"
-              @options={{@statusOptions}}/>
-  </FormRow>
+    <FormRow>
+        <FormLabel @fixed={{true}}>Personnel</FormLabel>
+        <div class="col-auto mt-2">
+            {{#if (has-role "admin")}}
+                <f.checkbox @name="has_note_on_file" @label="Note on file" @value={{1}} />
+            {{else}}
+                {{#if @person.has_note_on_file}}
+                    <b class="text-danger">Note on file</b>
+                {{else}}
+                    <i class="text-muted">no note on file</i>
+                {{/if}}
+            {{/if}}
+        </div>
+    </FormRow>
 
-  <FormRow>
-    <FormLabel @fixed={{true}}>Personnel</FormLabel>
-    <div class="col-auto mt-2">
-      {{#if (has-role "admin")}}
-        <f.checkbox @name="has_note_on_file" @label="Note on file" @value={{1}} />
-      {{else}}
-        {{#if @person.has_note_on_file}}
-          <b class="text-danger">Note on file</b>
-        {{else}}
-          <i class="text-muted">no note on file</i>
+    <FormRow>
+        <FormLabel @fixed={{true}}>On Site</FormLabel>
+        <div class="col-auto mt-2">
+            <f.radioGroup @name="on_site"
+                          @options={{@onSiteOptions }}
+                          @inline={{true}}/>
+        </div>
+    </FormRow>
+
+
+    <FormRow>
+        <FormLabel @fixed={{true}}>Teams/Positions</FormLabel>
+        <div class="col-sm-12 col-xl-10">
+            <Person::Positions @personMembership={{@personMembership}}
+                               @showMembership={{@showMembership}}
+                               @toggleMembership={{@toggleMembership}}
+                               @canEditMembership={{@canEditMembership}}
+            />
+        </div>
+    </FormRow>
+
+    <FormRow>
+        <FormLabel @fixed={{true}}>Permissions</FormLabel>
+        <div class="col-sm-12 col-xl-10">
+            <Person::Permissions @roles={{@roles}}
+                                 @grantedRoles={{@grantedRoles}}
+                                 @toggleRoles={{@toggleRoles}}
+                                 @editRolesAction={{@editRolesAction}}
+                                 @showRoles={{@showRoles}}
+                                 @person={{@person}}
+            />
+        </div>
+    </FormRow>
+
+    <FormRow>
+        <FormLabel @fixed={{true}}>Mail Flags</FormLabel>
+        <div class="col-sm-12 col-xl-10 mt-2">
+            {{#if (has-role "tech-ninja")}}
+                <f.checkbox @name="is_bouncing"
+                            @label="Email address is reported as bouncing"/>
+            {{else if this.person.is_bouncing}}
+                <span class="text-danger">Email address has been reported as bouncing</span>
+            {{else}}
+                <i class="text-muted">Email address not reported as bouncing.</i>
+            {{/if}}
+        </div>
+    </FormRow>
+
+    <FormRow>
+        <FormLabel @fixed={{true}}>More Flags</FormLabel>
+        <div class="col-sm-12 col-xl-10 mt-2">
+            <LinkTo @route="person.event-info">Person &gt; Event/Training Info</LinkTo>
+            has additional agreements, affidavits, and vehicles flags which are reset every year.
+        </div>
+    </FormRow>
+
+    <FormRow>
+        <FormLabel @fixed={{true}}>&nbsp;</FormLabel>
+        <div class="col-sm-12 col-xl-auto mb-4">
+            <f.submit @label="Update" @disabled={{or @person.isSaving (not f.model.isDirty)}}
+                      @submitClass="btn-responsive"/>
+        </div>
+        <div class="col-sm-12 col-xl-auto mb-4">
+            {{#if (has-role "admin")}}
+                {{#if @person.message}}
+                    <UiButton @type="secondary" @class="btn-responsive" @onClick={{@editNote}}>
+                        Update Note
+                    </UiButton>
+                {{else}}
+                    <UiButton @type="secondary" @class="btn-responsive" @onClick={{@confirmNoteOrMessage}}>
+                        Add Banner Note
+                    </UiButton>
+                {{/if}}
+            {{/if}}
+        </div>
+        {{#if (and (has-role "admin" "vc") @person.isProspective)}}
+            <div class="col-sm-12 col-xl-auto mb-4">
+                <UiButton @type="secondary" @class="btn-responsive" @onClick={{@sendWelcomeMailAction}}>
+                    Resend Welcome Email
+                </UiButton>
+            </div>
         {{/if}}
-      {{/if}}
-    </div>
-  </FormRow>
 
-  <FormRow>
-    <FormLabel @fixed={{true}}>On Site</FormLabel>
-    <div class="col-auto mt-2">
-      <f.radioGroup @name="on_site"
-                    @options={{@onSiteOptions }}
-                    @inline={{true}}/>
-    </div>
-  </FormRow>
-
-
-  <FormRow>
-    <FormLabel @fixed={{true}}>Teams/Positions</FormLabel>
-    <div class="col-sm-12 col-xl-10">
-      <Person::Positions @personMembership={{@personMembership}}
-                         @showMembership={{@showMembership}}
-                         @toggleMembership={{@toggleMembership}}
-                         @canEditMembership={{@canEditMembership}}
-      />
-    </div>
-  </FormRow>
-
-  <FormRow>
-    <FormLabel @fixed={{true}}>Permissions</FormLabel>
-    <div class="col-sm-12 col-xl-10">
-      <Person::Permissions @roles={{@roles}}
-                           @grantedRoles={{@grantedRoles}}
-                           @toggleRoles={{@toggleRoles}}
-                           @editRolesAction={{@editRolesAction}}
-                           @showRoles={{@showRoles}}
-                           @person={{@person}}
-      />
-    </div>
-  </FormRow>
-
-  <FormRow>
-    <FormLabel @fixed={{true}}>Mail Flags</FormLabel>
-    <div class="col-sm-12 col-xl-10 mt-2">
-      {{#if (has-role "tech-ninja")}}
-        <f.checkbox @name="is_bouncing"
-                    @label="Email address is reported as bouncing"/>
-      {{else if this.person.is_bouncing}}
-        <span class="text-danger">Email address has been reported as bouncing</span>
-      {{else}}
-        <i class="text-muted">Email address not reported as bouncing.</i>
-      {{/if}}
-    </div>
-  </FormRow>
-
-  <FormRow>
-    <FormLabel @fixed={{true}}>More Flags</FormLabel>
-    <div class="col-sm-12 col-xl-10 mt-2">
-      <LinkTo @route="person.event-info">Person &gt; Event/Training Info</LinkTo>
-      has additional agreements, affidavits, and vehicles flags which are reset every year.
-    </div>
-  </FormRow>
-
-  <FormRow>
-    <FormLabel @fixed={{true}}>&nbsp;</FormLabel>
-    <div class="col-sm-12 col-xl-auto mb-4">
-      <f.submit @label="Update" @disabled={{or @person.isSaving (not f.model.isDirty)}} @submitClass="btn-responsive"/>
-    </div>
-    <div class="col-sm-12 col-xl-auto mb-4">
-      {{#if (has-role "admin")}}
-        {{#if @person.message}}
-          <UiButton @type="secondary" @class="btn-responsive" @onClick={{@editNote}}>
-            Update Note
-          </UiButton>
-        {{else}}
-          <UiButton @type="secondary" @class="btn-responsive" @onClick={{@confirmNoteOrMessage}}>
-            Add Banner Note
-          </UiButton>
+        {{#if (has-role "admin")}}
+            <div class="col-sm-12 col-xl-auto mb-4">
+                <UiButton @type="secondary" @class="btn-responsive" @onClick={{@showPasswordDialogAction}}>
+                    Change Password
+                </UiButton>
+            </div>
         {{/if}}
-      {{/if}}
-    </div>
-    {{#if (and (has-role "admin" "vc") @person.isProspective)}}
-      <div class="col-sm-12 col-xl-auto mb-4">
-        <UiButton @type="secondary" @class="btn-responsive" @onClick={{@sendWelcomeMailAction}}>
-          Resend Welcome Email
-        </UiButton>
-      </div>
-    {{/if}}
 
-    {{#if (has-role "admin")}}
-      <div class="col-sm-12 col-xl-auto mb-4">
-        <UiButton @type="secondary" @class="btn-responsive" @onClick={{@showPasswordDialogAction}}>
-          Change Password
-        </UiButton>
-      </div>
-    {{/if}}
-
-    <div class="col-sm-12 col-xl-auto mb-4">
-      {{#if @person.isSaving}}
-        <LoadingIndicator/>
-      {{/if}}
-    </div>
-    {{#if (has-role "admin")}}
-      <div class="col-sm-12 col-xl-auto ms-auto mt-1">
-        <UiButton @type="secondary" @size="sm" @onClick={{@removePersonAction}}>Remove</UiButton>
-      </div>
-    {{/if}}
-  </FormRow>
+        <div class="col-sm-12 col-xl-auto mb-4">
+            {{#if @person.isSaving}}
+                <LoadingIndicator/>
+            {{/if}}
+        </div>
+        {{#if (has-role "admin")}}
+            <div class="col-sm-12 col-xl-auto ms-auto mt-1">
+                <UiButton @type="secondary" @size="sm" @onClick={{@removePersonAction}}>Remove</UiButton>
+            </div>
+        {{/if}}
+    </FormRow>
 </ChForm>

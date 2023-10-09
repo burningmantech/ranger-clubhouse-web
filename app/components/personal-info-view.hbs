@@ -1,0 +1,117 @@
+<div class="grid-table">
+    <div class="grid-table-label">
+        Legal Name
+    </div>
+    <div>
+        {{@person.first_name}} {{@person.mi}} {{@person.last_name}}
+    </div>
+
+    <div class="grid-table-label">
+        Address
+    </div>
+    <div>
+        {{@person.street1}} {{@person.apt}}<br>
+        {{#if @person.street2}}
+            {{@person.street2}}<br>
+        {{/if}}
+        {{@person.city}}, {{@person.state}} {{@person.zip}}, {{@person.country}}
+    </div>
+
+    <div class="grid-table-label">
+        Email
+    </div>
+    <div>
+        <MailTo @to={{@person.email}} />
+    </div>
+
+    <div class="grid-table-label">Home Phone</div>
+    <div>
+        {{#if @person.home_phone}}
+            {{phone-link @person.home_phone}}
+        {{else}}
+            <i>none given</i>
+        {{/if}}
+    </div>
+
+    <div class="grid-table-label">
+        Alt. Phone
+    </div>
+    <div>
+        {{#if @person.alt_phone}}
+            {{phone-link @person.alt_phone}}
+        {{else}}
+            <i>none given</i>
+        {{/if}}
+    </div>
+
+    <div class="grid-table-label">
+        Gender
+    </div>
+    <div>
+        {{this.genderIdentityLabel @person}}
+    </div>
+
+    <div class="grid-table-label">
+        Pronouns
+    </div>
+    <div>
+        {{#if @person.pronouns}}
+            {{pronouns-format @person noParens=true}}
+        {{else}}
+            <i>not stated</i>
+        {{/if}}
+    </div>
+
+    <div class="grid-table-label">
+        Languages
+    </div>
+    <div>
+        <PresentOrNot @value={{@person.languages}} />
+    </div>
+
+    <div class="grid-table-label">
+        Camp Location
+    </div>
+    <div>
+        <PresentOrNot @value={{@person.camp_location}} />
+    </div>
+    {{#if (has-role "edit-clothing")}}
+        <div class="grid-table-label">
+            Clothing
+        </div>
+        <div>
+            <ChForm @formId="person" @formFor={{@person}} @onSubmit={{@savePerson}} as |f|>
+                <FormRow>
+                    <f.select @name="tshirt_swag_id"
+                              @label="T-Shirt Size"
+                              @options={{@tshirtOptions}}
+                    />
+                    <f.select @name="tshirt_secondary_swag_id"
+                              @label="T-Shirt Size (Backup Choice)"
+                              @options={{@tshirtOptions}}
+                    />
+                    <f.select @name="long_sleeve_swag_id"
+                              @label="Long Sleeve Shirt Size"
+                              @options={{@longSleeveOptions}}
+                    />
+                </FormRow>
+                <FormRow class="mt-4">
+                    <div class="col-auto">
+                        <f.submit/>
+                    </div>
+                </FormRow>
+            </ChForm>
+        </div>
+    {{else}}
+        <div class="grid-table-label">Short Sleeve / Secondary</div>
+        <div>
+            {{this.shirtTitle @person.tshirt_swag_id}}<br>
+            {{this.shirtTitle @person.tshirt_secondary_swag_id}}
+        </div>
+
+        <div class="grid-table-label">Long Sleeve</div>
+        <div>
+            {{this.shirtTitle @person.long_sleeve_swag_id}}
+        </div>
+    {{/if}}
+</div>
