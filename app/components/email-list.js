@@ -33,43 +33,6 @@ export default class EmailListComponent extends Component {
       return;
     }
 
-    const emails = element.textContent;
-
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(emails).then(() => {
-        this.toast.success('Emails have been copied to the clipboard');
-      }).catch((err) => {
-        this.toast.error(`Sorry, unable to copy the text to the clipboard. Error: [${err}]`);
-      });
-
-      return;
-    } else if (window.clipboardData) {
-      window.clipboardData.setData('Text', emails);
-      this.toast.success('Emails have been copied to the clipboard');
-      return;
-    }
-
-
-    // Create a Range object used to select the element's text.
-    const range = document.createRange();
-    const selection = window.getSelection();
-
-    // Select the text into the range
-    range.selectNodeContents(element);
-    // Remove previously selected range
-    selection.removeAllRanges();
-    // And now set the new range
-    selection.addRange(range);
-
-    try {
-        // Copy the selection to the clipboard
-      document.execCommand("copy");
-    } catch (err) {
-      this.toast.error(`Sorry, unable to copy the text to the clipboard. Error: [${err}]`);
-      return;
-    }
-
-    selection.removeAllRanges();
-    this.toast.success("Emails have been copied to the clipboard");
+    this.house.copyToClipboard(element);
   }
 }

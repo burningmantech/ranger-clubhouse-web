@@ -28,6 +28,7 @@ export const VEHICLE_MANAGEMENT = 116;     // Can access vehicle fleet managemen
 export const TIMECARD_YEAR_ROUND = 117;    // Paid folks who can self check in/out, and submit timesheet corrections year round.
 export const SALESFORCE_IMPORT = 118;      // Allowed to import new accounts from Salesforce
 export const MESSAGE_MANAGEMENT = 119;    // Allow access to Clubhouse Messages year round regardless of LMYR/LMOP setting.
+export const EDIT_CLOTHING = 120;   // Can edit a clothing fields.
 
 export const Role = {
   ADMIN,
@@ -37,6 +38,7 @@ export const Role = {
   EDIT_ACCESS_DOCS,
   EDIT_ASSETS,
   EDIT_BMIDS,
+  EDIT_CLOTHING,
   EDIT_SLOTS,
   EDIT_SWAG,
   GRANT_POSITION,
@@ -68,6 +70,7 @@ export const RoleToString = {
   [EDIT_ACCESS_DOCS]: 'edit-access-docs',
   [EDIT_ASSETS]: 'edit-assets',
   [EDIT_BMIDS]: 'edit-bmids',
+  [EDIT_CLOTHING]: 'edit-clothing',
   [EDIT_SLOTS]: 'edit-slots',
   [EDIT_SWAG]: 'edit-swag',
   [GRANT_POSITION]: 'grant-position',
