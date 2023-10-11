@@ -92,7 +92,8 @@ export class SubstringRule {
           `${handle.name} is already in use`,
           `${handle.name} is a slur`,
           `${handle.name} is considered obscene`,
-          this.id
+          this.id,
+          true
         );
       } else if (name.length < targetName.length) {
         if (targetName.indexOf(name) >= 0) {
@@ -126,13 +127,14 @@ export class SubstringRule {
           `${handle.name} is already in use`,
           `${handle.name} is a slur`,
           `${handle.name} is considered obscene`,
-          this.id
+          this.id,
+          true
         );
       }
     }
   }
 
-  buildConflict(result, rawName, handle, message, slurMessage, obsceneMessage, id) {
+  buildConflict(result, rawName, handle, message, slurMessage, obsceneMessage, id, isHighPriority = false) {
     let priority;
     // TODO(srabraham): improve priority handling; other types should be high priority as well
     if (handle.entityType === TYPE_OBSCENE){
@@ -142,7 +144,7 @@ export class SubstringRule {
       priority = 'high';
       message = slurMessage;
     } else {
-      priority = 'medium';
+      priority = isHighPriority ? 'high' : 'medium';
     }
     result.push(new HandleConflict(rawName, message, priority, id, handle));
   }

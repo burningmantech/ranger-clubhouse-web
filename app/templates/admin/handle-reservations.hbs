@@ -172,7 +172,7 @@
                     {{#if hr.expires_on}}
                       {{hr.expires_on}}
                     {{else}}
-                      -
+                      <i>never</i>
                     {{/if}}
                   </td>
                   <td>
@@ -256,4 +256,10 @@
       </Modal.footer>
     </ChForm>
   </ModalDialog>
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting the request
+  </LoadingDialog>
 {{/if}}
