@@ -3,14 +3,15 @@ import _ from 'lodash';
 
 export default class VcHandleCheckerRoute extends ClubhouseRoute {
   model() {
-    return this.ajax.request('handles')
-        .then((result) => _.sortBy(result.data, [(h) => h.name.toLowerCase(), 'entityType']));
+    return this.ajax.request('handle-reservation/handles');
   }
 
   setupController(controller, model) {
+    let {handles} = model;
+    handles = _.sortBy(handles, [(h) => h.name.toLowerCase(), 'entityType'])
     // help rendering performance by giving a key hint.
-    model.forEach((h,idx) => h.keyIdx = idx);
-    controller.set('allHandles', model);
+    handles.forEach((h, idx) => h.keyIdx = idx);
+    controller.allHandles = handles;
     controller.buildHandleRules();
     controller.buildEntityTypes();
   }

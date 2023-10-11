@@ -4,51 +4,201 @@
     These are handles that should not be given to Rangers as callsigns for a
     fixed or indefinite period of time.
     <br>They are an input to the VC handle checker tool.
-    <br>These <strong>should not</strong> include active and vintage Ranger callsigns, as those are
+    <br>These <b>should not</b> include active and vintage Ranger callsigns, as those are
     brought separately into the handle checker tool.
   </p>
-  <p>
-    {{! TODO(srabraham): maybe add a "delete all expired button"? }}
-    <button type="button" class="btn btn-primary" {{action this.newHandleReservation}}>New Handle Reservation</button>
-    <div class="form-check form-check-inline">
-      <Input @type="checkbox" @checked={{this.showExpired}} class="form-check-input" id="show-expired" onclick="{{action this.toggleShowExpired}}" />
-      <label class="form-check-label" for="show-expired">Show Expired</label>
-    </div>
-  </p>
-  {{! TODO(srabraham): maybe add filtering? Bulk deleting? }}
-  <table class="table table-sm table-hover table-striped table-width-auto">
-    <thead>
-    <tr>
-      <th>Handle</th>
-      <th>Type</th>
-      <th>Start date</th>
-      <th>End date</th>
-      <th>Reason</th>
-      <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each this.reservations as |hr|}}
-      <tr>
-        <td>{{hr.handle}}</td>
-        <td>{{this.typeLabel hr.reservation_type}}</td>
-        <td>{{hr.start_date}}</td>
-        <td>{{hr.end_date}}</td>
-        <td>{{hr.reason}}</td>
-        <td>
-          {{! TODO(srabraham): maybe also add a delete button? And an extend-by-one-year button? }}
-          <UiButton @onClick={{fn this.editHandleReservation hr}} @size="sm">
-            {{fa-icon "edit"}} Edit
-          </UiButton>
-        </td>
-      </tr>
-    {{/each}}
-    </tbody>
-  </table>
+
+  <UiTab as |tab|>
+    <tab.pane @title="Handle Entries" @id="entries">
+      <p>
+        <UiButton @type="primary" @onClick={{this.newHandleReservation}}>
+          New Handle Reservation
+        </UiButton>
+        <UiButton @type="secondary" @onClick={{this.expireHandles}}>
+          Delete Expired Handles
+        </UiButton>
+      </p>
+      <FormRow>
+        <FormLabel @auto={{true}}>Filters</FormLabel>
+        <div class="col-auto mt-2">
+          <div class="form-check form-check-inline">
+            <Input @type="checkbox"
+                   @checked={{this.showExpired}}
+                   class="form-check-input"
+                   id="show-expired"
+            />
+            <label class="form-check-label" for="show-expired">Show Only Expired</label>
+          </div>
+        </div>
+        <FormLabel @auto={{true}}>Type</FormLabel>
+        <div class="col-auto">
+          <ChForm::Select @name="typeFilter"
+                          @value={{this.typeFilter}}
+                          @options={{this.typeFilterOptions}}
+                          @onChange={{action (mut this.typeFilter)}}
+          />
+        </div>
+      </FormRow>
+
+      Showing {{this.viewHandleReservations.length}} of {{pluralize this.handleReservations.length "handle"}}
+      <table class="table table-sm table-hover table-striped table-width-auto">
+        <thead>
+        <tr>
+          <th>Handle / Term</th>
+          <th>Type</th>
+          <th>TWII Year</th>
+          <th>Expires On</th>
+          <th>Reason</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.viewHandleReservations key="id" as |hr|}}
+          <tr>
+            <td>{{hr.handle}}</td>
+            <td>{{hr.reservationTypeLabel}}</td>
+            <td class="text-center">
+              <PresentOrNot @value={{hr.twii_year}} @empty="-"/>
+            </td>
+            <td>
+              <PresentOrNot @value={{hr.expires_on}} @empty="never"/>
+              {{#if hr.has_expired}}
+                <span class="text-danger ms-1">(expired)</span>
+              {{/if}}
+            </td>
+            <td>
+              <PresentOrNot @value={{hr.reason}} @empty="-"/>
+            </td>
+            <td>
+              <UiButton @onClick={{fn this.editHandleReservation hr}} @size="sm">
+                {{fa-icon "edit"}} Edit
+              </UiButton>
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td class="text-danger" colspan="6">No Handles found.</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </tab.pane>
+    <tab.pane @title="Bulk Upload" @id="upload">
+      <ChForm @formFor={{this.uploadForm}} @formId="upload" @onSubmit={{this.verifyUpload}} as |f|>
+        <FormRow>
+          <f.select @name="reservation_type"
+                    @label="Reservation Type"
+                    @options={{this.typeOptions}} />
+          <f.datetime @name="expires_on" @label="Expires On (optional)" @dateOnly={{true}} />
+          <f.number @name="twii_year"
+                    @label="TWII Year"
+                    @size={{4}}
+                    @maxlength={{4}}
+                    @disabled={{not-eq f.model.reservation_type "twii_person"}} />
+        </FormRow>
+        {{#if (eq f.model.reservation_type "twii_person")}}
+          <p>
+            Note: When no Expires On is given for TWII entries, the expiration date will be set to September 15th in
+            the year of the 3rd event, including this upcoming event, from now. (e.g., uploading the TWII 2023 will
+            have a default expiration of September 15th, 2025.)
+          </p>
+        {{/if}}
+        <FormRow>
+          <f.text @name="reason"
+                  @label="Reason (optional)"
+                  @size={{40}}
+                  @maxlength={{80}} />
+        </FormRow>
+        <FormRow>
+          <f.textarea @name="handles"
+                      @label="Handles"
+                      @rows={{10}}
+                      @cols={{30}} />
+        </FormRow>
+        <f.submit @label="Verify"/>
+      </ChForm>
+
+      {{#if this.haveResults}}
+        <UiSection class="mt-4">
+          <:title>
+            {{if this.didCommit "Commited Handles" "Verified but not committed handles"}}
+            {{#if this.errorCount}}
+              <span class="text-danger ms-1">{{pluralize this.errorCount "error"}} found</span>
+            {{else}}
+              <span class="text-success ms-1">No Errors Found</span>
+            {{/if}}
+          </:title>
+          <:body>
+            {{#if this.errorCount}}
+              <p>
+                Once the errors have been fixed, the handles can be committed.
+              </p>
+            {{else if (not this.didCommit)}}
+              <p>
+                <UiButton @onClick={{this.submitUpload}} @type="primary">
+                  Commit Handles
+                </UiButton>
+              </p>
+            {{/if}}
+            Showing {{pluralize this.uploadResults.length "handles"}}
+            <table class="table table-width-auto table-striped table-hover">
+              <thead>
+              <th>&nbsp;</th>
+              <th>Handle</th>
+              <th>Type</th>
+              {{#if (eq this.uploadedType "twii_person")}}
+                <th>TWII Year</th>
+              {{/if}}
+              <th>Expires On</th>
+              <th>Reason</th>
+              <th>Errors</th>
+              </thead>
+              <tbody>
+              {{#each this.uploadResults as |hr|}}
+                <tr>
+                  <td>
+                    {{#if hr.error}}
+                      {{fa-icon "times"}}
+                    {{else}}
+                      {{fa-icon "check"}}
+                    {{/if}}
+                  </td>
+                  <td>{{hr.handle}}</td>
+                  <td>{{this.typeLabel hr.reservation_type}}</td>
+                  {{#if (eq this.uploadedType "twii_person")}}
+                    <td>{{hr.twii_year}}</td>
+                  {{/if}}
+                  <td>
+                    {{#if hr.expires_on}}
+                      {{hr.expires_on}}
+                    {{else}}
+                      -
+                    {{/if}}
+                  </td>
+                  <td>
+                    <PresentOrNot @value={{hr.reason}} @empty="-"/>
+                  </td>
+                  <td>
+                    {{#if hr.error}}
+                      <b class="text-danger">{{hr.error}}</b>
+                    {{else}}
+                      -
+                    {{/if}}
+                  </td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </table>
+          </:body>
+        </UiSection>
+      {{/if}}
+    </tab.pane>
+  </UiTab>
 </main>
 
 {{#if this.entry}}
-  <ModalDialog @title={{if this.entry.isNew "New Handle Reservation"  "Edit Handle Reservation"}} @onEscape={{this.cancelHandleReservation}} as |Modal|>
+  <ModalDialog @title={{if this.entry.isNew "New Handle Reservation"  "Edit Handle Reservation"}}
+               @onEscape={{this.cancelHandleReservation}} as |Modal|>
     <ChForm @formId="role"
             @formFor={{this.entry}}
             @validator={{this.handleReservationValidations}}
@@ -56,30 +206,38 @@
             @onCancel={{this.cancelHandleReservation}} as |f|>
       <Modal.body>
         <FormRow>
-          <f.text @name="handle" @label="Handle" @maxlength={{40}} @size={{25}}/>
-          <f.select @name="reservation_type" @label="Reservation Type" @options={{this.typeOptions}} />
+          <f.text @name="handle"
+                  @label="Handle / Term"
+                  @maxlength={{40}}
+                  @size={{25}}/>
+          <f.select @name="reservation_type"
+                    @label="Type"
+                    @options={{this.typeOptions}} />
         </FormRow>
-        <fieldset>
-          <legend>Effective dates</legend>
-          <FormRow>
-            <f.datetime @name="start_date"
-                        @label="Start date"
-                        @dateOnly={{true}}
-                        @maxlength={{25}} />
-            <f.datetime @name="end_date"
-                        @label="End date (optional)"
-                        @dateOnly={{true}}
-                        @maxlength={{25}} />
-          </FormRow>
-        </fieldset>
-        <fieldset>
-          <legend>Metadata</legend>
-          <FormRow>
-            <div class="col">
-              <f.text @name="reason" @label="Reason (optional)"/>
-            </div>
-          </FormRow>
-        </fieldset>
+        <FormRow>
+          <f.datetime @name="expires_on"
+                      @label="Expires On (optional)"
+                      @dateOnly={{true}}
+                      @maxlength={{25}} />
+          <f.number @name="twii_year"
+                    @label="TWII Year"
+                    @size={{4}}
+                    @maxlength={{4}}
+                    @disabled={{not-eq f.model.reservation_type "twii_person"}}
+          />
+        </FormRow>
+        {{#if (eq f.model.reservation_type "twii_person")}}
+          <p>
+            Note: When Expires On is left blank for TWII entries, the expiration date will be set to September 15, 3
+            years from now.
+          </p>
+        {{/if}}
+        <FormRow>
+          <f.text @name="reason"
+                  @label="Reason (optional)"
+                  @size={{40}}
+                  @maxlength={{100}} />
+        </FormRow>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />

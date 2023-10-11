@@ -1,5 +1,6 @@
 import {doubleMetaphone} from 'double-metaphone';
 import {HandleConflict} from './handle-conflict';
+import {TYPE_OBSCENE, TYPE_PHONETIC_ALPHABET, TYPE_SLUR} from "clubhouse/models/handle-reservation";
 
 /** Warns about handles that are really short words, though initials like JC are allowed. */
 export class MinLengthRule {
@@ -21,66 +22,10 @@ export class MinLengthRule {
   }
 }
 
-
-/** Warns abuout words the FCC could fine us about or ethnic slurs that shouldn't be part of a callsign. */
-export class InappropriateRule {
-  constructor() {
-    const fcc = 'is frowned on by the FCC';
-    const roma = 'is an ethnic slur for the Roma people';
-    this.inappropriateWords = {
-      // the Carlin 7
-      'shit': fcc,
-      'piss': fcc,
-      'fuck': fcc,
-      'cunt': fcc,
-      'cocksucker': fcc,
-      'motherfucker': fcc,
-      'tits': fcc,
-      // TODO are there FCC swear words George Carlin didn't share?
-
-      // Roma ethnic slurs per https://github.com/burningmantech/ranger-clubhouse-api/issues/1087
-      'gypsy': roma,
-      'gipsy': roma,
-      'gypsi': roma,
-      'gypsys': roma,
-      'gipsys': roma,
-      'gypsis': roma,
-      'gypsies': roma,
-      'zingara': roma,
-      'zingaro': roma,
-      'tzigan': roma,
-      'tzigane': roma,
-      'gyppo': roma,
-      'cigano': roma,
-      'zigeuner': roma,
-      'gitan': roma,
-      'gitano': roma,
-
-      // TODO slurs for more ethnic groups?
-    };
-  }
-
-  get id() {
-    return 'inappropriate';
-  }
-
-  check(name) {
-    const result = [];
-    // See if any inappropriate word is a substring of the proposed name
-    for (const [word, reason] of Object.entries(this.inappropriateWords)) {
-      if (name.toLowerCase().indexOf(word) >= 0) {
-        result.push(new HandleConflict(name, `${word} ${reason}`, 'high', this.id));
-      }
-    }
-    return result;
-  }
-}
-
-
 /** Warns about names which consist entirely of NATO phonetic alphabet words, e.g. Tango Charlie. */
 export class PhoneticAlphabetRule {
   constructor(handles) {
-    const words = handles.filter((h) => h.entityType === 'phonetic-alphabet')
+    const words = handles.filter((h) => h.entityType === TYPE_PHONETIC_ALPHABET)
       .map((h) => this.normalizeName(h.name));
     this.phoneticRegex = new RegExp(`^(${words.join('|')})+$`, 'i');
   }
@@ -110,8 +55,14 @@ export class PhoneticAlphabetRule {
 export class SubstringRule {
   constructor(handles) {
     this.normalizedHandles = {};
+    this.basicNormalizedHandles = {};
     for (const handle of handles) {
+      if (handle.entityType === TYPE_PHONETIC_ALPHABET) {
+        // processed by the phonetic alphabet rule checker.
+        continue;
+      }
       this.normalizedHandles[this.normalizeName(handle.name)] = handle;
+      this.basicNormalizedHandles[this.basicNormalizedName(handle.name)] = handle;
     }
   }
 
@@ -125,26 +76,75 @@ export class SubstringRule {
     if (name.length === 0) {
       return result;
     }
-    for (const [targetName, handle] of Object.entries(this.normalizedHandles)) {
-      if (name.length === targetName.length) {
-        if (name === targetName) {
-          result.push(new HandleConflict(rawName, `${handle.name} is already in use`, 'high', this.id, handle));
-        }
+
+    if (!this.scanNames(name, rawName, this.normalizedHandles, result)) {
+      this.exactMatch(this.basicNormalizedName(rawName), rawName, this.basicNormalizedHandles, result);
+    }
+    return result;
+  }
+
+  scanNames(name, rawName, handles, result) {
+    let errors = 0;
+    for (const [targetName, handle] of Object.entries(handles)) {
+      if (name === targetName) {
+        errors++;
+        this.buildConflict(result, rawName, handle,
+          `${handle.name} is already in use`,
+          `${handle.name} is a slur`,
+          `${handle.name} is considered obscene`,
+          this.id
+        );
       } else if (name.length < targetName.length) {
         if (targetName.indexOf(name) >= 0) {
-          // TODO(srabraham): improve priority handling; other types should be high priority as well
-          const priority = handle.entityType === 'slur' ? 'high' : 'medium';
-          result.push(new HandleConflict(rawName, `${handle.name} contains ${rawName}`, priority, this.id, handle));
+          this.buildConflict(result, rawName, handle,
+            `${handle.name} contains ${rawName}`,
+            `The slur ${handle.name} contains ${rawName}`,
+            `The obscenity ${handle.name} contains ${rawName}`,
+            this.id
+          );
+          errors++;
         }
       } else {
         if (name.indexOf(targetName) >= 0) {
-          // TODO(srabraham): improve priority handling; other types should be high priority as well
-          const priority = handle.entityType === 'slur' ? 'high' : 'medium';
-          result.push(new HandleConflict(rawName, `${rawName} contains ${handle.name}`, priority, this.id, handle));
+          this.buildConflict(result, rawName, handle,
+            `${rawName} contains ${handle.name}`,
+            `${rawName} contains the slur ${handle.name}`,
+            `${rawName} contains the obscenity ${handle.name}`,
+            this.id
+          );
+          errors++;
         }
       }
     }
-    return result;
+    return errors;
+  }
+
+  exactMatch(name, rawName, handles, result) {
+    for (const [targetName, handle] of Object.entries(handles)) {
+      if (name === targetName) {
+        this.buildConflict(result, rawName, handle,
+          `${handle.name} is already in use`,
+          `${handle.name} is a slur`,
+          `${handle.name} is considered obscene`,
+          this.id
+        );
+      }
+    }
+  }
+
+  buildConflict(result, rawName, handle, message, slurMessage, obsceneMessage, id) {
+    let priority;
+    // TODO(srabraham): improve priority handling; other types should be high priority as well
+    if (handle.entityType === TYPE_OBSCENE){
+      priority = 'high';
+      message = obsceneMessage;
+    } else if (handle.entityType === TYPE_SLUR) {
+      priority = 'high';
+      message = slurMessage;
+    } else {
+      priority = 'medium';
+    }
+    result.push(new HandleConflict(rawName, message, priority, id, handle));
   }
 
   normalizeName(name) {
@@ -153,6 +153,10 @@ export class SubstringRule {
     // while allowing "DPW Bob" to match "D P W" or "D-P-W".  This isn't perfect, though: "Tall Eagle" contains "LE".
     name = name.trim().replace(/\b[A-Z]{2,}\b/g, word => word.split(new RegExp('')).join(' '));
     return name.toLowerCase().replace(/\W+/g, ' ').trim();
+  }
+
+  basicNormalizedName(name) {
+    return name.toLowerCase().replace(/\W+/g, '').trim();
   }
 }
 
@@ -578,7 +582,6 @@ export const ALL_RULE_CLASSES = [
   EditDistanceRule,
   EyeRhymeRule,
   ExperimentalEyeRhymeRule,
-  InappropriateRule,
   MinLengthRule,
   PhoneticAlphabetRule,
   SubstringRule

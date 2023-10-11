@@ -9,6 +9,9 @@ export default class HandleReservationsRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    controller.set('handleReservations', model);
+    controller.handleReservations = model;
+    controller.setupUploadForm();
+    controller.haveResults = false;
+    controller.typeFilter = 'all';
   }
 }

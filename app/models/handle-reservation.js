@@ -1,4 +1,5 @@
-import Model, { attr } from '@ember-data/model';
+import Model, {attr} from '@ember-data/model';
+import optionsToLabels from "clubhouse/utils/options-to-labels";
 
 // Handle reservation types
 export const TYPE_BRC_TERM = 'brc_term';
@@ -9,32 +10,41 @@ export const TYPE_RANGER_TERM = 'ranger_term';
 export const TYPE_SLUR = 'slur';
 export const TYPE_TWII_PERSON = 'twii_person';
 export const TYPE_UNCATEGORIZED = 'uncategorized';
+export const TYPE_OBSCENE = 'obscene';
+export const TYPE_PHONETIC_ALPHABET = 'phonetic-alphabet';
 
-export const TypeLabels = {
-  [TYPE_BRC_TERM]: 'BRC term',
-  [TYPE_DECEASED_PERSON]: 'Deceased person',
-  [TYPE_DISMISSED_PERSON]: 'Dismissed person',
-  [TYPE_RADIO_JARGON]: 'Radio jargon',
-  [TYPE_RANGER_TERM]: 'Ranger term',
-  [TYPE_SLUR]: 'Slur',
-  [TYPE_TWII_PERSON]: 'TWII Person',
-  [TYPE_UNCATEGORIZED]: 'Uncategorized',
-};
+export const ReservationTypeOptions = [
+  [ 'BRC Term', TYPE_BRC_TERM ],
+  [ 'Deceased Person', TYPE_DECEASED_PERSON ],
+  [ 'Dismissed Person', TYPE_DISMISSED_PERSON ],
+  [ 'Obscene Word', TYPE_OBSCENE ],
+  [ 'Phonetic Alphabet', TYPE_PHONETIC_ALPHABET ],
+  [ 'Radio Jargon', TYPE_RADIO_JARGON ],
+  [ 'Ranger Term', TYPE_RANGER_TERM ],
+  [ 'Slur', TYPE_SLUR ],
+  [ 'TWII Person', TYPE_TWII_PERSON ],
+  [ 'Uncategorized', TYPE_UNCATEGORIZED ],
+];
+
+export const ReservationTypeLabels = optionsToLabels(ReservationTypeOptions);
+
 
 export default class HandleReservationModel extends Model {
   @attr('string') handle;
 
-  @attr('string', { defaultValue: TYPE_UNCATEGORIZED }) reservation_type;
+  @attr('string', {defaultValue: TYPE_UNCATEGORIZED}) reservation_type;
 
   @attr('string') start_date;
 
-  // TODO(srabraham): this doesn't save correctly when transitioning from having
-  // an end date set to attempting to not have an end date. Laravel returns a
-  // complaint, saying that it's trying to set "end_date =", when really we want
-  // end_date=NULL. Hopefully Frankenstein can advise on this, because I
-  // struggled for a while in vain, and I'm not even sure if it should be a
-  // client-side or server-side fix.
-  @attr('string') end_date;
+  @attr('string') expires_on;
 
   @attr('string') reason;
+
+  @attr('number') twii_year;
+
+  @attr('boolean', {readOnly: true}) has_expired;
+
+  get reservationTypeLabel() {
+    return ReservationTypeLabels[this.reservation_type] ?? this.reservation_type;
+  }
 }
