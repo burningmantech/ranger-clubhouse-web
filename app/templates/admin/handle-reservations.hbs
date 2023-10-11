@@ -257,3 +257,9 @@
     </ChForm>
   </ModalDialog>
 {{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting the request
+  </LoadingDialog>
+{{/if}}
