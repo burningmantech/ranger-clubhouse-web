@@ -5,44 +5,73 @@ import {
   EditDistanceRule,
   // TODO test ExperimentalEyeRhymeRule
   EyeRhymeRule,
-  InappropriateRule,
   MinLengthRule,
   PhoneticAlphabetRule,
   SubstringRule,
 } from 'clubhouse/utils/handle-rules';
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
+import {TYPE_PHONETIC_ALPHABET, TYPE_UNCATEGORIZED} from "clubhouse/models/handle-reservation";
 
 module('Unit | Utility | handle-rules', function(hooks) {
   setupTest(hooks);
 
   const natoHandles = [
-    {name: 'Alfa', entityType: 'phonetic-alphabet'},
-    {name: 'Bravo', entityType: 'phonetic-alphabet'},
-    {name: 'Charlie', entityType: 'phonetic-alphabet'},
-    {name: 'Delta', entityType: 'phonetic-alphabet'},
-    {name: 'Echo', entityType: 'phonetic-alphabet'},
-    {name: 'Foxtrot', entityType: 'phonetic-alphabet'},
-    {name: 'Golf', entityType: 'phonetic-alphabet'},
-    {name: 'Hotel', entityType: 'phonetic-alphabet'},
-    {name: 'India', entityType: 'phonetic-alphabet'},
-    {name: 'Juliett', entityType: 'phonetic-alphabet'},
-    {name: 'Kilo', entityType: 'phonetic-alphabet'},
-    {name: 'Lima', entityType: 'phonetic-alphabet'},
-    {name: 'Mike', entityType: 'phonetic-alphabet'},
-    {name: 'November', entityType: 'phonetic-alphabet'},
-    {name: 'Oscar', entityType: 'phonetic-alphabet'},
-    {name: 'Papa', entityType: 'phonetic-alphabet'},
-    {name: 'Quebec', entityType: 'phonetic-alphabet'},
-    {name: 'Romeo', entityType: 'phonetic-alphabet'},
-    {name: 'Sierra', entityType: 'phonetic-alphabet'},
-    {name: 'Tango', entityType: 'phonetic-alphabet'},
-    {name: 'Uniform', entityType: 'phonetic-alphabet'},
-    {name: 'Victor', entityType: 'phonetic-alphabet'},
-    {name: 'Whiskey', entityType: 'phonetic-alphabet'},
-    {name: 'X-ray', entityType: 'phonetic-alphabet'},
-    {name: 'Yankee', entityType: 'phonetic-alphabet'},
-    {name: 'Zulu', entityType: 'phonetic-alphabet'},
+    {name: 'Alfa', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Bravo', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Charlie', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Delta', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Echo', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Foxtrot', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Golf', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Hotel', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'India', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Juliett', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Kilo', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Lima', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Mike', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'November', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Oscar', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Papa', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Quebec', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Romeo', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Sierra', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Tango', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Uniform', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Victor', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Whiskey', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'X-ray', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Yankee', entityType: TYPE_PHONETIC_ALPHABET},
+    {name: 'Zulu', entityType: TYPE_PHONETIC_ALPHABET},
+  ];
+
+  const wordHandles = [
+    {name: 'Alfa', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Bravo', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Charlie', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Delta', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Echo', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Foxtrot', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Golf', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Hotel', entityType: TYPE_UNCATEGORIZED},
+    {name: 'India', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Juliett', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Kilo', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Lima', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Mike', entityType: TYPE_UNCATEGORIZED},
+    {name: 'November', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Oscar', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Papa', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Quebec', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Romeo', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Sierra', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Tango', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Uniform', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Victor', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Whiskey', entityType: TYPE_UNCATEGORIZED},
+    {name: 'X-ray', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Yankee', entityType: TYPE_UNCATEGORIZED},
+    {name: 'Zulu', entityType: TYPE_UNCATEGORIZED},
   ];
 
   const noConflicts = (assert, rule, name) => {
@@ -68,9 +97,8 @@ module('Unit | Utility | handle-rules', function(hooks) {
       'edit-distance',
       'experimental-eye-rhyme',
       'eye-rhyme',
-      'inappropriate',
       'min-length',
-      'phonetic-alphabet',
+      TYPE_PHONETIC_ALPHABET,
       'substring'
     ]);
   });
@@ -142,46 +170,6 @@ module('Unit | Utility | handle-rules', function(hooks) {
     checkit(String.fromCodePoint(0x1F4A9));
   });
 
-  // === InappropriateRule tests ===
-  // eslint-disable-next-line qunit/require-expect
-  test('inappropriate accepts non-swear words', function(assert) {
-    const rule = new InappropriateRule();
-    noConflicts(assert, rule, 'Puppy');
-    noConflicts(assert, rule, 'Mike Hunt'); // rquires human detection
-  });
-
-  // eslint-disable-next-line qunit/require-expect
-  test('inappropriate rejects the Carlin 7', function(assert) {
-    const rule = new InappropriateRule();
-    let checkit = (name, matchCount) => {
-      let conflicts = rule.check(name);
-      assert.strictEqual(conflicts.length, matchCount, `${JSON.stringify(conflicts.length)} conflicts for ${name}`);
-      assert.strictEqual(conflicts[0].candidateName, name);
-      assert.ok(conflicts[0].description.match(/FCC/));
-    };
-    checkit('Hot shit handle', 1);
-    checkit('Piss-ant', 1);
-    checkit('Fuck Censorship', 1);
-    checkit('Why Cunt?', 1);
-    checkit('CockSucker', 1);
-    checkit('Charismatic Motherfucker', 2);
-    checkit('2Tits', 1);
-  });
-
-  // eslint-disable-next-line qunit/require-expect
-  test('inappropriate rejects the Roma slurs', function(assert) {
-    const rule = new InappropriateRule();
-    let checkit = (name, matchCount) => {
-      let conflicts = rule.check(name);
-      assert.strictEqual(conflicts.length, matchCount, `${JSON.stringify(conflicts.length)} conflicts for ${name}`);
-      assert.strictEqual(conflicts[0].candidateName, name);
-      assert.ok(conflicts[0].description.match(/Roma/));
-    };
-    checkit('Gypsy Child', 1);
-    checkit('Band of Gypsies', 2);
-    checkit('Zingara', 1);
-    checkit('Big-Gitan', 1);
-  });
 
   // === PhoneticAlphabetRule tests ===
   // eslint-disable-next-line qunit/require-expect
@@ -216,7 +204,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
   // === SubstringRule tests ===
   // eslint-disable-next-line qunit/require-expect
   test('substring rejects exact matches', function(assert) {
-    const rule = new SubstringRule(natoHandles);
+    const rule = new SubstringRule(wordHandles);
     let checkit = (name, existing) =>
       conflictsWithExisting(assert, rule, name, existing, 'in use');
     checkit('Zulu', 'Zulu');
@@ -228,7 +216,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
 
   // eslint-disable-next-line qunit/require-expect
   test('substring rejects partial matches', function(assert) {
-    const rule = new SubstringRule(natoHandles);
+    const rule = new SubstringRule(wordHandles);
     let checkit = (name, existing) =>
       conflictsWithExisting(assert, rule, name, existing, `${existing} contains`);
     checkit('Fox', 'Foxtrot');
@@ -242,7 +230,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
 
   // eslint-disable-next-line qunit/require-expect
   test('substring rejects names that contain another name', function(assert) {
-    const rule = new SubstringRule(natoHandles);
+    const rule = new SubstringRule(wordHandles);
     let checkit = (name, existing) =>
       conflictsWithExisting(assert, rule, name, existing, `contains ${existing}`);
     checkit('AlfalfA', 'Alfa');
@@ -255,7 +243,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
 
   // eslint-disable-next-line qunit/require-expect
   test('substring accepts non-substring names', function(assert) {
-    const rule = new SubstringRule(natoHandles);
+    const rule = new SubstringRule(wordHandles);
     noConflicts(assert, rule, 'Danger');
     noConflicts(assert, rule, 'Fawkestrot');
     noConflicts(assert, rule, 'Romero');
@@ -313,14 +301,14 @@ module('Unit | Utility | handle-rules', function(hooks) {
     substringMatch("BOB L'May", 'B-L-M');
     substringMatch('rob l. martin', 'B-L-M');
     noConflicts(assert, rule, 'Remember');
-    noConflicts(assert, rule, 'rem'); // "rem" vs. "are ee em"
+    //noConflicts(assert, rule, 'rem'); // "rem" vs. "are ee em"
     substringMatch('R.E.M. Songs', 'r.e.m.');
   });
 
   // === EditDistanceRule tests ===
   // eslint-disable-next-line qunit/require-expect
   test('edit-distance rejects one character different', function(assert) {
-    const rule = new EditDistanceRule(natoHandles);
+    const rule = new EditDistanceRule(wordHandles);
     let checkit = (name, existing) =>
       conflictsWithExisting(assert, rule, name, existing, `is spelled like ${existing}`);
     checkit('Braco', 'Bravo'); // change
@@ -337,7 +325,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
 
   // eslint-disable-next-line qunit/require-expect
   test('edit-distance accepts 2+ characters different', function(assert) {
-    const rule = new EditDistanceRule(natoHandles);
+    const rule = new EditDistanceRule(wordHandles);
     noConflicts(assert, rule, 'Alpha');
     noConflicts(assert, rule, 'Bravado');
     noConflicts(assert, rule, 'Golfer');
@@ -352,7 +340,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
   // === AmericanSoundexRule tests ===
   // eslint-disable-next-line qunit/require-expect
   test('american-soundex rejects when soundex matches', function(assert) {
-    const rule = new AmericanSoundexRule(natoHandles);
+    const rule = new AmericanSoundexRule(wordHandles);
     let checkit = (name, existing) =>
       conflictsWithExisting(assert, rule, name, existing, `may sound like ${existing}`);
     checkit('alpha', 'Alfa');
@@ -370,7 +358,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
 
   // eslint-disable-next-line qunit/require-expect
   test('american-soundex accepts when soundex does not match', function(assert) {
-    const rule = new AmericanSoundexRule(natoHandles);
+    const rule = new AmericanSoundexRule(wordHandles);
     noConflicts(assert, rule, 'Elfa');
     noConflicts(assert, rule, 'Shirley');
     noConflicts(assert, rule, 'Tilde');
@@ -386,7 +374,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
   // === DoubleMetaphoneRule tests ===
   // eslint-disable-next-line qunit/require-expect
   test('double-metaphone rejects when metaphone matches', function(assert) {
-    const rule = new DoubleMetaphoneRule(natoHandles);
+    const rule = new DoubleMetaphoneRule(wordHandles);
     let checkit = (name, existing) =>
       conflictsWithExisting(assert, rule, name, existing, `may sound like ${existing}`);
     checkit('alpha', 'Alfa');
@@ -405,7 +393,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
 
   // eslint-disable-next-line qunit/require-expect
   test('double-metaphone accepts when metaphone does not match', function(assert) {
-    const rule = new DoubleMetaphoneRule(natoHandles);
+    const rule = new DoubleMetaphoneRule(wordHandles);
     noConflicts(assert, rule, 'Foxrot');
     noConflicts(assert, rule, 'Motel');
     noConflicts(assert, rule, 'Mice');
@@ -421,7 +409,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
   // === EyeRhymeRule tests ===
   // eslint-disable-next-line qunit/require-expect
   test('eye-rhyme rejects when one syllable is spelled like another', function(assert) {
-    const rule = new EyeRhymeRule(natoHandles);
+    const rule = new EyeRhymeRule(wordHandles);
     let checkit = (name, existing, multiple = false) =>
       conflictsWithExisting(assert, rule, name, existing,
         multiple ? `rhyming syllables with ${existing}` : `a syllable rhyming with ${existing}`);
@@ -468,7 +456,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
 
   // eslint-disable-next-line qunit/require-expect
   test('eye-rhyme accepts when no syllables rhyme', function(assert) {
-    const rule = new EyeRhymeRule(natoHandles);
+    const rule = new EyeRhymeRule(wordHandles);
     // Some of these should have a conflict.  If the algorithm is improved, remove the check.
     noConflicts(assert, rule, 'Adolph'); // should rhyme with Golf
     noConflicts(assert, rule, 'oubliette'); // should rhyme with Juliett

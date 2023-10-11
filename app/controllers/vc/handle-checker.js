@@ -9,20 +9,13 @@ import {
   EditDistanceRule,
   ExperimentalEyeRhymeRule,
   EyeRhymeRule,
-  InappropriateRule,
   MinLengthRule,
   PhoneticAlphabetRule,
   SubstringRule
 } from 'clubhouse/utils/handle-rules';
+import { ReservationTypeLabels } from 'clubhouse/models/handle-reservation';
 
 let nextCheckId = 1;
-
-class Conflict {
-  @tracked isCollapsed = true;
-  constructor(obj) {
-    Object.assign(this, obj);
-  }
-}
 
 class CheckedHandle {
   constructor(obj) {
@@ -86,7 +79,6 @@ export default class VcHandlerCheckerController extends ClubhouseController {
     // No input yet on ideal ordering for all checks.
     addRule(new SubstringRule(handles), 'Substring');
     addRule(new MinLengthRule(), 'Minimum Length');
-    addRule(new InappropriateRule(), 'Inappropriate words');
     addRule(new PhoneticAlphabetRule(handles), 'Phonetic alphabet');
     addRule(new EditDistanceRule(handles), 'Edit distance');
     addRule(new AmericanSoundexRule(handles), 'American Soundex');
@@ -105,18 +97,19 @@ export default class VcHandlerCheckerController extends ClubhouseController {
   buildEntityTypes() {
     const comparator = (entity1, entity2) => {
       // group all "$status ranger" statuses together
-      const isRanger1 = entity1.indexOf('ranger') >= 0;
-      const isRanger2 = entity2.indexOf('ranger') >= 0;
+      const isRanger1 = !ReservationTypeLabels[entity1];
+      const isRanger2 = !ReservationTypeLabels[entity2];
       if (isRanger1 !== isRanger2) {
         return isRanger2 - isRanger1;
       }
       return entity1.localeCompare(entity2);
     }
     // By default, alphas can choose the handle of a non-vintage retired Ranger
-    const disabledByDefault = new Set(['retired ranger', 'non ranger ranger']);
+    const disabledByDefault = new Set(['retired', 'non ranger']);
     this.entityTypes = this.allHandles.mapBy('entityType').uniq().sort(comparator).map((type) => new EntityType({
       id: dasherize(type),
       name: type,
+      label: ReservationTypeLabels[type] ?? type,
       enabled: !disabledByDefault.has(type),
     }));
   }
@@ -140,7 +133,7 @@ export default class VcHandlerCheckerController extends ClubhouseController {
     const rules = Object.values(this.handleRules).map((obj) => obj.rule);
     const id = nextCheckId++;
     rules.forEach((rule) => {
-      rule.check(name).forEach((conflict) => conflicts.push(new Conflict(conflict)));
+      rule.check(name).forEach((conflict) => conflicts.push(conflict));
     });
     conflicts.sort(HandleConflict.comparator);
     this.checkedHandles.unshiftObject(new CheckedHandle({
@@ -164,7 +157,7 @@ export default class VcHandlerCheckerController extends ClubhouseController {
   }
 
   @action
-  toggleConflict(conflict) {
-    conflict.isCollapsed = !conflict.isCollapsed;
+  entityTypeLabel(type) {
+    return ReservationTypeLabels[type] ?? type;
   }
 }

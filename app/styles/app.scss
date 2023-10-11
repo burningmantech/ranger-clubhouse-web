@@ -494,6 +494,7 @@ legend {
 .hq-navigation-container {
   padding: 0.5rem 1.25rem;
   margin: -1rem -1.25rem 0.25rem;
+
   a {
     font-size: 0.9rem !important;
   }
@@ -642,6 +643,10 @@ ul.no-indent, ol.no-indent {
   column-count: 5;
 }
 
+.columns-6 {
+  column-count: 6;
+}
+
 .award-card {
   width: 175px;
   padding: 10px;
@@ -652,4 +657,8 @@ ul.no-indent, ol.no-indent {
 .calendar-close-text::after {
   padding-left: 10px;
   content: 'Close';
+}
+
+summary:hover {
+  background-color: #dee2e6 !important;
 }

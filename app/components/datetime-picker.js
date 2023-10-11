@@ -8,9 +8,7 @@ import {later} from '@ember/runloop';
 export default class DatetimePickerComponent extends Component {
   constructor() {
     super(...arguments);
-    const {dateOnly,} = this.args;
-    let {minDate, maxDate} = this.args;
-    this.dateFormat = dateOnly ? 'Y-m-d' : 'Y-m-d H:i';
+    let {dateOnly, minDate, maxDate} = this.args;
 
     this.value = !isEmpty(this.args.value) ? this.args.value : '';
 
@@ -20,7 +18,7 @@ export default class DatetimePickerComponent extends Component {
       localization: {
         locale: 'en',
         hourCycle: 'h23',
-        format: 'yyyy-MM-dd HH:mm',
+        format: dateOnly ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm',
         dayViewHeaderFormat: {month: 'long', year: 'numeric'},
       },
       keepInvalid: true,

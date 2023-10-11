@@ -1,48 +1,47 @@
-import dayjs from 'dayjs';
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {
-  TypeLabels,
-  TYPE_BRC_TERM,
-  TYPE_DECEASED_PERSON,
-  TYPE_DISMISSED_PERSON,
-  TYPE_RADIO_JARGON,
-  TYPE_RANGER_TERM,
-  TYPE_SLUR,
-  TYPE_TWII_PERSON,
-  TYPE_UNCATEGORIZED,
-} from 'clubhouse/models/handle-reservation';
+import {ReservationTypeOptions, TYPE_UNCATEGORIZED} from 'clubhouse/models/handle-reservation';
+import {isEmpty} from '@ember/utils';
+import EmberObject from '@ember/object';
+import {cached} from '@glimmer/tracking';
 
 export default class HandleReservationController extends ClubhouseController {
-
   @tracked handleReservations;
-
-  @tracked showExpired = false;
-
   @tracked entry = null;
 
-  typeOptions = [
-    ['BRC term', TYPE_BRC_TERM],
-    ['Deceased person', TYPE_DECEASED_PERSON],
-    ['Dismissed person', TYPE_DISMISSED_PERSON],
-    ['Radio jargon', TYPE_RADIO_JARGON],
-    ['Ranger term', TYPE_RANGER_TERM],
-    ['Slur', TYPE_SLUR],
-    ['TWII Person', TYPE_TWII_PERSON],
-    ['Uncategorized', TYPE_UNCATEGORIZED],
+  @tracked showExpired = false;
+  @tracked typeFilter;
+
+  @tracked uploadForm;
+  @tracked uploadResults;
+  @tracked uploadType;
+  @tracked didCommit = false;
+  @tracked errorCount = 0;
+  @tracked haveResults = false;
+
+  @tracked isSubmitting = false;
+
+  typeOptions = ReservationTypeOptions;
+
+  typeFilterOptions = [
+    ['All', 'all'],
+    ...ReservationTypeOptions,
   ];
 
-  typeLabel(type) {
-    return TypeLabels[type] ?? type;
-  }
 
-  get reservations() {
+  @cached
+  get viewHandleReservations() {
     let results = this.handleReservations;
-    if (!this.showExpired) {
-      const today = dayjs();
-      results = results.filter((h) => h.end_date === null || today.isBefore(h.end_date));
+
+    if (this.showExpired) {
+      results = results.filter((r) => r.has_expired);
     }
+
+    if (this.typeFilter !== 'all') {
+      results = results.filter((r) => r.reservation_type === this.typeFilter);
+    }
+
     return results;
   }
 
@@ -58,12 +57,17 @@ export default class HandleReservationController extends ClubhouseController {
 
   @action
   removeHandleReservation() {
-    this.modal.confirm('Delete Handle Reservation', `Are you sure you wish to delete "${this.entry.handle}"? This operation cannot be undone.`, () => {
-      this.entry.destroyRecord().then(() => {
-        this.toast.success('The handle reservation has been deleted.');
-        this.entry = null;
-      }).catch((response) => this.house.handleErrorResponse(response));
-    })
+    this.modal.confirm('Delete Handle Reservation',
+      `Are you sure you wish to delete "${this.entry.handle}"? This operation cannot be undone.`,
+      async () => {
+        try {
+          await this.entry.destroyRecord();
+          this.toast.success('The handle reservation has been deleted.');
+          this.entry = null;
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        }
+      });
   }
 
   @action
@@ -72,10 +76,12 @@ export default class HandleReservationController extends ClubhouseController {
       return;
     }
 
-    this.house.saveModel(model, `The handle reservation has been ${model.isNew ? 'created' : 'updated'}.`, () => {
-      this.handleReservations.update();
-      this.entry = null;
-    });
+    this.house.saveModel(model,
+      `The handle reservation has been ${model.isNew ? 'created' : 'updated'}.`,
+      () => {
+        this.handleReservations.update();
+        this.entry = null;
+      });
   }
 
   @action
@@ -83,8 +89,83 @@ export default class HandleReservationController extends ClubhouseController {
     this.entry = null;
   }
 
+  setupUploadForm() {
+    this.uploadForm = EmberObject.create({
+      reservation_type: TYPE_UNCATEGORIZED,
+      expires_on: '',
+      twii_year: '',
+      handles: '',
+      commit: false,
+    });
+  }
+
   @action
-  toggleShowExpired() {
-    this.showExpired = !this.showExpired;
+  verifyUpload(model, isValid) {
+    if (!isValid) {
+      return;
+    }
+
+    this.uploadData = {
+      reservation_type: model.reservation_type,
+      handles: model.handles,
+    };
+
+    ['twii_year', 'reason', 'expires_on'].forEach((attr) => {
+      if (!isEmpty(model[attr])) {
+        this.uploadData[attr] = model[attr];
+      }
+    });
+
+    this._executeUpload(false);
+  }
+
+  @action
+  submitUpload() {
+    this._executeUpload(true);
+  }
+
+  async _executeUpload(commit) {
+    this.didCommit = false;
+
+    try {
+      this.isSubmitting = true;
+      const results = await this.ajax.request(`handle-reservation/upload`, {
+        method: 'POST',
+        data: {...this.uploadData, commit: commit ? 1 : 0}
+      });
+      this.didCommit = commit;
+      this.errorCount = results.errors;
+      this.uploadResults = results.handles;
+      this.haveResults = true;
+      this.uploadType = this.uploadData.reservation_type;
+      if (commit && !this.errorCount) {
+        this.setupUploadForm();
+        await this.handleReservations.update();
+      }
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
+  }
+
+  @action
+  expireHandles() {
+    this.modal.confirm('Expire Handles', `Are you sure you want to delete the expired handles at this time?`, async () => {
+      try {
+        this.isSubmitting = true;
+        const expired = (await this.ajax.request(`handle-reservation/expire`, {method: 'POST'})).expired;
+        await this.handleReservations.update();
+        if (expired) {
+          this.toast.success(`${expired} handle(s) successfully expired.`);
+        } else {
+          this.modal.info('No Handles Expired', 'No handles were found to have expired.');
+        }
+      } catch (response) {
+        this.house.handleErrorResponse(response);
+      } finally {
+        this.isSubmitting = false;
+      }
+    });
   }
 }
