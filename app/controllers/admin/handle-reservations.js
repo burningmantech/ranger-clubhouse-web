@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {ReservationTypeOptions, TYPE_UNCATEGORIZED} from 'clubhouse/models/handle-reservation';
+import {ReservationTypeLabels, ReservationTypeOptions, TYPE_UNCATEGORIZED} from 'clubhouse/models/handle-reservation';
 import {isEmpty} from '@ember/utils';
 import EmberObject from '@ember/object';
 import {cached} from '@glimmer/tracking';
@@ -29,6 +29,9 @@ export default class HandleReservationController extends ClubhouseController {
     ...ReservationTypeOptions,
   ];
 
+  typeLabel(type) {
+    return ReservationTypeLabels[type] ?? type;
+  }
 
   @cached
   get viewHandleReservations() {
@@ -138,8 +141,7 @@ export default class HandleReservationController extends ClubhouseController {
       this.uploadResults = results.handles;
       this.haveResults = true;
       this.uploadType = this.uploadData.reservation_type;
-      if (commit && !this.errorCount) {
-        this.setupUploadForm();
+      if (commit) {
         await this.handleReservations.update();
       }
     } catch (response) {
