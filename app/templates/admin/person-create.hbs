@@ -1,0 +1,56 @@
+<main>
+  <h1>Create Clubhouse Account</h1>
+  <ChForm @formId="person"
+          @formFor={{this.person}}
+          @validator={{this.personValidations}}
+          @onSubmit={{this.createPerson}} as |f|>
+    <FormRow>
+      <f.text @name="callsign"
+              @label="Callsign"
+              @size={{30}}
+              @maxlength={{80}}
+      />
+      <f.text @name="email"
+              @label="Email Address"
+              @inputmode="email"
+              @size={{30}}/>
+      <f.select @name="status"
+                @label="Status"
+                @options={{this.statusOptions}}
+      />
+    </FormRow>
+
+    <FormRow>
+      <f.text @name="first_name"
+              @label="Legal First Name"
+              @maxlength={{25}}/>
+      <f.text @name="mi"
+              @label="M.I."
+              @size={{2}}
+              @maxlength={{10}} />
+      <f.text @name="last_name"
+              @label="Legal Last Name"
+              @maxlength={{25}}/>
+    </FormRow>
+
+    <PersonAddressEdit @f={{f}} />
+
+    <FormRow>
+      <f.text @name="home_phone"
+              @label="Primary Phone"
+              @inputmode="tel"/>
+    </FormRow>
+
+    <f.submit @label="Create Account" disabled={{this.iSaving}} />
+  </ChForm>
+</main>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting request
+  </LoadingDialog>
+{{/if}}
+
+{{#if this.askForPassword}}
+  <PersonPassword @onClose={{this.closePassword}} @person={{this.person}} />
+{{/if}}

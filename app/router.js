@@ -105,6 +105,7 @@ Router.map(function () {
     this.route('timesheet-slot-repair');
     this.route('top-hour-earners');
 
+    this.route('person-create');
   });
 
   this.route('hq', {path: '/hq/:person_id'}, function () {
