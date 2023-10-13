@@ -237,7 +237,7 @@ export default class TicketDeliverInfoComponent extends Component {
 
     model.save();
 
-    this._saveDeliveryCommon({...model, delivery_method: DELIVERY_POSTAL}, 'Delivery address successfully saved.');
+    this._saveDeliveryCommon({...model, delivery_method: DELIVERY_POSTAL}, 'Delivery info successfully saved.');
   }
 
   _saveDeliveryCommon(data, message) {

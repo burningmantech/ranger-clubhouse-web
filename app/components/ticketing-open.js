@@ -58,7 +58,7 @@ export default class TicketingOpenComponent extends Component {
    */
 
   @action
-  async setDocumentStatus(document, status) {
+  async setDocumentStatus(document, status, callback = null) {
     this.isSavingDocumentStatus = true;
     try {
       const result = await this.ajax.request(`access-document/statuses`, {
@@ -70,8 +70,9 @@ export default class TicketingOpenComponent extends Component {
       const {vehiclePass} = this.args.ticketPackage;
       if (vehiclePass && document.isRegularTicket) {
         // Vehicle Pass may have been released because all tickets were banked.
-        return vehiclePass.reload();
+        await vehiclePass.reload();
       }
+      callback?.();
     } catch (response) {
       this.house.handleErrorResponse(response)
     } finally {
