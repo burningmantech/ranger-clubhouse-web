@@ -11,31 +11,69 @@
     <h3> Gift Ticket #{{add idx 1}} of {{@ticketPackage.giftTickets.length}}</h3>
   {{/if}}
   {{#if ticket.isClaimed}}
-    <h4>You have claimed your {{ticket.typeLabel}}</h4>
+    <h4>
+      You have claimed your {{ticket.typeLabel}} for
+      {{if ticket.isDeliveryPostal "delivery by mail" "pick up at Will-Call"}}
+    </h4>
     <p>
       If your plans have changed, please release the ticket. Gift tickets cannot be banked and are only good for the
       upcoming event.
     </p>
     <TicketGiftConditions/>
-    <UiButton @class="btn-responsive"
-              @onClick={{fn @setDocumentStatus ticket "qualified"}}
-              @disabled={{@isSavingDocumentStatus}}>
-      Release Gift Ticket
-      {{#if @isSavingDocumentStatus}}
-        <SpinIcon/>
-      {{/if}}
-    </UiButton>
+    <p>
+      <UiButton @class="btn-responsive"
+                @onClick={{fn @setDocumentStatus ticket "qualified"}}
+                @disabled={{@isSavingDocumentStatus}}>
+        Release Gift Ticket
+        {{#if @isSavingDocumentStatus}}
+          <SpinIcon/>
+        {{/if}}
+      </UiButton>
+    </p>
+    <p>
+      Do you wish to change the delivery method?
+    </p>
+    {{#if ticket.isDeliveryPostal}}
+      <UiButton @class="btn-responsive"
+                @onClick={{fn this.setDeliveryMethod ticket "will_call"}}
+                @disabled={{@isSavingDocumentStatus}}>
+        Pick Up At Will Call Instead
+        {{#if @isSavingDocumentStatus}}
+          <SpinIcon/>
+        {{/if}}
+      </UiButton>
+    {{else}}
+      <UiButton @class="btn-responsive"
+                @onClick={{fn this.setDeliveryMethod ticket "postal"}}
+                @disabled={{@isSavingDocumentStatus}}>
+        Deliver By Mail Instead
+        {{#if @isSavingDocumentStatus}}
+          <SpinIcon/>
+        {{/if}}
+      </UiButton>
+    {{/if}}
   {{else if ticket.isQualified}}
     <h4>A {{ticket.typeLabel}} is available</h4>
     <TicketGiftConditions/>
-    <UiButton @class="btn-responsive"
-              @onClick={{fn @setDocumentStatus ticket "claimed"}}
-              @disabled={{@isSavingDocumentStatus}}>
-      Claim Ticket
-      {{#if @isSavingDocumentStatus}}
-        <SpinIcon/>
-      {{/if}}
-    </UiButton>
+    <div class="d-flex align-items-center flex-column justify-content-sm-between flex-lg-row justify-content-lg-start">
+      <UiButton @class="btn-responsive"
+                @onClick={{fn this.claimAndSetDeliveryMethod ticket "postal"}}
+                @disabled={{@isSavingDocumentStatus}}>
+        Claim Ticket &amp; Deliver By Mail
+        {{#if @isSavingDocumentStatus}}
+          <SpinIcon/>
+        {{/if}}
+      </UiButton>
+      <span class="my-2 mx-3">- OR -</span>
+      <UiButton @class="btn-responsive"
+                @onClick={{fn this.claimAndSetDeliveryMethod ticket "will_call"}}
+                @disabled={{@isSavingDocumentStatus}}>
+        Claim Ticket &amp; Pick Up At Will Call
+        {{#if @isSavingDocumentStatus}}
+          <SpinIcon/>
+        {{/if}}
+      </UiButton>
+    </div>
   {{else}}
     <p>
       Uh oh, I don't know the state of the ticket [{{ticket.status}}], id #{{ticket.id}}.
