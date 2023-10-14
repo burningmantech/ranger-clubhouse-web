@@ -10,6 +10,9 @@ Router.map(function () {
   this.route('debug');
 
   this.route('login');
+  this.route('client', function() {    // Old URLs -- the /client prefix has been dropped.
+    this.route('stuff', { path: '/*'} );
+  });
   this.route('offline');
   this.route('reset-password');
   this.route('register');
@@ -132,7 +135,7 @@ Router.map(function () {
     this.route('schedule');
     this.route('pod', function () {
       this.route('index', {path: '/'});
-      this.route('manage', { path: '/:slot_id' });
+      this.route('manage', {path: '/:slot_id'});
     });
   });
 
