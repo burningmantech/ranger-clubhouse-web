@@ -24,7 +24,7 @@ export default class NewVersionNotifyComponent extends Component {
 
     const fileName = ENV.newVersion.fileName;
     const baseUrl = (ENV.rootURL || ENV.baseURL || '/');
-    this.url = (baseUrl === '/') ? fileName : `${baseUrl}${fileName}`;
+    this.url = `${baseUrl}${fileName}`;
     this.pollSeconds = ENV.newVersion.pollSeconds || DEFAULT_POLL_INTERVAL_SECONDS;
     this.currentBuildTimestamp = ENV.APP.buildTimestamp;
     this._pollVersionFile();
