@@ -135,7 +135,7 @@ module.exports = function (environment) {
 
   if (environment === 'production') {
     // here you can enable a production-specific feature
-    ENV.rootURL = (process.env.RANGER_CLUBHOUSE_CLIENT_PREFIX || '/client');
+    ENV.rootURL = (process.env.RANGER_CLUBHOUSE_CLIENT_PREFIX || '/');
 
     // Try to report any non-recoverable errors.
     ENV.logEmberErrors = true;
