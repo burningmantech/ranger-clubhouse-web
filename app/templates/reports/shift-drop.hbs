@@ -1,0 +1,110 @@
+<h1>Shift Drop Report</h1>
+
+<p>
+  This page will report on who dropped a shift within X hours of the shift starting for selected positions.
+</p>
+<FormRow>
+  <div class="col-auto">
+    <label class="col-form-label">
+      Event Year
+    </label>
+    <ChForm::Select @name="year" @value={{this.year}} @options={{this.yearOptions}} @onChange={{action
+      (mut this.year)}} />
+  </div>
+  <div class="col-auto">
+    <label class="col-form-label">
+      Dropped within hours of shift start
+    </label>
+    <ChForm::Select @name="hours" @value={{this.hours}} @options={{this.hourOptions}} @onChange={{action
+      (mut this.hours)}} />
+  </div>
+</FormRow>
+<fieldset>
+  <legend>Select Positions To Report On</legend>
+  <p>
+    Click on the team name to show the team's positions.
+  </p>
+  <div class="d-flex justify-content-between">
+    {{#each this.teamColumns as |column|}}
+      <div class="flex-grow-1 me-4">
+        {{#each column as |team|}}
+          <details class="mb-3">
+            <summary class="masonry-item-header">
+              {{team.title}}
+              {{#if team.selectedCount}}
+                <small class="ms-1 text-muted">({{team.selectedCount}} selected)</small>
+              {{/if}}
+            </summary>
+            {{#each team.positionOptions as |position|}}
+              <div class="form-check">
+                <Input @type="checkbox"
+                       @checked={{position.isChecked}}
+                       id="position_{{position.id}}"
+                       class="form-check-input"
+                />
+                {{!template-lint-disable no-nested-interactive}}
+                <label class="form-check-label" for="position_{{position.id}}">{{position.title}}</label>
+              </div>
+            {{/each}}
+          </details>
+        {{/each}}
+      </div>
+    {{/each}}
+  </div>
+</fieldset>
+<p>
+  <UiButton @type="primary" @onClick={{this.submit}}>
+    Submit
+  </UiButton>
+</p>
+
+{{#if this.haveResults}}
+  <UiSection id="drop-results" {{did-insert this.scrollToResults}}>
+    <:title>{{pluralize this.people.length "Shift Drop"}} for {{this.year}}, within {{pluralize this.hours "hour"}} of
+      shift start
+    </:title>
+    <:body>
+      <p>
+        {{pluralize this.positionsSelected.length "selected positions"}}:
+        {{#each this.positionsSelected as |title idx|}}
+          {{if idx ", "}}{{title}}
+        {{/each}}
+      </p>
+      {{#if this.people}}
+        <UiExportToCSVButton @onClick={{this.exportToCSV}} />
+        <table class="table table-width-auto table-striped table-hover">
+          <thead>
+          <tr>
+            <th>Position</th>
+            <th>Shift Start</th>
+            <th>Callsign</th>
+            <th>Hours Dropped Before</th>
+            <th>Dropped At</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.people as |person|}}
+            <tr>
+              <td>{{person.position_title}}</td>
+              <td>{{shift-format person.begins}}</td>
+              <td>
+                <PersonLink @callsign={{person.callsign}} @personId={{person.person_id}} />
+              </td>
+              <td class="text-end">{{person.hours_before}}</td>
+              <td>{{shift-format person.dropped_at}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{else}}
+        <b class="text-danger">No drop shifts found for the positions selected.</b>
+      {{/if}}
+    </:body>
+  </UiSection>
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting request
+  </LoadingDialog>
+{{/if}}
