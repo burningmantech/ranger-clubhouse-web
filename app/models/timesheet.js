@@ -38,6 +38,9 @@ export default class TimesheetModel extends Model {
   // Volunteer doing work on behalf of the Rangers, yet is not a Ranger. May earn (some) perks.
   @attr('boolean') is_non_ranger;
 
+  // Suppress any too short / too long duration warnings
+  @attr('boolean', { defaultValue: false }) suppress_duration_warning;
+
   @tracked isIgnoring = false; // Used by the HQ window interface
   @tracked selected = false;
 
