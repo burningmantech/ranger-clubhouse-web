@@ -55,7 +55,7 @@
   </div>
 {{/if}}
 
-<UiTab @customTabs={{true}} @activeId={{this.firstTab}}  as |tab|>
+<UiTab @customTabs={{true}} @activeId={{this.firstTab}}  @checkTabNavigation={{this.checkAssetCheckout}} as |tab|>
   <UiTabCustomNav @tab={{tab}} as |nav|>
     <nav.item @paneId="timesheet-verification" @icon="list">
       <div>
@@ -153,6 +153,7 @@
                              @attachments={{this.attachments}}
                              @eventInfo={{this.eventInfo}}
                              @onCheckOut={{this.onAssetCheckOut}}
+                             @registerCallback={{this.registerAssetCallback}}
           />
         {{/if}}
 

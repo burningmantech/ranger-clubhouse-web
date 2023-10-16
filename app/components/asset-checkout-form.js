@@ -2,19 +2,15 @@ import Component from '@glimmer/component';
 import EmberObject from '@ember/object';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {validatePresence} from 'ember-changeset-validations/validators';
 import {service} from '@ember/service';
 
 export default class AssetCheckoutFormComponent extends Component {
   @service ajax;
-  @service toast;
   @service house;
+  @service modal;
+  @service toast;
 
-  assetValidations = {
-    barcode: [validatePresence(true)]
-  };
-
-  @tracked assetForm = EmberObject.create({});
+  @tracked assetForm = EmberObject.create({barcode:''});
 
   @tracked barcodeNotFound = null;
   @tracked barcodeCheckedOut = null;
@@ -27,6 +23,7 @@ export default class AssetCheckoutFormComponent extends Component {
     const options = this.args.attachments.map((a) => [a.description, a.id]);
     options.unshift(['-', '']);
     this.attachmentOptions = options;
+    this.args.registerCallback?.(this.checkForBlankOnNavigate);
   }
 
   /**
@@ -46,14 +43,14 @@ export default class AssetCheckoutFormComponent extends Component {
    */
 
   @action
-  async checkoutAsset(model, isValid) {
-    if (!isValid) {
-      return;
-    }
-
-    const barcode = model.barcode;
+  async checkoutAsset(model) {
+    const {barcode} = model;
     this.clearErrors();
 
+    if (barcode.trim() === '') {
+      this.modal.info(null, 'No barcode number was enterd.');
+      return;
+    }
     this.isSubmitting = true;
     try {
       const result = await this.ajax.request('asset/checkout', {
@@ -64,7 +61,7 @@ export default class AssetCheckoutFormComponent extends Component {
       switch (result.status) {
         case 'success':
           this.toast.success('Asset was successfully checked out.');
-          this.assetForm = EmberObject.create({});
+          this.assetForm = EmberObject.create({barcode: ''});
           await this.args.assets.update();
           this.args.onCheckOut?.(result.asset);
           break;
@@ -102,4 +99,21 @@ export default class AssetCheckoutFormComponent extends Component {
   closeHistory() {
     this.showHistory = false;
   }
+
+  /**
+   * Check to see if the barcode field is blank, and allow the navigation to be tabbed away.
+   *
+   * @param resume
+   */
+
+  @action
+  checkForBlankOnNavigate(resume) {
+    if (this.assetForm.barcode.trim() === '') {
+      resume();
+      return;
+    }
+
+    this.modal.info('Asset not checked out', 'A barcode was entered, yet was not checked out. Either complete the check out process, or blank the barcode field before clicking on another tab.');
+  }
+
 }
