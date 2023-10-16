@@ -29,9 +29,10 @@ export class HqTodoTask {
   @tracked ignore = false;
   @tracked message;
 
-  constructor(task, ignore = false) {
+  constructor(task, ignore = false, blink = false) {
     this.task = task;
     this.message = HqTodoLabels[task];
     this.ignore = ignore;
+    this.blink = blink;
   }
 }

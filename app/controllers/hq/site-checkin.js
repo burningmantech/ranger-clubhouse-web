@@ -16,7 +16,7 @@ export default class HqSiteCheckinController extends ClubhouseController {
     return this.assets.filter((asset) => !asset.checked_in);
   }
 
-  get isPersonDirtTrained() {
+  get inPersonTrainingPassed() {
     if (this.person.status === NON_RANGER) {
       return true;
     }
