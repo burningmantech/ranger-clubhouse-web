@@ -62,7 +62,7 @@
             work
             shifts.
         </UiNotice>
-    {{else if @hasUnverifiedTimesheet}}
+    {{else if @hasUnreviewedTimesheet}}
         <UiNotice @icon="hand" @type="danger" @title="Outstanding Tasks">
             One or more timesheet entries has to be reviewed FIRST before a shift can be started.
         </UiNotice>

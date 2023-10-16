@@ -20,7 +20,7 @@ export default class HqTimesheetVerificationComponent extends Component {
    * @returns {boolean}
    */
 
-  get hasUnverifiedTimesheet() {
+  get hasUnreviewedTimesheet() {
     return !!this.args.unverifiedTimesheets.find((t) => (t.isUnverified && !t.isIgnoring));
   }
 
@@ -38,7 +38,7 @@ export default class HqTimesheetVerificationComponent extends Component {
     try {
       await entry.save();
       this.toast.success(`Timesheet was successfully ${isVerified ? 'un-verified' : 'marked as verified'}.`);
-      if (!this.hasUnverifiedTimesheet) {
+      if (!this.hasUnreviewedTimesheet) {
         this.args.completeTodo(HQ_TODO_VERIFY_TIMESHEET);
       }
     } catch (response) {
@@ -68,7 +68,7 @@ export default class HqTimesheetVerificationComponent extends Component {
   ignoreEntry(entry) {
     entry.isIgnoring = true;
 
-    if (!this.hasUnverifiedTimesheet) {
+    if (!this.hasUnreviewedTimesheet) {
       this.args.completeTodo(HQ_TODO_VERIFY_TIMESHEET);
     }
   }
@@ -103,7 +103,7 @@ export default class HqTimesheetVerificationComponent extends Component {
       this.entry.additional_notes = null; // pseudo field, not cleared on save
       this.showCorrectionForm = false;
       this.toast.success('Correction request successfully submitted.');
-      if (!this.hasUnverifiedTimesheet) {
+      if (!this.hasUnreviewedTimesheet) {
         this.args.completeTodo(HQ_TODO_VERIFY_TIMESHEET);
       }
     } catch (response) {

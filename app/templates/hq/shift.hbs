@@ -60,8 +60,8 @@
     <nav.item @paneId="timesheet-verification" @icon="list">
       <div>
         Timesheet Review
-        {{#if this.unverifiedTimesheetCount}}
-          <span class="ms-1 text-danger">({{pluralize this.unverifiedTimesheetCount "entry"}})</span>
+        {{#if this.unreviewedTimesheetCount}}
+          <span class="ms-1 text-danger">({{pluralize this.unreviewedTimesheetCount "entry"}})</span>
         {{else}}
           <div class="ms-1 text-muted">(not needed yet)</div>
         {{/if}}
@@ -100,7 +100,7 @@
                        @timesheets={{this.timesheets}}
                        @person={{this.person}}
                        @upcomingSlots={{this.upcomingSlots}}
-                       @hasUnverifiedTimesheet={{this.hasUnverifiedTimesheet}}
+                       @hasUnreviewedTimesheet={{this.hasUnreviewedTimesheet}}
                        @startShiftNotify={{this.startShiftNotify}}
                        @endShiftNotify={{this.endShiftNotify}}
                        @onDutyEntry={{this.onDutyEntry}}
@@ -202,7 +202,7 @@
                 <li>{{pluralize this.assetsCheckedOut.length "asset"}} (radios, gear, etc.) not collected.</li>
               {{/if}}
               {{#if this.unverifiedTimesheets}}
-                <li>{{pluralize this.unverifiedTimesheets.length "timesheet entry"}} not verified.</li>
+                <li>{{pluralize this.unverifiedTimesheets.length "timesheet entry"}} not reviewed.</li>
               {{/if}}
             </ul>
             You may choose to ignore this warning and proceed to mark this person off site. However, you really should
