@@ -16,7 +16,7 @@ export default class HqShiftController extends ClubhouseController {
   @tracked isMarkingOffSite = false;
 
   @tracked timesheets;
- // @tracked unverifiedTimesheets = [];
+  // @tracked unverifiedTimesheets = [];
   @tracked onDutyEntry;
 
   @tracked assets;
@@ -55,7 +55,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get hasUnreviewedTimesheet() {
-    return !!this.unverifiedTimesheets.find((t) =>!t.isIgnoring);
+    return !!this.unverifiedTimesheets.find((t) => !t.isIgnoring);
   }
 
   /**
@@ -65,7 +65,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get unreviewedTimesheetCount() {
-    return this.unverifiedTimesheets.filter((t) =>!t.isIgnoring).length;
+    return this.unverifiedTimesheets.filter((t) => !t.isIgnoring).length;
   }
 
   /**
@@ -119,7 +119,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get shiftRadios() {
-   return this.assetsCheckedOut.filter((a) => a.asset.description === TYPE_RADIO && !a.asset.perm_assign).length;
+    return this.assetsCheckedOut.filter((a) => a.asset.description === TYPE_RADIO && !a.asset.perm_assign).length;
   }
 
   /**
@@ -188,7 +188,7 @@ export default class HqShiftController extends ClubhouseController {
       if (timesheet) {
         this.completeTodo(HQ_TODO_END_SHIFT);
         this.addTodo(HQ_TODO_VERIFY_TIMESHEET);
-        const { eventPeriods, eventInfo: { event_period } } = this;
+        const {eventPeriods, eventInfo: {event_period}} = this;
         if (eventPeriods[event_period].hasPass) {
           this.addTodo(HQ_TODO_MEAL_POG_NONE, true);
         } else {
@@ -319,7 +319,7 @@ export default class HqShiftController extends ClubhouseController {
    * @param {string} task
    */
 
-  addTodo(task,  ignore = false) {
+  addTodo(task, ignore = false) {
     const existing = this.todos.find((t) => t.task === task);
 
     if (existing) {
@@ -346,5 +346,19 @@ export default class HqShiftController extends ClubhouseController {
 
   get todoCount() {
     return this.todos.filter((t) => !t.completed && !t.ignore).length;
+  }
+
+  @action
+  checkAssetCheckout(activeTabId, wantTabId, navigate) {
+    if (activeTabId === 'assets') {
+      this.assetCallback(navigate);
+    } else {
+      navigate();
+    }
+  }
+
+  @action
+  registerAssetCallback(callback) {
+    this.assetCallback = callback;
   }
 }

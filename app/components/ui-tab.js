@@ -15,6 +15,16 @@ export default class UiTabComponent extends BsTab {
     if (event) {
       event.preventDefault();
     }
+
+    const {checkTabNavigation} = this;
+    if (checkTabNavigation) {
+      checkTabNavigation(this.isActiveId, id, () => this._continueSelect(id));
+    } else {
+      this._continueSelect(id);
+    }
+  }
+
+  _continueSelect(id) {
     super.select(id);
 
     // Record when the user clicks on a tab.

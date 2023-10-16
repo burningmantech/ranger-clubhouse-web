@@ -1,6 +1,6 @@
 <ChForm @formId="checkout"
         @formFor={{this.assetForm}}
-        @validator={{this.assetValidations}}
+        @changeSet={{false}}
         @onSubmit={{this.checkoutAsset}} as |f|>
   <FormRow>
     <f.text @name="barcode"
