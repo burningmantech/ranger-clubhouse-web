@@ -10,3 +10,15 @@
 button.btn-timesheet:not(:last-child) {
   margin-right: 1vw;
 }
+
+.hq-todo-blink {
+  animation: todo-blinker 2s linear infinite;
+  color: #ff0000;
+}
+
+@keyframes todo-blinker {
+   50% {
+     color: #ee7d7d;
+     opacity: 60%;
+  }
+}

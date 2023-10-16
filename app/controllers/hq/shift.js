@@ -5,7 +5,7 @@ import {ALPHA, BURN_PERIMETER} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 import {
   HQ_TODO_COLLECT_RADIO,
-  HQ_TODO_END_SHIFT, HQ_TODO_ISSUE_RADIO, HQ_TODO_MEAL_POG, HQ_TODO_MEAL_POG_NONE, HQ_TODO_NO_RADIO,
+  HQ_TODO_END_SHIFT, HQ_TODO_ISSUE_RADIO, HQ_TODO_MEAL_POG, HQ_TODO_MEAL_POG_NONE, HQ_TODO_NO_RADIO, HQ_TODO_OFF_SITE,
   HQ_TODO_START_SHIFT,
   HQ_TODO_VERIFY_TIMESHEET,
   HqTodoTask
@@ -27,6 +27,8 @@ export default class HqShiftController extends ClubhouseController {
   @tracked endedShiftEntry = null;
 
   @tracked firstTab;
+
+  @tracked askIfDone;
 
   correctionValidations = {
     additional_notes: [validatePresence(true)]
@@ -85,7 +87,7 @@ export default class HqShiftController extends ClubhouseController {
 
   @action
   onAssetCheckOut(asset) {
-    if (asset.description === TYPE_RADIO) {
+    if (asset.type === TYPE_RADIO) {
       this.completeTodo(HQ_TODO_ISSUE_RADIO);
     }
   }
@@ -96,7 +98,7 @@ export default class HqShiftController extends ClubhouseController {
 
   @action
   onAssetCheckIn() {
-    if (!this.shiftRadios) {
+    if (!this.collectRadioCount) {
       this.completeTodo(HQ_TODO_COLLECT_RADIO);
     }
   }
@@ -108,7 +110,38 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get radioCount() {
-    return this.assetsCheckedOut.filter((a) => a.asset.description === TYPE_RADIO).length;
+    return this.assetsCheckedOut.filter((a) => a.asset.type === TYPE_RADIO).length;
+  }
+
+  /**
+   * How many radios are to be collected?
+   *
+   * @return {number}
+   */
+
+  get collectRadioCount() {
+    return this.shiftRadios + this.collectEventRadiosAtShiftEnd;
+  }
+
+  get collectEventRadiosAtShiftEnd() {
+    let count = this.eventRadios;
+    if (count >= this.eventInfo.radio_max) {
+      count -= this.eventInfo.radio_max;
+    }
+
+    return count;
+  }
+
+  /**
+   * How many event radios to collect at the end of the event?
+   *
+   * @return {number}
+   */
+
+  get collectEventRadios() {
+    const count = this.eventRadios;
+
+    return (count > this.eventInfo.radio_max) ? this.eventInfo.radio_max : count;
   }
 
   /**
@@ -119,7 +152,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get shiftRadios() {
-    return this.assetsCheckedOut.filter((a) => a.asset.description === TYPE_RADIO && !a.asset.perm_assign).length;
+    return this.assetsCheckedOut.filter((a) => a.asset.type === TYPE_RADIO && !a.asset.perm_assign).length;
   }
 
   /**
@@ -129,7 +162,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get eventRadios() {
-    return this.assetsCheckedOut.filter((a) => a.asset.description === TYPE_RADIO && a.asset.perm_assign).length;
+    return this.assetsCheckedOut.filter((a) => a.asset.type === TYPE_RADIO && a.asset.perm_assign).length;
   }
 
   /**
@@ -160,6 +193,10 @@ export default class HqShiftController extends ClubhouseController {
   @action
   async startShiftNotify() {
     this.completeTodo(HQ_TODO_START_SHIFT);
+
+    if (this.askIfDone) {
+      this.askIfDone.ignore = true;
+    }
 
     try {
       await this.timesheets.update();
@@ -307,7 +344,12 @@ export default class HqShiftController extends ClubhouseController {
 
   @action
   completeTodo(task) {
-    const todo = this.todos.find((t) => t.task === task);
+    let todo;
+    if (task === HQ_TODO_OFF_SITE) {
+      todo = this.askIfDone;
+    } else {
+      todo = this.todos.find((t) => t.task === task);
+    }
     if (todo) {
       todo.completed = true;
     }
@@ -317,6 +359,7 @@ export default class HqShiftController extends ClubhouseController {
    * Add a todo list item
    *
    * @param {string} task
+   * @param {boolean} ignore
    */
 
   addTodo(task, ignore = false) {
@@ -345,12 +388,17 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get todoCount() {
-    return this.todos.filter((t) => !t.completed && !t.ignore).length;
+    let count = this.todos.filter((t) => !t.completed && !t.ignore).length;
+    if (this.askIfDone && !this.askIfDone.completed && !this.askIfDone.ignore) {
+      count++;
+    }
+
+    return count;
   }
 
   @action
   checkAssetCheckout(activeTabId, wantTabId, navigate) {
-    if (activeTabId === 'assets') {
+    if (activeTabId === 'assets' && this.assetCallback) {
       this.assetCallback(navigate);
     } else {
       navigate();

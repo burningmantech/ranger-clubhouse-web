@@ -3,10 +3,11 @@ import {set} from '@ember/object';
 import {action} from '@ember/object';
 import {service} from '@ember/service';
 import {DIRT, DIRT_SHINY_PENNY, TRAINING, BURN_PERIMETER, NVO_RANGER, DPW_RANGER} from 'clubhouse/constants/positions';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import {NON_RANGER} from 'clubhouse/constants/person_status';
 import {ADMIN, CAN_FORCE_SHIFT, TIMECARD_YEAR_ROUND} from 'clubhouse/constants/roles';
 import {TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
+import {TYPE_TRAINING} from "clubhouse/models/position";
 
 export default class ShiftCheckInOutComponent extends Component {
   @service ajax;
@@ -35,7 +36,7 @@ export default class ShiftCheckInOutComponent extends Component {
   @tracked showForceStartConfirm = false;
   @tracked forcePosition = null;
 
-  @tracked haveNoTrainingRequired = false;
+  @tracked noTrainingRequiredPositions;
 
   tooShortDuration = TOO_SHORT_DURATION;
 
@@ -44,12 +45,13 @@ export default class ShiftCheckInOutComponent extends Component {
 
     const {positions} = this.args;
 
-    this.haveNoTrainingRequired = !!positions.find((p) => p.no_training_required && p.active);
-    if (this.haveNoTrainingRequired && this.args.isSelfServe) {
-      this.activePositions = positions.filter(p => p.no_training_required && p.active);
+    this.noTrainingRequiredPositions = positions.filter((p) => p.no_training_required);
+    if (this.noTrainingRequiredPositions.length && this.args.isSelfServe) {
+      this.activePositions = this.noTrainingRequiredPositions;
     } else {
-      this.activePositions = positions.filter(p => p.active);
+      this.activePositions = positions;
     }
+
 
     // Mark imminent slots as trained or not.
     const {upcomingSlots} = this.args;
@@ -76,16 +78,12 @@ export default class ShiftCheckInOutComponent extends Component {
       let disqualified = null;
 
       if (pos.is_untrained) {
-        disqualified = 'UNTRAINED';
+        disqualified = `${pos.training_title} has not been passed.`;
       } else if (pos.is_unqualified) {
         disqualified = pos.unqualified_message;
       }
 
-      if (disqualified) {
-        title = `${title} (${disqualified})`;
-      }
-
-      return {id: pos.id, title};
+      return {id: pos.id, title, disqualified};
     });
 
     // hack for operator convenience - Dirt is the most common
@@ -108,14 +106,14 @@ export default class ShiftCheckInOutComponent extends Component {
 
     // Has the person gone through dirt training?
     if (this.args.person.status === NON_RANGER) {
-      this.isPersonDirtTrained = true;
+      this.inPersonTrainingPassed = true;
     } else {
       const {eventInfo} = this.args;
       if (eventInfo.online_course_only) {
         this.otOnly = true;
-        this.isPersonDirtTrained = eventInfo.online_course_passed;
+        this.inPersonTrainingPassed = eventInfo.online_course_passed;
       } else {
-        this.isPersonDirtTrained = !!eventInfo.trainings.find((training) => (training.position_id === TRAINING && training.status === 'pass'));
+        this.inPersonTrainingPassed = !!eventInfo.trainings.find((training) => (training.position_id === TRAINING && training.status === 'pass'));
       }
     }
 
@@ -151,8 +149,8 @@ export default class ShiftCheckInOutComponent extends Component {
   _startShift(positionId, slotId = null) {
     const position = this.activePositions.find((p) => +p.id === +positionId);
 
-    if (position.type === 'Training'
-      || (this.isPersonDirtTrained && !position.is_unqualified && !position.is_untrained)
+    if (position.type === TYPE_TRAINING
+      || (this.inPersonTrainingPassed && !position.is_unqualified && !position.is_untrained)
       || position.no_training_required) {
       this._signInPerson(position, slotId);
       return;
@@ -210,17 +208,6 @@ export default class ShiftCheckInOutComponent extends Component {
       const callsign = person.callsign;
       switch (result.status) {
         case 'success':
-          /*  if (result.forced) {
-              // Shift start was forced, let the user know what was overridden.
-              let reason;
-              if (result.unqualified_reason === 'untrained') {
-                reason = `has not completed '${result.required_training}'`;
-              } else {
-                reason = `is unqualified ('${result.unqualified_message}')`;
-              }
-              //this.modal.info('Sign In Forced', `WARNING: The person ${reason}. Because you are an admin or have the timesheet management role, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
-            }
-           */
           this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
 
           if (this.args.startShiftNotify) {
@@ -241,11 +228,11 @@ export default class ShiftCheckInOutComponent extends Component {
           break;
 
         case 'not-trained':
-          this.modal.info('Not Trained', `${callsign} has has not completed "${result.position_title}" and cannot be signed into the shift.`);
+          this.modal.info('Training Not Passed', `${callsign} has has not completed "${result.position_title}" and cannot be signed into the shift.`);
           break;
 
         case 'not-qualified':
-          this.modal.info('Not Qualified', `${callsign} has not meet one or more of the qualifiers needed to sign into the shift.<br>Reason: ${result.unqualified_message}`);
+          this.modal.info('Not Qualified', `${callsign} has not met one or more required qualifiers needed to sign in to the shift.<br>Reason: ${result.unqualified_message}`);
           break;
 
         default:
@@ -501,5 +488,17 @@ export default class ShiftCheckInOutComponent extends Component {
     this.showEarlyShiftConfirm = false;
     this._startShift(this.earlySlot.position_id, this.earlySlot.slot_id);
     this.earlySlot = null;
+  }
+
+  @cached
+  get selectedPosition() {
+    return this.signinPositions.find((p) => p.id === +this.signinPositionId);
+  }
+
+  @cached
+  get selectedPositionDisqualified() {
+    const position = this.selectedPosition;
+
+    return (!position || !position.disqualified) ? null : position.disqualified;
   }
 }

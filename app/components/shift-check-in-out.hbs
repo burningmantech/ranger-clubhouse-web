@@ -59,15 +59,14 @@
     {{#if (not @person.canStartShift)}}
         <UiNotice @icon="hand" @type="danger" @title="Status Issue">
             {{@person.callsign}} cannot start a shift because their status ({{@person.status}}) does not allow them to
-            work
-            shifts.
+            work shifts.
         </UiNotice>
     {{else if @hasUnreviewedTimesheet}}
         <UiNotice @icon="hand" @type="danger" @title="Outstanding Tasks">
             One or more timesheet entries has to be reviewed FIRST before a shift can be started.
         </UiNotice>
     {{else}}
-        {{#if this.isPersonDirtTrained}}
+        {{#if this.inPersonTrainingPassed}}
             {{#if @upcomingSlots.imminent}}
                 <p class="text-success">
                     {{pluralize @upcomingSlots.imminent.length "upcoming scheduled shift sign-up"}} found.
@@ -136,14 +135,13 @@
                                                 time while waiting to be deployed.
                                             </li>
                                             <li>
-                                                If this is a specialized shift (Mentors, Leads, Longs, Supervisors,
-                                                OODs, On Call, Shift
-                                                Command,
-                                                etc.), or if the person's cadre/team/manager has requested the person
-                                                start earlier than
-                                                scheduled, check in the person now. Rangers have to adapt to the
-                                                ever-changing situation on
-                                                playa.
+                                                If this is a specialized shift (e.g., Mentors, Leads, Longs,
+                                                Supervisors, OODs, On Call,
+                                                Shift Command, etc.), or if the person's cadre/team/manager has
+                                                requested the person start
+                                                earlier than scheduled, check in the person now. Rangers have to adapt
+                                                to the ever-changing
+                                                situation on playa.
                                             </li>
                                         </ul>
                                         <b>The recommendations are guidelines, not a hard set of
@@ -190,15 +188,29 @@
                     <p>
                         In case the person attended an In-Person Training earlier in the day, the trainers may be
                         delayed recording who passed the training. Have the HQ Short or Lead contact the trainers to
-                        verify the
-                        person attended and passed the training.
+                        verify the person attended and passed the training.
                     </p>
                     {{#if this.userCanForceCheckIn}}
                         You have the privileges to force a shift start.
                     {{else}}
-                        You do not have the privileges to force a shift start. A HQ Lead may be able to start the shift.
+                        You do not have the privileges to force a shift start. A HQ Short or Lead may be able to start
+                        the shift.
                     {{/if}}
                 </UiNotice>
+
+                {{#if this.noTrainingRequiredPositions}}
+                    <UiNotice @title="Has No Training Required Positions" @icon="thumbs-up" @type="success">
+                        <p>
+                        While {{@person.callsign}} has not passed an In-Person Training session, they do have
+                        positions which can be signed in to that do not require passing an In-Person Training.
+                            Select such a position and the Start Shift button will appear.
+                        </p>
+                        No training required position(s):<br>
+                        {{#each this.noTrainingRequiredPositions as |position idx|}}
+                            {{position.title}}{{if idx ", "}}
+                        {{/each}}
+                    </UiNotice>
+                {{/if}}
             {{/if}}
         {{/if}}
 
@@ -213,22 +225,35 @@
                                 @onChange={{this.updateShiftPosition}}/>
             </div>
             <div class="col-auto">
-                {{#if (or this.isPersonDirtTrained this.haveNoTrainingRequired)}}
+                {{#if this.selectedPosition.disqualified}}
+                    {{#if this.userCanForceCheckIn}}
+                        <UiButton @type="warning" @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
+                            Force Shift Start
+                        </UiButton>
+                    {{else}}
+                        <div class="text-danger mt-1">Shift start not allowed</div>
+                    {{/if}}
+                {{else}}
                     <UiButton @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
                         {{fa-icon "walking" right=2}} Start Shift
                     </UiButton>
-                {{else if this.userCanForceCheckIn}}
-                    <UiButton @type="warning" @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
-                        Force Shift Start
-                    </UiButton>
-                {{else}}
-                    <div class="text-danger mt-1">NOT IN-PERSON TRAINED - SHIFT START IS NOT ALLOWED</div>
                 {{/if}}
                 {{#if this.isSubmitting}}
                     <LoadingIndicator/>
                 {{/if}}
             </div>
         </FormRow>
+        {{#if this.selectedPositionDisqualified}}
+            <div class="text-danger mb-2">
+                The selected position, {{this.selectedPosition.title}}, should not be signed in to because:<br>
+                {{this.selectedPositionDisqualified}}
+            </div>
+            {{#if this.userCanForceCheckIn}}
+                <b>You do have the privileges to force the shift start.</b>
+            {{else}}
+                <b>Consult with the HQ Short or Lead if this is an error.</b>
+            {{/if}}
+        {{/if}}
     {{/if}}
 {{/if}}
 
@@ -286,13 +311,12 @@
             <p>
                 <b class="text-danger">
                     WARNING: {{@person.callsign}} has not meet all the qualifications to start
-                    a {{this.forcePosition.title}}
-                    shift
+                    a {{this.forcePosition.title}} shift
                 </b>
             </p>
             <ul>
                 {{#if
-                        (and (not this.isPersonDirtTrained) (not this.forcePosition.is_untrained) (not this.forcePosition.is_unqualified))}}
+                        (and (not this.inPersonTrainingPassed) (not this.forcePosition.is_untrained) (not this.forcePosition.is_unqualified))}}
                     <li>In-Person Training has not been completed.</li>
                 {{/if}}
                 {{#if this.forcePosition.is_untrained}}
@@ -310,8 +334,7 @@
             </p>
             <p>
                 Are you absolutely sure you want to sign in this person at this time? Check with the HQ Lead or Short if
-                in
-                doubt.
+                in doubt.
             </p>
         </Modal.body>
         <Modal.footer>

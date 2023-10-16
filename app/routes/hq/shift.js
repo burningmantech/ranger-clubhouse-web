@@ -44,12 +44,14 @@ export default class HqShiftRoute extends ClubhouseRoute {
     const {upcomingSlots} = model;
 
     if (!upcomingSlots.imminent.length && !upcomingSlots.upcoming.length) {
-      todos.push(new HqTodoTask(HQ_TODO_OFF_SITE));
+      controller.askIfDone = new HqTodoTask(HQ_TODO_OFF_SITE, false, true);
+    } else {
+      controller.askIfDone = null;
     }
 
     if (!controller.isOffDuty) {
       todos.push(new HqTodoTask(HQ_TODO_END_SHIFT));
-      if (controller.shiftRadios) {
+      if (controller.collectRadioCount) {
         todos.push(new HqTodoTask(HQ_TODO_COLLECT_RADIO));
       }
     } else {
