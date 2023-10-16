@@ -13,7 +13,6 @@ import {
 } from 'clubhouse/models/person-pog';
 import {EventPeriodLabels} from 'clubhouse/models/event-date';
 import {validatePresence} from 'ember-changeset-validations/validators';
-import {htmlSafe} from '@ember/template';
 import {
   MENTOR,
   MENTOR_APPRENTICE,
@@ -45,7 +44,12 @@ export default class HqPogsComponent extends Component {
   @tracked config;
   @tracked pog;
   @tracked pogToCancel;
+  @tracked pogToIssue;
+  @tracked pogIssueWarnings;
+  @tracked pogIssueInfo;
   @tracked pogs;
+
+  @tracked pogToEdit;
 
   pogValidations = {
     notes: [validatePresence(true)]
@@ -55,6 +59,10 @@ export default class HqPogsComponent extends Component {
     super(...arguments);
 
     this._loadPogs();
+  }
+
+  pogLabel(type) {
+    return PogLabels[type] ?? type;
   }
 
   /**
@@ -84,7 +92,7 @@ export default class HqPogsComponent extends Component {
 
   @action
   recordFullMealPog() {
-    this.createPog(POG_MEAL);
+    this.setupToIssue(POG_MEAL);
   }
 
   /**
@@ -93,7 +101,7 @@ export default class HqPogsComponent extends Component {
 
   @action
   recordHalfMealPog() {
-    this.createPog(POG_HALF_MEAL);
+    this.setupToIssue(POG_HALF_MEAL);
   }
 
   /**
@@ -102,68 +110,98 @@ export default class HqPogsComponent extends Component {
 
   @action
   recordShowerPog() {
-    this.createPog(POG_SHOWER);
+    this.setupToIssue(POG_SHOWER);
   }
 
   /**
    * Attempt to create a pog.
    *
    * @param {string} type
-   * @returns {Promise<void>}
    */
 
   @action
-  async createPog(type) {
+   setupToIssue(type) {
     let moreInfo = '';
-    let bmidWarning = '';
+    const warnings = [];
     const {callsign} = this.args.person;
     switch (type) {
       case POG_HALF_MEAL:
       case POG_MEAL:
         if (this.hasMealPass) {
-          bmidWarning = `<b class="text-danger">${callsign} has a BMID Meal Pass for the current event period.</b>`
+          warnings.push(`${callsign} has a BMID Meal Pass for the current event period.`);
         }
         break;
       case POG_SHOWER:
         if (this.args.showers) {
-          bmidWarning = `<b class="text-danger">Person already has a BMID with Wet Spot access.</b>`;
+          warnings.push(`${callsign} already has a BMID with Wet Spot access.`);
         }
         break;
     }
 
     if (type === POG_HALF_MEAL) {
-      moreInfo = '<span class="text-danger">Half Meal Pogs are tracked digitally. No physical pog is issued.</span>';
-    } else {
-      moreInfo = "Don't forget to hand over the physical pog";
+      warnings.push(`Half Meal Pogs are tracked digitally. No physical pog is issued.`);
     }
 
-    if (bmidWarning !== '') {
-      bmidWarning = `<p>${bmidWarning}</p>`;
+    this.pogIssueWarnings = warnings;
+    this.pogIssueInfo = moreInfo;
+    this.pogToIssue = type;
+    this.pogIssueForm = { notes: ''};
+   }
+
+  @action
+  async savePog(model) {
+    const type = this.pogToIssue;
+    const pog = this.store.createRecord('person-pog', {
+      person_id: this.args.person.id,
+      pog: type,
+      status: STATUS_ISSUED,
+      timesheet_id: this.args.endedShiftEntry?.id,
+      notes: model.notes
+    });
+
+    this.isSubmitting = true;
+    try {
+      await pog.save();
+      await this.pogs.update();
+      this.toast.success('Pog successfully created.');
+      this.pogToIssue = null;
+      if (type === POG_MEAL || type === POG_HALF_MEAL) {
+        this.args.onPogIssue?.();
+      }
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
     }
+  }
 
-    const pogLabel = PogLabels[type] ?? type;
-    this.modal.confirm(`Confirm ${pogLabel}`,
-      htmlSafe(
-        `${bmidWarning}<p>You are about issue a ${pogLabel}. Are you sure you want to do this?</p>${moreInfo}`),
-      async () => {
-        const pog = this.store.createRecord('person-pog', {
-          person_id: this.args.person.id,
-          pog: type,
-          status: STATUS_ISSUED,
-          timesheet_id: this.args.endedShiftEntry?.id,
-        });
+  @action
+  cancelPogIssue() {
+    this.pogToIssue = null;
+  }
 
-        try {
-          await pog.save();
-          await this.pogs.update();
-          this.toast.success('Pog successfully created.');
-          if (type === POG_MEAL || type === POG_HALF_MEAL) {
-            this.args.onPogIssue?.();
-          }
-        } catch (response) {
-          this.house.handleErrorResponse(response);
-        }
-      });
+  @action
+  editPog(pog) {
+    this.pogToEdit = pog;
+  }
+
+  @action
+  cancelPogEdit() {
+    this.pogToEdit = null;
+  }
+
+  @action
+  async updatePog(model) {
+    this.isSubmitting = true;
+    try {
+      await model.save();
+      this.toast.success('Pog successfully updated.');
+      this.pogToEdit = null;
+    } catch (response){
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   /**

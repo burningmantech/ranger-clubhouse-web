@@ -54,7 +54,7 @@ export default class HqShiftController extends ClubhouseController {
    * @returns {boolean}
    */
 
-  get hasUnverifiedTimesheet() {
+  get hasUnreviewedTimesheet() {
     return !!this.unverifiedTimesheets.find((t) =>!t.isIgnoring);
   }
 
@@ -64,7 +64,7 @@ export default class HqShiftController extends ClubhouseController {
    * @returns {number}
    */
 
-  get unverifiedTimesheetCount() {
+  get unreviewedTimesheetCount() {
     return this.unverifiedTimesheets.filter((t) =>!t.isIgnoring).length;
   }
 
@@ -259,7 +259,7 @@ export default class HqShiftController extends ClubhouseController {
       items++;
     }
 
-    if (this.unverifiedTimesheetCount) {
+    if (this.unreviewedTimesheetCount) {
       items++;
     }
 

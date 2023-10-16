@@ -13,10 +13,10 @@
           {{pluralize this.assetsCheckedOut.length "asset"}} has not been collected.
         </li>
       {{/if}}
-      {{#if this.unverifiedTimesheetCount}}
+      {{#if this.unreviewedTimesheetCount}}
         <li>
-          {{if (eq this.unverifiedTimesheetCount 1) "A timesheet entry has"
-               (concat  this.unverifiedTimesheetCount " timesheet entries have")}} not been verified.
+          {{if (eq this.unreviewedTimesheetCount 1) "A timesheet entry has"
+               (concat  this.unreviewedTimesheetCount " timesheet entries have")}} not been verified.
         </li>
       {{/if}}
     </ul>

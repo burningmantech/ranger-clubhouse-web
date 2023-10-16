@@ -4,12 +4,13 @@
   {{#if @endedShiftEntry}}
     <p>
     <div class="fs-5 mb-2">
-      The shift <i>{{@endedShiftEntry.position.title}}</i> worked {{shift-format @endedShiftEntry.on_duty @endedShiftEntry.off_duty}} was {{hour-minute-words @endedShiftEntry.duration}}
-      in length.
+      The shift <i>{{@endedShiftEntry.position.title}}</i> worked
+      {{shift-format @endedShiftEntry.on_duty @endedShiftEntry.off_duty}}
+      was {{hour-minute-words @endedShiftEntry.duration}} in length.
     </div>
     {{#if @endedShiftEntry.isUnverified}}
       <b class="text-danger">
-        The timesheet entry is unverified. Review the timesheet entry to ensure the worked shift duration is
+        The timesheet entry has not been reviewed. Review the timesheet entry to ensure the worked shift duration is
         accurate.
       </b>
     {{else if @endedShiftEntry.isPending}}
@@ -23,11 +24,11 @@
     <UiNotice @icon="hand-point-right" @type="secondary" @title="Has Meal Pass">
       {{@person.callsign}} has a BMID Meal Pass for the {{this.currentPeriodLabel}} period.
     </UiNotice>
-   {{else}}
+  {{else}}
     {{#if this.isMentor}}
       <div class="alert alert-danger fs-6">
-        {{fa-icon "hand-point-right" right=1}} {{@person.callsign}} is on a Mentor shift and will receive their meal pogs directly
-        from the Mentor Shack.
+        {{fa-icon "hand-point-right" right=1}} {{@person.callsign}} is on a Mentor shift and will receive their meal
+        pogs directly from the Mentor Shack.
       </div>
     {{/if}}
 
@@ -66,6 +67,7 @@
       <th>Status</th>
       <th>Issued On</th>
       <th>Issued By</th>
+      <th>Notes</th>
       <th>Action</th>
     </tr>
     </thead>
@@ -85,16 +87,24 @@
           <PersonLink @person={{pog.issued_by}} />
         </td>
         <td>
-          {{#if (and pog.isHalfMealPog pog.isIssued)}}
-            <UiButton @onClick={{fn this.redeemForFullMealPog pog}} @size="sm">
-              Redeem for Full Meal Pog
-            </UiButton>
-          {{else if (not pog.isCancelled)}}
-            <UiButton @onClick={{fn this.confirmPogCancel pog}} @size="sm" @type="secondary">
-              Cancel
-            </UiButton>
-          {{else}}
+          <PresentOrNot @value={{pog.notes}} @empty="-"/>
+        </td>
+        <td>
+          {{#if pog.isCancelled}}
             -
+          {{else}}
+            {{#if (and pog.isHalfMealPog pog.isIssued)}}
+              <UiButton @onClick={{fn this.redeemForFullMealPog pog}} @size="sm">
+                Redeem for Full Meal Pog
+              </UiButton>
+            {{else if (not pog.isCancelled)}}
+              <UiButton @onClick={{fn this.confirmPogCancel pog}} @size="sm" @type="secondary">
+                Cancel
+              </UiButton>
+            {{/if}}
+            <UiButton @onClick={{fn this.editPog pog}} @size="sm" @type="secondary">
+              Update Note
+            </UiButton>
           {{/if}}
         </td>
       </tr>
@@ -107,6 +117,48 @@
     {{/each}}
     </tbody>
   </table>
+{{/if}}
+
+{{#if this.pogToIssue}}
+  <ModalDialog as |Modal|>
+    <ChForm @formId="pog"
+            @changeSet={{false}}
+            @formFor={{this.pogIssueForm}}
+            @onSubmit={{this.savePog}} as |f|>
+      <Modal.title>Confirm {{this.pogLabel this.pogToIssue}}</Modal.title>
+      <Modal.body>
+        <p>
+          Are you sure you want to issue a {{this.pogLabel this.pogToIssue}}?
+        </p>
+        {{#if this.pogIssueWarnings}}
+          WARNING:
+          <ul>
+            {{#each this.pogIssueWarnings as |warning|}}
+              <li class="text-danger">{{warning}}</li>
+            {{/each}}
+          </ul>
+        {{/if}}
+        {{#if this.pogIssueInfo}}
+          <p>
+            {{this.pogIssueInfo}}
+          </p>
+        {{/if}}
+        <FormRow>
+          <f.textarea @name="notes"
+                      @label="Optional note to record with this pog:"
+                      @rows={{2}}
+                      @cols={{80}}
+          />
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Record {{this.pogLabel this.pogToIssue}}"/>
+        <UiButton @onClick={{this.cancelPogIssue}} @type="secondary">
+          Cancel
+        </UiButton>
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
 {{/if}}
 
 {{#if this.pogToCancel}}
@@ -136,6 +188,43 @@
         <f.submit @label="Cancel {{this.pogToCancel.pogLabel}}"/>
         <UiButton @onClick={{this.cancelCancelPog}} @type="secondary">
           Close Without Pog Cancel
+        </UiButton>
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.pogToEdit}}
+  <ModalDialog @onEscape={{this.cancelPogEdit}} as |Modal|>
+    <ChForm @formId="pog"
+            @formFor={{this.pogToEdit}}
+            @validator={{this.pogValidations}}
+            @onSubmit={{this.updatePog}} as |f|>
+      <Modal.title>Edit Pog {{this.pogType this.pogToEdit.pog}}</Modal.title>
+      <Modal.body>
+        <div class="d-flex mb-4">
+          <div class="me-4">
+            <b>Issued On</b><br>
+            {{shift-format this.pogToEdit.issued_at}}
+          </div>
+          <div>
+            <b>Pog Type</b><br>
+            {{this.pogToEdit.pogLabel}}
+          </div>
+        </div>
+        <FormRow>
+          <f.textarea @name="notes"
+                      @label="Update the pog note:"
+                      @rows={{2}}
+                      @cols={{80}}
+                      @autofocus={{true}}
+          />
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Update"/>
+        <UiButton @onClick={{this.cancelPogEdit}} @type="secondary">
+          Cancel
         </UiButton>
       </Modal.footer>
     </ChForm>
