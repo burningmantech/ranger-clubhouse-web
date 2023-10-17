@@ -41,6 +41,8 @@ export default class TimesheetModel extends Model {
   // Suppress any too short / too long duration warnings
   @attr('boolean', { defaultValue: false }) suppress_duration_warning;
 
+  @attr('boolean', { readOnly: true }) was_signin_forced;
+
   @tracked isIgnoring = false; // Used by the HQ window interface
   @tracked selected = false;
 

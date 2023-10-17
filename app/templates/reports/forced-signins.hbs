@@ -1,0 +1,49 @@
+<YearSelect @year={{this.year}} @title="Forced Sign-Ins Report"
+            @minYear={{2018}}
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}}
+/>
+<p>
+  This shows what shift sign-ins were forced and what blockers were overridden.
+</p>
+
+{{#if this.entries}}
+  <p>
+    <UiExportToCSVButton @onClick={{this.exportToCSV}} />
+  </p>
+  Showing {{pluralize this.entries.length "entry"}} for {{this.year}}
+  <table class="table table-width-auto table-striped table-hover">
+    <thead>
+    <tr>
+      <th>Person</th>
+      <th>Position</th>
+      <th>Shift Start</th>
+      <th>Forced By</th>
+      <th>Reason</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.entries as |entry|}}
+      <tr>
+        <td>
+          <PersonLink @person={{entry}} />
+        </td>
+        <td>
+          {{entry.position_title}}
+        </td>
+        <td>
+          {{shift-format entry.on_duty}}
+        </td>
+         <td>
+          <PersonLink @callsign={{entry.forced_by_callsign}} @personId={{entry.forced_by_id}} />
+        </td>
+        <td>
+          {{entry.reason}}
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <div class="text-danger">No forced sign-in entries found for {{this.year}}</div>
+{{/if}}
