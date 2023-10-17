@@ -1,6 +1,6 @@
 import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
-import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 import _ from "lodash";
 
 const CSV_COLUMNS = [
@@ -13,10 +13,10 @@ const CSV_COLUMNS = [
 ];
 
 const HOUR_OPTIONS = [
-  [ '1 hour', 1],
-  [ '6 hours', 6],
-  [ '12 hours', 12],
-  [ '24 hours', 24],
+  ['1 hour', 1],
+  ['6 hours', 6],
+  ['12 hours', 12],
+  ['24 hours', 24],
 ];
 
 export default class ReportsShiftDropController extends ClubhouseController {
@@ -73,10 +73,16 @@ export default class ReportsShiftDropController extends ClubhouseController {
 
     try {
       this.isSubmitting = true;
-      const {people} = await this.ajax.request('timesheet/shift-drop-report', { data: { year: this.year, position_ids }});
+      const {people} = await this.ajax.request('timesheet/shift-drop-report', {
+        data: {
+          year: this.year,
+          position_ids,
+          hours: this.hours
+        }
+      });
       this.haveResults = true;
       this.people = people;
-    } catch(response) {
+    } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
