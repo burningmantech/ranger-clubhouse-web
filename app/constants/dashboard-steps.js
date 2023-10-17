@@ -605,11 +605,12 @@ export const SIGN_RADIO_CHECKOUT_AGREEMENT = {
     }
 
 
-    let adj;
+    let adj, alpha = '';
     if (person.isNonRanger) {
       adj = 'Ranger volunteers';
     } else if (isPNV) {
       adj = 'Prospective Rangers'
+      alpha = ' You will be using a radio during your Alpha shift.';
     } else {
       adj = 'Rangers';
     }
@@ -622,7 +623,7 @@ export const SIGN_RADIO_CHECKOUT_AGREEMENT = {
       route: 'me.agreements',
       linkedMessage: {
         route: 'me.agreements',
-        prefix: htmlSafe(`All ${adj} must sign the Ranger Radio Checkout Agreement prior to checking out a radio from the Rangers.<br><br>Visit`),
+        prefix: htmlSafe(`All ${adj} must sign the Ranger Radio Checkout Agreement prior to checking out a radio from the Rangers.${alpha}<br><br>Visit`),
         text: 'Me > Radio Agreement',
         suffix: 'to review and agree to the Radio Checkout Agreement.'
       },

@@ -21,7 +21,7 @@
      {{@step.message}}
     {{/if}}
     {{#if @step.linkedMessage}}
-      &nbsp;{{@step.linkedMessage.prefix}}
+      {{@step.linkedMessage.prefix}}
       <LinkTo @route={{@step.linkedMessage.route}} disabled={{@isNotUser}}>{{@step.linkedMessage.text}}</LinkTo>
       {{@step.linkedMessage.suffix}}
     {{/if}}

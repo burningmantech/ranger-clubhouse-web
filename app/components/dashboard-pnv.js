@@ -14,7 +14,7 @@ import {
   WAITING
 } from "clubhouse/constants/dashboard";
 import * as DashboardStep from 'clubhouse/constants/dashboard-steps';
-import {PROSPECTIVE} from "../constants/person_status";
+import {BONKED, PROSPECTIVE, UBERBONKED} from "../constants/person_status";
 
 const SETUP_ACCOUNT_STEPS = [
   DashboardStep.UPLOAD_PHOTO,
@@ -36,7 +36,7 @@ const ALPHA_STEPS = [
   {
     name: 'Sign up for an Alpha shift',
     check({milestones, person}) {
-      if (person.status === 'bonked') {
+      if (person.status === BONKED || person.status === UBERBONKED) {
         return {result: SKIP};
       }
 
@@ -57,7 +57,7 @@ const ALPHA_STEPS = [
           route: 'me.schedule',
           linkedMessage: {
             route: 'me.schedule',
-            prefix: 'Visit',
+            prefix: htmlSafe('Alpha shifts are only available Saturday (the day before the gate opens), Sunday, Monday, and Tuesday. No shifts are offered later in the week.<br><br>Visit '),
             text: 'Me > Schedule / Sign Up',
             suffix: 'to sign up for an Alpha shift.'
           }
@@ -74,7 +74,7 @@ const ALPHA_STEPS = [
   {
     name: 'Attend your Alpha shift',
     check({milestones, person}) {
-      if (person.status === 'bonked') {
+      if (person.status === BONKED || person.status === UBERBONKED) {
         return {
           result: BLOCKED,
           message: 'You did not pass your Alpha shift. You are unable to sign up for Ranger shifts this season.',
@@ -88,7 +88,7 @@ const ALPHA_STEPS = [
             message: htmlSafe(`<p>Please read "<a href="${milestones.alpha_shift_prep_link}" target="_blank" rel="noopener noreferrer">Becoming a Ranger: On-playa Alpha Shifts</a>"`
               + ` on the Ranger website.</p>Your Alpha shift starts ${dayjs(milestones.alpha_shift.begins).format('ddd MMM DD [@] HH:mm')}.`
               + `<p><b class="text-danger">ARRIVE 30 MINUTES EARLY. Late arrivals will be turned away.</b></p>`
-              + `<p>Check-in at the Hat Rack located at Ranger HQ, 5:45 &amp; the Esplanda close to Center Camp.</p>`
+              + `<p>Check-in at the Hat Rack located at Ranger HQ, 5:45 &amp; the Esplanade close to Center Camp.</p>`
               + `If you know you won't be able to make your Alpha shift please email the Mentor Cadre or stop by Ranger HQ on playa.`),
             email: 'MentorEmail'
           };
