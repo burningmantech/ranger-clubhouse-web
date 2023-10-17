@@ -20,9 +20,8 @@ Showing {{this.viewGroupCorrections.length}} of {{pluralize this.requests.length
     <th>Callsign</th>
     <th>Type</th>
     <th>Position</th>
-    <th>On Duty</th>
-    <th>Off Duty</th>
     <th>Time</th>
+    <th>Duration</th>
     <th>Credits</th>
   </tr>
   </thead>
@@ -39,10 +38,9 @@ Showing {{this.viewGroupCorrections.length}} of {{pluralize this.requests.length
         </td>
         <td>{{if request.is_missing "Missing Entry" "Correction"}}</td>
         <td>{{request.position.title}}</td>
-        <td>{{shift-format request.on_duty}}</td>
-        <td>{{shift-format request.off_duty}}</td>
-        <td>{{hour-minute-format request.duration}}</td>
-        <td>{{credits-format request.credits}}</td>
+        <td>{{shift-format request.on_duty request.off_duty}}</td>
+        <td class="text-end">{{hour-minute-format request.duration}}</td>
+        <td class="text-end">{{credits-format request.credits}}</td>
       </tr>
     {{/each}}
   {{else}}

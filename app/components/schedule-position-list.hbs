@@ -26,8 +26,8 @@
         <p>
           {{#if this.needsFullDayTraining}}
             <b>
-              Because you are {{this.personStatus}}, you must attend the <u class="text-danger">FULL DAY</u> In-Person
-              Training.
+              Because you are {{this.personStatus}}, you MUST attend the <u class="text-danger">FULL DAY</u>
+              In-Person Training.
             </b>
           {{else}}
             Since you have 2 or more years experience, you may choose to attend only the second
@@ -38,12 +38,30 @@
         <p>
           Additional training sessions will be posted through the end of Spring.
         </p>
+      {{else if this.isAlphaPosition}}
+        <p>
+          Note: Alpha shifts are only offered on Saturday (the day before the gate opens), Sunday, Monday, and Tuesday.
+          No other shifts are offered later in the week.
+        </p>
+        <p>
+          <b class="text-danger">ARRIVE 30 MINUTES EARLY for your Alpha shift. You be turned away if you arrive
+            after the start time.</b>
+        </p>
+        <p>
+          Check-in at the Hat Rack located at Ranger HQ, 5:45 &amp; the Esplanade close to Center Camp.
+        </p>
+        <p>
+          <b>Are you on playa and know you won't be able to make your Alpha shift?</b> Email the Mentor Cadre or stop
+          by Ranger HQ on playa to see if another shift can be attended.
+        </p>
       {{/if}}
       {{#if this.haveNoAppreciationSlots}}
-        <NoAppreciateIcon/> = the shift hours will not count towards provisions &amp; appreciations.<br>
+        <NoAppreciateIcon/>
+        = the shift hours will not count towards provisions &amp; appreciations.<br>
       {{/if}}
       {{#if this.haveShiftWithAdditionalInfo}}
-          <InfoIcon/> = More shift information available, click on the icon and/or text.<br>
+        <InfoIcon/>
+        = More shift information available, click on the icon and/or text.<br>
       {{/if}}
       {{#if this.haveOverlapping}}
         <div class="mt-1 text-danger">

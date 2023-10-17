@@ -1,6 +1,8 @@
 import Service from '@ember/service';
 import {service} from '@ember/service';
 import {set} from '@ember/object';
+import {shiftFormat} from 'clubhouse/helpers/shift-format';
+
 import ModalMultipleEnrollmentComponent from 'clubhouse/components/modal-multiple-enrollment';
 import ModalMissingRequirementsComponent from 'clubhouse/components/modal-missing-requirements';
 import ModalConfirmMultipleEnrollmentComponent from 'clubhouse/components/modal-confirm-multiple-enrollment';
@@ -228,7 +230,13 @@ export default class ShiftManageService extends Service {
   async checkDateTime(position_id, start, finished, callback) {
     let status, begins, ends, start_status, finished_status;
     try {
-      ({ status, begins, ends, start_status, finished_status } = await this.ajax.request('slot/check-datetime', {data: {position_id, start, finished }}));
+      ({
+        status,
+        begins,
+        ends,
+        start_status,
+        finished_status
+      } = await this.ajax.request('slot/check-datetime', {data: {position_id, start, finished}}));
     } catch (response) {
       this.house.handleErrorResponse(response);
       return;
@@ -249,16 +257,15 @@ export default class ShiftManageService extends Service {
     this.modal.confirm('Date(s) might be out of range', message, callback);
   }
 
-  alertRange(label, date, status, begins, ends)
-  {
+  alertRange(label, date, status, begins, ends) {
     if (status === 'success') {
       return '';
     }
 
     if (status === 'before-begins') {
-      return `<li>The ${label} time ${date} is before the first shift starting on ${begins}.</li>`;
+      return `<li >The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is BEFORE the first shift</b> starting on ${shiftFormat([begins], {})}.</li>`;
     } else {
-      return `<li>The ${label} time ${date} is after the last shift ending on ${ends}.</li>`;
+      return `<li>The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is AFTER the last shift</b> ending on ${shiftFormat([ends], {})}.</li>`;
     }
   }
 }
