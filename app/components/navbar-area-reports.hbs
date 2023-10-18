@@ -24,12 +24,15 @@
     <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-totals" @item="Timesheet Totals"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-by-callsign" @item="Timesheet By Callsign"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-by-position" @item="Timesheet By Position"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-correction-requests" @item="Corrections Requests"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-unconfirmed" @item="Timesheet Unconfirmed"/>
-    {{#if (has-role "timesheet-management")}}
-      <NavbarMenuItem @menu={{menu}} @route="admin.timesheet-sanity-checker" @item="Timesheet Sanity Checker"/>
-    {{/if}}
   </NavbarMenuSection>
+  {{#if (has-role "admin" "timesheet-management")}}
+  <NavbarMenuSection @section="Timesheet Corrections">
+      <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-correction-requests" @item="Corrections Requests"/>
+      <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-unconfirmed" @item="Timesheet Unconfirmed"/>
+      <NavbarMenuItem @menu={{menu}} @route="admin.timesheet-sanity-checker" @item="Timesheet Sanity Checker"/>
+      <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-correction-stats" @item="Correction Statistics"/>
+  </NavbarMenuSection>
+  {{/if}}
   <NavbarMenuSection @section="Assets">
     <NavbarMenuItem @menu={{menu}} @route="reports.assets-outstanding" @item="Assets Outstanding"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.asset-history" @item="Non-Radio Asset History"/>
