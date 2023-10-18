@@ -1,0 +1,175 @@
+<YearSelect @title="Timesheet Correction Statistics"
+            @year={{this.year}}
+            @minYear={{2018}}
+            @skipPandemic={{true}}
+            @onChange={{action (mut this.year)}}
+/>
+
+<p>
+  Entries submitted and corrected by their owners are excluded.
+</p>
+<p>
+  {{pluralize this.statistics.timesheet_total "timesheet entry"}} are present for {{this.year}}.
+</p>
+
+<div class="d-flex">
+  <div class="me-4">
+    <h4>Timesheet Correction Requests</h4>
+    <table class="table table-width-auto">
+      <tbody>
+      <tr>
+        <th>Approved</th>
+        <td class="text-end">{{this.statistics.correction_requests.approved}}</td>
+      </tr>
+      <tr>
+        <th>Rejected</th>
+        <td class="text-end">{{this.statistics.correction_requests.rejected}}</td>
+      </tr>
+      <tr>
+        <th>Entries Deleted</th>
+        <td class="text-end">{{this.statistics.entries_deleted}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <h4>Missing Timesheet Requests</h4>
+    <table class="table table-width-auto mb-3">
+      <tbody>
+      <tr>
+        <th>Total Requests</th>
+        <td class="text-end">{{this.statistics.missing_requests.total}}</td>
+      </tr>
+      <tr>
+        <th>Corrections Approved</th>
+        <td class="text-end">{{this.statistics.missing_requests.approved}}</td>
+      </tr>
+      <tr>
+        <th>Corrections Rejected</th>
+        <td class="text-end">{{this.statistics.missing_requests.rejected}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="d-flex">
+  <div class="me-4">
+    <h4>Top Timesheet Position Corrections</h4>
+    <table class="table table-width-auto table-hover table-striped">
+      <thead>
+      <tr>
+        <th>Position</th>
+        <th class="text-end">Total</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.statistics.correction_requests.top_positions as |position|}}
+        <tr>
+          <td>{{position.title}}</td>
+          <td class="text-end">{{position.total}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </div>
+  <div class="me-4">
+    <h4>Top Timesheet Correction Submitters</h4>
+    <table class="table table-width-auto table-hover table-striped">
+      <thead>
+      <tr>
+        <th>Person</th>
+        <th class="text-end">Total</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.statistics.correction_requests.top_people as |person|}}
+        <tr>
+          <td>
+            <PersonLink @person={{person}} @page="timesheet" />
+          </td>
+          <td class="text-end">{{person.total}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="me-4">
+    <h4>Top Missing Position Requests</h4>
+    <table class="table table-width-auto table-hover table-striped">
+      <thead>
+      <tr>
+        <th>Position</th>
+        <th class="text-end">Total</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.statistics.missing_requests.top_positions as |position|}}
+        <tr>
+          <td>{{position.title}}</td>
+          <td class="text-end">{{position.total}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <h4>Top Missing Request Submitters</h4>
+    <table class="table table-width-auto table-hover table-striped">
+      <thead>
+      <tr>
+        <th>Person</th>
+        <th class="text-end">Total</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.statistics.missing_requests.top_people as |person|}}
+        <tr>
+          <td>
+            <PersonLink @person={{person}} @page="timesheet" />
+          </td>
+          <td class="text-end">{{person.total}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </table>
+
+  </div>
+
+</div>
+
+<h4>Reviewers</h4>
+<table class="table table-width-auto table-striped table-hover">
+  <thead>
+  <tr>
+    <th>Callsign</th>
+    <th class="text-end">Corrections<br>Approved</th>
+    <th class="text-end">Corrections<br>Rejected</th>
+    <th class="text-end">Corrections<br>Total</th>
+    <th class="text-end">Missing<br>Approvals</th>
+    <th class="text-end">Missing<br>Rejections</th>
+    <th class="text-end">Missing<br>Total</th>
+    <th class="text-end">Grand<br>Total</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.statistics.reviewers as |person|}}
+    <tr>
+      <td>
+        <PersonLink @person={{person}} />
+      </td>
+      <td class="text-end">{{person.corrections_approved}}</td>
+      <td class="text-end">{{person.corrections_rejected}}</td>
+      <td class="text-end">{{person.corrections_total}}</td>
+      <td class="text-end">{{person.missing_approved}}</td>
+      <td class="text-end">{{person.missing_rejected}}</td>
+      <td class="text-end">{{person.missing_total}}</td>
+      <td class="text-end">{{person.grand_total}}</td>
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
+
+

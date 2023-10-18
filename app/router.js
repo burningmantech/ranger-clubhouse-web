@@ -227,6 +227,7 @@ Router.map(function () {
     this.route('vehicle-registry');
     this.route('shift-drop');
     this.route('forced-signins');
+    this.route('timesheet-correction-stats');
   });
 
   this.route('vc', function () {
