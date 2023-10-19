@@ -29,6 +29,7 @@ export default class MeTimesheetRoute extends ClubhouseRoute {
 
     data.timesheetSummary = (await this.ajax.request(`person/${person_id}/timesheet-summary`, {data: {year}})).summary;
     data.timesheets = await this.store.query('timesheet', queryParams);
+    data.eventInfo = (await this.ajax.request(`person/${person_id}/event-info`, { data: { year } })).event_info;
 
     data.timecardYearRound = this.session.hasRole(TIMECARD_YEAR_ROUND);
 
@@ -42,7 +43,6 @@ export default class MeTimesheetRoute extends ClubhouseRoute {
       data.positions = (await this.ajax.request(`person/${person_id}/positions`, {data: {include_mentee: 1}})).positions;
 
       if (data.timecardYearRound) {
-        data.eventInfo = (await this.ajax.request(`person/${person_id}/event-info`, { data: { year } })).event_info;
         timesheetInfo.correction_enabled = true;
       }
     } else {
@@ -58,6 +58,7 @@ export default class MeTimesheetRoute extends ClubhouseRoute {
     controller.finalConfirmation = model.timesheetInfo.timesheet_confirmed;
     controller.confirmedAt = model.timesheetInfo.timesheet_confirmed_at;
     controller.isCurrentYear = currentYear() === +model.year;
+    controller.askForFinalConfirmation = (model.eventInfo.event_period !== 'before-event');
   }
 
   resetController(controller, isExiting) {

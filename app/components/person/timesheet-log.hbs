@@ -6,26 +6,25 @@
   <LoadingIndicator @text="Loading timesheet audit log"/>
 {{else}}
   {{#each this.logs as |entry|}}
-    <UiSection>
-      <:title>
+    <UiAccordion as |Accordion|>
+      <Accordion.title>
         #{{entry.timesheet_id}}
         {{#if entry.deleted}}
           <span class="text-danger mx-1">DELETED</span>
         {{/if}}
         {{#if entry.timesheet}}
           {{entry.timesheet.position_title}}:
-          {{shift-format entry.timesheet.on_duty}} -
           {{#if entry.timesheet.off_duty}}
-            {{shift-format entry.timesheet.off_duty}}
+            {{shift-format entry.timesheet.on_duty entry.timesheet.off_duty}}
           {{else}}
-            <i class="text-danger">Still On Duty</i>
+            {{shift-format entry.timesheet.on_duty}} - <i class="text-danger">Still On Duty</i>
           {{/if}}
         {{else}}
           <b class="text-danger">Timesheet association failure</b>
         {{/if}}
-      </:title>
+      </Accordion.title>
 
-      <:body>
+      <Accordion.body>
         <table class="table table-sm table-striped table-hover max-width-900">
           <thead>
           <tr>
@@ -61,34 +60,37 @@
                     {{data.message}}<br>
                   {{/if}}
                   {{#if data.forced}}
-                    <span class="text-danger">Forced - unqualified "{{data.forced.message}}"</span><br>
+                    <span class="text-danger">Forced - Unqualified "{{data.forced.message}}"</span><br>
                   {{/if}}
                   {{#if (eq log.action "update")}}
                     {{#if data.review_status}}
-                      Status update {{get data.review_status 0}} &rarr; {{get data.review_status 1}}<br>
+                      <span class="me-2">Status update:</span>
+                      {{get data.review_status 0}} &rarr; {{get data.review_status 1}}<br>
                     {{/if}}
                     {{#if data.position_id}}
-                      Position update {{get (get data.position_id 0) 'title'}} &rarr; {{get (get data.position_id 1)
-                                                                                            'title'}}<br>
+                      <span class="me-2">Position update:</span>
+                      {{get (get data.position_id 0) 'title'}} &rarr; {{get (get data.position_id 1) 'title'}}<br>
                     {{/if}}
                     {{#if data.on_duty}}
-                      On duty update {{shift-format (get data.on_duty 0)}} &rarr; {{shift-format (get data.on_duty 1)}}
-                      <br>
+                      <span class="me-2">On Duty update:</span>
+                      {{shift-format (get data.on_duty 0)}} &rarr; {{shift-format (get data.on_duty 1)}}<br>
                     {{/if}}
                     {{#if data.off_duty}}
-                      Off duty update {{shift-format (get data.off_duty 0)}} &rarr;
-                      {{shift-format (get data.off_duty 1)}}
-                      <br>
+                      <span class="me-2">Off Duty update:</span>
+                      {{shift-format (get data.off_duty 0)}} &rarr; {{shift-format (get data.off_duty 1)}}<br>
                     {{/if}}
                   {{else}}
                     {{#if data.position_title}}
-                      Position {{data.position_title}}<br>
+                      <span class="me-2">Position:</span>
+                      {{data.position_title}}<br>
                     {{/if}}
                     {{#if data.on_duty}}
-                      On duty {{shift-format data.on_duty}}<br>
+                      <span class="me-2">On Duty:</span>
+                      {{shift-format data.on_duty}}<br>
                     {{/if}}
                     {{#if data.off_duty}}
-                      Off duty {{shift-format data.off_duty}}<br>
+                      <span class="me-2">Off Duty:</span>
+                      {{shift-format data.off_duty}}<br>
                     {{/if}}
                   {{/if}}
                   {{#if data.notes}}
@@ -109,8 +111,8 @@
           {{/each}}
           </tbody>
         </table>
-      </:body>
-    </UiSection>
+      </Accordion.body>
+    </UiAccordion>
   {{else}}
     <p>
       <b class="text-danger">
@@ -124,9 +126,9 @@
   {{/each}}
 
   {{#if (gte @year 2018)}}
-    <UiSection>
-      <:title>Other Timesheet Actions</:title>
-      <:body>
+    <UiAccordion as |Accordion|>
+      <Accordion.title>Other Timesheet Actions</Accordion.title>
+      <Accordion.body>
         <table class="table table-sm table-striped table-hover max-width-900">
           <thead>
           <tr>
@@ -145,7 +147,7 @@
               </td>
               <td class="timesheetlog-message">
                 <b>
-                  {{get this.actionLabels log.action}}
+                  {{this.actionLabel log.action}}
                   {{#if log.data.via}}
                     via
                     {{#if (eq log.data.via "bulk-upload")}}
@@ -170,7 +172,7 @@
           {{/each}}
           </tbody>
         </table>
-      </:body>
-    </UiSection>
+      </Accordion.body>
+    </UiAccordion>
   {{/if}}
 {{/if}}
