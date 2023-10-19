@@ -26,10 +26,17 @@ export default class MeTimesheetController extends ClubhouseController {
   @tracked isCurrentYear;
 
 
+  /**
+   * Count any unverified (status unverified or approved) timesheet, and any still on duty
+   * timesheet entries.
+   *
+   * @returns {number}
+   */
+
   @cached
   get unverifiedCount() {
-    return countIf(this.timesheets, (ts) => ts.isUnverified) +
-      (this.timesheets.find((ts) => !ts.off_duty) ? 1 : 0);
+    return countIf(this.timesheets, (ts) => ts.isUnverified)
+      + (this.timesheets.find((t) => !t.off_duty) ? 1 : 0);
   }
 
   @cached
@@ -86,21 +93,25 @@ export default class MeTimesheetController extends ClubhouseController {
   }
 
   @action
-  confirmAction() {
+  async confirmAction() {
     this.isSubmitting = true;
 
-    this.ajax.request(`timesheet/confirm`, {
-      method: 'POST',
-      data: {person_id: this.session.userId, confirmed: 1}
-    }).then(({confirm_info}) => {
+    try {
+      const {confirm_info} = await this.ajax.request(`timesheet/confirm`, {
+        method: 'POST',
+        data: {person_id: this.session.userId, confirmed: 1}
+      });
       // Update the confirmed results
       this.finalConfirmation = confirm_info.timesheet_confirmed;
       this.confirmedAt = confirm_info.timesheet_confirmed_at;
       this.showFinalConfirmation = false;
       this.toast.success(`Your timesheet has been marked as CONFIRMED.`);
       window.scrollTo(0, 0);
-    }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    } catch (response) {
+      this.house.handleErrorResponse(response)
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action

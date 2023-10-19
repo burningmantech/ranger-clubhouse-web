@@ -35,19 +35,19 @@
           {{#if this.correctionsEnabled}}
             <div class="timesheet-row-header {{this.timesheetRowClass ts}}">
               {{#if ts.stillOnDuty}}
-                {{fa-icon "ban"}} The entry cannot be verified or a correction submitted
+                {{fa-icon "ban" right=1}} The entry cannot be verified or a correction submitted
                 until after the shift has ended.
               {{else if ts.isVerified}}
-                {{fa-icon "check"}} Entry was verified as correct on {{shift-format ts.verified_at}} (Pacific)
+                {{fa-icon "check" right=1}} Entry was verified as correct on {{shift-format ts.verified_at}} (Pacific)
               {{else if ts.isUnverified}}
-                {{fa-icon "arrow-right"}} The entry has not been verified as correct or a correction submitted.
+                {{fa-icon "arrow-right" right=1}} The entry has not been verified as correct or a correction submitted.
               {{else if ts.isApproved}}
-                {{fa-icon "arrow-right"}} The correction request has been approved. You will need verify the
+                {{fa-icon "arrow-right" right=1}} The correction request has been approved. You will need verify the
                 correction is accurate.
               {{else if ts.isRejected}}
-                {{fa-icon "times"}} The correction request has been denied. An appeal may be submitted.
+                {{fa-icon "times" right=1}} The correction request has been denied. An appeal may be submitted.
               {{else if ts.isPending}}
-                {{fa-icon "hourglass-half"}} The correction request is pending review.
+                {{fa-icon "hourglass-half" right=1}} The correction request is pending review.
               {{else}}
                 Unknown state? [{{ts.review_status}}]
               {{/if}}

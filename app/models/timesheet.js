@@ -70,7 +70,7 @@ export default class TimesheetModel extends Model {
 
   // Timesheet has not been reviewed yet
   get isUnverified() {
-    return (this.off_duty && this.review_status === STATUS_UNVERIFIED);
+    return (this.off_duty && (this.review_status === STATUS_UNVERIFIED || this.review_status === STATUS_APPROVED));
   }
 
 
