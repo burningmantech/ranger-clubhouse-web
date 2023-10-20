@@ -91,7 +91,7 @@ export default class RollcallSignInComponent extends Component {
       const found = options.find((p) => p[1] === burnPosition);
       if (found) {
         burnPositions.unshift(found);
-        options.removeObject(found);
+        _.pull(options, found);
       }
     });
 

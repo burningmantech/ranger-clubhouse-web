@@ -19,8 +19,8 @@
         The following are outstanding tasks:
       </p>
       <ul>
-        {{#if this.unverifiedCount}}
-          <li>You need to review {{pluralize this.unverifiedCount "timesheet entry"}}.</li>
+        {{#if this.unreviewedCount}}
+          <li>You need to review {{pluralize this.unreviewedCount "timesheet entry"}}.</li>
         {{/if}}
         {{#if this.correctionPendingReviewCount}}
           <li>

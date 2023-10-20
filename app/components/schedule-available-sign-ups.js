@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import dayjs from 'dayjs';
+import _ from "lodash";
 
 const allDays = ['All Days', 'all'];
 const upcomingShifts = ['Upcoming Shifts', 'upcoming'];
@@ -47,7 +48,7 @@ export default class ScheduleAvailableSignUpsComponent extends Component {
    */
 
   get dayOptions() {
-    const unique = this.args.availableSlots.uniqBy('slotDay').mapBy('slotDay');
+    const unique = _.map(_.uniqBy(this.args.availableSlots, 'slotDay'), 'slotDay');
     const days = [];
 
     unique.sort((a, b) => {

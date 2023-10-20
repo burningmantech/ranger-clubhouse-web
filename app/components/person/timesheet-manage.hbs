@@ -94,16 +94,16 @@
               {{badge "warning" "Still On Duty"}}
             {{else if ts.isVerified}}
               {{badge "success" "Verified"}}
+            {{else if ts.isApproved}}
+                {{badge "success" "Correction Approved"}}<br>
+                {{badge "secondary" "Verification still needed"}}
             {{else if ts.isUnverified}}
               {{badge "secondary" "Unverified"}}
             {{else if ts.isPending}}
               {{badge "danger" "Correction Requested"}}
             {{else if ts.isRejected}}
               {{badge "warning" "Correction Rejected"}}
-            {{else if ts.isApproved}}
-              {{badge "success" "Correction Approved"}}<br>
-              {{badge "secondary" "Verification still needed"}}
-            {{else}}
+             {{else}}
               &nbsp;
             {{/if}}
           </td>

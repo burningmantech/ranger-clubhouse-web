@@ -120,11 +120,11 @@ export default class AdminCreditsController extends ClubhouseController {
       credits = credits.filter((p) => p.creditDay === dayFilter);
     }
 
-    this.viewCredits = credits.sortBy('start_time');
+    this.viewCredits = _.sortBy(credits,'start_time');
   }
 
   get dayOptions() {
-    const unique = this.credits.uniqBy('creditDay').mapBy('creditDay');
+    const unique = _.map(_.uniqBy(this.credits, 'creditDay'), 'creditDay');
     const days = unique.map((day) => ({id: day, title: dayjs(day).format('ddd MMM DD')}));
     days.unshift(ALL_DAYS);
     return days;
@@ -232,7 +232,6 @@ export default class AdminCreditsController extends ClubhouseController {
       () => {
         credit.destroyRecord()
           .then(() => {
-            this.credits.removeObject(credit);
             this._buildDisplay();
             this.toast.success('Credit has been deleted.')
           })
@@ -275,7 +274,7 @@ export default class AdminCreditsController extends ClubhouseController {
           credits: credits.map((c) => new CopySourceCredit({controller: this, source: c}))
         }))
       });
-    copyPositions = copyPositions.sortBy('title');
+    copyPositions = _.sortBy(copyPositions, 'title');
     if (copyPositions.length === 1) {
       copyPositions[0].expanded = true;
     }
@@ -303,7 +302,7 @@ export default class AdminCreditsController extends ClubhouseController {
       return;
     }
 
-    if (params.newPositionId > 0 && sourceCredits.map((c) => c.source.position_id).uniq().length > 1) {
+    if (params.newPositionId > 0 && _.uniq(sourceCredits.map((c) => c.source.position_id)).length > 1) {
       this.toast.warning("Can't copy credits from multiple positions to a new position");
       return;
     }

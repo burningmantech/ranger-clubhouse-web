@@ -2,6 +2,7 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {tracked} from '@glimmer/tracking';
 import {action, set} from '@ember/object';
 import groupBy from 'clubhouse/utils/group-by';
+import _ from 'lodash';
 
 export default class VcSalesforceController extends ClubhouseController {
   @tracked commit = false;
@@ -55,7 +56,7 @@ export default class VcSalesforceController extends ClubhouseController {
 
     groups.forEach((g) => {
       g.statusLabel = this.statusLabels[g.status] || {label: `Unknown status [${g.status}]`};
-      g.items = g.items.sortBy('callsign');
+      g.items = _.sortBy(g.items, 'callsign');
     });
 
     return groups;
@@ -71,7 +72,7 @@ export default class VcSalesforceController extends ClubhouseController {
   _orderStatus(groups, status) {
     const group = groups.find((g) => g.status == status);
     if (group) {
-      groups.removeObject(group);
+      _.pull(groups, group);
       groups.unshift(group);
     }
   }
@@ -80,7 +81,6 @@ export default class VcSalesforceController extends ClubhouseController {
   import() {
     // Normal both create accouht and update sf should be checked together
     if (this.createAccounts) {
-
       if (!this.updateSalesforce) {
         this.modal.confirm(null, 'You have checked "Create accounts" but "Update Salesforce Records" is unchecked. Normally, these two are checked together. Did you mean to do that?', () => {
           this.showConfirmModal = true;

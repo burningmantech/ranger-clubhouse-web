@@ -8,6 +8,7 @@ import {NON_RANGER} from 'clubhouse/constants/person_status';
 import {ADMIN, CAN_FORCE_SHIFT, TIMECARD_YEAR_ROUND} from 'clubhouse/constants/roles';
 import {TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
 import {TYPE_TRAINING} from "clubhouse/models/position";
+import _ from 'lodash';
 
 export default class ShiftCheckInOutComponent extends Component {
   @service ajax;
@@ -102,7 +103,7 @@ export default class ShiftCheckInOutComponent extends Component {
     this.signinPositions = signins;
 
     // Set the position options to the first item
-    this.signinPositionId = this.signinPositions.length ? this.signinPositions.firstObject.id : null;
+    this.signinPositionId = this.signinPositions.length ? this.signinPositions[0].id : null;
 
     // Has the person gone through dirt training?
     if (this.args.person.status === NON_RANGER) {
@@ -123,7 +124,7 @@ export default class ShiftCheckInOutComponent extends Component {
   _putOnTop(signins, positionId) {
     const position = signins.find((p) => p.id === positionId);
     if (position) {
-      signins.removeObject(position);
+      _.pull(signins, position);
       signins.unshift(position);
     }
   }

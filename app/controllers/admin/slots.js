@@ -137,11 +137,11 @@ export default class SlotsController extends ClubhouseController {
       }
     }
 
-    this.viewSlots = slots.sortBy('begins');
+    this.viewSlots = _.sortBy(slots, 'begins');
   }
 
   get dayOptions() {
-    const unique = this.slots.uniqBy('slotDay').mapBy('slotDay');
+    const unique = _.map(_.uniqBy(this.slots, 'slotDay'), 'slotDay');
     const days = [allDays];
 
     unique.sort((a, b) => {
@@ -150,7 +150,7 @@ export default class SlotsController extends ClubhouseController {
       return 0;
     });
 
-    unique.forEach((day) => days.pushObject({id: day, title: dayjs(day).format('ddd MMM DD')}));
+    unique.forEach((day) => days.push({id: day, title: dayjs(day).format('ddd MMM DD')}));
 
     return days;
   }
@@ -180,7 +180,7 @@ export default class SlotsController extends ClubhouseController {
       }
     });
 
-    this.positionSlots = groups.sortBy('title');
+    this.positionSlots = _.sortBy(groups, 'title');
   }
 
   @action
@@ -221,8 +221,7 @@ export default class SlotsController extends ClubhouseController {
 
   @action
   newSlot() {
-    const position_id = this.positions.firstObject.id;
-    this.slot = this.store.createRecord('slot', {position_id});
+    this.slot = this.store.createRecord('slot', {position_id: this.positions[0].id});
   }
 
   @action
@@ -275,16 +274,19 @@ export default class SlotsController extends ClubhouseController {
   }
 
   @action
-  repeatSlotAdd24Hours(slot) {
+  async repeatSlotAdd24Hours(slot) {
     const duplicate = this._duplicateSlot(slot);
 
     duplicate.begins = dayjs(slot.begins).add(24, 'hours').format(DATETIME_FORMAT);
     duplicate.ends = dayjs(slot.ends).add(24, 'hours').format(DATETIME_FORMAT);
 
-    duplicate.save().then(() => {
+    try {
+      await duplicate.save();
       this._updateSlots();
       this.toast.success('Slot was successfully repeated with 24 hour addition.');
-    }).catch((response) => this.house.handleErrorResponse(response));
+    } catch (response) {
+      this.house.handleErrorResponse(response)
+    }
   }
 
   @action
@@ -292,30 +294,32 @@ export default class SlotsController extends ClubhouseController {
     this.modal.confirm(
       'Confirm Slot Deletion',
       `Are you sure you want to delete ${slot.position_title} - ${slot.description}?`,
-      () => {
-        slot.destroyRecord()
-          .then(() => {
-            this.slots.removeObject(slot);
-            this._buildDisplay();
-            this.toast.success('Slot has been deleted.')
-          })
-          .catch((response) => this.house.handleErrorResponse(response))
-      }
-    );
+      async () => {
+        try {
+          await slot.destroyRecord();
+          this._buildDisplay();
+          this.toast.success('Slot has been deleted.');
+        } catch (response) {
+          this.house.handleErrorResponse(response)
+        }
+      });
   }
 
   @action
-  cloneSlot(model, isValid) {
+  async cloneSlot(model, isValid) {
     if (!isValid) {
       return;
     }
 
     const duplicate = this._duplicateSlot(model);
-    duplicate.save().then(() => {
+    try {
+      await duplicate.save();
       this._updateSlots();
       this.toast.success(`Slot successfully created from existing slot.`);
       this.slot = duplicate;
-    }).catch((response) => this.house.handleErrorResponse(response));
+    } catch (response) {
+      this.house.handleErrorResponse(response)
+    }
   }
 
   @action
@@ -330,7 +334,7 @@ export default class SlotsController extends ClubhouseController {
 
   @action
   cancel() {
-      this.slot = null;
+    this.slot = null;
   }
 
   @action
@@ -356,7 +360,7 @@ export default class SlotsController extends ClubhouseController {
         slots: slots.map((s) => new CopySourceSlot({controller: this, source: s}))
       }))
     );
-    copyPositions = copyPositions.sortBy('title');
+    copyPositions = _.sortBy(copyPositions, 'title');
     this.copyParams = new CopyParams({deltaDays: this.laborDayDiff});
     this.copySourcePositions = copyPositions;
   }
@@ -433,7 +437,7 @@ export default class SlotsController extends ClubhouseController {
   }
 
   @action
-  bulkEditCloseAction(){
+  bulkEditCloseAction() {
     this.showBulkEditDialog = false;
   }
 

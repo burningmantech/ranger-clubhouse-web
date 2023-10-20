@@ -5,6 +5,7 @@ import {service} from '@ember/service';
 import {DIRT} from 'clubhouse/constants/positions';
 import validateDateTime from 'clubhouse/validators/datetime';
 import {tracked} from '@glimmer/tracking';
+import _ from 'lodash';
 
 export default class MeTimesheetMissingCommonComponent extends Component {
   @service house;
@@ -32,7 +33,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     const positions = this.args.positions.map((p) => [p.title, p.id]);
     const dirt = positions.find((p) => p[1] === DIRT);
     if (dirt) {
-      positions.removeObject(dirt);
+      _.pull(positions, dirt);
       positions.unshift(dirt);
     }
 

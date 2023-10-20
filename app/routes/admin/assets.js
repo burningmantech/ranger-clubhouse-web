@@ -13,7 +13,7 @@ export default class AdminAssetsRoute extends ClubhouseRoute {
     const year = requestYear(params);
     this.year = year;
     this.store.unloadAll('asset');
-    return this.store.query('asset', {year}).then((result) => result.toArray());
+    return this.store.query('asset', {year});
   }
 
   setupController(controller, model) {

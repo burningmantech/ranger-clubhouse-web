@@ -142,7 +142,7 @@ export default class PositionController extends ClubhouseController {
 
     this.positions.forEach((position) => {
       if (position.type === 'Training' && !position.title.match(/\btrainer\b/i)) {
-        options.pushObject([position.title, position.id]);
+        options.push([position.title, position.id]);
       }
     });
 

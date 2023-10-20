@@ -1,7 +1,8 @@
-  import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {TYPE_NORMAL, TYPE_TRAINER, TYPE_SEPARATE, TYPE_SUMMARY} from 'clubhouse/models/survey-group';
+import _ from 'lodash';
 
 export default class AdminSurveyManageController extends ClubhouseController {
   @tracked groupEntry = null;
@@ -30,12 +31,12 @@ export default class AdminSurveyManageController extends ClubhouseController {
 
 
   _buildOrderedGroups() {
-    this.orderedGroups = this.surveyGroups.sortBy('sort_index');
+    this.orderedGroups = _.sortBy(this.surveyGroups,'sort_index');
   }
 
   @action
   newGroupAction() {
-    const lastGroup = this.surveyGroups.lastObject;
+    const lastGroup = _.last(this.surveyGroups);
 
     this.groupEntry = this.store.createRecord('survey-group', {
       survey_id: this.survey.id,
@@ -92,7 +93,7 @@ export default class AdminSurveyManageController extends ClubhouseController {
     let groups = this.orderedGroups;
     const idx = groups.findIndex((g) => g.id == group.id);
 
-    groups.removeObject(group);
+    _.pull(groups, group);
 
     if (direction < 0) {
       if (idx === 1) {
@@ -127,7 +128,7 @@ export default class AdminSurveyManageController extends ClubhouseController {
 
   @action
   newQuestionAction(group) {
-    const lastQuestion = group.surveyQuestions ? group.surveyQuestions.lastObject : null;
+    const lastQuestion = group.surveyQuestions ? _.last(group.surveyQuestions) : null;
 
     this.questionEntry = this.store.createRecord('survey-question', {
       survey_id: this.survey.id,
@@ -243,6 +244,6 @@ export default class AdminSurveyManageController extends ClubhouseController {
   }
 
   isNotLast(obj, array) {
-    return obj !== array[array.length -1];
+    return obj !== array[array.length - 1];
   }
 }

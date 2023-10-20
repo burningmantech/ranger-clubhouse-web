@@ -2,6 +2,7 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
 import dayjs from 'dayjs';
 import {tracked} from '@glimmer/tracking';
+import _ from 'lodash';
 
 export default class MentorAcceptanceSheetsController extends ClubhouseController {
   @tracked filter;
@@ -45,9 +46,8 @@ export default class MentorAcceptanceSheetsController extends ClubhouseControlle
   }
 
   get filterOptions() {
-    const dates = this.alphas.filter((a) => a.alpha_slot != null)
-      .uniqBy('alpha_slot.begins')
-      .mapBy('alpha_slot.begins')
+    const dates = _.uniqBy(this.alphas.filter((a) => a.alpha_slot != null), (a) => a.alpha_slot.begins)
+      .map((a) => a.alpha_slot.begins)
       .sort();
 
     const options = dates.map((date) => {
