@@ -405,7 +405,7 @@ export default class TrainingSessionController extends ClubhouseController {
       this.ajax.delete(`person/${student.id}/schedule/${this.slot.id}`)
         .then((results) => {
           if (results.status === 'success') {
-            this.students.removeObject(student);
+            this.students = this.students.filter((s) => s.id !== student.id);
             this.toast.success(`${student.callsign} was successfully removed from this training session.`);
             this.editStudent = null;
           } else {
@@ -416,8 +416,6 @@ export default class TrainingSessionController extends ClubhouseController {
         .finally(() => this.isSubmitting = false);
     });
   }
-
-  // Toggle the email list
 
   /**
    * Toggle showing the email list

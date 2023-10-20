@@ -15,7 +15,7 @@ export default class MentorScheduleRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    controller.set('slots', model.slots);
+    controller.setupSlot(model.slots);
     controller.set('year', this.year);
     controller.set('signupSheetSlot', null);
     controller.set('signedInSlot', null);

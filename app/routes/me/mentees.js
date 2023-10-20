@@ -1,4 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import _ from 'lodash';
 
 export default class MeMenteesRoute extends ClubhouseRoute {
   model() {
@@ -29,8 +30,8 @@ export default class MeMenteesRoute extends ClubhouseRoute {
     controller.set('totalBonked', totalBonked);
     if (menteeList.length > 0) {
       // server return list in decending order
-      controller.set('lastYear', menteeList.firstObject.year);
-      controller.set('firstYear', menteeList.lastObject.year);
+      controller.set('lastYear', _.first(menteeList).year);
+      controller.set('firstYear', _.last(menteeList).year);
     } else {
       controller.set('firstYear', 0);
       controller.set('lastYear', 0);

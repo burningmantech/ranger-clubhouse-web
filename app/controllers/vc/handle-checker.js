@@ -14,6 +14,7 @@ import {
   SubstringRule
 } from 'clubhouse/utils/handle-rules';
 import { ReservationTypeLabels } from 'clubhouse/models/handle-reservation';
+import _ from 'lodash';
 
 let nextCheckId = 1;
 
@@ -106,7 +107,9 @@ export default class VcHandlerCheckerController extends ClubhouseController {
     }
     // By default, alphas can choose the handle of a non-vintage retired Ranger
     const disabledByDefault = new Set(['retired', 'non ranger']);
-    this.entityTypes = this.allHandles.mapBy('entityType').uniq().sort(comparator).map((type) => new EntityType({
+    this.entityTypes = _.uniq(_.map(this.allHandles, 'entityType'))
+      .sort(comparator)
+      .map((type) => new EntityType({
       id: dasherize(type),
       name: type,
       label: ReservationTypeLabels[type] ?? type,

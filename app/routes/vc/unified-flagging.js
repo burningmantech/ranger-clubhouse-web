@@ -1,6 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {INTAKE} from 'clubhouse/constants/roles';
-import { A } from '@ember/array';
 import requestYear from 'clubhouse/utils/request-year';
 
 export default class VcUnifiedFlaggingRoute extends ClubhouseRoute {
@@ -17,7 +16,7 @@ export default class VcUnifiedFlaggingRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    controller.set('people', A(model.people));
+    controller.people = model.people;
     controller.set('year', this.year);
   }
 }

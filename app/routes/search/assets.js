@@ -33,7 +33,7 @@ export default class SearchAssetsRoute extends ClubhouseRoute {
 
       if (assets.length > 0) {
         // Found an asset
-        asset = assets.firstObject;
+        asset = assets[0];
         // Still checked out by someone?
         checkedOut = asset.asset_history.find((a) => a.checked_in == null);
       } else {

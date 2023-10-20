@@ -1,9 +1,9 @@
 import Service from '@ember/service';
-import {A} from '@ember/array';
 import {action} from '@ember/object';
-import {tracked} from '@glimmer/tracking';
+import {tracked} from 'tracked-built-ins';
 import ModalInfoComponent from 'clubhouse/components/modal-info';
 import ModalConfirmComponent from 'clubhouse/components/modal-confirm';
+import _ from 'lodash';
 
 /*
   The modal service. Handles inline modals (aka this.modal.{info,confirm,open}) and
@@ -16,7 +16,7 @@ import ModalConfirmComponent from 'clubhouse/components/modal-confirm';
  */
 
 export default class ModalService extends Service {
-  @tracked dialogs = A();
+  @tracked dialogs = tracked([]);
 
   constructor() {
     super(...arguments);
@@ -85,7 +85,7 @@ export default class ModalService extends Service {
    */
 
   addDialog(dialog) {
-    this.dialogs.pushObject(dialog);
+    this.dialogs.push(dialog);
 
     if (this.dialogs.length === 1) {
       // First dialog to show up, setup the keyboard listener
@@ -105,9 +105,8 @@ export default class ModalService extends Service {
       return;
     }
 
-    this.dialogs.removeObject(dialog);
+    _.pull(this.dialogs, dialog);
     dialog.isRemoved = true;
-
     if (this.dialogs.length === 0) {
       // Remove the keyboard listener in case this was the last one.
       window.removeEventListener('keyup', this._checkForEscape);
@@ -128,7 +127,7 @@ export default class ModalService extends Service {
       return true;
     }
 
-    const dialog = this.dialogs.lastObject;
+    const dialog = _.last(this.dialogs);
 
     if (dialog.isInline || dialog.closeCallback || dialog.onEscape) {
       event.preventDefault(); // Don't allow the key to percolate upwards
@@ -150,7 +149,7 @@ export default class ModalService extends Service {
 
   @action
   closeAction() {
-    const dialog = this.dialogs.lastObject;
+    const dialog = _.last(this.dialogs);
 
     this.removeDialog(dialog);
     if (dialog && dialog.closeCallback) {
@@ -164,7 +163,7 @@ export default class ModalService extends Service {
 
   @action
   confirmAction() {
-    const dialog = this.dialogs.lastObject;
+    const dialog = _.last(this.dialogs);
     this.removeDialog(dialog);
     dialog.confirmCallback();
   }

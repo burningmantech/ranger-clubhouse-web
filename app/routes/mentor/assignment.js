@@ -2,6 +2,7 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
 import {tracked} from '@glimmer/tracking';
 import dayjs from 'dayjs';
+import _ from 'lodash';
 
 const MENTOR_COUNT = 3;
 
@@ -52,8 +53,8 @@ export default class MentorAssignmentRoute extends ClubhouseRoute {
         current.mentors.forEach((mentor) => {
           mentors.push(new Mentor(mentor.id, mentor.person_mentor_id));
         });
-        // remove the current mentors so it does not appear int the prior list
-        person.mentor_history.removeObject(current);
+        // remove the current mentor, so it does not appear in the prior list
+        _.pull(person.mentor_history, current);
       } else {
         person.mentor_status = 'pending';
       }

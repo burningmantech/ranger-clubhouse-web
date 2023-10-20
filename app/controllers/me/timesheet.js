@@ -34,8 +34,8 @@ export default class MeTimesheetController extends ClubhouseController {
    */
 
   @cached
-  get unverifiedCount() {
-    return countIf(this.timesheets, (ts) => ts.isUnverified)
+  get unreviewedCount() {
+    return countIf(this.timesheets, (ts) => (ts.isUnverified || ts.isApproved))
       + (this.timesheets.find((t) => !t.off_duty) ? 1 : 0);
   }
 
@@ -50,7 +50,7 @@ export default class MeTimesheetController extends ClubhouseController {
   }
 
   get haveOutstandingTasks() {
-    return this.unverifiedCount || this.correctionPendingReviewCount || this.missingPendingReviewCount;
+    return this.unreviewedCount || this.correctionPendingReviewCount || this.missingPendingReviewCount;
   }
 
   get correctionsEnabled() {

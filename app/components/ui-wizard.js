@@ -1,9 +1,9 @@
 import Component from '@glimmer/component';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
-import {A} from '@ember/array';
 import {schedule} from '@ember/runloop';
 import {action} from '@ember/object';
+import { TrackedArray } from 'tracked-built-ins';
 
 export default class UiWizardComponent extends Component {
   @service session;
@@ -14,7 +14,7 @@ export default class UiWizardComponent extends Component {
   @tracked backLabel = this.args.backLabel ?? "Back";
   @tracked finishLabel = this.args.finishLabel ?? "Finish";
 
-  steps = A([]);
+  steps = new TrackedArray([]);
   currentStep = null;
 
   /**
@@ -36,7 +36,7 @@ export default class UiWizardComponent extends Component {
         stepComponent.isActive = true;
         this.currentStep = stepComponent;
       }
-      this.steps.pushObject(stepComponent);
+      this.steps = [...this.steps, stepComponent];
       this.stepCount = number;
     });
   }

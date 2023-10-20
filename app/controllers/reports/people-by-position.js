@@ -45,8 +45,8 @@ export default class PeopleByPositionController extends ClubhouseController {
 
   buildViewPositions() {
     const people = this.people;
-    const lookupPeople = (ids) => ids ? ids.map((id) => people[id]).sortBy('callsign') : [];
-    this.viewPositions = this.positions.map((position) =>
+    const lookupPeople = (ids) => ids ? _.sortBy(ids.map((id) => people[id]),'callsign') : [];
+    this.viewPositions = _.sortBy(this.positions.map((position) =>
       new ViewPosition({
         id: position.id,
         title: position.title,
@@ -59,12 +59,12 @@ export default class PeopleByPositionController extends ClubhouseController {
         people: lookupPeople(position.personIds),
         missingPeople: lookupPeople(position.missingPersonIds),
         statuses: this.statuses,
-      }))
-      .sortBy('title');
+      })),'title');
   }
 
   buildPositionTypes() {
-    this.positionTypes = this.positions.mapBy('type').uniq().sort()
+    this.positionTypes = _.uniq(_.map(this.positions, 'type'))
+      .sort()
       .map((type) => new SelectChoice(type, true));
   }
 

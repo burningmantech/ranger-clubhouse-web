@@ -74,7 +74,7 @@
           <table class="table table-sm table-hover">
             <thead>
             <tr>
-              <th>ID</th>
+              <th class="text-end">ID</th>
               <th>Time</th>
               <th class="text-end">Max</th>
               <th class="text-end">Count</th>
@@ -87,7 +87,7 @@
             <tbody>
             {{#each position.slots key="id" as |slot|}}
               <tr id="slot-{{slot.id}}">
-                <td>{{slot.id}}</td>
+                <td class="text-end">{{slot.id}}</td>
                 <td>
                   {{shift-format slot.begins slot.ends timezone=slot.timezone_abbr}}
                 </td>

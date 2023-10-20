@@ -4,8 +4,17 @@ import {debounce} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {GENDER_CUSTOM, GenderIdentityLabels} from "clubhouse/models/person";
+import _ from 'lodash';
 
 const SEARCH_RATE_MS = 300;
+
+class AlphaShift {
+  @tracked people;
+
+  constructor(obj) {
+    Object.assign(this, obj);
+  }
+}
 
 export default class MentorScheduleController extends ClubhouseController {
   @service shiftManage;
@@ -80,14 +89,18 @@ export default class MentorScheduleController extends ClubhouseController {
 
   @action
   addPersonAction(person, slot) {
-    this.shiftManage.slotSignup(slot, person, () => {
-      this.addPersonForm = null;
-      this.isSubmitting = true;
-      this.ajax.request('mentor/alpha-schedule', {data: {year: this.year}}).then((result) => {
-        this.slots = result.slots;
-      }).catch((response) => this.house.handleErrorResponse(response))
-        .finally(() => this.isSubmitting = false)
-    });
+    this.shiftManage.slotSignup(slot, person,  async () => {
+        this.addPersonForm = null;
+        this.isSubmitting = true;
+        try {
+          const {slots} = await this.ajax.request('mentor/alpha-schedule', {data: {year: this.year}});
+          this.setupSlot(slots);
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        } finally {
+          this.isSubmitting = false
+        }
+      });
   }
 
   // Remove a student from the session
@@ -98,19 +111,22 @@ export default class MentorScheduleController extends ClubhouseController {
     this.modal.confirm(
       'Remove Sign Up',
       `Are you sure you want to remove ${person.callsign} from the mentee shift?`,
-      () => {
+      async () => {
         this.isSubmitting = true;
-        this.ajax.delete(`person/${personId}/schedule/${slot.id}`)
-          .then((results) => {
-            if (results.status === 'success') {
-              slot.people.removeObject(person);
-              this.toast.success(`${person.callsign} was successfully removed from the mentee shift.`);
-            } else {
-              this.toast.error(`The server responded with an unknown status code [${results.status}]`);
-            }
-          })
-          .catch((response) => this.house.handleErrorResponse(response))
-          .finally(() => this.isSubmitting = false);
+        try {
+          const {status} = await this.ajax.delete(`person/${personId}/schedule/${slot.id}`);
+          if (status === 'success') {
+            _.pull(slot.people, person);
+            slot.people = [...slot.people]; // cause re-render
+            this.toast.success(`${person.callsign} was successfully removed from the mentee shift.`);
+          } else {
+            this.toast.error(`The server responded with an unknown status code [${status}]`);
+          }
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        } finally {
+          this.isSubmitting = false;
+        }
       });
   }
 
@@ -166,5 +182,9 @@ export default class MentorScheduleController extends ClubhouseController {
       default:
         return GenderIdentityLabels[person.gender_identity] ?? person.gender_identity;
     }
+  }
+
+  setupSlot(slots) {
+    this.slots = slots.map((s) => new AlphaShift(s));
   }
 }

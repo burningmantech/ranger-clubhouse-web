@@ -91,7 +91,7 @@ export default class ReportsPeopleByLocationController extends ClubhouseControll
 
   @action
   onAccordionDestroy(accordion) {
-    this.accordions.removeObject(accordion);
+    _.pull(this.accordions, accordion);
   }
 
   @action

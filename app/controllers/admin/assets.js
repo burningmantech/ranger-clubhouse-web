@@ -70,7 +70,7 @@ export default class AdminAssetsController extends ClubhouseController {
   }
 
   get viewAssets() {
-    let assets = this.assets;
+    let assets = [...this.assets];
 
     if (this.typeFilter !== 'All') {
       assets = assets.filter((asset) => asset.type === this.typeFilter);
@@ -159,7 +159,7 @@ export default class AdminAssetsController extends ClubhouseController {
 
       try {
         await record.save();
-        this.assets.pushObject(record);
+        await this.assets.update();
       } catch (response) {
         this.house.handleErrorResponse(response);
         this.isSubmitting = false;
@@ -209,7 +209,7 @@ export default class AdminAssetsController extends ClubhouseController {
     try {
       await model.save();
       if (isNew) {
-        this.assets.pushObject(this.entry);
+        await this.assets.update();
       }
       this.toast.success(`The asset was successfully ${isNew ? 'created' : 'updated'}`);
       this.entry = null;
@@ -232,7 +232,6 @@ export default class AdminAssetsController extends ClubhouseController {
       async () => {
         try {
           await asset.destroyRecord();
-          this.assets.removeObject(asset);
           this.toast.success('Asset was successfully deleted');
         } catch (response) {
           this.house.handleErrorResponse(response);

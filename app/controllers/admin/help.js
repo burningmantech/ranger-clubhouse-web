@@ -1,6 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
+import _ from 'lodash';
 
 export default class AdminHelpController extends ClubhouseController {
   @tracked entry;
@@ -54,6 +55,6 @@ export default class AdminHelpController extends ClubhouseController {
   }
 
   _sortDocuments() {
-    this.viewDocuments = this.documents.toArray().sortBy('slug');
+    this.viewDocuments = _.sortBy(this.documents.toArray(),'slug');
   }
 }

@@ -7,7 +7,7 @@ export default class AdminAlertsRoute extends ClubhouseRoute {
   model() {
     this.store.unloadAll('alert');
 
-    return this.store.query(`alert`, { }).then((result) => result.toArray());
+    return this.store.query(`alert`, { });
   }
 
   setupController(controller, model) {

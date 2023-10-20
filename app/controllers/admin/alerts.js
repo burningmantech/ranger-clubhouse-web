@@ -26,33 +26,34 @@ export default class AdminAlertsController extends ClubhouseController {
   }
 
   @action
-  saveAlert(model, isValid) {
+  async saveAlert(model, isValid) {
     if (!isValid)
       return;
 
     const isNew = model.isNew;
 
-    model.save().then((record) => {
+    try {
+      await model.save();
       if (isNew) {
-        this.alerts.pushObject(record);
+        await this.alerts.update();
       }
-
       this.toast.success(`Alert was successfully ${isNew ? 'created' : 'updated'}.`);
       this.entry = null;
-    }).catch((response) => {
+    } catch (response) {
       this.house.handleErrorResponse(response);
       this.entry.rollbackAttributes();
-    });
+    }
   }
 
   @action
   deleteAlert(alert) {
     this.modal.confirm(`Confirm alert deletion`, `Are you sure you want to delete "${alert.title}?"`,
-      () => {
-        alert.destroyRecord().then(() => {
-          this.alerts.removeObject(alert);
-          this.toast.success(`Alert was successfully deleted.`);
-        })
+      async () => {
+        try {
+          await alert.destroyRecord();
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        }
       });
   }
 }

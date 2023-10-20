@@ -1,11 +1,11 @@
 import Service from '@ember/service';
-import {A} from '@ember/array';
-import {tracked} from '@glimmer/tracking';
+import {tracked} from 'tracked-built-ins';
+import _ from 'lodash';
 
 const TIMEOUT = 7000;
 
 export default class extends Service {
-  @tracked loaf = A();
+  loaf = tracked([]);
 
   success(message) {
     this.addToast({message, type: 'success'});
@@ -20,9 +20,9 @@ export default class extends Service {
   }
 
   addToast(toast) {
-    this.loaf.pushObject(toast);
+    this.loaf.push(toast);
     if (toast.type !== 'danger') {
-      toast.timerId = setTimeout(() => this.loaf.removeObject(toast), TIMEOUT);
+      toast.timerId = setTimeout(() => _.pull(this.loaf, toast), TIMEOUT);
     }
   }
 
@@ -31,7 +31,7 @@ export default class extends Service {
       clearTimeout(toast.timerId);
     }
 
-    this.loaf.removeObject(toast);
+    _.pull(this.loaf, toast);
   }
 
   clear() {
@@ -42,6 +42,9 @@ export default class extends Service {
       }
     });
 
-    this.loaf = A();
+    // would be nice if tracked arrays could be reset by simply doing let x = [];
+    while(this.loaf.length) {
+      this.loaf.pop();
+    }
   }
 }

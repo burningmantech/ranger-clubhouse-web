@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import {validatePresence, validateNumber} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 import TimezoneOptions from 'clubhouse/constants/timezone-options';
+import _ from 'lodash';
 
 export default class SlotFormComponent extends Component {
   timezoneOptions = TimezoneOptions;
@@ -50,7 +51,7 @@ export default class SlotFormComponent extends Component {
     const slots = this.args.trainerSlots;
     const groupOptions = [];
 
-    if (!slots || slots.length == 0) {
+    if (!slots || !slots.length) {
       return [];
     }
 
@@ -58,7 +59,7 @@ export default class SlotFormComponent extends Component {
       const title = slot.position_title;
 
       let group = groupOptions.find((opt) => {
-        return title == opt.groupName
+        return title === opt.groupName
       });
 
       if (!group) {
@@ -69,7 +70,7 @@ export default class SlotFormComponent extends Component {
       group.options.push([`${slot.description} ${slot.begins_format}`, slot.id]);
     });
 
-    return groupOptions.sortBy('groupName');
+    return _.sortBy(groupOptions,'groupName');
   }
 }
 

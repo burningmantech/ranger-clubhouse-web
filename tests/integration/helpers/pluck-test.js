@@ -1,7 +1,6 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-//import { A } from '@ember/array';
 import hbs from 'htmlbars-inline-precompile';
 
 module('Integration | Helper | pluck', function(hooks) {
