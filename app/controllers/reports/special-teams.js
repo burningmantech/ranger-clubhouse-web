@@ -1,7 +1,8 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import { action } from '@ember/object';
-import { tracked } from '@glimmer/tracking';
-import { positionLabel } from 'clubhouse/helpers/position-label';
+import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
+import {positionLabel} from 'clubhouse/helpers/position-label';
+import _ from "lodash";
 
 export default class ReportsSpecialTeamsController extends ClubhouseController {
   @tracked isSubmitting = false;
@@ -14,7 +15,11 @@ export default class ReportsSpecialTeamsController extends ClubhouseController {
   @tracked people;
 
   get positionOptions() {
-    return this.positions.map((p) =>  [positionLabel([p,true]), p.id]);
+    return this.positions.map((p) => [positionLabel([p, true]), p.id]);
+  }
+
+  get teamColumns() {
+    return _.chunk(this.teamOptions, this.teamOptions.length / 4);
   }
 
   get yearOptions() {
@@ -22,6 +27,9 @@ export default class ReportsSpecialTeamsController extends ClubhouseController {
 
     const years = [];
     for (let year = endYear; year >= 2010; year--) {
+      if (year === 2020 || year === 2021) {
+        continue;
+      }
       years.push(year);
     }
     return years;
@@ -32,6 +40,9 @@ export default class ReportsSpecialTeamsController extends ClubhouseController {
 
     const years = [];
     for (let year = start; year <= end; year++) {
+      if (year === 2020 || year === 2021) {
+        continue;
+      }
       years.push(year);
     }
 
@@ -39,15 +50,23 @@ export default class ReportsSpecialTeamsController extends ClubhouseController {
   }
 
   @action
-  searchTeamsAction() {
+  async searchTeamsAction() {
     const form = this.teamsForm;
-    const position_ids = form.positionIds,
-        include_inactive = form.showInactives ? 1 : 0,
-        start_year = parseInt(form.startYear),
-        end_year = parseInt(form.endYear);
+    const position_ids = [],
+      include_inactive = form.showInactives ? 1 : 0,
+      start_year = parseInt(form.startYear),
+      end_year = parseInt(form.endYear);
 
-    if (position_ids.length == 0) {
-      this.modal.info(null, 'No team/positions were selected.');
+    this.teamOptions.forEach((t) => {
+      t.positionOptions.forEach((p) => {
+        if (p.isChecked) {
+          position_ids.push(p.id);
+        }
+      })
+    });
+
+    if (!position_ids.length) {
+      this.modal.info('No Selected Positions', 'Select the positions you wish to report on.');
       return;
     }
 
@@ -57,48 +76,54 @@ export default class ReportsSpecialTeamsController extends ClubhouseController {
     }
 
     this.isSubmitting = true;
-    this.ajax.request('timesheet/special-teams', { method: 'POST', data: { position_ids, include_inactive, start_year, end_year }})
-      .then((result) => {
-        this.people = result.people;
-        this.haveResults = true;
-        this.startYear = start_year;
-        this.endYear = end_year;
+    try {
+      const {people} = await this.ajax.request('timesheet/special-teams', {
+        method: 'POST',
+        data: {position_ids, include_inactive, start_year, end_year}
+      });
+      this.people = people;
+      this.haveResults = true;
+      this.startYear = start_year;
+      this.endYear = end_year;
 
-        this.positionsUsed =  this.positions.filter((p) => position_ids.includes(p.id));
+      this.positionsUsed = this.positions.filter((p) => position_ids.includes(p.id));
 
-        const years = (end_year - start_year)+1;
-        const totals = new Array(years);
+      const years = (end_year - start_year) + 1;
+      const totals = new Array(years);
 
-        for (let i = 0; i < years; i++) {
-          totals[i] = 0;
-        }
+      for (let i = 0; i < years; i++) {
+        totals[i] = 0;
+      }
 
-        this.people.forEach((p) => {
-          p.years.forEach((total, idx) => {
-            totals[idx] += total;
-          });
+      this.people.forEach((p) => {
+        p.years.forEach((total, idx) => {
+          totals[idx] += total;
         });
+      });
 
-        this.totalsList = totals;
-        this.grandTotal = this.people.reduce((total, p) => p.total_duration + total, 0);
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+      this.totalsList = totals;
+      this.grandTotal = this.people.reduce((total, p) => p.total_duration + total, 0);
+    } catch (response) {
+      this.house.handleErrorResponse(response)
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action
   exportToCSV() {
     const columns = [
-      { title: 'Callsign', key: 'callsign' },
-      { title: 'Name', key: 'name' },
-      { title: 'Status', key: 'status' },
-      { Title: 'Email', key: 'email' }
+      {title: 'Callsign', key: 'callsign'},
+      {title: 'Name', key: 'name'},
+      {title: 'Status', key: 'status'},
+      {Title: 'Email', key: 'email'}
     ];
 
     this.yearList.forEach((year) => {
-      columns.push({ title: `${year} Hours`, key: year.toString() });
+      columns.push({title: `${year} Hours`, key: year.toString()});
     });
 
-    columns.push({ title: 'Total', key: 'total' });
+    columns.push({title: 'Total', key: 'total'});
 
     const rows = this.people.map((person) => {
       const row = {
@@ -117,5 +142,10 @@ export default class ReportsSpecialTeamsController extends ClubhouseController {
     });
 
     this.house.downloadCsv(`special-teams-${this.startYear}-${this.endYear}`, columns, rows);
+  }
+
+  @action
+  scrollToOnRender() {
+    this.house.scrollToElement('#people');
   }
 }

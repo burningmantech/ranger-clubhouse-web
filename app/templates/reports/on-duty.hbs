@@ -27,12 +27,15 @@
   </ChForm>
 {{/unless}}
 
+{{#if this.timesheet}}
+  <DropdownScrollList @items={{this.scrollList}}  @openAccordion={{true}} @thing="position"/>
+{{/if}}
 <p>
   Showing {{pluralize this.timesheet.length "person"}} on duty in {{pluralize this.positions.length "position"}}.
 </p>
 {{#each this.positions key="id" as |position|}}
   <div class="max-width-700">
-    <UiAccordion as |accordion|>
+    <UiAccordion id="position-{{position.id}}" as |accordion|>
       <accordion.title>
         {{position.title}} - {{pluralize position.timesheets.length "person"}}
       </accordion.title>

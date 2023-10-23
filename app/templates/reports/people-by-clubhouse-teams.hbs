@@ -1,7 +1,10 @@
 <h1>People By Clubhouse Team Membership Report</h1>
+<p>
+  <DropdownScrollList @items={{this.teamsScrollList}} @openAccordion={{true}} @thing="team" />
+</p>
 Showing {{pluralize this.teams.length "Clubhouse Team"}}
 {{#each this.teams as |team|}}
-  <UiAccordion as |accordion|>
+  <UiAccordion id="team-{{team.id}}" as |accordion|>
     <accordion.title>
       {{team.title}} ({{pluralize team.members.length "member"}}, {{pluralize team.managers.length "manager"}})
     </accordion.title>

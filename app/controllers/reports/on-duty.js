@@ -66,4 +66,11 @@ export default class ReportsOnDutyController extends ClubhouseController {
   exportAllToCSV() {
     this._exportToCSV(this.viewPeople, 'all');
   }
+
+  get scrollList() {
+    return this.positions.map((p) => ({
+      id: `position-${p.id}`,
+      title: p.title
+    }));
+  }
 }
