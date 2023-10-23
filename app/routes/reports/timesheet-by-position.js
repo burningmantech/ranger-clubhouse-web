@@ -19,6 +19,7 @@ export default class ReportsTimesheetByPositionRoute extends ClubhouseRoute {
     })
     controller.set('positions', positions);
     controller.set('year', this.year);
+    controller.set('positionsScrollList', positions.map((p)=> ({ id: `position-${p.id}`, title: p.title })));
   }
 
   resetController(controller, isExiting) {

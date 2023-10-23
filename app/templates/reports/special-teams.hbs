@@ -1,51 +1,76 @@
-<h1>People By Special Teams</h1>
+<h1>People By Special Teams With Hours</h1>
 <p>
-  This report shows the hours worked by Rangers in chosen positions (special
-  teams) for the years chosen.
+  This report shows the hours worked by Rangers in chosen positions (aka Special Teams) for the years specified.
 </p>
 
-<UiSection>
-  <:body>
-    <ChForm @formId="teamsForm"
-            @formFor={{this.teamsForm}}
-            @changeSet={{false}}
-            @onSubmit={{this.searchTeamsAction}} as |f|>
-      <FormRow>
-        <f.checkboxGroup @name="positionIds"
-                         @label="Teams:"
-                         @options={{this.positionOptions}}
-                         @cols={{4}} />
-      </FormRow>
-      <FormRow>
-        <f.select @name="startYear"
-                  @label="Start Year:"
-                  @options={{this.yearOptions}}
-                  @inline={{true}}
-        />
-        <f.select @name="endYear"
-                  @label="Ending Year:"
-                  @options={{this.yearOptions}}
-                  @inline={{true}}
-        />
-        <div class="col-auto mt-2">
-          <f.checkbox @name="showInactives"
-                      @label="Include people who hold the position(s) but may not have worked in the year range"
-                      @inline={{true}} />
+<ChForm @formId="teamsForm"
+        @formFor={{this.teamsForm}}
+        @changeSet={{false}}
+        @onSubmit={{this.searchTeamsAction}} as |f|>
+  <fieldset>
+    <legend>Year Range & Status</legend>
+    <FormRow>
+      <f.select @name="startYear"
+                @label="Start Year:"
+                @options={{this.yearOptions}}
+                @inline={{true}}
+      />
+      <f.select @name="endYear"
+                @label="Ending Year:"
+                @options={{this.yearOptions}}
+                @inline={{true}}
+      />
+      <div class="col-auto mt-2">
+        <f.checkbox @name="showInactives"
+                    @label="Include people who hold the position(s) but may not have worked in the year range"
+                    @inline={{true}} />
+      </div>
+    </FormRow>
+  </fieldset>
+  <fieldset>
+    <legend>Positions To Report On</legend>
+    <p>
+      Click on the team name to reveal the team's positions.
+    </p>
+    <div class="d-flex justify-content-between">
+      {{#each this.teamColumns as |column|}}
+        <div class="flex-grow-1 me-4">
+          {{#each column as |team|}}
+            <details class="mb-3">
+              <summary class="masonry-item-header">
+                {{team.title}}
+                {{#if team.selectedCount}}
+                  <small class="ms-1 text-muted">({{team.selectedCount}} selected)</small>
+                {{/if}}
+              </summary>
+              {{#each team.positionOptions as |position|}}
+                <div class="form-check">
+                  <Input @type="checkbox"
+                         @checked={{position.isChecked}}
+                         id="position_{{position.id}}"
+                         class="form-check-input"
+                  />
+                  {{!template-lint-disable no-nested-interactive}}
+                  <label class="form-check-label" for="position_{{position.id}}">{{position.title}}</label>
+                </div>
+              {{/each}}
+            </details>
+          {{/each}}
         </div>
-      </FormRow>
-      <f.submit @label="Submit" @disabled={{this.isSubmitting}}/>
-      {{#if this.isSubmitting}}
-        <LoadingIndicator/>
-      {{/if}}
-      {{#if (and this.haveResults (not this.people))}}
-        <p class="text-danger">No people were found who matched the criteria.</p>
-      {{/if}}
-    </ChForm>
-  </:body>
-</UiSection>
+      {{/each}}
+    </div>
+  </fieldset>
+  <f.submit @label="Submit" @disabled={{this.isSubmitting}}/>
+  {{#if this.isSubmitting}}
+    <LoadingIndicator/>
+  {{/if}}
+  {{#if (and this.haveResults (not this.people))}}
+    <p class="text-danger">No people were found who matched the criteria.</p>
+  {{/if}}
+</ChForm>
 
 {{#if (and this.haveResults this.people)}}
-  <UiSection>
+  <UiSection id="people" {{did-insert this.scrollToOnRender}}>
     <:title>
       Found {{pluralize this.people.length "person"}} for
       {{#each this.positionsUsed as |position idx|~}}

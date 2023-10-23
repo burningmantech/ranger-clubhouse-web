@@ -8,15 +8,19 @@
     <label class="col-form-label">
       Event Year
     </label>
-    <ChForm::Select @name="year" @value={{this.year}} @options={{this.yearOptions}} @onChange={{action
-      (mut this.year)}} />
+    <ChForm::Select @name="year"
+                    @value={{this.year}}
+                    @options={{this.yearOptions}}
+                    @onChange={{action (mut this.year)}} />
   </div>
   <div class="col-auto">
     <label class="col-form-label">
       Dropped within hours of shift start
     </label>
-    <ChForm::Select @name="hours" @value={{this.hours}} @options={{this.hourOptions}} @onChange={{action
-      (mut this.hours)}} />
+    <ChForm::Select @name="hours"
+                    @value={{this.hours}}
+                    @options={{this.hourOptions}}
+                    @onChange={{action (mut this.hours)}} />
   </div>
 </FormRow>
 <fieldset>

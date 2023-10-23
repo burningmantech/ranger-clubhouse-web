@@ -4,6 +4,7 @@ import { tracked } from '@glimmer/tracking';
 
 export default class ReportsFlakesController extends ClubhouseController {
   @tracked date;
+  @tracked dateForm;
 
   queryParams = [ 'date' ];
 

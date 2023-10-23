@@ -6,6 +6,7 @@ export default class ReportsPeopleByClubhouseTeamsRoute extends ClubhouseRoute {
   }
 
   setupController(controller, {teams}) {
-    controller.set('teams', teams);
+    controller.teams = teams;
+    controller.teamsScrollList = teams.map((t) => ({id: `team-${t.id}`, title: t.title}));
   }
 }

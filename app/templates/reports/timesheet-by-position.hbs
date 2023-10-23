@@ -4,12 +4,13 @@
             @minYear={{2008}}
             @skipPandemic={{true}}
 />
+<DropdownScrollList @items={{this.positionsScrollList}} @openAccordion={{true}} @thing="position" />
 <p>
   Showing {{pluralize this.positions.length "position"}}
 </p>
 {{#each this.positions key="id" as |position|}}
   <div class="max-width-700">
-    <UiAccordion as |accordion|>
+    <UiAccordion id="position-{{position.id}}" as |accordion|>
       <accordion.title>{{position-label position}} ({{pluralize position.timesheets.length "entry"}})</accordion.title>
       <accordion.body>
         {{#if accordion.isOpen}}

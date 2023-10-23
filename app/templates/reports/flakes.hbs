@@ -27,14 +27,16 @@
   </FormRow>
 </ChForm>
 
+{{#if this.positions}}
+  <DropdownScrollList @items={{this.positionsScrollList}} @openAccordion={{true}} @thing="position"/>
+{{/if}}
 <p>
   Showing {{pluralize this.positions.length "position"}}.
 </p>
 
-
 {{#each this.positions as |position|}}
   <div class="max-width-1000">
-    <UiAccordion as |accordion|>
+    <UiAccordion id="position-{{position.id}}" as |accordion|>
       <accordion.title>{{position.title}}</accordion.title>
       <accordion.body>
         {{#if accordion.isOpen}}
