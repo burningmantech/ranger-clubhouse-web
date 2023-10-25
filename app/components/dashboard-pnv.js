@@ -31,6 +31,8 @@ const TRAINING_STEPS = [
   DashboardStep.TAKE_STUDENT_SURVEY
 ];
 
+const ALPHA_SHIFT_DISCLAIMER = 'Alpha shifts are only available Saturday (the day before the gate opens), Sunday, Monday, and Tuesday. No shifts are offered later in the week.';
+
 const ALPHA_STEPS = [
   DashboardStep.SIGN_RADIO_CHECKOUT_AGREEMENT,
   {
@@ -47,7 +49,7 @@ const ALPHA_STEPS = [
       if (milestones.training.status !== 'pass') {
         return {
           result: NOT_AVAILABLE,
-          message: 'You need to attend and pass training before being allowed to sign up for an Alpha shift.'
+          message: 'You must ATTEND and PASS an In-Person Training first before being allowed to sign up for an Alpha shift. ' + ALPHA_SHIFT_DISCLAIMER,
         };
       }
 
@@ -57,7 +59,7 @@ const ALPHA_STEPS = [
           route: 'me.schedule',
           linkedMessage: {
             route: 'me.schedule',
-            prefix: htmlSafe('Alpha shifts are only available Saturday (the day before the gate opens), Sunday, Monday, and Tuesday. No shifts are offered later in the week.<br><br>Visit '),
+            prefix: htmlSafe(`${ALPHA_SHIFT_DISCLAIMER}<br><br>Visit `),
             text: 'Me > Schedule / Sign Up',
             suffix: 'to sign up for an Alpha shift.'
           }
@@ -66,7 +68,7 @@ const ALPHA_STEPS = [
 
       return {
         result: WAITING,
-        message: 'Not Available Yet. Alpha shifts will be available on July 15th OR the Wednesday AFTER you complete training, which ever is later.'
+        message: 'Not Available Yet. Alpha shifts will be available on July 15th OR the Wednesday AFTER you complete training, which ever is later. ' + ALPHA_SHIFT_DISCLAIMER,
       };
     }
   },
@@ -85,9 +87,16 @@ const ALPHA_STEPS = [
         if (milestones.alpha_shift.status === 'pending') {
           return {
             result: ACTION_NEEDED,
-            message: htmlSafe(`<p>Please read "<a href="${milestones.alpha_shift_prep_link}" target="_blank" rel="noopener noreferrer">Becoming a Ranger: On-playa Alpha Shifts</a>"`
+            message: htmlSafe(
+              `<p>Please read "<a href="${milestones.alpha_shift_prep_link}" target="_blank" rel="noopener noreferrer">Becoming a Ranger: On-playa Alpha Shifts</a>"`
               + ` on the Ranger website.</p>Your Alpha shift starts ${dayjs(milestones.alpha_shift.begins).format('ddd MMM DD [@] HH:mm')}.`
-              + `<p><b class="text-danger">ARRIVE 30 MINUTES EARLY. Late arrivals will be turned away.</b></p>`
+              + `<p class="text-danger"><b>ARRIVE 30 MINUTES EARLY.</b> Late arrivals will be turned away.</p>`
+              + `<p>Alpha shifts are long 10+ hours. The first 2 hours are review, and practice. 6 hours are spent in
+                the field with Mentors. The last 2+ hours are Mentor evaluations and may involve a lot of waiting. (We
+                have a lot of Alphas to assess at the end of the day, and it takes time.)</p>`
+              + `<p>Show up prepared with snacks and a meal, layered clothing, a hat, sunglasses, comfortable walking shoes,
+            sunscreen, a water container (water and electrolytes are offered), a pen or pencil, a notebook, and, if
+            attending a swing shift (2pm til midnight), a flashlight or headlamp. </p>`
               + `<p>Check-in at the Hat Rack located at Ranger HQ, 5:45 &amp; the Esplanade close to Center Camp.</p>`
               + `If you know you won't be able to make your Alpha shift please email the Mentor Cadre or stop by Ranger HQ on playa.`),
             email: 'MentorEmail'
@@ -95,8 +104,8 @@ const ALPHA_STEPS = [
         } else {
           return {
             result: URGENT,
-            message: "It looks like you've missed your Alpha shift. You are welcome to apply again next year. If you believe this is in error, please email the Mentor Cadre.",
-            email: 'MentorEmail'
+            message: "It looks like you've missed your Alpha shift. You are welcome to apply again next year. If you believe this is in error, please email the Volunteer Coordinators.",
+            email: 'VcEmail'
           };
         }
       }

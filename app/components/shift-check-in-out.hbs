@@ -207,7 +207,7 @@
                         </p>
                         No training required position(s):<br>
                         {{#each this.noTrainingRequiredPositions as |position idx|}}
-                            {{position.title}}{{if idx ", "}}
+                          {{if idx ", "}}{{position.title}}
                         {{/each}}
                     </UiNotice>
                 {{/if}}
