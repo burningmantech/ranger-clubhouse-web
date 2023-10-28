@@ -1,0 +1,191 @@
+<ModalDialog @size="xl" @onEscape={{@cancelEntryAction}} as |Modal|>
+  <Modal.title>Edit Timesheet #{{@entry.id}}</Modal.title>
+  <ChForm @formId="entry" @formFor={{@entry}}
+          @validator={{this.timesheetValidations}}
+          @onSubmit={{@saveEntryAction}}
+          as |f|>
+    <Modal.body>
+      {{#if @entry.stillOnDuty}}
+        <UiNotice @type="danger" @icon="hand" @title="Still On Duty">
+          {{@person.callsign}} is still on duty. Please do not touch the entry until the shift has ended.
+        </UiNotice>
+      {{else if @entry.isPending}}
+        <UiNotice @type="danger" @icon="arrow-right" @title="Correction Request Review Required">
+          Entry has a correction request and needs to be reviewed.
+        </UiNotice>
+      {{else if @entry.isUnverified}}
+        <UiNotice @type="danger" @title="Unverified - No Review Required" @icon="hourglass">
+          No review action required at this time. {{@person.callsign}} needs to verify this entry.
+        </UiNotice>
+      {{else if @entry.isVerified}}
+        <UiNotice @type="success" @icon="check" @title="Entry Verified - No Review Required">
+          Review is not needed at this time.
+          Verified on {{shift-format @entry.verified_at}} by {{@entry.verified_person.callsign}}.
+        </UiNotice>
+      {{else if @entry.isApproved}}
+        <UiNotice @type="danger" @title="Verification Needed - No Review Required" @icon="hourglass">
+          Review is not needed at this time. The correction request was approved.
+          However, the correction still needs to be reviewed by {{@person.callsign}}.
+        </UiNotice>
+      {{/if}}
+
+      <fieldset>
+        <legend>User &amp; Timesheet Wrangler Notes</legend>
+        <TimesheetNotes @notes={{@entry.notes}} @showNoNotesMessage={{true}} />
+        {{#if @canManageTimesheets}}
+          <FormRow>
+            <f.textarea @name="additional_wrangler_notes"
+                        @label="New note to {{@person.callsign}}  (your callsign & the time will automatically be added):"
+                        @cols={{80}}
+                        @rows={{2}}/>
+          </FormRow>
+        {{/if}}
+      </fieldset>
+      {{#if @canManageTimesheets}}
+        <fieldset>
+          <legend>Administration Notes</legend>
+          <TimesheetNotes @notes={{@entry.admin_notes}} @showNoNotesMessage={{true}} />
+          <FormRow>
+            <f.textarea @name="additional_admin_notes"
+                        @label="New admin. note (your callsign & the time will automatically be added):"
+                        @cols={{80}}
+                        @rows={{2}}/>
+          </FormRow>
+        </fieldset>
+      {{/if}}
+      <fieldset>
+        <legend>Time &amp; Position</legend>
+         <div class="my-1">
+          {{#if @entry.slot}}
+            For reference, the scheduled sign-up is:
+            <table class="table table-width-auto my-1">
+              <thead>
+              <tr>
+                <th>Scheduled Time</th>
+                <th>Duration</th>
+                <th>Slot ID</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>{{shift-format @entry.slot.begins @entry.slot.ends}}</td>
+                <td>{{hour-minute-words @entry.slot.duration}}</td>
+                <td class="text-end">{{@entry.slot.id}}</td>
+              </tr>
+              </tbody>
+            </table>
+            The actual time worked might be longer or shorter than the scheduled sign-up.
+          {{else}}
+            Entry does not appear to be associated with a scheduled signed-up.
+          {{/if}}
+        </div>
+        {{#if @entry.isTooShort}}
+          <div class="text-danger">
+            Warning: Entry might be too short. Duration is less than 15 minutes.
+          </div>
+        {{else if @entry.isTooLong}}
+          <div class="text-danger">
+            Warning: Entry might be too long. Duration is over 1.5x the scheduled shift of
+            {{hour-minute-words @entry.slot.duration}}.
+          </div>
+        {{/if}}
+
+        {{#if @canManageTimesheets}}
+          <div class="fw-medium">Timesheet Duration {{this.entryDuration f.model}}</div>
+          <FormRow class="mt-2">
+            <f.datetime @name="on_duty"
+                        @label="On Duty"
+                        @size={{20}}
+            />
+            <f.datetime @name="off_duty"
+                        @label="Off Duty"
+                        @size={{20}}
+            />
+            <f.select @name="position_id"
+                      @label="Position"
+                      @options={{@positionOptions}}
+            />
+          </FormRow>
+        {{else}}
+          <table class="table table-width-auto">
+            <thead>
+            <tr>
+              <th>Position</th>
+              <th>Time</th>
+              <th>Duration</th>
+              <th>Credits</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>
+                {{@entry.position.title}}
+                {{#if @entry.is_non_ranger}}
+                  (as non ranger volunteer)
+                {{/if}}
+              </td>
+              <td>
+                {{shift-format @entry.on_duty @entry.off_duty}}
+              </td>
+              <td>
+                {{hour-minute-words @entry.duration}}
+              </td>
+              <td>
+                {{credits-format @entry.credits}}
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        {{/if}}
+      </fieldset>
+      {{#if @canManageTimesheets}}
+        <fieldset>
+          <legend>Attributes</legend>
+          <FormRow class="mt-3">
+            <div class="col-auto">
+              <f.checkbox @name="is_non_ranger"
+                          @label="Entry is for a dept volunteer (non-ranger status) - time will not count towards service years"/>
+            </div>
+          </FormRow>
+          <FormRow>
+            <div class="col-auto">
+              <f.checkbox @name="suppress_duration_warning"
+                          @label="Supress duration warnings (too short / too long). Duration confirmed correct."/>
+            </div>
+          </FormRow>
+        </fieldset>
+        <fieldset>
+          <legend>Entry Status</legend>
+          <FormRow>
+            <div class="col-auto">
+              <f.radioGroup @name="review_status"
+                            @options={{this.reviewOptions}}
+                            @inline={{true}}
+              />
+            </div>
+          </FormRow>
+        </fieldset>
+      {{else}}
+        <b>Review Status:</b> {{@entry.review_status}}
+      {{/if}}
+    </Modal.body>
+    <Modal.footer @noAlign={{true}}>
+      {{#if @canManageTimesheets}}
+        <f.submit @label="Update" @disabled={{@entry.isSaving}} />
+        <UiCancelButton @disabled={{@entry.isSaving}} @onClick={{@cancelEntryAction}} />
+        {{#if @entry.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+        <div class="ms-auto">
+          <UiButton @type="danger"
+                    @onClick={{fn @showDeleteDialogAction f.model}}
+                    @disabled={{@entry.isSaving}}>
+            {{fa-icon "trash"}} Delete
+          </UiButton>
+        </div>
+      {{else}}
+        <UiCancelButton @disabled={{@entry.isSaving}} @onClick={{@cancelEntryAction}} />
+      {{/if}}
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>

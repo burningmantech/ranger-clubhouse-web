@@ -1,15 +1,11 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {Role} from 'clubhouse/constants/roles';
-import {validatePresence} from 'ember-changeset-validations/validators';
-import validateDateTime from 'clubhouse/validators/datetime';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
-import {isEmpty} from '@ember/utils';
-import dayjs from 'dayjs';
 import {NON_RANGER} from "clubhouse/constants/person_status";
 import {STATUS_REJECTED} from "clubhouse/models/timesheet";
-
+import {TRAINING} from "clubhouse/constants/positions";
 
 export default class PersonTimesheetManageComponent extends Component {
   @service ajax;
@@ -25,18 +21,6 @@ export default class PersonTimesheetManageComponent extends Component {
 
   @tracked positionOptions = [];
 
-  reviewOptions = [
-    ['Correction approved', 'approved'],
-    ['Correction rejected', 'rejected'],
-    ['Correction requested', 'pending'],
-    ['Entry verified', 'verified'],
-    ['Entry unverified', 'unverified']
-  ];
-
-  timesheetValidations = {
-    on_duty: [validateDateTime({before: 'off_duty'}), validatePresence({presence: true})],
-    off_duty: [validateDateTime({after: 'on_duty'})],
-  };
 
   constructor() {
     super(...arguments);
@@ -83,11 +67,11 @@ export default class PersonTimesheetManageComponent extends Component {
    */
 
   @action
-  editEntryAction(timesheet) {
+  async editEntryAction(timesheet) {
     const {positions} = this.args;
 
     // The positions the person can be part of
-    this.positionOptions = positions.map((p) => [p.title, p.id]);
+    this.positionOptions = positions.filter((p) => p.id !== TRAINING).map((p) => [p.title, p.id]);
 
     if (!positions.find((p) => p.id === timesheet.position_id)) {
       // Might be something like a mentee shift and the person no longer has the position grant, yet
@@ -95,33 +79,18 @@ export default class PersonTimesheetManageComponent extends Component {
       this.positionOptions.unshift([timesheet.position.title, timesheet.position_id]);
     }
 
-    timesheet.reload().then(() => {
+    try {
+      this.isSubmitting = true;
+      await timesheet.reload();
       this.editVerification = false;
       this.editEntry = timesheet;
       this._markOverlapping();
-    }).catch((response) => this.house.handleErrorResponse(response));
-  }
 
-  /**
-   * Check if the entry has abnormal on duty or off duty times.
-   * Allow an unrestricted date range if the years don't match, or the months
-   * are not August or September.
-   *
-   * @param {string} restrictTime
-   * @returns {undefined|string}
-   * @private
-   */
-
-  _restrictCheck(restrictTime) {
-    if (!isEmpty(this.editEntry.on_duty) && !isEmpty(this.editEntry.off_duty)) {
-      const onDuty = dayjs(this.editEntry.on_duty), offDuty = dayjs(this.editEntry.off_duty);
-      if (onDuty.year() !== offDuty.year()
-        || onDuty.month() < 7 || onDuty.month() > 9
-        || offDuty.month() < 7 || offDuty.month() > 9) {
-        return undefined;
-      }
+    } catch (response){
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
     }
-    return restrictTime;
   }
 
   /**
@@ -165,12 +134,16 @@ export default class PersonTimesheetManageComponent extends Component {
    * @private
    */
 
-  async _saveCheckTimes(model) {
-    if (model._changes['position_id'] || model._changes['on_duty'] || model._changes['off_duty'] || (model._changes['review_status'] && model.review_status !== STATUS_REJECTED)) {
-      await this.shiftManage.checkDateTime(model.position_id, model.on_duty, model.off_duty, () => this._saveCommon(model));
+   _saveCheckTimes(model) {
+    if (model.review_status !== STATUS_REJECTED && (model._changes['position_id'] || model._changes['on_duty'] || model._changes['off_duty'])) {
+      this.shiftManage.checkDateTime(model.position_id, model.on_duty, model.off_duty, () => this._checkForOverlaps(model));
     } else {
       this._saveCommon(model);
     }
+  }
+
+  _checkForOverlaps(model) {
+    this.shiftManage.checkForOverlap(this.args.person.id, model.on_duty, model.off_duty, model.id, () => this._saveCommon(model));
   }
 
   /**
@@ -185,7 +158,8 @@ export default class PersonTimesheetManageComponent extends Component {
     this.house.saveModel(model, 'The timesheet entry has been successfully updated.',
       async () => {
         this.editEntry.additional_notes = '';
-        this.editEntry.additional_reviewer_notes = '';
+        this.editEntry.additional_wrangler_notes = '';
+        this.editEntry.additional_admin_notes = '';
         this.editEntry = null;
         await this.args.timesheets.update();
         this.args.onChange();
@@ -271,35 +245,5 @@ export default class PersonTimesheetManageComponent extends Component {
 
   get hasOverlapping() {
     return this.args.timesheets.find((ts) => ts.isOverlapping) !== undefined;
-  }
-
-  /**
-   * Return the duration in hours & minutes. Takes into account invalid or blank dates.
-   *
-   * @param model
-   * @returns {string}
-   */
-
-  entryDuration(model) {
-    if (isEmpty(model.on_duty) || isEmpty(model.off_duty)) {
-      return '-';
-    }
-
-    const start = dayjs(model.on_duty), end = dayjs(model.off_duty);
-    if (!start.isValid() || !end.isValid()) {
-      return '-';
-    }
-
-    const duration = end.diff(start, 's');
-    const minutes = Math.floor((duration / 60) % 60);
-    const hours = Math.floor(duration / 3600);
-
-    let time = `${minutes} min${minutes === 1 ? '' : 's'}`;
-
-    if (hours) {
-      time = `${hours} hour${hours === 1 ? '' : 's'} ${time}`;
-    }
-
-    return time;
   }
 }

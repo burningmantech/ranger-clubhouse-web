@@ -85,38 +85,65 @@
             @validator={{this.newEntryValidations}}
             @onSubmit={{this.createEntryAction}} as |f|>
       <Modal.body>
-        <FormRow>
-          <f.datetime @name="on_duty"
-                      @label="On Duty"
-          />
-          <f.datetime @name="off_duty"
-                      @label="Off Duty"
-          />
-          <f.select @name="position_id"
-                    @label="Position"
-                    @options={{@positions}}/>
-        </FormRow>
-        <FormRow>
-          <f.text @name="partner"
-                  @label="Partner(s) for shift."
-                  @size={{40}}
-                  @maxlength={{60}}/>
-        </FormRow>
-        <FormRow>
-          <f.textarea @name="additional_notes"
-                      @label="Requester note FROM {{@person.callsign}}"
-                      @cols={{80}}
-                      @rows={{4}}
-                      @options={{@positions}} />
-        </FormRow>
-        {{#if this.hasTimesheetManagement}}
+        <fieldset>
+          <legend>Time &amp; Position w/Partners</legend>
           <FormRow>
-            <f.textarea @name="additional_reviewer_notes"
-                        @label="Reviewer note TO {{@person.callsign}}"
-                        @cols={{80}}
-                        @rows={{4}}
-                        @options={{@positions}} />
+            <f.datetime @name="on_duty"
+                        @label="On Duty"
+            />
+            <f.datetime @name="off_duty"
+                        @label="Off Duty"
+            />
+            <f.select @name="position_id"
+                      @label="Position"
+                      @options={{@positions}}/>
           </FormRow>
+          <FormRow>
+            <f.text @name="partner"
+                    @label="Partner(s) for shift."
+                    @size={{40}}
+                    @maxlength={{60}}/>
+          </FormRow>
+        </fieldset>
+        <fieldset>
+          <legend>User Notes</legend>
+          <FormRow>
+            <f.textarea @name="additional_notes"
+                        @label="Note to submit on behalf of {{@person.callsign}} (your callsign & the time will automatically be added):"
+                        @cols={{80}}
+                        @rows={{2}}/>
+          </FormRow>
+        </fieldset>
+        {{#if this.hasTimesheetManagement}}
+          <fieldset>
+            <legend>Timesheet Wrangler Notes</legend>
+            <FormRow>
+              <f.textarea @name="additional_wrangler_notes"
+                          @label="New note to {{@person.callsign}}  (your callsign & the time will automatically be added):"
+                          @cols={{80}}
+                          @rows={{2}}/>
+            </FormRow>
+            <FormRow>
+              <f.textarea @name="additional_admin_notes"
+                          @label="New admin. note (your callsign & the time will automatically be added):"
+                          @cols={{80}}
+                          @rows={{2}}/>
+            </FormRow>
+            <FormRow>
+              <f.radioGroup @name="review_status"
+                            @label="Correction Status:"
+                            @options={{this.reviewOptions}}
+                            @inline={{true}}
+                            @onChange={{this.statusChangeAction}} />
+            </FormRow>
+            <FormRow>
+              <div class="col-auto">
+                <f.checkbox @name="create_entry"
+                            @label="Create new entry (requires request be approved first)"
+                            @disabled={{not-eq f.model.review_status "approved"}}/>
+              </div>
+            </FormRow>
+          </fieldset>
         {{/if}}
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
@@ -147,60 +174,62 @@
             Request was rejected. Review is not needed at this time.
           </UiNotice>
         {{/if}}
-        <dl class="row">
-          <dt class="col-2">Position:</dt>
-          <dd class="col-10">{{this.editEntry.position.title}}</dd>
-
-          <dt class="col-2">Time:</dt>
-          <dd class="col-10">{{shift-format this.editEntry.on_duty}} - {{shift-format this.editEntry.off_duty}}</dd>
-
-          <dt class="col-2">Duration:</dt>
-          <dd class="col-10">{{hour-minute-format this.editEntry.duration}}</dd>
-
-          <dt class="col-2">Credits:</dt>
-          <dd class="col-10">{{credits-format this.editEntry.credits}}</dd>
-          <dt class="col-2">Partner(s):</dt>
-          <dd class="col-10">
-            {{#if (and this.editEntry.partner this.editEntry.partner_info)}}
-              <table class="table table-sm table-striped">
-                <thead>
-                <tr>
-                  <th>Partner</th>
-                  <th>Time</th>
-                  <th>Position</th>
-                  <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                {{#each this.partnerInfo as |pi|}}
-                  <tr>
-                    <td>{{pi.callsign}}</td>
-                    {{#if pi.on_duty}}
-                      <td>{{shift-format pi.on_duty pi.off_duty}}</td>
-                      <td>{{pi.position_title}}</td>
-                    {{else if pi.person_id}}
-                      <td colspan="2" class="text-danger">
-                        no partner shift found within 30 mins of {{shift-format this.editEntry.on_duty}}
-                      </td>
-                    {{else}}
-                      <td colspan="{{if pi.person_pi 3 4}}" class="text-danger">callsign not found</td>
-                    {{/if}}
-                    {{#if pi.person_id}}
-                      <td>
-                        <UiButton @type="secondary" @size="sm" @onClick={{fn this.viewPartnerTimesheetAction pi}}>
-                          View Timesheet
-                        </UiButton>
-                      </td>
-                    {{/if}}
-                  </tr>
-                {{/each}}
-                </tbody>
-              </table>
-            {{else}}
-              <i>No partner name given</i>
-            {{/if}}
-          </dd>
-        </dl>
+        <table class="table table-width-auto">
+          <thead>
+          <tr>
+            <th>Position</th>
+            <th>Time</th>
+            <th>Duration</th>
+            <th>Credits</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr>
+            <td>{{this.editEntry.position.title}}</td>
+            <td>{{shift-format this.editEntry.on_duty this.editEntry.off_duty}}</td>
+            <td>{{hour-minute-words this.editEntry.duration}}</td>
+            <td class="text-end">{{credits-format this.editEntry.credits}}</td>
+          </tr>
+          </tbody>
+        </table>
+        {{#if (and this.editEntry.partner this.editEntry.partner_info)}}
+          <table class="table table-sm table-striped">
+            <thead>
+            <tr>
+              <th>Partner</th>
+              <th>Time</th>
+              <th>Position</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each this.partnerInfo as |pi|}}
+              <tr>
+                <td>{{pi.callsign}}</td>
+                {{#if pi.on_duty}}
+                  <td>{{shift-format pi.on_duty pi.off_duty}}</td>
+                  <td>{{pi.position_title}}</td>
+                {{else if pi.person_id}}
+                  <td colspan="2" class="text-danger">
+                    no partner shift found within 30 mins of {{shift-format this.editEntry.on_duty}}
+                  </td>
+                {{else}}
+                  <td colspan="{{if pi.person_pi 3 4}}" class="text-danger">callsign not found</td>
+                {{/if}}
+                {{#if pi.person_id}}
+                  <td>
+                    <UiButton @type="secondary" @size="sm" @onClick={{fn this.viewPartnerTimesheetAction pi}}>
+                      View Timesheet
+                    </UiButton>
+                  </td>
+                {{/if}}
+              </tr>
+            {{/each}}
+            </tbody>
+          </table>
+        {{else}}
+          <i>No partner name given</i>
+        {{/if}}
         {{#if this.havePartnerTimesheet}}
           <fieldset>
             <legend>Timesheet for {{this.partnerCallsign}} </legend>
@@ -239,35 +268,28 @@
           </fieldset>
         {{/if}}
         <fieldset>
-          <legend>Message from {{@person.callsign}}</legend>
-          {{#if this.editEntry.notes}}
-            {{nl2br this.editEntry.notes}}
-          {{else}}
-            <i>No notes or messages from {{@person.callsign}} about this request?!?</i>
+          <legend>User &amp; Timesheet Wrangler Notes</legend>
+          <TimesheetNotes @notes={{this.editEntry.notes}} @showNoNotesMessage={{true}} />
+          {{#if this.canManageTimesheets}}
+            <FormRow>
+              <f.textarea @name="additional_wrangler_notes"
+                          @label="New note to {{@person.callsign}}  (your callsign & the time will automatically be added):"
+                          @cols={{80}}
+                          @rows={{2}}/>
+            </FormRow>
           {{/if}}
         </fieldset>
         <fieldset>
-          <legend>Submission Review</legend>
-          <div class="mb-2">
-            {{#if this.editEntry.reviewer_notes}}
-              {{nl2br this.editEntry.reviewer_notes}}
-            {{else}}
-              <i>No reviewer notes have been left yet.</i>
-            {{/if}}
-            {{#if this.editEntry.reviewed_at}}
-              <FormRow>
-                Last review on {{shift-format this.editEntry.reviewed_at}}
-                by {{this.editEntry.reviewer_person.callsign}}
-              </FormRow>
-            {{/if}}
-          </div>
-          <FormRow>
-            <f.textarea @name="additional_reviewer_notes"
-                        @label="Enter your response to {{@person.callsign}} below. Be clear and concise."
-                        @hint="A timestamp and your callsign will automatically be added."
-                        @cols={{80}}
-                        @rows={{4}}/>
-          </FormRow>
+          <legend>Administration Notes</legend>
+          <TimesheetNotes @notes={{this.editEntry.admin_notes}} @showNoNotesMessage={{true}}  />
+          {{#if this.canManageTimesheets}}
+            <FormRow>
+              <f.textarea @name="additional_admin_notes"
+                          @label="New admin. note (your callsign & the time will automatically be added):"
+                          @cols={{80}}
+                          @rows={{2}}/>
+            </FormRow>
+          {{/if}}
           <FormRow>
             <f.radioGroup @name="review_status"
                           @label="Correction Status:"
@@ -327,42 +349,30 @@
   <ModalDialog @title="Missing Timesheet Request ID #{{this.viewEntry.id}}"
                @onEscape={{this.closeViewEntry}} as |Modal|>
     <Modal.body>
-      <dl class="row">
-        <dt class="col-2">Position:</dt>
-        <dd class="col-10">{{this.viewEntry.position.title}}</dd>
-
-        <dt class="col-2">Time:</dt>
-        <dd class="col-10">{{shift-format this.viewEntry.on_duty this.viewEntry.off_duty}}</dd>
-
-        <dt class="col-2">Duration:</dt>
-        <dd class="col-10">{{hour-minute-format this.viewEntry.duration}}</dd>
-
-        <dt class="col-2">Credits:</dt>
-        <dd class="col-10">{{credits-format this.viewEntry.credits}}</dd>
-        <dt class="col-2">Partner(s):</dt>
-        <dd class="col-10">{{or this.viewEntry.partner "-"}}</dd>
-      </dl>
-      <p>
-        <b>Requester notes FROM {{@person.callsign}}</b><br>
-        {{#if this.viewEntry.notes}}
-          {{nl2br this.viewEntry.notes}}
-        {{else}}
-          <i>No notes or messages from {{@person.callsign}} about this request?!?</i>
-        {{/if}}
-      </p>
-      <p>
-        <b>Reviewer notes TO {{@person.callsign}}</b><br>
-        {{#if this.viewEntry.reviewer_notes}}
-          {{nl2br this.viewEntry.reviewer_notes}}
-        {{else}}
-          <i>No reviewer notes have been left yet.</i>
-        {{/if}}
-        {{#if this.viewEntry.reviewed_at}}
-          <br>
-          Last review on {{shift-format this.viewEntry.reviewed_at}}
-          by {{this.viewEntry.reviewer_person.callsign}}
-        {{/if}}
-      </p>
+      <table class="table table-width-auto">
+        <thead>
+        <tr>
+          <th>Position</th>
+          <th>Time</th>
+          <th>Duration</th>
+          <th>Credits</th>
+          <th>Partners(s)</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>{{this.viewEntry.position.title}}</td>
+          <td>{{shift-format this.viewEntry.on_duty this.viewEntry.off_duty}}</td>
+          <td>{{hour-minute-words this.viewEntry.duration}}</td>
+          <td>{{credits-format this.viewEntry.credits}}</td>
+          <td>{{or this.viewEntry.partner "-"}}</td>
+        </tr>
+        </tbody>
+      </table>
+      <fieldset>
+        <legend>User &amp; Timesheet Wranglers Notes</legend>
+        <TimesheetNotes @notes={{this.viewEntry.notes}} @showNoNotesMessage={{true}} />
+      </fieldset>
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeViewEntry}} />

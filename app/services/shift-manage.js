@@ -268,4 +268,45 @@ export default class ShiftManageService extends Service {
       return `<li>The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is AFTER the last shift</b> ending on ${shiftFormat([ends], {})}.</li>`;
     }
   }
+
+  /**
+   * Check if the given start and finished datetimes do not overlap with any timesheet entries.
+   *
+   * @param {number} person_id
+   * @param {string} on_duty
+   * @param {string} off_duty
+   * @param {number|null} timesheet_id
+   * @param {Function} callback
+   * @returns {Promise<*>}
+   */
+
+  async checkForOverlap(person_id, on_duty, off_duty, timesheet_id, callback) {
+    let status, timesheets;
+    try {
+      const data = {person_id, on_duty, off_duty};
+      if (timesheet_id) {
+        data.timesheet_id = timesheet_id;
+      }
+      ({status, timesheets} = await this.ajax.request('timesheet/check-overlap', {data}));
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+      return;
+    }
+
+    if (status === 'success') {
+      // No overlaps detected
+      return callback();
+    }
+
+    let message = `<p>The time overlaps with the following timesheet entries:<ul>`;
+
+    timesheets.forEach((entry) => {
+      message += `<li>${entry.position.title} ${shiftFormat([ entry.on_duty, entry.off_duty ], {})}</li>`
+    });
+
+    message += '</ul>Use the Cancel button to correct the dates, or use Confirm to indicate the dates are correct.';
+
+    this.modal.confirm('Overlapping Timesheet Entries', message, callback);
+  }
+
 }

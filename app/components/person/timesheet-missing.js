@@ -7,7 +7,8 @@ import validateDateTime from 'clubhouse/validators/datetime';
 import validatePresenceIf from 'clubhouse/validators/presence-if';
 
 import {DIRT} from 'clubhouse/constants/positions';
-import {TIMESHEET_MANAGEMENT} from 'clubhouse/constants/roles';
+import {ADMIN, TIMESHEET_MANAGEMENT} from 'clubhouse/constants/roles';
+import {APPROVED, PENDING, REJECTED} from "clubhouse/models/timesheet-missing";
 
 export default class PersonTimesheetMissingComponent extends Component {
   @tracked newEntry = null;
@@ -35,9 +36,9 @@ export default class PersonTimesheetMissingComponent extends Component {
   hasTimesheetManagement = this.session.hasRole(TIMESHEET_MANAGEMENT);
 
   reviewOptions = [
-    'approved',
-    'rejected',
-    'pending'
+    APPROVED,
+    REJECTED,
+    PENDING
   ];
 
   timesheetValidations = {
@@ -70,11 +71,11 @@ export default class PersonTimesheetMissingComponent extends Component {
 
     if (this.hasTimesheetManagement) {
       this.newEntryValidations.additional_notes = [validatePresenceIf({
-        if_blank: 'additional_reviewer_notes',
+        if_blank: 'additional_wrangler_notes',
         message: 'Either a requester or reviewer note must be entered.'
       })]
 
-      this.newEntryValidations.additional_reviewer_notes = [validatePresenceIf({
+      this.newEntryValidations.additional_wrangler_notes = [validatePresenceIf({
         if_blank: 'additional_notes',
         message: 'Either a requester or reviewer note must be entered.'
       })];
@@ -122,11 +123,12 @@ export default class PersonTimesheetMissingComponent extends Component {
       timesheet.set('new_position_id', timesheet.position_id);
       timesheet.set('create_entry', 0);
       timesheet.set('additional_notes', '');
+      timesheet.set('additional_admin_notes', '');
       timesheet.set('additional_reviewer_notes', '');
+      timesheet.set('additional_wrangler_notes', '');
 
       this.editEntry = timesheet;
       this.nextEntry = nextEntry;
-      this.editEntry = timesheet;
       this.partnerInfo = timesheet.partner_info;
       this.havePartnerTimesheet = false;
 
@@ -164,25 +166,29 @@ export default class PersonTimesheetMissingComponent extends Component {
    * @private
    */
 
-   _saveEntry(model, isValid, nextEntry) {
+  _saveEntry(model, isValid, nextEntry) {
     if (!isValid) {
       return;
     }
 
     if (model.create_entry) {
-      this.shiftManage.checkDateTime(model.position_id, model.new_on_duty, model.new_off_duty, () => this._saveCommon(model, nextEntry));
+      this.shiftManage.checkDateTime(model.position_id, model.new_on_duty, model.new_off_duty, () => this._checkSaveOverlap(model, nextEntry));
     } else {
       this._saveCommon(model, nextEntry);
     }
   }
 
+  _checkSaveOverlap(model, nextEntry) {
+    this.shiftManage.checkForOverlap(this.args.person.id, model.new_on_duty, model.new_off_duty, null, () => this._saveCommon(model, nextEntry));
+  }
+
   _saveCommon(model, nextEntry) {
     const createEntry = model.create_entry;
-    this.toast.clear();
     this.house.saveModel(model, 'Missing timesheet entry has been successfully updated.',
       async () => {
         this.editEntry = null;
         this.nextEntry = null;
+        this.newEntry = null;
         this.havePartnerTimesheet = null;
 
         const {timesheets, onChange} = this.args;
@@ -298,8 +304,8 @@ export default class PersonTimesheetMissingComponent extends Component {
 
   @action
   statusChangeAction(field, value) {
-    if (value === 'approved') {
-      this.editEntry.set('create_entry', 1);
+    if (value === APPROVED) {
+      (this.newEntry || this.editEntry).set('create_entry', 1);
     }
   }
 
@@ -315,7 +321,8 @@ export default class PersonTimesheetMissingComponent extends Component {
     }
     this.newEntry = this.store.createRecord('timesheet-missing', {
       person_id: person.id,
-      position_id: positions.find((p) => p.id === DIRT) ? DIRT : positions[0]?.id
+      position_id: positions.find((p) => p.id === DIRT) ? DIRT : positions[0]?.id,
+      review_status: PENDING,
     });
   }
 
@@ -339,17 +346,37 @@ export default class PersonTimesheetMissingComponent extends Component {
       return;
     }
 
+    this.shiftManage.checkDateTime(model.position_id, model.on_duty, model.off_duty, () => model.create_entry ? this._checkForCreateOverlap(model) : this._createCommon(model));
+  }
+
+  _checkForCreateOverlap(model) {
+    this.shiftManage.checkForOverlap(this.args.person.id, model.on_duty, model.off_duty, null, () => this._createCommon(model));
+  }
+
+  _createCommon(model) {
     this.house.saveModel(model, 'A new missing timesheet request has been successfully created.',
       async () => {
         this.newEntry = null;
         try {
+          const {timesheets, onChange} = this.args;
           this.isSubmitting = false;
+          model.additional_admin_notes = null;
+          model.additional_wranger_notes = null;
+          model.additional_reviewer_notes = null;
           await this.args.timesheetMissing.update();
+          if (model.create_entry) {
+            await timesheets?.update();
+          }
+          onChange?.();
         } catch (response) {
           this.house.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }
       });
+  }
+
+  get canManageTimesheets() {
+    return this.session.hasRole([ADMIN, TIMESHEET_MANAGEMENT]);
   }
 }

@@ -3,8 +3,7 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {validatePresence} from 'ember-changeset-validations/validators';
-import {isEmpty } from '@ember/utils';
-
+import {isEmpty} from '@ember/utils';
 import {STATUS_PENDING, STATUS_VERIFIED} from "clubhouse/models/timesheet";
 import currentYear from 'clubhouse/utils/current-year';
 

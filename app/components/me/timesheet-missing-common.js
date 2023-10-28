@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import {service} from '@ember/service';
-import {DIRT} from 'clubhouse/constants/positions';
+import {DIRT, TRAINING} from 'clubhouse/constants/positions';
 import validateDateTime from 'clubhouse/validators/datetime';
 import {tracked} from '@glimmer/tracking';
 import _ from 'lodash';
@@ -10,6 +10,7 @@ import _ from 'lodash';
 export default class MeTimesheetMissingCommonComponent extends Component {
   @service house;
   @service modal;
+  @service session;
   @service shiftManage;
   @service store;
   @service toast;
@@ -30,7 +31,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
   constructor() {
     super(...arguments);
 
-    const positions = this.args.positions.map((p) => [p.title, p.id]);
+    const positions = this.args.positions.filter((p) => p.id !== TRAINING).map((p) => [p.title, p.id]);
     const dirt = positions.find((p) => p[1] === DIRT);
     if (dirt) {
       _.pull(positions, dirt);
@@ -38,6 +39,10 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     }
 
     this.positionOptions = positions;
+  }
+
+  get isMe() {
+    return +this.args.person.id === this.session.userId;
   }
 
   /**
@@ -137,7 +142,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     );
   }
 
-   /**
+  /**
    * Helper to color the row header. (aka entry status header)
    *
    * @param {TimesheetMissingModel} ts
@@ -159,5 +164,4 @@ export default class MeTimesheetMissingCommonComponent extends Component {
 
     return ''
   }
-
 }

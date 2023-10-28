@@ -1,326 +1,154 @@
-<UiSection>
-  <:title>{{@year}} Timesheet Entries</:title>
-  <:body>
+{{#if this.editEntry}}
+  <Person::TimesheetEditModal @entry={{this.editEntry}}
+                              @person={{@person}}
+                              @saveEntryAction={{this.saveEntryAction}}
+                              @canManageTimesheets={{this.canManageTimesheets}}
+                              @positionOptions={{this.positionOptions}}
+                              @showDeleteDialogAction={{this.showDeleteDialogAction}}
+                              @cancelEntryAction={{this.cancelEntryAction}}
+  />
+{{else}}
+  <UiSection>
+    <:title>{{@year}} Timesheet Entries</:title>
+    <:body>
     <span class="me-2">
     <b>Credits:</b> {{credits-format @timesheetSummary.total_credits}}
     </span>
-    <span class="me-2">
+      <span class="me-2">
     <b>Counted Hours Towards Appreciations:</b>
-      {{hour-minute-format @timesheetSummary.counted_duration}}
+        {{hour-minute-format @timesheetSummary.counted_duration}}
     </span>
-    <b>Total Hours:</b>
-    {{hour-minute-format @timesheetSummary.total_duration}}
-    <div class="d-flex mt-1">
-      <div>
-        <NoAppreciateIcon/>
-        = the shift hours do not count towards provisions and appreciations.
-      </div>
-      {{#if this.hasOverlapping}}
-        <div class="ms-2">
-          {{fa-icon "flag" color="danger"}} = entry's time overlaps with another entry.
+      <b>Total Hours:</b>
+      {{hour-minute-format @timesheetSummary.total_duration}}
+      <div class="d-flex mt-1">
+        <div>
+          <NoAppreciateIcon/>
+          = the shift hours do not count towards provisions and appreciations.
         </div>
-      {{/if}}
-    </div>
-    <table class="table table-hover table-striped table-width-auto">
-      <thead>
-      <tr>
-        <th>&nbsp;</th>
-        <th>Time</th>
-        <th class="text-end">Duration</th>
-        <th class="text-end">Credits</th>
-        <th>Position</th>
-        <th class="text-center">Status</th>
-        <th>Action</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each @timesheets key="id" as |ts|}}
-        <tr class="align-middle">
-          <td>
-            {{#if (is-empty ts.off_duty)}}
-              {{fa-icon "person-walking"}}
-            {{else if ts.isVerified}}
-              {{fa-icon "check" color="success"}}
-            {{else if ts.isUnverified}}
-              {{fa-icon "question"}}
-            {{else if ts.isPending}}
-              {{fa-icon "arrow-right" color="danger"}}
-            {{else if ts.isRejected}}
-              {{fa-icon "times"}}
-            {{else if ts.isApproved}}
-              {{fa-icon "thumbs-up" type="far"}}
-            {{else}}
-              &nbsp;
-            {{/if}}
-          </td>
-          <td>
-            {{#if ts.isOverlapping}}
-              {{fa-icon "flag" color="danger"}} &nbsp;
-            {{/if}}
-            {{#if ts.off_duty}}
-              {{shift-format ts.on_duty ts.off_duty}}
-            {{else}}
-              {{shift-format ts.on_duty}}
-            {{/if}}
-            {{#unless ts.suppress_duration_warning}}
-              {{#if ts.isTooShort}}
-                <div class="text-danger">
-                  Entry might be too short.
-                </div>
-              {{else if ts.isTooLong}}
-                <div class="text-danger">
-                  Entry might be too long.
-                </div>
+        {{#if this.hasOverlapping}}
+          <div class="ms-2">
+            {{fa-icon "flag" color="danger"}} = entry's time overlaps with another entry.
+          </div>
+        {{/if}}
+      </div>
+      <table class="table table-hover table-striped table-width-auto">
+        <thead>
+        <tr>
+          <th>&nbsp;</th>
+          <th>Time</th>
+          <th class="text-end">Duration</th>
+          <th class="text-end">Credits</th>
+          <th>Position</th>
+          <th class="text-center">Status</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each @timesheets key="id" as |ts|}}
+          <tr class="align-middle">
+            <td>
+              {{#if (is-empty ts.off_duty)}}
+                {{fa-icon "person-walking"}}
+              {{else if ts.isVerified}}
+                {{fa-icon "check" color="success"}}
+              {{else if ts.isUnverified}}
+                {{fa-icon "question"}}
+              {{else if ts.isPending}}
+                {{fa-icon "arrow-right" color="danger"}}
+              {{else if ts.isRejected}}
+                {{fa-icon "times"}}
+              {{else if ts.isApproved}}
+                {{fa-icon "thumbs-up" type="far"}}
+              {{else}}
+                &nbsp;
               {{/if}}
-            {{/unless}}
-          </td>
-          <td class="text-end">
-            {{#unless ts.position.count_hours}}
-              <NoAppreciateIcon/>
-            {{/unless}}
-            {{hour-minute-format ts.duration}}
-          </td>
-          <td class="text-end">
-            {{credits-format ts.credits}}
-          </td>
-          <td>
-            {{ts.position.title}}
-            {{#if ts.is_non_ranger}}
-              <br><i>(as non ranger volunteer)</i>
-            {{/if}}
-          </td>
-          <td class="text-center">
-            {{#if (is-empty ts.off_duty)}}
-              {{badge "warning" "Still On Duty"}}
-            {{else if ts.isVerified}}
-              {{badge "success" "Verified"}}
-            {{else if ts.isApproved}}
+            </td>
+            <td>
+              {{#if ts.isOverlapping}}
+                {{fa-icon "flag" color="danger"}} &nbsp;
+              {{/if}}
+              {{#if ts.off_duty}}
+                {{shift-format ts.on_duty ts.off_duty}}
+              {{else}}
+                {{shift-format ts.on_duty}}
+              {{/if}}
+              {{#unless ts.suppress_duration_warning}}
+                {{#if ts.isTooShort}}
+                  <div class="text-danger">
+                    Entry might be too short.
+                  </div>
+                {{else if ts.isTooLong}}
+                  <div class="text-danger">
+                    Entry might be too long.
+                  </div>
+                {{/if}}
+              {{/unless}}
+            </td>
+            <td class="text-end">
+              {{#unless ts.position.count_hours}}
+                <NoAppreciateIcon/>
+              {{/unless}}
+              {{hour-minute-format ts.duration}}
+            </td>
+            <td class="text-end">
+              {{credits-format ts.credits}}
+            </td>
+            <td>
+              {{ts.position.title}}
+              {{#if ts.is_non_ranger}}
+                <br><i>(as non ranger volunteer)</i>
+              {{/if}}
+            </td>
+            <td class="text-center">
+              {{#if (is-empty ts.off_duty)}}
+                {{badge "warning" "Still On Duty"}}
+              {{else if ts.isVerified}}
+                {{badge "success" "Verified"}}
+              {{else if ts.isApproved}}
                 {{badge "success" "Correction Approved"}}<br>
                 {{badge "secondary" "Verification still needed"}}
-            {{else if ts.isUnverified}}
-              {{badge "secondary" "Unverified"}}
-            {{else if ts.isPending}}
-              {{badge "danger" "Correction Requested"}}
-            {{else if ts.isRejected}}
-              {{badge "warning" "Correction Rejected"}}
-             {{else}}
-              &nbsp;
-            {{/if}}
-          </td>
-          <td>
-            {{#if (is-empty ts.off_duty)}}
-              <UiButton @type="danger" @size="sm" @onClick={{fn this.signoffAction ts}}>
-                End Shift
-              </UiButton>
-            {{else}}
-              <UiButton @type={{if ts.isPending "danger" "primary"}}
-                        @size="sm"
-                        @onClick={{fn this.editEntryAction ts}}
-                        @disabled={{ts.isReloading}}>
-                {{#if this.canManageTimesheets}}
-                  {{fa-icon "edit"}} {{if ts.isPending "Review" "Edit"}}
-                {{else}}
-                  {{fa-icon "magnifying-glass"}} View
-                {{/if}}
-              </UiButton>
-            {{/if}}
-            {{#if ts.isReloading}}
-              <SpinIcon/>
-            {{/if}}
-          </td>
-        </tr>
-      {{else}}
-        <tr>
-          <td>&nbsp;</td>
-          <td colspan="6"><b class="mt-2 text-danger">No timesheet entries found for {{@year}}</b></td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </table>
-  </:body>
-</UiSection>
-
-{{#if this.editEntry}}
-  <ModalDialog
-    @title="{{if this.canManageTimesheets "Edit" "View"}} Timesheet #{{this.editEntry.id}}"
-    @onEscape={{this.cancelEntryAction}}
-    as |Modal|>
-    <ChForm @formId="entry" @formFor={{this.editEntry}}
-            @validator={{this.timesheetValidations}}
-            @onSubmit={{this.saveEntryAction}}
-            as |f|>
-      <Modal.body>
-        {{#if this.editEntry.stillOnDuty}}
-          <UiNotice @type="danger" @icon="hand" @title="Still On Duty">
-            {{@person.callsign}} is still on duty. Please do not touch the entry until the shift has ended.
-          </UiNotice>
-        {{else if this.editEntry.isPending}}
-          <UiNotice @type="danger" @icon="arrow-right" @title="Correction Request Review Required">
-            Entry has a correction request and needs to be reviewed.
-          </UiNotice>
-        {{else if this.editEntry.isUnverified}}
-          <UiNotice @type="danger" @title="Unverified - No Review Required" @icon="hourglass">
-            No review action required at this time.
-            Verification required by {{@person.callsign}}.
-          </UiNotice>
-        {{else if this.editEntry.isVerified}}
-          <UiNotice @type="success" @icon="check" @title="Entry Verified - No Review Required">
-            Review is not needed at this time.
-            Entry verified on {{shift-format this.editEntry.verified_at}}
-            by {{this.editEntry.verified_person.callsign}}.
-          </UiNotice>
-        {{else if this.editEntry.isApproved}}
-          <UiNotice @type="danger" @title="Verification Needed - No Review Required" @icon="hourglass">
-            Review is not needed at this time. The correction request was approved.
-            However, the correction still needs to be reviewed by {{@person.callsign}}.
-          </UiNotice>
-        {{/if}}
-
-        <fieldset>
-          <legend>Message(s) from {{@person.callsign}}:</legend>
-          <p>
-            {{#if this.editEntry.notes}}
-              {{nl2br this.editEntry.notes}}
-            {{else}}
-              <i>No notes were given.</i>
-            {{/if}}
-          </p>
-        </fieldset>
-        <fieldset>
-          <legend>Time &amp; Position</legend>
-          <span class="fw-bold me-2">Entry Duration</span> {{this.entryDuration f.model}}
-          {{#if this.editEntry.isTooShort}}
-            <div class="text-danger">
-              Warning: Entry might be too short. Duration is less than 15 minutes.
-            </div>
-          {{else if this.editEntry.isTooLong}}
-            <div class="text-danger">
-              Warning: Entry might be too long. Duration is over 1.5x the scheduled shift of
-              {{hour-minute-words this.editEntry.slot.duration}}.
-            </div>
-          {{/if}}
-          <div class="my-1">
-            {{#if this.editEntry.slot}}
-              For reference, the scheduled sign-up is:
-              <div class="my-1">
-                <b>Time</b> {{shift-format this.editEntry.slot.begins this.editEntry.slot.ends}}.
-                <b>Duration</b> {{hour-minute-words this.editEntry.slot.duration}} (slot #{{this.editEntry.slot.id}}).
-              </div>
-              The actual time worked might be longer or shorter than the scheduled sign-up.
-            {{else}}
-              Entry does not appear to be associated with a scheduled signed-up.
-            {{/if}}
-          </div>
-
-          {{#if this.canManageTimesheets}}
-            <FormRow>
-              <f.datetime @name="on_duty"
-                          @label="On Duty"
-                          @size={{20}}
-              />
-              <f.datetime @name="off_duty"
-                          @label="Off Duty"
-                          @size={{20}}
-              />
-              <f.select @name="position_id"
-                        @label="Position"
-                        @options={{this.positionOptions}}
-              />
-            </FormRow>
-          {{else}}
-            <dl class="row">
-              <dt class="col-2">Position:</dt>
-              <dd class="col-10">
-                {{this.editEntry.position.title}}
-                {{#if this.editEntry.is_non_ranger}}
-                  (as non ranger volunteer)
-                {{/if}}
-              </dd>
-
-              <dt class="col-2">Time:</dt>
-              <dd class="col-10">
-                {{shift-format this.editEntry.on_duty this.editEntry.off_duty}}
-              </dd>
-
-              <dt class="col-2">Duration:</dt>
-              <dd class="col-10">{{hour-minute-format this.editEntry.duration}}</dd>
-
-              <dt class="col-2">Credits:</dt>
-              <dd class="col-10">{{credits-format this.editEntry.credits}}</dd>
-            </dl>
-          {{/if}}
-        </fieldset>
-        {{#if this.canManageTimesheets}}
-          <fieldset>
-            <legend>Attributes</legend>
-            <FormRow class="mt-3">
-              <div class="col-auto">
-                <f.checkbox @name="is_non_ranger"
-                            @label="Entry is for a dept volunteer (non-ranger status) - time will not count towards service years"/>
-              </div>
-            </FormRow>
-            <FormRow>
-              <div class="col-auto">
-                <f.checkbox @name="suppress_duration_warning"
-                            @label="Supress duration warnings (too short / too long). Duration confirmed correct."/>
-              </div>
-            </FormRow>
-          </fieldset>
-        {{/if}}
-        <fieldset>
-          <legend>Reviewer message(s) to {{@person.callsign}}:</legend>
-          <p>
-            {{#if this.editEntry.reviewer_notes}}
-              {{nl2br this.editEntry.reviewer_notes}}
-            {{else}}
-              <i>No reviewer messages have been entered so far.</i>
-            {{/if}}
-          </p>
-          {{#if this.canManageTimesheets}}
-            <FormRow>
-              <f.textarea @name="additional_reviewer_notes"
-                          @label="Reviewer message to {{@person.callsign}}:"
-                          @cols={{80}}
-                          @rows={{2}}/>
-            </FormRow>
-            <FormRow>
-              <f.radioGroup @name="review_status"
-                            @label="Review status:"
-                            @options={{this.reviewOptions}}
-                            @inline={{true}}
-              />
-            </FormRow>
-          {{else}}
-            <dl class="row">
-              <dt class="col-2">
-                Review Status:
-              </dt>
-              <dd class="col-10">
-                {{this.editEntry.review_status}}
-              </dd>
-            </dl>
-          {{/if}}
-        </fieldset>
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        {{#if this.canManageTimesheets}}
-          <f.submit @label="Update" @disabled={{this.editEntry.isSaving}} />
-          <UiCancelButton @disabled={{this.editEntry.isSaving}} @onClick={{this.cancelEntryAction}} />
-          {{#if this.editEntry.isSaving}}
-            <LoadingIndicator/>
-          {{/if}}
-          <div class="ms-auto">
-            <UiButton @type="danger" @onClick={{fn this.showDeleteDialogAction f.model}}
-                      @disabled={{this.editEntry.isSaving}}>
-              {{fa-icon "trash"}} Delete
-            </UiButton>
-          </div>
+              {{else if ts.isUnverified}}
+                {{badge "secondary" "Unverified"}}
+              {{else if ts.isPending}}
+                {{badge "danger" "Correction Requested"}}
+              {{else if ts.isRejected}}
+                {{badge "warning" "Correction Rejected"}}
+              {{else}}
+                &nbsp;
+              {{/if}}
+            </td>
+            <td>
+              {{#if (is-empty ts.off_duty)}}
+                <UiButton @type="danger" @size="sm" @onClick={{fn this.signoffAction ts}}>
+                  End Shift
+                </UiButton>
+              {{else}}
+                <UiButton @type={{if ts.isPending "danger" "primary"}}
+                          @size="sm"
+                          @onClick={{fn this.editEntryAction ts}}
+                          @disabled={{ts.isReloading}}>
+                  {{#if this.canManageTimesheets}}
+                    {{fa-icon "edit"}} {{if ts.isPending "Review" "Edit"}}
+                  {{else}}
+                    {{fa-icon "magnifying-glass"}} View
+                  {{/if}}
+                </UiButton>
+              {{/if}}
+              {{#if ts.isReloading}}
+                <SpinIcon/>
+              {{/if}}
+            </td>
+          </tr>
         {{else}}
-          <UiCloseButton @onClick={{this.cancelEntryAction}} />
-        {{/if}}
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
+          <tr>
+            <td>&nbsp;</td>
+            <td colspan="6"><b class="mt-2 text-danger">No timesheet entries found for {{@year}}</b></td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </table>
+    </:body>
+  </UiSection>
 {{/if}}
 
 {{#if this.deleteEntry}}

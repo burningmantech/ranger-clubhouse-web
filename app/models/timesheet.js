@@ -1,5 +1,4 @@
 import Model, {attr} from '@ember-data/model';
-import {isEmpty} from '@ember/utils';
 import {tracked} from '@glimmer/tracking';
 import dayjs from 'dayjs';
 
@@ -9,7 +8,19 @@ export const STATUS_REJECTED = 'rejected';
 export const STATUS_VERIFIED = 'verified';
 export const STATUS_UNVERIFIED = 'unverified';
 
+export const NOTE_TYPE_USER = 'user';
+export const NOTE_TYPE_HQ_WORKER = 'hq-worker';
+export const NOTE_TYPE_WRANGLER = 'wrangler';
+export const NOTE_TYPE_ADMIN = 'admin';
+
 export const TOO_SHORT_DURATION = (15 * 60);
+
+export const NoteTypeLabels = {
+  [NOTE_TYPE_USER]: 'User',
+  [NOTE_TYPE_HQ_WORKER]: 'HQ Worker',
+  [NOTE_TYPE_WRANGLER]: 'Timesheet Wrangler',
+  [NOTE_TYPE_ADMIN]: 'Admin',
+};
 
 export default class TimesheetModel extends Model {
   @attr('number') person_id;
@@ -24,10 +35,14 @@ export default class TimesheetModel extends Model {
   @attr('number', {readOnly: true}) duration;
   @attr('number', {readOnly: true}) credits;
 
-  @attr('string', {readOnly: true}) notes;
+  @attr('', {readOnly: true}) admin_notes;
+  @attr('', {readOnly: true}) notes;
+
+  // Pseudo fields -- use to construct the timesheet notes.
   @attr('string') additional_notes;
-  @attr('string', {readOnly: true}) reviewer_notes;
-  @attr('string') additional_reviewer_notes;
+  @attr('string') additional_admin_notes;
+  @attr('string') additional_wrangler_notes;
+  @attr('string') additional_worker_notes;
 
   @attr('', {readOnly: true}) verified_person;
 
@@ -71,11 +86,6 @@ export default class TimesheetModel extends Model {
   // Timesheet has not been reviewed yet
   get isUnverified() {
     return (this.off_duty && this.review_status === STATUS_UNVERIFIED);
-  }
-
-
-  get haveReviewerResponse() {
-    return this.review_status !== STATUS_UNVERIFIED && !isEmpty(this.reviewer_notes);
   }
 
   get stillOnDuty() {
