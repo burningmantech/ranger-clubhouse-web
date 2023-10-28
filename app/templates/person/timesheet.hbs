@@ -6,7 +6,7 @@
 <UiTab class="mt-4" as |tab|>
   <tab.pane @title="Timesheet / Missing Entry Requests" @id="timesheet">
     {{#if (or this.timesheetPendingCount this.missingRequestPendingCount)}}
-      <UiNotice @title="Timesheet Entry Review Needed" @icon="arrow-right">
+      <UiNotice @title="Timesheet Wrangler Review Needed" @icon="arrow-right">
         {{#if this.timesheetPendingCount}}
           {{pluralize this.timesheetPendingCount "timesheet entry"}} requires correction review.<br>
         {{/if}}

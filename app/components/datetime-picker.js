@@ -62,7 +62,6 @@ export default class DatetimePickerComponent extends Component {
   blurEvent() {
     later(() => {
       if (document.activeElement !== this.element && document.activeElement.tagName === 'INPUT') {
-        console.log('BLUR ', document.activeElement);
         this.picker?.hide();
       }
     }, 100);

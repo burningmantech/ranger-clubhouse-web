@@ -1,0 +1,14 @@
+{{#each @notes as |row|}}
+  <div class="mb-2">
+    <div class="mb-1 fw-medium">
+      {{shift-format row.created_at}} {{this.fromLabel row}}:
+    </div>
+    {{nl2br row.note}}
+  </div>
+{{else}}
+  {{#if @showNoNotesMessage}}
+    <div class="mb-2">
+      <i>No notes have been entered</i>
+    </div>
+  {{/if}}
+{{/each}}

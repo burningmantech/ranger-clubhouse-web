@@ -1,11 +1,7 @@
 <UiSection>
   <:title>
     {{@year}} Timesheet
-    {{#if @isHQView}}
-      for {{@person.callsign}}
-      <HelpPopover @slug="hq-timesheet-entries"/>
-    {{/if}}
-  </:title>
+   </:title>
   <:body>
     {{#if (lt @year 2008)}}
       <p class="text-danger">
@@ -16,9 +12,8 @@
 
     {{#if (and @person.employee_id this.havePaidEntries)}}
       <p>
-        Note: Paid position entries may have a daily hour cap applied before being uploaded to the payroll system. This
-        will
-        not affect the hours and credits applied towards tickets and provisions.
+        Note: Paid position entries may have a daily hour cap applied before being uploaded to the payroll system.
+        This will not affect the hours and credits applied towards tickets and provisions.
       </p>
     {{/if}}
     <NoAppreciateIcon/>
@@ -146,15 +141,9 @@
         </ul>
         {{#if this.entry.isRejected}}
           <UiNotice @type="danger" @icon="times" @title="Correction request has been denied">
-            The response from the timesheet review team:<br>
-            {{nl2br this.entry.reviewer_notes}}
           </UiNotice>
         {{/if}}
 
-        {{#if this.entry.notes}}
-          Your previous message to the timesheet review team:<br>
-          {{nl2br this.entry.notes}}
-        {{/if}}
         <table class="table table-width-auto table-sm">
           <thead>
           <tr>
@@ -173,6 +162,12 @@
           </tr>
           </tbody>
         </table>
+        {{#if this.entry.notes}}
+          <div class="border p-2 my-2">
+            <h5 class="mx-n2 mt-n2 p-2 bg-secondary text-white">Notes from you &amp; the Timesheet Wranglers</h5>
+            <TimesheetNotes @notes={{this.entry.notes}} @isMe={{true}} />
+          </div>
+        {{/if}}
         <FormRow>
           <f.textarea @name="additional_notes"
                       @label={{if this.entry.isRejected "Supply additional information for an appeal:"

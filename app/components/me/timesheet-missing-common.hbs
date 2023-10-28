@@ -3,7 +3,7 @@
   = the shift hours do not count towards provisions and appreciations.
   <div class="timesheet-table">
     <div class="timesheet-row timesheet-header">
-      <div class="timesheet-time">From</div>
+      <div class="timesheet-time">Time</div>
       <div class="timesheet-duration">Duration</div>
       <div class="timesheet-position">Position</div>
     </div>
@@ -11,23 +11,18 @@
       <div class="timesheet-entry">
         <div class="timesheet-row-header {{this.requestClass tsm}}">
           {{#if tsm.isPending}}
-            {{fa-icon "hourglass"}}The request is pending review.
+            {{fa-icon "hourglass" right=1}} The request is pending review.
           {{else}}
             {{#if tsm.isApproved}}
-              {{fa-icon "check"}} The request has been APPROVED. The missing shift has been added to your timesheet.
+              {{fa-icon "check" right=1}} The request has been APPROVED. The missing shift has been added to your
+              timesheet.
             {{else if tsm.isRejected}}
-              {{fa-icon "ban"}} The request has been rejected.
+              {{fa-icon "ban" right=1}} The request has been rejected.
             {{else}}
               Unknown status [{{tsm.review_status}}].
             {{/if}}
           {{/if}}
         </div>
-        {{#if (and tsm.reviewer_notes (or tsm.isApproved tsm.isRejected))}}
-          <div class="timesheet-row-header">
-            <b>Response from the reviewer:</b><br>
-            {{nl2br tsm.reviewer_notes}}
-          </div>
-        {{/if}}
         <div class="timesheet-row">
           <div class="timesheet-time">{{shift-format tsm.on_duty tsm.off_duty}}</div>
           <div class="timesheet-duration">
@@ -35,6 +30,14 @@
           </div>
           <div class="timesheet-position">{{tsm.position.title}}</div>
         </div>
+        {{#if tsm.notes}}
+          <div class="timesheet-row-info">
+            <div class="border p-2 my-2">
+              <h5 class="mx-n2 mt-n2 p-2 bg-secondary text-white">Notes from you &amp; the Timesheet Wranglers</h5>
+              <TimesheetNotes @notes={{tsm.notes}} @isMe={{this.isMe}} />
+            </div>
+          </div>
+        {{/if}}
         <div class="timesheet-actions">
           {{#if (or tsm.isPending tsm.isRejected)}}
             <UiButton @onClick={{fn this.editAction tsm}} @disabled={{or tsm.isReloading tsm.isSaving}}>
@@ -94,7 +97,7 @@
           <f.datetime @name="on_duty"
                       @label="What was the START date & time of the shift?"
                       @size={{15}}
-           />
+          />
           <f.datetime @name="off_duty"
                       @label="What was the END date & time of the shift?"
                       @size={{15}}
@@ -110,11 +113,11 @@
         </FormRow>
         {{#if this.entry.isRejected}}
           <b class="text-danger">Sorry, the correction request has been rejected.</b>
-          <div class="card mb-4">
-            <div class="card-header">The Timesheet Correction Team has left you a note:</div>
-            <div class="card-body">
-              {{this.entry.reviewer_notes}}
-            </div>
+        {{/if}}
+        {{#if this.entry.notes}}
+          <div class="border p-2 my-2">
+            <h5 class="mx-n2 mt-n2 p-2 bg-secondary text-white">Notes from you &amp; the Timesheet Wranglers</h5>
+            <TimesheetNotes @notes={{this.entry.notes}} @isMe={{true}} />
           </div>
         {{/if}}
         <FormRow>
