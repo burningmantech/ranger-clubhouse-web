@@ -2,15 +2,12 @@ import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import focusElement from "clubhouse/utils/focus-element";
 import tempusdominus from '@eonasdan/tempus-dominus';
-import {isEmpty} from '@ember/utils';
 import {later} from '@ember/runloop';
 
 export default class DatetimePickerComponent extends Component {
   constructor() {
     super(...arguments);
     let {dateOnly, minDate, maxDate} = this.args;
-
-    this.value = !isEmpty(this.args.value) ? this.args.value : '';
 
     this.config = {
       allowInputToggle: true,

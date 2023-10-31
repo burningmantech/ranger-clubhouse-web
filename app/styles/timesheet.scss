@@ -44,14 +44,16 @@
   padding: 0.125rem 0.25rem;
 }
 
-.timesheet-row-header, .timesheet-actions {
+.timesheet-actions {
   width: 100%;
   margin: -0.125rem -0.25rem;
   padding: 0.125rem 0.25rem;
 }
 
 .timesheet-row-header {
-  margin-bottom: 0.5rem;
+  width: 100%;
+  margin: -0.125rem -0.25rem 0.225rem -0.25rem;
+  padding: 0.325rem 0.25rem 0.425rem 0.75rem;
 }
 
 .timesheet-actions {

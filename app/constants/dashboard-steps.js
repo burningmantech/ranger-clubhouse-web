@@ -80,7 +80,7 @@ function indefiniteArticle(noun) {
 export const UPLOAD_PHOTO = {
   name: 'Upload a BMID Photo',
   immediate: true,
-  check({photo, isPNV}) {
+  check({photo, isPNV, milestones}) {
     let reasons, message;
     switch (photo.photo_status) {
       case 'rejected':
@@ -98,13 +98,23 @@ export const UPLOAD_PHOTO = {
         };
       case 'missing':
         if (!photo.upload_enabled) {
+          let message;
+          if (milestones.period === BEFORE_EVENT) {
+            message = 'Photo uploading has been disabled in preparation to have the BMIDs printed.'
+          } else {
+            message = 'Photo uploading is disabled until early November so the Photo Wranglers have time to recover.'
+          }
+
           return {
             result: WAITING,
-            message: 'Photo uploading is not available at this time. Contact the Volunteer Coordinators for help.',
+            message: `${message} Contact the Volunteer Coordinators for help.`,
             email: 'VcEmail'
           }
         }
-        return {result: ACTION_NEEDED, isPhotoStep: true};
+        return {
+          result: ACTION_NEEDED,
+          isPhotoStep: true
+        };
       case 'submitted':
       case 'approved':
         return {result: isPNV ? COMPLETED : SKIP, isPhotoStep: (photo.photo_status !== 'approved'), isUploadPhoto: true};
