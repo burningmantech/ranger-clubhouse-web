@@ -8,12 +8,14 @@
                                @person={{this.person}}
                                @isHQView={{true}}
                                @year={{this.year}}
+                               @positions={{this.correctionPositions}}
     />
   </tab.pane>
   <tab.pane @title="Missing Timesheet Entry Requests" @id="missing-requests">
     <Me::TimesheetMissingCommon @person={{this.person}}
                                 @timesheetsMissing={{this.timesheetsMissing}}
                                 @timesheetInfo={{this.timesheetInfo}}
-                                @positions={{this.correctionPositions}} />
+                                @positions={{this.correctionPositions}}
+    />
   </tab.pane>
 </UiTab>

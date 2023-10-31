@@ -35,6 +35,12 @@ export default class TimesheetModel extends Model {
   @attr('number', {readOnly: true}) duration;
   @attr('number', {readOnly: true}) credits;
 
+  @attr('number') desired_position_id;
+  @attr('shiftdate') desired_off_duty;
+  @attr('shiftdate') desired_on_duty;
+
+  @attr('', {readOnly: true}) desired_position;
+
   @attr('', {readOnly: true}) admin_notes;
   @attr('', {readOnly: true}) notes;
 
@@ -54,9 +60,9 @@ export default class TimesheetModel extends Model {
   @attr('boolean') is_non_ranger;
 
   // Suppress any too short / too long duration warnings
-  @attr('boolean', { defaultValue: false }) suppress_duration_warning;
+  @attr('boolean', {defaultValue: false}) suppress_duration_warning;
 
-  @attr('boolean', { readOnly: true }) was_signin_forced;
+  @attr('boolean', {readOnly: true}) was_signin_forced;
 
   @tracked isIgnoring = false; // Used by the HQ window interface
   @tracked selected = false;

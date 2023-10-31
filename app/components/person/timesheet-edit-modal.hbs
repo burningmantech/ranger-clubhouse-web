@@ -55,7 +55,7 @@
       {{/if}}
       <fieldset>
         <legend>Time &amp; Position</legend>
-         <div class="my-1">
+        <div class="my-1">
           {{#if @entry.slot}}
             For reference, the scheduled sign-up is:
             <table class="table table-width-auto my-1">
@@ -91,7 +91,64 @@
         {{/if}}
 
         {{#if @canManageTimesheets}}
-          <div class="fw-medium">Timesheet Duration {{this.entryDuration f.model}}</div>
+          {{#if (or @entry.desired_position @entry.desired_on_duty @entry.desired_off_duty)}}
+            <table class="table table-width-auto table-sm">
+              <thead>
+              <tr>
+                <th colspan="4">Desired Changes</th>
+              </tr>
+              </thead>
+              <tbody>
+              {{#if @entry.desired_position}}
+                <tr>
+                  <th>Position</th>
+                  <td>
+                    {{@entry.position.title}}
+                  </td>
+                  <td>
+                    {{fa-icon "arrow-right"}}
+                  </td>
+                  <td>
+                    {{@entry.desired_position.title}}
+                  </td>
+                </tr>
+              {{/if}}
+              {{#if @entry.desired_on_duty}}
+                <tr>
+                  <th>On Duty</th>
+                  <td>
+                    {{shift-format @entry.on_duty}}
+                  </td>
+                  <td>
+                    {{fa-icon "arrow-right"}}
+                  </td>
+                  <td>
+                    {{shift-format @entry.desired_on_duty}}
+                  </td>
+                </tr>
+              {{/if}}
+              {{#if @entry.desired_off_duty}}
+                <tr>
+                  <th>Off Duty</th>
+                  <td>
+                    {{shift-format @entry.off_duty}}
+                  </td>
+                  <td>
+                    {{fa-icon "arrow-right"}}
+                  </td>
+                  <td>
+                    {{shift-format @entry.desired_off_duty}}
+                  </td>
+                </tr>
+              {{/if}}
+              </tbody>
+            </table>
+            <UiButton @onClick={{fn this.populatedDesiredChanges f.model}} @size="sm" @type="secondary">
+              Use the desired change(s)
+            </UiButton>
+          {{else}}
+            <b class="text-danger">No desired changes were entered?</b>
+          {{/if}}
           <FormRow class="mt-2">
             <f.datetime @name="on_duty"
                         @label="On Duty"
@@ -106,6 +163,7 @@
                       @options={{@positionOptions}}
             />
           </FormRow>
+          <div class="fw-medium mb-2">Timesheet Duration {{this.entryDuration f.model}}</div>
         {{else}}
           <table class="table table-width-auto">
             <thead>

@@ -3,6 +3,7 @@ import validateDateTime from "clubhouse/validators/datetime";
 import {validatePresence} from 'ember-changeset-validations/validators';
 import {isEmpty} from '@ember/utils';
 import dayjs from 'dayjs';
+import { action } from '@ember/object';
 
 export default class PersonTimesheetEditModalComponent extends Component {
   reviewOptions = [
@@ -46,5 +47,22 @@ export default class PersonTimesheetEditModalComponent extends Component {
     }
 
     return time;
+  }
+
+  @action
+  populatedDesiredChanges(model) {
+    const {entry} = this.args;
+
+    if (!isEmpty(entry.desired_position_id)) {
+      model.position_id = entry.desired_position_id;
+    }
+
+    if (!isEmpty(entry.desired_on_duty)) {
+      model.on_duty = entry.desired_on_duty;
+    }
+
+    if (!isEmpty(entry.desired_off_duty)) {
+      model.off_duty = entry.desired_off_duty;
+    }
   }
 }
