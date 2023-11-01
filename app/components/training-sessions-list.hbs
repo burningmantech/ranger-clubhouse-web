@@ -36,7 +36,7 @@
           {{session.slot.signed_up}} of {{session.slot.max}}
         </td>
         {{#if session.trainers.length}}
-          {{#each session.trainers as |trainerGroup idx|}}
+          {{#each session.trainers as |trainerGroup|}}
             <td class="text-nowrap">
               {{#if (gt this.trainingColumns 1)}}
                 {{trainerGroup.position_title}} ({{trainerGroup.trainers.length}}):<br>
