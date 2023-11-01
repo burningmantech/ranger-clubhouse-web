@@ -33,7 +33,9 @@ export default class TrainingIndexRoute extends ClubhouseRoute {
       });
     });
 
-    controller.set('trainingSessions', trainingSessions);
+
+    controller.set('upcomingSessions', trainingSessions.filter((t) => (!t.slot.has_started || !t.slot.has_ended)));
+    controller.set('pastSessions', trainingSessions.filter((t) => t.slot.has_ended));
   }
 
   // Don't allow the year parameter to bleed over to other routes.
