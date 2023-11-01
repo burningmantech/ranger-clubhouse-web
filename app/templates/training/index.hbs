@@ -3,63 +3,32 @@
             @minYear={{2008}}
             @skipPandemic={{true}}
             @onChange={{action (mut this.year)}} />
+<p>
+  Click on the time to manage the training session.
+</p>
+<p>
+{{fa-icon "check" color="success"}} = Session is activated and available for sign-ups.<br>
+{{fa-icon "times" color="danger"}} = not activated and sign-ups are not allowed.
+</p>
 
-{{#each this.trainingSessions as |session|}}
-  <UiSection>
-    <:title>
-      {{shift-format session.slot.begins}} ({{session.slot.timezone_abbr}})
-      <div class="d-sm-block d-lg-inline-block">{{session.slot.description}}</div>
-    </:title>
-    <:body>
-      {{#unless session.slot.active}}
-        <p>
-          <b class="text-danger">
-            Training session has not been activated. Sign ups are disabled until the session (aka slot) has been
-            activated.
-          </b>
-        </p>
-      {{/unless}}
-      {{#unless session.havePrimaryTrainers}}
-        <p>
-          <b class="text-danger">No trainers are signed up to teach this session.</b>
-        </p>
-      {{/unless}}
+<UiSection>
+  <:title>In Progress &amp; Upcoming Sessions</:title>
+  <:body>
+    {{#if this.upcomingSessions}}
+      <TrainingSessionsList @sessions={{this.upcomingSessions}} @training={{this.training}} />
+    {{else}}
+      No upcoming sessions were found.
+    {{/if}}
+  </:body>
+</UiSection>
 
-      <b>Sign ups: </b> {{session.slot.signed_up}} of {{session.slot.max}}
-      {{#if (gte session.slot.signed_up session.slot.max)}}
-        <span class="text-danger"> (FULL)</span>
-      {{/if}}
-      {{#each session.trainers as |trainerGroup|}}
-        <div class="mt-1">
-          <b>{{trainerGroup.position_title}} ({{trainerGroup.trainers.length}}):</b>
-          <span class="d-inline-block">
-            {{#each trainerGroup.trainers as |trainer index|~}}
-              {{~if index ", "~}}
-              <PersonLink @person={{trainer}} />
-              {{if trainer.is_lead " (lead trainer)"}}
-            {{~else}}
-              <i>none found</i>
-            {{/each}}
-          </span>
-        </div>
-      {{/each}}
-      {{#unless session.trainers}}
-        <p>
-          <b class="text-danger">No trainer slots were found.</b> In order to correctly
-          show how many trainers are signed up to teach this session, a trainer's slot needs to exists where the
-          slot's description matches this session's description exactly and where the start time within one hour
-          of this session.
-        </p>
-      {{/unless}}
-      <div class="mt-2">
-        <LinkTo @route="training.session.index"
-                @models={{array this.training.id session.slot.id}}
-                class="btn btn-primary btn-responsive">
-          Manage
-        </LinkTo>
-      </div>
-    </:body>
-  </UiSection>
-{{else}}
-  <div class="text-danger mt-2"><b>No {{this.year}} {{this.training.title}} sessions were found.</b></div>
-{{/each}}
+<UiSection>
+  <:title>Past Sessions</:title>
+  <:body>
+    {{#if this.pastSessions}}
+    <TrainingSessionsList @sessions={{this.pastSessions}} @training={{this.training}} />
+    {{else}}
+      No past sessions were found.
+    {{/if}}
+  </:body>
+</UiSection>
