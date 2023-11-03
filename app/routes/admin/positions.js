@@ -10,6 +10,7 @@ export default class AdminPositionRoute extends ClubhouseRoute {
     this.store.unloadAll('position');
     return RSVP.hash({
       positions: this.store.query('position', {include_roles: 1}),
+      positionLineups: this.store.query('position-lineup', {}),
       roles: this.ajax.request('role').then(({role}) => role),
       teams: this.ajax.request('team').then(({team}) => team),
     });
@@ -31,6 +32,5 @@ export default class AdminPositionRoute extends ClubhouseRoute {
       id: r.id,
       title: r.title
     }));
-
   }
 }
