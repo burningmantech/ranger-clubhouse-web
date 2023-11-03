@@ -88,11 +88,13 @@ export default class ReportsSpecialTeamsController extends ClubhouseController {
 
       this.positionsUsed = this.positions.filter((p) => position_ids.includes(p.id));
 
-      const years = (end_year - start_year) + 1;
-      const totals = new Array(years);
+      const totals =[];
 
-      for (let i = 0; i < years; i++) {
-        totals[i] = 0;
+      for (let year = start_year, i = 0; year <= end_year; year++) {
+        if (year === 2020 || year === 2021) {
+          continue;
+        }
+        totals[i++] = 0;
       }
 
       this.people.forEach((p) => {
