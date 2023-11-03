@@ -1,0 +1,73 @@
+<h3>Position Lineups</h3>
+
+<p>
+  Position Lineups control what position signups are shown together when the user clicks on the 'Sign-Ups' button on
+  the Schedule / Sign-Up pages. The typical use case is to show mentor &amp; mentee signups together.
+</p>
+{{#if @canManagePositions}}
+  <p>
+    <UiButton @onClick={{this.newEntry}} @size="sm">New Position Lineup</UiButton>
+  </p>
+{{/if}}
+Showing {{pluralize @positionLineups.length "position lineup"}}
+<table class="table table-width-auto table-striped table-hover">
+  <thead>
+  <tr>
+    <th>Description</th>
+    <th>Positions</th>
+    {{#if @canManagePositions}}
+      <th>Action</th>
+    {{/if}}
+  </tr>
+  </thead>
+  <tbody>
+  {{#each @positionLineups as |row|}}
+    <tr>
+      <td>{{row.description}}</td>
+      <td>
+        {{#each row.positions as |position|}}
+          {{position-label position}}<br>
+        {{else}}
+          <i>no positions linked together</i>
+        {{/each}}
+      </td>
+      {{#if @canManagePositions}}
+        <td>
+          <UiButton @onClick={{fn this.editEntry row}} @size="sm">Edit</UiButton>
+        </td>
+      {{/if}}
+    </tr>
+  {{/each}}
+  </tbody>
+</table>
+
+{{#if this.entry}}
+  <ModalDialog @onEscape={{this.cancel}} @size="xl" as |Modal|>
+    <ChForm @formFor={{this.entry}} @formId="lineup" @validator={{this.validations}} @onSubmit={{this.save}} as |f|>
+      <Modal.title>
+        {{#if this.entry.isNew}}
+          Create a new position lineup
+        {{else}}
+          Edit position lineup
+        {{/if}}
+      </Modal.title>
+      <Modal.body>
+        <FormRow>
+          <f.text @label="Lineup Description"
+                  @name="description"
+                  @size={{30}}
+                  @maxlength={{100}} />
+        </FormRow>
+        <FormRow>
+          <f.checkboxGroup @label="Positions part of this lineup"
+                           @name="position_ids"
+                           @options={{this.positionOptions}} />
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Save"/>
+        <UiCancelButton @onClick={{this.cancel}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}

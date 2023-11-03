@@ -5,7 +5,12 @@ import PositionTypes from 'clubhouse/constants/position-types';
 import PositionValidations from 'clubhouse/validations/position';
 import {TECH_NINJA} from 'clubhouse/constants/roles';
 import _ from 'lodash';
-import {TEAM_CATEGORY_ALL_MEMBERS, TEAM_CATEGORY_OPTIONAL, TEAM_CATEGORY_PUBLIC} from 'clubhouse/models/position';
+import {
+  TEAM_CATEGORY_ALL_MEMBERS,
+  TEAM_CATEGORY_OPTIONAL,
+  TEAM_CATEGORY_PUBLIC,
+  TYPE_TRAINING
+} from 'clubhouse/models/position';
 
 export default class PositionController extends ClubhouseController {
   @tracked positions;
@@ -141,7 +146,7 @@ export default class PositionController extends ClubhouseController {
     ];
 
     this.positions.forEach((position) => {
-      if (position.type === 'Training' && !position.title.match(/\btrainer\b/i)) {
+      if (position.type === TYPE_TRAINING && !position.title.match(/\btrainer\b/i)) {
         options.push([position.title, position.id]);
       }
     });

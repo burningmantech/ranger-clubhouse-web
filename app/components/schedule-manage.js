@@ -6,7 +6,7 @@ import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {htmlSafe} from '@ember/template';
 import {TRAINING} from 'clubhouse/constants/positions';
-import { isEmpty } from '@ember/utils';
+import {isEmpty} from '@ember/utils';
 import hyperlinkText from "clubhouse/utils/hyperlink-text";
 
 export default class ScheduleManageComponent extends Component {
@@ -26,6 +26,9 @@ export default class ScheduleManageComponent extends Component {
   @tracked isCurrentYear;
 
   @tracked isShinyPenny;
+
+  @tracked signUpInfo;
+  @tracked signUpSlot;
 
   activeOptions = [
     ['Active', 'active'],
@@ -233,20 +236,18 @@ export default class ScheduleManageComponent extends Component {
   async showPeople(slot) {
     slot.is_retrieving_people = true;
     try {
-      const result = await this.ajax.request('slot/' + slot.id + '/people');
-      let callsigns = result.people.map((person) => person.callsign);
-      const signups = callsigns.length;
-      if (signups) {
-        const list = callsigns.map((c) => `<div>${c}</div>`).join('');
-        callsigns = htmlSafe(`<div class="callsign-list">${list}</div>`);
-      } else {
-        callsigns = "No one is signed up for this shift. Be the first!";
-      }
-      this.modal.info(`${signups} signup${signups === 1 ? '' : 's'} for ` + slot.slot_description, callsigns);
-    } catch (response) {
+      this.signUpInfo = await this.ajax.request(`slot/${slot.id}/people`);
+      this.signUpSlot = slot;
+     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
       set(slot, 'is_retrieving_people', false)
     }
+  }
+
+  @action
+  closeSignUps() {
+    this.signUpInfo = null;
+    this.signUpSlot = null;
   }
 }

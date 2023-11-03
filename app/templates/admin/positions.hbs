@@ -2,75 +2,83 @@
   <h1>Clubhouse Positions</h1>
   {{#if this.canManagePositions}}
     <UiNotice @type="secondary" @icon="hand-point-right" @title="Need Position Help?">
-      Contact the Tech Team about creating new positions or adjusting existing ones.<br>
+      Contact the Tech Team regarding new positions or adjusting existing ones.
       <TechSupportEmail/>
     </UiNotice>
   {{/if}}
-  <FormRow>
-    <FormLabel @auto={{true}}>Type filter</FormLabel>
-    <div class="col-auto">
-      <ChForm::Select @name="typeFilter"
-                      @value={{this.typeFilter}}
-                      @options={{this.typeOptions}}
-                      @onChange={{action (mut this.typeFilter)}} />
-    </div>
-    <FormLabel @auto={{true}}>Active Filter</FormLabel>
-    <div class="col-auto">
-      <ChForm::Select @name="activeFilter"
-                      @value={{this.activeFilter}}
-                      @options={{this.activeOptions}}
-                      @onChange={{action (mut this.activeFilter)}} />
-    </div>
-    <FormLabel @auto={{true}}>View as</FormLabel>
-    <div class="col-auto">
-      <ChForm::Select @name="activeFilter"
-                      @value={{this.viewAs}}
-                      @options={{this.viewAsOptions}}
-                      @onChange={{action (mut this.viewAs)}} />
-    </div>
-    {{#if this.canManagePositions}}
-      <div class="col-auto">
-        <UiButton @onClick={{this.newAction}}>New Position</UiButton>
-      </div>
-    {{/if}}
-  </FormRow>
 
-  {{#if (eq this.viewAs "list")}}
-    <DropdownScrollList @items={{this.positionScrollItems}} @thing="position"/>
-    Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
-    <div class="overflow-y-auto">
-      <PositionTable @viewPositions={{this.viewPositions}}
-                     @positions={{this.positions}}
-                     @canManagePositions={{this.canManagePositions}}
-                     @editAction={{this.editAction}}
-                     @roleById={{this.roleById}}
-                     @teamById={{this.teamById}}
-      />
-    </div>
-  {{else}}
-    <DropdownScrollList @items={{this.teamScrollList}} @thing="team"/>
-    Showing {{pluralize this.viewByTeams.length "team"}}
-    {{#each this.viewByTeams as |team|}}
-      <UiSection id="team-{{team.id}}">
-        <:title>
-          {{team.title}} ({{pluralize team.team_positions.length "position"}})
-        </:title>
-        <:body>
-          <div class="overflow-y-auto mt-2">
-            <PositionTable @viewPositions={{team.team_positions}}
-                           @positions={{this.positions}}
-                           @canManagePositions={{this.canManagePositions}}
-                           @editAction={{this.editAction}}
-                           @roleById={{this.roleById}}
-                           @teamById={{this.teamById}}
-            />
+  <UiTab as |tab|>
+    <tab.pane @title="Positions" @id="positions">
+      <FormRow>
+        <FormLabel @auto={{true}}>Type filter</FormLabel>
+        <div class="col-auto">
+          <ChForm::Select @name="typeFilter"
+                          @value={{this.typeFilter}}
+                          @options={{this.typeOptions}}
+                          @onChange={{action (mut this.typeFilter)}} />
+        </div>
+        <FormLabel @auto={{true}}>Active Filter</FormLabel>
+        <div class="col-auto">
+          <ChForm::Select @name="activeFilter"
+                          @value={{this.activeFilter}}
+                          @options={{this.activeOptions}}
+                          @onChange={{action (mut this.activeFilter)}} />
+        </div>
+        <FormLabel @auto={{true}}>View as</FormLabel>
+        <div class="col-auto">
+          <ChForm::Select @name="activeFilter"
+                          @value={{this.viewAs}}
+                          @options={{this.viewAsOptions}}
+                          @onChange={{action (mut this.viewAs)}} />
+        </div>
+        {{#if this.canManagePositions}}
+          <div class="col-auto">
+            <UiButton @onClick={{this.newAction}}>New Position</UiButton>
           </div>
-
-        </:body>
-      </UiSection>
-    {{/each}}
-  {{/if}}
-
+        {{/if}}
+      </FormRow>
+      {{#if (eq this.viewAs "list")}}
+        <DropdownScrollList @items={{this.positionScrollItems}} @thing="position"/>
+        Showing {{this.viewPositions.length}} of {{this.positions.length}} positions
+        <div class="overflow-y-auto">
+          <PositionTable @viewPositions={{this.viewPositions}}
+                         @positions={{this.positions}}
+                         @canManagePositions={{this.canManagePositions}}
+                         @editAction={{this.editAction}}
+                         @roleById={{this.roleById}}
+                         @teamById={{this.teamById}}
+          />
+        </div>
+      {{else}}
+        <DropdownScrollList @items={{this.teamScrollList}} @thing="team"/>
+        Showing {{pluralize this.viewByTeams.length "team"}}
+        {{#each this.viewByTeams as |team|}}
+          <UiSection id="team-{{team.id}}">
+            <:title>
+              {{team.title}} ({{pluralize team.team_positions.length "position"}})
+            </:title>
+            <:body>
+              <div class="overflow-y-auto mt-2">
+                <PositionTable @viewPositions={{team.team_positions}}
+                               @positions={{this.positions}}
+                               @canManagePositions={{this.canManagePositions}}
+                               @editAction={{this.editAction}}
+                               @roleById={{this.roleById}}
+                               @teamById={{this.teamById}}
+                />
+              </div>
+            </:body>
+          </UiSection>
+        {{/each}}
+      {{/if}}
+    </tab.pane>
+    <tab.pane @title="Position Lineup" @id="lineup">
+      <PositionLineup @positionLineups={{this.positionLineups}}
+                      @positions={{this.positions}}
+                      @canManagePositions={{this.canManagePositions}}
+      />
+    </tab.pane>
+  </UiTab>
   {{#if this.position}}
     <ModalDialog @title={{if this.position.isNew "Create Position"
                              (concat "Edit Position ID #" this.position.id " - " this.position.title)}}
