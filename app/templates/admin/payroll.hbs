@@ -8,7 +8,17 @@
   <ChForm @formId="datesform" @formFor={{this.datesForm}} as |f|>
     <FormRow>
       <FormLabel>Positions to export</FormLabel>
-      <f.checkboxGroup @name="position_ids" @options={{this.positionOptions}} @includeToggleControls={{true}} />
+      <f.checkboxGroup @name="position_ids" @options={{this.positionOptions}}>
+        <:selectors as |setValues|>
+          <div class="col-auto my-2">
+            <a href class="me-2" {{action this.selectPayCode "all" setValues}}>select all</a>
+            <a href class="me-2" {{action this.selectPayCode "none" setValues}}>deselect all</a>
+            {{#each this.paycodeOptions as |code|}}
+              <a href {{action this.selectPayCode code setValues}} class="me-2">select {{code}}</a>
+            {{/each}}
+          </div>
+        </:selectors>
+      </f.checkboxGroup>
     </FormRow>
     <FormRow>
       <f.datetime @name="start_time"

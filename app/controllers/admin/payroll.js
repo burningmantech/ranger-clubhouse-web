@@ -5,6 +5,7 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {hourMinuteFormat} from "clubhouse/helpers/hour-minute-format";
 import dayjs from 'dayjs';
+import _ from 'lodash';
 
 const DEPARTMENT_CODE = '660';  // the Ranger department code
 
@@ -53,6 +54,7 @@ export default class AdminPayrollController extends ClubhouseController {
   @tracked isSubmitting = false;
   @tracked positions;
   @tracked positionOptions;
+  @tracked paycodeOptions;
 
   @tracked mealBreak;
 
@@ -247,5 +249,16 @@ export default class AdminPayrollController extends ClubhouseController {
       time: offDutyDT.format('HH:mm'),
       type: outCode,
     });
+  }
+
+  @action
+  selectPayCode(code, setValues) {
+    if (code === 'all') {
+      setValues(this.positions.map((p) => +p.id));
+    } else if (code === 'none') {
+      setValues([]);
+    } else {
+      setValues(this.positions.filter((p) => p.paycode === code).map((p) => +p.id));
+    }
   }
 }
