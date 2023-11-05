@@ -11,6 +11,10 @@ import {action} from '@ember/object';
 export default class TimesheetNotesComponent extends Component {
   @action
   fromLabel(row) {
+    if (!row.create_person) {
+      return 'from The Clubhouse Timesheet Bot'
+    }
+
     const type = row.type, callsign = row.create_person.callsign;
 
     if (this.args.isMe) {

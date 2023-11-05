@@ -108,7 +108,7 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
       }
     });
 
-    controller.generalPositions = positions.filter((p) => !p.is_team && !p.team_id && (p.active || positionsByIds[p.id]))
+    controller.generalPositions = positions.filter((p) => !p.team_id && (p.active || positionsByIds[p.id]))
       .map((p) => new SelectItem(p, !!positionsByIds[p.id]));
   }
 
