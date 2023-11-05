@@ -53,6 +53,7 @@ export default class AdminPayrollController extends ClubhouseController {
   @tracked isSubmitting = false;
   @tracked positions;
   @tracked positionOptions;
+  @tracked paycodeOptions;
 
   @tracked mealBreak;
 
@@ -247,5 +248,16 @@ export default class AdminPayrollController extends ClubhouseController {
       time: offDutyDT.format('HH:mm'),
       type: outCode,
     });
+  }
+
+  @action
+  selectPayCode(code, setValues) {
+    if (code === 'all') {
+      setValues(this.positions.map((p) => +p.id));
+    } else if (code === 'none') {
+      setValues([]);
+    } else {
+      setValues(this.positions.filter((p) => p.paycode === code).map((p) => +p.id));
+    }
   }
 }

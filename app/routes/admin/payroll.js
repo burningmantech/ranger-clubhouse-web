@@ -1,6 +1,7 @@
 import ClubhouseRoute from "clubhouse/routes/clubhouse-route";
 import {PAYROLL} from "clubhouse/constants/roles";
 import EmberObject from '@ember/object';
+import _ from 'lodash';
 
 export default class AdminPayrollRoute extends ClubhouseRoute {
   roleRequired = PAYROLL;
@@ -10,6 +11,10 @@ export default class AdminPayrollRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
+    controller.positions = model.position;
+    const paycodes = _.uniq(model.position.map((p) => p.paycode));
+    paycodes.sort();
+    controller.paycodeOptions = paycodes;
     controller.positionOptions = model.position.map((p) => [ `${p.title} (code ${p.paycode})`, p.id ]);
     controller.datesForm = EmberObject.create({
       start_time: '',

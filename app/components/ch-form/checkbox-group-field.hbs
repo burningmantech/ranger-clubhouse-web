@@ -8,6 +8,9 @@
     <a href {{action this.toggleAll false}}>deselect all</a>
     </div>
   {{/if}}
+  {{#if (has-block "selectors")}}
+    {{yield this.setValues to="selectors"}}
+  {{/if}}
   <ChForm::WrapBlock @wrapClass={{this.groupWrapClass}}>
     {{#each this.checkedBoxes as |option|~}}
       <ChForm::WrapBlock @wrapClass={{this.inputWrapClass}}>

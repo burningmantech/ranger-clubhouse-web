@@ -64,4 +64,17 @@ export default class ChFormCheckboxGroupFieldComponent extends ChFormFieldBaseCo
 
     this._updateValue(values);
   }
+
+  @action
+  setValues(ids) {
+    const values = [];
+    this.checkedBoxes.forEach((cb) => {
+      cb.isChecked = ids.includes(cb.value);
+      if (cb.isChecked) {
+        values.push(cb.value);
+      }
+    });
+
+    this._updateValue(values);
+  }
 }
