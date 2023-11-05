@@ -243,6 +243,25 @@
           </fieldset>
 
           <fieldset>
+            <legend>Auto Sign Out</legend>
+            A timesheet entry can be automatically signed out of when the hour cap is reached. A note will be left in
+            the timesheet audit trail, and an email sent to the contact email (set below).
+            <FormRow class="align-items-end">
+              <div class="col-auto align-self-center">
+                <f.checkbox @label="Auto sign out timesheet"
+                            @name="auto_sign_out"
+                />
+              </div>
+              <f.number @label="Hours Cap"
+                        @name="sign_out_hour_cap"
+                        @size={{10}}
+                        @maxlength={{10}}
+                        @hint="Partial hours are supported. (e.g., 10.5, 5.3, etc.)"
+                        @disabled={{not f.model.auto_sign_out}}
+              />
+            </FormRow>
+          </fieldset>
+          <fieldset>
             <legend>Notifications</legend>
             <FormRow>
               <div class="col-12">

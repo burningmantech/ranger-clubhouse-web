@@ -24,7 +24,6 @@ export default class PositionModel extends Model {
   @attr('boolean', {defaultValue: false}) all_rangers;
   @attr('boolean', {defaultValue: false}) count_hours;
 
-  @attr('boolean', {defaultValue: false}) is_team;
   @attr('number') team_id;
   @attr('string', {defaultValue: TEAM_CATEGORY_OPTIONAL}) team_category;
 
@@ -50,6 +49,9 @@ export default class PositionModel extends Model {
   @attr('boolean', {defaultValue: false}) no_payroll_hours_adjustment;
 
   @attr('string') resource_tag;
+
+  @attr('boolean', { defaultValue: false}) auto_sign_out;
+  @attr('number', {defaultValue: 0.0 }) sign_out_hour_cap;
 
   // Paycom employee paycode
   @attr('string') paycode;
