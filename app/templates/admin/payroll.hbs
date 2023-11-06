@@ -10,7 +10,7 @@
       <FormLabel>Positions to export</FormLabel>
       <f.checkboxGroup @name="position_ids" @options={{this.positionOptions}}>
         <:selectors as |setValues|>
-          <div class="col-auto my-2">
+          <div class="col-12 my-2">
             <a href class="me-2" {{action this.selectPayCode "all" setValues}}>select all</a>
             <a href class="me-2" {{action this.selectPayCode "none" setValues}}>deselect all</a>
             {{#each this.paycodeOptions as |code|}}
