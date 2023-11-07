@@ -106,14 +106,13 @@ export default class VcHandlerCheckerController extends ClubhouseController {
       return entity1.localeCompare(entity2);
     }
     // By default, alphas can choose the handle of a non-vintage retired Ranger
-    const disabledByDefault = new Set(['retired', 'non ranger']);
     this.entityTypes = _.uniq(_.map(this.allHandles, 'entityType'))
       .sort(comparator)
       .map((type) => new EntityType({
       id: dasherize(type),
       name: type,
       label: ReservationTypeLabels[type] ?? type,
-      enabled: !disabledByDefault.has(type),
+      enabled: true,
     }));
   }
 
