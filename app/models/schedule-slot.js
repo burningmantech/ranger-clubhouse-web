@@ -1,13 +1,18 @@
 import {tracked} from '@glimmer/tracking';
 import dayjs from 'dayjs';
+import {TYPE_TRAINING} from "clubhouse/models/position";
 
 export default class ScheduleSlotModel {
-  @tracked slot_signed_up = 0;
-  @tracked person_assigned = false;
-  @tracked is_overlapping = false;
-  @tracked is_training_overlap = false;
+  @tracked isOverlapping = false;
+  @tracked isSubmitting = false;
+  @tracked isRetrievingSignUps = false;
+  @tracked hasTrainingOverlap = false;
+
   @tracked overlappingSlots = [];
-  @tracked is_retrieving_people = false;
+  @tracked person_assigned = false;
+  @tracked signUpInfo = null;
+
+  @tracked slot_signed_up = 0;
 
   constructor(data) {
     Object.assign(this, data);
@@ -41,7 +46,7 @@ export default class ScheduleSlotModel {
   }
 
   get isTraining() {
-    return (this.position_type === 'Training');
+    return (this.position_type === TYPE_TRAINING);
   }
 
   get isNotPacific() {

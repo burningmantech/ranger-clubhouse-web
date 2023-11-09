@@ -1,0 +1,30 @@
+<div class="schedule-signup-row">
+  {{#if @info.people}}
+    <b>{{pluralize @info.people.length "sign-up"}}:</b>
+    <div class="callsign-list mt-2">
+      {{#each @info.people as |person|}}
+        <div>{{person.callsign}}</div>
+      {{/each}}
+    </div>
+  {{else}}
+    No one is signed up for this shift. Be the first!
+  {{/if}}
+  {{#if @info.assoc_signups}}
+    {{#each @info.assoc_signups as |assoc|}}
+      <div class="mt-2 fw-bold">
+        {{pluralize assoc.people.length "sign-up"}} for the corresponding {{assoc.position_title}} shift:
+      </div>
+      <div class="mt-2">
+        {{#if assoc.people}}
+          <div class="callsign-list">
+            {{#each assoc.people as |person|}}
+              <div>{{person.callsign}}</div>
+            {{/each}}
+          </div>
+        {{else}}
+          No one has signed up for corresponding shift.
+        {{/if}}
+      </div>
+    {{/each}}
+  {{/if}}
+</div>

@@ -1,6 +1,5 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
-import {set} from '@ember/object';
 import {schedule} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
@@ -81,9 +80,9 @@ export default class ScheduleManageComponent extends Component {
     slots.sort((a, b) => a.slot_begins_time - b.slot_begins_time);
     // Clear out overlapping flags
     this.args.slots.forEach((slot) => {
-      slot.is_overlapping = false;
+      slot.isOverlapping = false;
       slot.overlappingSlots = [];
-      slot.is_training_overlap = false;
+      slot.hasTrainingOverlap = false;
     });
 
     let prevEndTime = 0, prevSlot = null;
@@ -99,17 +98,17 @@ export default class ScheduleManageComponent extends Component {
           // Might be dirt training and ART training.. which is okay. Common scenario is attending Green Dot
           // training in the morning and then Dirt Training in the afternoon. However, most Dirt Trainings are
           // scheduled to start in the morning even tho veterans only have to attend the afternoon portion.
-          slot.is_training_overlap = true;
-          prevSlot.is_training_overlap = true;
+          slot.hasTrainingOverlap = true;
+          prevSlot.hasTrainingOverlap = true;
         } else {
-          slot.is_overlapping = true;
-          prevSlot.is_overlapping = true;
+          slot.isOverlapping = true;
+          prevSlot.isOverlapping = true;
           slot.overlappingSlots.push(prevSlot);
           prevSlot.overlappingSlots.push(slot);
         }
       } else {
-        slot.is_overlapping = false
-        slot.is_training_overlap = false;
+        slot.isOverlapping = false
+        slot.hasTrainingOverlap = false;
       }
       prevEndTime = slot.slot_ends_time;
       prevSlot = slot;
@@ -190,7 +189,7 @@ export default class ScheduleManageComponent extends Component {
     this.modal.confirm('Confirm Leaving Shift',
       message,
       async () => {
-        set(slot, 'is_submitting', true);
+      slot.isSubmitting = true;
         try {
           const result = await this.ajax.request(`person/${this.args.person.id}/schedule/${slot.id}`, {method: 'DELETE'});
           const signedUp = this.args.signedUpSlots.find((s) => +s.id === +slot.id);
@@ -220,7 +219,7 @@ export default class ScheduleManageComponent extends Component {
         } catch (response) {
           this.house.handleErrorResponse(response);
         } finally {
-          set(slot, 'is_submitting', false)
+          slot.isSubmitting = false;
         }
       }
     );
@@ -234,20 +233,18 @@ export default class ScheduleManageComponent extends Component {
 
   @action
   async showPeople(slot) {
-    slot.is_retrieving_people = true;
+    slot.isRetrievingSignUps = true;
     try {
-      this.signUpInfo = await this.ajax.request(`slot/${slot.id}/people`);
-      this.signUpSlot = slot;
+      slot.signUpInfo = await this.ajax.request(`slot/${slot.id}/people`);
      } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
-      set(slot, 'is_retrieving_people', false)
+      slot.isRetrievingSignUps = false
     }
   }
 
   @action
-  closeSignUps() {
-    this.signUpInfo = null;
-    this.signUpSlot = null;
+  hidePeople(slot) {
+    slot.signUpInfo = null;
   }
 }

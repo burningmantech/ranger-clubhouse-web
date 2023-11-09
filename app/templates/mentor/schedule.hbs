@@ -113,11 +113,11 @@
                   @label="Enter the callsign, real name, or email of the person to add:"
                   @size={{30}}
                   @autofocus={{true}}
-                  @disabled={{this.slot.is_submitting}}
+                  @disabled={{this.slot.isSubmitting}}
           />
         </FormRow>
-        <UiCancelButton @disabled={{this.slot.is_submitting}} @onClick={{this.cancelSearchAction}}/>
-        {{#if this.slot.is_submitting}}
+        <UiCancelButton @disabled={{this.slot.isSubmitting}} @onClick={{this.cancelSearchAction}}/>
+        {{#if this.slot.isSubmitting}}
           <LoadingIndicator @text="Adding"/>
         {{else if this.isSearching}}
           <LoadingIndicator @text="Searching"/>

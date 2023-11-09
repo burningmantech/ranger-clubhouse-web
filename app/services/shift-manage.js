@@ -1,6 +1,5 @@
 import Service from '@ember/service';
 import {service} from '@ember/service';
-import {set} from '@ember/object';
 import {shiftFormat} from 'clubhouse/helpers/shift-format';
 
 import ModalMultipleEnrollmentComponent from 'clubhouse/components/modal-multiple-enrollment';
@@ -25,13 +24,13 @@ export default class ShiftManageService extends Service {
    */
 
   slotSignup(slot, person, callback = null, force = false) {
-    set(slot, 'is_submitting', true);
+    slot.isSubmitting = true;
 
     this.ajax.request(`person/${person.id}/schedule`, {
       method: 'POST',
       data: {slot_id: slot.id, force: (force ? 1 : 0)}
     }).then((result) => {
-      set(slot, 'is_submitting', false);
+      slot.isSubmitting = false;
       if (result.status !== 'success') {
         this.handleSignupError(result, slot, person, callback);
         return;
@@ -40,7 +39,7 @@ export default class ShiftManageService extends Service {
       const isMe = +this.session.userId === +person.id;
       const name = isMe ? "You are" : `${person.callsign}  is`;
 
-      set(slot, 'slot_signed_up', result.signed_up);
+      slot.slot_signed_up = result.signed_up;
       const forcedReasons = [];
 
       if (result.has_started) {
@@ -71,7 +70,7 @@ export default class ShiftManageService extends Service {
         callback(result);
       }
     }).catch((response) => {
-      set(slot, 'is_submitting', false);
+      slot.isSubmitting = false;
       this.house.handleErrorResponse(response);
     });
   }
@@ -89,7 +88,7 @@ export default class ShiftManageService extends Service {
     const status = result.status;
     const isMe = +this.session.userId === +person.id;
 
-    set(slot, 'slot_signed_up', result.signed_up);
+    slot.slot_signed_up = result.signed_up;
 
     if (result.may_force) {
       // The signup may be forced by the user.

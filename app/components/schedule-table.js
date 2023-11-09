@@ -50,7 +50,7 @@ export default class ScheduleTableComponent extends Component {
    */
 
   get hasOverlapping() {
-    return this.viewSlots.reduce((total, slot) => (slot.is_overlapping ? 1 : 0) + total, 0) > 0;
+    return !!this.viewSlots.find((slot) => slot.isOverlapping);
   }
 
   /**

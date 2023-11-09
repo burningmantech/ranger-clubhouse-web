@@ -30,6 +30,7 @@
       {{#each this.positions key="position_id" as |position|}}
         <SchedulePositionList @position={{position}}
                               @showPeople={{@showPeople}}
+                              @hidePeople={{@hidePeople}}
                               @joinSlot={{@joinSlot}}
                               @leaveSlot={{@leaveSlot}}
                               @isAdmin={{@isAdmin}}
