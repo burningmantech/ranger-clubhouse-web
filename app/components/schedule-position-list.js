@@ -85,11 +85,11 @@ export default class SchedulePositionListComponent extends Component {
 
   @cached
   get haveOverlapping() {
-    return !!this.args.position.slots.find((s) => s.is_overlapping);
+    return !!this.args.position.slots.find((s) => s.isOverlapping);
   }
 
   @cached
   get overlappingCount() {
-    return this.args.position.slots.filter((s) => s.is_overlapping).length;
+    return this.args.position.slots.filter((s) => s.isOverlapping).length;
   }
 }

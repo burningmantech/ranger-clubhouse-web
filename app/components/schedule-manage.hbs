@@ -36,6 +36,7 @@
                        @scheduleSummary={{this.scheduleSummary}}
                        @leaveSlot={{this.leaveSlot}}
                        @showPeople={{this.showPeople}}
+                       @hidePeople={{this.hidePeople}}
         />
       </tab.pane>
       <tab.pane @title="Available Sign-Ups" @id="sign-ups">
@@ -43,6 +44,7 @@
         <ScheduleAvailableSignUps @availableSlots={{this.availableSlots}}
                                   @year={{@year}}
                                   @showPeople={{this.showPeople}}
+                                  @hidePeople={{this.hidePeople}}
                                   @joinSlot={{this.joinSlot}}
                                   @leaveSlot={{this.leaveSlot}}
                                   @isAdmin={{this.isAdmin}}
@@ -77,46 +79,3 @@
     </UiTab>
   {{/if}}
 </div>
-
-{{#if this.signUpInfo}}
-  <ModalDialog as |Modal|>
-    <Modal.title>
-      <span class="me-2">{{this.signUpSlot.position_title}}</span> {{shift-format this.signUpSlot.slot_begins
-                                                                                  timezone=this.signUpSlot.slot_tz_abbr}}
-    </Modal.title>
-    <Modal.body>
-      {{#if this.signUpInfo.people}}
-        <b>{{pluralize this.signUpInfo.people.length "sign-up"}}:</b>
-        <div class="callsign-list mt-2">
-          {{#each this.signUpInfo.people as |person|}}
-            <div>{{person.callsign}}</div>
-          {{/each}}
-        </div>
-      {{else}}
-        No one is signed up for this shift. Be the first!
-      {{/if}}
-      {{#if this.signUpInfo.assoc_signups}}
-        {{#each this.signUpInfo.assoc_signups as |assoc|}}
-          <div class="mt-2 fw-bold">
-            {{pluralize assoc.people.length "sign-up"}} for the corresponding {{assoc.position_title}} shift:
-          </div>
-          <div class="mt-2">
-            {{#if assoc.people}}
-              <div class="callsign-list">
-                {{#each assoc.people as |person|}}
-                  <div>{{person.callsign}}</div>
-                {{/each}}
-              </div>
-            {{else}}
-              <br>
-              No one has signed up for this related position.
-            {{/if}}
-          </div>
-        {{/each}}
-      {{/if}}
-    </Modal.body>
-    <Modal.footer>
-      <UiCloseButton @onClick={{this.closeSignUps}} />
-    </Modal.footer>
-  </ModalDialog>
-{{/if}}

@@ -60,7 +60,9 @@
           Check-in at the Hat Rack located at Ranger HQ, 5:45 &amp; the Esplanade, between BMIR and Placement.
         </p>
         <p>
-          <b>Can't make your Alpha shift?</b> Email the Mentor Cadre (<MailTo @to={{setting "MentorEmail"}} />) or stop by Ranger HQ on playa
+          <b>Can't make your Alpha shift?</b> Email the Mentor Cadre (
+          <MailTo @to={{setting "MentorEmail"}} />
+          ) or stop by Ranger HQ on playa
           to see if another shift can be attended.
         </p>
       {{/if}}
@@ -88,11 +90,11 @@
           <div class="schedule-actions">Actions</div>
         </div>
         {{#each @position.slots key="id" as |slot|}}
-          <div class="schedule-row {{if slot.is_overlapping "schedule-overlapping"
+          <div class="schedule-row {{if slot.isOverlapping "schedule-overlapping"
                                         (if slot.person_assigned "schedule-signed-up")}}"
                id="slot-{{slot.id}}">
             <div class="schedule-icon">
-              {{#if slot.is_overlapping}}
+              {{#if slot.isOverlapping}}
                 {{fa-icon "flag" color="danger"}}
               {{else if slot.person_assigned}}
                 {{fa-icon "check"}}
@@ -119,7 +121,7 @@
               {{#if (and slot.trainer_slot_id (eq slot.trainer_count 0))}}
                 <div class="text-danger">No trainers / mentors signed up yet.<br>Check back later.</div>
               {{/if}}
-              {{#if slot.is_overlapping}}
+              {{#if slot.isOverlapping}}
                 <div class="mt-1 small">
                   Sign up overlaps with:<br>
                   {{#each slot.overlappingSlots key="id" as |overlap|}}
@@ -146,28 +148,36 @@
               {{/if}}
             </div>
             <div class="schedule-actions">
-              <button type="button" {{on "click" (fn @showPeople slot)}} class="btn btn-secondary btn-sm"
-                      title="View people signed up"
-                      disabled={{slot.is_retrieving_people}}>
-                {{#if slot.is_retrieving_people}}
-                  <SpinIcon/>
-                {{else}}
-                  {{fa-icon "users" type="fas"}}
-                {{/if}}
-                Sign Ups
-              </button>
+              {{#if slot.signUpInfo}}
+                <button type="button" {{on "click" (fn @hidePeople slot)}} class="btn btn-warning btn-sm"
+                        title="Hide people signed up">
+                  {{fa-icon "users" type="fas" fixed=true right=1}}
+                  Hide Sign Ups
+                </button>
+              {{else}}
+                <button type="button" {{on "click" (fn @showPeople slot)}} class="btn btn-secondary btn-sm"
+                        title="View people signed up"
+                        disabled={{slot.isRetrievingSignUps}}>
+                  {{#if slot.isRetrievingSignUps}}
+                    <SpinIcon/>
+                  {{else}}
+                    {{fa-icon "users" type="fas" fixed=true right=1}}
+                  {{/if}}
+                  Sign Ups
+                </button>
+              {{/if}}
               {{#if slot.person_assigned}}
                 {{#if (or @isAdmin (not slot.has_started))}} {{!template-lint-disable "no-negated-condition"}}
                 {{! Only allow admins to remove a sign up that has started}}
                   <button type="button"
                     {{on "click" (fn @leaveSlot slot)}}
-                          class="btn btn-danger btn-sm"
+                          class="btn btn-danger btn-sm ms-1"
                           title="Remove from schedule"
-                          disabled={{slot.is_submitting}}>
-                    {{#if slot.is_submitting}}
+                          disabled={{slot.isSubmitting}}>
+                    {{#if slot.isSubmitting}}
                       <SpinIcon/>
                     {{else}}
-                      {{fa-icon "trash-alt" type="fas"}}
+                      {{fa-icon "trash-alt" type="fas" fixed=true right=1}}
                     {{/if}}
                     Remove
                   </button>
@@ -177,13 +187,13 @@
                 {{#if slot.slot_active}}
                   {{#if (or this.canForceSignUp (and (not slot.isFull) (not slot.has_started)))}}
                     <button type="button" {{on "click" (fn @joinSlot slot)}}
-                            class="btn btn-primary btn-sm"
+                            class="btn btn-primary btn-sm ms-1"
                             title="Sign up for the shift"
-                            disabled={{slot.is_submitting}}>
-                      {{#if slot.is_submitting}}
+                            disabled={{slot.isSubmitting}}>
+                      {{#if slot.isSubmitting}}
                         <SpinIcon/>
                       {{else}}
-                        {{fa-icon "user-plus" type="fas"}}
+                        {{fa-icon "user-plus" type="fas" fixed=true right=1}}
                       {{/if}}
                       Add
                     </button>
@@ -194,6 +204,9 @@
               {{/if}}
             </div>
           </div>
+          {{#if slot.signUpInfo}}
+            <ScheduleSignUpInfo @info={{slot.signUpInfo}} />
+          {{/if}}
         {{/each}}
       </div>
     {{/if}}

@@ -12,7 +12,7 @@
 <UiSection>
   <:title>{{@year}} Shift Schedule for {{@person.callsign}}</:title>
   <:body>
-     <div class="d-print-none">
+    <div class="d-print-none">
       <p>
         <NoAppreciateIcon/>
         = the shift hours do not count towards provisions (meal passes, showers, event radios) and appreciations
@@ -59,9 +59,9 @@
       {{/if}}
       <div class="schedule-body">
         {{#each this.viewSlots key="id" as |slot| }}
-          <div class="schedule-row {{if slot.is_overlapping "schedule-overlapping"}}">
+          <div class="schedule-row {{if slot.isOverlapping "schedule-overlapping"}}">
             <div class="schedule-icon">
-              {{#if slot.is_overlapping}}
+              {{#if slot.isOverlapping}}
                 {{fa-icon "flag" color="danger"}}
               {{else}}
                 &nbsp;
@@ -93,29 +93,44 @@
             <div class="schedule-actions">
               {{#if (or (not slot.has_started) @isAdmin)}}
               {{! Note: magic here -  by not using onclick, no event argument will be passed to leaveSlot. That tells the method to allow the page to scroll.}}
-                <button type="button" {{on "click" (fn @leaveSlot slot)}} class="btn btn-danger btn-sm me-1"
-                        disabled={{slot.is_submitting}}>
-                  {{~#if slot.is_submitting~}}
+                <button type="button" {{on "click" (fn @leaveSlot slot)}}
+                        class="btn btn-danger btn-sm me-1"
+                        disabled={{slot.isSubmitting}}>
+                  {{#if slot.isSubmitting}}
                     <SpinIcon/>
-                    {{~else~}}
+                  {{else}}
                     {{fa-icon "trash-alt" type="fas" fixed=true right=1}}
-                  {{~/if~}}
+                  {{/if}}
                   &nbsp;Remove
                 </button>
               {{~/if~}}
-              <button {{on "click" (fn @showPeople slot)}}
-                type="button"
-                class="btn btn-secondary btn-sm"
-                disabled={{slot.is_retrieving_people}}>
-                {{#if slot.is_retrieving_people}}
-                  <SpinIcon/>
-                {{~else~}}
-                  {{fa-icon "users" type="fas" fixed=true right=1}}
-                {{/if}}
-                &nbsp;Sign Ups
-              </button>
-            </div>
+              {{#if slot.signUpInfo}}
+                <button {{on "click" (fn @hidePeople slot)}}
+                  type="button"
+                  class="btn btn-warning btn-sm"
+                  disabled={{slot.isRetrievingSignUps}}>
+                    {{fa-icon "users" type="fas" fixed=true right=1}}
+                  &nbsp;Hide Sign Ups
+                </button>
+              {{else}}
+                <button {{on "click" (fn @showPeople slot)}}
+                  type="button"
+                  class="btn btn-secondary btn-sm"
+                  disabled={{slot.isRetrievingSignUps}}>
+                  {{#if slot.isRetrievingSignUps}}
+                    <SpinIcon/>
+                    {{~else~}}
+                    {{fa-icon "users" type="fas" fixed=true right=1}}
+                  {{/if}}
+                  &nbsp;Sign Ups
+                </button>
+              {{/if}}
+             </div>
           </div>
+          {{#if slot.signUpInfo}}
+            <ScheduleSignUpInfo @info={{slot.signUpInfo}} />
+          {{/if}}
+
         {{else}}
           <div class="schedule-row">
             <div class="schedule-icon">
