@@ -4,32 +4,34 @@
 </p>
 
 <div class="d-lg-flex justify-content-between">
-  {{#if (has-role "admin" "megaphone")}}
-    <section class="me-lg-4">
-      <h3>On Playa Broadcast Actions</h3>
+  <section class="me-lg-4">
+    <h3>On Playa Broadcast Actions</h3>
+    <div class="border rounded p-2 mb-2 text-center">
+      <LinkTo @route="admin.rbs.broadcast" @query={{hash type="recruit-position"}}
+              class="btn btn-success btn-lg btn-block">
+        Message off-duty SPECIAL TEAM RANGERS
+      </LinkTo>
+      A team (e.g., Green Dots, LEALs, Shift Leads) in the city is understaffed
+      Call up the willing specialized ranks.<br> Sent via text message and email only, NO CLUBHOUSE MESSAGES.
+    </div>
+    {{#if (has-role "megaphone")}}
       <div class="border rounded p-2 mb-2 text-center">
-        <LinkTo @route="admin.rbs.broadcast" @query={{hash type="recruit-dirt"}}
-                class="btn btn-success btn-lg btn-block">Message off-duty DIRT RANGERS
+        <LinkTo @route="admin.rbs.broadcast"
+                @query={{hash type="recruit-dirt"}}
+                class="btn btn-success btn-lg btn-block">
+          Message off-duty DIRT RANGERS
         </LinkTo>
         City currently is understaffed. Call upon willing off-duty Dirt Rangers to help out. Sent via text message and
         email.
       </div>
-
-      <div class="border rounded p-2 mb-2 text-center">
-        <LinkTo @route="admin.rbs.broadcast" @query={{hash type="recruit-position"}}
-                class="btn btn-success btn-lg btn-block">Message off-duty SPECIAL TEAM RANGERS
-        </LinkTo>
-        A team (e.g., Green Dots, LEALs, Shift Leads) in the city is understaffed. Call up the willing specialized
-        ranks. Sent via text message and email.
-      </div>
-
       <div class="border rounded p-2 mb-2 text-center">
         <LinkTo @route="admin.rbs.broadcast" @query={{hash type="onshift"}} class="btn btn-warning btn-lg btn-block">
           Text all ON-SHIFT RANGERS
         </LinkTo>
         Radio repeater failure, imminent city split, etc. Text message only.
       </div>
-
+    {{/if}}
+    {{#if (has-role "megaphone-emergency-onplaya")}}
       <div class="border rounded p-2 mb-2 text-center">
         <LinkTo @route="admin.rbs.broadcast" @query={{hash type="emergency"}} class="btn btn-danger btn-lg btn-block">
           Emergency Broadcast to ALL ON-PLAYA RANGERS
@@ -39,8 +41,8 @@
         </div>
         All hands on deck. Fatality, fire, plane crash, or other crises has happend.
       </div>
-    </section>
-  {{/if}}
+    {{/if}}
+  </section>
   <section>
     <h3>General Broadcast Actions</h3>
     <div class="border rounded p-2 mb-2 text-center">
@@ -50,14 +52,14 @@
       Notify Rangers signed up for a particular shift of a time change, or other related information. Text, email,
       and/or Clubhouse message.
     </div>
+    <div class="border rounded p-2 mb-2 text-center">
+      <LinkTo @route="admin.rbs.broadcast" @query={{hash type="position"}} class="btn btn-secondary btn-lg btn-block">
+        TEAM/POSITION BROADCAST
+      </LinkTo>
+      Send a message to everyone who holds a position or is on a Special Team. Useful for meeting requests. Text,
+      email, and/or Clubhouse message.
+    </div>
     {{#if (has-role "admin" "megaphone")}}
-      <div class="border rounded p-2 mb-2 text-center">
-        <LinkTo @route="admin.rbs.broadcast" @query={{hash type="position"}} class="btn btn-secondary btn-lg btn-block">
-          TEAM/POSITION BROADCAST
-        </LinkTo>
-        Send a message to everyone who holds a position or is on a Special Team. Useful for meeting requests. Text,
-        email, and/or Clubhouse message.
-      </div>
       <div class="border rounded p-2 mb-2 text-center">
         <LinkTo @route="admin.rbs.broadcast" @query={{hash type="general"}} class="btn btn-secondary btn-lg btn-block">
           GENERAL BROADCAST
@@ -67,7 +69,7 @@
     {{/if}}
   </section>
 </div>
-{{#if (has-role "admin")}}
+{{#if (has-role "tech-ninja")}}
   <UiSection>
     <:title>Administration</:title>
     <:body>

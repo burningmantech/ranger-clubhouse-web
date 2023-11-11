@@ -100,7 +100,7 @@ export default class ChFormSelectComponent extends Component {
 
   hasValue(haystack, value) {
     if (isArray(haystack)) {
-      return haystack.includes(value);
+      return !!haystack.find((straw) => straw == value);
     }
     // Handle comparing a selected value which is a boolean string and the
     // option value is an actual Boolean type.

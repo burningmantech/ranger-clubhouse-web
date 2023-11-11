@@ -29,6 +29,8 @@ import {
   PROSPECTIVE,
   RETIRED
 } from "clubhouse/constants/person_status";
+import {buildBroadcastOptions} from "clubhouse/utils/build-broadcast-options";
+import validateDateTime from "clubhouse/validators/datetime";
 
 export default class BroadcastComplexComponent extends Component {
   @service ajax;
@@ -95,12 +97,11 @@ export default class BroadcastComplexComponent extends Component {
       statuses: [ACTIVE],
       subject: isEmpty(subject) ? '' : subject,
       training: 'any',
+      expires_at: dayjs().add(12, 'h').format('YYYY-MM-DD HH:mm'),
     });
 
     if (this.args.broadcast.has_position) {
-      // Build up the basic position options
-      this.positionOptions = this.args.broadcast.positions.map((p) => [p.title, p.id.toString()]);
-      this.positionOptions.sort((a, b) => a[0].localeCompare(b[0]));
+      this.positionOptions = buildBroadcastOptions(this.args.broadcast.positions);
     }
   }
 
@@ -112,23 +113,24 @@ export default class BroadcastComplexComponent extends Component {
     const validations = {
       sms_message: [validatePresenceIf({if_set: 'send_sms', message: 'Enter a text message.'})],
       subject: [validatePresenceIf({if_set: ['send_clubhouse', 'send_email'], message: 'Enter a subject.'})],
-      message: [validatePresenceIf({if_set: ['send_clubhouse', 'send_email'], message: 'Enter a message.'})]
+      message: [validatePresenceIf({if_set: ['send_clubhouse', 'send_email'], message: 'Enter a message.'})],
+      expires_at: [validatePresence(true), validateDateTime()]
     };
 
     // Need to select a team/position
     if (broadcast.has_position) {
-      validations.position_ids = validateLength({min: 1, message: 'Select one ore more positions'});
+      validations.position_ids = [validateLength({min: 1, message: 'Select one ore more positions'})];
     }
 
     // Need to select a position, and then a slot
     if (broadcast.has_slot) {
-      validations.slotPositionId = validatePresence({presence: true, message: 'Select a position'});
-      validations.slot_id = validatePresence({presence: true, message: 'Select a shift'});
+      validations.slotPositionId = [validatePresence({presence: true, message: 'Select a position'})];
+      validations.slot_id = [validatePresence({presence: true, message: 'Select a shift'})];
     }
 
     // Need to select an alert preference type
     if (broadcast.alerts) {
-      validations.alert_id = validatePresence({presence: true, message: 'Choose an alert type'});
+      validations.alert_id = [validatePresence({presence: true, message: 'Choose an alert type'})];
     }
 
     return validations;
@@ -212,6 +214,9 @@ export default class BroadcastComplexComponent extends Component {
     data.send_sms = form.send_sms ? 1 : 0;
     data.send_email = form.send_email ? 1 : 0;
     data.send_clubhouse = form.send_clubhouse ? 1 : 0;
+    if (form.expires_at) {
+      data.expires_at = form.expires_at;
+    }
 
     return data;
   }
