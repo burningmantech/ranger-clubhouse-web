@@ -45,10 +45,13 @@
           {{fa-icon "user"}}
         {{/if}}
       </div>
-      <div class="mail-header {{if message.showing "mail-showing"}}" {{on "click" (fn this.toggleMessage message)}}
+      <div class="mail-header {{if message.showing "mail-showing"}}"
+          {{on "click" (fn this.toggleMessage message)}}
            role="button">
         <div class="mail-indicator">
-          {{#if message.delivered}}
+          {{#if message.has_expired}}
+            {{fa-icon "ban"}}
+          {{else if message.delivered}}
             {{fa-icon "check-circle" type="far"}}
           {{else}}
             {{fa-icon "arrow-right" color="success"}}
@@ -66,10 +69,19 @@
       </div>
       <BsCollapse @collapsed={{not message.showing}} class="mail-body">
         {{#if message.isDictated}}
-          <div class="mail-written-by">{{fa-icon "pen-alt"}} written by {{message.creator_callsign}}
-            for {{message.message_from}}</div>
+          <div class="mail-written-by">
+            {{fa-icon "pen-alt"}} written by {{message.creator_callsign}} for {{message.message_from}}
+          </div>
         {{/if}}
-
+        {{#if message.has_expired}}
+          <div class="mb-2 text-danger">
+            This message expired on {{shift-format message.expires_at}} and is no longer considered relevant.
+          </div>
+        {{else if message.expires_at}}
+          <div class="mb-2">
+            <i>This message will be no longer considered relevant after {{shift-format message.expires_at}}.</i>
+          </div>
+        {{/if}}
         {{message.body}}
         <div class="mail-actions">
           {{#if message.delivered}}

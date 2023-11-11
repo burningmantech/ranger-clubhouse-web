@@ -1,8 +1,8 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import { ADMIN, MEGAPHONE, EDIT_SLOTS } from 'clubhouse/constants/roles';
+import {ADMIN, MEGAPHONE, MEGAPHONE_TEAM_ONPLAYA, MEGAPHONE_EMERGENCY_ONPLAYA} from 'clubhouse/constants/roles';
 
 export default class AdminRbsRoute extends ClubhouseRoute {
-  roleRequired = [ ADMIN, MEGAPHONE, EDIT_SLOTS ];
+  roleRequired = [ADMIN, MEGAPHONE, MEGAPHONE_TEAM_ONPLAYA, MEGAPHONE_EMERGENCY_ONPLAYA];
 
   model() {
     // Pull in the configuration so users know what to expect.

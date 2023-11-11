@@ -17,6 +17,9 @@ export default class PersonMessageModel extends Model {
   @attr('number', { readOnly: true }) creator_person_id;
   @attr('string', { readOnly: true }) creator_callsign;
 
+  @attr('string', {readOnly: true}) expires_at;
+  @attr('boolean', {readOnly: true}) has_expired;
+
   @attr('string') subject;
   @attr('string') body;
   @attr('date') created_at;
@@ -27,6 +30,6 @@ export default class PersonMessageModel extends Model {
   @attr('boolean', { readOnly: true }) is_rbs;
 
   get isDictated() {
-      return (this.creator_person_id != this.sender_person_id);
+      return (this.creator_person_id !== this.sender_person_id);
   }
 }

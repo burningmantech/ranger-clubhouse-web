@@ -29,6 +29,8 @@ export const TIMECARD_YEAR_ROUND = 117;    // Paid folks who can self check in/o
 export const SALESFORCE_IMPORT = 118;      // Allowed to import new accounts from Salesforce
 export const MESSAGE_MANAGEMENT = 119;    // Allow access to Clubhouse Messages year round regardless of LMYR/LMOP setting.
 export const EDIT_CLOTHING = 120;   // Can edit a clothing fields.
+export const MEGAPHONE_TEAM_ONPLAYA = 121;  // On-Playa Megaphone permission
+export const MEGAPHONE_EMERGENCY_ONPLAYA = 122;    // Allows access to the broadcast all emergency
 
 export const Role = {
   ADMIN,
@@ -46,6 +48,8 @@ export const Role = {
   MANAGE,
   MANAGE_ON_PLAYA,
   MEGAPHONE,
+  MEGAPHONE_EMERGENCY_ONPLAYA,
+  MEGAPHONE_TEAM_ONPLAYA,
   MENTOR,
   MESSAGE_MANAGEMENT,
   REGIONAL_MANAGEMENT,
@@ -78,6 +82,8 @@ export const RoleToString = {
   [MANAGE]: 'manage',
   [MANAGE_ON_PLAYA]: 'manage-on-playa',
   [MEGAPHONE]: 'megaphone',
+  [MEGAPHONE_EMERGENCY_ONPLAYA]: 'megaphone-emergency-onplaya',
+  [MEGAPHONE_TEAM_ONPLAYA]: 'megaphone-team-onplaya',
   [MENTOR]: 'mentor',
   [MESSAGE_MANAGEMENT]: 'message-management',
   [PAYROLL]: 'payroll',

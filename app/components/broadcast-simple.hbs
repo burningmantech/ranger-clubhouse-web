@@ -61,6 +61,11 @@
             <f.select @name="position_id"
                       @options={{this.positionOptions}} />
           </FormRow>
+          <h4>When the message is considered "expired" or no longer relevant</h4>
+          The default is 12 hours from now.
+          <FormRow>
+            <f.datetime @name="expires_at" />
+          </FormRow>
         {{/if}}
         <h4>Message to send (limited to {{@config.sms_limit}} characters)</h4>
         <FormRow>

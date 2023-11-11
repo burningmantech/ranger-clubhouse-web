@@ -75,6 +75,10 @@
       </tr>
     {{/if}}
     <tr>
+      <th>Expires At</th>
+      <th>{{shift-format this.broadcastForm.expires_at}}</th>
+    </tr>
+    <tr>
       <th>Send Text/SMS</th>
       <td>
         {{if this.broadcastForm.send_sms "YES" "NO"}}<br>
@@ -171,7 +175,7 @@
                         @options={{this.signedUpOptions}}/>
             </FormRow>
           {{/if}}
-          {{#if @broadcast.has_restrictions}}
+           {{#if @broadcast.has_restrictions}}
             <FormRow>
               <FormLabel>Attendance:</FormLabel>
               <div class="col-sm-12 col-lg-auto">
@@ -221,6 +225,12 @@
     <UiSection>
       <:title>Email and/or Clubhouse Message</:title>
       <:body>
+        <FormRow>
+          <f.datetime @label="Message 'expires' at / no longer considered relevant after"
+                      @name="expires_at"
+                      @hint="Default is 12 hours from now"
+          />
+        </FormRow>
         <FormRow>
           <div class="col-12 ms-2">
             <f.checkbox @name="send_email"
