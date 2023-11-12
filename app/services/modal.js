@@ -91,6 +91,16 @@ export default class ModalService extends Service {
       // First dialog to show up, setup the keyboard listener
       window.addEventListener('keyup', this._checkForEscape);
     }
+    this._markTop();
+   }
+
+  _markTop() {
+    const len = this.dialogs.length, last = this.dialogs.length -1;
+
+    for (let idx = 0; idx < len; idx++) {
+      const dialog = this.dialogs[idx];
+      dialog.isTopDialog = (idx === last);
+     }
   }
 
   /**
@@ -111,6 +121,8 @@ export default class ModalService extends Service {
       // Remove the keyboard listener in case this was the last one.
       window.removeEventListener('keyup', this._checkForEscape);
     }
+
+    this._markTop();
   }
 
   /**
