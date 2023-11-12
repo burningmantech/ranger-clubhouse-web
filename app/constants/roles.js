@@ -31,9 +31,11 @@ export const MESSAGE_MANAGEMENT = 119;    // Allow access to Clubhouse Messages 
 export const EDIT_CLOTHING = 120;   // Can edit a clothing fields.
 export const MEGAPHONE_TEAM_ONPLAYA = 121;  // On-Playa Megaphone permission
 export const MEGAPHONE_EMERGENCY_ONPLAYA = 122;    // Allows access to the broadcast all emergency
+export const ANNOUNCEMENT_MANAGEMENT = 123;    // Allow announcements to be created and deleted.
 
 export const Role = {
   ADMIN,
+  ANNOUNCEMENT_MANAGEMENT,
   ART_TRAINER,
   CAN_FORCE_SHIFT,
   CERTIFICATION_MGMT,
@@ -69,6 +71,7 @@ export const Role = {
 
 export const RoleToString = {
   [ADMIN]: 'admin',
+  [ANNOUNCEMENT_MANAGEMENT]: 'announcement-management',
   [ART_TRAINER]: 'art-trainer',
   [CAN_FORCE_SHIFT]: 'force-shift',
   [EDIT_ACCESS_DOCS]: 'edit-access-docs',

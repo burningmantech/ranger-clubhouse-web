@@ -1,14 +1,16 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import EmberObject from '@ember/object';
-import { isEmpty } from '@ember/utils';
+import {isEmpty} from '@ember/utils';
+import {ADMIN, ANNOUNCEMENT_MANAGEMENT} from "clubhouse/constants/roles";
 
 export default class AdminMotdRoute extends ClubhouseRoute {
+  roleRequired = [ADMIN, ANNOUNCEMENT_MANAGEMENT]
   queryParams = {
-    audience: { refreshModel: true},
-    type: { refreshModel: true },
-    sort: { refreshModel: true },
-    page: { refreshModel: true },
-    page_size: { refreshModel: true }
+    audience: {refreshModel: true},
+    type: {refreshModel: true},
+    sort: {refreshModel: true},
+    page: {refreshModel: true},
+    page_size: {refreshModel: true}
   };
 
   model(params) {

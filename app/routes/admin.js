@@ -1,6 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {
   ADMIN,
+  ANNOUNCEMENT_MANAGEMENT,
   EDIT_ASSETS,
   EDIT_SLOTS,
   EDIT_SWAG,
@@ -12,6 +13,7 @@ import {
 export default class AdminRoute extends ClubhouseRoute {
   roleRequired = [
     ADMIN,
+    ANNOUNCEMENT_MANAGEMENT,
     EDIT_ASSETS,
     EDIT_SLOTS,
     EDIT_SWAG,
