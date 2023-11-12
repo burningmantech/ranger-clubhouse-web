@@ -18,18 +18,19 @@ module('Integration | Component | admin/slot-form', function(hooks) {
     });
 
     this.set('slot', slot);
-    this.set('positions', [ { id: 1, title: 'Alpha' }]);
+    this.set('slots', []);
+    this.set('positions', [ { id: 1, title: 'Alpha' }, { id: 2, title: 'Position 2'}]);
     this.set('trainerSlots', [{ id: 99, title: 'Position 99'}]);
     this.set('onCancel', () => { });
     this.set('onSave', () => { });
     this.set('onClone', () => { });
 
-    await render(hbs`<Admin::SlotForm @slot={{this.slot}} @positions={{this.positions}}
+    await render(hbs`<Admin::SlotForm @slot={{this.slot}} @positions={{this.positions}} @slots={{this.slots}}
         @trainerSlots={{this.trainerSlots}} @onCancel={{this.onCancel}} @onSave={{this.onSave}} @onClone={{this.onClone}} />`);
 
     //assert.dom(this.element).hasText('');
     assert.dom('input#slot-description').hasValue('Afternoon');
     assert.dom('input#slot-active').isChecked();
-    assert.dom('select[name=position_id]').hasValue('1');
+    assert.dom('select[name=position_id]').hasValue('2');
   });
 });

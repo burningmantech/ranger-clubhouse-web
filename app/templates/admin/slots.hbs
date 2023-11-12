@@ -4,6 +4,17 @@
               @years={{this.yearList}}
               @onChange={{action (mut this.year)}} />
 
+  {{#if (and this.eventDate.pre_event_slot_start this.eventDate.pre_event_slot_end)}}
+    <p class="mt-2">
+      {{this.year}} Pre-event is {{shift-format this.eventDate.pre_event_slot_start}} to
+      {{shift-format this.eventDate.pre_event_slot_end}}
+    </p>
+  {{else}}
+    <UiNotice @title="{{this.year}} pre-event slot dates are not setup" @type="danger">
+      Pre-Event slots may not be properly vetted. Contact the Tech Team to set the Event Date records.
+    </UiNotice>
+  {{/if}}
+
   <FormRow>
     <FormLabel @auto={{true}}>Day Filter</FormLabel>
     <div class="col-auto">
@@ -28,15 +39,9 @@
     </div>
   </FormRow>
 
-  {{#if (and this.eventDate.pre_event_slot_start this.eventDate.pre_event_slot_end)}}
-    <p class="mt-2">
-      {{this.year}} Pre-event is {{shift-format this.eventDate.pre_event_slot_start}} to
-      {{shift-format this.eventDate.pre_event_slot_end}}
-    </p>
-  {{else}}
-    <UiNotice @title="{{this.year}} pre-event slot dates are not setup" @type="danger">
-      Pre-Event slots may not be properly vetted. Contact the Tech Team to set the Event Date records.
-    </UiNotice>
+
+  {{#if this.positionSlots}}
+    <DropdownScrollList @items={{this.positionsScrollList}} @openAccordion={{true}} @thing="position"/>
   {{/if}}
 
   {{#if this.slots.length}}
@@ -50,8 +55,10 @@
     No slots were found for {{this.year}}?
   {{/if}}
 
+
   {{#each this.positionSlots as |position|}}
-    <UiAccordion @isInitOpen={{get this.positionsOpened position.position_id}}
+    <UiAccordion id="position-{{position.position_id}}"
+                 @isInitOpen={{get this.positionsOpened position.position_id}}
                  @onClick={{action this.positionClicked position}} as |box|>
       <box.title>
         {{position.title}} ({{position.slots.length}}
@@ -139,8 +146,13 @@
   {{/each}}
 
   {{#if this.slot}}
-    <Admin::SlotForm @slot={{this.slot}} @positions={{this.positions}} @trainerSlots={{this.trainerSlots}}
-                     @onSave={{this.saveSlot}} @onCancel={{this.cancel}} @onClone={{this.cloneSlot}} />
+    <Admin::SlotForm @slot={{this.slot}}
+                     @positions={{this.positions}}
+                     @trainerSlots={{this.trainerSlots}}
+                     @slots={{this.slots}}
+                     @onSave={{this.saveSlot}}
+                     @onCancel={{this.cancel}}
+                     @onClone={{this.cloneSlot}} />
   {{/if}}
 
   {{#if this.showBulkEditDialog}}

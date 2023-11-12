@@ -9,10 +9,39 @@
   {{else}}
     No one is signed up for this shift. Be the first!
   {{/if}}
+  {{#if @info.parent}}
+    <div class="my-2 fw-bold">
+      {{pluralize @info.parent.people.length "sign-up"}} in the parent {{@info.parent.position_title}} shift:
+    </div>
+    {{#if @info.parent.people}}
+      <div class="callsign-list">
+        {{#each @info.parent.people as |person|}}
+          <div>{{person.callsign}}</div>
+        {{/each}}
+      </div>
+    {{else}}
+      No one has signed up for the shift.
+    {{/if}}
+  {{/if}}
+  {{#if @info.child}}
+    <div class="my-2 fw-bold">
+      {{pluralize @info.child.people.length "sign-up"}} in the {{@info.child.position_title}} sub-shift:
+    </div>
+    {{#if @info.child.people}}
+      <div class="callsign-list">
+        {{#each @info.child.people as |person|}}
+          <div>{{person.callsign}}</div>
+        {{/each}}
+      </div>
+    {{else}}
+      No one has signed up for the shift.
+    {{/if}}
+  {{/if}}
+
   {{#if @info.assoc_signups}}
     {{#each @info.assoc_signups as |assoc|}}
       <div class="mt-2 fw-bold">
-        {{pluralize assoc.people.length "sign-up"}} for the corresponding {{assoc.position_title}} shift:
+        {{pluralize assoc.people.length "sign-up"}} in the corresponding {{assoc.position_title}} shift:
       </div>
       <div class="mt-2">
         {{#if assoc.people}}
