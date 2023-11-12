@@ -7,7 +7,7 @@
   @size={{or @size "lg"}}
   @fullscreen={{@fullscreen}}
   {{did-insert this.adjustClassOnInsert}}
-  style={{if (not this.dialogRegistry.isTopDialog) "display: none !important"}}
+  style={{unless this.dialogRegistry.isTopDialog "display: none !important"}}
   as |modal|>
   {{#if @title}}
     <modal.header @closeButton={{false}}>
