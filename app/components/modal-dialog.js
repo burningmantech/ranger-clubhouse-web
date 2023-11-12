@@ -2,11 +2,16 @@ import Component from '@glimmer/component';
 import {service} from '@ember/service';
 import {schedule} from '@ember/runloop';
 import {action} from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+
+class DialogEntry {
+  @tracked isTopDialog = false;
+}
 
 export default class ModalDialogComponent extends Component {
   @service modal;
 
-  dialogRegistry = {};
+  dialogRegistry = new DialogEntry();
 
   /**
    * Register a non-inline modal with the modal service. The service handles
@@ -22,6 +27,8 @@ export default class ModalDialogComponent extends Component {
     }
 
     this.dialogRegistry.onEscape = this.args.onEscape;
+    this.dialogRegistry.show = this._showDialog;
+    this.dialogRegistry.hide = this._hideDialog;
     schedule('afterRender', () => this.modal.addDialog(this.dialogRegistry));
   }
 
@@ -43,6 +50,11 @@ export default class ModalDialogComponent extends Component {
      */
 
     this.args.onInsert?.(element);
+  }
+
+  @action
+  _showDialog() {
+
   }
 
   /**
