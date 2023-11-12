@@ -81,12 +81,12 @@
       {{/if}}
     </NavbarMenuSection>
   {{/if}}
-  {{#if (has-role "admin" "megaphone" "megaphone-emergency-onplaya" "megaphone-team-onplaya")}}
+  {{#if (has-role "admin" "megaphone" "megaphone-emergency-onplaya" "megaphone-team-onplaya" "announcement-management")}}
     <NavbarMenuSection @section="Communications">
-      {{#if (has-role "admin")}}
+      {{#if (has-role "admin" "announcement-management")}}
         <NavbarMenuItem @menu={{menu}} @route="admin.motd" @item="Announcements"/>
       {{/if}}
-      {{#if (has-role "megaphone" "megaphone-emergency-onplaya" "megaphone-team-onplaya")}}
+      {{#if (has-role "admin" "megaphone" "megaphone-emergency-onplaya" "megaphone-team-onplaya")}}
         <NavbarMenuItem @menu={{menu}} @route="admin.rbs" @item="Ranger Broadcast"/>
       {{/if}}
       {{#if (has-role "admin")}}
