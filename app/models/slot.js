@@ -11,6 +11,7 @@ export default class SlotModel extends Model {
   @attr('string') url;
   @attr('boolean') active;
   @attr('number') trainer_slot_id;
+  @attr('number') parent_signup_slot_id;
 
   // signed_up is a column maintained by slot sign ups,
   // should not be directly editable.

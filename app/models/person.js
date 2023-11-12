@@ -53,7 +53,6 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('string', {readOnly: true}) status_date;
   @attr('string', {readOnly: true}) date_verified;
   @attr('string', {readOnly: true}) created_at;
-  @attr('boolean') active_next_event;
   @attr('boolean') on_site;
   @attr('boolean') has_reviewed_pi;   // pseudo field, write only
   @attr('string') reviewed_pi_at;

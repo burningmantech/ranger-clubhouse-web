@@ -31,6 +31,18 @@
           </div>
         </FormRow>
       {{/if}}
+      <p>
+        When a parent sign up slot is set, the parent's and this slot's sign ups counts work together.
+        The signups for this shift are counted against the parent's signup count.
+        (e.g., if the parent has 3 signups, and this slot has 2, then parent's signup count will effectively be 5.)
+      </p>
+      <FormRow>
+        <f.select @name="parent_signup_slot_id"
+                  @label="Parent Sign-Up Slot"
+                  @options={{this.parentSlotOptions f.model.position_id}}
+                  @includeBlank={{true}}
+        />
+      </FormRow>
 
       <FormRow>
         <f.text @name="description"

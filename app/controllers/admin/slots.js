@@ -183,6 +183,10 @@ export default class SlotsController extends ClubhouseController {
     this.positionSlots = _.sortBy(groups, 'title');
   }
 
+  get positionsScrollList() {
+    return this.positionSlots.map((p) => ({id: `position-${p.position_id}`, title: p.title}));
+  }
+
   @action
   positionClicked(position, opened) {
     this.positionsOpened[position.position_id] = opened;
