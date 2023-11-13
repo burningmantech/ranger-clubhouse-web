@@ -1,51 +1,54 @@
+<p>
+  Note: your home address is NOT synchronized with your Burner Profile.
+</p>
 <FormRow>
   <@f.select @name="country"
-            @label="Country"
-            @options={{this.countryOptions}}
-            @onChange={{action this.countryChange}}
-            @autocomplete="country"
-           />
+  @label="Country"
+  @options={{this.countryOptions}}
+  @onChange={{action this.countryChange}}
+  @autocomplete="country"
+  />
 </FormRow>
 <FormRow>
   <@f.text @name="street1"
-            @label="Street"
-            @size={{30}}
-            @maxlength={{128}}
-            @autocomplete="address-line1" />
+  @label="Street"
+  @size={{30}}
+  @maxlength={{128}}
+  @autocomplete="address-line1" />
   <@f.text @name="apt"
-           @label="Apt"
-           @size={{5}}
-           @maxlength={{10}}/>
+  @label="Apt"
+  @size={{5}}
+  @maxlength={{10}}/>
 </FormRow>
 
 <FormRow>
   <@f.text @name="street2"
-            @label="Street Line 2"
-           @size={{30}}
-           @maxlength={{128}}
-            @autocomplete="address-line2" />
+  @label="Street Line 2"
+  @size={{30}}
+  @maxlength={{128}}
+  @autocomplete="address-line2" />
 </FormRow>
 <FormRow>
   <@f.text @name="city"
-           @label="City"
-           @size={{20}}
-           @autocomplete="address-level2" />
+  @label="City"
+  @size={{20}}
+  @autocomplete="address-level2" />
   {{#if this.stateOptions}}
     <@f.select @name="state"
-              @label={{this.stateLabel}}
-              @options={{this.stateOptions}}
-               @autocomplete="address-level1" />
+    @label={{this.stateLabel}}
+    @options={{this.stateOptions}}
+    @autocomplete="address-level1" />
   {{else}}
     <@f.text @name="state"
-              @label={{this.stateLabel}}
-              @maxlength={{128}}
-              @disabled={{if @f.model.country false true}}
-              @autocomplete="address-level1" />
+    @label={{this.stateLabel}}
+    @maxlength={{128}}
+    @disabled={{if @f.model.country false true}}
+    @autocomplete="address-level1" />
   {{/if}}
 
   <@f.text @name="zip"
-            @label={{if (eq @f.model.country "US") "Zipcode" "Postal Code"}}
-            @size={{10}}
-            @maxlength={{10}}
-            @autocomplete="postal-code" />
+  @label={{if (eq @f.model.country "US") "Zipcode" "Postal Code"}}
+  @size={{10}}
+  @maxlength={{10}}
+  @autocomplete="postal-code" />
 </FormRow>
