@@ -14,6 +14,10 @@ export default class PersonMembershipController extends ClubhouseController {
     return this.session.isAdmin;
   }
 
+  get teamsScrollList() {
+    return this.teams.map((t) => ({ id: `team-box-${t.id}`, title: t.title }));
+  }
+
   @action
   itemClick(item) {
     item.selected = !item.selected;
