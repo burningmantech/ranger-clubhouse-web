@@ -662,3 +662,20 @@ ul.no-indent, ol.no-indent {
 summary:hover {
   background-color: #dee2e6 !important;
 }
+
+
+.blink-box {
+  animation: blink-box-keyframes 1s linear 2;
+}
+
+@keyframes blink-box-keyframes {
+  0% {
+    background-color: #FFC300FF;
+  }
+  50% {
+    background-color: #fff;
+  }
+  100% {
+    background-color: #FFC300FF;
+  }
+}

@@ -35,5 +35,11 @@ export default class DropdownScrollListComponent extends Component {
 
   _scrollToElement(id) {
     this.house.scrollToElement(`#${id}`, true, true);
+    if (this.args.blinkBox) {
+      const element = document.querySelector(`#${id}`);
+      if (element) {
+        setTimeout(() => element.classList.add('blink-box'), 100);
+      }
+    }
   }
 }
