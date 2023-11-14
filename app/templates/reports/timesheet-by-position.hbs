@@ -4,9 +4,9 @@
             @minYear={{2008}}
             @skipPandemic={{true}}
 />
-<DropdownScrollList @items={{this.positionsScrollList}} @openAccordion={{true}} @thing="position" />
+<DropdownScrollList @items={{this.positionsScrollList}} @openAccordion={{true}} @thing="position"/>
 <p>
-  Showing {{pluralize this.positions.length "position"}}
+  Showing {{pluralize this.positions.length "position"}} <UiExportToCSVButton @onClick={{this.exportAllToCSV}} @size="sm"/>
 </p>
 {{#each this.positions key="id" as |position|}}
   <div class="max-width-700">
@@ -15,14 +15,14 @@
       <accordion.body>
         {{#if accordion.isOpen}}
           <p>
-            <UiButton @onClick={{fn this.exportToCSV position}}>Export To CSV</UiButton>
+            <UiExportToCSVButton @onClick={{fn this.exportToCSV position}} @size="sm" />
           </p>
           <table class="table table-sm table-hover table-striped table-width-auto">
             <thead>
             <tr>
-              <th>From</th>
-              <th>To</th>
+              <th>Time</th>
               <th class="text-end">Hours</th>
+              <th class="text-end">Credits</th>
               <th>Callsign</th>
               {{#if this.session.canViewEmail}}
                 <th>Email</th>
@@ -32,15 +32,16 @@
             <tbody>
             {{#each position.timesheets key="id" as |entry|}}
               <tr>
-                <td>{{shift-format entry.on_duty}}</td>
                 <td>
                   {{#if entry.off_duty}}
-                    {{shift-format entry.off_duty}}
+                    {{shift-format entry.on_duty entry.off_duty}}
                   {{else}}
-                    <i>still on duty</i>
+                    {{shift-format entry.on_duty}}
+                    to <i>still on duty</i>
                   {{/if}}
                 </td>
                 <td class="text-end">{{hour-format entry.duration}}</td>
+                <td class="text-end">{{credits-format entry.credits}}</td>
                 <td>
                   <PersonLink @person={{entry.person}} />
                 </td>
