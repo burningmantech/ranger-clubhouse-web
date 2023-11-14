@@ -21,6 +21,7 @@
           Copy Credits
         </UiButton>
       {{/if}}
+      <UiExportToCSVButton @onClick={{this.exportAllToCSV}} />
     </div>
   </FormRow>
 
@@ -52,6 +53,7 @@
             <UiButton @onClick={{fn this.startCopy position.position_id}} @type="secondary" @size="sm">
               Bulk Copy
             </UiButton>
+            <UiExportToCSVButton @onClick={{fn this.exportToCSV position}} @size="sm" />
           </p>
           <table class="table table-sm table-hover table-striped">
             <thead>
