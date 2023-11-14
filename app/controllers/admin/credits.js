@@ -8,6 +8,14 @@ import validateDateTime from 'clubhouse/validators/datetime';
 import dayjs from 'dayjs';
 import _ from 'lodash';
 
+const CSV_COLUMNS = [
+  {title: 'Position', key: 'position'},
+  {title: 'Start', key: 'start_time'},
+  {title: 'End', key: 'end_time'},
+  {title: 'Credits', key: 'credits_per_hour'},
+  {title: 'Description', key: 'description'},
+];
+
 const ALL_DAYS = {id: 'all', title: 'All Days'};
 
 class CopyParams {
@@ -120,7 +128,7 @@ export default class AdminCreditsController extends ClubhouseController {
       credits = credits.filter((p) => p.creditDay === dayFilter);
     }
 
-    this.viewCredits = _.sortBy(credits,'start_time');
+    this.viewCredits = _.sortBy(credits, 'start_time');
   }
 
   get dayOptions() {
@@ -342,5 +350,18 @@ export default class AdminCreditsController extends ClubhouseController {
     // if all are selected, deselect all; otherwise select all
     const value = !position.allSelected;
     position.credits.forEach((c) => c.selected = value);
+  }
+
+  @action
+  exportToCSV(position) {
+    const rows = position.credits.map((c) => ({
+      position: position.title,
+      start_time: c.start_time,
+      end_time: c.end_time,
+      credits_per_hour: c.credits_per_hour.toFixed(2),
+      description: c.description
+    }));
+
+    this.house.downloadCsv(`${this.year}-${position.title.replace(' ', '-')}-credits.csv`, CSV_COLUMNS, rows);
   }
 }
