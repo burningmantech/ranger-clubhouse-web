@@ -354,14 +354,25 @@ export default class AdminCreditsController extends ClubhouseController {
 
   @action
   exportToCSV(position) {
-    const rows = position.credits.map((c) => ({
+    const rows = [];
+    this._buildPositionExport(position, rows)
+    this.house.downloadCsv(`${this.year}-${position.title.replace(' ', '-')}-credits.csv`, CSV_COLUMNS, rows);
+  }
+
+  @action
+  exportAllToCSV() {
+    const rows = [];
+    this.positionCredits.forEach((position) =>  this._buildPositionExport(position, rows));
+    this.house.downloadCsv(`${this.year}-all-credits.csv`, CSV_COLUMNS, rows);
+  }
+
+  _buildPositionExport(position, rows) {
+    position.credits.forEach((c) => rows.push({
       position: position.title,
       start_time: c.start_time,
       end_time: c.end_time,
       credits_per_hour: c.credits_per_hour.toFixed(2),
       description: c.description
     }));
-
-    this.house.downloadCsv(`${this.year}-${position.title.replace(' ', '-')}-credits.csv`, CSV_COLUMNS, rows);
   }
 }
