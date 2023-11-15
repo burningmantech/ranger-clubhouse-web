@@ -145,3 +145,18 @@
 >
   Retired accounts should only have positions flagged as new user eligible (similar to a prospective or auditor).
 </Admin::PositionSanityCheck>
+
+<Admin::PositionSanityCheck
+  @title="Accounts Missing Basic Positions"
+  @caption="{{pluralize this.missing_positions.length "person"}} found"
+  @sucessMessage="Congratulations! All accounts appear to be in order."
+  @columns={{(array)}}
+  @people={{this.missing_positions}}
+  @repairAction={{this.repairPeople}}
+  @repairType="missing_positions"
+  @canRepair={{this.userCanRepair}}
+  @isSubmitting={{this.isSubmitting}}
+>
+  All active Rangers accounts should have the positions set with the All Rangers flag, and all active accounts (auditor, non-ranger, Ranger)
+  should have the
+</Admin::PositionSanityCheck>
