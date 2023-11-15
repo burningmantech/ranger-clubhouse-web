@@ -93,6 +93,7 @@ Router.map(function () {
     });
 
     this.route('permissions');
+    this.route('person-create');
     this.route('settings');
     this.route('slots');
 
@@ -107,8 +108,6 @@ Router.map(function () {
     this.route('timesheet-sanity-checker');
     this.route('timesheet-slot-repair');
     this.route('top-hour-earners');
-
-    this.route('person-create');
   });
 
   this.route('hq', {path: '/hq/:person_id'}, function () {
@@ -138,7 +137,6 @@ Router.map(function () {
       this.route('manage', {path: '/:slot_id'});
     });
   });
-
 
   this.route('person', {path: '/person/:person_id'}, function () {
     this.route('index', {path: '/'});
@@ -171,6 +169,7 @@ Router.map(function () {
     this.route('index', {path: '/'});
     this.route('capacity');
     this.route('multiple-enrollments');
+    this.route('online-course-progress');
     this.route('people-training-completed');
     this.route('resources');
     this.route('session', {path: '/session/:slot_id'}, function () {
@@ -184,7 +183,6 @@ Router.map(function () {
     this.route('trainer-attendance');
     this.route('unified-flagging');
     this.route('untrained-people');
-    this.route('online-course-progress');
   });
 
   this.route('reports', function () {
@@ -195,6 +193,7 @@ Router.map(function () {
     this.route('cruise-direction');
     this.route('event-stats');
     this.route('flakes');
+    this.route('forced-signins');
     this.route('freaking-years');
     this.route('hq-forecast');
     this.route('languages');
@@ -214,6 +213,7 @@ Router.map(function () {
     this.route('schedule-by-callsign');
     this.route('schedule-by-position');
     this.route('shift-coverage');
+    this.route('shift-drop');
     this.route('shift-lead');
     this.route('shift-signups');
     this.route('special-teams');
@@ -221,33 +221,32 @@ Router.map(function () {
     this.route('timesheet-by-callsign');
     this.route('timesheet-by-position');
     this.route('timesheet-correction-requests');
+    this.route('timesheet-correction-stats');
     this.route('timesheet-totals');
     this.route('timesheet-unconfirmed');
     this.route('vehicle-paperwork');
     this.route('vehicle-registry');
-    this.route('shift-drop');
-    this.route('forced-signins');
-    this.route('timesheet-correction-stats');
   });
 
   this.route('vc', function () {
     this.route('access-documents', function () {
       this.route('index', {path: '/'});
-      this.route('expiring');
-      this.route('trs');
-      this.route('statistics');
-      this.route('waps');
-      this.route('unclaimed-with-signups');
       this.route('claimed-with-no-signups');
-      this.route('unsubmit-provisions');
+      this.route('expiring');
+      this.route('maintenance');
       this.route('provisions');
       this.route('reports');
-      this.route('maintenance');
+      this.route('statistics');
+      this.route('trs');
+      this.route('unclaimed-with-signups');
+      this.route('unsubmit-provisions');
+      this.route('waps');
     });
     this.route('bmid');
     this.route('bmid-print');
     this.route('bmid-sanity-check');
     this.route('handle-checker');
+    this.route('maintenance');
     this.route('photo-review');
     this.route('photos');
     this.route('salesforce');

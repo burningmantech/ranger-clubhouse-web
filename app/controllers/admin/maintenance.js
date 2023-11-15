@@ -5,36 +5,12 @@ import {tracked} from '@glimmer/tracking';
 const TASK_GROUPS = [
   {
     group_title: 'Account Post-Event',
-    tasks: [
-      {
-        action: 'mark-off-site',
-        title: 'Mark all Rangers as off-site',
-        description: 'Any Ranger who was marked as on site will be marked as off site',
-        controller: 'maintenance'
-      },
-      {
-        action: 'reset-pnvs',
-        title: 'Reset PNVs To Past Prospectives',
-        description: 'Revert Alpha/Bonked/Prospective/Prospective Waitlist people to "past prospective" status, change their callsigns to LastFirstYY, and mark callsigns as unapproved.',
-        controller: 'maintenance'
-      },
-
-      {
-        action: 'reset-past-prospectives',
-        title: 'Reset Past Prospectives',
-        description: 'Reset people with status of "past prospective" AND who have approved callsigns to a callsign of LastFirstYY and mark callsign as unapproved',
-        controller: 'maintenance'
-      }
-    ]
-  },
-  {
-    group_title: 'BMID',
     tasks: [{
-      action: 'set-bmid-titles',
-      title: 'Set BMID Titles',
-      description: 'Set BMID titles for Shift Leads, OODs, Operations Managers, Department Managers, LEALs, and 007s',
-      controller: 'bmid'
-    }]
+      action: 'mark-off-site',
+      title: 'Mark all Rangers as off-site',
+      description: 'Any Ranger who was marked as on site will be marked as off site',
+      controller: 'maintenance'
+    }],
   },
   {
     group_title: 'Clubhouse Messages',
