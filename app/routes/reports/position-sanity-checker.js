@@ -14,6 +14,7 @@ export default class ReportsPositionSanityCheckerRoute extends ClubhouseRoute {
     controller.set('deactivated_positions', this.deactivated_positions(model.deactivated_positions));
     controller.set('deactivated_teams', this.deactivated_teams(model.deactivated_teams));
     controller.set('lmyr', this.lmyrRole(model.lmyr));
+    controller.set('missing_positions', this.missingPositions(model.missing_positions))
     controller.set('retired_accounts', this.retiredAccounts(model.retired_accounts));
     controller.set('shiny_pennies', this.shinyPennies(model.shiny_pennies))
     controller.set('shiny_penny_year', model.shiny_penny_year)
@@ -75,6 +76,15 @@ export default class ReportsPositionSanityCheckerRoute extends ClubhouseRoute {
   deactivated_positions(positions) {
     positions.forEach((p) => this._setChecked(p.people));
     return positions;
+  }
+
+  missingPositions(people) {
+    this._setChecked(people);
+    people.columns = [
+      {label: 'Missing Positions', property: 'title', array: 'positions'},
+    ];
+
+    return people
   }
 
   deactivated_teams(teams) {

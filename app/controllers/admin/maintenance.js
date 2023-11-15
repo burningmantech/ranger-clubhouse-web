@@ -2,23 +2,16 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 
-const TASK_GROUPS = [{
-  group_title: 'Positions',
-  tasks: [{
-    action: 'update-positions',
-    title: 'Set Ranger Positions',
-    description: 'Ensure all Rangers have the correction positions',
-    controller: 'maintenance'
-  }]
-},
+const TASK_GROUPS = [
   {
     group_title: 'Account Post-Event',
-    tasks: [{
-      action: 'mark-off-site',
-      title: 'Mark all Rangers as off-site',
-      description: 'Any Ranger who was marked as on site will be marked as off site',
-      controller: 'maintenance'
-    },
+    tasks: [
+      {
+        action: 'mark-off-site',
+        title: 'Mark all Rangers as off-site',
+        description: 'Any Ranger who was marked as on site will be marked as off site',
+        controller: 'maintenance'
+      },
       {
         action: 'reset-pnvs',
         title: 'Reset PNVs To Past Prospectives',
@@ -34,7 +27,6 @@ const TASK_GROUPS = [{
       }
     ]
   },
- 
   {
     group_title: 'BMID',
     tasks: [{

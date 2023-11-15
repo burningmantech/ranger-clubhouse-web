@@ -11,79 +11,7 @@
       <a href {{action this.showIndex}}>{{fa-icon "angle-double-left"}} Back to Maintenance Tasks</a>
     </p>
 
-    {{#if (eq this.taskAction "update-positions")}}
-      <p>
-        The following changes have been made to Ranger positions:
-      </p>
-      <b>{{pluralize this.results.actives.length "person"}} - updated positions</b>
-      <table class="table table-striped table-hover table-width-auto">
-        <thead>
-        <tr>
-          <th>Callsign</th>
-          <th>Added Positions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each this.results.actives as |person|}}
-          <tr>
-            <td>
-              <PersonLink @person={{person}} />
-            </td>
-            <td>
-              {{#each person.positions_add as |position|}}
-                {{position.title}}<br>
-              {{/each}}
-            </td>
-          </tr>
-        {{else}}
-          <tr>
-            <td colspan="2">Congratulations, all Rangers appear to have been granted the basic set of positions (i.e.
-              the
-              "All Rangers" flag set on a position) and no adjustments are needed.
-            </td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
-
-      <b>{{pluralize this.results.prospectives.length  "prospective"}} - updated positions</b>
-      <table class="table table-striped table-hover table-width-auto">
-        <thead>
-        <tr>
-          <th>Callsign</th>
-          <th>Added Positions</th>
-          <th>Removed Positions"</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each this.results.prospectives as |person|}}
-          <tr>
-            <td>
-              <PersonLink @person={{person}} />
-            </td>
-            <td>
-              {{#each person.positions_add as |position|}}
-                {{position.title}}<br>
-              {{else}}
-                <i>none</i>
-              {{/each}}
-            </td>
-            <td>
-              {{#each person.positions_remove as |position|}}
-                {{position.title}}<br>
-              {{else}}
-                <i>none</i>
-              {{/each}}
-            </td>
-          </tr>
-        {{else}}
-          <tr>
-            <td colspan="3">Congratulations! All prospectives appear to have the correct positions.</td>
-          </tr>
-        {{/each}}
-        </tbody>
-      </table>
-    {{else if (eq this.taskAction "mark-off-site")}}
+    {{#if (eq this.taskAction "mark-off-site")}}
       <p>
         {{pluralize this.results.count "person"}} have been marked off-site.
       </p>
@@ -151,8 +79,8 @@
       {{else}}
         <p class="text-danger"><b>No Past Prospectives with approved callsigns were found.</b></p>
       {{/if}}
-     {{else if (eq this.taskAction "bump-expiration")}}
-      {{else if (eq this.taskAction "set-bmid-titles")}}
+    {{else if (eq this.taskAction "bump-expiration")}}
+    {{else if (eq this.taskAction "set-bmid-titles")}}
       {{#if this.results.bmids}}
         <p>
           Note: only titles that were set will be shown. A title set prior to this will not appear below.
@@ -226,7 +154,7 @@
                 </td>
                 <td class="w-70">
                   {{task.description}}
-                  </td>
+                </td>
               </tr>
             {{/each}}
             </tbody>
