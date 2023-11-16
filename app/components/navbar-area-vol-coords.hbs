@@ -5,6 +5,7 @@
     <NavbarMenuItem @menu={{menu}} @route="vc.photos" @item="Photos"/>
     <NavbarMenuItem @menu={{menu}} @route="vc.spigot" @item="Spigot Flow"/>
     <NavbarMenuItem @menu={{menu}} @route="vc.shiny-penny-report" @item="Shiny Penny Report"/>
+    <NavbarMenuItem @menu={{menu}} @route="vc.maintenance" @item="VC Maintenance"/>
     {{#if (has-role "admin" "salesforce-import")}}
       <NavbarMenuItem @menu={{menu}} @route="vc.salesforce" @item="Salesforce Import"/>
     {{/if}}
@@ -13,11 +14,11 @@
     {{/if}}
   {{/if}}
   {{#if (has-role "edit-access-docs")}}
-    <menu.divider />
+    <menu.divider/>
     <NavbarMenuItem @menu={{menu}} @route="vc.access-documents" @item="Manage Access Docs"/>
   {{/if}}
   {{#if (has-role "edit-bmids")}}
-    <menu.divider />
+    <menu.divider/>
     <NavbarMenuItem @menu={{menu}} @route="vc.bmid" @item="Manage BMIDs"/>
   {{/if}}
 </NavbarMenu>

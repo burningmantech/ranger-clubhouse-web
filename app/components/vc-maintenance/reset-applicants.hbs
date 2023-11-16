@@ -1,0 +1,30 @@
+{{#if @results.people}}
+  <b>{{pluralize @results.people.length  "applicant"}} reset to Past Prospective</b>
+  <table class="table table-width-auto table-striped table-hover ">
+    <thead>
+    <tr>
+      <th>Old Callsign</th>
+      <th>New Callsign</th>
+      <th>Old Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each @results.people as |person|}}
+      <tr>
+        <td>
+          <PersonLink @person={{person}} />
+        </td>
+        <td>{{person.callsign_reset}}</td>
+        <td>{{person.status}}</td>
+      </tr>
+      {{#if person.error}}
+        <tr>
+          <td colspan="3" class="text-danger">Error: {{person.error}}</td>
+        </tr>
+      {{/if}}
+    {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p class="text-danger"><b>Odd, no qualified applicants were found.</b></p>
+{{/if}}

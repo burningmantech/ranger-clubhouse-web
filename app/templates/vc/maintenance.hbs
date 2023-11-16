@@ -1,0 +1,31 @@
+<main>
+  <h1 class="mb-4">Volunteer Coordinator Maintenance Functions</h1>
+  {{#if this.isSubmitting}}
+    <LoadingDialog>
+      The task '{{this.task.title}}' is being performed. Hang tight!
+    </LoadingDialog>
+  {{else if this.task}}
+    <p>
+      <a href {{action this.showIndex}}>{{fa-icon "angle-double-left"}} Back to Maintenance Tasks</a>
+    </p>
+    <h3>The task "{{this.task.title}}" was completed.</h3>
+    <this.task.component @results={{this.results}} @taskAction={{this.taskAction}} />
+  {{else}}
+    <div class="row">
+      {{#each this.tasks as |task|}}
+        {{#if (or (not task.roleRequired) (has-role task.roleRequired))}}
+          <div class="mb-3 col-sm-12 col-xl-5 me-2">
+            <div class="card-body">
+              <h4 class="card-title">
+                <UiButton @class="btn-block" @onClick={{fn this.executeTask task}}>
+                  {{task.title}}
+                </UiButton>
+              </h4>
+              <div class="card-text">{{task.description}}</div>
+            </div>
+          </div>
+        {{/if}}
+      {{/each}}
+    </div>
+  {{/if}}
+</main>
