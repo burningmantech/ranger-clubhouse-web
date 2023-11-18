@@ -17,6 +17,8 @@ const HOUR_OPTIONS = [
   ['6 hours', 6],
   ['12 hours', 12],
   ['24 hours', 24],
+  ['36 hours', 36],
+  ['48 hours', 48],
 ];
 
 export default class ReportsShiftDropController extends ClubhouseController {
