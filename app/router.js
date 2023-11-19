@@ -197,6 +197,7 @@ Router.map(function () {
     this.route('freaking-years');
     this.route('hq-forecast');
     this.route('languages');
+    this.route('no-shows');
     this.route('on-duty');
     this.route('people-by-clubhouse-teams');
     this.route('people-by-location');

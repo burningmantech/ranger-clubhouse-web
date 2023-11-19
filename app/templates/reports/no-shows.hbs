@@ -1,0 +1,114 @@
+<h1>No Shows Report</h1>
+
+<p>
+  This report will show anyone who did not work a shift they signed up for.
+</p>
+<FormRow>
+  <div class="col-auto">
+    <label class="col-form-label">
+      Event Year
+    </label>
+    <ChForm::Select @name="year"
+                    @value={{this.year}}
+                    @options={{this.yearOptions}}
+                    @onChange={{action (mut this.year)}}
+    />
+  </div>
+</FormRow>
+<fieldset>
+  <legend>Select Positions To Report On</legend>
+  <p>
+    Click on the team name to show the team's positions.
+  </p>
+  <div class="d-flex justify-content-between">
+    {{#each this.teamColumns as |column|}}
+      <div class="flex-grow-1 me-4">
+        {{#each column as |team|}}
+          <details class="mb-3">
+            <summary class="masonry-item-header">
+              {{team.title}}
+              {{#if team.selectedCount}}
+                <small class="ms-1 text-muted">({{team.selectedCount}} selected)</small>
+              {{/if}}
+            </summary>
+            {{#each team.positionOptions as |position|}}
+              <div class="form-check">
+                <Input @type="checkbox"
+                       @checked={{position.isChecked}}
+                       id="position_{{position.id}}"
+                       class="form-check-input"
+                />
+                {{!template-lint-disable no-nested-interactive}}
+                <label class="form-check-label" for="position_{{position.id}}">{{position.title}}</label>
+              </div>
+            {{/each}}
+          </details>
+        {{/each}}
+      </div>
+    {{/each}}
+  </div>
+</fieldset>
+<p>
+  <UiButton @type="primary" @onClick={{this.submit}}>
+    Submit
+  </UiButton>
+</p>
+
+{{#if this.haveResults}}
+  <UiSection id="drop-results" {{did-insert this.scrollToResults}}>
+    <:title>
+      {{pluralize this.noShowPositions.length "position"}} for {{this.year}}
+    </:title>
+    <:body>
+      {{#each this.noShowPositions as |position|}}
+        <UiAccordion as |accordion|>
+          <accordion.title>{{position.title}}</accordion.title>
+          <accordion.body>
+            {{#if position.slots}}
+              <UiExportToCSVButton @onClick={{fn this.exportToCSV position}} />
+            {{/if}}
+            <table class="table table-width-auto table-striped table-hover mt-2">
+              <thead>
+              <tr>
+                <th>Shift</th>
+                <th>Description</th>
+                <th>No Shows</th>
+              </tr>
+              </thead>
+              <tbody>
+              {{#each position.slots as |slot|}}
+                <tr>
+                  <td>{{shift-format slot.begins}}</td>
+                  <td>{{slot.description}}</td>
+                  <td>
+                    {{#each slot.people as |person idx|}}
+                      {{if idx ", "}}
+                      <PersonLink @person={{person}} />
+                    {{else}}
+                      <span class="text-success">
+                      no flakes found.
+                    </span>
+                    {{/each}}
+                  </td>
+                </tr>
+              {{else}}
+                <tr>
+                  <td colspan="3">
+                   No flakes found for {{this.year}}
+                  </td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </table>
+          </accordion.body>
+        </UiAccordion>
+      {{/each}}
+    </:body>
+  </UiSection>
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting request
+  </LoadingDialog>
+{{/if}}
