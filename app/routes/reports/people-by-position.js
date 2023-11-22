@@ -11,7 +11,8 @@ export default class PeopleByPositionRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    controller.set('positions', model.positions);
+    controller.positions = model.positions;
+    controller.positionsScrollList = model.positions.map((p)=> ({ id: `position-${p.id}`, title: p.title }))
     controller.set('people', _.keyBy(model.people, 'id'));
     controller.buildPositionTypes();
     controller.buildStatuses();
