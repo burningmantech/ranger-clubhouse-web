@@ -12,21 +12,12 @@ const SLOT_SIGNUP_COLUMNS = [
   {key: 'callsigns', title: 'Callsigns'}
 ];
 
-const CALLSIGN_SIGNUP_COLUMNS = [
-  {key: 'callsign', title: 'Callsign'},
-  {key: 'first_name', title: 'First Name'},
-  {key: 'last_name', title: 'Last Name'},
-  {key: 'status', title: 'Status'},
-]
-
 export default class ReportsScheduleByPositionController extends ClubhouseController {
   queryParams = ['year'];
 
   @tracked expandAll = false;
   @tracked positions = [];
   @tracked activeFilter = 'active';
-  @tracked showBulkPositionDialog = false;
-  @tracked positionIdsForm = {};
 
   activeOptions = [
     ['Active', 'active'],
@@ -91,65 +82,5 @@ export default class ReportsScheduleByPositionController extends ClubhouseContro
 
     SLOT_SIGNUP_COLUMNS[0].title = `${this.year} ${position.title}`;
     this.house.downloadCsv(`${this.year}-${position.title}-shifts.csv`, SLOT_SIGNUP_COLUMNS, slots);
-  }
-
-  @action
-  exportByCallsign(position) {
-    const callsigns = {};
-
-    position.slots.forEach((slot) => {
-      slot.sign_ups.forEach((person) => {
-        if (!callsigns[person.id]) {
-          callsigns[person.id] = person;
-        }
-      });
-    });
-
-    const rows = [];
-    for (const personId in callsigns) {
-      rows.push(callsigns[personId]);
-    }
-    rows.sort((a, b) => a.callsign.localeCompare(b.callsign));
-    this.house.downloadCsv(`${this.year}-${position.title}-callsign-signups.csv`, CALLSIGN_SIGNUP_COLUMNS, rows);
-  }
-
-  @action
-  exportBulkPositions() {
-    this.showBulkPositionDialog = true;
-    this.positionIdsForm = {positionIds: []};
-  }
-
-  @action
-  cancelExport() {
-    this.showBulkPositionDialog = false;
-  }
-
-  @action
-  exportSelectedPositions() {
-    const {positionIds} = this.positionIdsForm;
-    if (!positionIds.length) {
-      this.modal.info(null, 'Please select one or more positions.');
-      return;
-    }
-
-    const callsigns = {};
-    positionIds.forEach((pid) => {
-      const position = this.positions.find((pos) => pos.id === pid);
-      position.slots.forEach((slot) => {
-        slot.sign_ups.forEach((person) => {
-          if (!callsigns[person.id]) {
-            callsigns[person.id] = person;
-          }
-        });
-      });
-    });
-
-    const rows = [];
-    for (const personId in callsigns) {
-      rows.push(callsigns[personId]);
-    }
-    rows.sort((a, b) => a.callsign.localeCompare(b.callsign));
-    this.house.downloadCsv(`${this.year}-callsign-signups.csv`, CALLSIGN_SIGNUP_COLUMNS, rows);
-    this.showBulkPositionDialog = false;
   }
 }

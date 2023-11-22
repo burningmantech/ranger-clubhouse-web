@@ -56,32 +56,7 @@
           </thead>
           <tbody>
           {{#each position.slots key="id" as |slot|}}
-            <tr>
-              <td class="text-center">
-                {{#if slot.active}}
-                  {{fa-icon "check" color="success"}}
-                {{else}}
-                  {{fa-icon "times" color="danger"}}
-                {{/if}}
-              </td>
-              <td class="w-25">
-                {{shift-format slot.begins slot.ends timezone=slot.tz}}<br>
-                <PresentOrNot @value={{slot.description}} @empty="-"/>
-              </td>
-              <td class="w-5 text-end">
-                {{hour-minute-format slot.duration}}
-              </td>
-              <td class="text-center">{{slot.sign_ups.length}}</td>
-              <td class="text-center">{{slot.max}}</td>
-              <td class="w-60">
-                {{#each slot.sign_ups as |person idx|}}
-                  {{~if idx ", "~}}
-                  <PersonLink @person={{person}} />
-                {{~else}}
-                  <span class="text-danger">No sign ups</span>
-                {{/each}}
-              </td>
-            </tr>
+            <ScheduleByPositionRow @slot={{slot}} />
           {{/each}}
           </tbody>
         </table>
