@@ -37,7 +37,7 @@
         <div class="flex-grow-1 me-4">
           {{#each column as |team|}}
             <details class="mb-3">
-              <summary class="masonry-item-header">
+              <summary>
                 {{team.title}}
                 {{#if team.selectedCount}}
                   <small class="ms-1 text-muted">({{team.selectedCount}} selected)</small>
@@ -70,7 +70,7 @@
 </ChForm>
 
 {{#if (and this.haveResults this.people)}}
-  <UiSection id="people" {{did-insert this.scrollToOnRender}}>
+  <UiSection id="people" class="mt-4" {{did-insert this.scrollToOnRender}}>
     <:title>
       Found {{pluralize this.people.length "person"}} for
       {{#each this.positionsUsed as |position idx|~}}
@@ -79,7 +79,7 @@
     </:title>
     <:body>
       <p>
-        <UiButton @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
+        <UiExportToCSVButton @onClick={{this.exportToCSV}} @size="sm"/>
       </p>
       <table class="table table-sm table-striped table-width-auto">
         <thead>

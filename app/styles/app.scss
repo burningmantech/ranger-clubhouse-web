@@ -659,10 +659,18 @@ ul.no-indent, ol.no-indent {
   content: 'Close';
 }
 
+summary {
+  font-size: 1.1em;
+  font-weight: 400;
+  margin: -7px -7px 7px -7px;
+  padding: 7px 10px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #dddddd;
+}
+
 summary:hover {
   background-color: #dee2e6 !important;
 }
-
 
 .blink-box {
   animation: blink-box-keyframes 1s linear 2;
