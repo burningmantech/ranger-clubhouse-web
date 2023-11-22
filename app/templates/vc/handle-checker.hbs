@@ -18,7 +18,7 @@
 
   <legend>Handle rules</legend>
   <FormRow class="max-width-900">
-    <div class="col columns-container columns-5">
+    <div class="col columns-container columns-4">
       {{#each this.handleRules as |rule|}}
         <div class="form-check">
           {{#let (concat "handle-rule-checkbox-" rule.id) as |checkid|}}
@@ -37,7 +37,7 @@
         <Input @type="checkbox" @checked={{this.includeVintage}} class="form-check-input" id="include-vintage"/>
         <label class="form-check-label" for="include-vintage">Include all vintage handles</label>
       </div>
-      <div class=" columns-container columns-6">
+      <div class="mt-2 columns-container columns-6">
         {{#each this.entityTypes as |type|}}
           <div class="form-check">
             {{#let (concat "entity-type-checkbox-" type.id) as |entityId|}}
@@ -58,37 +58,34 @@
           <accordion.title>{{checked.name}} ({{checked.conflicts.length}})</accordion.title>
           <accordion.body>
             {{#each checked.conflicts as |conflict|}}
-              <details class="card mb-1">
-                <summary class="card-body">
+              <details class="mb-2">
+                <summary>
                   {{conflict.description}}
                 </summary>
-
-                <div class="card-body">
-                  {{#if conflict.conflictingHandle}}
-                    {{#let conflict.conflictingHandle as |handle|}}
-                      {{#if handle.personId}}
-                        <LinkTo @route="person.index" @model={{handle.personId}} target="_blank">
-                          {{handle.name}}
-                        </LinkTo>
-                      {{else}}
+                {{#if conflict.conflictingHandle}}
+                  {{#let conflict.conflictingHandle as |handle|}}
+                    {{#if handle.personId}}
+                      <LinkTo @route="person.index" @model={{handle.personId}} target="_blank">
                         {{handle.name}}
-                      {{/if}}
-                      <span class="ms-2">
-                        {{badge "secondary" (this.entityTypeLabel handle.entityType)}}
-                      </span>
-                      {{#if handle.personVintage}}
-                        <span class="ms-2">{{badge "danger" "vintage"}}</span>
-                      {{/if}}
-                      {{#if handle.reason}}
-                        <div class="mt-2">
-                          Reason: {{handle.reason}}
-                        </div>
-                      {{/if}}
-                    {{/let}}
-                   {{/if}}
-                  <div class="mt-2">
-                    {{get this.ruleNames conflict.ruleId}} <span class="ms-4">{{conflict.priority}} priority</span>
-                  </div>
+                      </LinkTo>
+                    {{else}}
+                      {{handle.name}}
+                    {{/if}}
+                    <span class="ms-2">
+                      {{badge "secondary" (this.entityTypeLabel handle.entityType)}}
+                    </span>
+                    {{#if handle.personVintage}}
+                      <span class="ms-2">{{badge "danger" "vintage"}}</span>
+                    {{/if}}
+                    {{#if handle.reason}}
+                      <div class="mt-2">
+                        Reason: {{handle.reason}}
+                      </div>
+                    {{/if}}
+                  {{/let}}
+                {{/if}}
+                <div class="mt-2">
+                  {{get this.ruleNames conflict.ruleId}} <span class="ms-4">{{conflict.priority}} priority</span>
                 </div>
               </details>
             {{/each}}

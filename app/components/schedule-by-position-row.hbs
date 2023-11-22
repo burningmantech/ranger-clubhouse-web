@@ -1,0 +1,77 @@
+<tr>
+  <td class="text-center">
+    {{#if @slot.active}}
+      {{fa-icon "check" color="success"}}
+    {{else}}
+      {{fa-icon "times" color="danger"}}
+    {{/if}}
+  </td>
+  <td class="w-25">
+    {{shift-format @slot.begins @slot.ends timezone=@slot.tz}}<br>
+    <PresentOrNot @value={{@slot.description}} @empty="-"/>
+  </td>
+  <td class="w-5 text-end">
+    {{hour-minute-format @slot.duration}}
+  </td>
+  <td class="text-center">{{@slot.sign_ups.length}}</td>
+  <td class="text-center">{{@slot.max}}</td>
+  <td class="w-60">
+    {{#each @slot.sign_ups as |person idx|}}
+      {{~if idx ", "~}}
+      <PersonLink @person={{person}} />
+    {{~else}}
+      <span class="text-danger">No sign ups</span>
+    {{/each}}
+    {{#if @slot.parent}}
+      {{#if @slot.parent.people}}
+        <div class="my-2 small">
+          {{pluralize @slot.parent.people.length "sign-up"}} in the parent {{@slot.parent.position_title}} shift:
+        </div>
+        <div class="callsign-list">
+          {{#each @slot.parent.people key="id" as |person|}}
+            <div>{{person.callsign}}</div>
+          {{/each}}
+        </div>
+      {{else}}
+        <div class="my-2 text-muted small">
+          No signups in the parent {{@slot.parent.position_title}} shift.
+        </div>
+      {{/if}}
+    {{/if}}
+    {{#if @slot.child}}
+      {{#if  @slot.child.people}}
+        <div class="my-2 small">
+          {{pluralize @slot.child.people.length "sign-up"}} in the {{@slot.child.position_title}} sub-shift:
+        </div>
+        <div class="callsign-list">
+          {{#each @slot.child.people key="id" as |person|}}
+            <div>{{person.callsign}}</div>
+          {{/each}}
+        </div>
+      {{else}}
+        <div class="my-2 small text-muted">
+          No one has signed up for the {{@slot.child.position_title}} sub-shift.
+        </div>
+      {{/if}}
+    {{/if}}
+    {{#if @slot.associated}}
+      {{#each @slot.associated as |assoc|}}
+        {{#if assoc.people}}
+          <div class="my-2 small">
+            {{pluralize assoc.people.length "sign-up"}} in the corresponding {{assoc.position_title}}
+            shift:
+          </div>
+          <div class="callsign-list">
+            {{#each assoc.people key="id" as |person|}}
+              <div>{{person.callsign}}</div>
+            {{/each}}
+          </div>
+        {{else}}
+          <div class="mt-2 text-muted small">
+            No one has signed up for the corresponding {{assoc.position_title}} shift.
+          </div>
+        {{/if}}
+      {{/each}}
+    {{/if}}
+  </td>
+</tr>

@@ -1,10 +1,18 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {tracked} from '@glimmer/tracking';
 import {DECEASED, AUDITOR, PAST_PROSPECTIVE, SUSPENDED} from "clubhouse/constants/person_status";
+import { action } from '@ember/object';
 import _ from 'lodash';
+
+const CSV_COLUMNS = [
+  { title: 'Callsign', key: 'callsign'},
+  { title: 'Status', key: 'status'}
+];
 
 class ViewPosition {
   @tracked expanded = false;
+  @tracked positionsScrollList;
+  @tracked positions;
 
   constructor(obj) {
     Object.assign(this, obj);
@@ -72,4 +80,9 @@ export default class PeopleByPositionController extends ClubhouseController {
     this.statuses = _.map(_.uniq(_.map(_.values(this.people), 'status')).sort(),
       (status) => new SelectChoice(status, status !== DECEASED && status !== AUDITOR && status !== PAST_PROSPECTIVE && status !== SUSPENDED));
   }
-}
+
+  @action
+  exportToCSV(position) {
+    this.house.downloadCsv(`${this.house.currentYear()}-${position.title.replace(/ /g, '-')}.csv`, CSV_COLUMNS, position.people);
+  }
+ }

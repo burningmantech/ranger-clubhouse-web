@@ -21,6 +21,14 @@ export default class ReportsScheduleByPositionRoute extends ClubhouseRoute {
       p.slots.forEach((slot) => {
         slot.sign_ups = slot.sign_ups.map((personId) => people[personId]);
         slot.sign_ups.sort((a,b) => a.callsign.localeCompare(b.callsign));
+        if (slot.associated) {
+          slot.associated.forEach((assoc) => {
+            if (!assoc.people) {
+              return;
+            }
+            assoc.people = assoc.people.map((personId) => people[personId])
+          });
+        }
       })
     });
 
