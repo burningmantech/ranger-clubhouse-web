@@ -78,7 +78,7 @@
               Bulk Edit
             </UiButton>
           </p>
-          <table class="table table-sm table-hover">
+          <UiTable>
             <thead>
             <tr>
               <th class="text-end">ID</th>
@@ -139,7 +139,7 @@
               {{/if}}
             {{/each}}
             </tbody>
-          </table>
+          </UiTable>
         {{/if}}
       </box.body>
     </UiAccordion>
@@ -254,7 +254,7 @@
               </Accordion.title>
               <Accordion.body>
                 {{#if Accordion.isOpen}}
-                  <table class="table table-sm table-box table-hover">
+                  <UiTable class="table-box">
                     <thead>
                     <tr>
                       <th>Copy</th>
@@ -287,7 +287,7 @@
                       </tr>
                     {{/each}}
                     </tbody>
-                  </table>
+                  </UiTable>
                 {{/if}}
               </Accordion.body>
             </UiAccordion>

@@ -3,7 +3,7 @@
   <:body>
     {{#if this.workedPositions}}
       {{pluralize this.workedPositions.length "position"}} worked.
-      <table class="table table-width-auto table-striped table-hover">
+      <UiTable>
         <thead>
         <tr>
           <th>Position</th>
@@ -22,7 +22,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     {{else}}
       No positions were worked.
     {{/if}}

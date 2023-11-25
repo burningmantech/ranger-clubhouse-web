@@ -1,6 +1,6 @@
 {{#if @results.people}}
   <b>{{pluralize @results.people.length  "Past Prospective"}} with approved callsign(s) were reset</b>
-  <table class="table table-striped table-hover table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>Old Callsign</th>
@@ -26,7 +26,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 {{else}}
   <p class="text-danger"><b>No Past Prospectives with approved callsigns were found.</b></p>
 {{/if}}

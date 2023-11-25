@@ -29,7 +29,7 @@
           {{/if}} ({{asylum.people.length}})
         </Accordion.title>
         <Accordion.body>
-          <table class="table table-striped table-sm">
+          <UiTable>
             <thead>
             <tr>
               <th class="w-15">Callsign</th>
@@ -74,7 +74,7 @@
               </tr>
             {{/each}}
             </tbody>
-          </table>
+          </UiTable>
         </Accordion.body>
       </UiAccordion>
     {{/each}}

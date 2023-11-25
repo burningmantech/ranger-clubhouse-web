@@ -1,6 +1,6 @@
 {{#if @results.people}}
   <b>{{pluralize @results.people.length  "applicant"}} reset to Past Prospective</b>
-  <table class="table table-width-auto table-striped table-hover ">
+  <UiTable>
     <thead>
     <tr>
       <th>Old Callsign</th>
@@ -24,7 +24,7 @@
       {{/if}}
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 {{else}}
   <p class="text-danger"><b>Odd, no qualified applicants were found.</b></p>
 {{/if}}

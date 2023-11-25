@@ -12,7 +12,7 @@
   <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
 </p>
 Showing {{pluralize this.people.length "person"}}
-<table class="table table-width-auto table-sm table-hover table-striped">
+<UiTable>
   <thead>
   <tr>
     <th>&nbsp;</th>
@@ -71,7 +71,7 @@ Showing {{pluralize this.people.length "person"}}
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>
 <UiButton @onClick={{this.unsubmitAction}}>Un-submit Provisions</UiButton>
 {{#if this.isSubmitting}}
   <LoadingDialog>

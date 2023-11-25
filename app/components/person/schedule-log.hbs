@@ -2,7 +2,7 @@
   <LoadingIndicator @text="Loading the scheduling audit log"/>
 {{else}}
   {{fa-icon "times" color="danger"}} = Person is no longer signed up for the shift.
-  <table class="table table-sm table-width-auto table-striped table-hover">
+  <UiTable>
     <thead>
     <tr>
       <th>&nbsp;</th>
@@ -70,5 +70,5 @@
       {{/each}}
     {{/if}}
     </tbody>
-  </table>
+  </UiTable>
 {{/if}}

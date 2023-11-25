@@ -3,7 +3,7 @@
     {{pluralize @results.access_documents.length "item"}} un-banked.
   </p>
 
-  <table class="table table-striped table-hover table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>RAD</th>
@@ -28,7 +28,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 {{else}}
   <p class="text-danger">
     <b>No access documents were found that need to be un-banked.</b>

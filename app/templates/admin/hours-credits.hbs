@@ -14,7 +14,7 @@
   {{#if this.eventStart}}
     Showing {{pluralize this.people.length "person"}}. {{this.year}} Event week: {{shift-format this.eventStart}}
     - {{shift-format this.eventEnd}}
-    <table class="table table-sm table-striped table-hover">
+    <UiTable>
       <thead>
       <tr>
         <th>Callsign</th>
@@ -57,7 +57,7 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   {{else}}
     <p class="text-danger">
       <b>No Event Dates have been set for {{this.year}}. Hours and credits report cannot be run

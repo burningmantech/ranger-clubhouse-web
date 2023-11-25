@@ -3,7 +3,7 @@
   <UiAccordion as |Accordion|>
     <Accordion.title>{{pluralize this.on_duty.length "person"}} still on duty</Accordion.title>
     <Accordion.body>
-      <table class="table table-hover table-sm table-striped table-width-auto">
+      <UiTable>
         <thead>
         <tr>
           <th>Callsign</th>
@@ -29,7 +29,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </Accordion.body>
   </UiAccordion>
 
@@ -37,7 +37,7 @@
     <Accordion.title>{{pluralize this.end_before_start.length "entry"}} with an off duty time before on duty
     </Accordion.title>
     <Accordion.body>
-      <table class="table table-sm table-hover table-striped table-width-auto">
+      <UiTable>
         <thead>
         <tr>
           <th>Callsign</th>
@@ -62,14 +62,14 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </Accordion.body>
   </UiAccordion>
 
   <UiAccordion as |Accordion|>
     <Accordion.title>{{pluralize this.overlapping.length "person"}} with overlapping entries</Accordion.title>
     <Accordion.body>
-      <table class="table table-sm table-hover table-striped table-width-auto">
+      <UiTable>
         <thead>
         <tr>
           <th>Callsign</th>
@@ -99,7 +99,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </Accordion.body>
   </UiAccordion>
 
@@ -107,7 +107,7 @@
     <Accordion.title>{{pluralize this.too_long.length "entry"}} with possibly too long shifts</Accordion.title>
     <Accordion.body>
       The follow exceed the recommended max hours by 1.5 times.
-      <table class="table table-sm table-hover table-striped table-width-auto ">
+      <UiTable>
         <thead>
         <tr>
           <th>Callsign</th>
@@ -138,7 +138,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </Accordion.body>
   </UiAccordion>
   <UiAccordion as |Accordion|>
@@ -147,7 +147,7 @@
     </Accordion.title>
     <Accordion.body>
       The following are flagged because the entry's duration exceeds 1.5 times the scheduled (aka slot) duration.
-      <table class="table table-sm table-hover table-striped table-width-auto ">
+      <UiTable>
         <thead>
         <tr>
           <th>Callsign</th>
@@ -188,7 +188,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </Accordion.body>
   </UiAccordion>
 
@@ -196,7 +196,7 @@
     <Accordion.title>{{pluralize this.too_short.length "entry"}} with possibly too short duration</Accordion.title>
     <Accordion.body>
       The following are flagged because the shift lasted 15 minutes or less.
-      <table class="table table-sm table-hover table-striped table-width-auto">
+      <UiTable>
         <thead>
         <tr>
           <th>Callsign</th>
@@ -225,7 +225,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </Accordion.body>
   </UiAccordion>
   <UiAccordion as |Accordion|>
@@ -234,7 +234,7 @@
     </Accordion.title>
     <Accordion.body>
       The following people have been flagged because they have more than one Alpha timesheet entry.
-      <table class="table table-sm table-hover table-striped table-width-auto">
+      <UiTable>
         <thead>
         <tr>
           <th>Callsign</th>
@@ -260,7 +260,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </Accordion.body>
   </UiAccordion>
 </main>

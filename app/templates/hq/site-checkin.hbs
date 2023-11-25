@@ -144,7 +144,7 @@
           />
           {{#if this.activeAssets}}
             {{pluralize this.activeAssets.length "asset"}} checked out.
-            <table class="table table-striped table-sm">
+            <UiTable>
               <thead>
               <tr>
                 <th>Barcode</th>
@@ -167,7 +167,7 @@
                 </tr>
               {{/each}}
               </tbody>
-            </table>
+            </UiTable>
           {{/if}}
           {{#if this.assets.isUpdating}}
             <LoadingIndicator @text="Refreshing assets"/>

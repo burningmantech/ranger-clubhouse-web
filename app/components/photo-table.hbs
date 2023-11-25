@@ -1,4 +1,4 @@
-<table class="table table-stripped table-hover table-width-auto">
+<UiTable>
   <thead>
   <tr>
     <th>ID</th>
@@ -127,7 +127,7 @@
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>
 
 {{#if this.showPhoto}}
   <PhotoInfo @photo={{this.showPhoto}} @closeAction={{this.closePhotoAction}} @rejectionLabels={{@rejectionLabels}} />

@@ -2,7 +2,7 @@
 
 {{#if this.people}}
   {{pluralize this.people.length "person"}} may need a WAP
-  <table class="table table-width-auto table-sm table-striped table-hover">
+  <UiTable>
     <thead>
     <tr>
       <th>Person</th>
@@ -49,7 +49,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 {{else}}
   <b class="text-success">Congratulations! No Ranger appears to need a WAP at this moment.</b>
 {{/if}}

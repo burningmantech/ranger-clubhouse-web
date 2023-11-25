@@ -100,7 +100,7 @@
 
     <tab.pane @id="all-handles" @title="All Handles / Locations / Terms">
       Showing {{pluralize this.allEnabledHandles.length "handle"}}
-      <table class="table table-sm table-striped table-hover table-width-auto">
+      <UiTable>
         <thead>
         <tr>
           <th>Handle</th>
@@ -125,7 +125,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </tab.pane>
   </UiTab>
 </main>

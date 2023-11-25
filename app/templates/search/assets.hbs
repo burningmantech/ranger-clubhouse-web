@@ -37,7 +37,7 @@
   <UiSection>
     <:title>Checkout History</:title>
     <:body>
-      <table class="table table-striped table-hover mt-4 table-width-auto">
+      <UiTable class="mt-4">
         <thead>
         <tr>
           <th>Person</th>
@@ -87,13 +87,13 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </:body>
   </UiSection>
   <UiSection>
     <:title>Detailed Asset Information</:title>
     <:body>
-      <table class="table  mt-4 table-width-auto">
+      <UiTable class="mt-4">
         <thead>
         <tr>
           <th>Event Year</th>
@@ -114,7 +114,7 @@
           <td>{{this.asset.created_at}}</td>
         </tr>
         </tbody>
-      </table>
+      </UiTable>
     </:body>
   </UiSection>
 {{/if}}

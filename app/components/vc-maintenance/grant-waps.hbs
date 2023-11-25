@@ -3,7 +3,7 @@
     {{pluralize @results.people.length "person"}} {{if (eq @results.people.length 1) "has" "have"}} been
     granted WAPs
   </p>
-  <table class="table table-width-auto table-sm table-striped table-hover">
+  <UiTable>
     <thead>
     <tr>
       <th>Person</th>
@@ -20,7 +20,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 {{else}}
   <p class="text-danger">
     No qualifying {{if (eq @taskAction "grant-alpha-waps") "Alphas" "active/inactive Rangers"}} were found

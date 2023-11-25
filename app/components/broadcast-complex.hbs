@@ -5,7 +5,7 @@
 {{else if this.didTransmit}}
   <BroadcastSentTable @result={{this.result}} />
 {{else if this.isReviewing}}
-  <table class="table table-width-auto">
+  <UiTable>
     <caption>Review the criteria and message</caption>
     <tbody>
     {{#if @broadcast.alerts}}
@@ -105,7 +105,7 @@
       </tr>
     {{/if}}
     </tbody>
-  </table>
+  </UiTable>
 
   <div class="my-4">
     <UiButton @type="success" @size="lg" @onClick={{this.transmitAction}}>SEND MESSAGE</UiButton>

@@ -6,7 +6,7 @@
   <LinkTo @route="admin.rbs">Back to RBS</LinkTo>
 </p>
 Showing {{pluralize this.phones.length "record"}}
-<table class="table table-striped table-sm table-width-auto">
+<UiTable>
   <thead>
   <tr>
     <th>Timestamp</th>
@@ -28,4 +28,4 @@ Showing {{pluralize this.phones.length "record"}}
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>

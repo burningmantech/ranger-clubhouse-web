@@ -6,7 +6,7 @@
   <p>
     <UiButton @onClick={{this.newAward}}>{{fa-icon "plus"}} New Award</UiButton>
   </p>
-  <table class="table table-sm table-hover table-striped table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>ID</th>
@@ -39,7 +39,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 </main>
 {{#if this.entry}}
   <ModalDialog @title={{if this.entry.isNew "New Award"  "Edit Award"}} @onEscape={{this.cancelAward}} as |Modal|>

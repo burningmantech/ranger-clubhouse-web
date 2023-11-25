@@ -10,7 +10,7 @@
     <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
   </p>
   Showing {{pluralize this.people.length "Shiny Penny"}}
-  <table class="table table-width-auto table-striped table-hover table-sm">
+  <UiTable>
     <thead>
     <tr>
       <th>Callsign</th>
@@ -35,6 +35,6 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 </main>
 

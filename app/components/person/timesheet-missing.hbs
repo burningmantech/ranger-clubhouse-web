@@ -6,7 +6,7 @@
     </p>
     {{pluralize @timesheetMissing.length "missing entry request"}}
     {{#if @timesheetMissing}}
-      <table class="table table-striped table-width-auto">
+      <UiTable>
         <thead>
         <tr>
           <th>&nbsp;</th>
@@ -71,7 +71,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     {{else}}
       <p class="mt-2 text-danger">No missing timesheet entry requests found for {{@year}}</p>
     {{/if}}
@@ -174,7 +174,7 @@
             Request was rejected. Review is not needed at this time.
           </UiNotice>
         {{/if}}
-        <table class="table table-width-auto">
+        <UiTable>
           <thead>
           <tr>
             <th>Position</th>
@@ -191,9 +191,9 @@
             <td class="text-end">{{credits-format this.editEntry.credits}}</td>
           </tr>
           </tbody>
-        </table>
+        </UiTable>
         {{#if (and this.editEntry.partner this.editEntry.partner_info)}}
-          <table class="table table-sm table-striped">
+          <UiTable>
             <thead>
             <tr>
               <th>Partner</th>
@@ -226,14 +226,14 @@
               </tr>
             {{/each}}
             </tbody>
-          </table>
+          </UiTable>
         {{else}}
           <i>No partner name given</i>
         {{/if}}
         {{#if this.havePartnerTimesheet}}
           <fieldset>
             <legend>Timesheet for {{this.partnerCallsign}} </legend>
-            <table class="table table-width-auto table-sm">
+            <UiTable>
               <thead>
               <tr>
                 <th>From</th>
@@ -264,7 +264,7 @@
                 </tr>
               {{/each}}
               </tbody>
-            </table>
+            </UiTable>
           </fieldset>
         {{/if}}
         <fieldset>
@@ -349,7 +349,7 @@
   <ModalDialog @title="Missing Timesheet Request ID #{{this.viewEntry.id}}"
                @onEscape={{this.closeViewEntry}} as |Modal|>
     <Modal.body>
-      <table class="table table-width-auto">
+      <UiTable>
         <thead>
         <tr>
           <th>Position</th>
@@ -368,7 +368,7 @@
           <td>{{or this.viewEntry.partner "-"}}</td>
         </tr>
         </tbody>
-      </table>
+      </UiTable>
       <fieldset>
         <legend>User &amp; Timesheet Wranglers Notes</legend>
         <TimesheetNotes @notes={{this.viewEntry.notes}} @showNoNotesMessage={{true}} />

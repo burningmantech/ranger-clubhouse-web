@@ -41,7 +41,7 @@
 <UiSection>
   <:title>Broadcast to {{pluralize @result.people.length "person"}}</:title>
   <:body>
-    <table class="table table-striped table-width-auto mt-4">
+    <UiTable class="mt-4">
       <thead>
       <tr>
         <th>Callsign</th>
@@ -83,6 +83,6 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   </:body>
 </UiSection>

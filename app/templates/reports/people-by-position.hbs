@@ -77,7 +77,7 @@
           </div>
         {{/if}}
         {{#if (and position.missingPeople position.missingPeople.length)}}
-          <table class="table table-sm table-striped table-hover table-width-auto">
+          <UiTable>
             <thead>
             <tr>
               <th>&nbsp;</th>
@@ -100,7 +100,7 @@
               </tr>
             {{~/each~}}
             </tbody>
-          </table>
+          </UiTable>
         {{/if}}
       {{/if}}
     </accordion.body>

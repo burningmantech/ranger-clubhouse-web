@@ -5,7 +5,7 @@
     The following combined allocated and earned provision(s) have been given to you:
   {{/if}}
 </p>
-<table class="table table-width-auto">
+<UiTable>
   <tbody>
   {{#each @ticketPackage.provisionItems as |item|}}
     <tr>
@@ -19,7 +19,7 @@
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>
 {{#if @ticketPackage.provisionsBankable}}
   {{#if @ticketPackage.provisionsBanked}}
     <p>

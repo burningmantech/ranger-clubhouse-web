@@ -15,7 +15,7 @@
       {{/if}}
       {{#if this.candidates}}
         The following candidates are eligible to be granted the position(s):
-        <table class="table table-striped table-hover table-sm">
+        <UiTable>
           <thead>
           <tr>
             <th class="w-15">Graduate?</th>
@@ -43,7 +43,7 @@
             </tr>
           {{/each}}
           </tbody>
-        </table>
+        </UiTable>
       {{else}}
         <p>
           <b class="text-danger">No eligible candidates were found.</b>
@@ -51,7 +51,7 @@
       {{/if}}
       {{#if this.ineligible}}
         <div class="text-danger">The following are not eligible for graduation:</div>
-        <table class="table table-striped table-hover table-sm">
+        <UiTable>
           <thead>
           <tr>
             <th class="w-15">Callsign</th>
@@ -71,7 +71,7 @@
             </tr>
           {{/each}}
           </tbody>
-        </table>
+        </UiTable>
       {{else}}
         <p>
           <b class="text-success">No ineligible candidates found. (Congratulations?)</b>

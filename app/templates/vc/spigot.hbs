@@ -15,7 +15,7 @@
     <UiButton @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
   </p>
   Showing {{pluralize @model.days.length "day"}}.
-  <table class="table table-width-auto table-striped table-hover">
+  <UiTable>
     <thead>
     <tr>
       <th>Date</th>
@@ -166,5 +166,5 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 </main>

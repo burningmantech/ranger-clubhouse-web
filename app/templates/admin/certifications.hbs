@@ -4,7 +4,7 @@
     <UiButton @onClick={{this.newCertificationAction}}>New Certification</UiButton>
   </p>
   Showing {{pluralize this.certifications.length "certification"}}
-  <table class="table table-sm table-hover table-striped table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>ID #</th>
@@ -50,7 +50,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 
   {{#if this.entry}}
     <ModalDialog @title="{{if this.entry.isNew "New" "Edit"}} Certification"

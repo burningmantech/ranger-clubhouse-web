@@ -1,4 +1,4 @@
-<table class="table table-striped table-width-auto">
+<UiTable>
   <thead>
   <tr>
     <th>Type</th>
@@ -48,7 +48,7 @@
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>
 
 {{#if this.updateAsset}}
   <ModalDialog @title="Update attachment for {{this.updateAsset.asset.barcode}}"

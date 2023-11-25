@@ -13,7 +13,7 @@
   </p>
 
   {{pluralize this.alphas.length "alpha"}} found
-  <table class="table table-hover table-striped table-sm table-width-auto">
+  <UiTable>
     <thead>
       <tr>
         <th>Callsign</th>
@@ -43,13 +43,13 @@
         </tr>
       {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 
   <h3 id="shirt-totals">Shirt Totals</h3>
   <div class="row">
     {{#each this.shirtGroups as |shirts|}}
       <div class="col-3">
-        <table class="table table-sm table-box">
+        <UiTable class="table-box">
           <caption>
             {{shirts.name}} Totals
               <UiButton @type="secondary"
@@ -72,7 +72,7 @@
               </tr>
             {{/each}}
           </tbody>
-        </table>
+        </UiTable>
       </div>
     {{/each}}
   </div>

@@ -97,7 +97,7 @@
       Found {{pluralize this.people.length "person"}}.
       <UiExportToCSVButton @onClick={{this.exportToCSV}} />
     </div>
-    <table class="table table-sm table-width-auto table-striped table-hover">
+    <UiTable>
       <thead>
       <tr>
         <th>Callsign</th>
@@ -216,7 +216,7 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   {{else}}
     <div class="mt-2">
       <b class="text-danger">No accounts were found matching the search criteria.</b>

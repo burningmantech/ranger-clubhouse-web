@@ -1,7 +1,7 @@
 <UiSection>
   <:title>{{@name}} - {{pluralize @people.length "person"}}</:title>
   <:body>
-    <table class="table table-striped table-hover table-sm table-width-auto">
+    <UiTable>
       <thead>
       <tr>
         <th>Moodle ID</th>
@@ -42,6 +42,6 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   </:body>
 </UiSection>

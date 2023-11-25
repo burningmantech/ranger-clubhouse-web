@@ -22,7 +22,7 @@
 </p>
 
 {{#each this.orderedGroups as |group idx|}}
-  <table class="table table-sm table-striped table-hover">
+  <UiTable>
     <caption>
       <div class="d-inline-block">
         ID #{{group.id}} {{group.title}}
@@ -107,7 +107,7 @@
     {{/each}}
 
     </tbody>
-  </table>
+  </UiTable>
 {{else}}
   <p>
     <b class="text-danger">No groups were found for this survey. Try adding some.</b>

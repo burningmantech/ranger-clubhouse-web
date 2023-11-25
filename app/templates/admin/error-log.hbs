@@ -8,7 +8,7 @@
     <p>
       Showing {{this.page}} of {{this.total_pages}} pages. Total {{pluralize this.total "found row"}}
     </p>
-    <table class="table table-hover table-sm table-width-auto">
+    <UiTable>
       <thead>
       <tr>
         <th>Timestamp</th>
@@ -56,7 +56,7 @@
         {{/if}}
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
     <div class="row">
       <div class="col-sm-12 col-md-6">
         {{#if (not-eq this.page 1)}}

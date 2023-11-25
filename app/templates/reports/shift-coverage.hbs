@@ -30,7 +30,7 @@
 {{/if}}
 
 {{! template-lint-disable table-groups}}
-<table class="table table-sm table-hover table-striped table-width-auto">
+<UiTable>
   {{#each this.dayGroups as |day|}}
     <thead>
     <tr>
@@ -76,4 +76,4 @@
     {{/each}}
     </tbody>
   {{/each}}
-</table>
+</UiTable>

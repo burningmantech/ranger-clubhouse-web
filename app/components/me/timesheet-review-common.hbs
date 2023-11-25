@@ -138,7 +138,7 @@
           </UiNotice>
         {{/if}}
 
-        <table class="table table-width-auto table-sm">
+        <UiTable>
           <thead>
           <tr>
             <th>Position</th>
@@ -155,7 +155,7 @@
             <td class="text-end">{{credits-format this.entry.credits}}</td>
           </tr>
           </tbody>
-        </table>
+        </UiTable>
         {{#if this.entry.notes}}
           <div class="border p-2 my-2">
             <h5 class="mx-n2 mt-n2 p-2 bg-secondary text-white">Notes from you &amp; the Timesheet Wranglers</h5>

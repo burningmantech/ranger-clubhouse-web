@@ -25,7 +25,7 @@
       <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
     </p>
     {{pluralize this.people.length "person"}} to send {{this.year}} Thank You cards to.
-    <table class="table table-sm table-hover table-striped table-width-auto">
+    <UiTable>
       <thead>
       <tr>
         <th>Callsign</th>
@@ -62,6 +62,6 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   {{/if}}
 </main>

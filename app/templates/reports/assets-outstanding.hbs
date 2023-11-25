@@ -8,7 +8,7 @@
   <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
 </p>
 Showing {{pluralize this.assets.length "asset"}} outstanding.
-<table class="table table-sm table-striped table-width-auto">
+<UiTable>
   <thead>
   <tr>
     <th>Barcode</th>
@@ -60,4 +60,4 @@ Showing {{pluralize this.assets.length "asset"}} outstanding.
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>

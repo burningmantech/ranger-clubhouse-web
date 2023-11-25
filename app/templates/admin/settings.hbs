@@ -18,7 +18,7 @@
   </FormRow>
 
   Showing {{this.viewSettings.length}} of {{this.settings.length}}.
-  <table class="table table-striped table-sm table-hover table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>Setting</th>
@@ -57,7 +57,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 
   {{#if this.editSetting}}
     <ModalDialog @title="Edit Setting {{this.editSetting.name}}" @onEscape={{this.cancel}} as |Modal|>

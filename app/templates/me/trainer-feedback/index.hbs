@@ -2,7 +2,7 @@
 <BackToHome />
 
 {{#if this.surveys}}
-  <table class="table table-striped table-hover table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>Year</th>
@@ -23,7 +23,7 @@
       </tr>
     {{/each-in}}
     </tbody>
-  </table>
+  </UiTable>
 {{else}}
   <p>
     <b class="text-danger">No one has left you trainer feedback or you are not a trainer.</b>

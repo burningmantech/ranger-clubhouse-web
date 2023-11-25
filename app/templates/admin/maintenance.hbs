@@ -37,7 +37,7 @@
       <UiSection>
         <:title>{{group.group_title}}</:title>
         <:body>
-          <table class="table table-striped">
+          <UiTable>
             <tbody>
             {{#each group.tasks as |task|}}
               <tr>
@@ -58,7 +58,7 @@
               </tr>
             {{/each}}
             </tbody>
-          </table>
+          </UiTable>
         </:body>
       </UiSection>
     {{/each}}

@@ -20,7 +20,7 @@
           bottom window below and try again.
         </p>
       {{/if}}
-      <table class="table table-striped table-sm table-width-auto">
+      <UiTable>
         <thead>
         <tr>
           <th>Callsign</th>
@@ -85,7 +85,7 @@
           {{/if}}
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
 
       {{#if (and (not this.haveError) (not this.committed))}}
         <div class="mt-2 mb-2">

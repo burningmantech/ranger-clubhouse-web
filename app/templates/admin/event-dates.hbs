@@ -15,7 +15,7 @@
   {{/if}}
 
   {{pluralize this.eventDates.length "event date"}}
-  <table class="table table-sm table-striped table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>Year</th>
@@ -51,7 +51,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 
   {{#if this.entry}}
     <ModalDialog @title="{{if this.entry.isNew "Create" "Edit"}} Event Data Record"

@@ -8,7 +8,7 @@ Showing {{pluralize this.expiring.length "person"}}
     {{fa-icon "file-export"}} Export CSV
   </UiButton>
 </div>
-<table class="table table-hover table-striped table-width-auto table-sm">
+<UiTable>
   <thead>
     <tr>
       <th>Callsign</th>
@@ -42,6 +42,6 @@ Showing {{pluralize this.expiring.length "person"}}
       </tr>
     {{/each}}
   </tbody>
-</table>
+</UiTable>
 
 <EmailList @people={{this.emailList}} />

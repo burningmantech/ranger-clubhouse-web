@@ -20,7 +20,7 @@ Showing {{this.totalPeople}} people over {{this.freaking.length}} years.
     <UiAccordion as |accordion|>
       <accordion.title>{{pluralize freaks.years "year"}} - {{pluralize freaks.people.length "person"}}</accordion.title>
       <accordion.body>
-        <table class="table table-striped table-sm">
+        <UiTable>
           <thead>
           <tr>
             <th class="w-20">Callsign</th>
@@ -45,7 +45,7 @@ Showing {{this.totalPeople}} people over {{this.freaking.length}} years.
             </tr>
           {{/each}}
           </tbody>
-        </table>
+        </UiTable>
       </accordion.body>
     </UiAccordion>
   </div>

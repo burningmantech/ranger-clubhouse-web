@@ -18,7 +18,7 @@
 <UiSection>
   <:title>{{pluralize this.prospectives.length "Alpha candidate"}}</:title>
   <:body>
-    <table class="table table-striped table-sm table-hover">
+    <UiTable>
       <thead>
       <tr>
         <th class="w-15">
@@ -90,7 +90,7 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
     <UiButton @type="success"
               @onClick={{this.convertAction}}
               @disabled={{this.isSubmitting}}>

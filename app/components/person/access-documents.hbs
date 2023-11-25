@@ -3,7 +3,7 @@
   <:body>
     Showing {{if this.isShowingAll "ALL including used and expired" "current"}}
     {{pluralize this.documents.length "access document"}}
-    <table class="table table-striped table-hover table-width-auto">
+    <UiTable>
       <thead>
       <tr>
         <th>ID</th>
@@ -50,7 +50,7 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
     <UiButton @onClick={{this.newAccessDocument}}>
       {{fa-icon "plus"}} New Access Document
     </UiButton>
@@ -150,7 +150,7 @@
         {{#if this.showingChanges}}
           <div class="mt-2">
             {{#if this.entryChanges}}
-              <table class="table table-sm table-width-auto table-striped table-hover">
+              <UiTable>
                 <thead>
                 <tr>
                   <th>Timestamp (UTC-7)</th>
@@ -177,7 +177,7 @@
                   </tr>
                 {{/each}}
                 </tbody>
-              </table>
+              </UiTable>
             {{else}}
               <span class="text-danger">No changes have been recorded.</span>
             {{/if}}

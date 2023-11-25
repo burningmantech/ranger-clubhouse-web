@@ -4,7 +4,7 @@
     This page will show anyone still on duty. Select those individuals you which to sign out in bulk.
   </p>
 
-  <table class="table table-sm table-hover table-striped table-width-auto">
+  <UiTable>
     <caption>{{pluralize this.onDutyCount "person"}} still on duty</caption>
     <thead>
     <tr>
@@ -54,7 +54,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 
   <UiButton @onClick={{this.signoffAction}}>
     Sign out selected entries ({{this.selectedCount}})

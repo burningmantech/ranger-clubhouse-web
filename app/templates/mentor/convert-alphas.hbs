@@ -13,7 +13,7 @@
 <UiSection>
   <:title>{{pluralize this.passed.length "Shiny Penny candidate"}}</:title>
   <:body>
-    <table class="table table-sm table-hover">
+    <UiTable>
       <thead>
       <tr>
         <th class="w-5">
@@ -49,7 +49,7 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
     <UiButton @type="success"
               @onClick={{fn this.convertAction this.passed "active"}}
               @disabled={{or (not this.passCount) this.isSubmitting}}>
@@ -61,7 +61,7 @@
 <UiSection>
   <:title>{{pluralize this.bonked.length "Bonked Alpha"}}</:title>
   <:body>
-    <table class="table table-sm table-hover">
+    <UiTable>
       <thead>
       <tr>
         <th class="w-5">
@@ -97,7 +97,7 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
     <UiButton @type="danger"
               @disabled={{or (not this.bonkCount) this.isSubmitting}}
               @onClick={{fn this.convertAction this.bonked "bonked"}}>

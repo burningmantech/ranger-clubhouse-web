@@ -30,7 +30,7 @@
 {{#if this.pods}}
   {{#each this.podGroups as |group|}}
     <div class="table-responsive mt-4">
-      <table class="table table-width-auto table-bordered">
+      <UiTable class="table-bordered">
         <thead>
         <tr>
           {{#each group as |pod|}}
@@ -268,7 +268,7 @@
           {{/each}}
         </tr>
         </tbody>
-      </table>
+      </UiTable>
     </div>
   {{/each}}
 {{else}}

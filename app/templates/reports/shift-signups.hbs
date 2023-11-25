@@ -13,7 +13,7 @@
 
 <UiButton @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
 {{! template-lint-disable table-groups}}
-<table class="table table-sm table-hover table-width-auto mt-2">
+<UiTable class="mt-2">
   {{#each this.positions key="id" as |position|}}
     <thead>
     <tr>
@@ -51,7 +51,7 @@
     {{/each}}
     </tbody>
   {{/each}}
-</table>
+</UiTable>
 
 <h3 id="summary">{{this.year}} Empty Shifts</h3>
 <p>
@@ -59,7 +59,7 @@
   {{fa-icon "frown" type="far"}}
 </p>
 
-<table class="table table-sm table-hover table-width-auto">
+<UiTable>
   <thead>
   <tr>
     <th>Position</th>
@@ -90,4 +90,4 @@
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>

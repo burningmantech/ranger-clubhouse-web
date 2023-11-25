@@ -28,7 +28,7 @@
   The following shows all current provisions (available, banked, claimed &amp; submitted)
 </p>
 Showing {{pluralize this.viewProvisions.length "provision"}} <UiExportToCSVButton @onClick={{this.exportToCSV}}/>
-<table class="table table-sm table-width-auto table-striped table-hover">
+<UiTable>
   <thead>
   <tr>
     <th>ID</th>
@@ -61,4 +61,4 @@ Showing {{pluralize this.viewProvisions.length "provision"}} <UiExportToCSVButto
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>

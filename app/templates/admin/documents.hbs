@@ -44,7 +44,7 @@
     <UiButton @onClick={{this.newAction}}>{{fa-icon "plus"}} New Document</UiButton>
     </span>
     </p>
-    <table class="table table-sm table-striped table-width-auto table-hover">
+    <UiTable>
       <thead>
       <tr>
         <th>Tag</th>
@@ -79,6 +79,6 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   {{/if}}
 </main>

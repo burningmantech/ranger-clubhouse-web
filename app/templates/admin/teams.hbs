@@ -12,7 +12,7 @@
   </p>
 
   Showing {{pluralize this.teams.length "team"}}
-  <table class="table table-sm table-hover table-striped table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>ID</th>
@@ -61,7 +61,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 </main>
 
 {{#if this.entry}}

@@ -16,7 +16,7 @@
       {{fa-icon "triangle-exclamation"}} = Bounced,
       {{fa-icon "bell"}} = Marked as spam
     </p>
-    <table class="table table-striped table-hover">
+    <UiTable>
       <thead>
       <tr>
         <th class="w-15">Timestamp</th>
@@ -67,7 +67,7 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
     {{#if (not-eq @logs.length @meta.total)}}
       <UiButton @type="secondary" @onClick={{@goPrevPage}} @disabled={{eq @meta.page 1}}>
         Prev Page

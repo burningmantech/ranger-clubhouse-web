@@ -35,7 +35,7 @@
       <:title><span class="text-success">{{pluralize this.peopleFound.length "person"}} found</span></:title>
       <:body>
         {{#if this.peopleFound}}
-          <table class="table table-width-auto table-striped table-hover">
+          <UiTable>
             <thead>
             <tr>
               <th>Callsign</th>
@@ -68,7 +68,7 @@
               </tr>
             {{/each}}
             </tbody>
-          </table>
+          </UiTable>
           <UiButton @onClick={{this.exportFoundToCSV}}>Export Found To CSV</UiButton>
         {{/if}}
       </:body>

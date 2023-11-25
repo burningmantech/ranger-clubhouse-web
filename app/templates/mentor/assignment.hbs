@@ -1,7 +1,7 @@
 <h1>{{this.year}} Alpha Mentor Assignments</h1>
 {{#if this.isPrinting}}
   <PrintInstruction @backLabel="Back to Mentor Assignments" @backAction={{action this.togglePrinting}} />
-  <table class="table table-width-auto">
+  <UiTable>
     <caption>Showing {{this.viewAlphas.length}} of {{this.alphas.length}}</caption>
     <thead>
     <tr>
@@ -43,7 +43,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 {{else}}
   <p>
     Use this page to assign mentors to Alphas (anyone with the Alpha position).
@@ -87,7 +87,7 @@
           Mark (but not save) {{pluralize this.selectedAlphas "Alpha"}} as Passed
         </UiButton>
       </p>
-      <table class="table table-striped table-hover table-sm table-width-auto">
+      <UiTable>
         <thead>
         <tr>
           <th><Input @type="checkbox" @checked={{this.selectAll}} {{on "change" this.toggleAll}} /></th>
@@ -184,7 +184,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
       <UiButton @disabled={{this.isSubmitting}} @onClick={{this.saveAlphas}}>
         Save Assignments &amp; Results
       </UiButton>

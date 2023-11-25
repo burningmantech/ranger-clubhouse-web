@@ -3,7 +3,7 @@
           @formFor={{this.roleForm}}
           @onSubmit={{this.save}} as |f|>
     <Modal.body>
-      <table class="table table-sm table-width-auto table-striped table-hover">
+      <UiTable>
         <thead>
         <tr>
           <th>&nbsp;</th>
@@ -54,7 +54,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
       <f.submit @label="Update" @disabled={{@isSaving}} />

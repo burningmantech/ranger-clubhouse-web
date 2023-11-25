@@ -10,7 +10,7 @@
   </p>
 {{/if}}
 Showing {{pluralize @positionLineups.length "position lineup"}}
-<table class="table table-width-auto table-striped table-hover">
+<UiTable>
   <thead>
   <tr>
     <th>Description</th>
@@ -39,7 +39,7 @@ Showing {{pluralize @positionLineups.length "position lineup"}}
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>
 
 {{#if this.entry}}
   <ModalDialog @onEscape={{this.cancel}} @size="xl" as |Modal|>

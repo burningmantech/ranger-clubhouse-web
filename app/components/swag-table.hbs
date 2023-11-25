@@ -3,7 +3,7 @@
   {{fa-icon "times" color="danger"}} = is deactivated and will not appear as an option.
 </p>
 Showing {{pluralize @swags.length "item"}}
-<table class="table table-sm table-hover table-striped table-width-auto">
+<UiTable>
   <thead>
   <tr>
     <th>ID</th>
@@ -50,4 +50,4 @@ Showing {{pluralize @swags.length "item"}}
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>

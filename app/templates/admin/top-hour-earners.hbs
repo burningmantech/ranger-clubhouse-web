@@ -30,7 +30,7 @@
       <UiExportToCSVButton @onClick={{this.exportToCsv}} /><br>
       Showing {{pluralize this.topEarners.length "person"}} for {{this.startYear}} to {{this.endYear}}.
     </div>
-    <table class="table table-width-auto table-hover table-striped">
+    <UiTable>
       <thead>
       <tr>
         <th>Callsign</th>
@@ -63,7 +63,7 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   {{/if}}
 </main>
 

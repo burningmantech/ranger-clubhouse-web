@@ -19,7 +19,7 @@
   </FormRow>
 
   Showing {{this.viewAlphas.length}} of {{pluralize this.alphas.length "Alpha"}}
-  <table class="table table-striped table-sm table-hover table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th><Input @type="checkbox" @checked={{this.selectAll}} {{on "change" this.toggleAll}} /></th>
@@ -75,6 +75,6 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
   <UiButton @onClick={{this.printAction}}>Print Selected ({{this.printAlphas.length}})</UiButton>
 {{/if}}

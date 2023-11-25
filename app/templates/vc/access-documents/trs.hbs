@@ -30,7 +30,7 @@
       </span>
     </:title>
     <:body>
-      <table class="table table-width-auto table-sm table-hover table-striped">
+      <UiTable>
         <thead>
         <tr>
           <th>Callsign</th>
@@ -59,7 +59,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </:body>
   </UiSection>
 {{/if}}
@@ -88,7 +88,7 @@
     {{/if}}
     Showing {{pluralize this.viewRecords.length "item"}} of type "{{this.filterLabel}}".
     Selected {{pluralize this.selectedCount "item"}}.
-    <table class="table table-sm table-hover table-striped table-width-auto">
+    <UiTable>
       <thead>
       <tr>
         <th>
@@ -136,7 +136,7 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
 
     <UiButton @onClick={{this.exportSelectedAction}}
               @disabled={{or this.isSubmitting

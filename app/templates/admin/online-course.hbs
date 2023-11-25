@@ -17,7 +17,7 @@
     <UiButton @type="primary" @onClick={{this.retrieveCourses}}>{{fa-icon "list"}} Available Moodle Courses</UiButton>
   </p>
   Showing {{pluralize this.onlineCourses.length "Online Course"}}
-  <table class="table table-width-auto table-striped table-hover">
+  <UiTable>
     <thead>
     <tr>
       <th>Position</th>
@@ -50,7 +50,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
   {{#if this.haveEnrollment}}
     <OnlineCourseEnrollment @name="Moodle Enrollment - {{this.enrollmentCourse.name}}" @people={{this.enrollment}} />
   {{/if}}

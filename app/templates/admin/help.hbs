@@ -10,7 +10,7 @@
   <p>
     <UiButton @onClick={{this.newHelp}}>New Help Doc</UiButton>
   </p>
-  <table class="table table-sm table-hover table-striped table-width-auto">
+  <UiTable>
     <caption>
       Showing {{pluralize this.viewDocuments.length "help document"}}
     </caption>
@@ -40,7 +40,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 
   {{#if this.entry}}
     <ModalDialog @title="{{if this.entry.isNew "New" "Edit"}} Help Document"
