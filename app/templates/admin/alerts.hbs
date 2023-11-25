@@ -7,7 +7,7 @@
 {{/if}}
 
 Showing {{pluralize this.alerts.length "alert"}}
-<table class="table table-sm table-hover table-width-auto">
+<UiTable>
   <thead>
   <tr>
     <th class="w-10">ID</th>
@@ -42,7 +42,7 @@ Showing {{pluralize this.alerts.length "alert"}}
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>
 
 {{#if this.entry}}
   <ModalDialog @title="{{if this.entry.isNew "New" "Edit"}} Alert" @onEscape={{this.cancelAlert}} as |Modal|>

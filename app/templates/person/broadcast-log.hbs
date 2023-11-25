@@ -1,6 +1,6 @@
 <YearSelect @title="Broadcast Messages" @year={{this.year}} @years={{this.person.all_years}} @subheader={{true}} @onChange={{action (mut this.year)}} />
 
-<table class="table table-sm table-hover table-width-auto">
+<UiTable>
   <thead>
       <tr>
           <th>Timestamp</th>
@@ -30,4 +30,4 @@
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>

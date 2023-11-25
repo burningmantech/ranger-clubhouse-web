@@ -54,7 +54,7 @@
     <div class="mt-4">
       Showing {{this.currentPage}} of {{this.total_pages}} pages. {{pluralize this.total "row"}}
     </div>
-    <table class="table table-hover table-sm table-width-auto">
+    <UiTable>
       <thead>
       <tr>
         <th class="w-15">Timestamp</th>
@@ -93,7 +93,7 @@
 
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
     <UiButton @type="secondary" @onClick={{this.goPrevPage}} @disabled={{eq this.currentPage 1}}>
       Prev Page
     </UiButton>

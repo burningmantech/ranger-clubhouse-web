@@ -5,7 +5,7 @@
 {{/unless}}
 <div class="ms-2">
   {{#if (eq @question.type "rating")}}
-    <table class="table table-width-auto table-sm">
+    <UiTable>
       <thead>
       <tr>
         <th colspan="2">Avg. Rating</th>
@@ -29,7 +29,7 @@
         </td>
       </tr>
       </tbody>
-    </table>
+    </UiTable>
   {{else}}
     {{#if @question.responses}}
       ({{pluralize @question.responses.length "response"}})

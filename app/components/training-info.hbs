@@ -1,5 +1,5 @@
 <div class="table-responsive my-2">
-  <table class="table table-sm table-striped table-hover table-width-auto">
+  <UiTable>
     <thead>
       <tr>
         <th>Training</th>
@@ -69,7 +69,7 @@
         {{/if}}
       {{/each}}
     </tbody>
-  </table>
+  </UiTable>
   {{#if this.hasNotGrantedPositions}}
     Note: The position will be granted once all ART requirements have been passed.
   {{/if}}

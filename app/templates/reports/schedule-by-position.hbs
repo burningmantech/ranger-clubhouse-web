@@ -43,7 +43,7 @@
         <p>
           <UiExportToCSVButton @onClick={{fn this.exportByShift position}} />
         </p>
-        <table class="table table-sm table-hover table-striped">
+        <UiTable>
           <thead>
           <tr>
             <th>&nbsp;</th>
@@ -59,7 +59,7 @@
             <ScheduleByPositionRow @slot={{slot}} />
           {{/each}}
           </tbody>
-        </table>
+        </UiTable>
       {{/if}}
     </accordion.body>
   </UiAccordion>

@@ -5,7 +5,7 @@
             @onChange={{action (mut this.year)}} />
 
 Showing {{pluralize this.slots.length "session"}}
-<table class="table table-hover table-striped table-width-auto table-sm">
+<UiTable>
   <thead>
   <tr>
     <th>Date / Location</th>
@@ -29,4 +29,4 @@ Showing {{pluralize this.slots.length "session"}}
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>

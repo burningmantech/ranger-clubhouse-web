@@ -1,7 +1,7 @@
 {{#unless @noHeader}}
 <i><b>{{@summary.description}}</b></i>
 {{/unless}}
-<table class="table table-width-auto table-sm table-striped table-hover">
+<UiTable>
   <thead>
   <tr>
     {{#if this.isNormal}}
@@ -48,4 +48,4 @@
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>

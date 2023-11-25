@@ -41,7 +41,7 @@
       </accordion.title>
       <accordion.body>
         {{#if accordion.isOpen}}
-          <table class="table table-sm table-striped table-hover table-width-auto">
+          <UiTable>
             <thead>
             <tr>
               <th class="w-25">Callsign</th>
@@ -75,7 +75,7 @@
               </tr>
             {{/each}}
             </tbody>
-          </table>
+          </UiTable>
         {{/if}}
       </accordion.body>
     </UiAccordion>

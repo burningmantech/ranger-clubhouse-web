@@ -5,7 +5,7 @@
   <UiButton @onClick={{this.newEntry}}>New Pog</UiButton>
 </p>
 Showing {{pluralize @personPogs.length "pog"}}
-<table class="table table-width-auto table-sm table-striped table-hover">
+<UiTable>
   <thead>
   <tr>
     <th>Pog</th>
@@ -32,7 +32,7 @@ Showing {{pluralize @personPogs.length "pog"}}
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>
 
 {{#if this.entry}}
   <ModalDialog as |Modal|>

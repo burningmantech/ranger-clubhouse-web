@@ -11,7 +11,7 @@
         <b>No teams or positions.</b>
     </div>
 {{else if @showMembership}}
-    <table class="table table-width-auto table-sm table-striped table-hover mt-2">
+    <UiTable class="mt-2">
         <thead>
         <tr>
             <th>Team</th>
@@ -52,5 +52,5 @@
             </tr>
         {{/each}}
         </tbody>
-    </table>
+    </UiTable>
 {{/if}}

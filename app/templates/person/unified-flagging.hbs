@@ -19,7 +19,7 @@
             visible.
           </p>
         {{/if}}
-        <table class="table table-striped table-hover table-sm">
+        <UiTable>
           <thead>
           <tr>
             <th class="w-10">Team</th>
@@ -84,7 +84,7 @@
             </tr>
           {{/unless}}
           </tbody>
-        </table>
+        </UiTable>
       </:body>
     </UiSection>
   </tab.pane>
@@ -92,7 +92,7 @@
     <UiSection>
       <:title>Training &amp; Alpha Shift History</:title>
       <:body>
-        <table class="table table-sm table-striped table-hover table-width-auto">
+        <UiTable>
           <thead>
           <tr>
             <th>Year</th>
@@ -125,7 +125,7 @@
             </tr>
           {{/each-in}}
           </tbody>
-        </table>
+        </UiTable>
       </:body>
     </UiSection>
   </tab.pane>

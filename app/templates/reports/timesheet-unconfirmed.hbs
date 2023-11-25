@@ -19,7 +19,7 @@
   count = How many timesheet entries are not verified
 </p>
 Showing {{pluralize this.unconfirmed_people.length "person"}}
-<table class="table table-hover table-striped table-width-auto">
+<UiTable>
   <thead>
   <tr>
     <th>Callsign</th>
@@ -48,7 +48,7 @@ Showing {{pluralize this.unconfirmed_people.length "person"}}
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>
 
 {{#if this.unconfirmed_people}}
   <EmailList @people={{this.unconfirmed_people}} />

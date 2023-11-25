@@ -10,7 +10,7 @@
             the HQ Short or Lead if in doubt.
         </UiNotice>
     {{/if}}
-    <table class="table table-width-auto">
+    <UiTable>
         <thead>
         <tr>
             <th>Position</th>
@@ -50,7 +50,7 @@
             </td>
         </tr>
         </tbody>
-    </table>
+    </UiTable>
     {{#unless @onDutyEntry.position.count_hours}}
         Note:
         <NoAppreciateIcon/> = {{@onDutyEntry.position.title}} hours do not count towards provisions and appreciations.
@@ -72,7 +72,7 @@
                     {{pluralize @upcomingSlots.imminent.length "upcoming scheduled shift sign-up"}} found.
                 </p>
                 You may sign {{@person.callsign}} into a scheduled shift OR a different shift / position (see below).
-                <table class="table table-width-auto table-hover table-striped">
+                <UiTable>
                     <thead>
                     <tr>
                         <th>Shift</th>
@@ -153,7 +153,7 @@
                         {{/unless}}
                     {{/each}}
                     </tbody>
-                </table>
+                </UiTable>
                 <p>
                     <b>
                         To sign in to a different shift / position, select the position below, and use the

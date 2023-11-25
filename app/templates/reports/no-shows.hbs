@@ -67,7 +67,7 @@
             {{#if position.slots}}
               <UiExportToCSVButton @onClick={{fn this.exportToCSV position}} />
             {{/if}}
-            <table class="table table-width-auto table-striped table-hover mt-2">
+            <UiTable class="mt-2">
               <thead>
               <tr>
                 <th>Shift</th>
@@ -99,7 +99,7 @@
                 </tr>
               {{/each}}
               </tbody>
-            </table>
+            </UiTable>
           </accordion.body>
         </UiAccordion>
       {{/each}}

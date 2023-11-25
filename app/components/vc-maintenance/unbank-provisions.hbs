@@ -3,7 +3,7 @@
     {{pluralize @results.provisions.length "provision"}} un-banked.
   </p>
 
-  <table class="table table-striped table-hover table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>RP</th>
@@ -28,7 +28,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 {{else}}
   <p class="text-danger">
     <b>No provisions were found that need to be un-banked.</b>

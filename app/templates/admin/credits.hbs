@@ -55,7 +55,7 @@
             </UiButton>
             <UiExportToCSVButton @onClick={{fn this.exportToCSV position}} @size="sm" />
           </p>
-          <table class="table table-sm table-hover table-striped">
+          <UiTable>
             <thead>
             <tr>
               <th class="w-5">ID</th>
@@ -85,7 +85,7 @@
               </tr>
             {{/each}}
             </tbody>
-          </table>
+          </UiTable>
         {{/if}}
       </accordion.body>
     </UiAccordion>
@@ -216,7 +216,7 @@
               </Accordion.title>
               <Accordion.body>
                 {{#if Accordion.isOpen}}
-                  <table class="table table-sm table-box table-hover">
+                  <UiTable class="table-box">
                     <thead>
                     <tr>
                       <th>Copy</th>
@@ -249,7 +249,7 @@
                       </tr>
                     {{/each}}
                     </tbody>
-                  </table>
+                  </UiTable>
                 {{/if}}
               </Accordion.body>
             </UiAccordion>

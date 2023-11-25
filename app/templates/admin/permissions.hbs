@@ -5,7 +5,7 @@
     A Clubhouse permission to use access certain parts of this website.
   </p>
 
-  <table class="table table-sm table-hover table-striped table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>ID</th>
@@ -50,7 +50,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 
   {{#if this.entry}}
     <ModalDialog @title={{if this.entry.isNew "New Role"  "Edit Role"}} @onEscape={{this.cancelRole}} as |Modal|>

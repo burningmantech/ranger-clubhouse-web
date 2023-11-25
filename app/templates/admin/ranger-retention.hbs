@@ -12,7 +12,7 @@
   <p>
     <UiButton @onClick={{this.exportToCsv}}>Export To CSV</UiButton>
   </p>
-  <table class="table table-sm table-width-auto table-striped table-hover">
+  <UiTable>
     <thead>
     <tr>
       <th>Callsign</th>
@@ -41,5 +41,5 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 </main>

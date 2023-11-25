@@ -9,7 +9,7 @@
       {{/if}}
     </p>
     Showing {{pluralize this.personCertifications.length "certification"}}
-    <table class="table table-width-auto table-striped table-hover">
+    <UiTable>
       <thead>
       <tr>
         <th>Certification</th>
@@ -33,7 +33,7 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   </:body>
 </UiSection>
 

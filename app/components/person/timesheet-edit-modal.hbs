@@ -58,7 +58,7 @@
         <div class="my-1">
           {{#if @entry.slot}}
             For reference, the scheduled sign-up is:
-            <table class="table table-width-auto my-1">
+            <UiTable class="my-1">
               <thead>
               <tr>
                 <th>Scheduled Time</th>
@@ -73,7 +73,7 @@
                 <td class="text-end">{{@entry.slot.id}}</td>
               </tr>
               </tbody>
-            </table>
+            </UiTable>
             The actual time worked might be longer or shorter than the scheduled sign-up.
           {{else}}
             Entry does not appear to be associated with a scheduled signed-up.
@@ -92,7 +92,7 @@
 
         {{#if @canManageTimesheets}}
           {{#if (or @entry.desired_position @entry.desired_on_duty @entry.desired_off_duty)}}
-            <table class="table table-width-auto table-sm">
+            <UiTable>
               <thead>
               <tr>
                 <th colspan="4">Desired Changes</th>
@@ -142,7 +142,7 @@
                 </tr>
               {{/if}}
               </tbody>
-            </table>
+            </UiTable>
             <UiButton @onClick={{fn this.populatedDesiredChanges f.model}} @size="sm" @type="secondary">
               Use the desired change(s)
             </UiButton>
@@ -165,7 +165,7 @@
           </FormRow>
           <div class="fw-medium mb-2">Timesheet Duration {{this.entryDuration f.model}}</div>
         {{else}}
-          <table class="table table-width-auto">
+          <UiTable>
             <thead>
             <tr>
               <th>Position</th>
@@ -193,7 +193,7 @@
               </td>
             </tr>
             </tbody>
-          </table>
+          </UiTable>
         {{/if}}
       </fieldset>
       {{#if @canManageTimesheets}}

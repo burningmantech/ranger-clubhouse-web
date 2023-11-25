@@ -9,7 +9,7 @@
 
 Showing {{pluralize this.slots.length "Alpha shift"}}.
 {{#if this.slots}}
-  <table class="table table-striped table-hover table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>&nbsp;</th>
@@ -42,7 +42,7 @@ Showing {{pluralize this.slots.length "Alpha shift"}}.
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 
 {{else}}
   <div class="mt-2 text-danger">

@@ -23,7 +23,7 @@
 </p>
 
 Showing  {{pluralize this.people.length "person"}}
-<table class="table table-width-auto table-hover table-striped table-sm">
+<UiTable>
   <thead>
   <tr>
     <th>Callsign</th>
@@ -72,14 +72,14 @@ Showing  {{pluralize this.people.length "person"}}
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>
 
 {{#if this.people}}
   <h3 id="shirt-totals">Shirt Totals</h3>
   <div class="row">
     {{#each this.shirtGroups as |shirts|}}
       <div class="col-3">
-        <table class="table table-sm table-box">
+        <UiTable class="table-box">
           <caption>
             {{shirts.name}} Totals
             <span class="d-inline-block float-end">
@@ -100,7 +100,7 @@ Showing  {{pluralize this.people.length "person"}}
             </tr>
           {{/each}}
           </tbody>
-        </table>
+        </UiTable>
       </div>
     {{/each}}
   </div>

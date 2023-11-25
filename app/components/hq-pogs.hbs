@@ -60,7 +60,7 @@
     </div>
   </div>
   Showing {{pluralize this.pogs.length "pog"}}.
-  <table class="table table-width-auto table-hover table-stripped">
+  <UiTable>
     <thead>
     <tr>
       <th>Pog</th>
@@ -116,7 +116,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 {{/if}}
 
 {{#if this.pogToIssue}}

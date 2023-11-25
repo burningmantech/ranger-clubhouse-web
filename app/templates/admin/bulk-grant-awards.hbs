@@ -39,7 +39,7 @@
           {{/if}}
           who have worked {{this.serviceYears}} years or more.
         </div>
-        <table class="table table-width-auto table-striped table-hover">
+        <UiTable>
           <thead>
           <tr>
             <th>Person</th>
@@ -65,7 +65,7 @@
             </tr>
           {{/each}}
           </tbody>
-        </table>
+        </UiTable>
         {{#if (and this.serviceYearsResults (not this.committed))}}
           <UiButton @onClick={{this.commitServiceYearGrant}}>
             Grant "{{this.awardSelected.title}}" to {{pluralize this.serviceYearsResults.length "person"}}
@@ -108,7 +108,7 @@
             {{/if}}
           {{/if}}
         </div>
-        <table class="table table-width-auto table-striped table-hover">
+        <UiTable>
           <thead>
           <tr>
             <th>Person</th>
@@ -148,7 +148,7 @@
             </tr>
           {{/each}}
           </tbody>
-        </table>
+        </UiTable>
         {{#if (and this.haveResults (not this.committed))}}
           <UiButton @onClick={{this.commitGrant}}>
             Grant "{{this.awardSelected.title}}" to {{pluralize this.results.length "person"}}

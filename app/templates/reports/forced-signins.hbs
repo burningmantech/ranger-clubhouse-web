@@ -12,7 +12,7 @@
     <UiExportToCSVButton @onClick={{this.exportToCSV}} />
   </p>
   Showing {{pluralize this.entries.length "entry"}} for {{this.year}}
-  <table class="table table-width-auto table-striped table-hover">
+  <UiTable>
     <thead>
     <tr>
       <th>Person</th>
@@ -43,7 +43,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 {{else}}
   <div class="text-danger">No forced sign-in entries found for {{this.year}}</div>
 {{/if}}

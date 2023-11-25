@@ -6,7 +6,7 @@
   <ModalDialog @title="Edit Certifications" @onEscape={{@onCancel}} @size="xl" as |Modal|>
     <form {{on "submit" this.submitAction}}>
       <Modal.body>
-        <table class="table table-sm table-striped table-hover">
+        <UiTable>
           <thead>
           <tr>
             <th>Certification</th>
@@ -65,7 +65,7 @@
             </tr>
           {{/each}}
           </tbody>
-        </table>
+        </UiTable>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <UiButton @disabled={{@isSaving}} @onClick={{this.saveAction}} @type="primary">Save</UiButton>

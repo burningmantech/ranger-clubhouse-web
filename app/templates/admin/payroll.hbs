@@ -58,7 +58,7 @@
       <UiButton @onClick={{this.exportTable}} @size="sm">
         Export On Screen Table
       </UiButton>
-      <table class="table table-width-auto table-sm table-striped table-hover mt-2">
+      <UiTable class="mt-2">
         <thead>
         <tr>
           <th>Callsign / Employee ID</th>
@@ -118,7 +118,7 @@
           {{/each}}
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     {{else}}
       <b class="text-danger">
         No timesheet entries found for the time range

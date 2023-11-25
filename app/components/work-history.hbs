@@ -35,7 +35,7 @@
     {{/if}}
     {{pluralize this.positions.length "position"}}.
     <div class="overflow-y-auto">
-      <table class="table table-width-auto table-striped table-hover">
+      <UiTable>
         <thead>
         <tr>
           <th>Position</th>
@@ -81,7 +81,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </div>
   {{else}}
     <p>
@@ -95,7 +95,7 @@
                @onEscape={{this.closePositionYearSummaryAction}} as |Modal|>
     <Modal.body>
       {{pluralize this.entries.length "entry"}}
-      <table class="table table-width-auto table-striped table-hover">
+      <UiTable>
         <thead>
         <tr>
           <th>Time</th>
@@ -121,7 +121,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closePositionYearSummaryAction}} />
@@ -134,7 +134,7 @@
   <ModalDialog @title={{this.position.title}} @onEscape={{this.closePositionAllEntriesAction}} as |Modal|>
     <Modal.body>
       {{#each-in this.position.years as |year info|}}
-        <table class="table table-striped table-hover">
+        <UiTable>
           <thead>
           <tr>
             <th>Year {{year}}</th>
@@ -160,7 +160,7 @@
             </tr>
           {{/each}}
           </tbody>
-        </table>
+        </UiTable>
       {{/each-in}}
     </Modal.body>
     <Modal.footer>
@@ -172,7 +172,7 @@
 {{#if this.showEntireYear}}
   <ModalDialog @title="Year {{this.showEntireYear}}" @onEscape={{this.closeEntireYearAction}} as |Modal|>
     <Modal.body>
-      <table class="table table-width-auto table-striped table-hover">
+      <UiTable>
         <thead>
         <tr>
           <th>Position</th>
@@ -202,7 +202,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeEntireYearAction}} />

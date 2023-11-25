@@ -4,7 +4,7 @@
     {{if (eq @results.people.length 1) "has" "have"}} been set the access date of
     "{{@results.access_date}}".
   </p>
-  <table class="table table-striped table-hover table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>RAD</th>
@@ -27,7 +27,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 {{else}}
   <p class="text-danger"><b>No Staff Credentials with unspecified access dates were found.</b></p>
 {{/if}}

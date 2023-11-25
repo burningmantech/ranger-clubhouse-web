@@ -39,7 +39,7 @@
 {{#if this.showHistory}}
   <ModalDialog @title="{{@person.callsign}} Training History" @size="xl" @onEscape={{this.closeHistoryAction}} as |Modal|>
     <Modal.body>
-      <table class="table table-sm table-striped table-hover">
+      <UiTable>
         <thead>
         <tr>
           <th class="w-15">Date</th>
@@ -87,7 +87,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeHistoryAction}} />

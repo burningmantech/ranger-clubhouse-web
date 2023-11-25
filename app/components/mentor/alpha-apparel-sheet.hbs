@@ -7,7 +7,7 @@
     </div>
 
     {{pluralize group.people.length group.title}}
-    <table class="table table-striped">
+    <UiTable>
       <thead>
         <tr>
           <th>Callsign</th>
@@ -39,7 +39,7 @@
           </tr>
         {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   {{/each}}
 {{/each}}
 
@@ -47,7 +47,7 @@
 <div class="row">
   {{#each this.shirtGroups as |shirts|}}
     <div class="col-5">
-      <table class="table table-box">
+      <UiTable class="table-box">
         <caption>{{shirts.name}} Totals</caption>
         <thead>
           <tr>
@@ -63,7 +63,7 @@
             </tr>
           {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </div>
   {{/each}}
 </div>

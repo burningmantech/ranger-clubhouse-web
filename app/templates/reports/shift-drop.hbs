@@ -76,7 +76,7 @@
       </p>
       {{#if this.people}}
         <UiExportToCSVButton @onClick={{this.exportToCSV}} />
-        <table class="table table-width-auto table-striped table-hover">
+        <UiTable>
           <thead>
           <tr>
             <th>Position</th>
@@ -99,7 +99,7 @@
             </tr>
           {{/each}}
           </tbody>
-        </table>
+        </UiTable>
       {{else}}
         <b class="text-danger">No drop shifts found for the positions selected.</b>
       {{/if}}

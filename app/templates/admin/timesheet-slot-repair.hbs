@@ -21,7 +21,7 @@
 
   {{#if this.haveResults}}
     {{pluralize this.entries.length "timesheet entry"}} repaired.
-    <table class="table table-width-auto table-striped table-hover">
+    <UiTable>
       <thead>
       <tr>
         <th>ID</th>
@@ -69,7 +69,7 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   {{/if}}
 </main>
 {{#if this.isSubmitting}}

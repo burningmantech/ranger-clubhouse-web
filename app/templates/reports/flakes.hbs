@@ -41,7 +41,7 @@
       <accordion.body>
         {{#if accordion.isOpen}}
           {{#each position.slots key="id" as |slot idx|}}
-            <table class="table table-sm">
+            <UiTable>
               <thead>
               <tr>
                 <th>From</th>
@@ -60,7 +60,7 @@
                 <td class="text-end">{{slot.max}}</td>
               </tr>
               </tbody>
-            </table>
+            </UiTable>
             <div class="ms-1 {{unless idx "mb-2"}}">
               {{#if slot.checked_in}}
                 <h6>Signed up &amp; in ({{slot.checked_in.length}})</h6>

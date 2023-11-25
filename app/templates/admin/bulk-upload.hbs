@@ -20,7 +20,7 @@
         {{#if this.resultFailures}}
           <h4 class="text-danger">{{pluralize this.resultFailures.length "error"}} encountered</h4>
 
-          <table class="table table-sm table-width-auto table-striped mt-4">
+          <UiTable class="mt-4">
             <thead>
             <tr>
               <th>Callsign</th>
@@ -50,7 +50,7 @@
               </tr>
             {{/each}}
             </tbody>
-          </table>
+          </UiTable>
         {{else if this.resultsCommitted}}
           <h4 class="text-success">Bulk Upload SUCCESS!</h4>
         {{else}}
@@ -58,7 +58,7 @@
         {{/if}}
 
         {{#if this.resultWarnings}}
-          <table class="table table-sm table-striped table-width-auto">
+          <UiTable>
             <caption>{{pluralize this.resultWarnings.length "warning"}} encountered</caption>
             <thead>
             <tr>
@@ -78,7 +78,7 @@
               </tr>
             {{/each}}
             </tbody>
-          </table>
+          </UiTable>
         {{/if}}
 
         {{#if this.resultSuccesses}}

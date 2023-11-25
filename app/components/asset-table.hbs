@@ -1,5 +1,5 @@
 {{pluralize @assets.length "asset"}} found
-<table class="table table-width-auto table-striped table-hover table-sm">
+<UiTable>
   <thead>
   <tr>
     <th>Type</th>
@@ -63,7 +63,7 @@
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>
 
 {{#if this.assetForHistory}}
   <ModalAssetHistory @assetId={{this.assetForHistory.id}} @onClose={{this.closeHistory}} />

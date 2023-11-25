@@ -27,7 +27,7 @@
   </FormRow>
 
   Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
-  <table class="table table-sm table-striped table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>Barcode</th>
@@ -67,7 +67,7 @@
       <td colspan="5" class="text-danger">No assets were found for {{this.year}}?!?</td>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 
   {{#if this.entry}}
     <ModalDialog @title={{if this.entry.isNew "New Asset" "Edit Asset"}} @onEscape={{this.cancelAsset}} as |Modal|>

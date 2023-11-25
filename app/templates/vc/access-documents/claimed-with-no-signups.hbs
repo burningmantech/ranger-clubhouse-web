@@ -7,7 +7,7 @@
   <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
 </p>
 {{pluralize this.people.length "person"}} found.
-<table class="table table-striped table-hover table-sm table-width-auto">
+<UiTable>
   <thead>
   <tr>
     <th>Callsign</th>
@@ -75,4 +75,4 @@
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>

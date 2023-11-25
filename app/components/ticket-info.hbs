@@ -7,7 +7,7 @@
   <p>
     Please select which ticket you wish to use:
   </p>
-  <table class="table table-width-auto">
+  <UiTable>
     <tbody>
     {{#each @ticketPackage.tickets as |item|}}
       <tr class={{if item.isClaimed "table-success"}}>
@@ -38,7 +38,7 @@
       </td>
     </tr>
     </tbody>
-  </table>
+  </UiTable>
   <p>
     While you have multiple tickets to choose from, only ONE ticket may be used in any given year.
     The rest will be banked, and cannot be transferred to other people.

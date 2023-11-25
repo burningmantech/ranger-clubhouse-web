@@ -29,7 +29,7 @@
       {{#if accordion.isOpen}}
         {{#if role.people}}
           <UiButton @onClick={{fn this.exportToCSV role}} @size="sm">Export To CSV</UiButton>
-          <table class="table table-sm table-width-auto table-striped table-hover mt-2">
+          <UiTable class="mt-2">
             <thead>
             <tr>
               <th>Callsign</th>
@@ -101,7 +101,7 @@
               </tr>
             {{/each}}
             </tbody>
-          </table>
+          </UiTable>
         {{else}}
           <b>No one found which matches the filter.</b>
         {{/if}}

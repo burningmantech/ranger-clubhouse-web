@@ -15,7 +15,7 @@
 <h3>People signed up and no training shift</h3>
 {{pluralize this.not_signed_up.length "person"}} signed up for a shift who
 {{if (eq this.not_signed_up.length 1) "has" "have"}} not signed up for a corresponding training shift.
-<table class="table table-border table-sm table-hover table-width-auto mt-2">
+<UiTable class="table-border    mt-2">
   <thead>
   <tr>
     <th>Callsign</th>
@@ -46,7 +46,7 @@
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>
 {{#if this.not_signed_up}}
   <EmailList @people={{this.not_signed_up}} @listId="no-signup-emails"/>
 {{/if}}
@@ -56,7 +56,7 @@
 {{pluralize this.not_passed.length "individual"}} signed up for a shift who
 {{if (eq this.not_passed.length 1) "has" "have"}} not passed training.
 (This could be because their training hasn’t happened yet.)
-<table class="table table-sm table-hover mt-2 table-width-auto">
+<UiTable class="mt-2">
   <thead>
   <tr>
     <th>Callsign</th>
@@ -93,7 +93,7 @@
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>
 
 {{#if this.not_passed}}
   <EmailList @people={{this.not_passed}} />

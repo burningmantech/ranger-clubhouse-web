@@ -32,7 +32,7 @@
             {{fa-icon "plus"}} Add Person
           </UiButton>
         </div>
-        <table class="table table-sm table-striped table-hover">
+        <UiTable>
           <thead>
           <tr>
             <th class="w-15">Callsign</th>
@@ -87,7 +87,7 @@
             </tr>
           {{/each}}
           </tbody>
-        </table>
+        </UiTable>
       </Accordion.body>
     </UiAccordion>
   {{else}}
@@ -126,7 +126,7 @@
           <div class="mt-2">
             Click on the callsign to add the person to the Alpha shift.
           </div>
-          <table class="table table-hover ">
+          <UiTable>
             <thead>
             <tr>
               <th class="w-25">Callsign</th>
@@ -149,7 +149,7 @@
               {{/each}}
             {{/each}}
             </tbody>
-          </table>
+          </UiTable>
         {{else if this.noSearchMatch}}
           <div class="text-danger">No person found matching "{{this.noSearchMatch}}"</div>
         {{/if}}

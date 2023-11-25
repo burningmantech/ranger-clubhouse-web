@@ -3,7 +3,7 @@
     Note: only titles that were set will be shown. A title set prior to this will not appear below.
   </p>
   {{pluralize @results.bmids.length "BMID"}} were set.
-  <table class="table table-striped table-hover table-sm table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>Callsign</th>
@@ -26,7 +26,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 {{else}}
   <p class="text-danger">
     <b>It appears all qualifying BMIDs have the titles already set.</b>

@@ -102,7 +102,7 @@
     {{/if}}
     {{#if this.unsaveRows}}<span class="ms-4 text-danger">UNSAVED {{pluralize this.unsaveRows "record"}}</span>{{/if}}
   {{/unless}}
-  <table class="table table-sm table-striped table-hover">
+  <UiTable>
     <thead>
     <tr>
       <th>&nbsp;</th>
@@ -319,7 +319,7 @@
       </tr>
     {{/if}}
     </tbody>
-  </table>
+  </UiTable>
 </main>
 
 {{#if this.entry}}

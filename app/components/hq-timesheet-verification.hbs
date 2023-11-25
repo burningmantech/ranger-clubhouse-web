@@ -16,7 +16,7 @@
   </UiNotice>
 {{/if}}
 {{#if @unverifiedTimesheets}}
-  <table class="table table-width-auto">
+  <UiTable>
     <thead>
     <tr>
       <th>Time / Position</th>
@@ -92,7 +92,7 @@
       </tr>
     {{/each}}
     </tbody>
-  </table>
+  </UiTable>
 {{/if}}
 
 {{#if this.showCorrectionForm}}

@@ -10,7 +10,7 @@
   </p>
 {{/if}}
 Showing {{pluralize this.enrollments.length "trainee"}}
-<table class="table table-sm table-width-auto table-striped table-width-auto">
+<UiTable>
   <thead>
   <tr>
     <th>Callsign</th>
@@ -45,7 +45,7 @@ Showing {{pluralize this.enrollments.length "trainee"}}
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>
 {{#if this.enrollments}}
   <EmailList @people={{this.enrollments}} />
 {{/if}}

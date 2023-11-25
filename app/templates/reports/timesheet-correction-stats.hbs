@@ -15,7 +15,7 @@
 <div class="d-flex">
   <div class="me-4">
     <h4>Timesheet Correction Requests</h4>
-    <table class="table table-width-auto">
+    <UiTable>
       <tbody>
       <tr>
         <th>Approved</th>
@@ -30,11 +30,11 @@
         <td class="text-end">{{this.statistics.entries_deleted}}</td>
       </tr>
       </tbody>
-    </table>
+    </UiTable>
   </div>
   <div>
     <h4>Missing Timesheet Requests</h4>
-    <table class="table table-width-auto mb-3">
+    <UiTable class="mb-3">
       <tbody>
       <tr>
         <th>Total Requests</th>
@@ -49,14 +49,14 @@
         <td class="text-end">{{this.statistics.missing_requests.rejected}}</td>
       </tr>
       </tbody>
-    </table>
+    </UiTable>
   </div>
 </div>
 
 <div class="d-flex">
   <div class="me-4">
     <h4>Top Timesheet Position Corrections</h4>
-    <table class="table table-width-auto table-hover table-striped">
+    <UiTable>
       <thead>
       <tr>
         <th>Position</th>
@@ -71,11 +71,11 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   </div>
   <div class="me-4">
     <h4>Top Timesheet Correction Submitters</h4>
-    <table class="table table-width-auto table-hover table-striped">
+    <UiTable>
       <thead>
       <tr>
         <th>Person</th>
@@ -92,12 +92,12 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   </div>
 
   <div class="me-4">
     <h4>Top Missing Position Requests</h4>
-    <table class="table table-width-auto table-hover table-striped">
+    <UiTable>
       <thead>
       <tr>
         <th>Position</th>
@@ -112,12 +112,12 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   </div>
 
   <div>
     <h4>Top Missing Request Submitters</h4>
-    <table class="table table-width-auto table-hover table-striped">
+    <UiTable>
       <thead>
       <tr>
         <th>Person</th>
@@ -134,14 +134,14 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
 
   </div>
 
 </div>
 
 <h4>Reviewers</h4>
-<table class="table table-width-auto table-striped table-hover">
+<UiTable>
   <thead>
   <tr>
     <th>Callsign</th>
@@ -170,6 +170,6 @@
     </tr>
   {{/each}}
   </tbody>
-</table>
+</UiTable>
 
 

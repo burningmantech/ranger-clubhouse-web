@@ -34,7 +34,7 @@
 
   {{#if this.foundCallsigns}}
     <b>Click on the callsign below to send a message:</b>
-    <table class="table table-striped table-bordered table-width-auto">
+    <UiTable class="table-bordered">
       <tbody>
       {{#each this.foundCallsigns key="id" as |ranger|}}
         <tr>
@@ -48,7 +48,7 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   {{else if this.noMatch}}
     <p class="text-danger"><b>No callsigns match "{{this.noMatch}}"</b></p>
   {{/if}}

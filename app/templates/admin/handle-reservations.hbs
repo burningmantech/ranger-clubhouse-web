@@ -41,7 +41,7 @@
       </FormRow>
 
       Showing {{this.viewHandleReservations.length}} of {{pluralize this.handleReservations.length "handle"}}
-      <table class="table table-sm table-hover table-striped table-width-auto">
+      <UiTable>
         <thead>
         <tr>
           <th>Handle / Term</th>
@@ -81,7 +81,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </tab.pane>
     <tab.pane @title="Bulk Upload" @id="upload">
       <ChForm @formFor={{this.uploadForm}} @formId="upload" @onSubmit={{this.verifyUpload}} as |f|>
@@ -141,7 +141,7 @@
               </p>
             {{/if}}
             Showing {{pluralize this.uploadResults.length "handles"}}
-            <table class="table table-width-auto table-striped table-hover">
+            <UiTable>
               <thead>
               <th>&nbsp;</th>
               <th>Handle</th>
@@ -188,7 +188,7 @@
                 </tr>
               {{/each}}
               </tbody>
-            </table>
+            </UiTable>
           </:body>
         </UiSection>
       {{/if}}

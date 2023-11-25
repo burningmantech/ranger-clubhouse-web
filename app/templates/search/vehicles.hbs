@@ -30,7 +30,7 @@
   <UiSection>
     <:title>Found {{pluralize this.vehicles.length "vehicle"}}</:title>
     <:body>
-      <table class="table table-striped table-hover table-width-auto">
+      <UiTable>
         <thead>
         <tr>
           <th>Person or Team</th>
@@ -72,7 +72,7 @@
           </tr>
         {{/each}}
         </tbody>
-      </table>
+      </UiTable>
     </:body>
   </UiSection>
 {{/if}}

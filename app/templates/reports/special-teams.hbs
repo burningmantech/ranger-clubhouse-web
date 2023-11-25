@@ -81,7 +81,7 @@
       <p>
         <UiExportToCSVButton @onClick={{this.exportToCSV}} @size="sm"/>
       </p>
-      <table class="table table-sm table-striped table-width-auto">
+      <UiTable>
         <thead>
         <tr>
           <th>Callsign</th>
@@ -128,7 +128,7 @@
           <td class="text-end">{{hour-format this.grandTotal}}</td>
         </tr>
         </tbody>
-      </table>
+      </UiTable>
     </:body>
   </UiSection>
 {{/if}}

@@ -1,7 +1,7 @@
 <UiSection>
   <:title>{{@title}}</:title>
   <:body>
-    <table class="table table-sm table-striped table-hover table-width-auto">
+    <UiTable>
       <thead>
       <tr>
         <th>Time ({{@interval}} min interval)</th>
@@ -29,6 +29,6 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   </:body>
 </UiSection>

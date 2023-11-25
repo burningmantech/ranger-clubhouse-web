@@ -17,7 +17,7 @@
           <p>
             <UiExportToCSVButton @onClick={{fn this.exportToCSV position}} @size="sm" />
           </p>
-          <table class="table table-sm table-hover table-striped table-width-auto">
+          <UiTable>
             <thead>
             <tr>
               <th>Time</th>
@@ -57,7 +57,7 @@
               </tr>
             {{/each}}
             </tbody>
-          </table>
+          </UiTable>
         {{/if}}
       </accordion.body>
     </UiAccordion>

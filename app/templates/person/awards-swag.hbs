@@ -15,7 +15,7 @@
       <UiButton @onClick={{fn this.newSwag "other"}}>{{fa-icon "star"}} Other Swag</UiButton>
     </p>
     Showing {{pluralize this.personSwag.length "item"}}
-    <table class="table table-width-auto table-striped table-hover">
+    <UiTable>
       <thead>
       <tr>
         <th>Swag</th>
@@ -48,7 +48,7 @@
       </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
 
     {{#if this.swagEntry}}
       <ModalDialog @size="xl" @onEscape={{this.cancelSwag}} as |Modal|>
@@ -92,7 +92,7 @@
     <p>
       <UiButton @onClick={{this.newAward}}>Grant Award</UiButton>
     </p>
-    <table class="table table-striped table-hover table-width-auto">
+    <UiTable>
       <thead>
       <tr>
         <th>Award</th>
@@ -125,7 +125,7 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   </tab.pane>
 </UiTab>
 

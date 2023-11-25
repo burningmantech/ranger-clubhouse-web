@@ -9,7 +9,7 @@
       odd about this person's collection of Access Documents.</p>
 
     Showing {{pluralize this.summaryDocuments.people.length "person"}}
-    <table class="table table-hover table-sm table-width-auto">
+    <UiTable>
       <thead>
       <tr>
         <th>Person</th>
@@ -34,7 +34,7 @@
         </tr>
       {{/each}}
       </tbody>
-    </table>
+    </UiTable>
   </tab.pane>
   <tab.pane @title="Current Records" @id="records">
     {{#if this.isLoading}}
@@ -63,7 +63,7 @@
         <UiExportToCSVButton @onClick={{this.exportToCSV}}/>
       </p>
       Showing {{this.viewDocuments.length}} of {{pluralize this.accessDocuments.length "access document"}}
-      <table class="table table-hover table-sm table-width-auto">
+      <UiTable>
         <thead>
         <tr>
           <th>RAD</th>
@@ -116,7 +116,7 @@
         <tr>
         </tr>
         </tbody>
-      </table>
+      </UiTable>
     {{/if}}
   </tab.pane>
 </UiTab>
