@@ -42,6 +42,7 @@ export default class VcSalesforceController extends ClubhouseController {
       color: 'danger'
     },
     'reset': {label: 'Reset Testing* Records Status', icon: 'check', color: 'success'},
+    'reserved-callsign': {label: 'Reserved Callsigns', icon: 'ban', color: 'danger'},
   };
 
   get accountGroups() {

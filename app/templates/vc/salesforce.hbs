@@ -174,7 +174,7 @@
           <UiTable>
             <thead>
             <tr>
-              <th>Ranger Obj</th>
+              <th>Salesforce<br>Record</th>
               <th>Callsign</th>
               <th>Name</th>
               <th>Email</th>
@@ -217,10 +217,9 @@
               {{else}}
                 <tr>
                   <td>
-                    <a href="https://burningman.my.salesforce.com/{{account.salesforce_ranger_object_id}}"
-                       rel="noopener noreferrer" target="_blank">
+                    <ExtLink @href="https://burningman.my.salesforce.com/{{account.salesforce_ranger_object_id}}">
                       {{account.salesforce_ranger_object_name}}
-                    </a>
+                    </ExtLink>
                   </td>
                   <td>
                     {{#if (and (eq account.status "succeeded") account.chuid)}}
