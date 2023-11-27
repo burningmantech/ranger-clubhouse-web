@@ -9,7 +9,7 @@ module('Acceptance | me/emergency contact', function (hooks) {
 
   test('rendered /me/emergency-contact', async function (assert) {
     const person = this.server.create('person', {
-      emergency_contact: faker.random.alphaNumeric(100)
+      emergency_contact: faker.string.alpha(100)
     });
 
     await authenticateUser(person.id);

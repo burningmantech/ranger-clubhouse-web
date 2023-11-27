@@ -43,8 +43,8 @@ module('Acceptance | auditor', function (hooks) {
   });
 
   test('Auditor see the schedule page', async function (assert) {
-    this.server.create('schedule', {person_assigned: true});
-    this.server.create('schedule', {person_assigned: false});
+    this.server.create('schedule', {person_assigned: true, person_id: this.person.id});
+    this.server.create('schedule', {person_assigned: false, person_id: this.person.id});
 
     await visit('/me/schedule');
 

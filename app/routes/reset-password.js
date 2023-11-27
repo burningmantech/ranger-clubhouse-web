@@ -1,5 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import Login from 'clubhouse/models/login';
+import EmberObject from '@ember/object';
 
 export default class ResetPasswordRoute extends ClubhouseRoute {
   beforeModel() {
@@ -7,6 +7,9 @@ export default class ResetPasswordRoute extends ClubhouseRoute {
   }
 
   setupController(controller) {
-    controller.set('auth', new Login);
+    controller.set('auth', EmberObject.create({
+      identification: '',
+      password: ''
+    }));
   }
 }

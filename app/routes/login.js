@@ -1,6 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import Login from 'clubhouse/models/login';
 import ENV from 'clubhouse/config/environment';
+import EmberObject from '@ember/object';
 
 export default class LoginRoute extends ClubhouseRoute {
   authRequired = false;
@@ -54,7 +54,10 @@ export default class LoginRoute extends ClubhouseRoute {
 
    setupController(controller, model) {
     controller.set('tokenError', model);
-    controller.set('authForm', new Login);
+    controller.set('authForm', EmberObject.create({
+      identification: '',
+      password:''
+    }));
     this.house.clearStorage();
   }
 

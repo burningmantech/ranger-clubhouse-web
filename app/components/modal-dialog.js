@@ -2,7 +2,8 @@ import Component from '@glimmer/component';
 import {service} from '@ember/service';
 import {schedule} from '@ember/runloop';
 import {action} from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
+import {htmlSafe} from '@ember/template';
 
 class DialogEntry {
   @tracked isTopDialog = false;
@@ -55,6 +56,10 @@ export default class ModalDialogComponent extends Component {
   @action
   _showDialog() {
 
+  }
+
+  get hideDialogStyle() {
+    return htmlSafe(!this.dialogRegistry.isTopDialog ? 'display: none !important' : '');
   }
 
   /**

@@ -1,7 +1,6 @@
-import {discoverEmberDataModels} from "ember-cli-mirage";
+import {discoverEmberDataModels, applyEmberDataSerializers} from "ember-cli-mirage";
 import {Response, createServer} from 'miragejs';
 import dayjs from 'dayjs';
-import configMock from './api-mocks/config-mock';
 import scheduleMock from './api-mocks/schedule-mock';
 
 function now() {
@@ -11,8 +10,32 @@ function now() {
 function routes() {
   this.urlPrefix = 'http://localhost:8000';
 
-  configMock(this);
   scheduleMock(this);
+
+  this.get('/api/config', function () {
+    return {
+      AdminEmail: 'rangers-tech-ninjas@burningman.org',
+      AuditorRegistrationDisabled: false,
+      EditorUrl: 'https://example.com/editor',
+      HQWindowInterfaceEnabled: true,
+      GeneralSupportEmail: 'rangers@burningman.org',
+      JoiningRangerSpecialTeamsUrl: 'https://example.com/special-teams',
+      LoginManageOnPlayaEnabled: true,
+      MealDates: 'Thanksgiving',
+      MealInfoAvailable: true,
+      MentorEmail: 'ranger-mentors@burningman.org',
+      MotorpoolPolicyEnable: true,
+      PersonnelEmail: 'ranger-personnel@burningman.org',
+      RadioCheckoutAgreementEnabled: true,
+      RangerFeedbackFormUrl: 'https://example.com/feedback',
+      RangerManualUrl: 'https://example.com/ranger-manual',
+      RangerPoliciesUrl: 'https://example.com/policy-folder',
+      RpTicketThreshold: 19,
+      ScTicketThreshold: 38,
+      TrainingAcademyEmail: 'ranger-training-academy@burningman.org',
+      VcEmail: 'ranger-vc@burningman.org',
+    };
+  });
 
   this.post('/api/auth/login', function (schema, request) {
     let params = JSON.parse(request.requestBody);
@@ -233,6 +256,15 @@ function routes() {
     };
   });
 
+  this.get('/api/person/:id/membership', () => {
+    return {
+      membership: {
+        teams: [],
+        positions: []
+      }
+    }
+  });
+
   this.get('/api/person-event/:id', (_, request) => {
     return {
       person_event: {
@@ -265,9 +297,16 @@ function routes() {
     };
   });
 
-  this.get('/api/document/:id', (_, request) => {
-    const id = request.params.id;
-    if (id === 'tag-test') {
+  this.get('/api/document/:id', () => {
+    return new Response(404, {'Content-Type': 'application/json'}, {
+      errors: [{status: 404, title: 'Record does not exist.'}]
+    });
+  });
+
+  this.get('/api/document', (_, request) => {
+    const tag = request.queryParams.tag;
+
+    if (tag === 'tag-test') {
       return {
         document: {
           id: 1,
@@ -278,11 +317,13 @@ function routes() {
           person_update_id: 1,
         }
       };
-    } else {
+    } else if (tag) {
       return new Response(404, {'Content-Type': 'application/json'}, {
         errors: [{status: 404, title: 'Record does not exist.'}]
       });
     }
+
+    return [];
   });
 
   this.get('/api/agreements/:id', () => {
@@ -305,6 +346,10 @@ function routes() {
     return {period: 'before-event'}
   });
 
+  this.get('/api/person-certification', () => {
+    return {};
+  });
+
   /*
     Shorthand cheatsheet:
 
@@ -321,7 +366,8 @@ function routes() {
 export default function (config) {
   let finalConfig = {
     ...config,
-    models: {...discoverEmberDataModels(), ...config.models},
+    models: {...discoverEmberDataModels(config.store), ...config.models},
+    serializers: applyEmberDataSerializers(config.serializers),
     routes,
   };
 

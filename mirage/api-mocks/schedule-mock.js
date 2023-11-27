@@ -1,4 +1,4 @@
-import Response from 'ember-cli-mirage/response';
+import { Response } from 'miragejs';
 
 const signupPermission = {
   all_signups_allowed: true,
@@ -29,18 +29,9 @@ export default function scheduleMock(server) {
       return Response(404);
     }
 
-    const schedules = schema.schedules.all();
-    const positions = schedules.models.map((row) => {
-      return {
-        id: row.position_id,
-        title: row.position_title,
-        count_hours: row.position_count_hours,
-      }
-    });
-
     return {
-      slots: this.serialize(schedules).schedules,
-      positions,
+      slots: [],
+      positions: [],
       credits_earned: 10.0,
       schedule_summary: scheduleSummary,
       signup_permission: signupPermission
