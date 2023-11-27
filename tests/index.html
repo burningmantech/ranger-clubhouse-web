@@ -1,37 +1,39 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Clubhouse Tests</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <meta charset="utf-8">
+  <title>TestMirage Tests</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {{content-for "head"}}
-    {{content-for "test-head"}}
+  {{content-for "head"}}
+  {{content-for "test-head"}}
 
-    <link rel="stylesheet" href="{{rootURL}}assets/vendor.css">
-    <link rel="stylesheet" href="{{rootURL}}assets/clubhouse.css">
-    <link rel="stylesheet" href="{{rootURL}}assets/test-support.css">
+  <link rel="stylesheet" href="{{rootURL}}assets/vendor.css">
+  <link rel="stylesheet" href="{{rootURL}}assets/clubhouse.css">
+  <link rel="stylesheet" href="{{rootURL}}assets/test-support.css">
 
-    {{content-for "head-footer"}}
-    {{content-for "test-head-footer"}}
-  </head>
-  <body>
-    {{content-for "body"}}
-    {{content-for "test-body"}}
-    <div id="qunit"></div>
-    <div id="qunit-fixture">
-      <div id="ember-testing-container">
-        <div id="ember-testing"></div>
-      </div>
+  {{content-for "head-footer"}}
+  {{content-for "test-head-footer"}}
+</head>
+<body>
+  {{content-for "body"}}
+  {{content-for "test-body"}}
+
+  <div id="qunit"></div>
+  <div id="qunit-fixture">
+    <div id="ember-testing-container">
+      <div id="ember-testing"></div>
     </div>
-    <script src="/testem.js" integrity="" data-embroider-ignore></script>
-    <script src="{{rootURL}}assets/vendor.js"></script>
-    <script src="{{rootURL}}assets/test-support.js"></script>
-    <script src="{{rootURL}}assets/clubhouse.js"></script>
-    <script src="{{rootURL}}assets/tests.js"></script>
+  </div>
 
-    {{content-for "body-footer"}}
-    {{content-for "test-body-footer"}}
-  </body>
+  <script src="/testem.js" integrity="" data-embroider-ignore></script>
+  <script src="{{rootURL}}assets/vendor.js"></script>
+  <script src="{{rootURL}}assets/test-support.js"></script>
+  <script src="{{rootURL}}assets/clubhouse.js"></script>
+  <script src="{{rootURL}}assets/tests.js"></script>
+
+  {{content-for "body-footer"}}
+  {{content-for "test-body-footer"}}
+</body>
 </html>

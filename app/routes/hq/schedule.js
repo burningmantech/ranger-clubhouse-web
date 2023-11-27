@@ -1,6 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
-import ScheduleSlotModel from 'clubhouse/models/schedule-slot';
+import ScheduleSlotModel from 'clubhouse/records/schedule-slot';
 
 export default class HqScheduleRoute extends ClubhouseRoute {
   model() {

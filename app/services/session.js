@@ -4,7 +4,7 @@ import {typeOf} from '@ember/utils';
 import {debounce} from '@ember/runloop';
 import {tracked} from '@glimmer/tracking';
 import SessionService from "ember-simple-auth/services/session";
-import User from "clubhouse/models/user";
+import User from "clubhouse/records/user";
 import ENV from 'clubhouse/config/environment';
 import {setting} from 'clubhouse/utils/setting';
 import {ADMIN, MANAGE, TRAINER, VC, VIEW_PII, VIEW_EMAIL} from 'clubhouse/constants/roles';

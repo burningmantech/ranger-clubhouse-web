@@ -1,4 +1,4 @@
-import {Factory} from 'ember-cli-mirage';
+import { Factory } from 'miragejs';
 import {faker} from '@faker-js/faker';
 import dayjs from 'dayjs';
 
@@ -16,7 +16,7 @@ export default Factory.extend({
   has_reviewed_pi: false,
 
   callsign() {
-    return faker.datatype.uuid();
+    return faker.string.uuid();
   },
 
   email() {
@@ -24,34 +24,34 @@ export default Factory.extend({
   },
 
   first_name() {
-    return faker.name.firstName();
+    return faker.person.firstName();
   },
 
   mi() {
-    return faker.random.alphaNumeric(2)
+    return faker.string.alpha(2)
   },
 
   last_name() {
-    return faker.name.lastName();
+    return faker.person.lastName();
   },
 
   street1() {
-    return faker.address.streetAddress(true);
+    return faker.location.streetAddress(true);
   },
 
   street2() {
-    return faker.address.secondaryAddress()
+    return faker.location.secondaryAddress()
   },
 
   city() {
-    return faker.address.city();
+    return faker.location.city();
   },
 
   state() {
-    return faker.address.stateAbbr();
+    return faker.location.state({ abbreviated: true });
   },
   zip() {
-    return faker.address.zipCode();
+    return faker.location.zipCode();
   },
   home_phone() {
     return faker.phone.number();
@@ -63,9 +63,9 @@ export default Factory.extend({
     return dayjs().format('YYYY-MM-DD hh:mm:ss');
   },
   camp_location() {
-    return `Camp ${faker.address.city()}`;
+    return `Camp ${faker.location.city()}`;
   },
   bpguid() {
-    return faker.datatype.uuid();
+    return faker.string.uuid();
   }
 });

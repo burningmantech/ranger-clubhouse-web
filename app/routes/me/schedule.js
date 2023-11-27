@@ -1,6 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
-import ScheduleSlotModel from 'clubhouse/models/schedule-slot';
+import ScheduleSlotModel from 'clubhouse/records/schedule-slot';
 
 export default class MeScheduleRoute extends ClubhouseRoute {
   queryParams = {
