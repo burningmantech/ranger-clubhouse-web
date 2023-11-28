@@ -1,24 +1,18 @@
 # unconventional js
 /blueprints/*/files/
-/vendor/
 
 # compiled output
 /dist/
-/tmp/
-
-# dependencies
-/bower_components/
-/node_modules/
 
 # misc
 /coverage/
 !.*
 /public/
 .*/
-.eslintcache
 
 # ember-try
 /.node_modules.ember-try/
+<<<<<<< HEAD
 /npm-shrinkwrap.json.ember-try
 /package.json.ember-try
 
@@ -27,3 +21,5 @@
 /config/deprecation-workflow.js
 /package-lock.json.ember-try
 /yarn.lock.ember-try
+=======
+>>>>>>> adead07a (v4.11.0...v5.4.1)
