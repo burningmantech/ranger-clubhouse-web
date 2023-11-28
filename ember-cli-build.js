@@ -27,7 +27,7 @@ module.exports = function (defaults) {
 
     '@embroider/macros': {
       setConfig: {
-        '@ember-data/store': {
+        'ember-data/store': {
           polyfillUUID: true
         },
       },
