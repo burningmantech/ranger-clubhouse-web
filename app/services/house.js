@@ -8,6 +8,7 @@ import currentYear from 'clubhouse/utils/current-year';
 import {isChangeset} from 'validated-changeset';
 import {AbortError, InvalidError, NotFoundError, ServerError, TimeoutError} from '@ember-data/adapter/error'
 import dayjs from "dayjs";
+import {htmlSafe} from '@ember/template';
 
 export default class HouseService extends Service {
   @service router;
@@ -149,7 +150,7 @@ export default class HouseService extends Service {
       message = `A server error was encountered:<ul><li>${response}</li></ul>`;
     }
 
-    this.toast.error(message);
+    this.modal.info('An error occurred', htmlSafe(message));
   }
 
   /**
@@ -161,36 +162,26 @@ export default class HouseService extends Service {
    * @returns {Promise<*>}
    */
 
-  saveModel(model, successMessage, routeOrCallback = null) {
+  async saveModel(model, successMessage, routeOrCallback = null) {
     this.toast.clear();
 
     const isCallback = typeof (routeOrCallback) === 'function';
 
-    /*
-    if (!model.get('isDirty') && !model.get('isNew')) {
-      this.toast.success(successMessage);
-      if (isCallback) {
-        routeOrCallback(model);
-      } else if (routeOrCallback){
-        this.router.transitionTo(routeOrCallback);
-      }
-      return;
-    }*/
-
-    return model.save().then((result) => {
+    try {
+      const result = await model.save();
       this.toast.success(successMessage);
       if (isCallback) {
         routeOrCallback(model, result);
       } else if (routeOrCallback) {
         this.router.transitionTo(routeOrCallback);
       }
-    }).catch((response) => {
+    } catch (response) {
       if (isChangeset(model)) {
         this.handleErrorResponse(response, model);
       } else {
         this.handleErrorResponse(response);
       }
-    });
+    }
   }
 
 

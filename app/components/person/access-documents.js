@@ -97,7 +97,7 @@ export default class PersonAccessDocumentsComponent extends Component {
   get yearOptions() {
     const currentYear = this.house.currentYear();
     const years = [];
-    for (let year = currentYear - 5; year < currentYear + 5; year++) {
+    for (let year = currentYear - 5; year < currentYear + 10; year++) {
       years.push(year);
     }
 
