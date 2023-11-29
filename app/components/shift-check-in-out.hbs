@@ -1,3 +1,9 @@
+{{#if this.isReturningRanger}}
+  <UiNotice @title="Conversion to active status after shift end">
+    {{@person.callsign}} is {{@person.status}} status. They will be automatically converted to active status after
+    successfully working a regular shift that is not a training, nor Cheetah Cub shift.
+  </UiNotice>
+{{/if}}
 {{#if this.isReloadingTimesheets}}
     <LoadingIndicator @text="Reloading Timesheet Entries"/>
 {{else if @onDutyEntry}}
@@ -199,7 +205,7 @@
                 </UiNotice>
 
                 {{#if this.noTrainingRequiredPositions}}
-                    <UiNotice @title="Has No Training Required Positions" @icon="thumbs-up" @type="success">
+                    <UiNotice @title="Limited Positions Available" @icon="thumbs-up" @type="success">
                         <p>
                         While {{@person.callsign}} has not passed an In-Person Training session, they do have
                         positions which can be signed in to that do not require passing an In-Person Training.
