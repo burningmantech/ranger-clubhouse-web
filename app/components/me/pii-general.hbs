@@ -1,9 +1,9 @@
 <div class="mb-2">
-  {{#if @person.isRanger}}
+  {{#if (or @person.isRanger @person.isNonRanger)}}
     Your legal first and last name will be used for ticketing, mailings, Motor Vehicle Records (MVR) requests,
-    and anything else requiring government id.
+    and anything else a requiring government id.
   {{else}}
-    Your legal first and last name will be used for any items requiring government id.
+    Your legal first and last name will be used for any items requiring a government id.
   {{/if}}
 </div>
 <FormRow>
