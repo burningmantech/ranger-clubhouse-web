@@ -679,10 +679,15 @@ summary:hover {
   right: 15px;
   background-color: #007A00FF;
   color: #f0f0f0;
-  font-size: 16px;
+  font-size: 1rem;
   line-height: 48px;
   width: 48px;
   text-align: center;
+}
+
+.scroll-to-top-button:hover {
+  background-color: #02a802;
+  color: #ffffff;
 }
 
 .blink-box {
