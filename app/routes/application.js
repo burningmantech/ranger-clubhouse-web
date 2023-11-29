@@ -42,10 +42,10 @@ export default class ApplicationRoute extends ClubhouseRoute {
       this.send('collectTitleTokens', []);
     }
 
-    if (!ENV.logRoutes) {
+   /* if (!ENV.logRoutes) {
       // don't bother setting up recording route transitions if not enabled.
       return;
-    }
+    }*/
 
     if (transition?.to?.name === 'admin.action-log') {
       return;
@@ -72,6 +72,10 @@ export default class ApplicationRoute extends ClubhouseRoute {
         route_from: transition.from ? transition.from.name : 'unknown',
         pathname,
       };
+
+      if (!transition.from) {
+        data.referrer = document.referrer;
+      }
 
       analytics.append('data', JSON.stringify(data));
       if (this.session.isAuthenticated) {
