@@ -8,7 +8,7 @@ export default class ReportsCertificationsController extends ClubhouseRoute {
     setupController(controller, model) {
       controller.set('certifications', model.certification);
       controller.set('certificationsForm', {
-        credentialIds: []
+        certificationIds: []
       });
       controller.set('people', []);
       controller.set('isSubmitting', false);

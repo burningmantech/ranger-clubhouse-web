@@ -97,8 +97,7 @@
                  disabled={{eq this.filter "all"}} />
         </th>
         <th>Callsign</th>
-        <th>First Name</th>
-        <th>Last Name</th>
+        <th>Legal Name</th>
         <th>Email</th>
         <th>Delivery</th>
         <th>Note</th>
@@ -123,8 +122,7 @@
             {{/if}}
             <PersonLink @person={{rec.person}} @page="tickets-provisions"/>
           </td>
-          <td>{{rec.person.first_name}}</td>
-          <td>{{rec.person.last_name}}</td>
+          <td>{{rec.person.first_name}} {{rec.person.last_name}}</td>
           <td><MailTo @to={{rec.person.email}} /></td>
           <td>{{this.deliveryLabel rec}}</td>
           <td>

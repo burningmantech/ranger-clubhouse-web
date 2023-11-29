@@ -3,6 +3,7 @@ import {service} from '@ember/service';
 // eslint-disable-next-line ember/no-mixins
 import PersonMixin from 'clubhouse/mixins/models/person';
 import optionsToLabels from "clubhouse/utils/options-to-labels";
+import {isEmpty} from "lodash";
 
 export const GENDER_CIS_FEMALE = 'cis-female';
 export const GENDER_CIS_MALE = 'cis-male';
@@ -38,6 +39,7 @@ export default class PersonModel extends PersonMixin(Model) {
   @service ajax;
 
   @attr('string') first_name;
+  @attr('string') preferred_name;
   @attr('string') mi;
   @attr('string') last_name;
   @attr('string') email;
@@ -121,6 +123,10 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('boolean') sms_off_playa_verified;
   @attr('boolean') sms_on_playa_stopped;
   @attr('boolean') sms_off_playa_stopped;
+
+  get desired_first_name() {
+    return isEmpty(this.preferred_name) ? this.first_name : this.preferred_name;
+  }
 }
 
 

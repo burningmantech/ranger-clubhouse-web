@@ -31,7 +31,11 @@
         {{person.status}}
       </td>
       <td>
-        {{person.first_name}} {{person.last_name}}<br>
+        {{person.first_name}} {{person.last_name}}
+        {{#if person.preferred_name}}
+          (<i>{{person.preferred_name}}</i>)
+        {{/if}}
+        <br>
         <MailTo @to={{person.email}} />
       </td>
       <td>

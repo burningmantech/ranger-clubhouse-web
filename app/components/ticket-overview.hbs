@@ -12,7 +12,7 @@
       <TicketOverviewItem @icon="ticket" @title="{{this.ticket.typeLabel}} Claimed" @type="success">
         {{#if (or this.usingStaffCredential this.usingWillCall)}}
           Pick up at {{if this.usingStaffCredential "Staff Credentialing" "Will Call"}} &mdash;
-          Held under your name "{{@person.first_name}} {{@person.last_name}}"
+          Held under your legal name "{{@person.first_name}} {{@person.last_name}}"
         {{else if this.ticket.isDeliveryNone}}
           <b class="text-danger">
             You did not indicate if you want the ticket mailed or if you will pick it up at Will Call.

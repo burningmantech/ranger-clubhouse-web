@@ -1,6 +1,6 @@
 <div class="homepage-title">Clubhouse Auditor Checklist</div>
 <p>
-  Hello Auditor {{@person.first_name}}! Your Clubhouse handle is {{@person.callsign}}.
+  Hello Auditor {{or @person.desired_first_name @person.first_name}}. Your Clubhouse handle is {{@person.callsign}}.
 </p>
 <p>
   <b>Questions?</b> Contact the Volunteer Coordinators at <VcEmail />
@@ -47,9 +47,12 @@
       </div>
     </div>
     {{#each this.steps as |step|}}
-      <DashboardStep @step={{step}} @isActive={{step.isActive}} @isNotUser={{this.isNotUser}}
+      <DashboardStep @step={{step}}
+                     @isActive={{step.isActive}}
+                     @isNotUser={{this.isNotUser}}
                      @showBehaviorAgreementAction={{@showBehaviorAgreementAction}}
-                     @person={{@person}} @milestones={{@milestones}} />
+                     @person={{@person}}
+                     @milestones={{@milestones}} />
     {{/each}}
   </DashboardGroup>
   <DashboardLinks @isPNV={{true}} />
