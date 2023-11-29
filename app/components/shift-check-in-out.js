@@ -4,7 +4,7 @@ import {action} from '@ember/object';
 import {service} from '@ember/service';
 import {DIRT, DIRT_SHINY_PENNY, TRAINING, BURN_PERIMETER, NVO_RANGER, DPW_RANGER} from 'clubhouse/constants/positions';
 import {cached, tracked} from '@glimmer/tracking';
-import {NON_RANGER} from 'clubhouse/constants/person_status';
+import {INACTIVE, INACTIVE_EXTENSION, NON_RANGER, RETIRED} from 'clubhouse/constants/person_status';
 import {ADMIN, CAN_FORCE_SHIFT, TIMECARD_YEAR_ROUND} from 'clubhouse/constants/roles';
 import {TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
 import {TYPE_TRAINING} from "clubhouse/models/position";
@@ -128,6 +128,11 @@ export default class ShiftCheckInOutComponent extends Component {
       _.pull(signins, position);
       signins.unshift(position);
     }
+  }
+
+  get isReturningRanger() {
+    const { status } = this.args.person;
+    return (status === INACTIVE || status === INACTIVE_EXTENSION || status === RETIRED);
   }
 
   /**
@@ -326,6 +331,11 @@ export default class ShiftCheckInOutComponent extends Component {
         default:
           this.toast.error(`Unknown signoff response [${result.status}].`);
           break;
+      }
+
+      if (result.now_active_status) {
+        await this.args.person.reload();
+        this.modal.info('Returned To Active Status', `${callsign} has completed a non-training shift, and has been converted back to active status. Welcome them back to the department.`);
       }
     } catch (response) {
       this.house.handleErrorResponse(response);
