@@ -15,7 +15,7 @@
               @onBack={{fn this.navigateStep f.model}}
               as |w|>
       <w.step @title="General Information">
-        <Me::PiiGeneral @f={{f}} @pronounOptions={{this.pronounOptions}} />
+        <Me::PiiGeneral @f={{f}} @pronounOptions={{this.pronounOptions}} @person={{this.person}} />
       </w.step>
       <w.step @title="Contact Information">
         <Me::PiiContactInfo @f={{f}} />
@@ -59,7 +59,7 @@
     <UiSection>
       <:title>General Information</:title>
       <:body>
-        <Me::PiiGeneral @f={{f}} @pronounOptions={{this.pronounOptions}} />
+        <Me::PiiGeneral @f={{f}} @pronounOptions={{this.pronounOptions}} @person={{this.person}} />
         <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
       </:body>
     </UiSection>

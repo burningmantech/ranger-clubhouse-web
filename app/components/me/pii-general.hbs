@@ -1,17 +1,22 @@
 <div class="mb-2">
-  Your legal first and last name will be used for ticketing, mailings, and anything else requiring government id.
+  {{#if @person.isRanger}}
+    Your legal first and last name will be used for ticketing, mailings, Motor Vehicle Records (MVR) requests,
+    and anything else requiring government id.
+  {{else}}
+    Your legal first and last name will be used for any items requiring government id.
+  {{/if}}
 </div>
 <FormRow>
-   <@f.text @name="first_name"
-            @label="Legal First Name"
-            @maxlength={{25}}/>
+  <@f.text @name="first_name"
+  @label="Legal First Name"
+  @maxlength={{25}}/>
   <@f.text @name="mi"
-           @label="Middle Initial"
-           @maxlength={{10}}
+  @label="Middle Initial"
+  @maxlength={{10}}
   />
   <@f.text @name="last_name"
-           @label="Legal Last Name"
-           @maxlength={{25}}/>
+  @label="Legal Last Name"
+  @maxlength={{25}}/>
 </FormRow>
 <div class="mb-2">
   The preferred first name is used for email correspondences, and most Clubhouse reports.
@@ -24,28 +29,28 @@
 </FormRow>
 <FormRow>
   <@f.select @name="gender_identity"
-             @label="Gender (optional)"
-             @options={{this.genderIdentityOptions}}
+  @label="Gender (optional)"
+  @options={{this.genderIdentityOptions}}
   />
   {{#if (eq @f.model.gender_identity "custom")}}
     <@f.text @name="gender_custom"
-             @label="Tell us your gender"
-             @size={{25}}
-             @maxlength={{25}}
-             @showCharCount={{true}}
+    @label="Tell us your gender"
+    @size={{25}}
+    @maxlength={{25}}
+    @showCharCount={{true}}
     />
   {{/if}}
 </FormRow>
 <FormRow>
   <@f.select @name="pronouns"
-             @label="Pronouns (optional)"
-             @options={{@pronounOptions}}/>
+  @label="Pronouns (optional)"
+  @options={{@pronounOptions}}/>
   {{#if (eq @f.model.pronouns "custom")}}
     <@f.text @name="pronouns_custom"
-             @label="Tell us your pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
-             @size={{30}}
-             @maxlength={{30}}
-             @showCharCount={{true}}
+    @label="Tell us your pronouns (e.g, ze/zim/zir, she/them/theirs, etc.)"
+    @size={{30}}
+    @maxlength={{30}}
+    @showCharCount={{true}}
     />
   {{/if}}
 </FormRow>
