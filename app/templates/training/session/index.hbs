@@ -423,7 +423,7 @@
               {{#each group.people as |person|}}
                 <tr>
                   <td><a href {{on "click" (fn this.addPersonAction person)}}>{{person.callsign}}</a></td>
-                  <td>{{person.first_name}} {{person.last_name}}</td>
+                  <td>{{or person.preferred_name person.first_name}} {{person.last_name}}</td>
                   <td>{{person.status}}</td>
                 </tr>
               {{/each}}

@@ -10,6 +10,7 @@ const CSV_COLUMNS = [
   {title: 'Email', key: 'email'},
   {title: 'First Name', key: 'first_name'},
   {title: 'Last Name', key: 'last_name'},
+  {title: 'Preferred Name', key: 'preferred_name'},
   {title: 'Type', key: 'type'},
   {title: 'RAD', key: 'rad_id'},
   {title: 'OT Completed?', key: 'ot_completed', yesno: true},

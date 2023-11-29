@@ -1,5 +1,5 @@
 <div class="mb-2">
-  Your legal first and last name will be used for ticketing and other mailing purposes.
+  Your legal first and last name will be used for ticketing, mailings, and anything else requiring government id.
 </div>
 <FormRow>
    <@f.text @name="first_name"
@@ -12,6 +12,15 @@
   <@f.text @name="last_name"
            @label="Legal Last Name"
            @maxlength={{25}}/>
+</FormRow>
+<div class="mb-2">
+  The preferred first name is used for email correspondences, and most Clubhouse reports.
+</div>
+<FormRow>
+  <@f.text @name="preferred_name"
+  @label="Preferred First Name (optional)"
+  @maxlength={{25}}
+  />
 </FormRow>
 <FormRow>
   <@f.select @name="gender_identity"

@@ -58,7 +58,7 @@
         <PersonLink @person={{this.person}} />
         <span class="d-inline-block">
           &lt;{{this.person.status}}{{if this.person.vintage "/vintage"~}}
-          , {{this.person.first_name}} {{this.person.last_name}}&gt;
+          , {{or this.person.preferred_name this.person.first_name}} {{this.person.last_name}}&gt;
         </span>
         <div class="person-manage-pronouns">
           {{pronouns-format this.person}}
