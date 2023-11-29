@@ -26,7 +26,7 @@ export default class MePersonalInfoEditController extends ClubhouseController {
       return;
     }
 
-    this._savePerson(model, true);
+    this._savePerson(model, false);
   }
 
   _savePerson(model, backToHome = false, cb = null) {
@@ -43,13 +43,6 @@ export default class MePersonalInfoEditController extends ClubhouseController {
         }
         cb?.();
       })
-  }
-
-
-  @action
-  onCancel() {
-    this.toast.warning('Editing your personal information was cancelled. No changes were saved.');
-    this.router.transitionTo('me.homepage');
   }
 
   @action
@@ -71,17 +64,21 @@ export default class MePersonalInfoEditController extends ClubhouseController {
   }
 
   @action
-  navigateStep(model, cb) {
+  async navigateStep(model, cb) {
     if (!model.isDirty) {
       cb();
       return;
     }
 
-    model.validate().then(() => {
-      if (!model.isInvalid) {
-        model.save().then(() => this._savePerson(model, false, cb));
+    try {
+      await model.validate();
+      if (model.isInvalid) {
+        return;
       }
-    }).catch((response) => this.house.handleErrorResponse(response));
+      this._savePerson(model, false, cb);
+    } catch (response) {
+      this.house.handleErrorResponse(response, model)
+    }
   }
 
 
@@ -113,12 +110,12 @@ export default class MePersonalInfoEditController extends ClubhouseController {
    * @param {string} milestone
    * @private
    */
-  _updateMilestone(milestone) {
-    this.ajax.request(`person-event/${this.session.userId}/progress`, {
-      method: 'POST',
-      data: {milestone: `pii-${milestone}`}
-    })
-      .catch((response) => this.house.handleErrorResponse(response));
-  }
 
+  async _updateMilestone(milestone) {
+    try {
+      await this.ajax.post(`person-event/${this.session.userId}/progress`, {data: {milestone: `pii-${milestone}`}});
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
+  }
 }

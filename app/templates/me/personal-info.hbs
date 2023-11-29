@@ -46,8 +46,7 @@
         <p>
           You started a review of your Personal Information but did not complete all the steps. Click the 'Start Review'
           button below, make sure you go through all the steps, and be sure to click the 'Save &amp; Finish Review'
-          button on the
-          last step.
+          button on the last step.
         </p>
         <UiButton @onClick={{this.startReview}} @type="danger">Start Review</UiButton>
       </UiNotice>
@@ -61,18 +60,21 @@
       <:title>General Information</:title>
       <:body>
         <Me::PiiGeneral @f={{f}} @pronounOptions={{this.pronounOptions}} />
+        <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
       </:body>
     </UiSection>
     <UiSection>
       <:title>Contact Information</:title>
       <:body>
         <Me::PiiContactInfo @f={{f}} />
+        <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
       </:body>
     </UiSection>
     <UiSection>
       <:title>Camp Name &amp; Location</:title>
       <:body>
         <Me::PiiCampInfo @f={{f}} />
+        <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
       </:body>
     </UiSection>
     {{#unless this.person.isAuditor}}
@@ -80,12 +82,14 @@
         <:title>Languages</:title>
         <:body>
           <Me::PiiLanguages @f={{f}} />
+          <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
         </:body>
       </UiSection>
       <UiSection>
         <:title>Callsign Pronunciation</:title>
         <:body>
           <Me::PiiPronounciation @f={{f}} />
+          <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
         </:body>
       </UiSection>
       <UiSection>
@@ -94,6 +98,7 @@
           <Me::PiiClothing @f={{f}}
                            @tshirtOptions={{this.tshirtOptions}}
                            @longSleeveOptions={{this.longSleeveOptions}} />
+          <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
         </:body>
       </UiSection>
     {{/unless}}
@@ -102,16 +107,12 @@
       <:title>Home Address</:title>
       <:body>
         <PersonAddressEdit @f={{f}} />
+        <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
       </:body>
     </UiSection>
-
-    <f.submit @label="Update" @disabled={{this.person.isSaving}} />
-    <UiCancelButton @disabled={{this.person.isSaving}} @onClick={{this.onCancel}} />
-    {{#if this.isSubmitting}}
-      <LoadingIndicator/>
-    {{/if}}
   {{/if}}
 </ChForm>
+<BackToHome/>
 
 {{#if this.showUpdateMailingListsDialog}}
   <ModalDialog @title="Update Ranger Mailing Lists Subscriptions?" as |Modal|>
