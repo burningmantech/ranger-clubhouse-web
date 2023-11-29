@@ -47,6 +47,37 @@ export default class ApplicationController extends ClubhouseController {
   }
 
   @action
+  scrollToTopAction() {
+    this.house.scrollToTop();
+  }
+
+  @action
+  intersectionCallback(entries) {
+    if (!this.scrollToTopButton) {
+      return;
+    }
+
+    entries.forEach(entry => this.scrollToTopButton.style.display = entry.isIntersecting ? 'block' : 'none');
+  }
+
+  @action
+  scrollToTopButtonInserted(element) {
+    this.scrollToTopButton = element;
+  }
+
+  @action
+  bodyRowInserted(element) {
+    this.bodyRowObserver = new IntersectionObserver(this.intersectionCallback,
+      {
+        root: null,
+        rootMargin: '0px 0px -100%',
+        threshold: 0,
+      });
+    this.bodyRowObserver.observe(element);
+  }
+
+
+  @action
   closeBrowserNotSupported() {
     this.showBrowserNotSupported = false;
   }

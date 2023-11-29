@@ -22,7 +22,7 @@
   </header>
 {{/unless}}
 
-<div id="body-row">{{outlet}}</div>
+<div id="body-row" {{did-insert this.bodyRowInserted}}>{{outlet}}</div>
 
 {{#unless this.session.isOffline}}
   <footer class="d-print-none">
@@ -34,6 +34,11 @@
   </footer>
 {{/unless}}
 
+<a id="scroll-to-top-button" href class="scroll-to-top-button"
+  {{did-insert this.scrollToTopButtonInserted}}
+  {{action this.scrollToTopAction}}>
+  <i class="fa-solid fa-arrow-up"></i>
+</a>
 {{#if this.showBrowserNotSupported}}
   <ModalDialog @title="Browser Too Old" as |Modal|>
     <Modal.body>

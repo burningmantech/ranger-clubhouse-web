@@ -672,6 +672,24 @@ summary:hover {
   background-color: #dee2e6 !important;
 }
 
+.scroll-to-top-button {
+  display: none;
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  background-color: #007A00FF;
+  color: #f0f0f0;
+  font-size: 1rem;
+  line-height: 48px;
+  width: 48px;
+  text-align: center;
+}
+
+.scroll-to-top-button:hover {
+  background-color: #02a802;
+  color: #ffffff;
+}
+
 .blink-box {
   animation: blink-box-keyframes 1s linear 2;
 }
