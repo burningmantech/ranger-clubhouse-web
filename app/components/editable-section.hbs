@@ -1,0 +1,39 @@
+<UiSection id={{if @sectionId (concat "section-" @sectionId)}}>
+  <:title>
+    <div class="d-flex flex-row justify-content-between">
+      <div>
+        {{yield to="title"}}
+      </div>
+      <div>
+        {{#if this.isEditing}}
+          <UiButton @onClick={{this.cancelEdit}} @type="secondary" @size="sm">
+            Cancel
+          </UiButton>
+        {{else}}
+          <UiButton @onClick={{this.editAction}} @type="secondary" @size="sm">
+            {{fa-icon "edit" right=1}} Edit
+          </UiButton>
+        {{/if}}
+      </div>
+    </div>
+  </:title>
+  <:body>
+    {{#if this.isEditing}}
+      <ChForm @formId={{@formId}}
+              @formFor={{@formFor}}
+              @autocomplete="on"
+              @validator={{@validator}}
+              @onSubmit={{this.onSubmit}} as |f|>
+        {{yield f to="edit"}}
+        <div class="mt-4">
+          <f.submit/>
+          <UiButton @onClick={{this.cancelEdit}} @type="secondary">
+            Cancel
+          </UiButton>
+        </div>
+      </ChForm>
+    {{else}}
+      {{yield to="view"}}
+    {{/if}}
+  </:body>
+</UiSection>

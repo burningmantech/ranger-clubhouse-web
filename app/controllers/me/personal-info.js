@@ -3,6 +3,7 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import PersonInfoValidations from 'clubhouse/validations/person-info';
 import {pronounOptions} from 'clubhouse/constants/pronouns';
+import {GenderIdentityOptions} from 'clubhouse/models/person';
 
 export default class MePersonalInfoEditController extends ClubhouseController {
   @tracked showUpdateMailingListsDialog = false;
@@ -19,30 +20,35 @@ export default class MePersonalInfoEditController extends ClubhouseController {
 
   personInfoValidations = PersonInfoValidations;
   pronounOptions = pronounOptions;
+  genderIdentityOptions = GenderIdentityOptions;
 
   @action
-  onSubmit(model, isValid) {
+  async onSubmit(model, isValid) {
     if (!isValid) {
-      return;
+      return false;
     }
 
-    this._savePerson(model, false);
+    return this._savePerson(model);
   }
 
-  _savePerson(model, backToHome = false, cb = null) {
+  async _savePerson(model, callBack = null) {
     const emailChanged = model.email !== this.person.email;
     const oldEmail = this.person.email;
-    this.house.saveModel(model, 'Your personal information was successfully updated.',
-      () => {
-        if (emailChanged && this.person.isRanger) {
-          this.message = '';
-          this.showUpdateMailingListsDialog = true;
-          this.oldEmail = oldEmail;
-        } else if (backToHome) {
-          this.router.transitionTo('me.homepage');
-        }
-        cb?.();
-      })
+
+    try {
+      await model.save();
+      this.toast.success('Your personal information was successfully updated.');
+      if (emailChanged && this.person.isRanger) {
+        this.message = '';
+        this.showUpdateMailingListsDialog = true;
+        this.oldEmail = oldEmail;
+      }
+      callBack?.();
+      return true;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+      return false;
+    }
   }
 
   @action
@@ -75,7 +81,7 @@ export default class MePersonalInfoEditController extends ClubhouseController {
       if (model.isInvalid) {
         return;
       }
-      this._savePerson(model, false, cb);
+      await this._savePerson(model,  cb);
     } catch (response) {
       this.house.handleErrorResponse(response, model)
     }
@@ -95,7 +101,7 @@ export default class MePersonalInfoEditController extends ClubhouseController {
   @action
   finishReview(model) {
     model.has_reviewed_pi = true;
-    this._savePerson(model, false, () => {
+    this._savePerson(model, () => {
       this.toast.success('You have successfully completed the Personal Info review. Thank you!');
       this.isReviewing = false;
       this._updateMilestone('finished');

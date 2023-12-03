@@ -1,0 +1,23 @@
+<EditableSection
+  @formId="person"
+  @sectionId="address"
+  @formFor={{@person}}
+  @validator={{@personInfoValidations}}
+  @onSubmit={{@onSubmit}}>
+  <:title>Home Address</:title>
+  <:view>
+    <p>
+      Clubhouse and Burner Profile accounts are NOT synced. Entering an address here will not update the
+      Burner Profile, and vice versa.
+    </p>
+    {{@person.street1}} {{@person.apt}}<br>
+    {{#if @person.street2}}
+      {{@person.street2}}<br>
+    {{/if}}
+    {{@person.city}}, {{@person.state}} {{@person.zip}}
+    <span class="ms-1">{{@person.country}}</span>
+  </:view>
+  <:edit as |f|>
+    <PersonAddressEdit @f={{f}} />
+  </:edit>
+</EditableSection>

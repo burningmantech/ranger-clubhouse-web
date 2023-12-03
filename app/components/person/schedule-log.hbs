@@ -7,8 +7,7 @@
     <tr>
       <th>&nbsp;</th>
       <th>Start</th>
-      <th>Position</th>
-      <th>Description</th>
+      <th>Position / Description</th>
       <th>Added On/By</th>
       <th>Removed On/By</th>
     </tr>
@@ -34,9 +33,11 @@
               <br><b class="text-danger">No longer signed up.</b>
             {{/if}}
           </td>
-          <td>{{entry.position_title}}</td>
-          <td>{{entry.slot_description}}</td>
-           <td>
+          <td>
+            {{entry.position_title}}<br>
+            {{entry.slot_description}}
+          </td>
+          <td>
             {{#each entry.added as |event|}}
               {{shift-format event.date}}<br>
               {{#if (eq this.personId event.person.id)}}

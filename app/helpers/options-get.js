@@ -1,17 +1,18 @@
-import { helper } from '@ember/component/helper';
-import { typeOf } from '@ember/utils'
+import {helper} from '@ember/component/helper';
+import {typeOf} from '@ember/utils'
 
-export default helper(function optionsGet([ options, lookupValue ]/*, hash*/) {
+export default helper(function optionsGet([options, lookupValue]/*, hash*/) {
   let foundLabel;
   options.some((opt) => {
     const type = typeOf(opt);
     let label, value;
 
-    if (type == 'object' && ("id" in opt)) {
+    if (type === 'object' && ("id" in opt)) {
+      // { id: value, title: label }
       label = opt.title
       value = opt.id
-    // Simple [ 'label', value ]
-    } else if (type == 'array') {
+    } else if (type === 'array') {
+      // Simple [ 'label', value ]
       label = opt[0];
       value = opt[1];
     } else {
