@@ -1,0 +1,41 @@
+<EditableSection
+  @formId="person"
+  @sectionId="contact"
+  @formFor={{@person}}
+  @validator={{@personInfoValidations}}
+  @onSubmit={{@onSubmit}}>
+  <:title>Contact Information</:title>
+  <:view>
+    <p>
+      The email address is used to log into the Clubhouse and IMS. Ranger teams and leads may also use the email
+      address to send important messages to regarding scheduling, operations, and timesheet corrections.
+    </p>
+    <div class="grid-table">
+      <div class="grid-table-label">
+        Email
+      </div>
+      <div>
+        {{@person.email}}
+      </div>
+      <div class="grid-table-label">
+        Phone
+      </div>
+      <div>
+        {{@person.home_phone}}
+      </div>
+      <div class="grid-table-label">
+        Alt. Phone
+      </div>
+      <div>
+        {{#if @person.alt_phone}}
+          {{@person.alt_phone}}
+        {{else}}
+          <i>None stated.</i>
+        {{/if}}
+      </div>
+    </div>
+  </:view>
+  <:edit as |f|>
+    <Me::PiiContactInfoForm @f={{f}} />
+  </:edit>
+</EditableSection>

@@ -1,0 +1,19 @@
+<EditableSection
+  @formId="person"
+  @sectionId="callsign"
+  @formFor={{@person}}
+  @validator={{@personInfoValidations}}
+  @onSubmit={{@onSubmit}}>
+
+  <:title>Callsign Pronunciation (optional)</:title>
+  <:view>
+    {{#if @person.callsign_pronounce}}
+      {{@person.callsign_pronounce}}
+    {{else}}
+      <i>No callsign pronunciation given</i>
+    {{/if}}
+  </:view>
+  <:edit as |f|>
+    <Me::PiiPronunciationForm @f={{f}} />
+  </:edit>
+</EditableSection>

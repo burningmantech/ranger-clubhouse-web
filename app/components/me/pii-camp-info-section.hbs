@@ -1,0 +1,18 @@
+<EditableSection
+  @formId="person"
+  @sectionId="camp"
+  @formFor={{@person}}
+  @validator={{@personInfoValidations}}
+  @onSubmit={{@onSubmit}}>
+  <:title>Camp Name &amp; Location</:title>
+  <:view>
+    {{#if @person.camp_location}}
+      {{@person.camp_location}}
+    {{else}}
+      <i>No camp location stated.</i>
+    {{/if}}
+  </:view>
+  <:edit as |f|>
+    <Me::PiiCampInfoForm @f={{f}} />
+  </:edit>
+</EditableSection>

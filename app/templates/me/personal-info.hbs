@@ -1,12 +1,66 @@
 <h1>Personal Information For <span class="d-inline-block">{{this.person.callsign}}</span></h1>
 <BackToHome/>
 
-<ChForm @formId="person"
-        @formFor={{this.person}}
-        @autocomplete="on"
-        @validator={{this.personInfoValidations}}
-        @onSubmit={{this.onSubmit}} as |f|>
-  {{#if this.isReviewing}}
+{{#if (and this.startedReview (not this.finishedReview))}}
+  <UiNotice @type="danger" @icon="hand" @title="Personal Information review not finished!">
+    <p>
+      You started a review of your Personal Information but did not complete all the steps. Click the 'Start Review'
+      button below, make sure you go through all the steps, and be sure to click the 'Save &amp; Finish Review'
+      button on the last step.
+    </p>
+    <UiButton @onClick={{this.startReview}} @type="danger">Start Review</UiButton>
+  </UiNotice>
+{{else if this.completedReview}}
+  <UiNotice @type="success" @icon="check" @title="Personal Information Review Completed!">
+    Thank you for reviewing your Personal Information.
+  </UiNotice>
+{{/if}}
+
+<div class="max-width-800">
+  <Me::PiiGeneralSection @person={{this.person}}
+                         @personInfoValidations={{this.personInfoValidations}}
+                         @onSubmit={{this.onSubmit}}
+                         @pronounOptions={{this.pronounOptions}}
+                         @genderIdentityOptions={{this.genderIdentityOptions}}
+  />
+  <Me::PiiContactInfoSection @person={{this.person}}
+                             @personInfoValidations={{this.personInfoValidations}}
+                             @onSubmit={{this.onSubmit}}
+  />
+  <Me::PiiCampInfoSection @person={{this.person}}
+                          @personInfoValidations={{this.personInfoValidations}}
+                          @onSubmit={{this.onSubmit}}
+  />
+
+  {{#unless this.person.isAuditor}}
+    <Me::PiiLanguagesSection @person={{this.person}}
+                             @personInfoValidations={{this.personInfoValidations}}
+                             @onSubmit={{this.onSubmit}}
+    />
+    <Me::PiiPronunciationSection @person={{this.person}}
+                                 @personInfoValidations={{this.personInfoValidations}}
+                                 @onSubmit={{this.onSubmit}}
+    />
+    <Me::PiiClothingSection @person={{this.person}}
+                            @personInfoValidations={{this.personInfoValidations}}
+                            @onSubmit={{this.onSubmit}}
+                            @tshirtOptions={{this.tshirtOptions}}
+                            @longSleeveOptions={{this.longSleeveOptions}}
+    />
+
+    <Me::PiiAddressSection @person={{this.person}}
+                           @personInfoValidations={{this.personInfoValidations}}
+                           @onSubmit={{this.onSubmit}}
+    />
+  {{/unless}}
+</div>
+
+{{#if this.isReviewing}}
+  <ChForm @formId="person"
+          @formFor={{this.person}}
+          @autocomplete="on"
+          @validator={{this.personInfoValidations}}
+          @onSubmit={{this.onSubmit}} as |f|>
     <UiWizard @onCancel={{this.cancelReview}}
               @onFinish={{fn this.finishReview f.model}}
               @finishLabel="Save & Finish Review"
@@ -15,103 +69,33 @@
               @onBack={{fn this.navigateStep f.model}}
               as |w|>
       <w.step @title="General Information">
-        <Me::PiiGeneral @f={{f}} @pronounOptions={{this.pronounOptions}} @person={{this.person}} />
+        <Me::PiiGeneralForm @f={{f}} @pronounOptions={{this.pronounOptions}} @person={{this.person}} />
       </w.step>
       <w.step @title="Contact Information">
-        <Me::PiiContactInfo @f={{f}} />
+        <Me::PiiContactInfoForm @f={{f}} />
       </w.step>
       <w.step @title="Camp Name & Location">
-        <Me::PiiCampInfo @f={{f}} />
+        <Me::PiiCampInfoForm @f={{f}} />
       </w.step>
       {{#unless this.person.isAuditor}}
         <w.step @title="Languages">
-          <Me::PiiLanguages @f={{f}} />
+          <Me::PiiLanguagesForm @f={{f}} />
         </w.step>
         <w.step @title="Callsign Pronunciation">
-          <Me::PiiPronounciation @f={{f}} />
+          <Me::PiiPronunciationForm @f={{f}} />
         </w.step>
         <w.step @title="Ranger Clothing">
-          <Me::PiiClothing @f={{f}}
-                           @tshirtOptions={{this.tshirtOptions}}
-                           @longSleeveOptions={{this.longSleeveOptions}} />
+          <Me::PiiClothingForm @f={{f}}
+                               @tshirtOptions={{this.tshirtOptions}}
+                               @longSleeveOptions={{this.longSleeveOptions}} />
         </w.step>
       {{/unless}}
       <w.step @title="Home Address" @isLast={{true}}>
         <PersonAddressEdit @f={{f}} />
       </w.step>
     </UiWizard>
-  {{else}}
-    {{#if (and this.startedReview (not this.finishedReview))}}
-      <UiNotice @type="danger" @icon="hand" @title="Personal Information review not finished!">
-        <p>
-          You started a review of your Personal Information but did not complete all the steps. Click the 'Start Review'
-          button below, make sure you go through all the steps, and be sure to click the 'Save &amp; Finish Review'
-          button on the last step.
-        </p>
-        <UiButton @onClick={{this.startReview}} @type="danger">Start Review</UiButton>
-      </UiNotice>
-    {{else if this.completedReview}}
-      <UiNotice @type="success" @icon="check" @title="Personal Information Review Completed!">
-        Thank you for reviewing your Personal Information.
-      </UiNotice>
-    {{/if}}
-
-    <UiSection>
-      <:title>General Information</:title>
-      <:body>
-        <Me::PiiGeneral @f={{f}} @pronounOptions={{this.pronounOptions}} @person={{this.person}} />
-        <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
-      </:body>
-    </UiSection>
-    <UiSection>
-      <:title>Contact Information</:title>
-      <:body>
-        <Me::PiiContactInfo @f={{f}} />
-        <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
-      </:body>
-    </UiSection>
-    <UiSection>
-      <:title>Camp Name &amp; Location</:title>
-      <:body>
-        <Me::PiiCampInfo @f={{f}} />
-        <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
-      </:body>
-    </UiSection>
-    {{#unless this.person.isAuditor}}
-      <UiSection>
-        <:title>Languages</:title>
-        <:body>
-          <Me::PiiLanguages @f={{f}} />
-          <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
-        </:body>
-      </UiSection>
-      <UiSection>
-        <:title>Callsign Pronunciation</:title>
-        <:body>
-          <Me::PiiPronounciation @f={{f}} />
-          <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
-        </:body>
-      </UiSection>
-      <UiSection>
-        <:title>Ranger Clothing</:title>
-        <:body>
-          <Me::PiiClothing @f={{f}}
-                           @tshirtOptions={{this.tshirtOptions}}
-                           @longSleeveOptions={{this.longSleeveOptions}} />
-          <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
-        </:body>
-      </UiSection>
-    {{/unless}}
-
-    <UiSection>
-      <:title>Home Address</:title>
-      <:body>
-        <PersonAddressEdit @f={{f}} />
-        <f.submit @label="Update" class="mt-2" @disabled={{this.person.isSaving}} />
-      </:body>
-    </UiSection>
-  {{/if}}
-</ChForm>
+  </ChForm>
+{{/if}}
 <BackToHome/>
 
 {{#if this.showUpdateMailingListsDialog}}
@@ -122,8 +106,8 @@
       </p>
       <p>
         The Ranger mailing lists (Announce, Allcom, etc.) <b class="text-danger">subscriptions have NOT been
-        updated.</b>
-        You can request the lists to be updated to your new address, or continue to use the old email address.
+        updated.</b> You can request the lists to be updated to your new address, or continue to use the old email
+        address.
       </p>
       <p>
         Use the area below to list any additional Ranger mailing lists that should be updated in addition
@@ -147,4 +131,9 @@
       </UiButton>
     </Modal.footer>
   </ModalDialog>
+{{/if}}
+{{#if this.person.isSaving}}
+  <LoadingDialog>
+    Saving information
+  </LoadingDialog>
 {{/if}}

@@ -1,0 +1,47 @@
+<EditableSection
+  @formId="person"
+  @sectionId="clothing"
+  @formFor={{@person}}
+  @validator={{@personInfoValidations}}
+  @onSubmit={{@onSubmit}}>
+  <:title>Ranger Clothing</:title>
+  <:view>
+    <div class="grid-table">
+      <div class="grid-table-label">
+        T-Shirt
+      </div>
+      <div>
+        {{#if @person.tshirt_swag_id}}
+          {{options-get @tshirtOptions @person.tshirt_swag_id}}
+        {{else}}
+          <i>Unknown</i>
+        {{/if}}
+      </div>
+      <div class="grid-table-label">
+        Backup T-Shirt
+      </div>
+      <div>
+        {{#if @person.tshirt_secondary_swag_id}}
+          {{options-get @tshirtOptions @person.tshirt_secondary_swag_id}}
+        {{else}}
+          <i>Unknown</i>
+        {{/if}}
+      </div>
+      <div class="grid-table-label">
+        Long Sleeve Shirt
+      </div>
+      <div>
+        {{#if @person.long_sleeve_swag_id}}
+          {{options-get @longSleeveOptions @person.long_sleeve_swag_id}}
+        {{else}}
+          <i>Unknown</i>
+        {{/if}}
+      </div>
+    </div>
+  </:view>
+  <:edit as |f|>
+    <Me::PiiClothingForm @f={{f}}
+                     @tshirtOptions={{@tshirtOptions}}
+                     @longSleeveOptions={{@longSleeveOptions}} />
+  </:edit>
+</EditableSection>

@@ -14,10 +14,18 @@ export default class PersonPersonalInfoController extends ClubhouseController {
   }
 
   @action
-  savePerson(model, isValid) {
+  async savePerson(model, isValid) {
     if (!isValid) {
-      return;
+      return false;
     }
-    this.house.saveModel(model, 'Personal information was successfully updated.');
+
+    try {
+      await model.save();
+      this.toast.success('Personal info was successfully updated.');
+      return true;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+      return false;
+    }
   }
 }

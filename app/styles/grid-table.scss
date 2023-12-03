@@ -4,11 +4,15 @@
   grid-template-columns: 120px 5fr;
 }
 
-.grid-table > div {
+.grid-table > :not(.grid-table-label) {
   padding: 5px;
+}
+
+.grid-table > .grid-table-label {
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
 .grid-table-label {
   font-weight: 600;
-  padding-right: 15px;
 }

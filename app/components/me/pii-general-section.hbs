@@ -1,0 +1,51 @@
+<EditableSection
+  @formId="person"
+  @sectionId="general"
+  @formFor={{@person}}
+  @validator={{@personInfoValidations}}
+  @onSubmit={{@onSubmit}}>
+  <:title>Name, Gender, and Pronouns</:title>
+  <:edit as |f|>
+    <Me::PiiGeneralForm @f={{f}} @pronounOptions={{@pronounOptions}} @person={{@person}} />
+  </:edit>
+  <:view>
+    <LegalNameInfo @fullDisclosure={{or @person.isRanger @person.isNonRanger}} />
+    <div class="grid-table">
+      <div class="grid-table-label">
+        Legal Name
+      </div>
+      <div>
+        {{@person.first_name}} {{@person.mi}} {{@person.last_name}}<br>
+      </div>
+    </div>
+    <PreferredNameInfo/>
+    <div class="grid-table">
+      <div class="grid-table-label">
+        Preferred Name
+      </div>
+      <div>
+        {{#if @person.preferred_name}}
+          {{@person.preferred_name}}
+        {{else}}
+          <i>None stated.</i>
+        {{/if}}
+      </div>
+      <div class="grid-table-label">Gender</div>
+      <div>
+        {{#if (eq @person.gender_identity "none")}}
+          <i>None stated</i>
+        {{else}}
+          {{@person.genderIdentityLabel}}
+        {{/if}}
+      </div>
+      <div class="grid-table-label">Pronouns</div>
+      <div>
+        {{#if @person.pronouns}}
+          {{pronouns-format @person noParens=true}}
+        {{else}}
+          <i>None stated.</i>
+        {{/if}}
+      </div>
+    </div>
+  </:view>
+</EditableSection>

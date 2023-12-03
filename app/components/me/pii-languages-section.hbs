@@ -1,0 +1,18 @@
+<EditableSection
+  @formId="person"
+  @sectionId="languages"
+  @formFor={{@person}}
+  @validator={{@personInfoValidations}}
+  @onSubmit={{@onSubmit}}>
+  <:title>Languages (optional)</:title>
+  <:view>
+    {{#if @person.languages}}
+      {{@person.languages}}
+    {{else}}
+      <i>No languages stated.</i>
+    {{/if}}
+  </:view>
+  <:edit as |f|>
+    <Me::PiiLanguagesForm @f={{f}} />
+  </:edit>
+</EditableSection>

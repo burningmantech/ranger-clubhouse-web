@@ -1,11 +1,4 @@
-<div class="mb-2">
-  {{#if (or @person.isRanger @person.isNonRanger)}}
-    Your legal first and last name will be used for ticketing, mailings, Motor Vehicle Records (MVR) requests,
-    and anything else requiring a government id.
-  {{else}}
-    Your legal first and last name will be used for any items requiring a government id.
-  {{/if}}
-</div>
+<LegalNameInfo @fullDisclosure={{or @person.isRanger @person.isNonRanger}} />
 <FormRow>
   <@f.text @name="first_name"
   @label="Legal First Name"
@@ -18,9 +11,7 @@
   @label="Legal Last Name"
   @maxlength={{25}}/>
 </FormRow>
-<div class="mb-2">
-  The preferred first name is used for email correspondences, and most Clubhouse reports.
-</div>
+<PreferredNameInfo/>
 <FormRow>
   <@f.text @name="preferred_name"
   @label="Preferred First Name (optional)"

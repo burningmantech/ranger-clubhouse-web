@@ -112,7 +112,7 @@ export default class PersonModel extends PersonMixin(Model) {
 
   @attr('string', {readOnly: true}) updated_at;
 
-  // a separate table the database and not
+  // a separate table in the database and not
   // filled in when retrieving the person
   // however updated thru here.
   @attr('string') languages;
@@ -126,6 +126,15 @@ export default class PersonModel extends PersonMixin(Model) {
 
   get desired_first_name() {
     return isEmpty(this.preferred_name) ? this.first_name : this.preferred_name;
+  }
+
+  get genderIdentityLabel() {
+    switch (this.gender_identity) {
+      case GENDER_CUSTOM:
+        return this.gender_custom;
+      default:
+        return GenderIdentityLabels[this.gender_identity] ?? this.gender_identity;
+    }
   }
 }
 
