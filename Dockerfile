@@ -4,7 +4,7 @@
 # Note we need a version of Node that is supported by ember-cli.
 # See: https://github.com/ember-cli/ember-cli/blob/master/docs/node-support.md
 #
-FROM node:18-alpine as development
+FROM node:20-alpine as development
 
 # Install Ember CLI
 RUN npm install --global ember-cli && \
