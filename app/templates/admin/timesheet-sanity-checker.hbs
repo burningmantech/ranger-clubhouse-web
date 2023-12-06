@@ -228,6 +228,43 @@
       </UiTable>
     </Accordion.body>
   </UiAccordion>
+
+  <UiAccordion as |Accordion|>
+    <Accordion.title>{{pluralize this.no_credits.length "entry"}} with no credits</Accordion.title>
+    <Accordion.body>
+      Entries with no credit values may indicate a misconfiguration with this year's positional credits.
+      Contact the Tech Team for help.
+      <UiTable>
+        <thead>
+        <tr>
+          <th>Callsign</th>
+          <th>Position</th>
+          <th>On Duty</th>
+          <th>Off Duty</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.no_credits as |entry|}}
+          <tr>
+            <td>
+              <PersonLink @person={{entry.person}} @page="timesheet" @year={{this.year}} />
+            </td>
+            <td>{{entry.position.title}}</td>
+            <td>{{shift-format entry.on_duty}}</td>
+            <td>{{shift-format entry.off_duty}}</td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="4" class="text-success">
+              Congratulations! All timesheet entries appear to have credit values.
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </UiTable>
+    </Accordion.body>
+  </UiAccordion>
+
   <UiAccordion as |Accordion|>
     <Accordion.title>
       {{pluralize this.duplicate_alphas.length "person"}} with more than one Alpha timesheet entry
