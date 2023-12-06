@@ -3,10 +3,18 @@ import {action} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {tracked} from '@glimmer/tracking';
 
+import {ALL_EAT_PASS,  EVENT_EAT_PASS,WET_SPOT, EVENT_RADIO} from 'clubhouse/models/provision';
+
+const HAS_YEARS = [
+  ALL_EAT_PASS,  EVENT_EAT_PASS,WET_SPOT, EVENT_RADIO
+];
+
 export default class AdminBulkUploadController extends ClubhouseController {
   @tracked uploadAction = null;
   @tracked actionLabel = null;
   @tracked uploadHelp = null;
+  @tracked defaultSourceYear;
+  @tracked defaultExpiryYear;
 
   @tracked commit = false;
   @tracked records = '';
@@ -77,5 +85,9 @@ export default class AdminBulkUploadController extends ClubhouseController {
   @action
   commitAction() {
     this._submitCallsigns(true);
+  }
+
+  get usesDefaultYears() {
+    return (this.uploadAction === 'tickets' || HAS_YEARS.includes(this.uploadAction));
   }
 }

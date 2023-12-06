@@ -30,7 +30,9 @@ export default class AdminBulkUploadRoute extends ClubhouseRoute {
       resultsCommitted: false,
       resultSuccesses: [],
       resultFailures: [],
-      resultWarnings: []
+      resultWarnings: [],
+      defaultSourceYear: model.default_source_year,
+      defaultExpiryYear: model.default_expiry_year,
     });
   }
 }

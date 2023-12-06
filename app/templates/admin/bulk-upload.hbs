@@ -125,6 +125,12 @@
           <i>Line format:</i><br>
           {{nl2br this.uploadHelp}}
         </p>
+        {{#if this.usesDefaultYears}}
+          <p class="text-danger">
+            Source year defaults to {{this.defaultSourceYear}}, and expiry year defaults to
+            {{this.defaultExpiryYear}}
+          </p>
+        {{/if}}
       {{/if}}
       <Textarea class="form-control" @value={{this.records}} rows={{10}} cols={{80}} />
     </div>
