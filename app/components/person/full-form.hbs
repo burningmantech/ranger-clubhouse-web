@@ -208,7 +208,7 @@ Everyone else will see person/simple-form
                 @submitClass="btn-responsive"/>
     </div>
     <div class="col-sm-12 col-xl-auto mb-4">
-      {{#if (has-role "admin")}}
+      {{#if (has-role "admin" "vc")}}
         {{#if @person.message}}
           <UiButton @type="secondary" @class="btn-responsive" @onClick={{@editNote}}>
             Update Note
