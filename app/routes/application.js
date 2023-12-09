@@ -142,6 +142,10 @@ export default class ApplicationRoute extends ClubhouseRoute {
 
       this.authSetup = true;
     } catch (response) {
+      if (response.status === 401) {
+        this.session.invalidate();
+        return;
+      }
       // Can't retrieve the configuration. Consider the application offline for the moment.
       this.router.transitionTo('offline');
     }

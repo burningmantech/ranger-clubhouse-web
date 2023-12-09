@@ -92,7 +92,7 @@
           <td class="w-20">
             {{log.event}}
           </td>
-          <td class="w-25">
+          <td class="w-25 text-break">
             {{#if log.message}}
               {{log.message}}
             {{else}}
@@ -103,7 +103,7 @@
 
         {{#if (or log.positions log.position log.roles log.slot log.role log.team)}}
           <tr class="tr-no-border">
-            <td colspan="5">
+            <td colspan="5" class="text-break">
               {{#if log.positions}}
                 {{#each log.positions as |p idx|}}
                   {{if idx " / "}} {{p.title}}
@@ -146,7 +146,7 @@
         {{#if log.showing}}
           <tr class="tr-no-border">
             {{! template-lint-disable no-inline-styles}}
-            <td colspan="5" style="overflow-x: scroll">
+            <td colspan="5" class="text-break">
               {{#if log.ip}}
                 IP: {{log.ip}}<br>
               {{/if}}
