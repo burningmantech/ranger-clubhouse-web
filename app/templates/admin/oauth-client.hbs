@@ -1,0 +1,82 @@
+<main>
+  <h1>OAuth Clients</h1>
+  <p>
+    OAuth Clients are other websites which use the Clubhouse as a SSO server via the OAuth2 / OpenID protocols.
+  </p>
+  <div class="my-4">
+    <UiButton @onClick={{this.newEntry}} @size="sm">New Client</UiButton>
+  </div>
+  Showing {{pluralize this.clients.length "client"}}
+  <UiTable>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Client ID</th>
+      <th>Description</th>
+      <th>Secret</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.clients as |client|}}
+      <tr>
+        <td class="text-right">{{client.id}}</td>
+        <td>{{client.client_id}}</td>
+        <td>{{client.description}}</td>
+        <td>{{client.secret}}</td>
+        <td>
+          <UiButton @onClick={{fn this.editEntry client}} @size="sm">
+            {{fa-icon "edit" right=1}} Edit
+          </UiButton>
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </UiTable>
+
+  {{#if this.entry}}
+    <ModalDialog @title={{if this.entry.isNew "Create a new client" "Edit client"}}
+                 @onEscape={{this.cancelEntry}}
+                 as |Modal|>
+      <ChForm @formFor={{this.entry}}
+              @formId="client"
+              @validator={{this.validations}}
+              @onSubmit={{this.saveEntry}} as |f|>
+        <Modal.body>
+          <FormRow>
+            <f.text @name="client_id" @label="Client ID" @size={{30}} @maxLength={{30}} />
+          </FormRow>
+          <FormRow>
+            <f.text @name="description" @label="Description" @size={{30}} @maxLength={{30}} />
+          </FormRow>
+
+          <FormRow>
+            {{#if this.entry.isNew}}
+              <div class="col">The secret key will be generated when the entry is created</div>
+            {{else}}
+              <f.text @name="secret" @label="Secret Key" @size={{64}} @maxLength={{64}} />
+            {{/if}}
+          </FormRow>
+        </Modal.body>
+        <Modal.footer @noAlign={{true}}>
+          <f.submit/>
+          <UiCancelButton @onClick={{this.cancelEntry}} />
+          {{#unless this.entry.isNew}}
+            <UiButton @type="danger" @class="ms-auto"
+                      @onClick={{fn this.deleteEntry this.entry}}
+                      @disabled={{this.entry.isSaving}}>
+              {{fa-icon "trash"}} Delete
+            </UiButton>
+          {{/unless}}
+
+        </Modal.footer>
+      </ChForm>
+    </ModalDialog>
+  {{/if}}
+
+  {{#if this.isSubmitting}}
+    <LoadingDialog>
+      Submitting your request
+    </LoadingDialog>
+  {{/if}}
+</main>

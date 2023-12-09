@@ -35,6 +35,9 @@
         <NavbarMenuItem @menu={{menu}} @route="admin.teams" @item="Teams"/>
         <NavbarMenuItem @menu={{menu}} @route="admin.person-create" @item="Create Account"/>
       {{/if}}
+      {{#if (has-role "tech-ninja")}}
+        <NavbarMenuItem @menu={{menu}} @route="admin.oauth-client" @item="OAuth Clients"/>
+      {{/if}}
     </NavbarMenuSection>
   {{/if}}
   {{#if (has-role "admin")}}

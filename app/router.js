@@ -44,6 +44,7 @@ Router.map(function () {
     });
     this.route('vehicles');
     this.route('welcome');
+    this.route('oauth2-grant');
   });
 
   this.route('search', function () {
@@ -108,6 +109,7 @@ Router.map(function () {
     this.route('timesheet-sanity-checker');
     this.route('timesheet-slot-repair');
     this.route('top-hour-earners');
+    this.route('oauth-client');
   });
 
   this.route('hq', {path: '/hq/:person_id'}, function () {

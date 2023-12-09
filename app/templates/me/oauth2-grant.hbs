@@ -1,0 +1,16 @@
+<main>
+  {{#if (eq this.status "success")}}
+    <ModalDialog as |Modal|>
+      <Modal.title>Please wait</Modal.title>
+      <Modal.body>
+        The login was successful. We're heading back to {{this.client_description}}. <SpinIcon/>
+      </Modal.body>
+    </ModalDialog>
+  {{else}}
+    <h1>Something went wrong . . .</h1>
+    The external service did not supply the correct parameters. It might be misconfigured. If you continue to experience
+    an issue, please contact the Ranger Tech Team
+    <TechSupportEmail/>
+    .
+  {{/if}}
+</main>
