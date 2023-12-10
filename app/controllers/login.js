@@ -54,6 +54,10 @@ export default class LoginController extends ClubhouseController {
     }
   */
 
+  get isTryingToOAuthAuthenticate() {
+    return (this.session.attemptedTransition?.targetName === 'me.oauth2-grant');
+  }
+
   @action
   submit(model, isValid) {
     if (!isValid)

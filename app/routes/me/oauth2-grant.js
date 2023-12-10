@@ -33,7 +33,7 @@ export default class MeOauth2GrantRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    if (model.callback_url) {
+    if (model?.callback_url) {
       controller.status = 'success';
       controller.client_description = model.client_description;
       location.replace(model.callback_url);
