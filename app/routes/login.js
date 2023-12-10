@@ -35,6 +35,7 @@ export default class LoginRoute extends ClubhouseRoute {
       },
     };
 
+
     /*
       Slight bit of magic here - If the token is valid, route/application.js sessionAuthenticated() is
       called and the route transition to the password change form will happen there. For an error,

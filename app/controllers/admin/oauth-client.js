@@ -43,7 +43,7 @@ export default class AdminOauthClientController extends ClubhouseController {
       }
       this.entry = null;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.house.handleErrorResponse(response, model);
     } finally {
       this.isSubmitting = false;
     }
