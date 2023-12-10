@@ -1,7 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import ENV from 'clubhouse/config/environment';
 import EmberObject from '@ember/object';
-import { service } from '@ember/service';
 
 export default class LoginRoute extends ClubhouseRoute {
   authRequired = false;
