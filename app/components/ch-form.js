@@ -36,6 +36,7 @@ export default class ChFormComponent extends Component {
     return this.changeSet ? this.changeSetModel : formFor;
   }
 
+  @action
   _buildChangeSet() {
     const {formFor, validator} = this.args;
 
