@@ -15,6 +15,7 @@ export default class HouseService extends Service {
   @service toast;
   @service session;
   @service store;
+  @service modal;
 
   cachedScripts = {};
 

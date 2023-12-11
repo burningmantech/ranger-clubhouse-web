@@ -89,6 +89,10 @@ Everyone else will see person/simple-form
             @maxlength={{100}}/>
     <f.select @name="callsign_approved"
               @options={{@callsignApprovedOptions}}/>
+    <div class="col-auto mt-1">
+      <UiButton @type="secondary" @onClick={{fn this.releaseCallsign f}} @size="sm">Release Callsign</UiButton>
+    </div>
+
   </FormRow>
 
   {{#if (has-role "admin" "vc")}}
@@ -103,7 +107,7 @@ Everyone else will see person/simple-form
           <i>(Used on {{mdy-format @person.vanity_changed_at}})</i>
         {{/if}}
       </div>
-    </FormRow>
+     </FormRow>
   {{else if @person.used_vanity_change}}
     <FormRow>
       <FormLabel @fixed={{true}}>&nbsp;</FormLabel>
