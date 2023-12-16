@@ -29,9 +29,9 @@ export default class ApplicationController extends ClubhouseController {
       }
 
       const {key} = event;
-      if ((event.shiftKey && key === 'F1')
+      if (
         // Mac OS X <CMD>-K
-        || (isMac && event.metaKey && key === 'k')
+        (isMac && event.metaKey && key === 'k')
         // Linux/Window <CTRL>-K
         || (!isMac && event.ctrlKey && key === 'k')
       ) {
@@ -67,6 +67,10 @@ export default class ApplicationController extends ClubhouseController {
 
   @action
   bodyRowInserted(element) {
+    if (!('IntersectionObserver' in window)) {
+      // Too old of browser.
+      return;
+    }
     this.bodyRowObserver = new IntersectionObserver(this.intersectionCallback,
       {
         root: null,
