@@ -122,7 +122,7 @@ jobs:
         run: docker image save ranger-clubhouse-web:dev | gzip -9 > docker_image.tgz
 
       - name: Upload Docker image artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: docker
           path: docker_image.tgz
