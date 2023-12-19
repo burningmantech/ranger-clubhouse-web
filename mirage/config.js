@@ -39,7 +39,7 @@ function routes() {
       RangerFeedbackFormUrl: 'https://example.com/feedback',
       RangerManualUrl: 'https://example.com/ranger-manual',
       RangerPoliciesUrl: 'https://example.com/policy-folder',
-      RpTicketThreshold: 19,
+      SpTicketThreshold: 19,
       ScTicketThreshold: 38,
       TrainingAcademyEmail: 'ranger-training-academy@burningman.org',
       VcEmail: 'ranger-vc@burningman.org',

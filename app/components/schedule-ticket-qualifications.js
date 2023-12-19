@@ -6,7 +6,7 @@ export default class TicketThresholdComponent extends Component {
   @service house;
 
   // Specia Price Ticket threshold
-  rpThreshold = parseFloat(setting('RpTicketThreshold'));
+  rpThreshold = parseFloat(setting('SpTicketThreshold'));
   // Staff credentials threshold
   scThreshold = parseFloat(setting('ScTicketThreshold'));
 
