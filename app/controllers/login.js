@@ -29,8 +29,8 @@ export default class LoginController extends ClubhouseController {
       await this.session.authenticate('authenticator:oauth2', model.identification, model.password);
     } catch (response) {
       if (response.status === 401) {
-        const data = response.json ? response.json : response.payload;
-        this.loginError = (data ? data.status : `Unknown error ${JSON.stringify(data)}`);
+        const data = response.responseJSON ? response.responseJSON : response.payload;
+        this.loginError = (data ? data.error : `Unknown error ${JSON.stringify(data)}`);
         model.password = '';
       } else {
         this.house.handleErrorResponse(response)
