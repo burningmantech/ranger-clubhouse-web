@@ -59,7 +59,7 @@
       <TicketOverviewItem @icon="car-side" @title="Vehicle Pass Claimed" @type="success">
         {{#if (or this.usingStaffCredential this.usingWillCall)}}
           Pick up at {{if this.usingStaffCredential "Staff Credentialing" "Will Call"}} &mdash;
-          Held under your name "{{@person.first_name}} {{@person.last_name}}"
+          Held under your legal name "{{@person.first_name}} {{@person.last_name}}"
         {{else}}
           The vehicle pass will be mailed to you.
         {{/if}}
