@@ -47,7 +47,7 @@ export default class HouseService extends Service {
       return;
     }
 
-    if (+response.status === 401 && this.session.isAuthenticated) {
+    if (response.status === 401 && this.session.isAuthenticated) {
       this.toast.warning('Your session has timed out. Please login again.')
       this.session.invalidate();
       return;
