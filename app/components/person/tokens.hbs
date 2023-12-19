@@ -1,0 +1,49 @@
+{{#if this.isLoading}}
+  <LoadingIndicator @text="loading tokens"/>
+{{else}}
+  <p>
+    OAuth tokens are used to log into the Clubhouse, and linked client websites such as Moodle &amp; the IMS. Deprecated JWT
+    tokens are not tracked through this interface.
+  </p>
+  Show {{pluralize this.tokens.length "token"}}
+  <UiTable>
+    <thead>
+    <tr>
+      <th class="text-right">ID</th>
+      <th>Issued For</th>
+      <th>Last Used At</th>
+      <th>Created At</th>
+      <th>Expires At</th>
+      <th>Token ID</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.tokens as |token|}}
+      <tr>
+        <td class="text-right">{{token.id}}</td>
+        <td>{{token.name}}</td>
+        <td>{{shift-format token.last_used_at}}</td>
+        <td>{{shift-format token.created_at}}</td>
+        <td>{{shift-format token.expires_at}}</td>
+        <td>{{token.token}}</td>
+        <td>
+          <UiButton @onClick={{fn this.revokeToken token}} @size="sm" @type="secondary">
+            Revoke
+          </UiButton>
+        </td>
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="5" class="text-danger">No active tokens.</td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </UiTable>
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting the request.
+  </LoadingDialog>
+{{/if}}
