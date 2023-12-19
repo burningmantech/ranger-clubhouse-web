@@ -15,7 +15,7 @@ export default class extends FetchService {
   get headers() {
     let headers = {};
     if (this.session.isAuthenticated) {
-      headers['Authorization'] = `Bearer ${this.session.jwt}`;
+      headers['Authorization'] = `Bearer ${this.session.bearerToken}`;
     }
     return headers;
   }

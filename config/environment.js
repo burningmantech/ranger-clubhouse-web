@@ -27,25 +27,6 @@ module.exports = function (environment) {
       })
     },
 
-    'ember-simple-auth': {
-      authorizer: 'authorizer:token',
-    },
-
-    'ember-simple-auth-token': {
-      // NOTE: setting refreshAccessTokens true will hang the tests since
-      // there is an outstanding timeout
-      refreshAccessTokens: false,
-
-      identificationField: 'identification',
-      passwordField: 'password',
-      tokenPropertyName: 'token',
-      refreshTokenPropertyName: 'token',
-
-      authorizationPrefix: 'JWT ',
-      authorizationHeaderName: 'Authorization',
-      headers: {},
-    },
-
     'ember-cli-page-progress': {
       includeCss: false
     },
@@ -91,9 +72,6 @@ module.exports = function (environment) {
     }
 
     ENV['api-server'] = 'http://localhost:8000';
-
-    ENV['ember-simple-auth-token'].serverTokenEndpoint = ENV['api-server'] + '/auth/login';
-    ENV['ember-simple-auth-token'].serverTokenRefreshEndpoint = ENV['api-server'] + '/auth/refresh';
 
     ENV['ember-cli-mirage'] = {
       enabled: false,

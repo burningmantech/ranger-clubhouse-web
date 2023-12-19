@@ -81,7 +81,6 @@
     "ember-qunit": "^8.0.2",
     "ember-resolver": "^11.0.1",
     "ember-simple-auth": "^6.0.0",
-    "ember-simple-auth-token": "^5.3.2",
     "ember-source": "~5.5.0",
     "ember-template-lint": "^5.13.0",
     "ember-truth-helpers": "^4.0.3",
