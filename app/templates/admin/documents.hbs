@@ -1,7 +1,7 @@
 <main>
   {{#if this.editDocument}}
     <h1>{{if this.editDocument.isNew "Create new" (concat "Edit " this.editDocument.tag)}} document</h1>
-    <ChForm @forId="document"
+    <ChForm @formId="document"
             @formFor={{this.editDocument}}
             @validator={{this.validations}}
             @onSubmit={{this.saveAction}}

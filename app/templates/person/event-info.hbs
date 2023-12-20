@@ -144,7 +144,7 @@
             <dt>Radio Checkout Agreement</dt>
             <dd>
               {{#if (has-role "admin")}}
-                <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as
+                <ChForm @formId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as
                         |f|>
                   <div class="text-danger">
                     Do not sign agreements on someone else's behalf. You may expose the organization
@@ -184,7 +184,7 @@
             </UiNotice>
           {{/if}}
           <dl>
-            <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as |f|>
+            <ChForm @formId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as |f|>
               <dt>Driving Privileges</dt>
               <dd>
                 {{#if this.canSignAgreements}}
@@ -254,7 +254,7 @@
             <dt>Lifetime Vehicle Flags</dt>
             <dd>
               {{#if (has-role "admin")}}
-                <ChForm @forId="person" @formFor={{this.person}} @onSubmit={{this.save}} as |f|>
+                <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.save}} as |f|>
                   <f.checkbox @name="vehicle_blacklisted"
                               @label="Vehicle Blacklisted"/>
                   <div class="mt-2">
@@ -284,7 +284,7 @@
             <dt>Yearly Agreements</dt>
             <dd>
               {{#if this.canSignAgreements}}
-                <ChForm @forId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as
+                <ChForm @formId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as
                         |f|>
                   <div class="text-danger">
                     Do not sign agreements on someone else's behalf. You may expose the organization
@@ -319,7 +319,7 @@
             <dt class="mt-2">Lifetime Agreements</dt>
             <dd>
               {{#if (has-role "admin")}}
-                <ChForm @forId="person" @formFor={{this.person}} @onSubmit={{this.save}} as |f|>
+                <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.save}} as |f|>
                   <p>
                     <f.checkbox @name="behavioral_agreement"
                                 @label="Burning Man's Behavioral Standards Agreement"

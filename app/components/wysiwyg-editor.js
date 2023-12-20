@@ -40,8 +40,6 @@ export default class WysiwygEditorComponent extends Component {
 
   editor = null;
 
-  heightStyle = "height: 600px";
-
   constructor() {
     super(...arguments);
 
@@ -77,12 +75,12 @@ export default class WysiwygEditorComponent extends Component {
       const uiCSS = (await import('tinymce/skins/ui/oxide/content.min.css?raw')).default;
 
       editorModule.init({
-        selector: 'textarea#' + this.elementId,
+        selector: '#' + this.elementId,
         content_css: false,
         content_style: `${contentCSS}\n${uiCSS}`,
         contextmenu: 'link image imagetools table configurepermanentpen',
         image_advtab: true,
-        max_height: 600,
+        min_height: 600,
         menubar: 'edit view insert format tools table tc help',
         plugins: [
           'advlist',
