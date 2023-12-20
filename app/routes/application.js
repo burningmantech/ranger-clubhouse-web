@@ -142,7 +142,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
 
       this.authSetup = true;
     } catch (response) {
-      if (response.status === 401) {
+      if (response.status === 401 || response.status === 403) {
         this.session.invalidate();
         return;
       }

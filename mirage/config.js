@@ -7,6 +7,15 @@ function now() {
   return dayjs().format('YYYY-MM-DD hh:mm:ss');
 }
 
+function getJsonFromParams(params) {
+  const result = {};
+  params.split("&").forEach(part => {
+    const item = part.split("=");
+    result[item[0]] = decodeURIComponent(item[1]);
+  });
+  return result;
+}
+
 function routes() {
   this.urlPrefix = 'http://localhost:8000';
 
@@ -30,57 +39,75 @@ function routes() {
       RangerFeedbackFormUrl: 'https://example.com/feedback',
       RangerManualUrl: 'https://example.com/ranger-manual',
       RangerPoliciesUrl: 'https://example.com/policy-folder',
-      RpTicketThreshold: 19,
+      SpTicketThreshold: 19,
       ScTicketThreshold: 38,
       TrainingAcademyEmail: 'ranger-training-academy@burningman.org',
       VcEmail: 'ranger-vc@burningman.org',
     };
   });
 
-  this.post('/api/auth/login', function (schema, request) {
-    let params = JSON.parse(request.requestBody);
-    let person;
-
-    if (params.temp_token) {
-      person = schema.db.people.findBy({tpassword: params.temp_token});
-    } else {
-      if (!params.identification || !params.password) {
-        const errors = [];
-
-        if (!params.identification) {
-          errors.push({status: 422, title: 'Email cannot be blank'});
-        }
-
-        if (!params.password) {
-          errors.push({status: 422, title: 'Password cannot be blank'});
-        }
-
-        return new Response(422, {'Content-Type': 'application/json'}, {errors});
-      }
-
-      person = schema.db.people.findBy({email: params.identification});
+  this.post('/api/auth/oauth2/temp-token', function (schema, request) {
+    let params = getJsonFromParams(request.requestBody);
+    if (!params.token) {
+      return new Response(422, {'Content-Type': 'application/json'}, {
+        errors: [{
+          status: 422,
+          title: 'temp token is missing '
+        }]
+      });
     }
 
+    const person = schema.db.people.findBy({tpassword: params.token});
     if (!person) {
-      return new Response(401, {'Content-Type': 'application/json'}, {status: 'invalid-credentials'});
+      return new Response(401, {'Content-Type': 'application/json'}, {status: 'invalid-token'});
     }
-
-    if (person.status === 'suspended') {
-      return new Response(401, {'Content-Type': 'application/json'}, {status: 'account-disabled'})
-    }
-
-    const payload = {
-      exp: (Math.ceil(Date.now() / 1000) + 1000),
-      sub: person.id,
-    };
-
 
     return {
       // ember-simple-auth only cares about the middle value
-      token: `${btoa('header')}.${btoa(JSON.stringify(payload))}.${btoa('signature')}`,
+      access_token: `deadbeef`,
       token_type: 'bearer',
       expires_in: 1000,
+      person_id: person.id
     };
+  });
+
+  this.post('/api/auth/oauth2/token', function (schema, request) {
+    const params = getJsonFromParams(request.requestBody);
+
+    if (!params.username || !params.password) {
+      const errors = [];
+      if (!params.username) {
+        errors.push({status: 422, title: 'Username cannot be blank'});
+      }
+
+      if (!params.password) {
+        errors.push({status: 422, title: 'Password cannot be blank'});
+      }
+
+      return new Response(422, {'Content-Type': 'application/json'}, {errors});
+    }
+
+    const person = schema.db.people.findBy({email: params.username});
+
+    if (!person) {
+      return new Response(401, {'Content-Type': 'application/json'}, {error: 'invalid-credentials'});
+    }
+
+    if (person.status === 'suspended') {
+      return new Response(401, {'Content-Type': 'application/json'}, {error: 'account-disabled'})
+    }
+
+    return {
+      // ember-simple-auth only cares about the middle value
+      access_token: `deadbeef`,
+      token_type: 'bearer',
+      expires_in: 1000,
+      person_id: person.id
+    };
+  });
+
+  this.post('/api/action-log/record', function () {
+    return {};
   });
 
   this.get('/api/person/:id', ({people}, request) => { // eslint-disable-line no-unused-vars

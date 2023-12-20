@@ -191,8 +191,7 @@ export default class extends SessionService {
       return Promise.resolve();
     }
 
-    const person_id = this.data.authenticated.tokenData.sub;
-    const {user_info} = await this.ajax.request(`person/${person_id}/user-info`);
+    const {user_info} = await this.ajax.request(`person/${this.userId}/user-info`);
     this.user = new User(user_info);
     this.unreadMessageCount = user_info.unread_message_count;
 
@@ -250,15 +249,6 @@ export default class extends SessionService {
     } catch {
       /* empty */
     }
-  }
-
-  /**
-   * Return the user id if available
-   *
-   * @returns {number|null}
-   */
-  get userId() {
-    return (this.isAuthenticated && this.user) ? +this.user.id : null;
   }
 
 
@@ -419,8 +409,12 @@ export default class extends SessionService {
    * @returns {string|null}
    */
 
-  get jwt() {
-    return this.isAuthenticated ? this.data.authenticated.token : null;
+  get bearerToken() {
+    return this.isAuthenticated ? this.data.authenticated.access_token : null;
+  }
+
+  get userId() {
+    return this.isAuthenticated ? this.data.authenticated.person_id : null;
   }
 }
 
