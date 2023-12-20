@@ -150,7 +150,9 @@
               {{#if log.ip}}
                 IP: {{log.ip}}<br>
               {{/if}}
-              {{#if log.user_agent}}
+              {{#if log.browser}}
+                Browser: {{log.browser.platform}} {{log.browser.browser}} {{log.browser.version}}
+              {{else if log.user_agent}}
                 User agent: {{log.user_agent}}<br>
               {{/if}}
               <JsonFormat @json={{log.data}} />
