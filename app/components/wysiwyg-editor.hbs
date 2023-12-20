@@ -1,5 +1,7 @@
 {{#if this.isLoading}}
-  <LoadingIndicator/>
+  <p>
+    <LoadingIndicator/>
+  </p>
 {{else if this.didError}}
   <p>
     <b class="text-danger">The WYSIWYG editor failed to load. Falling back to basic text.</b>
@@ -8,4 +10,6 @@
 <textarea
   id={{this.elementId}}
   name={{@name}}
+  cols="80"
+  rows="20"
   {{did-insert this.elementInsertedEvent}} disabled={{this.isLoading}}>{{this.initialText}}</textarea>
