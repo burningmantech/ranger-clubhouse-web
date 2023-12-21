@@ -28,13 +28,14 @@ export default class UiTabComponent extends BsTab {
     super.select(id);
 
     // Record when the user clicks on a tab.
-    const pane = this.childPanes.find((pane) => pane.id === this.isActiveId);
+    const pane = this.childPanes.find((pane) => pane.id === this.activeId);
     const url = window.location.pathname;
     const tab_title = pane ? pane.title : 'unknown';
+
     this.house.actionRecord('client-route-tab', {
       url,
       tab_title,
-      tab_id: this.isActiveId
-    }, `${url}#${this.isActiveId}`);
+      tab_id: this.activeId
+    }, `${url}#${this.activeId}`);
   }
 }
