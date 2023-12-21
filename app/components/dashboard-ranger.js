@@ -268,6 +268,7 @@ const STEPS = [
     }
   },
   DashboardStep.VEHICLE_REQUESTS,
+  DashboardStep.AFTER_EVENT_STATUS_ADVISORY,
  ];
 
 const NON_RANGER_STEPS = [
