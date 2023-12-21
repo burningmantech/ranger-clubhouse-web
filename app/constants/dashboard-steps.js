@@ -27,7 +27,7 @@ import {
   URGENT,
   WAITING
 } from "clubhouse/constants/dashboard";
-import {ACTIVE, AUDITOR, NON_RANGER} from 'clubhouse/constants/person_status';
+import {ACTIVE, AUDITOR, INACTIVE, INACTIVE_EXTENSION, NON_RANGER, RETIRED} from 'clubhouse/constants/person_status';
 import TicketPackage from 'clubhouse/utils/ticket-package';
 
 function indefiniteArticle(noun) {
@@ -117,7 +117,11 @@ export const UPLOAD_PHOTO = {
         };
       case 'submitted':
       case 'approved':
-        return {result: isPNV ? COMPLETED : SKIP, isPhotoStep: (photo.photo_status !== 'approved'), isUploadPhoto: true};
+        return {
+          result: isPNV ? COMPLETED : SKIP,
+          isPhotoStep: (photo.photo_status !== 'approved'),
+          isUploadPhoto: true
+        };
       default:
         return {
           result: NOT_AVAILABLE,
@@ -285,18 +289,18 @@ export const ONLINE_COURSE = {
     const manualLocation = '<p>The Ranger Manual can be found at <a href="' + setting('RangerManualUrl') + '" rel="noopener noreferrer" target="_blank">rangers.burningman.org</a>.</p>';
 
     if (isNonRanger) {
-     message =
-       '<p>As a Non Ranger Volunteer, you have the option to take the Ranger Online Course. If you do decide to attend an In-Person training, the Online Course must be completed first.</p>' +
-       manualLocation +
-       '<p>Please be sure to focus on the radio protocol section of the manual in case you will be carrying a radio.</p>' +
-       `<p>Note: it may take up to 20 minutes for the Clubhouse to record your course completion.</p>`;
+      message =
+        '<p>As a Non Ranger Volunteer, you have the option to take the Ranger Online Course. If you do decide to attend an In-Person training, the Online Course must be completed first.</p>' +
+        manualLocation +
+        '<p>Please be sure to focus on the radio protocol section of the manual in case you will be carrying a radio.</p>' +
+        `<p>Note: it may take up to 20 minutes for the Clubhouse to record your course completion.</p>`;
 
-   } else {
-     message = manualLocation +
-       `<p>The Online Course, like the In-Person training, has to be completed every year. The estimate time to complete the course is ${duration}.</p> <p>Note: it may take up to 20 minutes for the Clubhouse to record your course completion.</p>`;
-   }
+    } else {
+      message = manualLocation +
+        `<p>The Online Course, like the In-Person training, has to be completed every year. The estimate time to complete the course is ${duration}.</p> <p>Note: it may take up to 20 minutes for the Clubhouse to record your course completion.</p>`;
+    }
     return {
-      result: isNonRanger? OPTIONAL : ACTION_NEEDED,
+      result: isNonRanger ? OPTIONAL : ACTION_NEEDED,
       message: htmlSafe(message),
       isOnlineTraining: true,
       name
@@ -424,7 +428,7 @@ export const ATTEND_TRAINING = {
             } else {
               prefix += `${indefiniteArticle(person.status)} Ranger`;
             }
-            prefix +=', you need to attend the <b class="text-danger"><u>FULL DAY training</u></b>';
+            prefix += ', you need to attend the <b class="text-danger"><u>FULL DAY training</u></b>';
           }
           dt = 'ddd MMM DD [@] HH:mm';
         } else {
@@ -628,7 +632,7 @@ export const SIGN_RADIO_CHECKOUT_AGREEMENT = {
     const isAugust = (new Date).getMonth() === 7;
     return {
       // In August, bump up to urgent.
-      result:  isAugust ? URGENT : ACTION_NEEDED,
+      result: isAugust ? URGENT : ACTION_NEEDED,
       immediate: isAugust,
       route: 'me.agreements',
       linkedMessage: {
@@ -696,7 +700,7 @@ function buildTickets(milestones, personId, house) {
     claimed,
     bankedCount: pkg.accessDocuments.filter((ad) => ad.isBanked).length,
     qualifiedCount: pkg.tickets.filter((a) => a.isQualified).length,
-    notCriticalCount: pkg.accessDocuments.filter((ad) => ( ad.isQualified && (ad.isWAP || ad.isVehiclePass))).length,
+    notCriticalCount: pkg.accessDocuments.filter((ad) => (ad.isQualified && (ad.isWAP || ad.isVehiclePass))).length,
     // noAddress: !pkg.haveAddress,
     noAddress: false,
     provisionItems: !pkg.provisionsBanked ? pkg.provisionItems : null,
@@ -832,3 +836,35 @@ export const SIGN_NDA = {
     };
   }
 };
+
+export const AFTER_EVENT_STATUS_ADVISORY = {
+  period: AFTER_EVENT,
+
+  check({person}) {
+    const {status} = person;
+
+    if (status !== RETIRED && status !== INACTIVE && status !== INACTIVE_EXTENSION) {
+      return {result: SKIP};
+    }
+
+    if (status === RETIRED) {
+      return {
+        name: 'Retired Status',
+        email: 'VCEmail',
+        result: ACTION_NEEDED,
+        message: htmlSafe("<p>Because you have not worked in 5 or more events, your status is now 'retired.'</p>" +
+          "<p>If you wish to volunteer with the Rangers next event, you will need to attend a full day's " +
+          "In-Person Training, and walk a Cheetah Cub shift with a Mentor.</p> Contact the Volunteer Coordinators for more information.")
+      };
+    } else {
+      return {
+        name: `Inactive ${person.status === INACTIVE_EXTENSION ? 'Extension ' : ''}Status`,
+        email: 'VCEmail',
+        result: ACTION_NEEDED,
+        message: htmlSafe(`<p>Because you have not worked in 3 or more events, your status is now '${status}.'<p>` +
+          "<p>If you wish to volunteer with the Rangers next event, you will need to attend a full day's " +
+          "In-Person Training, and work a shift.</p>Contact the Volunteer Coordinators for more information.")
+      };
+    }
+  }
+}
