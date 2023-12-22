@@ -23,11 +23,11 @@
         = Sign-up overlaps with one or more shifts
       </p>
     </div>
-    <div class="d-flex flex-column flex-xl-row align-middle">
+    <div class="d-flex flex-column flex-xl-row align-items-xl-center">
       <div class="me-2">
         Showing {{this.viewSlots.length}} of {{pluralize @slots.length "sign-up"}}.
       </div>
-      <div class="d-print-none">
+      <div class="ms-xl-auto d-print-none">
         {{#if (and this.isCurrentYear (not this.showAllShifts) this.previousSlotCount)}}
           <UiButton @onClick={{this.toggleAll}}  @size="sm" @type="secondary">
             {{fa-icon "clock" type="far"}} Show {{if this.showAllShifts "Upcoming Shifts" "All Shifts"}}
@@ -49,11 +49,11 @@
       {{#if (and (not this.showAllShifts) this.previousSlotCount)}}
         <div class="schedule-row schedule-sub-header">
           <div class="schedule-sub-header-text">
-            <span class="d-inline-block text-danger fw-bold">
-              {{pluralize this.previousSlotCount "previous sign-up"}}
+            <span class="d-inline-block text-danger">
+              {{pluralize this.previousSlotCount "past sign-up"}}
               {{if (eq this.previousSlotCount 1) "is" "are"}} not shown.
             </span>
-            Use the Show All button to see the previous sign-ups.
+            Use the Show All Shifts button to see the previous sign-ups.
           </div>
         </div>
       {{/if}}
