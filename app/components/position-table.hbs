@@ -2,8 +2,7 @@
   <thead>
   <tr>
     <th>ID</th>
-    <th colspan="2">Active / Title</th>
-    <th>Short Title</th>
+    <th colspan="2">Active / Title (Short Title)</th>
     <th>Team / Category / Type</th>
     <th>Min / Max</th>
     <th>Attributes</th>
@@ -22,9 +21,9 @@
       </td>
       <td>
         {{position.title}}
-      </td>
-      <td>
-        <PresentOrNot @value={{position.short_title}} @empty="-"/>
+        {{#if position.short_title}}
+          <br>({{position.short_title}})
+        {{/if}}
       </td>
       <td>
         {{this.teamName position.team_id}}<br>
@@ -91,7 +90,7 @@
     </tr>
   {{else}}
     <tr>
-      <td colspan="{{if @canManagePositions 8 7}}"><b class="text-danger">No positions found</b></td>
+      <td colspan="{{if @canManagePositions 7 6}}"><b class="text-danger">No positions found</b></td>
     </tr>
   {{/each}}
   </tbody>

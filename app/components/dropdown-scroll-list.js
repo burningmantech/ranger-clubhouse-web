@@ -24,13 +24,15 @@ export default class DropdownScrollListComponent extends Component {
   }
 
   @action
-  scrollToItem(id) {
+  scrollToItem(id, closeMenu) {
     if (this.args.openAccordion) {
       document.querySelector(`#${id} .accordion-title`)?.click();
       setTimeout(() => this._scrollToElement(id), 350);
     } else {
       this._scrollToElement(id);
     }
+
+    closeMenu();
   }
 
   _scrollToElement(id) {

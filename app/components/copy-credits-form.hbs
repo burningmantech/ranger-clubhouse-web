@@ -1,0 +1,100 @@
+<h1 class="mb-4">Copy Positional Credits from year {{@year}} to {{@presentYear}}</h1>
+<ChForm @formId="copyCredits"
+        @formFor={{@copyParams}}
+        @changeSet={{false}}
+        @validator={{@copyValidations}}
+        @onSubmit={{@performCopy}}
+        as |f|>
+  <fieldset>
+    <legend>Add/Subtract Time to New Credits</legend>
+    <FormRow>
+      <f.number @name="deltaDays"
+                @label="Days"
+                @maxlength={{5}}
+                @size={{5}}/>
+      <f.number @name="deltaHours"
+                @label="Hours"
+                @maxlength={{5}}
+                @size={{5}}
+      />
+      <f.number @name="deltaMinutes"
+                @label="Minutes"
+                @maxlength={{5}}
+                @size={{5}}/>
+      <f.select @name="newPositionId"
+                @label="Position"
+                @options={{@positionOptionsForCopy}}
+      />
+    </FormRow>
+    <p>
+      Labor Day of {{@year}} is {{@selectedYearLaborDay}}.
+      Labor Day of {{@presentYear}} is {{@presentYearLaborDay}}, {{@laborDayDiff}} days later.
+    </p>
+    {{#if @badCredits}}
+      <p>
+        <b class="text-danger">
+          {{pluralize @badCredits.length "credit"}} have been filtered because the credits point to non-existent
+          positions.
+        </b>
+      </p>
+    {{/if}}
+  </fieldset>
+  <div class="mb-2">
+    <f.submit @label="Copy {{@copySelectedCreditCount}} selected credits"/>
+    <UiCancelButton @onClick={{@cancelCopy}} />
+  </div>
+  {{#each @copySourcePositions as |position|}}
+    <UiAccordion as |Accordion|>
+      <Accordion.title>
+       {{position.title}}: copying {{pluralize position.selectedCredits.length "credit"}}
+        <UiButton @onClick={{fn @copyPositionSelectAll position}} @size="sm" class="ms-4">
+          {{#if position.allSelected}}deselect{{else}}select{{/if}} all
+        </UiButton>
+      </Accordion.title>
+      <Accordion.body>
+        {{#if Accordion.isOpen}}
+          <UiTable>
+            <thead>
+            <tr>
+              <th>Copy</th>
+              <th>Start time</th>
+              <th>End time</th>
+              <th class="text-end">Credits</th>
+              <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each position.credits as |credit|}}
+              <tr>
+                <td><Input @type="checkbox" @checked={{credit.selected}} id={{credit.checkboxId}} /></td>
+                <td>
+                  <label for={{credit.checkboxId}}>
+                    {{shift-format credit.source.start_time}} &rarr;
+                    <br>{{credit.start_time}}
+                  </label>
+                </td>
+                <td>
+                  <label for={{credit.checkboxId}}>
+                    {{shift-format credit.source.end_time}} &rarr;
+                    <br>{{credit.end_time}}
+                  </label>
+                </td>
+                <td class="text-end">
+                  <label for={{credit.checkboxId}}>{{credits-format credit.source.credits_per_hour}}</label>
+                </td>
+                <td><label for={{credit.checkboxId}}>{{credit.source.description}}</label></td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </UiTable>
+        {{/if}}
+      </Accordion.body>
+    </UiAccordion>
+  {{/each}}
+</ChForm>
+
+{{#if @isCopying}}
+  <LoadingDialog>
+    Copying the selected credits
+  </LoadingDialog>
+{{/if}}
