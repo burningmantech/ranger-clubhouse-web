@@ -3,12 +3,12 @@
 {{/if}}
 <div class="d-flex flex-wrap mb-4">
   {{#each this.letterOptions as |letter idx|}}
-    <BsDropdown class="border p-2 {{if idx "ms-2"}} mt-2" as |dd|>
+    <BsDropdown  @closeOnMenuClick={{false}} class="border p-2 {{if idx "ms-2"}} mt-2" as |dd|>
       <dd.toggle>{{letter.letter}} <span class="caret"></span></dd.toggle>
       <dd.menu as |ddm|>
         {{#each letter.items as |item|}}
           <ddm.item>
-            <a href {{action this.scrollToItem item.id}} class="d-block p-2 dropdown-item">
+            <a href {{action this.scrollToItem item.id dd.closeDropdown}} class="d-block p-2 dropdown-item">
               {{item.title}}
             </a>
           </ddm.item>

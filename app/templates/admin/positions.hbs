@@ -1,13 +1,13 @@
 <main>
-  <h1>Clubhouse Positions</h1>
-  {{#if this.canManagePositions}}
+  <h1 class={{if this.position "d-none"}}>Clubhouse Positions</h1>
+  {{#unless this.canManagePositions}}
     <UiNotice @type="secondary" @icon="hand-point-right" @title="Need Position Help?">
       Contact the Tech Team regarding new positions or adjusting existing ones.
       <TechSupportEmail/>
     </UiNotice>
-  {{/if}}
+  {{/unless}}
 
-  <UiTab as |tab|>
+  <UiTab class={{if this.position "d-none"}} as |tab|>
     <tab.pane @title="Positions" @id="positions">
       <FormRow>
         <FormLabel @auto={{true}}>Type filter</FormLabel>
@@ -80,227 +80,15 @@
     </tab.pane>
   </UiTab>
   {{#if this.position}}
-    <ModalDialog @title={{if this.position.isNew "Create Position"
-                             (concat "Edit Position ID #" this.position.id " - " this.position.title)}}
-                 @onEscape={{this.cancelAction}} as |Modal|>
-      <ChForm @formId="position-form"
-              @formFor={{this.position}}
-              @validator={{this.positionValidations}}
-              @onSubmit={{this.saveAction}} as |f|>
-        <Modal.body>
-          <fieldset>
-            <legend>Description</legend>
-            <FormRow>
-              <f.text @name="title" @label="Title"
-                      @maxlength={{40}}
-                      @size={{40}}
-                      @showCharCount={{true}}
-              />
-              <f.text @name="short_title"
-                      @label="Short Title"
-                      @size={{6}}
-                      @maxlength={{6}}
-                      @showCharCount={{true}}
-              />
-              <f.select @name="type"
-                        @label="Type"
-                        @options={{this.positionTypes}}
-              />
-              <f.text @name="resource_tag"
-                      @label="Trainer resource page document tag"
-                      @size={{30}}
-                      @maxlength={{30}}
-                      @disabled={{not-eq f.model.type "Training"}}
-                      @hint="Only available for type 'Training'"
-              />
-            </FormRow>
-          </fieldset>
+    <PositionEdit @position={{this.position}}
 
-          <fieldset>
-            <legend>Suggested Ranger Counts Per Slot</legend>
-            <FormRow>
-              <f.number @name="min"
-                        @label="Min"
-                        @size={{3}}
-                        @maxlength={{3}} />
-              <f.number @name="max"
-                        @label="Max"
-                        @size={{3}}
-                        @maxlength={{3}} />
-            </FormRow>
-          </fieldset>
+                  @positions={{this.positions}}
+                  @teams={{this.teams}}
+                  @roleOptions={{this.roleOptions}}
 
-          <fieldset>
-            <legend>Active &amp; Grant Flags</legend>
-            <p class="text-danger">
-              The "Position Sanity Checker" needs be run after deactivating a position in order to revoke the position
-              from all accounts. Revocation is not automatic.
-            </p>
-            <FormRow>
-              <div class="col-12">
-                <f.checkbox @name="active" @label="Active"/>
-              </div>
-            </FormRow>
-            <p class="text-danger">
-              After setting the <i>"All Rangers"</i> and/or <i>"Grant to new Prospective accounts"</i> flags,
-              the maintenance "Set Ranger Positions" function has to be run to grant the position to existing accounts.
-            </p>
-            <FormRow>
-              <div class="col-12">
-                <f.checkbox @name="all_rangers"
-                            @label="Grant to All Rangers (status active / inactive / inactive extension / retired)"/>
-              </div>
-            </FormRow>
-            <FormRow>
-              <div class="col-12">
-                <f.checkbox @name="new_user_eligible"
-                            @label="Grant to new accounts (Rangers, Applications, etc)"/>
-              </div>
-            </FormRow>
-          </fieldset>
-          <fieldset>
-            <legend>Team &amp; Team Position Flags</legend>
-            <p class="text-danger">
-              After adjusting the team position category, run the Position Sanity Checker to bulk grant or revoke the
-              team positions to team members.
-            </p>
-            <FormRow>
-              <f.select @name="team_id"
-                        @label="Belongs To Team"
-                        @options={{this.teamPositionOptions}}
-              />
-              <f.select @name="team_category"
-                        @label="Team Position Category"
-                        @options={{this.categoryOptions}}
-                        @disabled={{not f.model.team_id}}
-              />
-            </FormRow>
-            <FormRow>
-              <div class="col-auto">
-                <f.checkbox @name="deselect_on_team_join"
-                            @label="Recommend position be deselected when the person joins the team (e.g., for mentee positions)"
-                            @disabled={{not f.model.team_id}}
-                />
-              </div>
-            </FormRow>
-          </fieldset>
-          <fieldset>
-            <legend>Other Flags</legend>
-            <FormRow>
-              <div class="col-12">
-                <f.checkbox @name="count_hours"
-                            @label="Hours count towards provisions (meal passes, showers) and appreciations (shirts)"/>
-                <f.checkbox @name="prevent_multiple_enrollments"
-                            @label="Prevent Multiple Enrollments (usually for Training positions)"/>
-                <f.checkbox @name="on_sl_report"
-                            @label="For the Shift Lead Report: indicates the person holds this position of interest"/>
-                <f.checkbox @name="on_trainer_report"
-                            @label="For the Trainer's Report: indicates the position is relevant to trainers"/>
-                <f.checkbox @name="no_training_required"
-                            @label="In-Person training not required to check-in for this position"/>
-              </div>
-            </FormRow>
-          </fieldset>
-
-          <fieldset>
-            <legend>Position Role Grants</legend>
-            <FormRow>
-              <div class="col-12">
-                <f.checkbox @name="require_training_for_roles"
-                            @label="ART training must be passed before roles are assigned"/>
-              </div>
-            </FormRow>
-            <FormRow>
-              <f.checkboxGroup @label="Roles to assign when position is granted" @name="role_ids"
-                               @options={{this.roleOptions}} />
-            </FormRow>
-          </fieldset>
-
-          {{#unless (eq f.model.type "Training")}}
-            <fieldset>
-              <legend>Training</legend>
-              <p>
-                The Training Position is the position the person has to have passed in the current year to
-                be allowed to work this position during the event.
-              </p>
-              <FormRow>
-                <f.select @name="training_position_id"
-                          @label="Training Position"
-                          @options={{this.trainingOptions}}
-                />
-              </FormRow>
-            </fieldset>
-          {{/unless}}
-          <fieldset>
-            <legend>Misc.</legend>
-            <FormRow class="align-items-end">
-              <f.text @name="paycode" @label="Paycom employee code" @size={{20}} @maxlength={{20}} />
-              <div class="col-auto">
-                <f.checkbox @name="no_payroll_hours_adjustment"
-                            @label="Hours will not be adjusted during payroll export"/>
-              </div>
-            </FormRow>
-          </fieldset>
-
-          <fieldset>
-            <legend>Auto Sign Out</legend>
-            A timesheet entry can be automatically signed out of when the hour cap is reached. A note will be left in
-            the timesheet audit trail, and an email sent to the contact email (set below).
-            <FormRow class="align-items-end">
-              <div class="col-auto align-self-center">
-                <f.checkbox @label="Auto sign out timesheet"
-                            @name="auto_sign_out"
-                />
-              </div>
-              <f.number @label="Hours Cap"
-                        @name="sign_out_hour_cap"
-                        @size={{10}}
-                        @maxlength={{10}}
-                        @hint="Partial hours are supported. (e.g., 10.5, 5.3, etc.)"
-                        @disabled={{not f.model.auto_sign_out}}
-              />
-            </FormRow>
-          </fieldset>
-          <fieldset>
-            <legend>Notifications</legend>
-            <FormRow>
-              <div class="col-12">
-                <f.checkbox @name="alert_when_no_trainers"
-                            @label="Send email to contact email when trainer/mentor slot signs up become empty and the trainee/mentee slots still have sign ups."
-                />
-              </div>
-              <div class="col-12">
-                <f.checkbox @name="alert_when_becomes_empty"
-                            @label="Send email to contact email when a slot signups become empty."
-                />
-              </div>
-            </FormRow>
-            <FormRow>
-              <div class="col-12">
-                <f.text @name="contact_email"
-                        @label="Contact Email (shift full notification, etc)"
-                        @size={{40}}
-                        @maxlength={{200}}/>
-              </div>
-            </FormRow>
-          </fieldset>
-        </Modal.body>
-
-        <Modal.footer @noAlign={{true}}>
-          <f.submit @label={{if this.position.isNew "Create" "Update"}} @disabled={{this.position.isSaving}} />
-          <UiCancelButton @onClick={{this.cancelAction}} @disabled={{this.position.isSaving}} />
-          {{#if this.position.isSaving}}
-            <LoadingIndicator/>
-          {{/if}}
-          {{#unless this.position.isNew}}
-            <div class="ms-auto">
-              <UiButton @type="danger" @onClick={{this.deleteAction}}>
-                {{fa-icon "trash"}} Delete Position
-              </UiButton>
-            </div>
-          {{/unless}}
-        </Modal.footer>
-      </ChForm>
-    </ModalDialog>
+                  @saveAction={{this.saveAction}}
+                  @cancelAction={{this.cancelAction}}
+                  @deleteAction={{this.deleteAction}}
+    />
   {{/if}}
 </main>

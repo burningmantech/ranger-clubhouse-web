@@ -2,22 +2,13 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
 import PositionTypes from 'clubhouse/constants/position-types';
-import PositionValidations from 'clubhouse/validations/position';
 import {TECH_NINJA} from 'clubhouse/constants/roles';
 import _ from 'lodash';
-import {
-  TEAM_CATEGORY_ALL_MEMBERS,
-  TEAM_CATEGORY_OPTIONAL,
-  TEAM_CATEGORY_PUBLIC,
-  TYPE_TRAINING
-} from 'clubhouse/models/position';
+import { later }from '@ember/runloop';
 
 export default class PositionController extends ClubhouseController {
   @tracked positions;
   @tracked position = null;
-
-  positionTypes = PositionTypes;
-  positionValidations = PositionValidations;
 
   @tracked typeFilter = 'All';
   @tracked activeFilter = 'all';
@@ -42,12 +33,6 @@ export default class PositionController extends ClubhouseController {
   viewAsOptions = [
     ['List', 'list'],
     ['Teams', 'teams']
-  ];
-
-  categoryOptions = [
-    ['Recommended to all new & existing members', TEAM_CATEGORY_ALL_MEMBERS],
-    ['Optional - membership required', TEAM_CATEGORY_OPTIONAL],
-    ['Public - available to anyone', TEAM_CATEGORY_PUBLIC]
   ];
 
 
@@ -114,16 +99,6 @@ export default class PositionController extends ClubhouseController {
   }
 
   @cached
-  get teamPositionOptions() {
-    const options = [
-      ['-', null]
-    ];
-
-    this.teams.forEach((team) => options.push([team.title, team.id]));
-    return options;
-  }
-
-  @cached
   get teamScrollList() {
     const list = [];
 
@@ -137,21 +112,6 @@ export default class PositionController extends ClubhouseController {
     });
 
     return list;
-  }
-
-  @cached
-  get trainingOptions() {
-    const options = [
-      ['-', '']
-    ];
-
-    this.positions.forEach((position) => {
-      if (position.type === TYPE_TRAINING && !position.title.match(/\btrainer\b/i)) {
-        options.push([position.title, position.id]);
-      }
-    });
-
-    return options;
   }
 
   @action
@@ -174,13 +134,16 @@ export default class PositionController extends ClubhouseController {
   deleteAction() {
     this.modal.confirm(`Confirm Deleting "${this.position.title}"`,
       `By deleting this position important historical information will be lost. Are you use you want to do this?`,
-      () => {
-        this.position.destroyRecord().then(() => {
+      async () => {
+        try {
+          await this.position.destroyRecord();
           this.toast.success('The position has been deleted.');
           this.position = null;
-        }).catch((response) => this.house.handleErrorResponse(response));
-      }
-    )
+          this.house.scrollToTop();
+        } catch (response) {
+          this.house.handleErrorResponse(response)
+        }
+      });
   }
 
   @action
@@ -191,14 +154,31 @@ export default class PositionController extends ClubhouseController {
       return;
     }
 
-    this.house.saveModel(model, `The position has been ${isNew ? 'created' : 'updated'}.`, () => {
-      this.position = null;
-      this.positions.update(); // refresh the list.
-    })
+    this.house.saveModel(model, `The position has been ${isNew ? 'created' : 'updated'}.`, async () => {
+      try {
+        if (isNew) {
+          await this.positions.update(); // refresh the list.
+        }
+        this._scrollToPosition(this.position.id);
+        this.position = null;
+      } catch (response) {
+        this.house.handleErrorResponse(response);
+      }
+    });
   }
 
   @action
   cancelAction() {
+    if (!this.position.isNew) {
+      this._scrollToPosition(this.position.id);
+    } else {
+      this.house.scrollToTop();
+    }
     this.position = null;
+  }
+
+  _scrollToPosition(positionId) {
+    later(() => this.house.scrollToElement(`#position-${positionId}`), 100);
+    
   }
 }
