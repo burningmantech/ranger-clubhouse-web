@@ -16,6 +16,7 @@ process.on('uncaughtException', function (err) {
 module.exports = function (defaults) {
   let app = new EmberApp(defaults, {
     babel: {
+      loose: true,
       plugins: [require.resolve('ember-auto-import/babel-plugin')],
     },
 
