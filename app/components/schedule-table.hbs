@@ -109,7 +109,7 @@
                   type="button"
                   class="btn btn-warning btn-sm"
                   disabled={{slot.isRetrievingSignUps}}>
-                    {{fa-icon "users" type="fas" fixed=true right=1}}
+                  {{fa-icon "users" type="fas" fixed=true right=1}}
                   &nbsp;Hide Sign Ups
                 </button>
               {{else}}
@@ -125,7 +125,7 @@
                   &nbsp;Sign Ups
                 </button>
               {{/if}}
-             </div>
+            </div>
           </div>
           {{#if slot.signUpInfo}}
             <ScheduleSignUpInfo @info={{slot.signUpInfo}} />
@@ -149,3 +149,20 @@
     </div>
   </:body>
 </UiSection>
+
+{{#if this.showCalendarExportAdvisory}}
+  <ModalDialog @onEscape={{this.cancelCalendarExport}} as |Modal|>
+    <Modal.title>Export to Calendar</Modal.title>
+    <Modal.body>
+      <p>
+        Please note: this is a <b>one-time, static export of your Ranger schedule</b>.
+      </p>
+      Changes or updates to your schedule will not be reflected in your calendar. You will need to export
+      your schedule again after making any changes.
+    </Modal.body>
+    <Modal.footer @noAlign={{true}}>
+      <UiButton @onClick={{this.calendarExportConfirmed}}>Download calendar file (.ics)</UiButton>
+      <UiCancelButton @onClick={{this.cancelCalendarExport}} />
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}

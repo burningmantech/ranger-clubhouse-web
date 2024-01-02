@@ -8,6 +8,7 @@ export default class ScheduleTableComponent extends Component {
   @service house;
   @service modal;
   @tracked showAllShifts = true;
+  @tracked showCalendarExportAdvisory = false;
 
   constructor() {
     super(...arguments);
@@ -69,13 +70,19 @@ export default class ScheduleTableComponent extends Component {
    */
 
   @action
-  async exportCalendarAction() {
+   exportCalendarAction() {
     const {slots} = this.args;
     if (!slots.length) {
       this.modal.info('No Sign-Ups', "No shifts and/or training sessions are signed up for. There's nothing to export.")
       return;
     }
 
+    this.showCalendarExportAdvisory = true;
+  }
+
+  @action
+  async calendarExportConfirmed() {
+    const {slots} = this.args;
     let ical;
     try {
       ical = (await import('ical-generator')).default;
@@ -103,6 +110,12 @@ export default class ScheduleTableComponent extends Component {
       });
     });
 
+    this.showCalendarExportAdvisory = false;
     this.house.downloadFile(`${this.args.year}-ranger-schedule.ics`, calendar.toString(), 'text/calendar');
+  }
+
+  @action
+  cancelCalendarExport() {
+    this.showCalendarExportAdvisory = false;
   }
 }
