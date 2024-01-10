@@ -16,7 +16,6 @@ import {
   WAITING
 } from "clubhouse/constants/dashboard";
 import * as DashboardStep from 'clubhouse/constants/dashboard-steps';
-import {MVR_REQUEST} from "clubhouse/constants/dashboard-steps";
 
 const RESULT_PRIORITIES = {
   [URGENT]: 1,
