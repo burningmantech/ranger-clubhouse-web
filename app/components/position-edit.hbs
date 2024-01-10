@@ -154,6 +154,13 @@
   {{/unless}}
   <fieldset>
     <legend>Misc.</legend>
+    <FormRow>
+      <div class="col-auto">
+        <f.checkbox @name="mvr_eligible"
+                    @inline={{true}}
+                    @label="Position grant will allow the person to be MVR eligible"/>
+      </div>
+    </FormRow>
     <FormRow class="align-items-end">
       <f.text @name="paycode" @label="Paycom employee code" @size={{20}} @maxlength={{20}} />
       <div class="col-auto">

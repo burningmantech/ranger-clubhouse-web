@@ -41,7 +41,8 @@
             Passed training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
             {{#if this.person.isAlpha}}
               <br>
-              <b class="text-danger">{{fa-icon "hand-point-right"}} You still need to attend your Alpha shift on playa in
+              <b class="text-danger">{{fa-icon "hand-point-right"}} You still need to attend your Alpha shift on playa
+                in
                 order to become a Ranger.</b>
             {{/if}}
           {{else if (eq this.dirtTraining.status "no-show")}}
@@ -191,6 +192,36 @@
         <UiSection>
           <:title>{{fa-icon "truck-pickup"}} Motor Vehicle Record (MVR)</:title>
           <:body>
+            {{#if (or this.person.isRanger this.person.isNonRanger)}}
+            <p>
+              {{#if this.eventInfo.mvr_eligible}}
+                {{badge "success" "MVR Eligible"}}
+                {{#if (or this.eventInfo.mvr_eligible_teams this.eventInfo.mvr_eligible_positions)}}
+                  You are eligible to submit a MVR request because you are a member of the following team(s), and/or have the following position(s):
+                  {{#if this.eventInfo.mvr_eligible_teams}}
+                    <div class="mt-2">
+                      {{pluralize this.eventInfo.mvr_eligible_teams.length "team"}}:
+                      {{#each this.eventInfo.mvr_eligible_teams as |team idx|}}
+                        {{if idx ", "}}{{team.title}}
+                      {{/each}}
+                    </div>
+                  {{/if}}
+                  {{#if this.eventInfo.mvr_eligible_positions}}
+                    <div class="mt-2">
+                      {{pluralize this.eventInfo.mvr_eligible_positions.length "position"}}:
+                      {{#each this.eventInfo.mvr_eligible_positions as |position idx|}}
+                        {{if idx ", "}}{{position.title}}
+                      {{/each}}
+                    </div>
+                  {{/if}}
+                {{else}}
+                  You are eligible to submit a MVR request.
+                {{/if}}
+              {{else}}
+                {{badge "secondary" "MVR Ineligible"}} You are currently ineligible to submit a MVR request.
+              {{/if}}
+              </p>
+            {{/if}}
             {{#if this.personEvent.org_vehicle_insurance}}
               {{badge "success" "Authorized" }} You are authorized to drive cars and
               trucks (including your own personal vehicle) on playa for Ranger business.

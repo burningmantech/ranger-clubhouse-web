@@ -1,6 +1,7 @@
-<h1>Motorpool Policy &amp; Motor Vehicle Record (MVR) Report</h1>
+<h1>{{this.year}} Motorpool Policy &amp; Motor Vehicle Record (MVR) Report</h1>
 <p>
-  This report will show who has signed the Motorpool Policy Agreement and/or who has a Motor Vehicle Record (MVR).
+  This report will show who has signed the Motorpool Policy Agreement, who has a Motor Vehicle Record (MVR), or who
+  is MVR eligible.
 </p>
 <p>
   <UiButton @onClick={{this.exportToCsv}}>Export to CSV</UiButton>
@@ -11,8 +12,12 @@ Showing {{pluralize this.people.length "person"}}
   <tr>
     <th>Callsign</th>
     <th>Status</th>
-    <th>{{this.year}} Motorpool</th>
-    <th>{{this.year}} Motor Vehicle Record</th>
+    <th>Motorpool Signed</th>
+    <th>MVR Approved</th>
+    <th>MVR Eligible</th>
+    <th>MVR Teams</th>
+    <th>MVR Positions</th>
+    <th>MVR Checkbox</th>
   </tr>
   </thead>
 
@@ -25,11 +30,33 @@ Showing {{pluralize this.people.length "person"}}
       <td>{{person.status}}</td>
       <td class="text-center">{{yesno person.signed_motorpool_agreement}}</td>
       <td class="text-center">{{yesno person.org_vehicle_insurance}}</td>
+      <td class="text-center">
+        {{#if (or person.mvr_eligible person.mvr_teams person.mvr_positions)}}
+          Y
+        {{else}}
+          N
+        {{/if}}
+      </td>
+      <td>
+        {{#each person.mvr_teams as |team|}}
+          {{team.title}}<br>
+        {{else}}
+          -
+        {{/each}}
+      </td>
+      <td>
+        {{#each person.mvr_positions as |position|}}
+          {{position.title}}<br>
+        {{else}}
+          -
+        {{/each}}
+      </td>
+      <td class="text-center">{{yesno person.mvr_eligible}}</td>
     </tr>
   {{else}}
     <tr>
-      <td colspan="4" class="text-danger">
-        <b>No one was found to have signed the Motorpool Policy or has Org insurance.</b>
+      <td colspan="8" class="text-danger">
+        <b>No one was found to have signed the Motorpool Policy, has Org insurance, or is MVR eligible.</b>
       </td>
     </tr>
   {{/each}}

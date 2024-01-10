@@ -8,7 +8,7 @@
     <UiSection>
       <:title>{{this.year}} Training &amp; ARTs</:title>
       <:body>
-        <ChForm @formFor={{this.courseForm}} @formId="course" @onSubmit={{this.save}} as |f|>
+        <ChForm @formFor={{this.courseForm}} @formId="course" @onSubmit={{this.saveOnlineCourse}} as |f|>
           <div class="row">
             <div class="col-auto">
               {{this.year}} Online Course Completion<br>
@@ -144,12 +144,12 @@
             <dt>Radio Checkout Agreement</dt>
             <dd>
               {{#if (has-role "admin")}}
-                <ChForm @formId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as
-                        |f|>
+                <ChForm @formId="person-event"
+                        @formFor={{this.personEvent}}
+                        @onSubmit={{this.save}} as |f|>
                   <div class="text-danger">
                     Do not sign agreements on someone else's behalf. You may expose the organization
-                    to legal
-                    liability.
+                    to legal liability.
                   </div>
                   <f.checkbox @name="asset_authorized"
                               @label="Signed Radio Checkout Agreement"/>
@@ -194,6 +194,9 @@
                   <f.checkbox @name="may_request_stickers"
                               @label="Personal Vehicle Use Requests Allowed (Allows access to the Me > Vehicles page)"
                   />
+                  <f.checkbox @name="mvr_eligible"
+                              @label="May submit a MVR request (use only if person does not have a MVR eligible team or position)"
+                  />
                   <div class="mt-2">
                     <f.submit/>
                   </div>
@@ -205,8 +208,7 @@
                       <b class="text-danger">{{fa-icon "times"}} NOT AUTHORIZED</b>
                     {{/if}}
                     for the {{this.year}} event to drive Ranger vehicles (including own personal
-                    vehicle) on playa for
-                    Ranger business. Vehicle must have a valid Burning Man driving sticker.
+                    vehicle) on playa for Ranger business. Vehicle must have a valid Burning Man driving sticker.
                   </p>
                   {{#if this.personEvent.may_request_stickers}}
                     <b class="text-success">{{fa-icon "check"}} Allowed</b>
@@ -221,8 +223,7 @@
                 {{#if this.canSignAgreements}}
                   <div class="text-danger">
                     Do not sign agreements on someone else's behalf. You may expose the organization
-                    to legal
-                    liability.
+                    to legal liability.
                   </div>
                   <f.checkbox @name="signed_motorpool_agreement"
                               @label="Signed Motorpool Policy Agreement"

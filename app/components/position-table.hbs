@@ -67,7 +67,10 @@
           {{fa-icon "bell" fixed=true}} Alert when slot becomes empty of signups.<br>
         {{/if}}
         {{#if position.no_training_required}}
-          {{fa-icon "person-walking" fixed=true}} In-Person training not required to check-in.<br>
+          {{fa-icon "person-walking" fixed=true}} In-Person training not required to check in.<br>
+        {{/if}}
+        {{#if position.mvr_eligible}}
+          {{fa-icon "truck-monster" fixed=true}} Position grants MVR eligibility.<br>
         {{/if}}
         {{#if position.contact_email}}
           <MailTo @to={{position.contact_email}} />

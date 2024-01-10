@@ -1,5 +1,12 @@
 import Model, { attr } from '@ember-data/model';
 
+export const TYPE_FLEET = 'fleet';
+export const TYPE_PERSONAL = 'personal';
+
+export const STATUS_PENDING = 'pending';
+export const STATUS_APPROVED = 'approved';
+export const STATUS_REJECTED = 'rejected';
+
 export const AmberLightLabels = {
   none: '-',
   'already-has': 'Personal',
@@ -33,7 +40,7 @@ export default class VehicleModel extends Model {
 
   @attr('number') event_year;
   @attr('string') type;     // Vehicle Type Personal or Fleet
-  @attr('string', { defaultValue: 'pending'}) status;
+  @attr('string', { defaultValue: STATUS_PENDING}) status;
   @attr('string', { defaultValue: '' }) team_assignment;
 
   @attr('string') vehicle_year; // might be numeric year or 'TBA' string.
@@ -61,23 +68,23 @@ export default class VehicleModel extends Model {
   @attr('string') callsign; // only used for creation or update
 
   get isApproved() {
-    return this.status === 'approved';
+    return this.status === STATUS_APPROVED;
   }
 
   get isRejected() {
-    return this.status === 'rejected';
+    return this.status === STATUS_REJECTED;
   }
 
   get isPending() {
-    return this.status === 'pending';
+    return this.status === STATUS_PENDING;
   }
 
   get isPersonal() {
-    return this.type === 'personal';
+    return this.type === TYPE_PERSONAL;
   }
 
   get isFleet() {
-    return this.type === 'fleet';
+    return this.type === TYPE_FLEET;
   }
 
   get amberLightLabel() {

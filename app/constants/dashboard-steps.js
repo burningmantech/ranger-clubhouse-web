@@ -493,14 +493,6 @@ export const SIGN_UP_FOR_SHIFTS = {
     const {shift_signups} = milestones;
 
     if (shift_signups.slot_count) {
-      /*
-        const totalHours = shift_signups.total_duration ? (+shift_signups.total_duration / 3600.0).toFixed(2) : '0.00';
-        const countedHours = shift_signups.counted_duration ? (+shift_signups.counted_duration / 3600.0).toFixed(2) : '0.00';
-        let notedHours = '';
-        if (shift_signups.total_duration !== shift_signups.counted_duration) {
-         notedHours = ` (${totalHours} total hours)`
-        }
-      */
       return {
         result: COMPLETED,
         sticky: true, // keep sorted close to the top
@@ -553,26 +545,60 @@ export const SIGN_BEHAVIORAL_AGREEMENT = {
 };
 
 export const SIGN_MOTORPOOL_AGREEMENT = {
-  name: 'Sign the Ranger Motorpool Policy (optional)',
+  name: 'Sign the Ranger Motorpool Policy',
   skipPeriod: AFTER_EVENT,
   check({milestones}) {
+    const {mvr_eligible} = milestones;
+    const name = `Sign the Ranger Motorpool Policy ${mvr_eligible ? '' : '(optional)'}`;
+
     if (!milestones.motorpool_agreement_available) {
       return {result: SKIP};
     }
 
     if (milestones.motorpool_agreement_signed) {
-      return {result: COMPLETED};
+      return {name, result: COMPLETED};
     }
+
+    let suffix = 'to review and agree to the Ranger Motor-Pool Policy, which is required to drive a golf cart or UTV ("gator").';
+
+    if (mvr_eligible) {
+      suffix = htmlSafe(`${suffix}<div class="mt-2">Once you have signed the Motor-Pool Policy, you will be able to submit a MVR request.</div>`);
+    }
+
     return {
-      result: OPTIONAL,
-      route: 'me.agreements',
+      name,
+      result: mvr_eligible ?  ACTION_NEEDED : OPTIONAL,
       linkedMessage: {
-        route: 'me.agreements',
+        route: mvr_eligible ? 'me.vehicles' : 'me.agreements',
         prefix: 'Ranger vehicles are a limited resource and issued based on availability. Vehicles are assigned according to operational need rather than convenience. Visit',
-        text: 'Me > Agreements',
-        suffix: 'to review and agree to the Ranger Motor-Pool Policy, which is required to drive a golf cart or UTV ("gator")'
+        text: mvr_eligible ? 'Me > Vehicle Dashboard' : 'Me > Agreements',
+        suffix
       },
     };
+  }
+};
+
+export const MVR_REQUEST = {
+  name: 'Submit a MVR request',
+  period: BEFORE_EVENT,
+  check({milestones}) {
+    const {mvr_eligible} = milestones;
+
+    if (!milestones.motorpool_agreement_available || !mvr_eligible) {
+      return { result: SKIP };
+    }
+
+    if (milestones.org_vehicle_insurance) {
+      return {
+        result: COMPLETED,
+        message: 'Your MVR request has been approved.'
+      }
+    }
+
+    return {
+      result: ACTION_NEEDED,
+      message: htmlSafe(`You are eligible to submit a MVR request. Use <a href="${milestones.mvr_request_url}" rel="noopener noreferrer" target="_blank">this form <i class="fa-solid fa-arrow-up-right-from-square"></i></a> to apply. <div class="mt-2"><b class="fw-bold text-danger">DO NOT SUBMIT MORE THAN ONE REQUEST.</b> Doing so will delay your application.</div>`)
+    }
   }
 };
 
@@ -775,7 +801,7 @@ export const VEHICLE_REQUESTS = {
         linkedMessage: {
           route: 'me.vehicles',
           prefix: 'Your vehicle request has been approved. Visit',
-          text: 'Me > Vehicle Requests',
+          text: 'Me > Vehicle Dashboard',
           suffix: 'for details.'
         }
       };
@@ -785,7 +811,7 @@ export const VEHICLE_REQUESTS = {
         linkedMessage: {
           route: 'me.vehicles',
           prefix: 'Your vehicle request is pending review. Visit',
-          text: 'Me > Vehicle Requests',
+          text: 'Me > Vehicle Dashboard',
           suffix: 'to adjust or delete your request.'
         }
       };
@@ -796,7 +822,7 @@ export const VEHICLE_REQUESTS = {
         linkedMessage: {
           route: 'me.vehicles',
           prefix: 'Your vehicle request has been denied. Visit',
-          text: 'Me > Vehicle Requests',
+          text: 'Me > Vehicle Dashboard',
           suffix: 'for details.'
         }
       };
@@ -806,7 +832,7 @@ export const VEHICLE_REQUESTS = {
         linkedMessage: {
           route: 'me.vehicles',
           prefix: 'You have been approved to submit vehicle requests and reauthorizations for driving stickers and other items. Visit',
-          text: 'Me > Vehicle Requests',
+          text: 'Me > Vehicle Dashboard',
           suffix: 'to submit a request.'
         }
       };
