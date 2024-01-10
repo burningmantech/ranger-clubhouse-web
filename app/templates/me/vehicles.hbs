@@ -1,311 +1,114 @@
-<h1>{{this.year}} Vehicle Requests for Stickers and Other Items</h1>
-<BackToHome/>
-
+<h1>{{this.year}} Vehicle Dashboard</h1>
 <p>
-  Using a Personal Vehicle while on Ranger business requires specific approval.
-  As with the Ranger rental fleet vehicles, Personal Vehicles used while on Ranger business
-  must display/contain authorized Vehicle Use Items in order to be driven on playa.
+  <BackToHome/>
 </p>
-<UiSection>
-  <:title>Vehicle requests must be submitted each &amp; every year</:title>
-  <:body>
-    <p>
-      Even if your vehicle was approved in previous years, <b class="text-danger">a vehicle request must be submitted
-      each and every year</b> a Personal Vehicle is to be used for Ranger business at the event. Approval is for the
-      current event only and does not carry over to the following event.
-    </p>
-    More information is available in the
-    <ExtLink @href={{this.vehicleConfig.personal_vehicle_document_url}}>
-      Ranger Personal Vehicle Use Procedures
-    </ExtLink>
-    document. (link opens in a new window)
-  </:body>
-</UiSection>
 
-{{#if (and this.motorpoolPolicySigned this.personalVehicleSigned)}}
-  <UiSection>
-    <:title>Personal Vehicles ({{pluralize this.vehicles.length "request"}})</:title>
-    <:body>
-      {{#unless this.vehicles}}
-        <p>
-          <b class="text-danger">All vehicle requests MUST be submitted BEFORE you leave for the playa.</b>
-          Failing to do will result in your inability to drive your vehicle on behalf of the Rangers.
-        </p>
-      {{/unless}}
-      <p>
-        <UiButton @onClick={{this.newAction}}>New Vehicle Request / Reauthorize Vehicle</UiButton>
-      </p>
-      {{#each this.vehicles as |vehicle idx|}}
-        {{#if idx}}
-          <hr>{{/if}}
-        <h3>
-          {{vehicle.vehicle_year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}} {{vehicle.vehicle_color}}
-          {{#if vehicle.license_number}}
-            (#{{vehicle.license_state}}-{{vehicle.license_number}})
-          {{/if}}
-        </h3>
-        {{#if vehicle.isPending}}
-          <p>
-            <b>{{fa-icon "hourglass-half"}} The request is awaiting review.</b>
-          </p>
-          <p>
-            <UiButton @onClick={{fn this.editAction vehicle}}>
-              {{fa-icon "edit"}} Edit Request
-            </UiButton>
-            <UiButton @type="light-red" @onClick={{fn this.deleteAction vehicle}}>
-              {{fa-icon "trash"}} Delete Request
-            </UiButton>
-          </p>
-        {{else if vehicle.isApproved}}
-          <p>
-            <b class="text-success">{{fa-icon "check"}} Your request has been approved for the following
-              item(s):</b>
-          </p>
-        {{else if vehicle.isRejected}}
-          <p>
-            <b class="text-light-red">
-              {{fa-icon "exclamation"}}  The request has been denied. Your vehicle is not authorized to be driven
-              on
-              playa
-            </b></p>
-        {{else}}
-          The status [{{vehicle.status}}] is not understood. This is a bug!
+{{#if this.vehicleInfo.motorpool_agreement_signed}}
+  <UiAlert @type="success">
+    {{fa-icon "check" right=1 fixed=true}} The Motorpool Policy has been agreed to.<br>
+    {{#if this.vehicleInfo.org_vehicle_insurance}}
+      {{fa-icon "check" right=1 fixed=true}} Your MVR request has been approved.<br>
+    {{/if}}
+    {{#if this.vehicleInfo.personal_vehicle_signed}}
+      {{fa-icon "check" right=1 fixed=true}} The Personal Vehicle Agreement has been agreed to.<br>
+    {{/if}}
+  </UiAlert>
+  {{#if this.vehicleInfo.org_vehicle_insurance}}
+    {{#if this.vehicleInfo.personal_vehicle_signed}}
+      {{#if this.vehicles}}
+        {{#if this.pendingVehicles}}
+          <UiAlert @type="secondary">
+            {{fa-icon "hourglass" fixed=true right=1}} {{pluralize this.pendingVehicles "pending vehicle request"}}
+          </UiAlert>
         {{/if}}
-        <dl>
-          {{#if vehicle.response}}
-            <dt>Response from Approver</dt>
-            <dd>
-              {{vehicle.response}}
-            </dd>
-          {{/if}}
-          <dt>Driving Sticker</dt>
-          <dd>
-            {{#if vehicle.isRejected}}
-              Denied
-            {{else if (or (eq vehicle.driving_sticker "prepost") (eq vehicle.driving_sticker "staff"))}}
-              {{if vehicle.isApproved "Approved" "Awaiting approval"}}
-              for a {{if (eq vehicle.driving_sticker "prepost") "Pre/Post" "Staff"}} sticker.
-            {{else}}
-              Other
-              <p>
-                {{vehicle.driving_other}}
-              </p>
-            {{/if}}
-          </dd>
-          <dt>Ranger Logo Decal</dt>
-          <dd>
-            {{#if (eq vehicle.ranger_logo "none")}}
-              None
-            {{else if vehicle.isRejected}}
-              Denied
-            {{else if (or (eq vehicle.ranger_logo "permanent-new") (eq vehicle.ranger_logo "permanent-existing") (eq vehicle.ranger_logo "event"))}}
-              {{#if vehicle.isApproved}}
-                Approved to use
-                {{#if (eq vehicle.ranger_logo "permanent-new")}}
-                  a new permanent Ranger logo decal.
-                {{else if (eq vehicle.ranger_logo "permanent-existing")}}
-                  your existing permanent Ranger logo decal.
-                {{else if (eq vehicle.ranger_logo "event")}}
-                  an event only Ranger logo decal.
-                {{/if}}
-              {{else}}
-                Awaiting approval to use a Ranger logo decal.
-              {{/if}}
-            {{else}}
-              Uh oh, unknown logo type [{{vehicle.ranger_logo}}]
-            {{/if}}
-          </dd>
-          <dt>Fuel Chit</dt>
-          <dd>
-            {{#if (eq vehicle.fuel_chit "none")}}
-              None
-            {{else if vehicle.isRejected}}
-              Denied
-            {{else if (eq vehicle.fuel_chit "event")}}
-              {{#if vehicle.isApproved}}
-                Approved for an event fuel chit.
-              {{else}}
-                Awaiting approval for an event fuel chit.
-              {{/if}}
-            {{else if (eq vehicle.fuel_chit "single-use")}}
-              {{#if vehicle.isApproved}}
-                Approved for a single-use fuel chit.
-              {{else}}
-                Awaiting approval for a single-use fuel chit.
-              {{/if}}
-            {{/if}}
-          </dd>
-          <dt>Amber Light</dt>
-          <dd>
-            {{#if (eq vehicle.amber_light "none")}}
-              None
-            {{else if vehicle.isRejected}}
-              Denied
-            {{else if (or (eq vehicle.amber_light "department") (eq vehicle.amber_light "already-has"))}}
-              {{#if vehicle.isApproved}}
-                Approved to use
-                {{#if (eq vehicle.amber_light "department")}}
-                  an amber light supplied by the Ranger department.
-                {{else}}
-                  your personal amber light.
-                {{/if}}
-              {{else}}
-                Awaiting approval to use an amber light.
-              {{/if}}
-            {{else}}
-              Uh oh, unknown amber light type [{{vehicle.amber_light}}]
-            {{/if}}
-          </dd>
-        </dl>
-      {{/each}}
-    </:body>
-  </UiSection>
-{{else}}
-  <UiSection>
-    <:title>Two Vehicle Agreements must be reviewed &amp; signed</:title>
-    <:body>
-      <p>
-        You must agree to both the Motorpool Policy Agreement and the Personal Vehicle Agreement before you may submit
-        requests for driving stickers.
-      </p>
+        {{#if this.approvedVehicles}}
+          <UiAlert @type="success">
+            {{fa-icon "check" fixed=true right=1}} {{pluralize this.approvedVehicles "approved vehicle request"}}
+          </UiAlert>
+        {{/if}}
+        {{#if this.rejectedVehicles}}
+          <UiAlert @type="danger">
+            {{fa-icon "ban" fixed=true right=1}} {{pluralize this.rejectedVehicles "rejected vehicle request"}}
+          </UiAlert>
+        {{/if}}
+      {{else}}
+        <UiAlert @type="warning">
+          {{fa-icon "times" right=1 fixed=true}} No vehicle requests have been submitted.
+        </UiAlert>
+      {{/if}}
+    {{/if}}
+  {{else}}
+    <UiAlert @type="warning">
+      {{fa-icon "hourglass" right=1 fixed=true}} A MVR request has not been submitted, or is awaiting approval.<br>
+    </UiAlert>
+  {{/if}}
+  {{#if this.vehicleInfo.org_vehicle_insurance}}
+    {{#if this.vehicleInfo.vehicle_requests_allowed}}
+      <Me::PersonalVehicle @vehicles={{this.vehicles}}
+                           @vehicleInfo={{this.vehicleInfo}}
+                           @reviewAgreement={{this.reviewPersonalVehicleAgreement}}
+      />
+    {{else}}
+      <div class="mt-2">
+        <b class="text-danger">Note: You may not drive your personal vehicle on behalf of the Rangers at this time.</b>
+        Reach out to your manager if you believe you have an operational need to drive your personal vehicle while
+        volunteering for the Rangers. All personal vehicles must be approved prior to arriving to the playa.
+      </div>
+    {{/if}}
+  {{else}}
     <p>
-      {{#if this.motorpoolPolicySigned}}
-        <div class="text-success">
-          {{fa-icon "check"}} You have agreed to Motorpool Policy for the year. Thank you!
-        </div>
-      {{else}}
-        <div class="text-danger">
-          {{fa-icon "times"}} You have not agreed to the Ranger Vehicle Motorpool Policy yet.
-        </div>
-        <UiButton @type="primary" @onClick={{this.reviewMotorpoolPolicy}}>
-          Review And Sign the Motorpool Policy
-        </UiButton>
-      {{/if}}
-      </p>
-      {{#if this.personalVehicleSigned}}
-        <div class="text-success">
-          {{fa-icon "check"}} You have already agreed to the Personal Vehicle Agreement. Thank you!
-        </div>
-      {{else}}
-        <div class="text-danger">
-          {{fa-icon "times"}} You have not agreed to the Ranger Personal Vehicle Agreement yet.
-        </div>
-        <UiButton @type="primary" @onClick={{this.reviewPersonalVehicleAgreement}}>
-          Review And Sign the Ranger Personal Vehicle Agreement
-        </UiButton>
-      {{/if}}
-    </:body>
-  </UiSection>
+      Before you are allowed to drive Ranger vehicles, such as trucks &amp; SUVs, on behalf of the Ranger department,
+      a MVR request must be submitted and approved. Burning Man’s insurance company will run a check on your driving
+      record and let us know whether they are willing to cover you under the Burning Man insurance policy.
+      Part of submitting this form is providing consent for the insurance company to perform this check.
+    </p>
+    Use the following information to fill out the MVR request:
+    <ul class="mb-2">
+      <li>Select <i>Rangers</i> as the Department</li>
+      <li>
+        Use your Ranger callsign, {{this.person.callsign}}, as your Playa Name. Do not enter “Ranger” before your
+        callsign!
+      </li>
+      <li>
+        Enter <i>Wilfredo Sanchez Vega</i> as the “Manager’s Full Legal Name”.
+      </li>
+      <li>
+        Ensure you correctly enter your driver license state and number, including any leading zeros.
+      </li>
+      <li>
+        For “DOB” (Date of Birth) make sure you enter your birthdate NOT today’s date or the current year. Seriously,
+        use your birthday, not the current date.
+      </li>
+    </ul>
+    <p>
+      It can take a couple weeks for the driving record/license verification to be processed. The processing time
+      will be longer for international drivers (i.e., drivers who hold a non-US license.)
+    </p>
+    <p>
+      <b class="text-danger">DO NOT SUBMIT MORE THAN ONE REQUEST.</b> Doing so will delay your application and cause
+      headaches for everyone involved. Much sadness will be had.
+    </p>
+    <p>
+      <b>Wondering about the status of your MVR request?</b> This page will let you know when your submission has been
+      approved. Reach out to your team's manager if you have additional concerns.
+    </p>
+    <p>
+      <b>Wish to drive your personal vehicle on behalf of the Rangers?</b> Using a Personal Vehicle while on Ranger
+      business requires specific approval. In addition to having an approved MVR, all personal vehicles must
+      be approved (or re-approved) EACH YEAR. Contact your manager if you believe you have an operational
+      need to use your personal vehicle while on duty.
+    </p>
+    Use
+    <ExtLink @href={{this.vehicleInfo.mvr_request_url}}>THIS LINK</ExtLink> to submit a MVR request.
+  {{/if}}
+{{else}}
+  <p>
+    Before you are allowed to submit a MVR request, the Motorppool Policy has to be agreed to first. Use the button
+    below to review and agree to the policy.
+  </p>
+  <UiButton @onClick={{this.reviewMotorpoolPolicy}}>Review &amp; Sign The Motorpool Policy</UiButton>
 {{/if}}
 
 {{#if this.showAgreementTag}}
   <Me::DocumentReview @tag={{this.showAgreementTag}} @onClose={{this.closeAgreement}} />
-{{/if}}
-
-{{#if this.entry}}
-  <ModalDialog @title="{{if this.entry.isNew "Submit" "Update"}} Vehicle Request"
-               @onEscape={{this.cancelAction}} as |Modal|>
-    <ChForm @formId="vehicle"
-            @formFor={{this.entry}}
-            @validator={{this.vehicleValidations}}
-            @onSubmit={{this.saveAction}}  as |f|>
-      <Modal.body>
-        <p>
-          <b class="text-danger">All fields are required.</b>
-        </p>
-        <fieldset>
-          <legend>Vehicle Description</legend>
-          <FormRow>
-            <f.select @name="vehicle_class"
-                      @label="Vehicle Class"
-                      @options={{this.vehicleClassOptions}}/>
-          </FormRow>
-          <FormRow>
-            <f.text @name="vehicle_year"
-                    @label="Vehicle Year"
-                    @size={{4}}
-                    @maxlength={{4}}
-            />
-            <f.text @name="vehicle_make"
-                    @label="Make"
-                    @size={{15}}
-                    @hint="e.g., Ford, GMC, etc."/>
-            <f.text @name="vehicle_model"
-                    @label="Model"
-                    @size={{15}}
-                    @hint="e.g., F-350, Tacoma, etc."
-            />
-            <f.text @name="vehicle_color"
-                    @label="Color"
-                    @size={{15}}
-            />
-          </FormRow>
-          <FormRow>
-            <f.select @name="license_state"
-                      @label="Vehicle License State or Province"
-                      @options={{this.stateOptions}}
-            />
-            <f.text @name="license_number"
-                    @label="Vehicle License Number"
-                    @size={{10}}
-            />
-          </FormRow>
-        </fieldset>
-        <fieldset>
-          <legend>Personal Vehicle Use Items (Stickers &amp; Other Items)</legend>
-          <FormRow>
-            <FormLabel>
-              Request a Driving Sticker if needed to drive your personal vehicle for Ranger business
-            </FormLabel>
-            <div class="col-12">
-              <f.radioGroup @name="driving_sticker"
-                            @options={{this.drivingStickerOptions}}
-                            @inline={{true}}
-              />
-            </div>
-          </FormRow>
-          <FormRow>
-            <FormLabel>Ranger Logo Decal</FormLabel>
-            <div class="col-12">
-              <f.radioGroup @name="ranger_logo"
-                            @options={{this.rangerLogoOptions}}
-                            @inline={{true}}
-              />
-            </div>
-          </FormRow>
-          <FormRow>
-            <FormLabel>Fuel Chit Requests</FormLabel>
-            <div class="col-12">
-              <f.radioGroup @name="fuel_chit"
-                            @options={{this.fuelChitOptions}}
-                            @inline={{true}}
-              />
-            </div>
-          </FormRow>
-          <FormRow>
-            <FormLabel>Amber Light</FormLabel>
-            <div class="col-12">
-              <f.radioGroup @name="amber_light"
-                            @options={{this.amberLightOptions}}
-                            @inline={{true}}
-              />
-            </div>
-          </FormRow>
-          <FormRow>
-            <f.textarea @name="request_comment"
-                        @label="Comments for the Approver"
-                        @rows={{2}}
-                        @cols={{80}}/>
-          </FormRow>
-        </fieldset>
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label="{{if this.entry.isNew "Submit" "Update"}} Request" @disabled={{this.entry.isSaving}} />
-        <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelAction}} />
-        {{#if this.entry.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
 {{/if}}

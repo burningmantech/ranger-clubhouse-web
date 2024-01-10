@@ -32,7 +32,7 @@ export default class PersonEventInfoController extends ClubhouseController {
   }
 
   @action
-  async save(model, isValid) {
+  async saveOnlineCourse(model, isValid) {
     if (!isValid) {
       return;
     }
@@ -52,11 +52,31 @@ export default class PersonEventInfoController extends ClubhouseController {
         }
       });
       if (+this.person.id === this.session.userId) {
-        this.session.loadUser();
+        await this.session.loadUser();
       }
       this.toast.success('Course successfully updated.');
     } catch (response) {
       this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
+  }
+
+  @action
+  async save(model, isValid) {
+    if (!isValid) {
+      return;
+    }
+
+    this.isSubmitting = true;
+    try {
+      await model.save();
+      if (+this.person.id === this.session.userId) {
+        await this.session.loadUser();
+      }
+      this.toast.success('Information successfully updated.');
+    } catch (response) {
+      this.house.handleErrorResponse(response, model);
     } finally {
       this.isSubmitting = false;
     }

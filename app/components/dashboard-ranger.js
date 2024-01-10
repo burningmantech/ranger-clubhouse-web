@@ -16,6 +16,7 @@ import {
   WAITING
 } from "clubhouse/constants/dashboard";
 import * as DashboardStep from 'clubhouse/constants/dashboard-steps';
+import {MVR_REQUEST} from "clubhouse/constants/dashboard-steps";
 
 const RESULT_PRIORITIES = {
   [URGENT]: 1,
@@ -109,6 +110,7 @@ const STEPS = [
 
   DashboardStep.SIGN_MOTORPOOL_AGREEMENT,
   //DashboardStep.SIGN_BEHAVIORAL_AGREEMENT,
+  DashboardStep.MVR_REQUEST,
   DashboardStep.SIGN_RADIO_CHECKOUT_AGREEMENT,
   DashboardStep.VERIFY_TIMESHEETS_FINISHED,
 
@@ -284,6 +286,7 @@ const NON_RANGER_STEPS = [
   DashboardStep.VERIFY_PERSONAL_INFO,
   DashboardStep.SIGN_UP_FOR_SHIFTS,
   DashboardStep.SIGN_MOTORPOOL_AGREEMENT,
+  DashboardStep.MVR_REQUEST,
   //DashboardStep.SIGN_BEHAVIORAL_AGREEMENT,
   DashboardStep.SIGN_RADIO_CHECKOUT_AGREEMENT,
   DashboardStep.VERIFY_TIMESHEETS_FINISHED,

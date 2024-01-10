@@ -1,0 +1,178 @@
+<p>
+  Using a Personal Vehicle while on Ranger business requires specific approval. As with the Ranger rental fleet
+  vehicles, Personal Vehicles used while on Ranger business must display/contain authorized Vehicle Use Items in order
+  to be driven on playa.
+</p>
+<h3>Vehicle Requests Must Be Submitted Each &amp; Every Year</h3>
+<p>
+  Even if your vehicle was approved in previous years, <b class="text-danger">a vehicle request must be submitted
+  each and every year</b> a Personal Vehicle is to be used for Ranger business at the event. Approval is for the
+  current event only and does not carry over to the following event.
+</p>
+<p>
+  More information is available in the
+  <ExtLink @href={{@vehicleInfo.personal_vehicle_document_url}}>
+    Ranger Personal Vehicle Use Procedures
+  </ExtLink>
+  document. (link opens in a new window)
+</p>
+{{#if @vehicleInfo.personal_vehicle_signed}}
+  <UiSection>
+    <:title>Personal Vehicles ({{pluralize @vehicles.length "request"}})</:title>
+    <:body>
+      {{#unless @vehicles}}
+        <p>
+          <b class="text-danger">All vehicle requests MUST be submitted BEFORE you leave for the playa.</b>
+          Failing to do will result in your inability to drive your vehicle on behalf of the Rangers.
+        </p>
+      {{/unless}}
+      <p>
+        <UiButton @onClick={{this.newAction}}>New Vehicle Request / Reauthorize Vehicle</UiButton>
+      </p>
+      {{#each @vehicles as |vehicle idx|}}
+        {{#if idx}}
+          <hr>{{/if}}
+        <h3>
+          {{vehicle.vehicle_year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}} {{vehicle.vehicle_color}}
+          {{#if vehicle.license_number}}
+            (#{{vehicle.license_state}}-{{vehicle.license_number}})
+          {{/if}}
+        </h3>
+        {{#if vehicle.isPending}}
+          <p>
+            <b>{{fa-icon "hourglass-half"}} The request is awaiting review.</b>
+          </p>
+          <p>
+            <UiButton @onClick={{fn this.editAction vehicle}}>
+              {{fa-icon "edit"}} Edit Request
+            </UiButton>
+            <UiButton @type="light-red" @onClick={{fn this.deleteAction vehicle}}>
+              {{fa-icon "trash"}} Delete Request
+            </UiButton>
+          </p>
+        {{else if vehicle.isApproved}}
+          <p>
+            <b class="text-success">{{fa-icon "check"}} Your request has been approved for the following
+              item(s):</b>
+          </p>
+        {{else if vehicle.isRejected}}
+          <p>
+            <b class="text-light-red">
+              {{fa-icon "exclamation"}}  The request has been denied. Your vehicle is not authorized to be driven
+              on
+              playa
+            </b></p>
+        {{else}}
+          The status [{{vehicle.status}}] is not understood. This is a bug!
+        {{/if}}
+        <dl>
+          {{#if vehicle.response}}
+            <dt>Response from Approver</dt>
+            <dd>
+              {{vehicle.response}}
+            </dd>
+          {{/if}}
+          <dt>Driving Sticker</dt>
+          <dd>
+            {{#if vehicle.isRejected}}
+              Denied
+            {{else if (or (eq vehicle.driving_sticker "prepost") (eq vehicle.driving_sticker "staff"))}}
+              {{if vehicle.isApproved "Approved" "Awaiting approval"}}
+              for a {{if (eq vehicle.driving_sticker "prepost") "Pre/Post" "Staff"}} sticker.
+            {{else}}
+              Other
+              <p>
+                {{vehicle.driving_other}}
+              </p>
+            {{/if}}
+          </dd>
+          <dt>Ranger Logo Decal</dt>
+          <dd>
+            {{#if (eq vehicle.ranger_logo "none")}}
+              None
+            {{else if vehicle.isRejected}}
+              Denied
+            {{else if (or (eq vehicle.ranger_logo "permanent-new") (eq vehicle.ranger_logo "permanent-existing") (eq vehicle.ranger_logo "event"))}}
+              {{#if vehicle.isApproved}}
+                Approved to use
+                {{#if (eq vehicle.ranger_logo "permanent-new")}}
+                  a new permanent Ranger logo decal.
+                {{else if (eq vehicle.ranger_logo "permanent-existing")}}
+                  your existing permanent Ranger logo decal.
+                {{else if (eq vehicle.ranger_logo "event")}}
+                  an event only Ranger logo decal.
+                {{/if}}
+              {{else}}
+                Awaiting approval to use a Ranger logo decal.
+              {{/if}}
+            {{else}}
+              Uh oh, unknown logo type [{{vehicle.ranger_logo}}]
+            {{/if}}
+          </dd>
+          <dt>Fuel Chit</dt>
+          <dd>
+            {{#if (eq vehicle.fuel_chit "none")}}
+              None
+            {{else if vehicle.isRejected}}
+              Denied
+            {{else if (eq vehicle.fuel_chit "event")}}
+              {{#if vehicle.isApproved}}
+                Approved for an event fuel chit.
+              {{else}}
+                Awaiting approval for an event fuel chit.
+              {{/if}}
+            {{else if (eq vehicle.fuel_chit "single-use")}}
+              {{#if vehicle.isApproved}}
+                Approved for a single-use fuel chit.
+              {{else}}
+                Awaiting approval for a single-use fuel chit.
+              {{/if}}
+            {{/if}}
+          </dd>
+          <dt>Amber Light</dt>
+          <dd>
+            {{#if (eq vehicle.amber_light "none")}}
+              None
+            {{else if vehicle.isRejected}}
+              Denied
+            {{else if (or (eq vehicle.amber_light "department") (eq vehicle.amber_light "already-has"))}}
+              {{#if vehicle.isApproved}}
+                Approved to use
+                {{#if (eq vehicle.amber_light "department")}}
+                  an amber light supplied by the Ranger department.
+                {{else}}
+                  your personal amber light.
+                {{/if}}
+              {{else}}
+                Awaiting approval to use an amber light.
+              {{/if}}
+            {{else}}
+              Uh oh, unknown amber light type [{{vehicle.amber_light}}]
+            {{/if}}
+          </dd>
+        </dl>
+      {{/each}}
+    </:body>
+  </UiSection>
+{{else}}
+  <h3>Personal Vehicle Agreement Must Be Reviewed &amp; Signed</h3>
+  <p>
+    The Personal Vehicle Agreement before you may submit requests for driving stickers.
+  </p>
+  {{#if @vehicleInfo.personal_vehicle_signed}}
+    <div class="text-success">
+      {{fa-icon "check"}} You have already agreed to the Personal Vehicle Agreement. Thank you!
+    </div>
+  {{else}}
+    <div class="text-danger">
+      {{fa-icon "times"}} You have not agreed to the Ranger Personal Vehicle Agreement yet.
+    </div>
+    <UiButton @type="primary" @onClick={{@reviewAgreement}}>
+      Review And Sign the Ranger Personal Vehicle Agreement
+    </UiButton>
+  {{/if}}
+{{/if}}
+
+{{#if this.entry}}
+  <Me::PersonalVehicleEdit @entry={{this.entry}} @onFinish={{this.finishEdit}} @vehicles={{@vehicles}} />
+{{/if}}

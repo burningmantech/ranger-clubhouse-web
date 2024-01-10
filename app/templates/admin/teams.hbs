@@ -19,6 +19,7 @@
       <th colspan="2">Active / Title</th>
       <th>Type</th>
       <th>Associated Roles</th>
+      <th>MVR Eligible?</th>
       <th>Managers</th>
       {{#if this.canManageTeams}}
         <th>Actions</th>
@@ -42,6 +43,9 @@
           {{else}}
             <i>None</i>
           {{/if}}
+        </td>
+        <td class="text-center">
+          {{if team.mvr_eligible "Y" "N"}}
         </td>
         <td>
           {{#each team.managers as |person|}}
@@ -79,8 +83,11 @@
         <fieldset>
           <legend>Team Flags</legend>
           <FormRow>
-            <div class="col">
+            <div class="col-12">
               <f.checkbox @name="active" @label="Active"/>
+            </div>
+            <div class="col-12">
+              <f.checkbox @name="mvr_eligible" @label="Team membership grants MVR eligibility"/>
             </div>
           </FormRow>
         </fieldset>
