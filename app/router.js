@@ -64,6 +64,7 @@ Router.map(function () {
     this.route('bulk-positions');
     this.route('bulk-sign-in-out');
     this.route('bulk-signout');
+    this.route('bulk-teams');
     this.route('bulk-upload');
     this.route('certifications');
     this.route('clubhouse1-log');
