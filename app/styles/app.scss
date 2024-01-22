@@ -163,6 +163,10 @@ dl {
 
 .dropdown-large {
   position: static !important;
+
+  .dropdown-menu {
+    left: 0;
+  }
 }
 
 .dropdown-menu-container {
