@@ -57,5 +57,11 @@ module.exports = {
       files: ['tests/**/*-test.{js,ts}'],
       extends: ['plugin:qunit/recommended'],
     },
+    {
+      files: ['**/*.{js,ts}'],
+      rules: {
+        'ember/no-runloop': 'off'
+      }
+    },
   ]
 };

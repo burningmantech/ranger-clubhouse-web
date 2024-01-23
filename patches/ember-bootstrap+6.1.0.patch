@@ -1,0 +1,142 @@
+diff --git a/node_modules/ember-bootstrap/.idea/.gitignore b/node_modules/ember-bootstrap/.idea/.gitignore
+new file mode 100644
+index 0000000..b58b603
+--- /dev/null
++++ b/node_modules/ember-bootstrap/.idea/.gitignore
+@@ -0,0 +1,5 @@
++# Default ignored files
++/shelf/
++/workspace.xml
++# Editor-based HTTP Client requests
++/httpRequests/
+diff --git a/node_modules/ember-bootstrap/.idea/ember-bootstrap.iml b/node_modules/ember-bootstrap/.idea/ember-bootstrap.iml
+new file mode 100644
+index 0000000..24643cc
+--- /dev/null
++++ b/node_modules/ember-bootstrap/.idea/ember-bootstrap.iml
+@@ -0,0 +1,12 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="WEB_MODULE" version="4">
++  <component name="NewModuleRootManager">
++    <content url="file://$MODULE_DIR$">
++      <excludeFolder url="file://$MODULE_DIR$/.tmp" />
++      <excludeFolder url="file://$MODULE_DIR$/temp" />
++      <excludeFolder url="file://$MODULE_DIR$/tmp" />
++    </content>
++    <orderEntry type="inheritedJdk" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+\ No newline at end of file
+diff --git a/node_modules/ember-bootstrap/.idea/inspectionProfiles/Project_Default.xml b/node_modules/ember-bootstrap/.idea/inspectionProfiles/Project_Default.xml
+new file mode 100644
+index 0000000..6da151c
+--- /dev/null
++++ b/node_modules/ember-bootstrap/.idea/inspectionProfiles/Project_Default.xml
+@@ -0,0 +1,7 @@
++<component name="InspectionProjectProfileManager">
++  <profile version="1.0">
++    <option name="myName" value="Project Default" />
++    <inspection_tool class="Eslint" enabled="true" level="WARNING" enabled_by_default="true" />
++    <inspection_tool class="TemplateLint" enabled="true" level="ERROR" enabled_by_default="true" />
++  </profile>
++</component>
+\ No newline at end of file
+diff --git a/node_modules/ember-bootstrap/.idea/modules.xml b/node_modules/ember-bootstrap/.idea/modules.xml
+new file mode 100644
+index 0000000..9bd8899
+--- /dev/null
++++ b/node_modules/ember-bootstrap/.idea/modules.xml
+@@ -0,0 +1,8 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="ProjectModuleManager">
++    <modules>
++      <module fileurl="file://$PROJECT_DIR$/.idea/ember-bootstrap.iml" filepath="$PROJECT_DIR$/.idea/ember-bootstrap.iml" />
++    </modules>
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/node_modules/ember-bootstrap/.idea/workspace.xml b/node_modules/ember-bootstrap/.idea/workspace.xml
+new file mode 100644
+index 0000000..b672e60
+--- /dev/null
++++ b/node_modules/ember-bootstrap/.idea/workspace.xml
+@@ -0,0 +1,54 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="AutoImportSettings">
++    <option name="autoReloadType" value="SELECTIVE" />
++  </component>
++  <component name="ChangeListManager">
++    <list default="true" id="b7de31a2-4893-4638-b2a8-3ea6e94ce985" name="Changes" comment="" />
++    <option name="SHOW_DIALOG" value="false" />
++    <option name="HIGHLIGHT_CONFLICTS" value="true" />
++    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
++    <option name="LAST_RESOLUTION" value="IGNORE" />
++  </component>
++  <component name="MarkdownSettingsMigration">
++    <option name="stateVersion" value="1" />
++  </component>
++  <component name="ProjectColorInfo"><![CDATA[{
++  "customColor": "",
++  "associatedIndex": 4
++}]]></component>
++  <component name="ProjectId" id="2bKaL3mFfQNaOKjf9DvxmbWWYZA" />
++  <component name="ProjectViewState">
++    <option name="hideEmptyMiddlePackages" value="true" />
++    <option name="showLibraryContents" value="true" />
++  </component>
++  <component name="PropertiesComponent"><![CDATA[{
++  "keyToString": {
++    "RunOnceActivity.OpenProjectViewOnStart": "true",
++    "RunOnceActivity.ShowReadmeOnStart": "true",
++    "node.js.detected.package.ember-template-lint": "true",
++    "node.js.detected.package.eslint": "true",
++    "node.js.detected.package.tslint": "true",
++    "node.js.selected.package.ember-template-lint": "/Users/lion/rangers/clubhouse2/web/node_modules/ember-bootstrap/node_modules/ember-template-lint",
++    "node.js.selected.package.eslint": "(autodetect)",
++    "node.js.selected.package.tslint": "(autodetect)",
++    "nodejs_package_manager_path": "npm",
++    "vue.rearranger.settings.migration": "true"
++  }
++}]]></component>
++  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
++  <component name="TaskManager">
++    <task active="true" id="Default" summary="Default task">
++      <changelist id="b7de31a2-4893-4638-b2a8-3ea6e94ce985" name="Changes" comment="" />
++      <created>1705966164918</created>
++      <option name="number" value="Default" />
++      <option name="presentableId" value="Default" />
++      <updated>1705966164918</updated>
++      <workItem from="1705966166047" duration="1074000" />
++    </task>
++    <servers />
++  </component>
++  <component name="TypeScriptGeneratedFilesManager">
++    <option name="version" value="3" />
++  </component>
++</project>
+\ No newline at end of file
+diff --git a/node_modules/ember-bootstrap/addon/components/bs-modal.js b/node_modules/ember-bootstrap/addon/components/bs-modal.js
+index 35ecbc3..39ebd82 100644
+--- a/node_modules/ember-bootstrap/addon/components/bs-modal.js
++++ b/node_modules/ember-bootstrap/addon/components/bs-modal.js
+@@ -522,7 +522,7 @@ export default class Modal extends Component {
+     await nextRunloop();
+ 
+     const { backdropElement } = this;
+-    assert('Backdrop element should be in DOM', backdropElement);
++   // assert('Backdrop element should be in DOM', backdropElement);
+ 
+     await transitionEnd(backdropElement, this.backdropTransitionDuration);
+   }
+@@ -541,7 +541,7 @@ export default class Modal extends Component {
+ 
+     if (this.usesTransition) {
+       const { backdropElement } = this;
+-      assert('Backdrop element should be in DOM', backdropElement);
++  //    assert('Backdrop element should be in DOM', backdropElement);
+ 
+       await transitionEnd(backdropElement, this.backdropTransitionDuration);
+     }
