@@ -42,12 +42,13 @@ export default class ApplicationRoute extends ClubhouseRoute {
       this.send('collectTitleTokens', []);
     }
 
-   /* if (!ENV.logRoutes) {
+    if (!ENV.logRoutes) {
       // don't bother setting up recording route transitions if not enabled.
       return;
-    }*/
+    }
 
-    if (transition?.to?.name === 'admin.action-log') {
+    const name = transition?.to?.name;
+    if (name === 'admin.action-log' || name === 'offline') {
       return;
     }
 
