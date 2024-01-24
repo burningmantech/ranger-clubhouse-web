@@ -28,6 +28,7 @@ export default function logError(error, type, additionalData = null) {
     error = {};
   }
 
+  // Don't log timeouts, unauthorized requests, expired authorization tokens, offline situations, or cancelled requests.
   if (
     // ember-model errors
     error instanceof TimeoutError
@@ -45,9 +46,11 @@ export default function logError(error, type, additionalData = null) {
     || message?.match(/Network request failed/i)
     || message?.match(/Load fail(ure|ed)/i)
     || message?.match(/Failed to fetch/i)
+    // the user hit the back button, another link was clicked, the cancel button in the browser bar was pushed,
+    // or the browser window closed while a request was in flight.
+    || (error.name === 'TypeError' && message === 'cancelled')
     // Authorization error
     || error.status === 403) {
-    // Don't record timeouts, unauthorized requests (aka expired authorization tokens), or offline errors.
     return;
   }
 
