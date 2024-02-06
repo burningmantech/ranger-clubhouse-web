@@ -2,12 +2,11 @@ import {schedule} from '@ember/runloop';
 
 const noIntersectionalAPI = typeof IntersectionObserver === "undefined";
 
-export default function focusElement(element, fastFocus = false) {
-  // for whatever damn reason, the Intersection Observer is not firing for textarea elements. grr.
-  if (element.offsetParent !== null || element.tagName  === 'TEXTAREA' || noIntersectionalAPI) {
-    // Element is not visible, allow the render to settle, and then focus. Higher delay is used to
-    // allow fade-in animation to complete.
-    setTimeout(() => schedule('afterRender', () => element.focus()), fastFocus ? 50 : 300);
+function setupToFocus(element, fastFocus) {
+  if (element.offsetParent === null || element.closest('.modal-dialog') || noIntersectionalAPI) {
+    // The IntersectionalObserver api is not available,  the element is not visible yet, or
+    // the field is on a modal dialog (and observer will not work such things)
+    setTimeout(() => element.focus(), fastFocus ? 50 : 300);
     return;
   }
 
@@ -15,12 +14,18 @@ export default function focusElement(element, fastFocus = false) {
   // Setup to observe when the element becomes visible.
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
-      if (entry.intersectionRatio > 0) {
+      if (entry.isIntersecting) {
         element.focus();
         observer.unobserve(element);
       }
     });
-  }, {root: document.documentElement});
+  }, {root: document.documentElement, tolerance: 0});
 
   observer.observe(element)
 }
+
+
+export default function focusElement(element, fastFocus = false) {
+  schedule('afterRender', () => setupToFocus(element, fastFocus));
+}
+
