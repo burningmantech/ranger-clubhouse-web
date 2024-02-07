@@ -1,10 +1,40 @@
 <ChForm @formId="bmid" @formFor={{@entry}} @onSubmit={{@onSave}} as |f|>
+  {{#if this.notQualified}}
+    <p>
+      <UiNotice @type={{if @entry.isNew "danger" "secondary"}}
+                @title="No Claimed Ticket nor In-Person Training Sign-Up Found"
+                @icon="hand"
+      >
+        <p>
+          Because the person has not signed up for In-Person Training nor claimed a ticket, the recommendation is to not
+          print their BMID.
+        </p>
+        {{#if @entry.isNew}}
+          To ensure the BMID is printed, set the status to "Prep" or "Ready To Print" (don't forget to fill out the
+          appropriate fields) and hit the "Create" button.
+        {{else if @entry.qualifiedToPrint}}
+          However, the BMID record has a status that will cause the BMID to be printed. Set the status to
+          "Do Not Print" or "Issues" to prevent the BMID from being printed.
+        {{else if @entry.isSubmitted}}
+          The BMID was submitted for printing.
+        {{else if @entry.willNotPrint}}
+          The BMID record has a status which will explicitly prevent the BMID from being printed.
+        {{else}}
+          Bug: Uh, the record has a status [{{@entry.status}}] which I cannot determine if the BMID will actually
+          be printed or not.
+        {{/if}}
+      </UiNotice>
+    </p>
+  {{/if}}
   <p>
     {{#if @entry.wap_id}}
-      The WAP is through RAD-#{{@entry.wap_id}} Type [{{@entry.wapTypeHuman}}] status [{{@entry.wap_status}}].
+      The WAP is through RAD-{{@entry.wap_id}} a {{@entry.wapTypeHuman}} status {{@entry.wap_status}}.
       {{#if @entry.wapSubmitted}}
         <br>
         <b class="text-danger">WAP has been submitted for processing - WAP Date cannot be changed.</b>
+      {{else if @entry.wapBanked}}
+        <br>
+        <span class="text-danger">The selected {{@entry.wapTypeHuman}} is banked. An additional WAP document may need to be issued.</span>
       {{/if}}
     {{else}}
       <b class="text-danger">A WAP or Staff Credential could not be located - WAP Date cannot be changed.</b>
@@ -106,16 +136,16 @@
                 @fieldSize="sm"/>
   </FormRow>
   {{#if @entry.isNew}}
-    <p>
+    <div class="mb-4">
       This is a new BMID record.
-    </p>
+    </div>
   {{else}}
-    <dl class="row mb-2">
-      <dt class="col-auto">Created</dt>
-      <dd class="col-auto">{{@entry.created_at}}</dd>
-      <dt class="col-auto">Last Modified</dt>
-      <dd class="col-auto">{{@entry.updated_at}}</dd>
-    </dl>
+    <div class="row mb-4">
+      <div class="col-auto">Created</div>
+      <div class="col-auto">{{@entry.created_at}}</div>
+      <div class="col-auto">Last Modified</div>
+      <div class="col-auto">{{@entry.updated_at}}</div>
+    </div>
   {{/if}}
   <f.submit @label={{if @entry.isNew "Create" "Update"}} @disabled={{@entry.isSaving}} />
   {{#if @onCancel}}
