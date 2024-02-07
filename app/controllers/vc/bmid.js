@@ -50,12 +50,18 @@ export default class VcBmidController extends ClubhouseController {
   filterOptions = [
     ['Specials (titles, meals, showers, or early arrival)', 'special'],
     ['Alphas', 'alpha'],
-    ['Vets w/shift after 8/10 OR PASSED training; excludes PNVs', 'signedup'],
+    ['Vets w/claimed tickets OR In-Person training sign-ups', 'qualified'],
     ['BMIDs marked as "Issues" or "Do Not Print"', 'nonprint'],
-    ['Submitted BMIDs', SUBMITTED],
     ['No shift signups', 'no-shifts'],
     ['In Prep', IN_PREP],
-    ['Ready To Print', READY_TO_PRINT]
+    ['Ready To Print', READY_TO_PRINT],
+    ['Submitted BMIDs', SUBMITTED],
+    {
+      groupName: 'Deprecated',
+      options: [
+        ['Vets w/shift after 8/10 OR PASSED training', 'signedup'],
+      ]
+    },
   ];
 
   @tracked sortColumn = 'callsign';
@@ -97,6 +103,10 @@ export default class VcBmidController extends ClubhouseController {
     ['Showers', 'showers']
   ];
 
+
+  get notCurrentYear() {
+    return +this.year !== this.house.currentYear();
+  }
 
   /*
    * Return the BMIDs to view which is filtered, and sorted

@@ -1,5 +1,15 @@
 <main>
-  <YearSelect @title="Manage BMIDs" @year={{this.year}} @onChange={{action (mut this.year)}} />
+  <YearSelect @title="Manage BMIDs"
+              @year={{this.year}}
+              @onChange={{action (mut this.year)}}
+              @minYear={{2017}}
+  />
+  {{#if this.notCurrentYear}}
+    <UiAlert @type="warning">
+      {{fa-icon "hand" right=1}} Warning: you are viewing a previous year.
+    </UiAlert>
+  {{/if}}
+
   <div class="my-2">
     Navigation:
     <LinkTo @route="vc.bmid-sanity-check" class="ms-2">

@@ -40,10 +40,15 @@ export const BmidStatusOptions = [
   ['Prep', IN_PREP],
   ['Do Not Print', DO_NOT_PRINT],
   ['Ready To Print', READY_TO_PRINT],
-  ['Ready To Reprint (Lost)', READY_TO_REPRINT_LOST],
-  ['Ready To Reprint (Changed)', READY_TO_REPRINT_CHANGE],
   ['Issues', ISSUES],
-  ['Submitted', SUBMITTED]
+  ['Submitted', SUBMITTED],
+  {
+    groupName: 'Deprecated',
+    options: [
+      ['Ready To Reprint (Lost)', READY_TO_REPRINT_LOST],
+      ['Ready To Reprint (Changed)', READY_TO_REPRINT_CHANGE],
+    ]
+  }
 ];
 
 export const MealLabels = {
@@ -111,6 +116,10 @@ export default class BmidModel extends Model {
   @attr('string', {readOnly: true}) allocated_meals;
   @attr('boolean', {readOnly: true}) allocated_showers;
 
+  // BMID qualifiers
+  @attr('boolean', {readOnly: true}) has_ticket;
+  @attr('boolean', {readOnly: true}) training_signed_up;
+
   get admission_date() {
     if (this.access_any_time) {
       return 'any';
@@ -173,6 +182,10 @@ export default class BmidModel extends Model {
     return this.wap_status === 'submitted';
   }
 
+  get wapBanked() {
+    return this.wap_status === 'banked';
+  }
+
   get wapTypeHuman() {
     return ticketTypeLabel[this.wap_type] || this.wap_type;
   }
@@ -233,5 +246,17 @@ export default class BmidModel extends Model {
 
   get effectiveShowers() {
     return !!(this.showers || this.earned_showers || this.allocated_showers);
+  }
+
+  get qualifiedToPrint() {
+    return this.status === IN_PREP || this.status === READY_TO_PRINT;
+  }
+
+  get isSubmitted() {
+    return this.status === SUBMITTED;
+  }
+
+  get willNotPrint() {
+    return this.status === DO_NOT_PRINT || this.status === ISSUES;
   }
 }

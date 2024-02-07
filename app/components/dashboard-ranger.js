@@ -45,6 +45,27 @@ class StepGroup {
 
 
 const STEPS = [
+  {
+    name: 'BMID will not be printed',
+    skipPeriod: AFTER_EVENT,
+    immediate: true,
+    check({milestones}) {
+      const month = (new Date()).getMonth();
+      if (month !== 6 && month !== 7) {
+        return {result: SKIP};
+      }
+
+      if (milestones.bmid_qualified) {
+        return {result: SKIP};
+      }
+
+      return {
+        result: URGENT,
+        message: htmlSafe(`<p>Because no ticket has been claimed, nor an In-Person Training signup found, your BMID will NOT be printed.</p>Email the Volunteer Coordinators ASAP if you intend to Ranger this event.`),
+        email: 'VCEmail'
+      };
+    }
+  },
   DashboardStep.SIGN_NDA,
   DashboardStep.UPLOAD_PHOTO,
   DashboardStep.PHOTO_APPROVAL,
@@ -270,7 +291,7 @@ const STEPS = [
   },
   DashboardStep.VEHICLE_REQUESTS,
   DashboardStep.AFTER_EVENT_STATUS_ADVISORY,
- ];
+];
 
 const NON_RANGER_STEPS = [
   DashboardStep.SIGN_NDA,
