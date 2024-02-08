@@ -21,7 +21,6 @@
         <s.link @route="me.tickets" @title="Tickets & Stuff" @icon="ticket-alt" @iconType="s"/>
       {{/if}}
       <s.link @route="me.agreements" @title="Agreements" @icon="file-signature" @iconType="s"/>
-      {{log this.user}}
       {{#if (or this.user.mvr_eligible this.user.may_request_stickers)}}
         <s.link @route="me.vehicles" @title="Vehicle Dashboard" @icon="truck-monster" @iconType="s"/>
       {{/if}}
