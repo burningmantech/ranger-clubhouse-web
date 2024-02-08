@@ -1,0 +1,144 @@
+<h1>Copy Slots</h1>
+
+<a href {{action @onCancel}} class="mb-4">
+  Back to Slot Listing
+</a>
+
+<ChForm @formId="copySlots"
+        @formFor={{this.copyParams}}
+        @changeSet={{false}}
+        @validator={{this.copyValidations}}
+        @onSubmit={{this.performCopy}}
+        as |f|>
+  <fieldset>
+    <legend>Add/Subtract Time to New Slots</legend>
+    <FormRow>
+      <f.number @name="deltaDays"
+                @label="Days"
+                @maxlength={{5}}
+                @size={{5}}
+      />
+      <f.number @name="deltaHours"
+                @label="Hours"
+                @maxlength={{5}}
+                @size={{5}}
+      />
+      <f.number @name="deltaMinutes"
+                @label="Minutes"
+                @maxlength={{5}}
+                @size={{5}}
+      />
+    </FormRow>
+    <p>
+      Labor Day of {{@year}} is {{this.selectedYearLaborDay}}.
+      Labor Day of {{this.presentYear}} is {{this.presentYearLaborDay}}, {{this.laborDayDiff}} days later.
+      <br>
+      Note: training and mentor/mentee slots cannot be copied yet.
+    </p>
+    <legend>Set New Slot Attributes</legend>
+    <p>
+      The new slots will be cloned as-is (except with the new times used above) from slots being copied.
+    </p>
+    <p>
+      Use the fields below if a different position, description, max (sign up count), information, and/or
+      active field is desired for the new slots. Leaving the fields blank will cause the original slot values to be
+      used.
+    </p>
+    <FormRow>
+      <f.select @name="newPositionId"
+                @label="Position"
+                @options={{this.positionOptionsForCopy}}
+      />
+    </FormRow>
+    <FormRow>
+      <f.text @name="description"
+              @label="Description"
+              @maxlength={{40}}
+              @size={{40}}
+              @showCharCount={{true}}
+      />
+      <f.text @name="max"
+              @label="Max"
+              @maxlength={{3}}
+              @size={{3}} />
+    </FormRow>
+    <FormRow>
+      <f.textarea @name="url"
+                  @label="Information"
+                  @rows={{3}}
+                  @cols={{80}}
+                  @maxlength={{512}}
+                  @showCharCount={{true}}
+      />
+    </FormRow>
+    <FormRow>
+      <div class="col-auto">
+        <f.checkbox @name="activate"
+                    @label="Activate new slots"/>
+      </div>
+    </FormRow>
+  </fieldset>
+  <div class="my-4">
+    <f.submit @label="Copy {{this.copySelectedSlotCount}} selected slots"/>
+    <UiCancelButton @onClick={{@onCancel}} />
+  </div>
+  {{#each this.copySourcePositions as |position|}}
+    <UiAccordion as |Accordion|>
+      <Accordion.title>
+        <span class="me-2">{{position.title}}</span>
+        ({{position.selectedSlots.length}} of {{position.slots.length}} slots to copy)
+        <UiButton @onClick={{fn this.copyPositionSelectAll position}} @size="sm" class="ms-2">
+          {{#if position.allSelected}}deselect{{else}}select{{/if}} all
+        </UiButton>
+      </Accordion.title>
+      <Accordion.body>
+        {{#if Accordion.isOpen}}
+          <UiTable class="table-box">
+            <thead>
+            <tr>
+              <th>Copy</th>
+              <th>Start time</th>
+              <th>End time</th>
+              <th class="text-end">Max</th>
+              <th>Description</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each position.slots as |slot|}}
+              <tr>
+                {{#let (concat "copy-slot-" slot.source.id) as |checkid|}}
+                  <td><Input @type="checkbox" @checked={{slot.selected}} id={{checkid}} /></td>
+                  <td>
+                    <label for={{checkid}}>
+                      {{shift-format slot.source.begins}} &rarr;
+                      <br>{{slot.begins}}
+                    </label>
+                  </td>
+                  <td>
+                    <label for={{checkid}}>
+                      {{shift-format slot.source.ends}} &rarr;<br>
+                      {{slot.ends}}
+                    </label>
+                  </td>
+                  <td class="text-end"><label for={{checkid}}>{{slot.source.max}}</label></td>
+                  <td><label for={{checkid}}>{{slot.source.description}}</label></td>
+                {{/let}}
+              </tr>
+            {{/each}}
+            </tbody>
+          </UiTable>
+        {{/if}}
+      </Accordion.body>
+    </UiAccordion>
+  {{/each}}
+</ChForm>
+
+<a href {{action @onCancel}} class="mt-4">
+  Back to Slot Listing
+</a>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting your request
+  </LoadingDialog>
+{{/if}}
