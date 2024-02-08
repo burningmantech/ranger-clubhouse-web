@@ -1,7 +1,5 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import {action, set} from '@ember/object';
-import currentYear from 'clubhouse/utils/current-year';
-import laborDay from 'clubhouse/utils/labor-day';
+import {action} from '@ember/object';
 import dayjs from 'dayjs';
 import _ from 'lodash';
 import {tracked} from '@glimmer/tracking';
@@ -9,66 +7,6 @@ import {tracked} from '@glimmer/tracking';
 const allDays = {id: 'all', title: 'All'};
 const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
-class CopyParams {
-  @tracked deltaDays = 0;
-  @tracked deltaHours = 0;
-  @tracked deltaMinutes = 0;
-  @tracked newPositionId = 0;
-  @tracked activate = false;
-
-  // Attributes:
-  @tracked description = null;
-  @tracked max = null;
-  @tracked url = null;
-
-  constructor(obj) {
-    Object.assign(this, obj);
-  }
-}
-
-class CopySourcePosition {
-  @tracked slots;
-
-  constructor(obj) {
-    Object.assign(this, obj);
-  }
-
-  get allSelected() {
-    return this.slots.every((c) => c.selected);
-  }
-
-  get selectedSlots() {
-    return this.slots.filter((s) => s.selected);
-  }
-}
-
-class CopySourceSlot {
-  // create with {controller: this, source: slot}
-  @tracked selected = false;
-  @tracked controller;
-  @tracked source;
-
-  constructor(obj) {
-    Object.assign(this, obj);
-  }
-
-  get begins() {
-    return this.adjustTime(this.source.begins);
-  }
-
-  get ends() {
-    return this.adjustTime(this.source.ends);
-  }
-
-  adjustTime(sourceDate) {
-    const delta = this.controller.copyParams;
-    return dayjs(sourceDate).add({
-      days: delta.deltaDays,
-      hours: delta.deltaHours,
-      minutes: delta.deltaMinutes
-    }).format('ddd MMM DD [@] HH:mm YYYY');
-  }
-}
 
 export default class SlotsController extends ClubhouseController {
   queryParams = ['year'];
@@ -82,7 +20,6 @@ export default class SlotsController extends ClubhouseController {
     {id: 'inactive', title: 'Inactive'},
   ];
 
-  @tracked isCopyingSlots = false;
   @tracked activatingSlot = null;
 
   @tracked slot = null; // Editing slot
@@ -95,10 +32,11 @@ export default class SlotsController extends ClubhouseController {
   @tracked selectedYearLaborDay;
   @tracked presentYearLaborDay;
   @tracked laborDayDiff;
-  @tracked copyParams;
-  @tracked copySourcePositions;
 
   @tracked showBulkEditDialog = false;
+  @tracked showSlotCopyDialog = false;
+  @tracked selectedPositionId = null;
+
   @tracked bulkEditPosition;
 
   @action
@@ -196,11 +134,6 @@ export default class SlotsController extends ClubhouseController {
     return this.slots.filter((slot) => slot.position_title.match(/(trainer|mentor)/i));
   }
 
-  get positionOptionsForCopy() {
-    const options = this.positions.map((p) => [p.title, p.id]);
-    return [['(same position)', 0], ...options];
-  }
-
   async _updateGroupActive(group, isActive) {
     const slots = group.slots;
 
@@ -219,12 +152,23 @@ export default class SlotsController extends ClubhouseController {
       }
     }
     this.activatingSlot = null;
-    this._updateSlots();
+    await this._updateSlots();
     this.toast.success(`Slots has been ${isActive ? 'activated' : 'deactivated'}`);
   }
 
   @action
   newSlot() {
+    if (this.year !== this.house.currentYear()) {
+      this.modal.confirm('Not Current Year',
+        `You are able to create a slot for a prior year (${this.year}). Are you sure you want to do this? `,
+        () => this._setupNewSlot()
+      );
+    } else {
+      this._setupNewSlot();
+    }
+  }
+
+  _setupNewSlot() {
     this.slot = this.store.createRecord('slot', {position_id: this.positions[0].id});
   }
 
@@ -241,16 +185,20 @@ export default class SlotsController extends ClubhouseController {
       return;
     }
 
-    this.house.saveModel(model, `The slot has been ${isNew ? 'created' : 'updated'}.`, () => {
-      this.slot = null;
-      this._updateSlots();
-    })
+    this.house.saveModel(model, `The slot has been ${isNew ? 'created' : 'updated'}.`,
+      () => {
+        this.slot = null;
+        this._updateSlots();
+      })
   }
 
-  _updateSlots() {
-    return this.slots.update().then(() => {
+  async _updateSlots() {
+    try {
+      await this.slots.update();
       this._buildDisplay();
-    })
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
   }
 
   _duplicateSlot(model) {
@@ -342,96 +290,24 @@ export default class SlotsController extends ClubhouseController {
   }
 
   @action
-  startCopy(selectedPositionId = null) {
-    this.presentYear = currentYear();
-    const selectedLaborDay = laborDay(this.year);
-    const presentLaborDay = laborDay(this.presentYear);
-    this.selectedYearLaborDay = selectedLaborDay.format('MMMM Do');
-    this.presentYearLaborDay = presentLaborDay.format('MMMM Do');
-    this.laborDayDiff = presentLaborDay.diff(selectedLaborDay, 'days');
-    let copyPositions = [];
-    let canCopy = (s) => !s.training_id && !s.trainee_slot_id && !s.trainer_slot_id;
-    let slotsByPosition = _.groupBy(this.viewSlots.filter(canCopy), 'position_id');
-    if (selectedPositionId) {
-      slotsByPosition = _.pick(slotsByPosition, [selectedPositionId]);
-    }
-    _.forOwn(
-      slotsByPosition,
-      (slots, positionId) => copyPositions.push(new CopySourcePosition({
-        id: positionId,
-        title: slots[0].position_title,
-        controller: this,
-        slots: slots.map((s) => new CopySourceSlot({controller: this, source: s}))
-      }))
-    );
-    copyPositions = _.sortBy(copyPositions, 'title');
-    this.copyParams = new CopyParams({deltaDays: this.laborDayDiff});
-    this.copySourcePositions = copyPositions;
-  }
-
-  get copySelectedSlotCount() {
-    return _.sumBy(this.copySourcePositions, (p) => p.selectedSlots.length);
-  }
-
-  @action
-  cancelCopy() {
-    this.copySourcePositions = null;
-    this.copyParams = null;
-  }
-
-  @action
-  performCopy() {
-    const params = this.copyParams;
-    if (params.newPositionId > 0) {
-      if (this.copySourcePositions.filter((p) => p.selectedSlots.length > 0).length > 1) {
-        this.toast.warning("Can't copy slots from multiple positions to a new position");
-        return false;
-      }
-    }
-    const sourceIds = this.copySourcePositions.flatMap((p) => p.selectedSlots).map((s) => s.source.id);
-    if (sourceIds.length === 0) {
-      this.toast.warning('No slots selected to copy; no changes made');
-      return;
-    }
-    const data = {
-      ids: sourceIds,
-      activate: params.activate,
-      attributes: {},
-    };
-    ['deltaDays', 'deltaHours', 'deltaMinutes', 'newPositionId'].forEach(function (key) {
-      if (params[key] != 0) {
-        data[key] = params[key];
-      }
-    });
-    ['description', 'url', 'max', 'timezone'].forEach(function (key) {
-      if (params[key]) {
-        data.attributes[key] = params[key];
-      }
-    });
-
-    this.isCopyingSlots = true;
-    this.ajax.request(`slot/copy`, {method: 'POST', data: data})
-      .then((result) => {
-        if (!result.slot.length) {
-          this.toast.error('No slots copied');
-          return;
+  openSlotCopy(positionId) {
+    if (this.year === this.house.currentYear()) {
+      this.modal.confirm('Current Year',
+        `You are about to copy slots from the current year (${this.year}) instead of a prior year. Are you sure you want to do this?`,
+        () => {
+          this.selectedPositionId = positionId;
+          this.showSlotCopyDialog = true;
         }
-
-        this.toast.success(`Copied ${result.slot.length} slots`);
-
-        return this._updateSlots().then(() => {
-          this.copySourcePositions = null;
-          this.copyParams = null;
-        })
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isCopyingSlots = false);
+      )
+    } else {
+      this.selectedPositionId = positionId;
+      this.showSlotCopyDialog = true;
+    }
   }
 
   @action
-  copyPositionSelectAll(position) {
-    // if all are selected, deselect all; otherwise select all
-    const value = !position.allSelected;
-    position.slots.forEach((s) => set(s, 'selected', value));
+  cancelSlotCopy() {
+    this.showSlotCopyDialog = false;
   }
 
   @action

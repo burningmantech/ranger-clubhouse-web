@@ -13,7 +13,7 @@ export default class UiButtonComponent extends Component {
 
   @action
   clickAction(e) {
-    e.preventDefault();
+    e.stopPropagation();
     e.target.blur();
     this.args.onClick();
   }
