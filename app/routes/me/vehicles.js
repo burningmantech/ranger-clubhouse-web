@@ -8,8 +8,8 @@ export default class MeVehiclesRoute extends ClubhouseRoute {
 
     const info = (await this.ajax.request(`vehicle/info/${person.id}`)).info;
 
-    if (!info.mvr_eligible) {
-      this.toast.error('Sorry, you are not MVR eligible.');
+    if (!info.mvr_eligible && !info.vehicle_requests_allowed) {
+      this.toast.error('Sorry, you are not MVR eligible nor may submit Personnel Vehicle requests .');
       this.router.transitionTo('me.homepage');
       return;
     }
