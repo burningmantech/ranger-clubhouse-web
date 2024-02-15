@@ -1,0 +1,29 @@
+<main>
+  <h1>Alpha Surveys</h1>
+
+  Showing {{pluralize this.surveys.length "survey"}}
+  <UiTable>
+    <thead>
+    <tr>
+      <th>Year</th>
+      <th>Title</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.surveys as |survey|}}
+      <tr>
+        <td>
+          {{survey.year}}
+        </td>
+        <td>
+          {{#each survey.reports as |report|}}
+            <LinkTo @route="mentor.survey" @model={{survey.id}} @query={{hash report_id=report.id}} class="d-block">
+              {{report.title}}
+            </LinkTo>
+          {{/each}}
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </UiTable>
+</main>

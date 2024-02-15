@@ -1,14 +1,15 @@
 import Component from '@glimmer/component';
-import { action, set } from '@ember/object';
+import {action, set} from '@ember/object';
+import {TYPE_ALPHA} from "clubhouse/models/survey";
 
 export default class SurveyQuestionReportComponent extends Component {
   constructor() {
     super(...arguments);
+    this.isAlphaSurvey = this.args.survey.type === TYPE_ALPHA;
   }
 
   @action
-  showPersonAnswerAction(answer, event)
-  {
+  showPersonAnswerAction(answer, event) {
     event.preventDefault();
     set(answer, 'showPerson', true);
   }
@@ -18,6 +19,6 @@ export default class SurveyQuestionReportComponent extends Component {
       return 0;
     }
 
-    return Math.floor((mean / 7.0)*100);
+    return Math.floor((mean / 7.0) * 100);
   }
 }

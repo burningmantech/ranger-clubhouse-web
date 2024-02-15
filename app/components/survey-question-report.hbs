@@ -36,6 +36,9 @@
       {{#each @question.responses as |response|}}
         <div class="mb-1 ms-2">
           &mdash; {{response.answer}}
+          {{#if this.isAlphaSurvey}}
+            <span class="text-muted ms-1">(from {{response.person.callsign}})</span>
+          {{/if}}
         </div>
       {{/each}}
     {{/if}}
@@ -56,6 +59,9 @@
             {{#each slot.responses as |response|}}
               <div class="mb-1 ms-2">
                 &mdash; {{response.answer}}
+                {{#if this.isAlphaSurvey}}
+                  <span class="text-muted ms-1">(from {{response.person.callsign}}</span>
+                {{/if}}
               </div>
             {{/each}}
           {{else}}

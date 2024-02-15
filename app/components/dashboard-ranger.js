@@ -76,7 +76,6 @@ const STEPS = [
   DashboardStep.ONLINE_COURSE,
   DashboardStep.SIGN_UP_FOR_TRAINING,
   DashboardStep.ATTEND_TRAINING,
-
   {
     name: 'Sign up for a Green Dot Mentee shift',
     skipPeriod: AFTER_EVENT,
@@ -197,10 +196,9 @@ const STEPS = [
       };
     }
   },
-
   DashboardStep.SIGN_UP_FOR_SHIFTS,
   DashboardStep.TAKE_STUDENT_SURVEY,
-
+  DashboardStep.TAKE_ALPHA_SURVEY,
   {
     name: "Take a Trainer's Training Survey (optional)",
     skipPeriod: AFTER_EVENT,

@@ -23,15 +23,15 @@ export default class AdminSurveyManageController extends ClubhouseController {
     {id: TYPE_NORMAL, title: 'Normal: Group questions are on the main report'},
     {
       id: TYPE_TRAINER,
-      title: 'Trainer: Group questions are repeated for each trainer who taught. Responses are collated on the Trainers\' Report'
+      title: 'Trainer/Mentor: Group questions are repeated for each trainer/mentor who taught. Responses are collated on the Trainers\' Report'
     },
     {id: TYPE_SEPARATE, title: 'Separate: Group is a separate report with session breakdown (report title req.)'},
-    {id: TYPE_SUMMARY, title: 'Summary: Group is a separate reporte with NO session breakdown (report title req.)'},
+    {id: TYPE_SUMMARY, title: 'Summary: Group is a separate report with NO session breakdown (report title req.)'},
   ]
 
 
   _buildOrderedGroups() {
-    this.orderedGroups = _.sortBy(this.surveyGroups,'sort_index');
+    this.orderedGroups = _.sortBy(this.surveyGroups, 'sort_index');
   }
 
   @action
@@ -76,15 +76,18 @@ export default class AdminSurveyManageController extends ClubhouseController {
   deleteGroupAction() {
     this.modal.confirm('Confirm Group Delete',
       'By deleting this group, all respondent answers will be lost. Are you sure want to delete this question?',
-      () => {
-        this.groupEntry.destroyRecord().then(async () => {
+      async () => {
+        try {
+          await this.groupEntry.destroyRecord();
           this.toast.success('The group has been deleted.');
           this.groupEntry = null;
           await this.surveyGroups.update();
           await this.surveyQuestions.update();
           this._assignQuestions();
           this._buildOrderedGroups()
-        }).catch((response) => this.house.handleErrorResponse(response));
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        }
       });
   }
 
@@ -152,36 +155,38 @@ export default class AdminSurveyManageController extends ClubhouseController {
   @action
   deleteQuestionAction() {
     this.modal.confirm('Confirm Question Delete', 'By deleting this question, all respondent answers will be lost. Are you sure want to delete this question?',
-      () => {
-        this.questionEntry.destroyRecord().then(() => {
+      async () => {
+        try {
+          await this.questionEntry.destroyRecord();
           this.toast.success('The question has been deleted.');
           this.questionEntry = null;
-          this.surveyQuestions.update().then(() => {
-            this._assignQuestions();
-          })
-        })
+          await this.surveyQuestions.update();
+          this._assignQuestions();
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        }
       });
   }
 
   @action
-  saveQuestionAction(model, isValid) {
+  async saveQuestionAction(model, isValid) {
     if (!isValid) {
       return;
     }
 
     const isNew = model.isNew;
 
-    model.save().then(() => {
+    try {
+      await model.save();
       this.toast.success(`The survey question was successfully ${isNew ? 'created' : 'updated'}.`);
       this.questionEntry = null;
       if (isNew) {
-        this.surveyQuestions.update().then(() => {
-          this._assignQuestions();
-        });
-      } else {
-        this._assignQuestions();
+        await this.surveyQuestions.update();
       }
-    }).catch((response) => this.house.handleErrorResponse(response, model));
+      this._assignQuestions();
+    } catch (response) {
+      this.house.handleErrorResponse(response, model)
+    }
   }
 
   @action

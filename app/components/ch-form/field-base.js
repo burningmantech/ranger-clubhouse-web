@@ -82,8 +82,8 @@ export default class ChFormFieldBaseComponent extends Component {
   constructor() {
     super(...arguments);
 
-    const {name} = this.args;
-    this.domId = `${this.args.form.formId}-${name}`;
+    const {name, id} = this.args;
+    this.domId = id ?? `${this.args.form.formId}-${name}`;
 
     if (this.args.showCharCount) {
       this.charCount = (this.modelValue ?? '').length;

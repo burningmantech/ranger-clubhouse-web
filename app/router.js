@@ -139,6 +139,8 @@ Router.map(function () {
       this.route('index', {path: '/'});
       this.route('manage', {path: '/:slot_id'});
     });
+    this.route('surveys');
+    this.route('survey', { path: '/survey/:survey_id'});
   });
 
   this.route('person', {path: '/person/:person_id'}, function () {

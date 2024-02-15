@@ -1,4 +1,11 @@
-<LinkTo @route="me.trainer-feedback.index">Back to Trainer Surveys</LinkTo>
+<h1>
+  {{#if (eq this.type "alpha")}}
+    {{this.year}} Alpha Survey Responses
+  {{else}}
+    {{this.year}} In-Person Training Survey Responses
+  {{/if}}
+</h1>
+<LinkTo @route="me.trainer-feedback.index" class="my-2 d-block">Back to Trainer Surveys</LinkTo>
 
 {{#each this.surveys as |survey|}}
   <UiAccordion as |Accordion|>
@@ -12,15 +19,23 @@
         {{#if (eq report.type "trainer")}}
           {{#each report.trainers as |trainer|}}
             {{#each trainer.questions as |question|}}
-              <SurveyQuestionReport @report={{report}} @trainer={{trainer}} @question={{question}} />
+              <SurveyQuestionReport @report={{report}}
+                                    @trainer={{trainer}}
+                                    @question={{question}}
+                                    @survey={{survey}}
+              />
             {{/each}}
           {{/each}}
         {{else}}
           {{#each report.questions as |question|}}
-            <SurveyQuestionReport @report={{report}} @question={{question}} />
+            <SurveyQuestionReport @report={{report}}
+                                  @question={{question}}
+                                  @survey={{survey}}
+            />
           {{/each}}
         {{/if}}
       {{/each}}
     </Accordion.body>
   </UiAccordion>
 {{/each}}
+<LinkTo @route="me.trainer-feedback.index" class="mt-2 d-block">Back to Trainer Surveys</LinkTo>

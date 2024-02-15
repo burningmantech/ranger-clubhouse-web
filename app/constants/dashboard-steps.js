@@ -470,6 +470,22 @@ export const TAKE_STUDENT_SURVEY = {
   }
 };
 
+export const TAKE_ALPHA_SURVEY = {
+  name: 'Take A Mentor Survey (optional)',
+  skipPeriod: AFTER_EVENT,
+  check({milestones}) {
+    if (milestones.surveys.alpha_survey) {
+      return {
+        result: OPTIONAL,
+        message: 'Congratulations on passing your Alpha shift. Welcome to the Ranger family! Please take a moment to provide feedback on your experience with the Alpha shift and your Mentors:',
+        survey: 'alpha'
+      };
+
+    }
+    return {result: SKIP}; // Only show the step IF a survey is available (marked as passed training, and a survey has been created)
+  }
+};
+
 export const SIGN_UP_FOR_SHIFTS = {
   name: 'Sign up for shifts',
   skipPeriod: AFTER_EVENT,

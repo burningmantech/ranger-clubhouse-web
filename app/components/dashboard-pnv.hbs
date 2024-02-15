@@ -7,19 +7,17 @@
   {{/if}}
 </p>
 {{#if this.haveUrgentActions}}
-  <div class="alert alert-danger mb-2">
-    {{fa-icon "exclamation-circle"}} There are one or more URGENT items that need your
-    attention.
-  </div>
+  <UiAlert @type="danger" @icon="exclamation-circle" class="mb-2">
+    There are one or more URGENT items that need your attention.
+  </UiAlert>
 {{else if this.haveWaiting}}
-  <div class="alert alert-secondary mb-2">
-    {{fa-icon "hourglass-half" right=1}} You're not done, however there is nothing to be done in the Clubhouse right
-    now. Please check back as indicated below.
-  </div>
+  <UiAlert @type="secondary" @icon="hourglass-half" class="mb-2">
+    You're not done, however there is nothing to be done in the Clubhouse right now. Please check back as indicated
+    below.
+  </UiAlert>
 {{/if}}
 <p>
-  <b>Questions?</b> Contact the Volunteer Coordinators at
-  <VcEmail/>
+  <b>Questions?</b> Contact the Volunteer Coordinators at <VcEmail/>
 </p>
 <p>
   <b>Need to drop your application?</b> Reach out to the Volunteer Coordinators at the email address above. Please note,

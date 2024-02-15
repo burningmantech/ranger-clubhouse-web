@@ -1,34 +1,11 @@
-<h1 id="top">{{this.survey.title}} (Year {{this.survey.year}})</h1>
-<p>
-  <LinkTo @route="training.survey.index" @query={{hash year=this.survey.year}} @model={{this.training.id}}>
-    Back to {{this.survey.year}} Surveys
-  </LinkTo>
-</p>
-{{#if (eq this.survey.type "trainer")}}
-  {{#each this.trainers as |trainer|}}
-    <UiAccordion id="trainer-{{trainer.trainer_id}}" as |Accordion|>
-      <Accordion.title>
-        Trainer {{trainer.callsign}}
-      </Accordion.title>
-      <Accordion.body>
-        {{#each trainer.report.summarized_ratings as |summary|}}
-          <SurveyRatingSummaryReport @report={{trainer.report}}
-                                     @summary={{summary}}
-                                     @survey={{this.survey}}
-          />
-        {{/each}}
-        {{#each trainer.report.questions as |question|}}
-          <SurveyQuestionReport @report={{trainer.report}}
-                                @question={{question}}
-                                @survey={{this.survey}}
-          />
-        {{/each}}
-      </Accordion.body>
-    </UiAccordion>
-  {{else}}
-    <b class="text-danger">No Trainer-on-Trainer feedback has been given yet.</b>
-  {{/each}}
-{{else}}
+<main>
+  <h1>{{this.survey.title}} (Year {{this.survey.year}})</h1>
+
+  <div class="my-4">
+    <LinkTo @route="mentor.surveys">
+      Back to Mentor Surveys
+    </LinkTo>
+  </div>
   {{#each this.report.summarized_ratings as |summary|}}
     <UiAccordion as |Accordion|>
       <Accordion.title>{{summary.description}}</Accordion.title>
@@ -43,10 +20,13 @@
   {{/each}}
 
   {{#if (eq this.report.type "trainer")}}
+    <p>
+      Showing {{pluralize this.report.trainers.length (if this.isAlphaSurvey "Mentor" "Trainer")}}
+    </p>
     {{#each this.report.trainers key="trainer_id" as |trainer|}}
       <UiAccordion id="trainer-{{trainer.trainer_id}}" as |Accordion|>
         <Accordion.title>
-          Trainer {{trainer.callsign}}
+          Mentor {{trainer.callsign}}
         </Accordion.title>
         <Accordion.body>
           <div class="photo-medium">
@@ -79,4 +59,9 @@
       </UiAccordion>
     {{/each}}
   {{/if}}
-{{/if}}
+  <div class="mt-4">
+    <LinkTo @route="mentor.surveys">
+      Back to Mentor Surveys
+    </LinkTo>
+  </div>
+</main>

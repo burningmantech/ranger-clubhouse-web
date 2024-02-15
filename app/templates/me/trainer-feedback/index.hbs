@@ -1,5 +1,5 @@
 <h1>Trainer Feedback</h1>
-<BackToHome />
+<BackToHome/>
 
 {{#if this.surveys}}
   <UiTable>
@@ -13,11 +13,23 @@
     {{#each-in this.surveys as |year surveyTypes|}}
       <tr>
         <td>
-          <LinkTo @route="me.trainer-feedback.view" @model={{year}}>{{year}}</LinkTo>
+          {{year}}
         </td>
         <td>
           {{#each surveyTypes as |survey|}}
-              {{survey.title}}<br>
+            {{#if (eq survey.type "alpha")}}
+              <LinkTo @route="me.trainer-feedback.view" @model={{year}}
+                      @query={{hash type=survey.type}}
+                      class="mb-2 d-block">
+                {{survey.title}}
+              </LinkTo>
+            {{else}}
+              <LinkTo @route="me.trainer-feedback.view"
+                      @model={{year}}
+                      class="mb-2 d-block">
+                {{survey.title}}
+              </LinkTo>
+            {{/if}}
           {{/each}}
         </td>
       </tr>
