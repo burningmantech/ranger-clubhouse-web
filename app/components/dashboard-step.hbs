@@ -61,6 +61,12 @@
             </LinkTo>
           </p>
         {{/each}}
+      {{else if (eq @step.survey "alpha")}}
+        <p class="my-1">
+          <LinkTo @route="me.survey" @query={{hash type="alpha"}} disabled={{@isNotUser}}>
+            Take Mentor Survey
+          </LinkTo>
+        </p>
       {{else}}
         {{#each @milestones.surveys.trainers as |slot|}}
           <p class="my-1">

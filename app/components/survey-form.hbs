@@ -1,5 +1,6 @@
 <ModalDialog @title="{{if @surveyEntry.isNew "Create" "Edit"}} Survey" @onEscape={{this.cancelSurveyAction}} as |Modal|>
-  <ChForm @formId="survey" @formFor={{@survey}}
+  <ChForm @formId="survey"
+          @formFor={{@survey}}
           @validator={{this.surveyValidations}}
           @onSubmit={{this.saveSurveyAction}} as |f|>
     <Modal.body>
@@ -9,7 +10,7 @@
                   @options={{this.typeOptions}}/>
         <f.select @name="position_id"
                   @label="Position"
-                  @options={{this.positionOptions}}/>
+                  @options={{if (eq f.model.type "alpha") this.alphaOption this.positionOptions}}/>
       </FormRow>
       <FormRow>
         <f.text @name="title"
@@ -31,11 +32,14 @@
       </FormRow>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>
-      <f.submit @label={{if @survey.isNew "Create" "Save"}} @disabled={{@survey.isSaving}} />
-      <UiCancelButton @disabled={{@survey.isSaving}} @onClick={{this.cancelSurveyAction}} />
-      {{#if @survey.isSaving}}
-        <LoadingIndicator/>
-      {{/if}}
+      <f.submit @label={{if @survey.isNew "Create" "Save"}}  />
+      <UiCancelButton @onClick={{this.cancelSurveyAction}} />
     </Modal.footer>
   </ChForm>
 </ModalDialog>
+
+{{#if @survey.isSaving}}
+  <LoadingDialog>
+    Submitting the request
+  </LoadingDialog>
+{{/if}}

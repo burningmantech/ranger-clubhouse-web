@@ -22,47 +22,53 @@
 </p>
 
 {{#each this.orderedGroups as |group idx|}}
-  <UiTable>
-    <caption>
-      <div class="d-inline-block">
-        ID #{{group.id}} {{group.title}}
-        {{#if (eq group.type "trainer")}}
-          <br><i>(Is trainer group)</i>
-        {{else if group.report_title}}
-          <br>(In separate report as: "{{group.report_title}}")
-        {{/if}}
+  <div class="bg-light-gray p-2">
+    <div class="fs-5">
+      <div class="d-flex justify-content-between">
+        <div>
+          {{group.title}}
+          {{#if (eq group.type "trainer")}}
+            <i>(Is trainer/mentor group)</i>
+          {{else if group.report_title}}
+            (In separate report as: "{{group.report_title}}")
+          {{/if}}
+        </div>
+        <div>
+          ID #{{group.id}}
+        </div>
       </div>
-      <span class="ms-2">
-          <UiButton @size="sm" @onClick={{fn this.newQuestionAction group}} @disabled={{group.isSaving}}>
-            {{fa-icon "plus"}} Add Question
-          </UiButton>
+    </div>
+    <div class="mt-2">
+      <UiButton @size="sm" @onClick={{fn this.newQuestionAction group}} @disabled={{group.isSaving}}>
+        {{fa-icon "plus"}} Add Question
+      </UiButton>
+      <UiButton @type="secondary"
+                @size="sm"
+                @onClick={{fn this.editGroupAction group}}
+                @disabled={{group.isSaving}}>
+        {{fa-icon "edit"}} Edit Group
+      </UiButton>
+      <span class="ms-4">
+        {{#if (not-eq idx 0)}}
           <UiButton @type="secondary"
                     @size="sm"
-                    @onClick={{fn this.editGroupAction group}}
+                    @onClick={{fn this.moveGroupAction group -1}}
                     @disabled={{group.isSaving}}>
-            {{fa-icon "edit"}} Edit Group
+            {{fa-icon "arrow-up"}} Move Group Up
           </UiButton>
-        </span>
-      <span class="ms-4">
-          {{#if (not-eq idx 0)}}
-            <UiButton @type="secondary"
-                      @size="sm"
-                      @onClick={{fn this.moveGroupAction group -1}}
-                      @disabled={{group.isSaving}}>
-              {{fa-icon "arrow-up"}} Move Group Up
-            </UiButton>
-          {{/if}}
+        {{/if}}
         {{#if (this.isNotLast group this.orderedGroups)}}
           <UiButton @type="secondary"
                     @size="sm"
                     @onClick={{fn this.moveGroupAction group 1}}
                     @disabled={{group.isSaving}}>
-              {{fa-icon "arrow-down"}} Move Group Down
-            </UiButton>
+            {{fa-icon "arrow-down"}} Move Group Down
+          </UiButton>
         {{/if}}
-
-        </span>
-    </caption>
+      </span>
+    </div>
+  </div>
+  <UiTable>
     <thead>
     <tr>
       <th class="w-5">ID</th>

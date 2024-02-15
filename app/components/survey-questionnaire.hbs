@@ -8,19 +8,21 @@
     {{this.htmlPrologue}}
   </p>
 {{/if}}
-<ChForm @formId="survey" @formFor={{this.surveyForm}} @validator={{this.validations}}
+<ChForm @formId="survey"
+        @formFor={{this.surveyForm}}
+        @validator={{this.validations}}
         @onSubmit={{this.submitAction}} as |f|>
-  {{#each this.surveyGroups as |group|}}
+  {{#each this.surveyGroups as |group groupIdx|}}
     <UiSection>
       <:title>
-        {{#if group.trainer}}Trainer {{group.trainer.callsign}} -{{/if}}
+        {{#if group.trainer}}{{this.trainerName}} {{group.trainer.callsign}} -{{/if}}
         {{group.title}}
       </:title>
       <:body>
         {{#if group.showTrainerPhoto}}
           {{#if group.trainer.photo_url}}
             <div class="photo-medium mb-3">
-              <img src={{group.trainer.photo_url}} alt="trainer {{group.trainer.callsign}}">
+              <img src={{group.trainer.photo_url}} alt="{{this.trainerName}} {{group.trainer.callsign}}">
             </div>
           {{else}}
             <div class="my-2">
@@ -43,7 +45,7 @@
             {{group.description}}
           </p>
         {{/if}}
-        {{#each group.survey_questions as |question|}}
+        {{#each group.survey_questions as |question questionIdx|}}
           <div class="mb-2 {{if (get f.model.error question.formName) "is-invalid"}}">
             {{question.description}}
             {{#if question.is_required}}
@@ -52,19 +54,25 @@
           </div>
           <FormRow>
             {{#if (eq question.type "text")}}
-              <f.textarea @name={{question.formName}} @rows={{4}} @cols={{80}}/>
+              <f.textarea @name={{question.formName}}
+                          @rows={{4}}
+                          @cols={{80}}
+                          @id="survey-text-{{groupIdx}}-{{questionIdx}}-{{if group.trainer group.trainer.id "single"}}"
+              />
             {{else if (eq question.type "rating")}}
               <div class="col-12">
                 <f.radioGroup @name={{question.formName}}
                               @options={{this.ratingOptions}}
                               @inline={{not this.session.isSmallScreen}}
-                />
+                  @id="survey-rating-{{groupIdx}}-{{questionIdx}}-{{if group.trainer group.trainer.id "single"}}"
+              />
               </div>
             {{else if (eq question.type "options")}}
               <div class="col-12">
                 <f.radioGroup @name={{question.formName}}
                               @options={{question.formOptions}}
                               @inline={{not this.session.isSmallScreen}}
+                              @id="survey-options-{{groupIdx}}-{{questionIdx}}-{{if group.trainer group.trainer.id "single"}}"
                 />
               </div>
             {{else}}
@@ -76,8 +84,16 @@
       </:body>
     </UiSection>
   {{/each}}
-  <f.submit @label="Submit Feedback" @submitClass="btn-responsive" @disabled={{this.isSubmitting}}/>
-  {{#if this.isSubmitting}}
-    <LoadingIndicator @text="Submitting"/>
+  {{#if @survey.epilogue}}
+    <div class="my-3">
+      {{this.htmlEpilogue}}
+    </div>
   {{/if}}
+
+  <f.submit @label="Submit Feedback" @submitClass="btn-responsive"/>
 </ChForm>
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting your answers
+  </LoadingDialog>
+{{/if}}

@@ -5,6 +5,8 @@ import {htmlSafe} from '@ember/template';
 import _ from 'lodash';
 import {service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';
+import {TYPE_ALPHA, TYPE_TRAINER} from "clubhouse/models/survey";
+import currentYear from "clubhouse/utils/current-year";
 
 export default class SurveyQuestionnaireComponent extends Component {
   @service house;
@@ -27,7 +29,7 @@ export default class SurveyQuestionnaireComponent extends Component {
   surveyForm = EmberObject.create({});
   validations = {};
 
-  shareNameOptionsForTrainer = { };
+  shareNameOptionsForTrainer = {};
 
   constructor() {
     super(...arguments);
@@ -35,15 +37,21 @@ export default class SurveyQuestionnaireComponent extends Component {
     const survey = this.args.survey;
     const trainers = this.args.trainers;
     const groups = [];
-    this.isTrainerSurvey = (survey.type === 'trainer');
+    this.isTrainerSurvey = (survey.type === TYPE_TRAINER);
+
+    if (survey.type === TYPE_ALPHA) {
+      this.trainerName = 'Mentor';
+    } else {
+      this.trainerName = 'Trainer';
+    }
 
     if (this.isTrainerSurvey) {
       // A trainer survey will loop through each trainer
       trainers.forEach((trainer) => {
         this.surveyForm['share_name_' + trainer.id] = 1;
         this.shareNameOptionsForTrainer[trainer.id] = [
-          { id: 1, title: `Share my name with ${trainer.callsign}` },
-          { id: 0, title: `Do not share my name with ${trainer.callsign}` }
+          {id: 1, title: `Share my name with ${trainer.callsign}`},
+          {id: 0, title: `Do not share my name with ${trainer.callsign}`}
         ];
 
         survey.survey_groups.forEach((group, idx) => {
@@ -74,6 +82,11 @@ export default class SurveyQuestionnaireComponent extends Component {
     if (survey.prologue) {
       this.htmlPrologue = htmlSafe(survey.prologue);
     }
+
+    if (survey.epilogue) {
+      this.htmlEpilogue = htmlSafe(survey.epilogue);
+    }
+
   }
 
   _setupGroup(group, trainer = null) {
@@ -101,7 +114,7 @@ export default class SurveyQuestionnaireComponent extends Component {
   }
 
   @action
-  submitAction(model, isValid) {
+  async submitAction(model, isValid) {
     if (!isValid) {
       this.house.scrollToElement('.is-invalid');
       return;
@@ -120,7 +133,7 @@ export default class SurveyQuestionnaireComponent extends Component {
         answerGroup.trainer_id = group.trainer.id;
 
         if (this.isTrainerSurvey) {
-          answerGroup.can_share_name = model['share_name_'+group.trainer.id] == 1;
+          answerGroup.can_share_name = model['share_name_' + group.trainer.id] == 1;
         }
       }
 
@@ -129,23 +142,31 @@ export default class SurveyQuestionnaireComponent extends Component {
           survey_question_id: q.id,
           response: model[q.formName],
         };
-       });
+      });
 
       return answerGroup;
     });
 
-    this.ajax.request(`survey/submit`, {
-      method: 'POST',
-      data: {
+    try {
+      const {slot} = this.args;
+      const data = {
         survey: groups,
-        slot_id: this.args.slot.id,
         type: survey.type,
+      };
+      if (slot) {
+        data.slot_id = slot.id;
       }
-    }).then(() => {
+      if (survey.type === TYPE_ALPHA) {
+        data.year = currentYear();
+      }
+      await this.ajax.post(`survey/submit`, {data});
       this.toast.success('Your responses have been successfully saved. Thank you!');
       this.args.onDone();
-    }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 }
 
