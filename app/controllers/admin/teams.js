@@ -1,6 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import {TECH_NINJA} from 'clubhouse/constants/roles';
 import {TypeLabels, TYPE_CADRE, TYPE_TEAM, TYPE_DELEGATION} from 'clubhouse/models/team';
 import {htmlSafe} from '@ember/template';
@@ -20,6 +20,11 @@ export default class AdminTeamsController extends ClubhouseController {
 
   typeLabel(type) {
     return TypeLabels[type] ?? type;
+  }
+
+  @cached
+  get teamScrollList() {
+    return this.teams.map((t) => ({ id: `team-${t.id}`, title: t.title}));
   }
 
   @action

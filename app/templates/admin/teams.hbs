@@ -6,9 +6,16 @@
     {{else}}
       <UiNotice @type="secondary" @icon="hand-point-right" @title="Need Clubhouse Team Help?">
         Contact the Tech Team about creating new teams or adjusting existing ones.<br>
-        <TechSupportEmail />
+        <TechSupportEmail/>
       </UiNotice>
     {{/if}}
+  </p>
+
+  <p>
+    <DropdownScrollList @items={{this.teamScrollList}}
+                        @thing="team"
+                        @blinkBox={{true}}
+    />
   </p>
 
   Showing {{pluralize this.teams.length "team"}}
@@ -27,8 +34,8 @@
     </tr>
     </thead>
     <tbody>
-    {{#each this.teams as |team|}}
-      <tr>
+    {{#each this.teams key="id" as |team|}}
+      <tr id="team-{{team.id}}">
         <td class="text-end">{{team.id}}</td>
         <td class="text-center">
           <BooleanIcon @value={{team.active}} @falseIcon="times" @falseClass="text-danger"/>
