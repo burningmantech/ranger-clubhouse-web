@@ -1,0 +1,48 @@
+<YearSelect @title="Prospective Applications"
+            @year={{this.year}}
+            @onChange={{action (mut this.year)}}
+            @skipPandemic={{true}}
+            @minYear={{2015}}
+/>
+
+{{#if this.notCurrentYear}}
+  <UiAlert @type="warning">
+    {{fa-icon "exclamation" right=1}} Warning: you are viewing a prior year.
+  </UiAlert>
+{{/if}}
+
+{{#if this.applications}}
+  <FormRow class="mb-3">
+    <FormLabel @auto={{true}}>Status</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="statusFilter"
+                      @value={{this.statusFilter}}
+                      @options={{this.statusFilterOptions}}
+                      @onChange={{action (mut this.statusFilter)}} />
+    </div>
+
+    <FormLabel @auto={{true}}>Assigned To</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="assignedTo"
+                      @value={{this.assignedToFilter}}
+                      @options={{this.assignedOptions}}
+                      @onChange={{action (mut this.assignedToFilter)}} />
+    </div>
+    <FormLabel @auto={{true}}>Last Name Filter</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="nameFilter"
+                      @value={{this.nameFilter}}
+                      @options={{this.nameFilterList}}
+                      @onChange={{action (mut this.nameFilter)}} />
+    </div>
+  </FormRow>
+
+
+  <ProspectiveApplicationTable @applications={{this.filteredApps}} >
+    {{this.assignedToCallsign}} {{this.nameFilterInfo}} {{this.applicationTypeDescription}}
+  </ProspectiveApplicationTable>
+{{else}}
+  <div class="my-3">
+    <b class="text-danger">No applications have been imported for {{this.year}}</b>
+  </div>
+{{/if}}

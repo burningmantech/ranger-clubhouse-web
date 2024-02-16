@@ -84,8 +84,8 @@ export default class VcHandlerCheckerController extends ClubhouseController {
     addRule(new EditDistanceRule(handles), 'Edit distance');
     addRule(new AmericanSoundexRule(handles), 'American Soundex');
     addRule(new DoubleMetaphoneRule(handles), 'Double Metaphone');
-    addRule(new EyeRhymeRule(handles), 'Eye rhymes');
-    addRule(new ExperimentalEyeRhymeRule(handles), 'Experimental eye rhymes', false);
+    addRule(new EyeRhymeRule(handles), 'Eye rhymes', false);
+    addRule(new ExperimentalEyeRhymeRule(handles), 'Experimental eye rhymes', true);
 
     this.handleRules = rules;
 

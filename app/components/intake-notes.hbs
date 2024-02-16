@@ -10,10 +10,10 @@
           <div class="mb-1">
             &mdash; {{note.note}}
             {{#if this.canAddNote}}
-              <p>
-                <UiButton @size="sm" @onClick={{fn this.updateNoteAction note}} class="me-2">Update</UiButton>
-                <UiButton @type="light-red" @size="sm" @onClick={{fn this.deleteNoteAction note}}>Delete</UiButton>
-              </p>
+              <div class="mt-2 mb-3">
+                <a href {{action this.updateNoteAction note}} class="me-4">Update</a>
+                <a href {{action this.deleteNoteAction note}}>Delete</a>
+              </div>
             {{/if}}
           </div>
         {{/unless}}

@@ -10,6 +10,13 @@ export default class UiTabComponent extends BsTab {
   @service house;
   @service router;
 
+  constructor() {
+    super(...arguments);
+    if (this.args.initialTabId) {
+      this.selectedId = this.args.initialTabId;
+    }
+  }
+
   @action
   select(id, event) {
     if (event) {

@@ -1,24 +1,42 @@
-<NavbarMenu @nav={{@nav}} @title="Vol Coord" as |menu|>
+<NavbarMenu @nav={{@nav}} @title="Vol Coord" @isLarge={{true}} as |menu|>
   {{#if (has-role "vc")}}
-    <NavbarMenuItem @menu={{menu}} @route="vc.handle-checker" @item="Check Callsigns"/>
-    <NavbarMenuItem @menu={{menu}} @route="vc.photo-review" @item="Photo Review"/>
-    <NavbarMenuItem @menu={{menu}} @route="vc.photos" @item="Photos"/>
-    <NavbarMenuItem @menu={{menu}} @route="vc.spigot" @item="Spigot Flow"/>
-    <NavbarMenuItem @menu={{menu}} @route="vc.shiny-penny-report" @item="Shiny Penny Report"/>
-    <NavbarMenuItem @menu={{menu}} @route="vc.maintenance" @item="VC Maintenance"/>
-    {{#if (has-role "admin" "salesforce-import")}}
-      <NavbarMenuItem @menu={{menu}} @route="vc.salesforce" @item="Salesforce Import"/>
-    {{/if}}
-    {{#if (has-role "intake")}}
-      <NavbarMenuItem @menu={{menu}} @route="vc.unified-flagging" @item="Unified Flagging"/>
+    <NavbarMenuSection @section="General">
+      <NavbarMenuItem @menu={{menu}} @route="vc.handle-checker" @item="Check Callsigns"/>
+      <NavbarMenuItem @menu={{menu}} @route="vc.spigot" @item="Spigot Flow"/>
+      <NavbarMenuItem @menu={{menu}} @route="vc.shiny-penny-report" @item="Shiny Penny Report"/>
+      <NavbarMenuItem @menu={{menu}} @route="vc.maintenance" @item="VC Maintenance"/>
+      {{#if (has-role "intake")}}
+        <NavbarMenuItem @menu={{menu}} @route="vc.unified-flagging" @item="Unified Flagging"/>
+      {{/if}}
+    </NavbarMenuSection>
+    <NavbarMenuSection @section="Photos">
+      <NavbarMenuItem @menu={{menu}} @route="vc.photo-review" @item="Photo Review"/>
+      <NavbarMenuItem @menu={{menu}} @route="vc.photos" @item="Photos"/>
+    </NavbarMenuSection>
+    {{#if false}}
+      {{#if (has-role "admin" "salesforce-import")}}
+        <NavbarMenuSection @section="Applications">
+          <NavbarMenuItem @menu={{menu}} @route="vc.applications" @item="Prospective Applications"/>
+          <NavbarMenuItem @menu={{menu}} @route="vc.application-import" @item="Application Import"/>
+          <NavbarMenuItem @menu={{menu}} @route="vc.create-prospectives" @item="Create Prospectives"/>
+          <NavbarMenuItem @menu={{menu}} @route="vc.salesforce" @item="Salesforce Import"/>
+        </NavbarMenuSection>
+      {{/if}}
     {{/if}}
   {{/if}}
   {{#if (has-role "edit-access-docs")}}
-    <menu.divider/>
-    <NavbarMenuItem @menu={{menu}} @route="vc.access-documents" @item="Manage Access Docs"/>
+    <NavbarMenuSection @section="Ticketing">
+      <NavbarMenuItem @menu={{menu}} @route="vc.access-documents.index" @item="Manage Access Docs"/>
+      <NavbarMenuItem @menu={{menu}} @route="vc.access-documents.reports" @item="Reports"/>
+      <NavbarMenuItem @menu={{menu}} @route="vc.access-documents.trs" @item="Export Documents"/>
+      <NavbarMenuItem @menu={{menu}} @route="vc.access-documents.maintenance" @item="Ticketing/Provision Maintenance"/>
+    </NavbarMenuSection>
   {{/if}}
   {{#if (has-role "edit-bmids")}}
-    <menu.divider/>
-    <NavbarMenuItem @menu={{menu}} @route="vc.bmid" @item="Manage BMIDs"/>
+    <NavbarMenuSection @section="BMIDs">
+      <NavbarMenuItem @menu={{menu}} @route="vc.bmid" @item="Manage BMIDs"/>
+      <NavbarMenuItem @menu={{menu}} @route="vc.bmid-sanity-check" @item="BMID Sanity Checker"/>
+      <NavbarMenuItem @menu={{menu}} @route="vc.bmid-print" @item="Export To Marcato"/>
+    </NavbarMenuSection>
   {{/if}}
 </NavbarMenu>

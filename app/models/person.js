@@ -110,6 +110,7 @@ export default class PersonModel extends PersonMixin(Model) {
 
   @attr('boolean') has_note_on_file;
 
+  @attr('string', {readOnly: true}) sfuid;
   @attr('string', {readOnly: true}) updated_at;
 
   // a separate table in the database and not

@@ -1,0 +1,46 @@
+<main>
+  <h1>Salesforce Application Import</h1>
+  <p>
+    Use this interface to create Clubhouse Prospective accounts from approved applications.
+  </p>
+  <div class="my-4">
+    <UiButton @onClick={{this.previewApplications}} @type="secondary">Preview Applications</UiButton>
+    <UiButton @onClick={{this.confirmImport}}>Import Applications</UiButton>
+  </div>
+
+  {{#if this.hasResults}}
+    <div class="mb-4">
+      {{pluralize this.newApplications.length "new application"}} found.<br>
+      {{pluralize this.existingApplications.length "existing application"}} found.
+    </div>
+    <UiSection>
+      <:title>New Applications</:title>
+      <:body>
+        {{#if this.newApplications}}
+          <Vc::ApplicationImportTable @applications={{this.newApplications}} @committed={{this.commit}} />
+        {{else}}
+          No new applications were found.
+        {{/if}}
+      </:body>
+    </UiSection>
+
+    <UiSection>
+      <:title>Existing Applications</:title>
+      <:body>
+        {{#if this.existingApplications}}
+          <p>
+            The following applications already exist within the Clubhouse.
+          </p>
+          <Vc::ApplicationImportTable @applications={{this.existingApplications}} @committed={{this.commit}} />
+        {{else}}
+          No current Salesforce applications were found that already exist within the Clubhouse.
+        {{/if}}
+      </:body>
+    </UiSection>
+  {{/if}}
+
+</main>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>Retrieving the applications</LoadingDialog>
+{{/if}}

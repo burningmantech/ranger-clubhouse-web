@@ -1,0 +1,284 @@
+<UiSection>
+  <:title>
+    <span class="me-4">Handle Information</span>
+  </:title>
+  <:body>
+    {{#if @application.isStatusMoreHandles}}
+      <UiSectionSubtitle @type="warning" @icon="hourglass-half">
+        More Handles Requested
+      </UiSectionSubtitle>
+    {{else if @application.isStatusHandleCheck}}
+      <UiSectionSubtitle @type="gray" @icon="thumbs-up">
+        Cleared To Process Callsign
+      </UiSectionSubtitle>
+    {{else if @application.isStatusCreated}}
+      <UiSectionSubtitle @type="success" @icon="check">
+        Callsign approved - account was created.
+      </UiSectionSubtitle>
+    {{else if @application.isStatusApproved}}
+      <UiSectionSubtitle @type="success" @icon="check">
+        Callsign approved - awaiting account creation.
+      </UiSectionSubtitle>
+    {{else if @application.isStatusApprovedPiiIssue}}
+      <UiSectionSubtitle @type="warning" @icon="hand">
+        Handle has been approved, however, the Personal Info has issues. Application is on hold until the applicant
+        responds.
+      </UiSectionSubtitle>
+    {{else}}
+      <UiSectionSubtitle @type="warning" @icon="hand">
+        Application has not been cleared for callsign processing
+      </UiSectionSubtitle>
+    {{/if}}
+    <UiGridTable as |t|>
+      <t.label>Approved Callsign</t.label>
+      <t.column>
+        {{#if @application.approved_handle}}
+          <span class="text-success">{{@application.approved_handle}}</span>
+        {{else}}
+          <i>none assigned yet</i>
+        {{/if}}
+        <div class="mt-2">
+          <UiButton @type="secondary" @size="sm" @onClick={{this.openEditAndApproveCallsign}}>
+            Edit &amp; Approve Callsign
+          </UiButton>
+          <UiButton @type="secondary" @size="sm" class="ms-2" @onClick={{this.openEditApprovedHandleDialog}}>
+            Edit Callsign
+          </UiButton>
+        </div>
+      </t.column>
+
+      <t.label>Submitted Handles</t.label>
+      <t.column>
+        {{#if @application.handles}}
+          {{#if @application.handleListIssues}}
+            <div class="text-bg-warning p-1">
+              The submitted handles require reformatting. Ensure each handle is on a separate line with no
+              explanations, priority indicators, or punctuation. Failing to do so will cause the Handle Checker to fail.
+              <ul>
+                {{#each @application.handleListIssues as |issue|}}
+                  <li>{{issue}}</li>
+                {{/each}}
+              </ul>
+            </div>
+          {{/if}}
+          <table>
+            <tbody>
+            {{#each @application.screened_handles as |handle|}}
+              <tr class="mb-1 highlight-hover">
+                <td class="p-1">
+                  {{handle.handle}}
+                </td>
+                <td class="p-1">
+                  <a href {{action this.assignCallsign handle.handle}}>
+                    assign callsign
+                  </a>
+                </td>
+                <td class="p-1">
+                  <LinkTo @route="vc.handle-checker" @query={{hash handle=handle.handle}} target="_blank" class="ms-1">
+                    check handle
+                  </LinkTo>
+                </td>
+                <td class="p-1">
+                  {{#if handle.existing_person}}
+                    Conflict with existing account:
+                    <PersonLink @person={{handle.existing_person}} @showStatus={{true}} />
+                    <br>
+                  {{/if}}
+                  {{#if handle.reserved_handles}}
+                    Conflict with reserved:
+
+                    {{#each handle.reserved_handles as |reserved idx|}}
+                      {{if idx ", "}}
+                      {{reserved.handle}}
+                      <span class="ms-1">{{badge "secondary"
+                                                 (this.reservedHandleType reserved.reservation_type)}}</span>
+                    {{/each}}
+                  {{/if}}
+                </td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </table>
+        {{else}}
+          <b class="text-danger">{{fa-icon "alert"}}  none submitted</b>
+        {{/if}}
+        <div class="mt-2">
+          <UiButton @type="secondary" @size="sm" @onClick={{this.openMoreHandlesDialog}}>
+            Reject Handle Submissions
+          </UiButton>
+          <UiButton @type="secondary" @size="sm" class="ms-2" @onClick={{this.openEditHandlesListDialog}}>
+            Edit Handles
+          </UiButton>
+        </div>
+      </t.column>
+      <t.label>Rejected Handles</t.label>
+      <t.column>
+        {{#each this.rejectionsList as |reject|}}
+          <div class="mb-2">
+            Rejected on {{shift-format reject.rejected_at}}
+            <div class="mt-1">
+              {{#each reject.handles as |handle|}}
+                {{handle}}<br>
+              {{/each}}
+            </div>
+            <div class="mt-1">
+              {{#if reject.message}}
+                <a href {{action this.toggleRejectionMessage reject}}>
+                  {{if reject.showMessage "Hide" "Show"}} rejection message
+                </a>
+              {{else}}
+                <div class="text-muted">No rejection message was given.</div>
+              {{/if}}
+              {{#if reject.showMessage}}
+                <div>
+                  {{nl2br reject.message}}
+                </div>
+              {{/if}}
+            </div>
+          </div>
+        {{else}}
+          <i class="text-muted">No rejected handles yet.</i>
+        {{/each}}
+      </t.column>
+    </UiGridTable>
+  </:body>
+</UiSection>
+
+{{#if this.showMoreHandlesDialog}}
+  <ModalDialog @onEscape={{this.cancelMoreHandlesDialog}} as |Modal|>
+    <ChForm @formId="more_handles"
+            @formFor={{this.handlesForm}}
+            @validator={{this.moreHandlesValidation}}
+            @onSubmit={{this.submitMoreHandles}} as |f|>
+      <Modal.title>Reject Submissions &amp; Request More Handles</Modal.title>
+      <Modal.body>
+        {{#if @application.isStatusCreated}}
+          <UiAlert @type="danger">
+            {{fa-icon "hand-point-right" right=1}} Account has been created. No more handles should be recorded.
+          </UiAlert>
+        {{/if}}
+        <p>
+          The submitted handles will be moved into rejected handles list, and an email send to the applicant
+          asking for more handles.
+        </p>
+
+        <div class="row">
+          <f.textarea @name="message"
+                      @label="Supply a brief message to email on why each of the handles are being rejected:"
+                      @rows={{10}}
+                      @cols={{80}}
+                      @autofocus={{true}}
+          />
+        </div>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Submit"/>
+        <UiCancelButton @onClick={{this.cancelMoreHandlesDialog}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+
+{{#if this.showEditHandlesListDialog}}
+  <ModalDialog @onEscape={{this.cancelEditHandlesListDialog}} as |Modal|>
+    <ChForm @formId="more_handles"
+            @formFor={{this.handlesForm}}
+            @validator={{this.handlesValidation}}
+            @onSubmit={{this.submitHandlesList}} as |f|>
+      <Modal.title>Edit Handles List</Modal.title>
+      <Modal.body>
+        {{#if @application.isStatusCreated}}
+          <UiAlert @type="danger">
+            {{fa-icon "hand-point-right" right=1}} Account has been created. No more handles should be recorded.
+          </UiAlert>
+        {{/if}}
+        <div class="row">
+          <f.textarea @name="handles"
+                      @label="Handles to add to the application, each handle should be on a separate line:"
+                      @rows={{10}}
+                      @cols={{80}}
+                      @autofocus={{true}}
+          />
+        </div>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Submit"/>
+        <UiCancelButton @onClick={{this.cancelEditHandlesListDialog}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.showEditApprovedHandleDialog}}
+  <ModalDialog @onEscape={{this.cancelApprovedHandleDialog}} as |Modal|>
+    <ChForm @formId="approved"
+            @formFor={{this.approvedHandleForm}}
+            @onSubmit={{this.submitApprovedHandle}} as |f|>
+      <Modal.title>Update Approved Callsign</Modal.title>
+      <Modal.body>
+        {{#if @application.isStatusCreated}}
+          <UiAlert @type="danger">
+            {{fa-icon "hand-point-right" right=1}} Account has been created. Updating the callsign here will not update
+            the Clubhouse account.
+          </UiAlert>
+        {{/if}}
+        <p>
+          Updating the approved callsign field will not email the applicant, nor update the application's status.
+        </p>
+        <div class="row">
+          <f.text @name="approved_handle"
+                  @label="Approved Callsign"
+                  @size={{40}}
+                  @autofocus={{true}}
+          />
+        </div>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Submit"/>
+        <UiCancelButton @onClick={{this.cancelApprovedHandleDialog}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.showEditAndApproveCallsign}}
+  <ModalDialog @onEscape={{this.cancelEditAndApproveCallsign}} as |Modal|>
+    <ChForm @formId="approved"
+            @formFor={{this.approvedHandleForm}}
+            @validator={{this.approvedHandleValidation}}
+            @onSubmit={{this.submitHandleAndApprove}} as |f|>
+      <Modal.title>Update Approved Callsign &amp; Approve Application</Modal.title>
+      <Modal.body>
+        {{#if @application.isStatusCreated}}
+          <p>
+            <b class="text-danger">Account has been created. Updating the callsign here will not update the Clubhouse
+              account.</b>
+          </p>
+        {{/if}}
+        <p>
+          {{#if @application.hasPersonalInfoIssues}}
+            The callsign will be approved, HOWEVER, the application has missing Personal Info fields. The applicant
+            will be emailed asking to supply the missing information. Once they respond, the application should be
+            updated and approved.
+          {{else}}
+            The callsign will be updated, the application's status marked as ready for account creation, and
+            the applicant emailed.
+          {{/if}}
+        </p>
+        <div class="row">
+          <f.text @name="approved_handle"
+                  @label="Approved Handle"
+                  @size={{40}}
+                  @autofocus={{true}}
+          />
+        </div>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Update &amp; Approve"/>
+        <UiCancelButton @onClick={{this.cancelEditAndApproveCallsign}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+

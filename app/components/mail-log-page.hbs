@@ -1,0 +1,21 @@
+<UiSection>
+  <:title>Mail Statistics</:title>
+  <:body>
+    <b>Last 24 hours:</b> {{@stats.counts.last_24}} <b>Last 7 days:</b> {{@stats.counts.week}}
+    <b>This year:</b> {{@stats.counts.year}}
+  </:body>
+</UiSection>
+<UiSection>
+  <:title>Mail Record Logs ({{@meta.page}} of {{@meta.total_pages}} pages)</:title>
+  <:body>
+    <MailLogTable @logs={{@logs}} />
+    {{#if (not-eq @logs.length @meta.total)}}
+      <UiButton @type="secondary" @onClick={{@goPrevPage}} @disabled={{eq @meta.page 1}}>
+        Prev Page
+      </UiButton>
+      <UiButton @type="secondary" @onClick={{@goNextPage}} @disabled={{eq @meta.page @meta.total_pages}}>
+        Next Page
+      </UiButton>
+    {{/if}}
+  </:body>
+</UiSection>

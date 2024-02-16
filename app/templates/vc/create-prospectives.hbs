@@ -1,0 +1,100 @@
+<main>
+  <h1>Create Prospective Accounts from Applications</h1>
+  <p>
+    This page will take all applications with the approved status, and attempt to create an account for each.
+  </p>
+  <p>
+    <UiButton @onClick={{this.previewCreate}} @type="secondary">
+      Preview Account Creation
+    </UiButton>
+    <UiButton @onClick={{this.createAccounts}} @type="primary" class="ms-2">
+      Create Accounts
+    </UiButton>
+  </p>
+
+  {{#each this.applicationGroups as |group|}}
+    <UiAccordion @isInitOpen={{true}} as |Accordion|>
+      <Accordion.title>
+        <div class={{if group.isSuccess "text-success" "text-danger"}}>
+          {{fa-icon group.statusLabel.icon right=1}}
+          {{group.label}} ({{pluralize group.applications.length "application"}})
+        </div>
+      </Accordion.title>
+      <Accordion.body>
+        <UiTable>
+          <thead>
+          <tr>
+            <th>Application ID</th>
+            <th>Name</th>
+            <th>Callsign</th>
+            <th>Email</th>
+            {{#if group.isCreate}}
+              <th>Account</th>
+            {{/if}}
+            <th>
+              Messages
+            </th>
+          </tr>
+          </thead>
+
+          <tbody>
+          {{#each group.applications as |app|}}
+            <tr>
+              <td>
+                <LinkTo @route="vc.applications.record" @model="A-{{app.application_id}}">
+                  A-{{app.application_id}}
+                </LinkTo>
+              </td>
+              <td>
+                {{app.first_name}} {{app.last_name}}
+              </td>
+              <td>
+                {{app.approved_handle}}
+              </td>
+              <td>
+                <MailTo @to={{app.email}} />
+              </td>
+              {{#if app.isCreate}}
+                <td>
+                  <PersonLink @person={{app.created_person}} />
+                </td>
+              {{/if}}
+              <td>
+                {{#if app.conflicting_person}}
+                  Conflicts with existing account
+                  <PersonLink @person={{app.conflicting_person}} @showStatus={{true}} />
+                  <br>
+                {{/if}}
+                {{#if app.reassign_callsign}}
+                  Callsign reassigned from
+                  <PersonLink @person={{app.reassign_callsign}} @showStatus={{true}} />
+                  <br>
+                {{/if}}
+                {{#each app.errors as |error|}}
+                  {{error}}<br>
+                {{else}}
+                  -
+                {{/each}}
+              </td>
+            </tr>
+          {{else}}
+            <tr>
+              <td colspan="5">
+                No applications found with this status?
+              </td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </UiTable>
+      </Accordion.body>
+    </UiAccordion>
+  {{else if this.haveResults}}
+    <b class="text-danger">No approved applications found.</b>
+  {{/each}}
+</main>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Processing applications
+  </LoadingDialog>
+{{/if}}

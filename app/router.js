@@ -166,6 +166,7 @@ Router.map(function () {
     this.route('tickets-provisions');
     this.route('timesheet');
     this.route('unified-flagging');
+    this.route('applications');
   });
 
   this.route('logout');
@@ -259,6 +260,13 @@ Router.map(function () {
     this.route('shiny-penny-report');
     this.route('spigot');
     this.route('unified-flagging');
+    this.route('applications', function() {
+      this.route('index', {path: '/'});
+      this.route('record', { path: '/:application_id'});
+      this.route('create');
+    });
+    this.route('application-import');
+    this.route('create-prospectives');
   });
 
   // Catch all for unrecognized urls

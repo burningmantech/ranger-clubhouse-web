@@ -1,0 +1,267 @@
+<EditableSection
+  @formId="application"
+  @sectionId="details"
+  @formFor={{@application}}
+  @validator={{this.applicationValidation}}
+  @onSubmit={{this.saveApplication}}
+  @editButtonNoRightAlign={{true}}
+>
+  <:title>Application Details</:title>
+  <:view>
+    {{#if @application.isProcessingCallsign}}
+      <UiSectionSubtitle @type="gray" @icon="hand-point-right">
+        Callsign processing in progress.
+      </UiSectionSubtitle>
+    {{/if}}
+    {{#if (eq @application.why_volunteer_review 'unreviewed')}}
+      <UiSectionSubtitle @type="warning" @icon="question">
+        Unreviewed paragraph
+      </UiSectionSubtitle>
+    {{/if}}
+    <div class="row">
+      <div class="col-auto">
+        <b>Experience</b><br>
+        {{@application.experienceLabel}}
+        {{#if @application.isBRCExperienceOkay}}
+          <div class="text-success">BRC exp. appears to be okay</div>
+          {{#if @application.isBRC1R1}}
+            Regional exp. may need verification.
+          {{/if}}
+        {{/if}}
+        {{#if @application.experienceIssue}}
+          <div class="text-danger">{{@application.experienceIssue}}</div>
+        {{/if}}
+      </div>
+      <div class="col-auto">
+        <b>BRC Events</b><br>
+        {{#if @application.eventsList}}
+            {{pluralize @application.eventsList.length
+                      (if @application.hasPandemicEvents "total event" "event")}}
+          [{{year-range @application.eventsList}}]
+          {{#if @application.hasPandemicEvents}}
+            <div class="text-danger">
+              Pandemic year(s) present.<br>
+            </div>
+          {{/if}}
+        {{else}}
+          <span class="text-danger">No events listed.</span>
+        {{/if}}
+      </div>
+      <div class="col-auto">
+        <b>Is 18 Or Older?</b><br>
+        {{#if @application.is_over_18}}
+          <span class="text-success">{{fa-icon "check" right=1}} Yes</span>
+        {{else}}
+          <span class="text-danger">{{fa-icon "times" right=1}} NO - Individual is under 18.</span>
+        {{/if}}
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-4">
+        <b>Known Rangers</b><br>
+        <PresentOrNot @value={{@application.known_rangers}} @empty="none stated"/>
+      </div>
+      <div class="col-4">
+        <b>Known Applicants</b><br>
+        <PresentOrNot @value={{@application.known_applicants}} @empty="none stated"/>
+      </div>
+    </div>
+
+    <div class="grid-table mt-1">
+      <div class="grid-table-label">
+        Why Ranger?
+      </div>
+      <div>
+        {{#if (eq @application.why_volunteer_review 'okay')}}
+          <span class="text-success">{{fa-icon "check" right=1}} Paragraph is okay</span>
+        {{else if (eq @application.why_volunteer_review 'problem')}}
+          <span class="text-danger">{{fa-icon "ban" right=1}} Problem paragraph</span>
+        {{else}}
+          <span>{{fa-icon "question" right=1}} Unreviewed paragraph</span>
+        {{/if}}
+        {{#if @application.reviewed_at}}
+          <span class="ms-2 text-muted">
+            Reviewed at {{shift-format @application.reviewed_at}} by
+            {{#if @application.review_person}}
+              {{@application.review_person.callsign}}
+            {{else}}
+              <i>- unknown -</i>
+            {{/if}}
+          </span>
+        {{/if}}
+        <div class="my-2">
+          {{nl2br @application.why_volunteer}}
+        </div>
+        {{#if (not-eq @application.why_volunteer_review 'okay')}}
+          <UiButton @type="secondary" @size="sm" @onClick={{this.setReviewOkay}} class="me-2">
+            Mark Okay
+          </UiButton>
+        {{/if}}
+        {{#if (not-eq @application.why_volunteer_review 'problem')}}
+          <UiButton @type="secondary" @size="sm" @onClick={{this.openProblemReviewDialog}}>
+            Mark As Problem
+          </UiButton>
+        {{/if}}
+      </div>
+      <div class="grid-table-label">Regional Experience</div>
+      <div>
+        {{#if @application.regional_experience}}
+          {{nl2br @application.regional_experience}}
+        {{else}}
+          <i>none stated</i>
+        {{/if}}
+      </div>
+      <div class="grid-table-label">Comments</div>
+      <div>
+        <Vc::ApplicationNotes @application={{@application}} @isComment={{true}} />
+      </div>
+
+      <div class="grid-table-label">Unified Flagging Notes</div>
+      <div>
+        <Vc::ApplicationNotes @application={{@application}} @isComment={{false}} />
+      </div>
+      <div class="grid-table-label">Actions</div>
+      <div>
+        <UiDropdownButton @label="Reject Application" as |dd|>
+          <dd.item @onSelect={{this.rejectQualification}}>
+            Lacking Event Experience
+          </dd.item>
+          <dd.item @onSelect={{this.rejectRegional}}>
+            Failed Regional Verification
+          </dd.item>
+          <dd.item @onSelect={{this.rejectTooYoung}}>
+            Too Young (&lt; 18 years old)
+          </dd.item>
+          <dd.item @onSelect={{this.rejectPreBonk}}>
+            Pre-Bonk
+          </dd.item>
+          <dd.item @onSelect={{this.rejectUberbonk}}>
+            Uberbonk
+          </dd.item>
+          <dd.item @onSelect={{this.rejectReturningRanger}}>
+            Returning Ranger
+          </dd.item>
+        </UiDropdownButton>
+        <UiButton @type="secondary" @size="sm" @onClick={{this.requestRRNCheck}}>Request RRN Check</UiButton>
+        <UiDropdownButton @label="Hold Application" as |dd|>
+          <dd.item @onSelect={{this.whyRangerIssue}}>
+            Why Ranger Answer Issue
+          </dd.item>
+          <dd.item @onSelect={{this.qualificationIssue}}>
+            Ask for Qualification Confirmation
+          </dd.item>
+        </UiDropdownButton>
+        <UiButton @type="secondary" @size="sm" @onClick={{this.approveForCallsignProcessing}}>
+          Approve for Callsign Processing
+        </UiButton>
+      </div>
+    </div>
+  </:view>
+  <:edit as |f|>
+    <FormRow>
+      <FormLabel @fixed={{true}}>
+        BRC Events Attended
+      </FormLabel>
+      <div class="col-auto">
+        <f.checkboxGroup @name="eventYears"
+                         @options={{this.eventYearOptions}}
+                         @cols={{3}}
+        />
+      </div>
+    </FormRow>
+    <FormRow>
+      <FormLabel @fixed={{true}}>Age</FormLabel>
+      <div class="col-auto mt-2">
+        <f.checkbox @name="is_over_18" @label="Is 18 years or older?" @inline={{true}}/>
+      </div>
+    </FormRow>
+    <FormRow>
+      <FormLabel @fixed={{true}}>
+        Why Ranger?
+      </FormLabel>
+      <f.textarea @name="why_volunteer" @cols={{80}} @rows={{5}}  />
+    </FormRow>
+    <FormRow>
+      <FormLabel @fixed={{true}}>
+        Regional Experience
+      </FormLabel>
+      <f.textarea @name="regional_experience" @cols={{80}} @rows={{5}} />
+    </FormRow>
+    <FormRow>
+      <FormLabel @fixed={{true}}>
+        Known Rangers
+      </FormLabel>
+      <f.text @name="known_rangers" @size={{80}} />
+    </FormRow>
+    <FormRow>
+      <FormLabel @fixed={{true}}>
+        Known Applicants
+      </FormLabel>
+      <f.text @name="known_applicants" @size={{80}} />
+    </FormRow>
+  </:edit>
+</EditableSection>
+
+{{#if this.showProblemReviewDialog}}
+  <ModalDialog @onEscape={{this.cancelProblemReviewDialog}} as |Modal|>
+    <ChForm @formId="reason"
+            @formFor={{this.messageForm}}
+            @validator={{this.messageValidation}}
+            @onSubmit={{this.submitProblemReview}} as |f|>
+      <Modal.title>Mark Paragraph as Problematic</Modal.title>
+      <Modal.body>
+        <div class="row">
+          <f.textarea @name="message"
+                      @label="Why is the paragraph problematic?"
+                      @rows={{10}}
+                      @cols={{80}}
+                      @autofocus={{true}}
+          />
+        </div>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label="Mark As Problem"/>
+        <UiCancelButton @onClick={{this.cancelProblemReviewDialog}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.showStatusWithMessageDialog}}
+  <ModalDialog @onEscape={{this.cancelStatusMessageDialog}} as |Modal|>
+    <ChForm @formId="reason"
+            @formFor={{this.messageForm}}
+            @validator={{this.messageValidation}}
+            @onSubmit={{this.updateStatusWithMessage}} as |f|>
+      <Modal.title>Update Status</Modal.title>
+      <Modal.body>
+        {{#if this.askForMessage}}
+          <p>
+            You are to update the status to "{{this.statusLabel this.newStatus}}".
+          </p>
+          <p>
+            The new status requires a reason / message to be sent to the applicant. The email's from address
+            will be
+            <VcEmail/>
+            .
+          </p>
+          <div class="row">
+            <f.textarea @name="message"
+                        @label="Your message to the applicant:"
+                        @rows={{10}}
+                        @cols={{80}}
+                        @autofocus={{true}}
+            />
+          </div>
+        {{else}}
+          Please confirm updating the status to "{{this.statusLabel this.newStatus}}"
+        {{/if}}
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label={{if this.askForMessage "Submit" "Confirm"}} />
+        <UiCancelButton @onClick={{this.cancelStatusMessageDialog}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+

@@ -1,0 +1,31 @@
+Showing {{pluralize @applications.length "application"}}
+<UiTable>
+  <thead>
+  <tr>
+    <th>Application ID</th>
+    <th>Salesforce ID</th>
+    <th>Name</th>
+    <th>Email</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each @applications as |row|}}
+    <tr>
+      <td>
+        {{#if row.id}}
+          <LinkTo @route="vc.applications.record" @model={{row.id}}>
+            A-{{row.id}}
+          </LinkTo>
+        {{else}}
+          -
+        {{/if}}
+      </td>
+      <td>{{row.salesforce_name}}</td>
+      <td>{{row.first_name}} {{row.last_name}}</td>
+      <td>
+        <MailTo @to={{row.email}} />
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</UiTable>

@@ -1,0 +1,50 @@
+<h1>Prospective Application</h1>
+<p>
+  This page shows what prospective applications have been submitted. Note: applications are not available prior to 2015.
+</p>
+{{#if this.createdPriorTo2015}}
+  <p class="text-danger">
+    The account was created prior to 2015. An application may not be on file.
+  </p>
+{{/if}}
+<p>
+  {{#if this.person.sfuid}}
+    Burner Profile record
+    <ExtLink @href="https://burningman.my.salesforce.com/{{this.person.sfuid}}">
+      {{this.person.sfuid}}
+    </ExtLink>
+  {{else}}
+    Link to Burner Profile record not available.
+  {{/if}}
+</p>
+{{pluralize this.applications.length "application"}}
+<UiTable>
+  <thead>
+  <tr>
+    <th>Application ID</th>
+    <th>Year</th>
+    <th>Status</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.applications as |app|}}
+    <tr>
+      <td>
+        <Vc::ApplicationLink @application={{app}} />
+      </td>
+      <td>
+        {{app.year}}
+      </td>
+      <td>
+        {{app.statusLabel}}
+      </td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="3">
+        No applications were found for 2015 or later.
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</UiTable>
