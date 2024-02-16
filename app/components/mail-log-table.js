@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
 
 export default class MailLogTableComponent extends Component {
   @tracked mailLog;
@@ -44,6 +44,4 @@ export default class MailLogTableComponent extends Component {
   closeMailLogAction() {
     this.mailLog = null;
   }
-
-
 }

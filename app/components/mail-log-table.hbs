@@ -1,83 +1,63 @@
-<UiSection>
-  <:title>Mail Statistics</:title>
-  <:body>
-    <b>Last 24 hours:</b> {{@stats.counts.last_24}} <b>Last 7 days:</b> {{@stats.counts.week}}
-    <b>This year:</b> {{@stats.counts.year}}
-  </:body>
-</UiSection>
-<UiSection>
-  <:title>Mail Record Logs ({{@meta.page}} of {{@meta.total_pages}} pages)</:title>
-  <:body>
-    <p class="text-danger">
-      Note: only the last 6 months of mail logs are retained.
-    </p>
-    <p>
-      Click the timestamp to view the entire message.
-      {{fa-icon "triangle-exclamation"}} = Bounced,
-      {{fa-icon "bell"}} = Marked as spam
-    </p>
-    <UiTable>
-      <thead>
-      <tr>
-        <th class="w-15">Timestamp</th>
-        <th class="w-35">From / To</th>
-        <th class="w-50">Subject</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each @logs as |mail|}}
-        <tr class="{{if mail.did_bounce "text-danger"}} {{if mail.did_complain "text-warning"}}">
-          <td class="w-15">
-            {{#if mail.did_bounce}}
-              {{fa-icon "triangle-exclamation"}}
-            {{/if}}
-            {{#if mail.did_complain}}
-              {{fa-icon "bell"}}
-            {{/if}}
-            <a href {{action this.showMailLogAction mail}}>
-              {{mail.created_at}}
-            </a>
-          </td>
-          <td class="w-35">
-            {{#if mail.sender}}
-              <PersonLink @person={{mail.sender}} />
-            {{else if mail.sender_id}}
-              Person #{{mail.sender_id}}
-            {{else}}
-              <i>- Clubhouse -</i>
-            {{/if}}
-            &lt;{{mail.from_email}}&gt; {{fa-icon "arrow-right"}}<br>
-            {{#if mail.person}}
-              <PersonLink @person={{mail.person}} />
-            {{else if mail.person_id}}
-              Person #{{mail.person_id}}
-            {{else}}
-              -
-            {{/if}} &lt;{{mail.to_email}}&gt;
-            {{#if mail.broadcast_id}}
-              <br>
-              <i>(sent via RBS)</i>
-            {{/if}}
-          </td>
-          <td class="w-50">{{mail.subject}}</td>
-        </tr>
-      {{else}}
-        <tr>
-          <td colspan="4" class="text-danger">No mail logs were found for {{@year}}</td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </UiTable>
-    {{#if (not-eq @logs.length @meta.total)}}
-      <UiButton @type="secondary" @onClick={{@goPrevPage}} @disabled={{eq @meta.page 1}}>
-        Prev Page
-      </UiButton>
-      <UiButton @type="secondary" @onClick={{@goNextPage}} @disabled={{eq @meta.page @meta.total_pages}}>
-        Next Page
-      </UiButton>
-    {{/if}}
-  </:body>
-</UiSection>
+<p class="text-danger">
+  Note: only the last 6 months of mail logs are retained.
+</p>
+<p>
+  Click the timestamp to view the entire message.<br>
+  {{fa-icon "triangle-exclamation"}} = Bounced (address doesn't exist or mailbox full),
+  {{fa-icon "bell"}} = Recipient's mail provider marked email as spam.
+</p>
+<UiTable>
+  <thead>
+  <tr>
+    <th class="w-15">Timestamp</th>
+    <th class="w-35">From / To</th>
+    <th class="w-50">Subject</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each @logs as |mail|}}
+    <tr class="{{if mail.did_bounce "text-danger"}} {{if mail.did_complain "text-warning"}}">
+      <td class="w-15">
+        {{#if mail.did_bounce}}
+          {{fa-icon "triangle-exclamation"}}
+        {{/if}}
+        {{#if mail.did_complain}}
+          {{fa-icon "bell"}}
+        {{/if}}
+        <a href {{action this.showMailLogAction mail}}>
+          {{mail.created_at}}
+        </a>
+      </td>
+      <td class="w-35">
+        {{#if mail.sender}}
+          <PersonLink @person={{mail.sender}} />
+        {{else if mail.sender_id}}
+          Person #{{mail.sender_id}}
+        {{else}}
+          <i>- Clubhouse -</i>
+        {{/if}}
+        &lt;{{mail.from_email}}&gt; {{fa-icon "arrow-right"}}<br>
+        {{#if mail.person}}
+          <PersonLink @person={{mail.person}} />
+        {{else if mail.person_id}}
+          Person #{{mail.person_id}}
+        {{else}}
+          -
+        {{/if}} &lt;{{mail.to_email}}&gt;
+        {{#if mail.broadcast_id}}
+          <br>
+          <i>(sent via RBS)</i>
+        {{/if}}
+      </td>
+      <td class="w-50">{{mail.subject}}</td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="4" class="text-danger">No mail logs were found.</td>
+    </tr>
+  {{/each}}
+  </tbody>
+</UiTable>
 
 {{#if this.mailLog}}
   <ModalDialog @onEscape={{this.closeMailLogAction}} @title="Mail Log #{{this.mailLog.id}}" as |Modal|>

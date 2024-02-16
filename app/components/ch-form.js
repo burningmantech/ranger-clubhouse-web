@@ -27,6 +27,8 @@ export default class ChFormComponent extends Component {
     this.formId = this.args.formId;
 
     this._buildChangeSet();
+
+    this.args.onFormInit?.(this);
   }
 
   get model() {

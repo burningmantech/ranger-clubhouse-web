@@ -1,0 +1,123 @@
+<EditableSection
+  @formId="application"
+  @sectionId="personal-info"
+  @formFor={{@application}}
+  @validator={{this.personalInfoValidation}}
+  @onSubmit={{@onSubmit}}
+  @onFormInit={{this.formInit}}
+  @editButtonNoRightAlign={{true}}
+>
+  <:title>Name, Address, Phone &amp; Emergency Contact</:title>
+  <:view>
+    {{#if @application.hasPersonalInfoIssues}}
+      <UiSectionSubtitle @type="warning" @icon="exclamation">
+        One or more  fields is blank. All fields, except the Emergency Contact info, are required before a Clubhouse account can be created.
+      </UiSectionSubtitle>
+    {{else if @application.isStatusApprovedPiiIssue}}
+      <UiSectionSubtitle @type="secondary" @icon="hand-point-right" class="mb-2">
+        {{fa-icon "hand-point-right" right=1}} Callsign has been approved, and the Personal Info issues appear to be resolved. Approve the application if everything looks good.
+      </UiSectionSubtitle>
+      <UiButton @onClick={{this.confirmApproval}} @type="primary">
+        Approve Application
+      </UiButton>
+    {{/if}}
+    <UiGridTable as |t|>
+      <t.label>Name</t.label>
+      <t.column>
+        {{@application.first_name}} {{@application.last_name}}
+      </t.column>
+      <t.label>Email</t.label>
+      <t.column>
+        <MailTo @to={{@application.email}} />
+      </t.column>
+      <t.label>Address</t.label>
+      <t.column>
+        {{@application.street}}<br>
+        {{@application.city}}
+        <span class="ms-2">{{@application.state}}</span>
+        <span class="ms-2">{{@application.postal_code}}</span>
+        <span class="ms-2">{{@application.country}}</span>
+      </t.column>
+      <t.label>Phone</t.label>
+      <t.column>
+        {{#if @application.phone}}
+          {{phone-link @application.phone}}
+        {{else}}
+          <i>not stated</i>
+        {{/if}}
+      </t.column>
+      <t.label>Emergency Contact</t.label>
+      <t.column>
+        <PresentOrNot @value={{@application.emergency_contact}} @empty="not stated"/>
+      </t.column>
+    </UiGridTable>
+  </:view>
+  <:edit as |f|>
+    <FormRow>
+      <f.text @name="first_name"
+              @label="First Name"
+              @size={{30}}
+      />
+      <f.text @name="last_name"
+              @label="Last Name"
+              @size={{30}}
+      />
+    </FormRow>
+    <FormRow>
+      <f.text @name="email" @label="Email" @size={{50}} />
+    </FormRow>
+    <FormRow>
+      <f.select @name="country"
+                @label="Country"
+                @options={{this.countryOptions}}
+                @onChange={{action this.countryChange}}
+      />
+    </FormRow>
+    <FormRow>
+      <f.text @name="street"
+              @label="Street"
+              @size={{60}}
+      />
+    </FormRow>
+    <FormRow>
+      <f.text @name="city"
+              @label="City"
+              @size={{30}}
+      />
+      {{#if this.stateOptions}}
+        <f.select @name="state"
+                  @label={{this.stateLabel}}
+                  @options={{this.stateOptions}}
+        />
+      {{else}}
+        <f.text @name="state"
+                @label={{this.stateLabel}}
+                @maxlength={{128}}
+                @disabled={{if f.model.country false true}}
+        />
+      {{/if}}
+      <f.text @name="postal_code"
+              @label="Postal Code"
+              @size={{10}}
+      />
+    </FormRow>
+    <FormRow>
+      <f.text @name="phone"
+              @label="Phone"
+              @size={{30}}
+      />
+    </FormRow>
+    <FormRow>
+      <f.textarea @name="emergency_contact"
+                  @label="Emergency Contact"
+                  @rows={{2}}
+                  @cols={{80}}
+      />
+    </FormRow>
+  </:edit>
+</EditableSection>
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting the request
+  </LoadingDialog>
+{{/if}}

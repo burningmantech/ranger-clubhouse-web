@@ -1,0 +1,48 @@
+<UiSection>
+  <:title>Audit Log</:title>
+  <:body>
+    <UiTable>
+      <thead>
+      <tr>
+        <th>Timestamp (UTC-7)</th>
+        <th>Who</th>
+        <th colspan="2">Action</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each @application.audit_logs as |row|}}
+        <tr>
+          <td>{{shift-format row.created_at}}</td>
+          <td>
+            {{#if row.person}}
+              {{row.person.callsign}}
+            {{else}}
+              <i>- unknown -</i>
+            {{/if}}
+          </td>
+          <td>
+            <b>{{row.action}}</b>
+          </td>
+          <td>
+            {{#if row.data}}
+              <table>
+                <tbody>
+                {{#each-in row.data as |column changes|}}
+                  <tr>
+                    <td class="pe-2">{{this.columnLabel column}}</td>
+                    <td>
+                      {{this.changeValues changes column row.meta}}
+                    </td>
+                  </tr>
+                {{/each-in}}
+                </tbody>
+              </table>
+            {{/if}}
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </UiTable>
+
+  </:body>
+</UiSection>

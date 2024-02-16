@@ -1,0 +1,64 @@
+{{#if @applications.length}}
+  Showing {{pluralize @applications.length "application"}} matching:
+  {{yield}}
+  <UiTable>
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Status</th>
+      <th>Name / Email</th>
+      <th>Assigned To</th>
+      <th>Updated At / By</th>
+      <th>Clubhouse Account</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each @applications as |row|}}
+      <tr>
+        <td class="text-right">
+          <LinkTo @route="vc.applications.record" @model={{row.applicationId}}>
+            {{row.applicationId}}
+          </LinkTo>
+        </td>
+        <td>
+          {{row.statusLabel}}
+        </td>
+        <td>
+          {{row.first_name}} {{row.last_name}}<br>
+          <MailTo @to={{row.email}} />
+        </td>
+        <td>
+          {{#if row.assigned_person}}
+            {{row.assigned_person.callsign}}
+          {{else}}
+            -
+          {{/if}}
+        </td>
+        <td>
+          {{#if row.updated_by_person_at}}
+            {{shift-format row.updated_by_person_at}}
+          {{else}}
+            -
+          {{/if}}
+          <br>
+          {{#if row.updated_by_person}}
+            {{row.updated_by_person.callsign}}
+          {{else}}
+            -
+          {{/if}}
+        </td>
+        <td>
+          {{#if row.person}}
+            <PersonLink @person={{row.person}} />
+            &lt;{{row.person.status}}&gt;
+          {{else}}
+            -
+          {{/if}}
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </UiTable>
+{{else}}
+  <b class="text-danger">No applications found matching: {{yield}}</b>
+{{/if}}

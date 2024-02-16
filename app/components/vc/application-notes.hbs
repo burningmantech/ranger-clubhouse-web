@@ -1,0 +1,78 @@
+{{#each this.notes as |note|}}
+  <p>
+    {{shift-format note.created_at}}
+    <span class="ms-2">
+      {{#if note.person}}
+        by {{note.person.callsign}}
+      {{else}}
+        <i>imported from Salesforce</i>
+      {{/if}}
+    </span>
+    <a href {{action this.deleteNote note}} class="ms-2">delete</a>
+    <a href {{action this.openDialog note}} class="ms-2">edit</a>
+    <br>
+    {{nl2br note.note}}
+  </p>
+{{else}}
+  <i>no {{if @isComment "comments" "notes"}}</i>
+{{/each}}
+<div class="mt-2">
+  <UiButton @type="secondary" @size="sm" @onClick={{action this.openDialog null}}>
+    Add {{if @isComment "Comment" "Unified Flagging VC Note"}}
+  </UiButton>
+</div>
+
+{{#if this.showDialog}}
+  <ModalDialog @onEscape={{this.cancelDialog}} as |Modal|>
+    <ChForm @formId="note"
+            @formFor={{this.noteForm}}
+            @validator={{this.noteValidation}}
+            @onSubmit={{this.submit}} as |f|>
+      <Modal.title>
+        {{if this.editNote "Edit" "Update"}}
+        {{if @isComment "Comment" "Unified Flagging Note"}}
+      </Modal.title>
+      <Modal.body>
+        {{#if (and @application.isStatusCreated (not @isComment))}}
+          <UiAlert @type="danger">
+            {{fa-icon "triangle-exclamation" right=1}} Because the account has been created, any notes entered will here NOT
+            be recorded into the Unified Flagging system.
+          </UiAlert>
+        {{/if}}
+        {{#if (and this.editNote (not (this.isMyNote this.editNote)))}}
+          <p class="text-danger">
+            <b>Warning: you did not write this {{if @isComment "comment" "note"}}.</b>
+          </p>
+        {{/if}}
+        <p>
+          {{#if @isComment}}
+            Comments are meant to be shared with your fellow VCs when reviewing an application.
+            Your comments will NOT be added to the Unified Flagging system.
+          {{else}}
+            VC Notes will be added to the Unified Flagging system when the Clubhouse account is created.
+          {{/if}}
+        </p>
+
+        <div class="row">
+          <f.textarea @name="note"
+                      @label="Your {{if @isComment "comment on the application"
+                                        "VC Note for the Unified Flagging System:"}}"
+                      @rows={{10}}
+                      @cols={{80}}
+                      @autofocus={{true}}
+          />
+        </div>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit @label={{if this.editNote "Update" "Add"}} />
+        <UiCancelButton @onClick={{this.cancelDialog}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting your request
+  </LoadingDialog>
+{{/if}}

@@ -1,0 +1,58 @@
+<main>
+  <ChForm @formId="application-search"
+          @formFor={{this.searchForm}}
+          @onSubmit={{this.searchForStuff}} as |f|>
+    <FormRow>
+      <f.text @name="query"
+              @label="Search applications"
+              @placeholder="A-nnnn, R-nnnn, name, email, or bpguid"
+              @inline={{true}}
+              @size={{60}} />
+      <div class="col-auto mt-1">
+        <UiButton @onClick={{action this.clearQuery f.model}} @size="sm" @type="secondary">
+          Clear Query
+        </UiButton>
+      </div>
+    </FormRow>
+  </ChForm>
+
+  {{#if this.results}}
+    <div class="my-4">
+      Found {{pluralize this.results.length "application"}} <a href {{action this.clearResults}} class="ms-4">Clear results</a>
+      <UiTable>
+        <thead>
+        <tr>
+          <th>Year</th>
+          <th>Application</th>
+          <th>Salesforce ID</th>
+          <th>Status</th>
+          <th>Name</th>
+          <th>Email</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.results as |app|}}
+          <tr>
+            <td>{{app.year}}</td>
+            <td>
+              <LinkTo @route="vc.applications.record" @model="A-{{app.id}}">
+                A-{{app.id}}
+              </LinkTo>
+            </td>
+            <td>{{app.salesforce_name}}</td>
+            <td>{{this.statusLabel app.status}}</td>
+            <td>{{app.first_name}} {{app.last_name}}</td>
+            <td>{{app.email}}</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </UiTable>
+    </div>
+  {{else if this.noneFound}}
+    <div class="my-4">
+      <b class="text-danger">No applications found with the query "{{this.query}}"</b>
+      <a href {{action this.clearResults}} class="ms-4">Clear message</a>
+    </div>
+  {{/if}}
+  {{outlet}}
+</main>

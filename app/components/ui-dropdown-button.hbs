@@ -1,0 +1,7 @@
+<BsDropdown @closeOnMenuClick={{false}} as |dd|>
+  <dd.button class="btn-sm">{{@label}} <span class="caret"></span></dd.button>
+  <dd.menu as |ddm|>
+    {{yield (hash item=(component "ui-dropdown-button-item" ddm=ddm dd=dd))}}
+  </dd.menu>
+</BsDropdown>
+

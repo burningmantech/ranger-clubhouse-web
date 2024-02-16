@@ -2,7 +2,9 @@
 <a href="#{{@paneId}}"
    class="nav-link {{if (eq @tab.activeId @paneId) "active"}}"
   {{action @tab.select @paneId}}>
-  {{fa-icon @icon fixed=true right=2}}
+  {{#if @icon}}
+    {{fa-icon @icon fixed=true right=2}}
+  {{/if}}
   {{yield}}
 </a>
 </@nav.item>

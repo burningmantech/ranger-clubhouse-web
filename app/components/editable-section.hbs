@@ -1,10 +1,10 @@
 <UiSection id={{if @sectionId (concat "section-" @sectionId)}}>
   <:title>
-    <div class="d-flex flex-row justify-content-between">
+    <div class="d-flex flex-row {{unless @editButtonNoRightAlign "justify-content-between"}}">
       <div>
         {{yield to="title"}}
       </div>
-      <div>
+      <div class="{{if @editButtonNoRightAlign "ms-4"}}">
         {{#if this.isEditing}}
           <UiButton @onClick={{this.cancelEdit}} @type="secondary" @size="sm">
             Cancel
@@ -23,7 +23,9 @@
               @formFor={{@formFor}}
               @autocomplete="on"
               @validator={{@validator}}
-              @onSubmit={{this.onSubmit}} as |f|>
+              @onSubmit={{this.onSubmit}}
+              @onFormInit={{@onFormInit}}
+              as |f|>
         {{yield f to="edit"}}
         <div class="mt-4">
           <f.submit/>

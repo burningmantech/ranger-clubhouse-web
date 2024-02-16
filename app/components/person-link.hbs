@@ -3,3 +3,6 @@
 {{~else~}}
   <LinkTo @route={{this.routePath}} @model={{@personId}} @query={{hash year=@year}} ...attributes>{{@callsign}}</LinkTo>
 {{~/if~}}
+{{#if @showStatus}}
+  &lt;{{@person.status}}&gt;
+{{/if}}

@@ -47,6 +47,11 @@ main {
   border-bottom: 1px solid #eaeded;
 }
 
+.ui-section-sub-title {
+  margin: -10px -10px 10px -10px;
+  padding: 10px;
+}
+
 @media print {
   h1 {
     font-size: 1.2rem !important;
@@ -177,7 +182,7 @@ dl {
   min-width: 230px;
 }
 
-@include media-breakpoint-up(lg) {
+@include media-breakpoint-up(xl) {
   .dropdown-menu-container {
     flex-direction: row;
   }
@@ -195,6 +200,7 @@ dl {
 
 ul.nav-tabs {
   display: flex;
+  justify-content: start;
   margin-bottom: 1.5vh;
 
   li {
@@ -246,7 +252,7 @@ ul.nav-tabs {
   }
 }
 
-@include media-breakpoint-down(xl) {
+@include media-breakpoint-down(lg) {
   ul.nav-tabs li {
     flex: 1;
 
@@ -712,4 +718,8 @@ summary:hover {
   100% {
     background-color: #FFC300FF;
   }
+}
+
+.highlight-hover:hover {
+  background-color: #f0f0f0;
 }

@@ -1,6 +1,9 @@
 <main>
-  <h1>Salesforce Import</h1>
+  <h1>Salesforce Account Import</h1>
 
+  <UiAlert @type="danger">
+    This interface is deprecated. Use the VC &gt; Application Import page to import Ranger applications into the Clubhouse.
+  </UiAlert>
   {{#if (eq this.importStatus "error")}}
     <UiSection>
       <:title><span class="text-danger">Processing Error</span></:title>

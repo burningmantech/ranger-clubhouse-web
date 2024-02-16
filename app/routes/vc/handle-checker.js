@@ -1,8 +1,13 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import _ from 'lodash';
+import _, {isEmpty} from 'lodash';
 
 export default class VcHandleCheckerRoute extends ClubhouseRoute {
-  model() {
+  queryParams = {
+    handle: { refreshModel: true }
+  };
+
+  model({handle}) {
+    this.handle = handle;
     return this.ajax.request('handle-reservation/handles');
   }
 
@@ -14,5 +19,12 @@ export default class VcHandleCheckerRoute extends ClubhouseRoute {
     controller.allHandles = handles;
     controller.buildHandleRules();
     controller.buildEntityTypes();
+
+    if (!isEmpty(this.handle)) {
+      controller.currentName = this.handle;
+      controller.checkCurrentName();
+    } else {
+      controller.currentName = '';
+    }
   }
 }

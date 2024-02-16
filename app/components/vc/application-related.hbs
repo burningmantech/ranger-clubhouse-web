@@ -1,0 +1,33 @@
+<UiSection>
+  <:title>Related Applications</:title>
+  <:body>
+    {{#if @relatedApplications}}
+      <UiTable>
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Salesforce ID</th>
+          <th>Year</th>
+          <th>Status</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each @relatedApplications as |app|}}
+          <tr>
+            <td>
+              <LinkTo @route="vc.applications.record" @model="A-{{app.id}}">
+                A-{{app.id}}
+              </LinkTo>
+            </td>
+            <td>{{app.salesforce_name}}</td>
+            <td>{{app.year}}</td>
+            <td>{{this.statusLabel app.status}}</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </UiTable>
+    {{else}}
+      <i>No past and/or duplicate applications found.</i>
+    {{/if}}
+  </:body>
+</UiSection>
