@@ -704,7 +704,13 @@ summary:hover {
   color: #ffffff;
 }
 
-.blink-box {
+tr.blink-box {
+  td {
+    animation: blink-box-keyframes 1s linear 2;
+  }
+}
+
+:not(tr) .blink-box {
   animation: blink-box-keyframes 1s linear 2;
 }
 
