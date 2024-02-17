@@ -119,10 +119,10 @@ index 0000000..b672e60
 +</project>
 \ No newline at end of file
 diff --git a/node_modules/ember-bootstrap/addon/components/bs-modal.js b/node_modules/ember-bootstrap/addon/components/bs-modal.js
-index 35ecbc3..39ebd82 100644
+index a68c092..bec3235 100644
 --- a/node_modules/ember-bootstrap/addon/components/bs-modal.js
 +++ b/node_modules/ember-bootstrap/addon/components/bs-modal.js
-@@ -522,7 +522,7 @@ export default class Modal extends Component {
+@@ -520,7 +520,7 @@ export default class Modal extends Component {
      await nextRunloop();
  
      const { backdropElement } = this;
@@ -131,7 +131,7 @@ index 35ecbc3..39ebd82 100644
  
      await transitionEnd(backdropElement, this.backdropTransitionDuration);
    }
-@@ -541,7 +541,7 @@ export default class Modal extends Component {
+@@ -539,7 +539,7 @@ export default class Modal extends Component {
  
      if (this.usesTransition) {
        const { backdropElement } = this;
