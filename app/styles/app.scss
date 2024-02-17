@@ -704,27 +704,21 @@ summary:hover {
   color: #ffffff;
 }
 
-tr.blink-box {
+@keyframes blink-keyframes {
+  from { background-color: #FFC300; }
+  to { background-color: inherit; }
+}
+
+.blink-row {
   td {
-    animation: blink-box-keyframes 1s linear 2;
+    animation: blink-keyframes 0.5s linear 4;
   }
 }
 
-:not(tr) .blink-box {
-  animation: blink-box-keyframes 1s linear 2;
+.blink-box {
+  animation: blink-keyframes 0.5s linear 4;
 }
 
-@keyframes blink-box-keyframes {
-  0% {
-    background-color: #FFC300FF;
-  }
-  50% {
-    background-color: #fff;
-  }
-  100% {
-    background-color: #FFC300FF;
-  }
-}
 
 .highlight-hover:hover {
   background-color: #f0f0f0;

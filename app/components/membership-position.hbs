@@ -22,6 +22,9 @@
           {{#if position.deselect_on_team_join}}
             <span class="text-muted me-1">{{fa-icon "power-off"}} <small>Deselected when person joins the team</small></span>
           {{/if}}
+          {{#unless position.active}}
+            <small class="ms-1 text-danger">[inactive]</small>
+          {{/unless}}
         </label>
         {{#if position.roles}}
           <Popover @text="[{{pluralize position.roles.length "permission"}}]">

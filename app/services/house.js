@@ -310,7 +310,7 @@ export default class HouseService extends Service {
    * Scroll to element
    *
    * @param {string} selector Element ID to scroll to
-   * @param {boolean} scroll [scroll=true] Use smooth scrolling (true) or jump scroll (false)
+   * @param {boolean} scroll=true Use smooth scrolling (true) or jump scroll (false)
    * @param {boolean} scrollToTop Scroll the element to top regardless if element is in view.
    */
 
