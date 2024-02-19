@@ -97,7 +97,7 @@
     </navbar.content>
   {{/if}}
   {{#if this.session.isAuthenticated}}
-    <div class="d-none d-lg-flex ms-auto">
+    <div class="d-none d-lg-flex">
       <navbar.content>
         <navbar.nav as |nav|>
           <nav.dropdown as |dropdown|>
@@ -112,7 +112,7 @@
                 ({{this.user.onduty_position.title}})
               {{/if}}
             </dropdown.toggle>
-            <dropdown.menu as |menu|>
+            <dropdown.menu class="dropdown-menu-right"  as |menu|>
               <menu.item>
                 {{#if this.user.isRanger}}
                   <LinkTo @route="me.messages" class="dropdown-item">

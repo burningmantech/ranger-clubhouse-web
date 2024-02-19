@@ -198,6 +198,12 @@ dl {
   color: #000;
 }
 
+.dropdown-menu-right {
+  right: 0;
+  left: auto;
+}
+
+
 ul.nav-tabs {
   display: flex;
   justify-content: start;
