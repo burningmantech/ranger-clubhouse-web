@@ -1,0 +1,80 @@
+<YearSelect @title="RBS Message Log"
+            @year={{this.year}}
+            @minYear={{2018}}
+            @onChange={{this.changeYearAction}} />
+<p>
+  <LinkTo @route="ops.rbs">Back to RBS</LinkTo>
+</p>
+
+<p>
+  <ChForm @formId="search" @formFor={{this.searchForm}} @changeSet={{false}} @onSubmit={{this.submitAction}} as |f|>
+    <FormRow>
+      <f.select @name="direction"
+                @label="Message Direction"
+                @options={{this.directionOptions}}
+      />
+    </FormRow>
+    <FormRow>
+      <f.checkboxGroup @name="status"
+                       @label="Statuses"
+                       @cols={{4}}
+                       @options={{this.statusOptions}}
+      />
+    </FormRow>
+    <f.submit @label="Search"/>
+  </ChForm>
+</p>
+
+Showing {{this.currentPage}} of {{this.total_pages}} pages. {{pluralize this.total "row"}}
+<UiTable class="mt-2">
+  <thead>
+  <tr>
+    <th>Timestamp</th>
+    <th>Person</th>
+    <th>Status</th>
+    <th>Direction</th>
+    <th>Address</th>
+    <th>Broadcast</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.messages as |message|}}
+    <tr>
+      <td>{{message.created_at}}</td>
+      <td>
+        <PersonLink @person={{message.person}} />
+      </td>
+      <td>{{message.status}}</td>
+      <td>{{message.direction}}</td>
+      <td>{{message.address}}</td>
+      <td>
+        <PresentOrNot @value={{message.broadcast_id}} @empty="-"/>
+      </td>
+    </tr>
+    {{#if (or (eq message.direction "inbound") (eq message.status "reply"))}}
+      <tr class="no-border">
+        <td colspan="6">
+          {{#if message.message}}
+            {{nl2br message.message}}
+          {{else}}
+            <i>empty message</i>
+          {{/if}}
+        </td>
+      </tr>
+    {{/if}}
+  {{else}}
+    <tr>
+      <td colspan="6">
+        <b class="text-danger">No message logs matched critiera.</b>
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</UiTable>
+
+<UiButton @type="secondary" @onClick={{this.goPrevPage}} @disabled={{eq this.currentPage 1}}>
+  Prev Page
+</UiButton>
+<UiButton @type="secondary" @onClick={{this.goNextPage}} @disabled={{eq this.currentPage this.total_pages}}>
+  Next Page
+</UiButton>

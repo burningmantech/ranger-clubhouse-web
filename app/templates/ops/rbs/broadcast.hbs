@@ -1,0 +1,25 @@
+<h1>{{this.title}}</h1>
+<p>
+  <LinkTo @route="ops.rbs">Back To Ranger Broadcast System</LinkTo>
+</p>
+
+{{#if (or this.config.sms_sandbox this.config.email_sandbox this.config.clubhouse_message_sandbox)}}
+  <div class="border rounded p-2 text-danger mb-2">
+    Sandboxed delivery mechanisms:
+    {{#if this.config.sms_sandbox}}
+      Text/SMS messages,
+    {{/if}}
+    {{#if this.config.email_sandbox}}
+      Email,
+    {{/if}}
+    {{#if this.config.clubhouse_message_sandbox}}
+      Clubhouse messages
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if this.broadcast.is_simple}}
+  <BroadcastSimple @config={{this.config}} @type={{this.type}} @broadcast={{this.broadcast}} />
+{{else}}
+  <BroadcastComplex @config={{this.config}} @type={{this.type}} @broadcast={{this.broadcast}} />
+{{/if}}
