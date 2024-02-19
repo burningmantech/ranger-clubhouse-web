@@ -1,0 +1,16 @@
+<h1>Team Roster Management Listing</h1>
+{{#if this.teams}}
+  <p>
+    You are allowed to manage the following {{pluralize this.teams.length "team"}}. Click on a team title to manage.
+  </p>
+
+  <div class="masonry-container masonry-hover">
+    {{#each this.teams as |team|}}
+      <LinkTo @route="ops.teams.manage" @model={{team.id}} class="masonry-item py-2">
+        {{team.title}}
+      </LinkTo>
+    {{/each}}
+  </div>
+{{else}}
+  <div class="text-danger">You appear not be a manager of any Clubhouse Team.</div>
+{{/if}}

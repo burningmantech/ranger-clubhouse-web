@@ -16,7 +16,7 @@ import {
   TROUBLESHOOTER, TROUBLESHOOTER_MENTEE, TROUBLESHOOTER_MENTOR
 } from "clubhouse/constants/positions";
 
-export default class ReportsCruiseDirectionController extends ClubhouseController {
+export default class OpsCruiseDirectionController extends ClubhouseController {
   @tracked shifts;
   @tracked selectedShift;
 

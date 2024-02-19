@@ -1,18 +1,18 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {ADMIN} from 'clubhouse/constants/roles';
+import {MANAGE} from 'clubhouse/constants/roles';
 import _ from 'lodash';
 
-export default class AdminBulkTeamsRoute extends ClubhouseRoute {
-  roleRequired = ADMIN;
+export default class OpsBulkTeamsRoute extends ClubhouseRoute {
+  roleRequired = MANAGE;
 
   model() {
-    return this.ajax.request('team').then(({team}) => team);
+    return this.ajax.request('team', { data: { can_manage: 1 }});
   }
 
-  setupController(controller, model) {
+  setupController(controller, {team}) {
     controller.isSubmitting = false;
     controller.setProperties({
-      teams: model,
+      teams: team.filter((t) => t.can_manage),
       committed: false,
       granted: false,
       people: null,
@@ -21,6 +21,6 @@ export default class AdminBulkTeamsRoute extends ClubhouseRoute {
       successCount: 0
     });
 
-    controller.teamsById = _.keyBy(model, 'id');
+    controller.teamsById = _.keyBy(team, 'id');
   }
 }

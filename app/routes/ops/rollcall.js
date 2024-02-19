@@ -1,6 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class ReportsRollcallRoute extends ClubhouseRoute {
+export default class OpsRollcallRoute extends ClubhouseRoute {
   setupController(controller) {
     controller.set('isSignOut', false);
     controller.set('isSignIn', false);

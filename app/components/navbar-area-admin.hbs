@@ -59,15 +59,10 @@
       {{#if (has-role "admin")}}
         <NavbarMenuItem @menu={{menu}} @route="admin.bulk-upload" @item="Bulk Upload"/>
       {{/if}}
-      {{#if (has-role "admin" "timesheet-management")}}
-        <NavbarMenuItem @menu={{menu}} @route="admin.bulk-sign-in-out" @item="Bulk Sign In/Out"/>
-      {{/if}}
       {{#if (has-role "admin")}}
         <NavbarMenuItem @menu={{menu}} @route="admin.bulk-signout" @item="Bulk Signout"/>
         <NavbarMenuItem @menu={{menu}} @route="admin.bulk-lookup" @item="Callsign/Email Lookup"/>
-        <NavbarMenuItem @menu={{menu}} @route="admin.bulk-positions" @item="Positions Grant/Revoke"/>
         <NavbarMenuItem @menu={{menu}} @route="admin.bulk-grant-awards" @item="Bulk Grant Awards"/>
-        <NavbarMenuItem @menu={{menu}} @route="admin.bulk-teams" @item="Teams Grant/Revoke"/>
       {{/if}}
       {{#if (has-role "payroll")}}
         <NavbarMenuItem @menu={{menu}} @route="admin.payroll" @item="Payroll Export"/>
@@ -85,14 +80,8 @@
       {{/if}}
     </NavbarMenuSection>
   {{/if}}
-  {{#if (has-role "admin" "megaphone" "megaphone-emergency-onplaya" "megaphone-team-onplaya" "announcement-management")}}
+  {{#if (has-role "admin")}}
     <NavbarMenuSection @section="Communications">
-      {{#if (has-role "admin" "announcement-management")}}
-        <NavbarMenuItem @menu={{menu}} @route="admin.motd" @item="Announcements"/>
-      {{/if}}
-      {{#if (has-role "admin" "megaphone" "megaphone-emergency-onplaya" "megaphone-team-onplaya")}}
-        <NavbarMenuItem @menu={{menu}} @route="admin.rbs" @item="Ranger Broadcast"/>
-      {{/if}}
       {{#if (has-role "admin")}}
         <NavbarMenuItem @menu={{menu}} @route="admin.mail-log" @item="Mail Log"/>
       {{/if}}

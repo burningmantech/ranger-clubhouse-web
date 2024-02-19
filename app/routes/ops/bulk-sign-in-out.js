@@ -2,7 +2,7 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {ADMIN, TIMESHEET_MANAGEMENT} from 'clubhouse/constants/roles';
 import EmberObject from '@ember/object';
 
-export default class AdminBulkSignInOutRoute extends ClubhouseRoute {
+export default class OpsBulkSignInOutRoute extends ClubhouseRoute {
   roleRequired = [ ADMIN, TIMESHEET_MANAGEMENT ];
 
   setupController(controller) {

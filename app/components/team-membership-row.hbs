@@ -1,0 +1,53 @@
+<tr class={{if @person.selected "table-warning"}}>
+  <td>
+    <Input @type="checkbox" @checked={{@person.selected}} class="form-check-input"/>
+  </td>
+  <td>
+    <PersonLink @person={{@person}} />
+  </td>
+  <td>
+    {{#if @person.revoked}}
+      <div class="text-muted">membership revoked</div>
+    {{else}}
+      {{#if @person.is_member}}
+        {{fa-icon "check" color="success" fixed=true right=1}}
+        <a href {{action @onRevoke @person}}>revoke</a>
+      {{else}}
+        <span class="text-danger">
+         {{fa-icon "times" fixed=true right=1}} not member
+        </span>
+      {{/if}}
+    {{/if}}
+  </td>
+
+  <td>
+    {{#each this.allMembersPositions as |position|}}
+      {{position.title}}<br>
+    {{else}}
+      -
+    {{/each}}
+  </td>
+  <td>
+    <TeamMembershipWorked @positions={{this.allMembersPositions}} />
+  </td>
+  <td>
+    {{#each this.optionalPositions as |position|}}
+      {{position.title}}<br>
+    {{else}}
+      -
+    {{/each}}
+  </td>
+  <td>
+    <TeamMembershipWorked @positions={{this.optionalPositions}} />
+  </td>
+  <td>
+    {{#each this.publicPositions as |position|}}
+      {{position.title}}<br>
+    {{else}}
+      -
+    {{/each}}
+  </td>
+  <td>
+    <TeamMembershipWorked @positions={{this.publicPositions}} />
+  </td>
+</tr>

@@ -61,10 +61,7 @@ Router.map(function () {
     this.route('awards');
     this.route('bulk-grant-awards');
     this.route('bulk-lookup');
-    this.route('bulk-positions');
-    this.route('bulk-sign-in-out');
     this.route('bulk-signout');
-    this.route('bulk-teams');
     this.route('bulk-upload');
     this.route('certifications');
     this.route('clubhouse1-log');
@@ -171,6 +168,18 @@ Router.map(function () {
 
   this.route('logout');
 
+  this.route('ops', function() {
+    this.route('bulk-positions');
+    this.route('bulk-sign-in-out');
+    this.route('bulk-teams');
+    this.route('cruise-direction');
+    this.route('rollcall');
+    this.route('teams', function() {
+      this.route('index', { path: '/'});
+      this.route('manage', { path: '/:team_id'});
+    });
+  });
+
   this.route('training', {path: '/training/:position_id'}, function () {
     this.route('index', {path: '/'});
     this.route('capacity');
@@ -196,7 +205,6 @@ Router.map(function () {
     this.route('asset-history');
     this.route('assets-outstanding');
     this.route('certifications');
-    this.route('cruise-direction');
     this.route('event-stats');
     this.route('flakes');
     this.route('forced-signins');
@@ -215,7 +223,6 @@ Router.map(function () {
     this.route('potential-swag');
     this.route('radio-assets');
     this.route('radio-checkout');
-    this.route('rollcall');
     this.route('sandman-qualified');
     this.route('schedule-by-callsign');
     this.route('schedule-by-position');
@@ -271,4 +278,4 @@ Router.map(function () {
 
   // Catch all for unrecognized urls
   this.route('not-found', {path: '/*path'});
-});
+ });

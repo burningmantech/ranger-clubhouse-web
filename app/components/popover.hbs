@@ -1,5 +1,5 @@
 <a href="#" {{on "click" this.preventClick}} ...attributes>
-  {{@text}}
+  <span class="d-inline-block">{{@text}}</span>
   <BsPopover @title={{@title}} @onShow={{@onShow}} as |po|>
     {{yield po}}
     <div class="popover-footer mt-2"><UiCloseButton @onClick={{po.close}} /></div>
