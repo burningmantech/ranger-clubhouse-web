@@ -1,0 +1,27 @@
+{{#each @positions as |position|}}
+  {{#if position.granted}}
+    {{#if position.granted.is_training}}
+      {{#if position.granted.worked_on}}
+        {{year-format position.granted.worked_on}} (trained)
+      {{else}}
+        <div class="text-muted">never trained</div>
+      {{/if}}
+    {{else if position.granted.is_trainer}}
+      {{#if position.granted.worked_on}}
+        {{year-format position.granted.worked_on}} (taught)
+      {{else}}
+        <div class="text-muted">never taught</div>
+      {{/if}}
+    {{else if position.granted.worked_on}}
+      <div>
+        {{year-format position.granted.worked_on}}
+      </div>
+    {{else}}
+      <div class="text-muted">never worked</div>
+    {{/if}}
+  {{else}}
+    <div class="text-muted">not granted</div>
+  {{/if}}
+{{else}}
+  -
+{{/each}}

@@ -2,34 +2,35 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
 
-export default class AdminBulkTeamsController extends ClubhouseController {
+export default class OpsBulkPositionsController extends ClubhouseController {
   @tracked people;
   @tracked committed = false;
-  @tracked teamId = null;
-  @tracked teamTitle = '';
+  @tracked positionId = null;
+  @tracked positionTitle = '';
   @tracked successCount = 0;
   @tracked errorCount = 0;
   @tracked isSubmitting = false;
 
   grantRevokeOptions = [
-    ['Grant Team', true],
-    ['Revoke Team', false]
+    ['Grant Position', true],
+    ['Revoke Position', false]
   ];
 
-  get teamOptions() {
-    const options = this.teams.map((p) => [p.title, p.id]);
-    options.unshift(['Select a team', null]);
+  get positionOptions() {
+    const options = this.positions.map((p) => [p.title, p.id]);
+    options.unshift(['Select a position', null]);
     return options;
   }
 
   @action
   async _execute(commit) {
     const callsigns = this.bulkForm.callsigns;
-    this.teamId = +this.bulkForm.teamId;
+
+    this.positionId = +this.bulkForm.positionId;
     this.committed = false;
     const data = {
       callsigns,
-      team_id: this.teamId,
+      position_id: this.positionId,
       grant: this.bulkForm.grant ? 1 : 0,
       commit: commit ? 1 : 0
     };
@@ -40,12 +41,11 @@ export default class AdminBulkTeamsController extends ClubhouseController {
     this.errorCount = 0;
     this.successCount = 0;
 
-    const team = this.teamsById[this.teamId];
-    this.teamTitle = team ? team.title : `Team #${this.teamId}`;
+    const position = this.positionsById[this.positionId];
+    this.positionTitle = position ? position.title : `Position #${this.positionId}`;
 
     try {
-      const {people} = await this.ajax.post('team/bulk-grant-revoke', {data});
-      this.house.scrollToTop();
+      const {people} = await this.ajax.post(`position/${this.positionId}/bulk-grant-revoke`, {data});
       this.people = people;
       if (commit && !this.errorCount) {
         this.committed = true;
@@ -54,6 +54,7 @@ export default class AdminBulkTeamsController extends ClubhouseController {
 
       this.errorCount = people.filter((p) => p.errors).length;
       this.successCount = people.filter((p) => p.success).length;
+      this.house.scrollToTop();
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {

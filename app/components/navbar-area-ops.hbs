@@ -1,0 +1,33 @@
+<NavbarMenu @nav={{@nav}} @title="Ops" as |menu|>
+  <NavbarMenuSection @section="Shift Operations">
+    {{#if (has-role "admin" "timesheet-management")}}
+      <NavbarMenuItem @menu={{menu}} @route="ops.bulk-sign-in-out" @item="Bulk Sign In/Out"/>
+    {{/if}}
+    <NavbarMenuItem @menu={{menu}} @route="ops.cruise-direction" @item="Cruise Direction"/>
+    <NavbarMenuItem @menu={{menu}} @route="ops.rollcall" @item="Rollcall"/>
+  </NavbarMenuSection>
+  <NavbarMenuSection @section="Teams / Positions">
+    <NavbarMenuItem @menu={{menu}}
+                    @route="ops.bulk-positions"
+                    @item="Bulk Position Grant/Revoke"
+    />
+     <NavbarMenuItem @menu={{menu}}
+                    @route="ops.bulk-teams"
+                    @item="Bulk Team Grant/Revoke"
+    />
+    <NavbarMenuItem @menu={{menu}}
+                    @route="ops.teams.index"
+                    @item="Roster Management"/>
+  </NavbarMenuSection>
+  {{#if
+    (has-role "admin" "megaphone" "megaphone-emergency-onplaya" "megaphone-team-onplaya" "announcement-management")}}
+    <NavbarMenuSection @section="Communications">
+      {{#if (has-role "admin" "announcement-management")}}
+        <NavbarMenuItem @menu={{menu}} @route="admin.motd" @item="Announcements"/>
+      {{/if}}
+      {{#if (has-role "admin" "megaphone" "megaphone-emergency-onplaya" "megaphone-team-onplaya")}}
+        <NavbarMenuItem @menu={{menu}} @route="admin.rbs" @item="Ranger Broadcast"/>
+      {{/if}}
+    </NavbarMenuSection>
+  {{/if}}
+</NavbarMenu>

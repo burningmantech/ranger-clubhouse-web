@@ -2,7 +2,7 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 
-export default class ReportsRollcallController extends ClubhouseController {
+export default class OpsRollcallController extends ClubhouseController {
   @tracked isSignOut = false;
   @tracked isSignIn = false;
 

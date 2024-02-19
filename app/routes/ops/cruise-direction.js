@@ -3,7 +3,7 @@ import {ADMIN, MANAGE} from "clubhouse/constants/roles";
 import requestYear from "clubhouse/utils/request-year";
 import RSVP from 'rsvp';
 
-export default class ReportsCruiseDirectionRoute extends ClubhouseRoute {
+export default class OpsCruiseDirectionRoute extends ClubhouseRoute {
   roleRequired = [ADMIN, MANAGE];
 
   queryParams = {

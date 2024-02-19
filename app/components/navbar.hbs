@@ -61,12 +61,14 @@
           <NavbarAreaVolCoords @nav={{nav}} />
         {{/if}}
 
-        {{#if (has-role "admin" "announcement-management" "edit-assets" "edit-slots" "edit-swag" "megaphone" "megaphone-team-onplaya" "megaphone-emergency-onplaya" "survey-management" "timesheet-management")}}
+        {{#if
+          (has-role "admin" "announcement-management" "edit-assets" "edit-slots" "edit-swag" "megaphone" "megaphone-team-onplaya" "megaphone-emergency-onplaya" "survey-management" "timesheet-management")}}
           <NavbarAreaAdmin @nav={{nav}} />
         {{/if}}
 
         {{#if (has-role "admin" "manage")}}
           <NavbarAreaReports @nav={{nav}} />
+          <NavbarAreaOps @nav={{nav}} />
           <NavbarAreaSearch @nav={{nav}} />
         {{/if}}
       {{else}}

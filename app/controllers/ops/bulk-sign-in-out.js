@@ -3,8 +3,8 @@ import {action} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {tracked} from '@glimmer/tracking';
 
-export default class AdminBulkSignInOutController extends ClubhouseController {
-  bulkForm = null;  // Setup in route
+export default class OpsBulkSignInOutController extends ClubhouseController {
+  @tracked bulkForm = null;  // Setup in route
 
   @tracked committed = false;
   @tracked haveError = false;
