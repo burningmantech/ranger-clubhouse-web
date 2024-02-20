@@ -1,4 +1,4 @@
-<NavbarMenu @nav={{@nav}} @title="Ops" as |menu|>
+<NavbarMenu @nav={{@nav}} @title="Ops" @isLarge={{true}} as |menu|>
   <NavbarMenuSection @section="Shift Operations">
     {{#if (has-role "admin" "timesheet-management")}}
       <NavbarMenuItem @menu={{menu}} @route="ops.bulk-sign-in-out" @item="Bulk Sign In/Out"/>
@@ -11,7 +11,7 @@
                     @route="ops.bulk-positions"
                     @item="Bulk Position Grant/Revoke"
     />
-     <NavbarMenuItem @menu={{menu}}
+    <NavbarMenuItem @menu={{menu}}
                     @route="ops.bulk-teams"
                     @item="Bulk Team Grant/Revoke"
     />
@@ -23,11 +23,36 @@
     (has-role "admin" "megaphone" "megaphone-emergency-onplaya" "megaphone-team-onplaya" "announcement-management")}}
     <NavbarMenuSection @section="Communications">
       {{#if (has-role "admin" "announcement-management")}}
-        <NavbarMenuItem @menu={{menu}} @route="admin.motd" @item="Announcements"/>
+        <NavbarMenuItem @menu={{menu}} @route="ops.motd" @item="Announcements"/>
       {{/if}}
       {{#if (has-role "admin" "megaphone" "megaphone-emergency-onplaya" "megaphone-team-onplaya")}}
-        <NavbarMenuItem @menu={{menu}} @route="admin.rbs" @item="Ranger Broadcast"/>
+        <NavbarMenuItem @menu={{menu}} @route="ops.rbs" @item="Ranger Broadcast"/>
       {{/if}}
+    </NavbarMenuSection>
+  {{/if}}
+  {{#if (has-role "admin" "edit-assets" "edit-slots" "survey-management")}}
+    <NavbarMenuSection @section="Event Records">
+      {{#if (has-role "admin" "edit-assets")}}
+        <NavbarMenuItem @menu={{menu}} @route="ops.assets" @item="Assets"/>
+      {{/if}}
+      {{#if (has-role "admin")}}
+        <NavbarMenuItem @menu={{menu}} @route="ops.event-dates" @item="Event Dates"/>
+        <NavbarMenuItem @menu={{menu}} @route="ops.credits" @item="Schedule Credits"/>
+      {{/if}}
+      {{#if (has-role "admin" "edit-slots")}}
+        <NavbarMenuItem @menu={{menu}} @route="ops.slots" @item="Schedule Slots"/>
+      {{/if}}
+      {{#if (has-role "admin" "survey-management")}}
+        <NavbarMenuItem @menu={{menu}} @route="ops.survey" @item="Surveys"/>
+      {{/if}}
+      {{#if (has-role "admin" "edit-swag")}}
+        <NavbarMenuItem @menu={{menu}} @route="ops.swag" @item="Swag"/>
+      {{/if}}
+    </NavbarMenuSection>
+  {{/if}}
+  {{#if (has-role "payroll")}}
+    <NavbarMenuSection @section="Payroll">
+      <NavbarMenuItem @menu={{menu}} @route="ops.payroll" @item="Payroll Export"/>
     </NavbarMenuSection>
   {{/if}}
 </NavbarMenu>

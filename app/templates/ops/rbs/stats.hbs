@@ -1,0 +1,39 @@
+<h1>RBS - Phone Number Stats</h1>
+<p>
+  <LinkTo @route="ops.rbs">Back to the RBS</LinkTo>
+</p>
+OP = On Playa Number, PE = Pre-Event Number.
+Verified = number has been verified.<br>
+OP = PE verified = same number is used for both and has been verified.<br>
+OP != PE verrified = different numbers are used and both are verified.<br>
+Stop = number has requested stop.
+<UiTable>
+  <thead>
+    <tr>
+      <th class="stats-status">Status</th>
+      <th class="text-end">OP = PE verified</th>
+      <th class="text-end">OP != PE verified</th>
+      <th class="text-end">OP Only</th>
+      <th class="text-end">OP Stop</th>
+      <th class="text-end">OP not verified</th>
+      <th class="text-end">PE Only</th>
+      <th class="text-end">PE Stop</th>
+      <th class="text-end">PE not verified</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each this.stats as |stat|}}
+      <tr class="separated">
+        <td class="stats-status">{{stat.status}}</td>
+        <td class="text-end">{{stat.same_verified}}</td>
+        <td class="text-end">{{stat.diff_verified}}</td>
+        <td class="text-end">{{stat.on_playa_verified}}</td>
+        <td class="text-end">{{stat.on_playa_stopped}}</td>
+        <td class="text-end">{{stat.on_playa_unverified}}</td>
+        <td class="text-end">{{stat.off_playa_verified}}</td>
+        <td class="text-end">{{stat.off_playa_stopped}}</td>
+        <td class="text-end">{{stat.off_playa_unverified}}</td>
+      </tr>
+    {{/each}}
+  </tbody>
+</UiTable>

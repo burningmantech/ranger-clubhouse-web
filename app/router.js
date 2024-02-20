@@ -57,7 +57,6 @@ Router.map(function () {
   this.route('admin', function () {
     this.route('action-log');
     this.route('alerts');
-    this.route('assets');
     this.route('awards');
     this.route('bulk-grant-awards');
     this.route('bulk-lookup');
@@ -65,43 +64,23 @@ Router.map(function () {
     this.route('bulk-upload');
     this.route('certifications');
     this.route('clubhouse1-log');
-    this.route('credits');
     this.route('documents');
     this.route('error-log');
-    this.route('event-dates');
     this.route('handle-reservations');
     this.route('help');
     this.route('hours-credits');
     this.route('mail-log');
     this.route('maintenance');
-    this.route('motd');
     this.route('online-course');
-    this.route('payroll');
     this.route('people-by-status-change');
     this.route('positions');
     this.route('radio-eligibility');
     this.route('ranger-retention');
 
-    this.route('rbs', function () {
-      this.route('broadcast');
-      this.route('broadcast-log');
-      this.route('message-log');
-      this.route('unknown-phones');
-      this.route('stats');
-      this.route('unverified-stopped');
-    });
-
     this.route('permissions');
     this.route('person-create');
     this.route('settings');
-    this.route('slots');
 
-    this.route('survey', function () {
-      this.route('index', {path: '/'});
-      this.route('manage', {path: '/:survey_id'});
-      this.route('preview', {path: '/:survey_id/preview'});
-    });
-    this.route('swag');
     this.route('teams');
     this.route('thank-you-cards');
     this.route('timesheet-sanity-checker');
@@ -169,11 +148,31 @@ Router.map(function () {
   this.route('logout');
 
   this.route('ops', function() {
+    this.route('assets');
     this.route('bulk-positions');
     this.route('bulk-sign-in-out');
     this.route('bulk-teams');
+    this.route('credits');
     this.route('cruise-direction');
+    this.route('event-dates');
+    this.route('motd');
+    this.route('rbs', function () {
+      this.route('broadcast');
+      this.route('broadcast-log');
+      this.route('message-log');
+      this.route('unknown-phones');
+      this.route('stats');
+      this.route('unverified-stopped');
+    });
+    this.route('payroll');
     this.route('rollcall');
+    this.route('slots');
+    this.route('survey', function () {
+      this.route('index', {path: '/'});
+      this.route('manage', {path: '/:survey_id'});
+      this.route('preview', {path: '/:survey_id/preview'});
+    });
+    this.route('swag');
     this.route('teams', function() {
       this.route('index', { path: '/'});
       this.route('manage', { path: '/:team_id'});

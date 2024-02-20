@@ -61,8 +61,7 @@
           <NavbarAreaVolCoords @nav={{nav}} />
         {{/if}}
 
-        {{#if
-          (has-role "admin" "announcement-management" "edit-assets" "edit-slots" "edit-swag" "megaphone" "megaphone-team-onplaya" "megaphone-emergency-onplaya" "survey-management" "timesheet-management")}}
+        {{#if (has-role "admin")}}
           <NavbarAreaAdmin @nav={{nav}} />
         {{/if}}
 
