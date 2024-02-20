@@ -6,19 +6,21 @@
     <NavbarMenuItem @menu={{menu}} @route="ops.cruise-direction" @item="Cruise Direction"/>
     <NavbarMenuItem @menu={{menu}} @route="ops.rollcall" @item="Rollcall"/>
   </NavbarMenuSection>
-  <NavbarMenuSection @section="Teams / Positions">
-    <NavbarMenuItem @menu={{menu}}
-                    @route="ops.bulk-positions"
-                    @item="Bulk Position Grant/Revoke"
-    />
-    <NavbarMenuItem @menu={{menu}}
-                    @route="ops.bulk-teams"
-                    @item="Bulk Team Grant/Revoke"
-    />
-    <NavbarMenuItem @menu={{menu}}
-                    @route="ops.teams.index"
-                    @item="Roster Management"/>
-  </NavbarMenuSection>
+  {{#if this.session.user.is_team_manager}}
+    <NavbarMenuSection @section="Teams / Positions">
+      <NavbarMenuItem @menu={{menu}}
+                      @route="ops.bulk-positions"
+                      @item="Bulk Position Grant/Revoke"
+      />
+      <NavbarMenuItem @menu={{menu}}
+                      @route="ops.bulk-teams"
+                      @item="Bulk Team Grant/Revoke"
+      />
+      <NavbarMenuItem @menu={{menu}}
+                      @route="ops.teams.index"
+                      @item="Roster Management"/>
+    </NavbarMenuSection>
+  {{/if}}
   {{#if
     (has-role "admin" "megaphone" "megaphone-emergency-onplaya" "megaphone-team-onplaya" "announcement-management")}}
     <NavbarMenuSection @section="Communications">
