@@ -110,6 +110,7 @@ Router.map(function () {
     this.route('convert-prospectives');
     this.route('post-season-summary');
     this.route('potentials');
+    this.route('setup-mentor-data');
     this.route('schedule');
     this.route('pod', function () {
       this.route('index', {path: '/'});
@@ -277,4 +278,4 @@ Router.map(function () {
 
   // Catch all for unrecognized urls
   this.route('not-found', {path: '/*path'});
- });
+});

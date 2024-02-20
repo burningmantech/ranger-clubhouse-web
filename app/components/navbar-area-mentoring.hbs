@@ -1,21 +1,27 @@
 <NavbarMenu @nav={{@nav}} @title="Mentoring" as |menu|>
   <NavbarMenuSection @section="Pre-Playa">
-    <NavbarMenuItem @menu={{menu}} @route="mentor.potentials" @item="Potential Alphas" />
-    <NavbarMenuItem @menu={{menu}} @route="mentor.convert-prospectives" @item="Convert Prospectives" />
-    <NavbarMenuItem @menu={{menu}} @route="mentor.alpha-status" @item="Alpha Status" />
+    <NavbarMenuItem @menu={{menu}} @route="mentor.potentials" @item="Potential Alphas"/>
+    <NavbarMenuItem @menu={{menu}} @route="mentor.convert-prospectives" @item="Convert Prospectives"/>
+    <NavbarMenuItem @menu={{menu}} @route="mentor.alpha-status" @item="Alpha Status"/>
   </NavbarMenuSection>
 
   <NavbarMenuSection @section="On Playa">
-    <NavbarMenuItem @menu={{menu}} @route="mentor.schedule" @item="Alpha Scheduled Shifts" />
-    <NavbarMenuItem @menu={{menu}} @route="mentor.acceptance-sheets" @item="Alpha Acceptance Sheets" />
-    <NavbarMenuItem @menu={{menu}} @route="mentor.pod" @item="Alpha Pod Management" />
-    <NavbarMenuItem @menu={{menu}} @route="mentor.assignment" @item="Alpha Mentors Assignment" />
-    <NavbarMenuItem @menu={{menu}} @route="mentor.convert-alphas" @item="Alpha Conversion" />
-    <NavbarMenuItem @menu={{menu}} @route="mentor.alpha-signout" @item="Alpha Signout" />
+    <NavbarMenuItem @menu={{menu}} @route="mentor.schedule" @item="Alpha Scheduled Shifts"/>
+    <NavbarMenuItem @menu={{menu}} @route="mentor.acceptance-sheets" @item="Alpha Acceptance Sheets"/>
+    <NavbarMenuItem @menu={{menu}} @route="mentor.pod" @item="Alpha Pod Management"/>
+    <NavbarMenuItem @menu={{menu}} @route="mentor.assignment" @item="Alpha Mentors Assignment"/>
+    <NavbarMenuItem @menu={{menu}} @route="mentor.convert-alphas" @item="Alpha Conversion"/>
+    <NavbarMenuItem @menu={{menu}} @route="mentor.alpha-signout" @item="Alpha Signout"/>
   </NavbarMenuSection>
 
   <NavbarMenuSection @section="Post-Playa">
-    <NavbarMenuItem @menu={{menu}} @route="mentor.post-season-summary" @item="Post Season Summary" />
-    <NavbarMenuItem @menu={{menu}} @route="mentor.surveys" @item="Alpha Surveys" />
+    <NavbarMenuItem @menu={{menu}} @route="mentor.post-season-summary" @item="Post Season Summary"/>
+    <NavbarMenuItem @menu={{menu}} @route="mentor.surveys" @item="Alpha Surveys"/>
   </NavbarMenuSection>
+
+  {{#if this.isGroundhogDayServer}}
+    <NavbarMenuSection @section="Training">
+      <NavbarMenuItem @menu={{menu}} @route="mentor.setup-mentor-data" @item="Setup Mentor Data"/>
+    </NavbarMenuSection>
+  {{/if}}
 </NavbarMenu>
