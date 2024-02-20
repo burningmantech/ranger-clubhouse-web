@@ -272,6 +272,15 @@ export default class extends SessionService {
   }
 
   /**
+   * Is this a Groundhog Day server?
+   *
+   */
+
+  get isGroundhogDayServer() {
+    return !!setting('GroundhogDayTime');
+  }
+
+  /**
    * Can the user view another person's email address?
    *
    * @returns {boolean}

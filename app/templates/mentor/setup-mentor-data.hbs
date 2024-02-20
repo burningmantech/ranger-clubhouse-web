@@ -1,0 +1,50 @@
+<h1>Setup Mentor Training Data</h1>
+
+{{#if this.isGroundhogDayServer}}
+<p>
+The "Setup Mentor Data" button will perform the following actions:
+</p>
+<ul>
+  <li>
+    Convert back to Alpha status any account that was an Alpha in {{this.trainingYear}} regardless of current status.
+  </li>
+  <li>
+    Any Alpha that walked on Saturday is checked back into the Alpha shift at {{shift-format this.groundhogDay}}.
+  </li>
+  <li>
+    The first Saturday Alpha shift of {{this.trainingYear}} is adjusted to start at
+    {{shift-format this.groundhogDay}}. All Alpha sign-ups for the shift are preserved.
+  </li>
+  <li>
+    All other Alpha shifts, including any other Saturday shifts, are deleted.
+  </li>
+  <li>
+    Any Mentors or MITTen who were on shift Saturday are placed back on shift starting at {{shift-format this.groundhogDay}}.
+    All other Mentor and MITTen timesheets are deleted.
+  </li>
+  <li>
+    All Alpha/Mentor pods for {{this.trainingYear}} are deleted.
+  </li>
+  <li class="text-danger">
+    Don't forget, the Training Server's database is reloaded every morning at approx. 4am. The above modifications will
+    be lost.
+  </li>
+</ul>
+{{#if this.didSetup}}
+  <div class="text-success">
+    Training data has been set up.
+  </div>
+{{else}}
+  <UiButton @onClick={{this.setup}}>
+    Setup Training Data
+  </UiButton>
+{{/if}}
+{{else}}
+  This training feature is only available on the training server.
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Setting up the Mentor Training Data
+  </LoadingDialog>
+{{/if}}
