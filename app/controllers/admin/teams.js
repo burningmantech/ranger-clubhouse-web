@@ -11,6 +11,20 @@ export default class AdminTeamsController extends ClubhouseController {
   @tracked roleById;
   @tracked entry = null;
   @tracked roleOptions;
+  @tracked activeFilter = 'all';
+  @tracked mvrEligibilityFilter = 'all';
+
+  activeOptions = [
+    {id: 'all', title: 'All'},
+    {id: 'active', title: 'Active'},
+    {id: 'inactive', title: 'Inactive'},
+  ];
+
+  mvrEligibleOptions = [
+    {id: 'all', title: 'All'},
+    {id: 'eligible', title: 'Eligible'},
+    {id: 'ineligible', title: 'Ineligible'},
+  ];
 
   typeOptions = [
     ['Team', TYPE_TEAM],
@@ -23,8 +37,31 @@ export default class AdminTeamsController extends ClubhouseController {
   }
 
   @cached
+  get viewTeams() {
+    let teams = this.teams;
+    switch (this.activeFilter) {
+      case 'active':
+        teams = teams.filter((t) => t.active);
+        break;
+      case 'inactive':
+        teams = teams.filter((t) => !t.active);
+      break;
+    }
+
+    switch (this.mvrEligibilityFilter) {
+      case 'eligible':
+        teams = teams.filter((t) => t.mvr_eligible);
+        break;
+      case 'ineligible':
+        teams = teams.filter((t) => !t.mvr_eligible);
+        break;
+    }
+
+    return teams;
+  }
+  @cached
   get teamScrollList() {
-    return this.teams.map((t) => ({ id: `team-${t.id}`, title: t.title}));
+    return this.teams.map((t) => ({id: `team-${t.id}`, title: t.title}));
   }
 
   @action
@@ -54,12 +91,16 @@ export default class AdminTeamsController extends ClubhouseController {
 
   @action
   removeTeam() {
-    this.modal.confirm('Delete Team', `Are you sure you wish to delete "${this.entry.title}"? This operation cannot be undone.`, () => {
-      this.entry.destroyRecord().then(() => {
-        this.toast.success('The team has been deleted.');
-        this.entry = null;
-      }).catch((response) => this.house.handleErrorResponse(response));
-    })
+    this.modal.confirm('Delete Team',
+      `Are you sure you wish to delete "${this.entry.title}"? This operation cannot be undone.`, async () => {
+        try {
+          await this.entry.destroyRecord();
+          this.toast.success('The team has been deleted.');
+          this.entry = null;
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        }
+      });
   }
 
   @action
