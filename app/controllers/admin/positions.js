@@ -4,7 +4,7 @@ import {cached, tracked} from '@glimmer/tracking';
 import PositionTypes from 'clubhouse/constants/position-types';
 import {TECH_NINJA} from 'clubhouse/constants/roles';
 import _ from 'lodash';
-import { later }from '@ember/runloop';
+import {later} from '@ember/runloop';
 
 export default class PositionController extends ClubhouseController {
   @tracked positions;
@@ -14,6 +14,8 @@ export default class PositionController extends ClubhouseController {
   @tracked activeFilter = 'all';
   @tracked allRangersFilter = '-';
   @tracked viewAs = 'list';
+  @tracked mvrEligibilityFilter = 'all';
+
   @tracked teams;
   @tracked rolesById;
   @tracked roleOptions;
@@ -22,6 +24,12 @@ export default class PositionController extends ClubhouseController {
     {id: 'all', title: 'All'},
     {id: 'active', title: 'Active'},
     {id: 'inactive', title: 'Inactive'},
+  ];
+
+  mvrEligibleOptions = [
+    {id: 'all', title: 'All'},
+    {id: 'eligible', title: 'Eligible'},
+    {id: 'ineligible', title: 'Ineligible'},
   ];
 
   allRangersOptions = [
@@ -50,7 +58,7 @@ export default class PositionController extends ClubhouseController {
 
   @cached
   get viewByTeams() {
-    const groups = _.groupBy(this.positions.toArray(), 'team_id');
+    const groups = _.groupBy(this.viewPositions.toArray(), 'team_id');
 
     const teams = this.teams.map((team) => ({
       id: team.id,
@@ -69,22 +77,33 @@ export default class PositionController extends ClubhouseController {
   @cached
   get viewPositions() {
     let positions = this.positions;
-    const {typeFilter, activeFilter, allRangersFilter} = this;
+    const {typeFilter} = this;
 
     if (typeFilter !== 'All') {
-      positions = positions.filterBy('type', typeFilter);
+      positions = positions.filter((p) => p.type === typeFilter);
     }
 
-    if (activeFilter) {
-      if (activeFilter === 'active') {
-        positions = positions.filterBy('active', true);
-      } else if (activeFilter === 'inactive') {
-        positions = positions.filterBy('active', false);
-      }
+    switch (this.activeFilter) {
+      case 'active':
+        positions = positions.filter((p) => p.active);
+        break;
+      case 'inactive':
+        positions = positions.filter((p) => !p.active);
+        break;
     }
 
-    if (allRangersFilter !== '-') {
-      positions = positions.filterBy('all_rangers', (allRangersFilter === 'all-rangers'));
+    switch (this.mvrEligibilityFilter) {
+      case 'eligible':
+        positions = positions.filter((p) => p.mvr_eligible);
+        break;
+      case 'ineligible':
+        positions = positions.filter((p) => !p.mvr_eligible);
+        break;
+    }
+
+
+    if (this.allRangersFilter === 'all-rangers') {
+      positions = positions.filter((p) => p.all_rangers);
     }
 
     return positions;
@@ -179,6 +198,6 @@ export default class PositionController extends ClubhouseController {
 
   _scrollToPosition(positionId) {
     later(() => this.house.scrollToElement(`#position-${positionId}`), 100);
-    
+
   }
 }

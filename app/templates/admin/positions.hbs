@@ -31,6 +31,13 @@
                           @options={{this.viewAsOptions}}
                           @onChange={{action (mut this.viewAs)}} />
         </div>
+        <FormLabel @auto={{true}}>MVR Eligibility Filter</FormLabel>
+        <div class="col-auto">
+          <ChForm::Select @name="mvrEligibilityFilter"
+                          @value={{this.mvrEligibilityFilter}}
+                          @options={{this.mvrEligibleOptions}}
+                          @onChange={{action (mut this.mvrEligibilityFilter)}} />
+        </div>
         {{#if this.canManagePositions}}
           <div class="col-auto">
             <UiButton @onClick={{this.newAction}}>New Position</UiButton>

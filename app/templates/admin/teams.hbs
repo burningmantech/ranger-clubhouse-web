@@ -11,6 +11,22 @@
     {{/if}}
   </p>
 
+  <FormRow>
+    <FormLabel @auto={{true}}>Active Filter</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="activeFilter"
+                      @value={{this.activeFilter}}
+                      @options={{this.activeOptions}}
+                      @onChange={{action (mut this.activeFilter)}} />
+    </div>
+    <FormLabel @auto={{true}}>MVR Eligibility Filter</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="mvrEligibilityFilter"
+                      @value={{this.mvrEligibilityFilter}}
+                      @options={{this.mvrEligibleOptions}}
+                      @onChange={{action (mut this.mvrEligibilityFilter)}} />
+    </div>
+  </FormRow>
   <p>
     <DropdownScrollList @items={{this.teamScrollList}}
                         @thing="team"
@@ -18,7 +34,7 @@
     />
   </p>
 
-  Showing {{pluralize this.teams.length "team"}}
+  Showing {{this.viewTeams.length}} of {{pluralize this.teams.length "team"}}
   <UiTable>
     <thead>
     <tr>
@@ -34,7 +50,7 @@
     </tr>
     </thead>
     <tbody>
-    {{#each this.teams key="id" as |team|}}
+    {{#each this.viewTeams key="id" as |team|}}
       <tr id="team-{{team.id}}">
         <td class="text-end">{{team.id}}</td>
         <td class="text-center">
