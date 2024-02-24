@@ -1,45 +1,31 @@
-{{!
-
-If the person is a past prospective
-OR if the callsign is not approved and they are not an Auditor or Non Ranger.
-then let them know what's up.
-}}
 {{#if this.person.isPastProspective}}
   <DashboardPastProspective/>
 {{else if this.person.isProspectiveWaitlist}}
   <DashboardProspectiveWaitlist/>
-{{else}}
-  {{#if false}}
-    <DashboardDebug @milestones={{this.milestones}}
+{{else if (or this.person.isProspective this.person.isAlpha this.person.isBonked)}}
+  <DashboardPnv @milestones={{this.milestones}}
+                @person={{this.person}}
+                @photo={{this.photo}}
+                @motds={{this.motds}}
+                @uploadAction={{this.showUploadDialogAction}}
+                @agreements={{this.agreements}}
+                @debugUpdateAction={{this.debugUpdateAction}} />
+{{else if this.person.isAuditor}}
+  <DashboardAuditor @milestones={{this.milestones}}
                     @person={{this.person}}
-                    @photo={{this.photo}}
-                    @update={{this.debugUpdateAction}} />
-  {{/if}}
-
-  {{#if (or this.person.isProspective this.person.isAlpha this.person.isBonked)}}
-    <DashboardPnv @milestones={{this.milestones}}
-                  @person={{this.person}}
-                  @photo={{this.photo}}
-                  @motds={{this.motds}}
-                  @uploadAction={{this.showUploadDialogAction}}
-                  @agreements={{this.agreements}}
-                  @debugUpdateAction={{this.debugUpdateAction}} />
-  {{else if this.person.isAuditor}}
-    <DashboardAuditor @milestones={{this.milestones}}
-                      @person={{this.person}}
-                      @motds={{this.motds}}
-                      @agreements={{this.agreements}}
-                      @debugUpdateAction={{this.debugUpdateAction}} />
-  {{else}}
-    <DashboardRanger @milestones={{this.milestones}}
-                     @person={{this.person}}
-                     @years={{this.years}}
-                     @motds={{this.motds}}
-                     @photo={{this.photo}}
-                     @uploadAction={{this.showUploadDialogAction}}
-                     @agreements={{this.agreements}}
-                     @debugUpdateAction={{this.debugUpdateAction}} />
-  {{/if}}
+                    @motds={{this.motds}}
+                    @agreements={{this.agreements}}
+                    @debugUpdateAction={{this.debugUpdateAction}} />
+{{else}}
+  <DashboardRanger @milestones={{this.milestones}}
+                   @person={{this.person}}
+                   @years={{this.years}}
+                   @motds={{this.motds}}
+                   @photo={{this.photo}}
+                   @uploadAction={{this.showUploadDialogAction}}
+                   @agreements={{this.agreements}}
+                   @debugUpdateAction={{this.debugUpdateAction}}
+  />
 {{/if}}
 
 <UiSection id="contacts">
@@ -47,17 +33,17 @@ then let them know what's up.
   <:body>
     <p>
       Contact the Volunteer Coordinators for general questions &amp; support, callsign changes, and photo wrangling:<br>
-      <VcEmail />
+      <VcEmail/>
     </p>
 
     <p>
       Contact the Training Academy for questions about the Online Course &amp; In-Person Trainings:<br>
-      <TrainingAcademyEmail />
+      <TrainingAcademyEmail/>
     </p>
 
     <p>
       Contact the Tech Ninjas for Clubhouse technical support:<br>
-      <TechSupportEmail />
+      <TechSupportEmail/>
     </p>
   </:body>
 </UiSection>
