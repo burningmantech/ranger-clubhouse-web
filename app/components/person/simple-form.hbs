@@ -15,7 +15,7 @@
                     {{phone-link @person.home_phone}}
                     <CopyToClipboard @text={{@person.home_phone}} />
                 {{else}}
-                    <i>none given</i>
+                    <i>no primary phone #</i>
                 {{/if}}
             </div>
             {{#if @person.alt_phone}}

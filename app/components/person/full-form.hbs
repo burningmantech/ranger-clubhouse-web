@@ -12,7 +12,7 @@ Everyone else will see person/simple-form
         <MailTo @to={{@person.email}} />
         <CopyToClipboard @text={{@person.email}} />
       {{else}}
-        <b class="text-danger">missing</b>
+        <b class="text-danger">missing email address?!?</b>
       {{/if}}
     </div>
     {{#if (has-role "admin" "vc" "view-pii")}}
@@ -21,7 +21,7 @@ Everyone else will see person/simple-form
           {{phone-link @person.home_phone}}
           <CopyToClipboard @text={{@person.home_phone}} />
         {{else}}
-          <i class="text-danger">missing</i>
+          <i class="text-danger">missing primary phone #</i>
         {{/if}}
       </div>
       {{#if @person.alt_phone}}
