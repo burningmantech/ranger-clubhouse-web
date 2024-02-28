@@ -14,7 +14,7 @@ export default class PositionController extends ClubhouseController {
   @tracked activeFilter = 'all';
   @tracked allRangersFilter = '-';
   @tracked viewAs = 'list';
-  @tracked mvrEligibilityFilter = 'all';
+  @tracked vehicleEligibilityFilter = 'all';
 
   @tracked teams;
   @tracked rolesById;
@@ -26,10 +26,12 @@ export default class PositionController extends ClubhouseController {
     {id: 'inactive', title: 'Inactive'},
   ];
 
-  mvrEligibleOptions = [
+  vehicleEligibleOptions = [
     {id: 'all', title: 'All'},
-    {id: 'eligible', title: 'Eligible'},
-    {id: 'ineligible', title: 'Ineligible'},
+    {id: 'mvr-eligible', title: 'MVR Eligible'},
+    {id: 'mvr-ineligible', title: 'MVR Ineligible'},
+    {id: 'pvr-eligible', title: 'PVR Eligible'},
+    {id: 'pvr-ineligible', title: 'PVR Ineligible'},
   ];
 
   allRangersOptions = [
@@ -92,13 +94,20 @@ export default class PositionController extends ClubhouseController {
         break;
     }
 
-    switch (this.mvrEligibilityFilter) {
-      case 'eligible':
+    switch (this.vehicleEligibilityFilter) {
+      case 'mvr-eligible':
         positions = positions.filter((p) => p.mvr_eligible);
         break;
-      case 'ineligible':
+      case 'mvr-ineligible':
         positions = positions.filter((p) => !p.mvr_eligible);
         break;
+      case 'pvr-eligible':
+        positions = positions.filter((p) => p.pvr_eligible);
+        break;
+      case 'pvr-ineligible':
+        positions = positions.filter((p) => !p.pvr_eligible);
+        break;
+
     }
 
 

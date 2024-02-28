@@ -86,7 +86,7 @@
       {{/if}}
     </p>
     <p>
-      It can take a couple weeks for the driving record/license verification to be processed. The processing time
+      It can take a couple of weeks for the driving record/license verification to be processed. The processing time
       will be longer for international drivers (i.e., drivers who hold a non-US license.)
     </p>
     {{#unless this.vehicleInfo.vehicle_requests_allowed}}
@@ -128,5 +128,6 @@
 
 
 {{#if this.showAgreementTag}}
+  TAG [ {{this.showAgreementTag}}]
   <Me::DocumentReview @tag={{this.showAgreementTag}} @onClose={{this.closeAgreement}} />
 {{/if}}
