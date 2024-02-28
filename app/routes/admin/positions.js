@@ -24,7 +24,8 @@ export default class AdminPositionRoute extends ClubhouseRoute {
       typeFilter: 'All',
       activeFilter: 'all',
       allRangersFilter: '-',
-      viewAs: 'list'
+      viewAs: 'list',
+      vehicleEligibilityFilter: 'all'
     });
     controller.teamById = _.keyBy(model.teams, 'id');
     controller.roleById = _.keyBy(roles, 'id');

@@ -158,7 +158,16 @@
       <div class="col-auto">
         <f.checkbox @name="mvr_eligible"
                     @inline={{true}}
-                    @label="Position grant will allow the person to be MVR eligible"/>
+                    @label="The person will become MVR eligible when granted the position AND signs up for a shift"
+        />
+      </div>
+    </FormRow>
+    <FormRow>
+      <div class="col-auto">
+        <f.checkbox @name="pvr_eligible"
+                    @inline={{true}}
+                    @label="The person will become Personal Vehicle Request eligible when granted the position AND signs up for a shift"
+        />
       </div>
     </FormRow>
     <FormRow class="align-items-end">

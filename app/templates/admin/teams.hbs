@@ -10,6 +10,11 @@
       </UiNotice>
     {{/if}}
   </p>
+  <p>
+    Legend:<br>
+    <i>MVR Eligible</i> = Allows the team member to submit Motor Vehicle Requests<br>
+    <i>PVR Eligible</i> = Allows the team member to submit Personal Vehicle Requests<br>
+  </p>
 
   <FormRow>
     <FormLabel @auto={{true}}>Active Filter</FormLabel>
@@ -43,6 +48,7 @@
       <th>Type</th>
       <th>Associated Roles</th>
       <th>MVR Eligible?</th>
+      <th>PVR Eligible?</th>
       <th>Managers</th>
       {{#if this.canManageTeams}}
         <th>Actions</th>
@@ -68,7 +74,10 @@
           {{/if}}
         </td>
         <td class="text-center">
-          {{if team.mvr_eligible "Y" "N"}}
+          {{if team.mvr_eligible "MVR" "-"}}
+        </td>
+        <td class="text-center">
+          {{if team.pvr_eligible "PVR" "-"}}
         </td>
         <td>
           {{#each team.managers as |person|}}
@@ -111,6 +120,9 @@
             </div>
             <div class="col-12">
               <f.checkbox @name="mvr_eligible" @label="Team membership grants MVR eligibility"/>
+            </div>
+            <div class="col-12">
+              <f.checkbox @name="pvr_eligible" @label="Team membership grants Personal Vehicle eligibility"/>
             </div>
           </FormRow>
         </fieldset>

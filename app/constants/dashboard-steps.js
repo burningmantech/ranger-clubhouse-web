@@ -613,7 +613,12 @@ export const MVR_REQUEST = {
 
     return {
       result: ACTION_NEEDED,
-      message: htmlSafe(`You are eligible to submit a MVR request. Use <a href="${milestones.mvr_request_url}" rel="noopener noreferrer" target="_blank">this form <i class="fa-solid fa-arrow-up-right-from-square"></i></a> to apply. <div class="mt-2"><b class="fw-bold text-danger">DO NOT SUBMIT MORE THAN ONE REQUEST.</b> Doing so will delay your application.</div>`)
+      linkedMessage: {
+        route: 'me.vehicles',
+        prefix: 'You are eligible to submit a MVR request. Visit',
+        text: 'Me > Vehicle Dashboard',
+        suffix: htmlSafe('for instructions on how to submit one.')
+      }
     }
   }
 };
@@ -803,7 +808,7 @@ export const TICKETING_CLOSED = {
 };
 
 export const VEHICLE_REQUESTS = {
-  name: 'Submit Personal Vehicle Request(s)',
+  name: 'Personal Vehicle Request Eligible',
   skipPeriod: AFTER_EVENT,
   check({milestones}) {
     if (!milestones.vehicle_requests_allowed) {
@@ -847,7 +852,7 @@ export const VEHICLE_REQUESTS = {
         result: ACTION_NEEDED,
         linkedMessage: {
           route: 'me.vehicles',
-          prefix: 'You have been approved to submit vehicle requests and reauthorizations for driving stickers and other items. Visit',
+          prefix: 'You are eligible to submit vehicle requests and reauthorizations for driving stickers and other items. Visit',
           text: 'Me > Vehicle Dashboard',
           suffix: 'to submit a request.'
         }
