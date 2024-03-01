@@ -1,13 +1,14 @@
 <UiSection>
   <:title>
     {{@year}} Timesheet
-   </:title>
+  </:title>
   <:body>
     {{#if (lt @year 2008)}}
-      <p class="text-danger">
-        Note: The department did not start tracking volunteer hours until 2008. Any timesheets prior to 2008 are
-        placeholders and do not represent the actual volunteer work performed.
-      </p>
+      <UiAlert @type="warning" @icon="hand-point-right">
+        You are viewing a timesheet created prior to 2008. The department did not start tracking volunteer hours
+        until 2008. Any timesheets from before 2008 are placeholders and do not represent the actual volunteer work
+        performed.
+      </UiAlert>
     {{/if}}
 
     {{#if (and @person.employee_id this.havePaidEntries)}}
@@ -50,13 +51,15 @@
           {{/if}}
           {{#if (and (not ts.isVerified) ts.isTooShort)}}
             <div class="timesheet-row-header">
-              {{fa-icon "hand-point-right" right=1}} The entry is less than 15 minutes. Please verify this is not a mistake.
+              {{fa-icon "hand-point-right" right=1}} The entry is less than 15 minutes. Please verify this is not a
+              mistake.
             </div>
           {{/if}}
           {{#if (and (not ts.isVerified) ts.isTooLong)}}
             <div class="timesheet-row-header">
               <p>
-                {{fa-icon "hand-point-right" right=1}} The entry exceeds the scheduled shift duration by 1.5 times. Please
+                {{fa-icon "hand-point-right" right=1}} The entry exceeds the scheduled shift duration by 1.5 times.
+                Please
                 confirm this is not a mistake, or submit a correction.
               </p>
               The scheduled shift was {{hour-minute-words ts.slot.duration}} long.

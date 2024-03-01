@@ -5,8 +5,10 @@
       {{#if @summary.event_start}}
         The {{@year}} Event Week is {{shift-format @summary.event_start}} to {{shift-format @summary.event_end}}.
       {{else}}
-        <b class="text-danger">Event dates have not been entered for the year. Hour &amp; credits breakdowns will not be
-          accurate.</b>
+        <UiAlert @type="warning" @icon="hand">
+         Event date ranges have not been entered for the year. The hour &amp; credits period summaries will not be
+          accurate.
+        </UiAlert>
       {{/if}}
     </p>
 
