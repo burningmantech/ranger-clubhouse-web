@@ -1,6 +1,6 @@
 import Service, {service} from '@ember/service';
 import ENV from 'clubhouse/config/environment';
-import {isAbortError} from 'ember-fetch/errors';
+import {isAbortError} from 'clubhouse/utils/ajax/response-errors';
 import {isArray} from '@ember/array';
 import {run} from '@ember/runloop';
 import {isEmpty} from '@ember/utils';

@@ -1,7 +1,7 @@
 import {TimeoutError, AbortError} from '@ember-data/adapter/error';
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import ENV from 'clubhouse/config/environment';
-import {isAbortError, isForbiddenResponse} from 'ember-fetch/errors';
+import {isAbortError, isForbiddenResponse} from 'clubhouse/utils/ajax/response-errors';
 import logError from 'clubhouse/utils/log-error';
 
 //

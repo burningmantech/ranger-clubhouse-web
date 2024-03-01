@@ -1,5 +1,5 @@
 import {TimeoutError, AbortError, ForbiddenError, UnauthorizedError} from '@ember-data/adapter/error';
-import {isAbortError, isForbiddenResponse, isUnauthorizedResponse} from 'ember-fetch/errors';
+import {isAbortError, isForbiddenResponse, isUnauthorizedResponse} from 'clubhouse/utils/ajax/response-errors';
 import config from 'clubhouse/config/environment';
 
 /**
