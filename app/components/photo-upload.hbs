@@ -1,10 +1,10 @@
 <ModalDialog @title="Upload A New BMID Photo" @onEscape={{@closeAction}} as |modal|>
   <modal.body>
     {{#unless @photo.upload_enabled}}
-      <h3 class="text-danger border border-danger p-2">
-        <b>Photo uploading is disabled.</b> Because you have the Admin or VC permission, you are allowed to upload a
+      <UiAlert @type="danger" @icon="hand-point-right">
+        Photo uploading is disabled. Because you have the Admin or VC permissions, you are allowed to upload a
         photo. Do not abuse this.
-      </h3>
+      </UiAlert>
     {{/unless}}
     {{#if (eq this.step "showGuidelines")}}
       <p>
@@ -12,16 +12,25 @@
       </p>
       <p>
         View
-        <ExtLink @href="https://docs.google.com/document/d/1hUqrJwdMG6XB5nk7Eh8nY2GH4uvAFTppmCKCmfidIvQ/edit?usp=sharing">
-         The Ranger BMID Help Sheet
-        </ExtLink> (Link will be opened in a new window)
-
+        <ExtLink
+          @href="https://docs.google.com/document/d/1hUqrJwdMG6XB5nk7Eh8nY2GH4uvAFTppmCKCmfidIvQ/edit?usp=sharing">
+          The Ranger BMID Help Sheet
+        </ExtLink>
+        (Link will be opened in a new window)
       </p>
-      {{else if (eq this.step "source")}}
+      <p>
+        <b class="text-danger">
+          Please note: Your ability to sign-up for shifts, including signing up for an In-Person Training, will be disabled
+          until the photo is approved.
+        </b>
+        Photo approval may take 2 to 3 days to complete. We recommend adjusting your schedule first before attempt
+        to upload a new photo.
+      </p>
+    {{else if (eq this.step "source")}}
       <h4>Your BMID photo is an ID photo. Think “passport” or driver's license.</h4>
       The photo must meet the following criteria:
       <ul class="no-indent">
-        <li><b class="text-danger">NO sunglasses, goggles, facepaint, or masks.</b></li>
+        <li><b class="text-danger">NO sunglasses, goggles, face paint, or masks.</b></li>
         <li>
           <b class="text-danger">Nothing covering your head - no hats, horns, wreaths, etc.</b>
           (Religious attire is OK.)
@@ -38,7 +47,7 @@
                    class="form-control"
                    id="photo-file"
                    accept=".jpg,.jpeg,.jp2,.png,image/jpg,image/jpeg,image/png"
-                {{on "change" this.fileChangeEvent}}>
+              {{on "change" this.fileChangeEvent}}>
           </div>
         </div>
         {{#if this.hasCamera}}
@@ -60,7 +69,8 @@
           </b>
         </p>
         <p>
-          <VcEmail /><br>
+          <VcEmail/>
+          <br>
           (don't forget to include your Prospective Ranger handle!)
         </p>
         <p>
