@@ -103,7 +103,7 @@
     "stylelint-prettier": "^5.0.0",
     "tinymce": "^6.8.3",
     "tracked-built-ins": "^3.3.0",
-    "webpack": "^5.90.2"
+    "webpack": "^5.90.3"
   },
   "engines": {
     "node": ">= 20"
