@@ -106,9 +106,15 @@
     Before you are allowed to submit a MVR request, the Motorppool Policy has to be agreed to first. Use the button
     below to review and agree to the policy.
   </p>
-  <p>
-    <UiButton @onClick={{this.reviewMotorpoolPolicy}}>Review &amp; Sign The Motorpool Policy</UiButton>
-  </p>
+  {{#if this.vehicleInfo.motorpool_agreement_available}}
+    <p>
+      <UiButton @onClick={{this.reviewMotorpoolPolicy}}>Review &amp; Sign The Motorpool Policy</UiButton>
+    </p>
+  {{else}}
+    <p class="text-danger">
+      Uh oh, it appears the Motorpool Agreement Policy is not available yet. This might be an issue!
+    </p>
+  {{/if}}
 {{/if}}
 
 {{#if this.vehicleInfo.vehicle_requests_allowed}}
