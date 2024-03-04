@@ -259,4 +259,8 @@ export default class BmidModel extends Model {
   get willNotPrint() {
     return this.status === DO_NOT_PRINT || this.status === ISSUES;
   }
+
+  get notQualifiedToPrint() {
+    return !this.has_ticket && !this.training_signed_up;
+  }
 }

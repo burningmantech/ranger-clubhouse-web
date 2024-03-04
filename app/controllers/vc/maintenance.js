@@ -29,7 +29,7 @@ export default class VcMaintenanceController extends ClubhouseController {
     {
       action: 'set-bmid-titles',
       title: 'Set BMID Titles',
-      description: 'Set BMID titles for Shift Leads, OODs, Operations Managers, Department Managers, LEALs, and 007s',
+      description: 'For individuals who have claimed a ticket or WAP, OR who have signed up an In-Person Training, set BMID titles for Shift Leads, OODs, Operations Managers, Department Managers, LEALs, and 007s.',
       controller: 'bmid',
       component: SetBMIDTitles,
       roleRequired: "edit-bmids",

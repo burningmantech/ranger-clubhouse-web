@@ -53,6 +53,15 @@
                       @fieldSize="sm"/>
 
     </div>
+    <div class="col-auto">
+      <label>Qualified To Print Filter:</label>
+      <ChForm::Select @name="qualifiedFilter"
+                      @value={{this.qualifiedFilter}}
+                      @options={{this.qualifiedFilterOptions}}
+                      @onChange={{action this.changeFilter 'qualifiedFilter'}}
+                      @fieldSize="sm"/>
+
+    </div>
   </FormRow>
   <FormRow>
     <FormLabel @auto={{true}}>Callsign, title, team, notes filter:</FormLabel>
@@ -92,19 +101,19 @@
   </p>
 
   <p>
-    {{fa-icon "exclamation-circle" color="danger"}} = indicates person has not signed up for any shifts.
-    {{fa-icon "eye" color="danger"}} = person does not have an approved photo
-
-  </p>
-  <p>
-    <EarnedProvisionIcon/>
-    = is earned provision which will be used.
-    <AllocatedProvisionIcon/>
-    = is allocated provision which will be used.
-    <SetProvisionIcon/>
-    = explicitly set provision
+    <span class="d-inline-block">{{fa-icon "exclamation-circle" color="danger"}} = indicates person has not a claimed a ticket or WAP, nor signed up for an In-Person Training.</span>
+    <span class="d-inline-block">{{fa-icon "eye" color="danger"}} = person does not have an approved photo</span>
+    <span class="d-inline-block"><EarnedProvisionIcon/> = is earned provision which will be used.</span>
+    <span class="d-inline-block"><AllocatedProvisionIcon/> = is allocated provision which will be used.</span>
+    <span class="d-inline-block"><SetProvisionIcon/>= explicitly set provision</span>
   </p>
 
+  {{#if this.hasUnqualifiedToPrint}}
+    <UiAlert @type="warning" @icon="hand-point-right">
+      One or more BMIDs do not meet the printing qualifications (no ticket/WAP claimed, nor has an In-Person Training sign-up),
+      and has the status "Prep".
+    </UiAlert>
+  {{/if}}
   Showing {{this.viewBmids.length}} of {{this.bmids.length}}
   {{#unless this.isRendering}}
     {{#if this.textFilter}}
@@ -112,6 +121,7 @@
     {{/if}}
     {{#if this.unsaveRows}}<span class="ms-4 text-danger">UNSAVED {{pluralize this.unsaveRows "record"}}</span>{{/if}}
   {{/unless}}
+
   <UiTable>
     <thead>
     <tr>
@@ -153,7 +163,7 @@
     {{#if this.viewBmids}}
       {{#if this.editMode}}
         {{#each this.editableBmids key="person_id" as |bmid|}}
-          <tr class="{{if bmid.isDirty "bg-warning"}}">
+          <tr class="{{if bmid.isDirty "table-warning"}}">
             <td>
               {{#unless bmid.has_approved_photo}}
                 {{fa-icon "eye" color="danger"}}
@@ -251,14 +261,14 @@
         {{/each}}
       {{else}}
         {{#each this.renderBmids key="person_id" as |bmid|}}
-          <tr>
+          <tr class={{this.rowColor bmid}}>
             <td>
               {{#unless bmid.has_approved_photo}}
-                {{fa-icon "eye" color="danger"}}
+                {{fa-icon "eye" color="danger" right=1 fixed=true}}
               {{/unless}}
-              {{~#unless bmid.has_signups~}}
-                {{fa-icon "exclamation-circle" color="danger"}}
-              {{~/unless}}
+              {{#if bmid.notQualifiedToPrint}}
+                {{fa-icon "exclamation-circle" color="danger" right=1 fixed=true}}
+              {{/if}}
             </td>
             <td>
               {{#if bmid.person}}
@@ -322,7 +332,7 @@
             {{#if this.bmids}}
               No BMIDs match the filter criteria.
             {{else}}
-              No BMIDs were found for {{this.year}}.
+              No BMIDs were found for {{this.year}} matching the filter criteria.
             {{/if}}
           </b>
         </td>
