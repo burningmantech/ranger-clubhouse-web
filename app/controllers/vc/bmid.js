@@ -1,9 +1,9 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import {action, set} from '@ember/object';
+import {action} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {schedule, later} from '@ember/runloop';
-import {tracked} from '@glimmer/tracking';
-import {MealOptions, BmidStatusOptions, ShowerOptions} from 'clubhouse/models/bmid';
+import {cached, tracked} from '@glimmer/tracking';
+import {MealOptions, BmidStatusOptions, ShowerOptions, DO_NOT_PRINT} from 'clubhouse/models/bmid';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import Changeset from 'ember-changeset';
 import {IN_PREP, READY_TO_PRINT, SUBMITTED} from "clubhouse/models/bmid";
@@ -50,7 +50,7 @@ export default class VcBmidController extends ClubhouseController {
   filterOptions = [
     ['Specials (titles, meals, showers, or early arrival)', 'special'],
     ['Alphas', 'alpha'],
-    ['Vets w/claimed tickets OR In-Person training sign-ups', 'qualified'],
+    ['Vets w/claimed tickets/WAPs OR In-Person training sign-ups', 'qualified'],
     ['BMIDs marked as "Issues" or "Do Not Print"', 'nonprint'],
     ['No shift signups', 'no-shifts'],
     ['In Prep', IN_PREP],
@@ -65,12 +65,15 @@ export default class VcBmidController extends ClubhouseController {
   ];
 
   @tracked sortColumn = 'callsign';
-  @tracked titleFilter = 'All';
+
+  @tracked qualifiedFilter = 'all';
   @tracked teamFilter = 'All';
   @tracked textFilter = '';
-  @tracked textFilterInput = '';
   @tracked textFilterError = null;
+  @tracked textFilterInput = '';
+  @tracked titleFilter = 'All';
   @tracked wantFilter = '';
+  @tracked filter;
 
   @tracked isRendering = false;
   @tracked renderBmids = [];
@@ -103,6 +106,11 @@ export default class VcBmidController extends ClubhouseController {
     ['Showers', 'showers']
   ];
 
+  qualifiedFilterOptions = [
+    ['Qualified & Unqualified', 'all'],
+    ['Meets qualifications', 'qualified'],
+    ['Does not meet  qualifications', 'unqualified'],
+  ]
 
   get notCurrentYear() {
     return +this.year !== this.house.currentYear();
@@ -114,7 +122,7 @@ export default class VcBmidController extends ClubhouseController {
 
   _buildViewBmids() {
     let bmids = this.bmids;
-    const {titleFilter, teamFilter, wantFilter} = this;
+    const {titleFilter, teamFilter, wantFilter, qualifiedFilter} = this;
     let key;
 
     if (titleFilter !== 'All') {
@@ -137,6 +145,15 @@ export default class VcBmidController extends ClubhouseController {
         break;
       case 'showers':
         bmids = bmids.filter((bmid) => (bmid.earned_showers || bmid.allocated_showers || bmid.showers));
+        break;
+    }
+
+    switch (qualifiedFilter) {
+      case 'qualified':
+        bmids = bmids.filter((bmid) => !bmid.notQualifiedToPrint);
+        break;
+      case 'unqualified':
+        bmids = bmids.filter((bmid) => bmid.notQualifiedToPrint);
         break;
     }
 
@@ -229,6 +246,11 @@ export default class VcBmidController extends ClubhouseController {
 
     this.viewBmids = bmids;
     this.startRenderBmids();
+  }
+
+  @cached
+  get hasUnqualifiedToPrint() {
+    return this.viewBmids.find((b) => (b.notQualifiedToPrint && b.status === IN_PREP));
   }
 
   /*
@@ -422,7 +444,7 @@ export default class VcBmidController extends ClubhouseController {
 
   @action
   changeFilter(name, value) {
-    set(this, name, value);
+    this[name] = value;
     this._buildViewBmids();
   }
 
@@ -506,5 +528,18 @@ export default class VcBmidController extends ClubhouseController {
     this.sortColumn = column;
     this._buildViewBmids();
     this.startRenderBmids();
+  }
+
+  @action
+  rowColor(bmid) {
+    if (!bmid.has_approved_photo) {
+      return 'table-danger';
+    }
+
+    if (bmid.notQualifiedToPrint && bmid.status === IN_PREP) {
+      return 'table-warning';
+    }
+
+    return '';
   }
 }
