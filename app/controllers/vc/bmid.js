@@ -3,10 +3,9 @@ import {action} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {schedule, later} from '@ember/runloop';
 import {cached, tracked} from '@glimmer/tracking';
-import {MealOptions, BmidStatusOptions, ShowerOptions, DO_NOT_PRINT} from 'clubhouse/models/bmid';
+import {MealOptions, BmidStatusOptions, ShowerOptions, IN_PREP, READY_TO_PRINT, SUBMITTED} from 'clubhouse/models/bmid';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import Changeset from 'ember-changeset';
-import {IN_PREP, READY_TO_PRINT, SUBMITTED} from "clubhouse/models/bmid";
 
 /*
  * BMID management controller
