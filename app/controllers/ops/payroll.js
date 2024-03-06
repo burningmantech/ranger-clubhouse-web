@@ -57,6 +57,10 @@ export default class OpsPayrollController extends ClubhouseController {
 
   @tracked mealBreak;
 
+  @tracked defaultWeekLabel;
+  @tracked payrollWeekStart;
+  @tracked payrollWeekEnd;
+
   datesValidation = {
     start_time: [
       validatePresence({presence: true, message: 'Enter a starting date and time.'}),

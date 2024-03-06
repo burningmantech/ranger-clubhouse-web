@@ -53,26 +53,21 @@
 
   <fieldset>
     <legend>Active &amp; Grant Flags</legend>
+    <UiAlert @type="warning" @icon="hand-point-right">
+      The "Position Sanity Checker" has be run after deactivating a position, setting <i>All Rangers</i>, and/or
+      checking <i>Grant to new Prospective accounts</i> in order to adjust the effected accounts. No accounts
+      will be automatically updated after adjusting these checkboxes.
+    </UiAlert>
     <p class="text-danger">
-      The "Position Sanity Checker" needs be run after deactivating a position in order to revoke the position
-      from all accounts. Revocation is not automatic.
     </p>
     <FormRow>
       <div class="col-12">
         <f.checkbox @name="active" @label="Active"/>
       </div>
-    </FormRow>
-    <p class="text-danger">
-      After setting the <i>"All Rangers"</i> and/or <i>"Grant to new Prospective accounts"</i> flags,
-      the maintenance "Set Ranger Positions" function has to be run to grant the position to existing accounts.
-    </p>
-    <FormRow>
       <div class="col-12">
         <f.checkbox @name="all_rangers"
                     @label="Grant to All Rangers (status active / inactive / inactive extension / retired)"/>
       </div>
-    </FormRow>
-    <FormRow>
       <div class="col-12">
         <f.checkbox @name="new_user_eligible"
                     @label="Grant to new accounts (Rangers, Applications, etc)"/>
@@ -81,10 +76,10 @@
   </fieldset>
   <fieldset>
     <legend>Team &amp; Team Position Flags</legend>
-    <p class="text-danger">
+    <UiAlert @type="warning" @icon="hand-point-right">
       After adjusting the team position category, run the Position Sanity Checker to bulk grant or revoke the
       team positions to team members.
-    </p>
+    </UiAlert>
     <FormRow>
       <f.select @name="team_id"
                 @label="Belongs To Team"
@@ -118,17 +113,20 @@
         <f.checkbox @name="on_trainer_report"
                     @label="For the Trainer's Report: indicates the position is relevant to trainers"/>
         <f.checkbox @name="no_training_required"
-                    @label="In-Person training not required to check-in for this position"/>
+                    @label="In-Person training not required to check-in for this position (note, all positions with type Training automatically do not require passing an In-Person training) "/>
       </div>
     </FormRow>
   </fieldset>
 
   <fieldset>
     <legend>Position Role Grants</legend>
+    <p>
+      Adjustments to role associations will take immediate effect upon pushing the Save button.
+    </p>
     <FormRow>
       <div class="col-12">
         <f.checkbox @name="require_training_for_roles"
-                    @label="ART training must be passed before roles are assigned"/>
+                    @label="ART training must be passed each year before roles are granted"/>
       </div>
     </FormRow>
     <FormRow>
@@ -153,26 +151,31 @@
     </fieldset>
   {{/unless}}
   <fieldset>
-    <legend>Misc.</legend>
+    <legend>Driving</legend>
     <FormRow>
-      <div class="col-auto">
+      <div class="col-12">
         <f.checkbox @name="mvr_eligible"
                     @inline={{true}}
                     @label="The person will become MVR eligible when granted the position AND signs up for a shift"
         />
       </div>
-    </FormRow>
-    <FormRow>
-      <div class="col-auto">
+      <div class="col-12">
         <f.checkbox @name="pvr_eligible"
                     @inline={{true}}
                     @label="The person will become Personal Vehicle Request eligible when granted the position AND signs up for a shift"
         />
       </div>
     </FormRow>
+  </fieldset>
+  <fieldset>
+    <legend>Payroll</legend>
+    <p>
+      Any position with a paycode will appear in the Payroll interface, and all timesheet entries will
+      have a paid position indicator.
+    </p>
     <FormRow class="align-items-end">
-      <f.text @name="paycode" @label="Paycom employee code" @size={{20}} @maxlength={{20}} />
-      <div class="col-auto">
+      <f.text @name="paycode" @label="Paycom employee code" @size={{20}} @maxlength={{20}} @inline={{true}} />
+      <div class="col-auto align-self-center">
         <f.checkbox @name="no_payroll_hours_adjustment"
                     @label="Hours will not be adjusted during payroll export"/>
       </div>
@@ -183,17 +186,20 @@
     <legend>Auto Sign Out</legend>
     A timesheet entry can be automatically signed out of when the hour cap is reached. A note will be left in
     the timesheet audit trail, and an email sent to the contact email (set below).
-    <FormRow class="align-items-end">
-      <div class="col-auto align-self-center">
+    <FormRow>
+      <div class="col-auto">
         <f.checkbox @label="Auto sign out timesheet"
                     @name="auto_sign_out"
         />
       </div>
+    </FormRow>
+    <FormRow>
       <f.number @label="Hours Cap"
                 @name="sign_out_hour_cap"
                 @size={{10}}
                 @maxlength={{10}}
-                @hint="Partial hours are supported. (e.g., 10.5, 5.3, etc.)"
+                @hint="Fractional hours are supported. (e.g., 10.5, 6.3, etc.)"
+                @inline={{true}}
                 @disabled={{not f.model.auto_sign_out}}
       />
     </FormRow>
