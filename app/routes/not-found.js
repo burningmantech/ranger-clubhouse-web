@@ -5,4 +5,9 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
  */
 
 export default class NotFoundRoute extends ClubhouseRoute {
+  setupController(controller) {
+    const href = window.location.href;
+    controller.url = href
+    controller.isOldURL = href.match(/\/clubhouse\//);
+  }
 }

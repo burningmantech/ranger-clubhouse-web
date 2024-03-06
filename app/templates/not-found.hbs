@@ -1,16 +1,38 @@
 <main>
   <h1>Khaki, Khaki, Clubhouse - I need to report a 404 error. The page cannot be found.</h1>
 
-  <p>
-    Sorry, the Clubhouse could not find the page you asked for. There could be a few reasons
-    for this:
+  {{#if this.isOldURL}}
+    <p>
+      It appears you are trying to access an outdated Clubhouse link:
+    </p>
+    <p>
+      {{this.url}}
+    </p>
+    <p>
+      Please update your browser's bookmarks, and any documentation that references the above, to
+      use the following link:
+    </p>
+    <p>
+      <a href="https://ranger-clubhouse.burningman.org">https://ranger-clubhouse.burningman.org</a>
+    </p>
+  {{else}}
+    <p>
+      Sorry, the Clubhouse could not find the link you asked for:
+    </p>
+    <p>
+      {{this.url}}
+    </p>
+    There could be a few reasons for this:
 
     <ul>
-      <li>The page address (aka URL) entered was mistyped. Check for any typos.</li>
+      <li>The URL (aka link or page) entered was mistyped. Check for any typos.</li>
       <li>The page has been moved somewhere else.</li>
       <li>The Clubhouse has a bug.</li>
     </ul>
 
-    <LinkTo @route="me.homepage">Back To The Home Page</LinkTo>
+  {{/if}}
+  <p>
+    Reach out to the Tech Team at <TechSupportEmail/> if you need help.
   </p>
+  <LinkTo @route="me.homepage" class="mt-2">Back To The Home Page</LinkTo>
 </main>

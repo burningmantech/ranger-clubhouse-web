@@ -22,8 +22,10 @@ export default class AdminTeamsController extends ClubhouseController {
 
   mvrEligibleOptions = [
     {id: 'all', title: 'All'},
-    {id: 'eligible', title: 'Eligible'},
-    {id: 'ineligible', title: 'Ineligible'},
+    {id: 'mvr-eligible', title: 'MVR Eligible'},
+    {id: 'mvr-ineligible', title: 'MVR Ineligible'},
+    {id: 'pvr-eligible', title: 'Personal Vehicle Eligible'},
+    {id: 'pvr-ineligible', title: 'Personal Vehicle Ineligible'},
   ];
 
   typeOptions = [
@@ -49,11 +51,17 @@ export default class AdminTeamsController extends ClubhouseController {
     }
 
     switch (this.mvrEligibilityFilter) {
-      case 'eligible':
+      case 'mvr-eligible':
         teams = teams.filter((t) => t.mvr_eligible);
         break;
-      case 'ineligible':
+      case 'mvr-ineligible':
         teams = teams.filter((t) => !t.mvr_eligible);
+        break;
+      case 'pvr-eligible':
+        teams = teams.filter((t) => t.pvr_eligible);
+        break;
+      case 'pvr-ineligible':
+        teams = teams.filter((t) => !t.pvr_eligible);
         break;
     }
 

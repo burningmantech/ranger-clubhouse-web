@@ -3,6 +3,14 @@
   <p>
     Use this page to grant or revoke a position for a list of callsigns.
   </p>
+  <p>
+    <span class="text-danger">Please note, granting or revoking positions will not add or remove a team's
+      membership.</span>
+    When you want to grant the recommended team positions (not public team positions), and wish to add
+    the person to the team's roster, use the
+    <LinkTo @route="ops.bulk-teams">Ops &gt; Bulk Grant/Revoke Team</LinkTo>
+    interface instead. The interface will add a person to roster, and grant the recommended team positions in one go.
+  </p>
 
   {{#if this.positions}}
     {{#if this.people}}

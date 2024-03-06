@@ -189,51 +189,25 @@
             {{/if}}
           </:body>
         </UiSection>
-        <UiSection>
-          <:title>{{fa-icon "truck-pickup"}} Motor Vehicle Record (MVR)</:title>
-          <:body>
-            {{#if (or this.person.isRanger this.person.isNonRanger)}}
-            <p>
-              {{#if this.eventInfo.mvr_eligible}}
-                {{badge "success" "MVR Eligible"}}
-                {{#if (or this.eventInfo.mvr_eligible_teams this.eventInfo.mvr_eligible_positions)}}
-                  You are eligible to submit a MVR request because you are a member of the following team(s), and/or have the following position(s):
-                  {{#if this.eventInfo.mvr_eligible_teams}}
-                    <div class="mt-2">
-                      {{pluralize this.eventInfo.mvr_eligible_teams.length "team"}}:
-                      {{#each this.eventInfo.mvr_eligible_teams as |team idx|}}
-                        {{if idx ", "}}{{team.title}}
-                      {{/each}}
-                    </div>
-                  {{/if}}
-                  {{#if this.eventInfo.mvr_eligible_positions}}
-                    <div class="mt-2">
-                      {{pluralize this.eventInfo.mvr_eligible_positions.length "position"}}:
-                      {{#each this.eventInfo.mvr_eligible_positions as |position idx|}}
-                        {{if idx ", "}}{{position.title}}
-                      {{/each}}
-                    </div>
-                  {{/if}}
-                {{else}}
-                  You are eligible to submit a MVR request.
-                {{/if}}
+        {{#if (or this.person.isRanger this.person.isNonRanger)}}
+          <UiSection>
+            <:title>{{fa-icon "truck-pickup"}} Motor Vehicle Record (MVR)</:title>
+            <:body>
+              {{#if this.personEvent.org_vehicle_insurance}}
+                {{badge "success" "Authorized" }} You are authorized to operate cars and trucks (including your own
+                personal vehicle, provided you have an approved Personal Vehicle Request) on the playa for Ranger
+                business. The vehicle must be equipped with a valid Burning Man driving sticker issued for the
+                current event. Please note that stickers are not transferable from year to year.
+              {{else if this.eventInfo.mvr_eligible}}
+                {{badge "success" "MVR Eligible"}} You are eligible to submit a MVR request.
               {{else}}
-                {{badge "secondary" "MVR Ineligible"}} You are currently ineligible to submit a MVR request.
+                {{badge "warning" "Not Authorized" }} You are NOT authorized to operate cars and trucks (including
+                your own personal vehicle) on the playa for Ranger business. If you believe this capability is
+                necessary for your Ranger duties on the playa, please contact your team lead.
               {{/if}}
-              </p>
-            {{/if}}
-            {{#if this.personEvent.org_vehicle_insurance}}
-              {{badge "success" "Authorized" }} You are authorized to drive cars and
-              trucks (including your own personal vehicle) on playa for Ranger business.
-              Vehicle must have a valid Burning Man driving sticker.
-            {{else}}
-              {{badge "warning" "Not Authorized" }} You are NOT authorized to drive cars
-              and trucks (including your own personal vehicle) on playa for Ranger
-              business. If you think you need this to do your job on playa, please
-              contact your manager or team lead.
-            {{/if}}
-          </:body>
-        </UiSection>
+            </:body>
+          </UiSection>
+        {{/if}}
       {{/if}}
     </tab.pane>
   {{/if}}

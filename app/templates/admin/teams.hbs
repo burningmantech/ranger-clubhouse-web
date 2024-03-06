@@ -24,7 +24,7 @@
                       @options={{this.activeOptions}}
                       @onChange={{action (mut this.activeFilter)}} />
     </div>
-    <FormLabel @auto={{true}}>MVR Eligibility Filter</FormLabel>
+    <FormLabel @auto={{true}}>Vehicle Eligibility Filter</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="mvrEligibilityFilter"
                       @value={{this.mvrEligibilityFilter}}
@@ -95,6 +95,12 @@
           </td>
         {{/if}}
       </tr>
+    {{else}}
+    <tr>
+      <td colspan="{{if this.canManageTeams 9 8}}" class="text-danger">
+        No teams found.
+      </td>
+    </tr>
     {{/each}}
     </tbody>
   </UiTable>
