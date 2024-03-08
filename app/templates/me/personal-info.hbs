@@ -32,7 +32,7 @@
                           @onSubmit={{this.onSubmit}}
   />
 
-  {{#unless this.person.isAuditor}}
+  {{#unless (or this.person.isAuditor this.person.isPastProspective)}}
     <Me::PiiLanguagesSection @person={{this.person}}
                              @personInfoValidations={{this.personInfoValidations}}
                              @onSubmit={{this.onSubmit}}

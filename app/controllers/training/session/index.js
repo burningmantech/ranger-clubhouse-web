@@ -51,6 +51,11 @@ export default class TrainingSessionController extends ClubhouseController {
   @tracked showEmails = false;
   @tracked isSubmitting = false;
 
+
+  @tracked addingTrainer=false;
+  @tracked addTrainerOptions = null;
+  @tracked addTrainerSlotId = null;
+
   @tracked editStudent;
   @tracked studentForm;
   @tracked editNote;
@@ -78,7 +83,7 @@ export default class TrainingSessionController extends ClubhouseController {
   }
 
   /**
-   * Is the user allowed to add a student to the class?
+   * Is the user allowed to adjust the trainer or trainee rosters?
    *
    * For dirt training - only Clubhouse Admins and folks holding the real Trainer role (not Trainer Seasonal, masquerading as Trainer)
    * For ARTS - any trainer.
@@ -86,7 +91,7 @@ export default class TrainingSessionController extends ClubhouseController {
    * @returns {boolean}
    */
 
-  get canAddStudent() {
+  get canAdjustRosters() {
     return this.training.is_art || this.session.isAdmin || this.session.isRealTrainer;
   }
 
@@ -310,7 +315,27 @@ export default class TrainingSessionController extends ClubhouseController {
    */
 
   @action
-  showAddPersonAction() {
+  showAddTraineeAction() {
+    this._setupAddPerson(false);
+  }
+
+  @action
+  showAddTrainerAction() {
+    if (this.trainers.length === 0) {
+      this.modal.info('No Training Slots Found', 'There are no associated training slots found. Be sure the slots have been activated.');
+      return;
+    }
+    if (this.trainers.length > 1) {
+      this.addTrainerOptions = this.trainers.map((t) => [ t.position_title, t.slot.id ]);
+    } else {
+      this.addTrainerOptions = null;
+    }
+    this.addTrainerSlotId = this.trainers[0].slot.id;
+    this._setupAddPerson(true);
+  }
+
+  _setupAddPerson(isTrainer) {
+    this.addingTrainer = isTrainer;
     this.foundPeople = null;
     this.noSearchMatch = null;
     this.addPersonForm = EmberObject.create({name: ''});
@@ -379,16 +404,29 @@ export default class TrainingSessionController extends ClubhouseController {
   @action
   addPersonAction(person, event) {
     event.preventDefault();
-    this.shiftManage.slotSignup(this.slot, person, () => {
+    let slot;
+    if (this.addingTrainer) {
+       slot = this.trainers.find((t) => t.slot.id === +this.addTrainerSlotId)?.slot;
+    } else {
+      slot = this.slot;
+    }
+    this.shiftManage.slotSignup(slot, person, async() => {
       this.addPersonForm = null;
       // Refresh the list
-      this.ajax.request(`training-session/${this.slot.id}`).then((results) => {
-        const student = results.students.find((s) => +s.id === +person.id);
-        if (student) {
-          this.students.push(student);
-          this.students = _.orderBy(this.students, [(s) => s.callsign.toLowerCase()], ['asc']);
+      try {
+        if (this.addingTrainer) {
+          this.trainers = (await this.ajax.request(`training-session/${this.slot.id}/trainers`)).trainers;
+        } else {
+          const results = await this.ajax.request(`training-session/${this.slot.id}`);
+          const student = results.students.find((s) => +s.id === +person.id);
+          if (student) {
+            this.students.push(student);
+            this.students = _.orderBy(this.students, [(s) => s.callsign.toLowerCase()], ['asc']);
+          }
         }
-      }).catch((response) => this.house.handleErrorResponse(response))
+      } catch (e) {
+        this.house.handleErrorResponse(e);
+      }
     });
   }
 
@@ -399,22 +437,45 @@ export default class TrainingSessionController extends ClubhouseController {
   @action
   removeStudentAction() {
     const student = this.editStudent;
-
-    this.modal.confirm('Confirm Student Removal', `Are you really sure you want to remove ${student.callsign} from this session?`, () => {
+    this.modal.confirm('Confirm Student Removal', `Are you really sure you want to remove ${student.callsign} from this session?`,
+      async () => {
       this.isSubmitting = true;
-      this.ajax.delete(`person/${student.id}/schedule/${this.slot.id}`)
-        .then((results) => {
-          if (results.status === 'success') {
-            this.students = this.students.filter((s) => s.id !== student.id);
-            this.toast.success(`${student.callsign} was successfully removed from this training session.`);
-            this.editStudent = null;
-          } else {
-            this.toast.error(`The server responded with an unknown status code [${results.status}]`);
-          }
-        })
-        .catch((response) => this.house.handleErrorResponse(response))
-        .finally(() => this.isSubmitting = false);
+      try {
+        const {status} = await this.ajax.delete(`person/${student.id}/schedule/${this.slot.id}`);
+        if (status === 'success') {
+          this.students = this.students.filter((s) => s.id !== student.id);
+          this.toast.success(`${student.callsign} was successfully removed from this training session.`);
+          this.editStudent = null;
+        } else {
+          this.toast.error(`The server responded with an unknown status code [${status}]`);
+        }
+      } catch (response){
+        this.house.handleErrorResponse(response);
+      } finally {
+        this.isSubmitting = false;
+      }
     });
+  }
+
+  @action
+  removeTrainerAction(trainer, slot) {
+    this.modal.confirm('Confirm Trainer Removal', `Are you really sure you want to remove ${trainer.callsign} from this session?`,
+      async () => {
+        this.isSubmitting = true;
+        try {
+          const {status} = await this.ajax.delete(`person/${trainer.id}/schedule/${slot.id}`);
+          if (status === 'success') {
+            this.toast.success(`${trainer.callsign} was successfully removed from this training session.`);
+            this.trainers = (await this.ajax.request(`training-session/${this.slot.id}/trainers`)).trainers;
+          } else {
+            this.toast.error(`The server responded with an unknown status code [${status}]`);
+          }
+        } catch (response){
+          this.house.handleErrorResponse(response);
+        } finally {
+          this.isSubmitting = false;
+        }
+      });
   }
 
   /**
