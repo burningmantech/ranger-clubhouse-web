@@ -59,24 +59,26 @@
         </div>
       {{/if}}
     </FormRow>
-
-    {{#if this.trainerCount}}
-      <p>
-        Be sure to make the Trainer as having "Attended" to ensure the person is considered trained for the year.<br>
-         Is Lead Trainer = the primary Trainer(s) responsible for the session.
-      </p>
-      Showing {{pluralize this.trainerCount "trainer"}}
-      <UiTable>
-        <thead>
-        <tr>
-          <th>Trainer Callsign</th>
-          <th>Type</th>
-          <th>Email</th>
-          <th>Attended?</th>
-          <th>&nbsp;</th>
-        </tr>
-        </thead>
-        <tbody>
+    <p>
+      Be sure to make the Trainer as having "Attended" to ensure the person is considered trained for the year.<br>
+      Is Lead Trainer = the primary Trainer(s) responsible for the session.
+    </p>
+    Showing {{pluralize this.trainerCount "trainer"}}
+    <UiTable>
+      <thead>
+      <tr>
+        <th>Trainer Callsign</th>
+        <th>Type</th>
+        <th>Email</th>
+        <th>Attended?</th>
+        <th>&nbsp;</th>
+        {{#if this.canAdjustRosters}}
+          <th>Action</th>
+        {{/if}}
+      </tr>
+      </thead>
+      <tbody>
+      {{#if this.trainerCount}}
         {{#each this.trainers as |trainerType|}}
           {{#each trainerType.trainers as |trainer|}}
             <tr>
@@ -84,7 +86,9 @@
                 <PersonLink @person={{trainer}} />
               </td>
               <td class="align-middle">{{trainerType.position_title}}</td>
-              <td class="align-middle"><MailTo @to={{trainer.email}} /></td>
+              <td class="align-middle">
+                <MailTo @to={{trainer.email}} />
+              </td>
               <td>
                 <ChForm::Select @name="trainer-{{trainer.id}}-status"
                                 @value={{trainer.status}}
@@ -102,17 +106,33 @@
                   </label>
                 </div>
               </td>
+              {{#if this.canAdjustRosters}}
+                <td>
+                  <UiButton @onClick={{fn this.removeTrainerAction trainer trainerType.slot}}
+                            @type="secondary"
+                            @size="sm">
+                    Remove
+                  </UiButton>
+                </td>
+              {{/if}}
             </tr>
           {{/each}}
         {{/each}}
-        </tbody>
-      </UiTable>
-      <UiButton @onClick={{this.saveTrainers}} @disabled={{this.isSubmitting}}>
-        Save Trainers
-      </UiButton>
-      {{#if this.isSubmitting}}
-        <LoadingIndicator/>
+      {{else}}
+        <tr>
+          <td class="text-danger" colspan={{if this.canAdjustRosters 5 6}}>No signed-up trainers found.</td>
+        </tr>
       {{/if}}
+      </tbody>
+    </UiTable>
+    <UiButton @onClick={{this.saveTrainers}} @disabled={{(not this.trainerCount)}}>
+      Save Trainers
+    </UiButton>
+    {{#if this.canAdjustRosters}}
+      <UiButton @onClick={{this.showAddTrainerAction}}
+                @type="secondary">
+        Add Trainer
+      </UiButton>
     {{/if}}
   </:body>
 </UiSection>
@@ -133,7 +153,7 @@
       <p>
         <b class="text-danger">{{fa-icon "hand-point-right"}} Reminder: Walk-ins are NOT allowed, this includes
           auditors. All attendees must be signed up prior to the session's start time.</b><br>
-        {{#unless this.canAddStudent}}
+        {{#unless this.canAdjustRosters}}
           Only the Training Academy may add trainees through this interface.
         {{/unless}}
       </p>
@@ -151,18 +171,23 @@
                 class="btn btn-secondary ms-1">
           {{fa-icon "clipboard-check"}} Sign up Sheet
         </LinkTo>
-        <UiButton @type="secondary" @onClick={{this.toggleEmailListAction}} @disabled={{is-empty this.students}}
+        <UiButton @type="secondary"
+                  @onClick={{this.toggleEmailListAction}}
+                  @disabled={{is-empty this.students}}
                   @class="ms-1">
           {{fa-icon "envelope"}} {{if this.showEmails "Hide Emails" "List Emails"}}
         </UiButton>
-        {{#if this.canAddStudent}}
-          <UiButton @type="secondary" @onClick={{this.showAddPersonAction}} @class="ms-1">
+        {{#if this.canAdjustRosters}}
+          <UiButton @type="secondary"
+                    @onClick={{this.showAddTraineeAction}}
+                    @class="ms-1">
             {{fa-icon "plus-square"}} Add Person
           </UiButton>
         {{/if}}
         {{#if this.offersGraduation}}
-          <UiButton @type="secondary" @onClick={{this.showGraduateStudentsAction}} @disabled={{is-empty
-            this.students}}
+          <UiButton @type="secondary"
+                    @onClick={{this.showGraduateStudentsAction}}
+                    @disabled={{is-empty this.students}}
                     @class="ms-1">
             {{fa-icon "graduation-cap"}} Graduate Trainees
           </UiButton>
@@ -189,7 +214,7 @@
               </a>
             {{/if}}
           </menu.item>
-          {{#if this.canAddStudent}}
+          {{#if this.canAdjustRosters}}
             <div class="dropdown-divider"></div>
             <a href class="dropdown-item" {{action this.showAddPersonAction}}>Add Person</a>
           {{/if}}
@@ -374,11 +399,8 @@
         {{/let}}
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
-        <f.submit @label="Save {{this.editStudent.callsign}} info" @disabled={{this.isSubmitting}} />
-        <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelStudentAction}} />
-        {{#if this.isSubmitting}}
-          <LoadingIndicator/>
-        {{/if}}
+        <f.submit @label="Save {{this.editStudent.callsign}} info"/>
+        <UiCancelButton @onClick={{this.cancelStudentAction}} />
         <div class="ms-auto">
           <UiButton @type="light-red" @onClick={{this.removeStudentAction}}>
             Remove From Training
@@ -392,7 +414,7 @@
 
 {{! Add Person dialog box}}
 {{#if this.addPersonForm}}
-  <ModalDialog @title="Add Trainee To Session"
+  <ModalDialog @title="Add {{if this.addingTrainer "Trainer" "Trainee"}} To Session"
                @onEscape={{this.cancelSearchAction}} as |Modal|>
     <ChForm @formId="search"
             @formFor={{this.addPersonForm}}
@@ -401,6 +423,20 @@
             @onEscape={{this.cancelSearchAction}}
             as |f|>
       <Modal.body>
+        {{#if (and this.addingTrainer this.addTrainerOptions)}}
+          <FormRow>
+            <FormLabel>
+              Trainer Position:
+            </FormLabel>
+            <div class="col-auto">
+              <ChForm::Select @name="addTrainerSlotId"
+                              @value={{this.addTrainerSlotId}}
+                              @options={{this.addTrainerOptions}}
+                              @onChange={{action (mut this.addTrainerSlotId)}}
+              />
+            </div>
+          </FormRow>
+        {{/if}}
         <FormRow>
           <f.text @name="name"
                   @label="Enter the callsign, real name, or email of the person to add:"
@@ -473,4 +509,10 @@
                          @slot={{this.slot}}
                          @students={{this.students}}
                          @onCancel={{this.cancelGraduateStudents}}/>
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting your request
+  </LoadingDialog>
 {{/if}}

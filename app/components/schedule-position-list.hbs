@@ -30,9 +30,9 @@
               In-Person Training.
             </b>
           {{else}}
-            Since you have 2 or more years experience, you may choose to attend only the second
-            half, usually immediately after lunch, of an In-Person Training. You are welcomed to
-            attend the full day to share your wisdom with new applicants and inexperienced Rangers.
+            Since you have two or more years of experience, you may choose to attend only the second half, which usually
+            starts immediately after lunch, of an In-Person Training. However, you are welcome to attend the full day
+            to share your wisdom with new applicants and inexperienced Rangers.
           {{/if}}
         </p>
         <p>
@@ -41,17 +41,18 @@
       {{else if this.isAlphaPosition}}
         <p>
           Alpha shifts are ONLY offered on Saturday (the day before the gate opens), Sunday, Monday, and Tuesday.
-          No other shifts are offered later in the week, and exceptions cannot be made.
+          No other shifts are offered later in the week. Exceptions cannot be made.
         </p>
         <p>
-          Alpha shifts are long 10+ hours. The first 2 hours are review, and practice. 6 hours are spent in
-          the field with Mentors. The last 2+ hours are Mentor evaluations and may involve a lot of waiting. (We
-          have a lot of Alphas to assess at the end of the day, and it takes time.)
+          Alpha shifts are 10+ hours long. The first two hours consist of review and practice. The next six hours
+          are spent in the field with Mentors. The final two hours are dedicated to Mentor evaluations and may
+          involve a fair amount of waiting. (We have many Alphas to assess at the end of the day, and it takes
+          time.)
         </p>
         <p>
-          Show up prepared with snacks and a meal, layered clothing, a hat, sunglasses, comfortable walking shoes,
-          sunscreen, a water container (water and electrolytes are offered), a pen or pencil, a notebook, and if
-          attending a swing shift (2pm til midnight) a flashlight or headlamp.
+          Show up prepared with snacks, a meal, layered clothing, a hat, sunglasses, comfortable walking shoes,
+          sunscreen, and a water container (water and electrolytes are provided). Also bring a pen or pencil, a
+          notebook, and, if attending a swing shift (2pm to midnight), a flashlight or headlamp.
         </p>
         <p class="text-danger">
           ARRIVE 30 MINUTES EARLY for your Alpha shift. You will be turned away if you arrive after the start time.
@@ -60,10 +61,8 @@
           Check-in at the Hat Rack located at Ranger HQ, 5:45 &amp; the Esplanade, between BMIR and Placement.
         </p>
         <p>
-          <b>Can't make your Alpha shift?</b> Email the Mentor Cadre (
-          <MailTo @to={{setting "MentorEmail"}} />
-          ) or stop by Ranger HQ on playa
-          to see if another shift can be attended.
+          <b>Can't make your Alpha shift?</b> Email the Mentor Cadre at <MailTo @to={{setting "MentorEmail"}} />
+          or stop by Ranger HQ on playa to see if another shift can be attended.
         </p>
       {{/if}}
       {{#if this.haveNoAppreciationSlots}}
@@ -99,7 +98,7 @@
               {{else if slot.person_assigned}}
                 {{fa-icon "check"}}
               {{else if (not slot.slot_active)}}
-                {{fa-icon "times"color="danger"}}
+                {{fa-icon "times" color="danger"}}
               {{else}}
                 &nbsp;
               {{/if}}
@@ -119,7 +118,7 @@
                 <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
               </div>
               {{#if (and slot.trainer_slot_id (eq slot.trainer_count 0))}}
-                <div class="text-danger">No trainers / mentors signed up yet.<br>Check back later.</div>
+                <div class="text-danger">No trainers / mentors are signed up yet.<br>Check back later.</div>
               {{/if}}
               {{#if slot.isOverlapping}}
                 <div class="mt-1 small">
