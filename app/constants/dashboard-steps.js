@@ -29,7 +29,6 @@ import {
 } from "clubhouse/constants/dashboard";
 import {ACTIVE, AUDITOR, INACTIVE, INACTIVE_EXTENSION, NON_RANGER, RETIRED} from 'clubhouse/constants/person_status';
 import TicketPackage from 'clubhouse/utils/ticket-package';
-import {isEmpty} from "lodash";
 
 function indefiniteArticle(noun) {
   return (noun.match(/^[aeiou]/i) ? `an ${noun}` : `a ${noun}`);
