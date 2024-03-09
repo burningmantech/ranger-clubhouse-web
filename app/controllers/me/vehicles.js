@@ -9,6 +9,7 @@ export default class MeVehiclesController extends ClubhouseController {
   @tracked vehicleInfo;
   @tracked vehicles;
   @tracked year;
+  @tracked isSubmitting;
 
   @action
   reviewPersonalVehicleAgreement() {
@@ -45,5 +46,23 @@ export default class MeVehiclesController extends ClubhouseController {
     }
 
     this.showAgreementTag = null;
+  }
+
+  @action
+  async toggleMute(item) {
+    const field = `ignore_${item}`, newValue = !this.vehicleInfo[field];
+    try {
+      this.isSubmitting = true;
+      await this.ajax.patch(`person-event/${this.person.id}-${this.year}/`, {
+        data: {
+          person_event: { [field]: newValue }
+        }
+      });
+      this.vehicleInfo = {...this.vehicleInfo, [field]: newValue};
+    } catch (e) {
+      this.house.handleErrorResponse(e);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 }

@@ -1,14 +1,27 @@
-<p>
-  Using a Personal Vehicle while on Ranger business requires specific approval. As with the Ranger rental fleet
-  vehicles, Personal Vehicles used while on Ranger business must display/contain authorized Vehicle Use Items in order
-  to be driven on playa.
-</p>
-<h3>Vehicle Requests Must Be Submitted Each &amp; Every Year</h3>
-<p>
-  Even if your vehicle was approved in previous years, <b class="text-danger">a vehicle request must be submitted
-  each and every year</b> a Personal Vehicle is to be used for Ranger business at the event. Approval is for the
-  current event only and does not carry over to the following event.
-</p>
+{{#if (and (not @vehicleInfo.pvr_eligble) (not @vehicleInfo.pvr_positions))}}
+  <UiAlert @type="danger" @icon="hand">
+    You are not permitted to use your personal vehicle for Ranger business currently.
+  </UiAlert>
+  <h6 class="fw-bold">Talk with your manager regarding eligibility</h6>
+  <p>
+    Reach out to your manager if you believe you have an operational need to drive your personal vehicle while
+    volunteering for the Rangers.
+  </p>
+{{/if}}
+<h6 class="fw-bold">Vehicle Requests Must Be Submitted Each &amp; Every Year</h6>
+Please note the following regarding Personal Vehicle requests:
+<ul class="mb-2">
+  <li class="fw-bold text-danger">
+    You must submit a vehicle request every year, even if your vehicle was previously approved.
+  </li>
+  <li class="fw-bold text-danger">
+    Requests must be submitted PRIOR to arriving on playa.
+  </li>
+  <li>
+    <b class="text-danger">Approvals do not carry over from year to year.</b>
+    An approved request is only valid for the current event.
+  </li>
+</ul>
 <p>
   More information is available in the
   <ExtLink @href={{@vehicleInfo.personal_vehicle_document_url}}>
@@ -16,6 +29,7 @@
   </ExtLink>
   document. (link opens in a new window)
 </p>
+
 {{#if @vehicleInfo.personal_vehicle_signed}}
   <UiSection>
     <:title>Personal Vehicles ({{pluralize @vehicles.length "request"}})</:title>
@@ -31,7 +45,8 @@
       </p>
       {{#each @vehicles as |vehicle idx|}}
         {{#if idx}}
-          <hr>{{/if}}
+          <hr>
+        {{/if}}
         <h3>
           {{vehicle.vehicle_year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}} {{vehicle.vehicle_color}}
           {{#if vehicle.license_number}}
@@ -46,7 +61,7 @@
             <UiButton @onClick={{fn this.editAction vehicle}}>
               {{fa-icon "edit"}} Edit Request
             </UiButton>
-            <UiButton @type="light-red" @onClick={{fn this.deleteAction vehicle}}>
+            <UiButton @type="gray" @onClick={{fn this.deleteAction vehicle}} class="btn-link">
               {{fa-icon "trash"}} Delete Request
             </UiButton>
           </p>
@@ -154,23 +169,31 @@
       {{/each}}
     </:body>
   </UiSection>
-{{else}}
-  <h3>Personal Vehicle Agreement Must Be Reviewed &amp; Signed</h3>
+{{else if (or @vehicleInfo.pvr_eligible @vehicleInfo.pvr_positions)}}
+  {{#unless @vehicleInfo.pvr_eligible}}
+    <Me::VehiclePositionSignups @name="Personal Vehicle Request" @positions={{@vehicleInfo.pvr_positions}} />
+  {{/unless}}
+  <h6 class="fw-bold">Personal Vehicle Agreement must be reviewed &amp; signed</h6>
   <p>
-    The Personal Vehicle Agreement before you may submit requests for driving stickers.
+    The Personal Vehicle Agreement must be signed before you may submit a Personal Vehicle Request.
+    {{#if @vehicleInfo.pvr_positions}}
+      The agreement will become available after you have signed up for a qualifying shift.
+    {{/if}}
   </p>
-  {{#if @vehicleInfo.personal_vehicle_signed}}
-    <div class="text-success">
-      {{fa-icon "check"}} You have already agreed to the Personal Vehicle Agreement. Thank you!
-    </div>
-  {{else}}
-    <div class="text-danger">
-      {{fa-icon "times"}} You have not agreed to the Ranger Personal Vehicle Agreement yet.
-    </div>
-    <UiButton @type="primary" @onClick={{@reviewAgreement}}>
-      Review And Sign the Ranger Personal Vehicle Agreement
-    </UiButton>
+  {{#if @vehicleInfo.pvr_eligible}}
+    <UiAlert @type="danger" @icon="hand">
+      You have not agreed to the Ranger Personal Vehicle Agreement yet.
+    </UiAlert>
+    <p>
+      <UiButton @type="primary" @onClick={{@reviewAgreement}}>
+        Review And Sign the Ranger Personal Vehicle Agreement
+      </UiButton>
+    </p>
   {{/if}}
+  <Me::VehicleStepMute @ignoring={{@vehicleInfo.ignore_pvr}}
+                       @toggleMute={{@toggleMute}}
+                       @name="Personal Vehicle Request"
+  />
 {{/if}}
 
 {{#if this.entry}}

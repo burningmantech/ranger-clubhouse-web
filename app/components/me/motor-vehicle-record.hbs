@@ -1,0 +1,80 @@
+{{#if @vehicleInfo.org_vehicle_insurance}}
+  <h6 class="text-danger fw-bold">
+    Your MVR request has been approved!
+  </h6>
+  You are authorized to operate trucks and SUVs on behalf of the Ranger department. However,
+  the MVR is not transferable between events, so a new request must be submitted each year.
+{{else if @vehicleInfo.mvr_eligible}}
+  <UiAlert @type="warning" @icon="hand-point-right">
+    A MVR Request has not been submitted, or is awaiting approval.
+  </UiAlert>
+  <h6 class="fw-bold">Wondering about the status of your MVR request?</h6>
+  <p>
+    This page will let you know when your submission has been approved. Reach out to your team's manager if you
+    have additional concerns.
+  </p>
+  <p>
+    Before you are allowed to drive the larger Ranger vehicles, such as trucks &amp; SUVs, on behalf of the Ranger
+    department, a MVR request must be submitted and approved. Burning Man’s insurance company will run a check on your
+    driving record and let us know whether they are willing to cover you under the Burning Man insurance policy.
+    Part of submitting this form is providing consent for the insurance company to perform this check.
+  </p>
+  <h6 class="fw-bold">Use the following information to fill out the MVR request:</h6>
+  <ul class="mb-2">
+    <li>Select <i>Rangers</i> as the Department</li>
+    <li>
+      Use your Ranger callsign, {{this.person.callsign}}, as your Playa Name. Do not enter “Ranger” before your
+      callsign!
+    </li>
+    <li>
+      Enter <i>Wilfredo Sanchez Vega</i> as the “Manager’s Full Legal Name”.
+    </li>
+    <li>
+      Ensure you correctly enter your driver license state and number, including any leading zeros.
+    </li>
+    <li>
+      For “DOB” (Date of Birth) make sure you enter your birthdate NOT today’s date or the current year.
+      Seriously, use your birthdate, not the current date.
+    </li>
+    <li>
+      <b class="text-danger">DO NOT SUBMIT MORE THAN ONE REQUEST.</b> Doing so will delay your application and
+      cause headaches for everyone involved. Much sadness will be had.
+    </li>
+  </ul>
+  <p>
+    {{#if @vehicleInfo.mvr_request_url}}
+      Use
+      <ExtLink @href={{@vehicleInfo.mvr_request_url}}>THIS LINK</ExtLink>
+      (the link will open in a new window) to submit a MVR request.
+    {{else}}
+      <b class="text-danger">Uh oh, the MVR link has not been provided. Sorry, this is a bug.</b>
+    {{/if}}
+  </p>
+  <p>
+    License and driving record verification can take 2 weeks or more. Longer for non-US license holders.
+  </p>
+  <h6 class="fw-bold">Wish to drive your personal vehicle on behalf of the Rangers?</h6>
+  <p>
+    Using a Personal Vehicle while on Ranger business requires specific approval. In addition to having an
+    approved MVR, all personal vehicles must be approved (or re-approved) EACH YEAR. Contact your manager
+    if you believe you have an operational need to use your personal vehicle while on duty.
+  </p>
+  <Me::VehicleStepMute @name="MVR Request"
+                       @ignoring={{@vehicleInfo.ignore_mvr}}
+                       @toggleMute={{@toggleMute}}
+  />
+{{else if @vehicleInfo.mvr_positions}}
+  <Me::VehiclePositionSignups @name="MVR Request" @positions={{@vehicleInfo.mvr_positions}} />
+  <Me::VehicleStepMute @name="MVR Request"
+                       @ignoring={{@vehicleInfo.ignore_mvr}}
+                       @toggleMute={{@toggleMute}}
+  />
+{{else}}
+  <UiAlert @type="danger" @icon="hand">
+    You are not eligible to submit a MVR Request at this time.
+  </UiAlert>
+  <p>
+    Reach out to your manager if you believe you have an operational need to drive your personal vehicle while
+    volunteering for the Rangers. All personal vehicles must be approved prior to arriving to the playa.
+  </p>
+{{/if}}

@@ -185,20 +185,20 @@
           {{/if}}
           <dl>
             <ChForm @formId="person-event" @formFor={{this.personEvent}} @onSubmit={{this.save}} as |f|>
-              <dt>Driving Privileges</dt>
+              <dt>Motor Vehicle Record (MVR) Flags</dt>
               <dd>
                 {{#if this.canSignAgreements}}
                   <f.checkbox @name="org_vehicle_insurance"
-                              @label="Has Motor Vehicle Record (MVR aka BMP insurance)"
+                              @label="MVR request has approved (aka BMP insurance)"
                   />
-                  <f.checkbox @name="may_request_stickers"
-                              @label="Personal Vehicle Use Requests Allowed (Allows access to the Me > Vehicles page)"
+                   <f.checkbox @name="mvr_eligible"
+                              @label="May submit a MVR request. Use only if person does not have a MVR eligible cadre/team nor is signed up for an eligible shift."
                   />
-                  <f.checkbox @name="mvr_eligible"
-                              @label="May submit a MVR request (use only if person does not have a MVR eligible team nor is signed up for an eligible shift)"
+                  <f.checkbox @name="ignore_mvr"
+                              @label="Mute the MVR request step on the Clubhouse Dashboard"
                   />
                   <div class="mt-2">
-                    <f.submit/>
+                    <f.submit class="btn-sm"/>
                   </div>
                 {{else}}
                   <p>
@@ -210,6 +210,21 @@
                     for the {{this.year}} event to drive Ranger vehicles (including own personal
                     vehicle) on playa for Ranger business. Vehicle must have a valid Burning Man driving sticker.
                   </p>
+                {{/if}}
+              </dd>
+              <dt>Person Vehicle Request Flags</dt>
+              <dd>
+                {{#if this.canSignAgreements}}
+                  <f.checkbox @name="may_request_stickers"
+                              @label="Personal Vehicle Use Requests allowed. Use only if person does not have a PVR eligible cadre/team, nor is signed up for an eligible shift."
+                  />
+                  <f.checkbox @name="ignore_pvr"
+                              @label="Mute the Personal Vehicle Request step on the Clubhouse Dashboard"
+                  />
+                  <div class="mt-2">
+                    <f.submit class="btn-sm"/>
+                  </div>
+                {{else}}
                   {{#if this.personEvent.may_request_stickers}}
                     <b class="text-success">{{fa-icon "check"}} Allowed</b>
                   {{else}}
@@ -232,7 +247,7 @@
                               @label="Signed Personal Vehicle Policy Agreement"
                   />
                   <div class="mt-2">
-                    <f.submit/>
+                    <f.submit class="btn-sm"/>
                   </div>
                 {{else}}
                   <p>
@@ -259,7 +274,7 @@
                   <f.checkbox @name="vehicle_blacklisted"
                               @label="Vehicle Blacklisted"/>
                   <div class="mt-2">
-                    <f.submit/>
+                    <f.submit class="btn-sm"/>
                   </div>
                 </ChForm>
               {{else if this.person.vehicle_blacklisted}}

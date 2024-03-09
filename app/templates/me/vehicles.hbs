@@ -10,101 +10,56 @@
       {{fa-icon "check" right=1 fixed=true}} The MVR request has been approved. You are cleared to drive larger
       Ranger vehicles.<br>
     {{/if}}
-    {{#if (and this.vehicleInfo.vehicle_requests_allowed this.vehicleInfo.personal_vehicle_signed)}}
+    {{#if (and this.vehicleInfo.pvr_eligible this.vehicleInfo.personal_vehicle_signed)}}
       {{fa-icon "check" right=1 fixed=true}} The Personal Vehicle Agreement has been agreed to. You may submit Personal
       Vehicle requests.<br>
     {{/if}}
   </UiAlert>
-  {{#if (and this.vehicleInfo.vehicle_requests_allowed this.vehicleInfo.personal_vehicle_signed)}}
+  {{#if (and this.vehicleInfo.pvr_eligible this.vehicleInfo.personal_vehicle_signed)}}
     {{#if this.vehicles}}
       {{#if this.pendingVehicles}}
-        <UiAlert @type="secondary">
-          {{fa-icon "hourglass" fixed=true right=1}} {{pluralize this.pendingVehicles "pending Personal Vehicle Request"}}
+        <UiAlert @type="secondary" @icon="hourglass">
+          {{pluralize this.pendingVehicles "pending Personal Vehicle Request"}}
         </UiAlert>
       {{/if}}
       {{#if this.approvedVehicles}}
-        <UiAlert @type="success">
-          {{fa-icon "check" fixed=true right=1}} {{pluralize this.approvedVehicles "approved Personal Vehicle Request"}}
+        <UiAlert @type="success" @icon="check">
+          {{pluralize this.approvedVehicles "approved Personal Vehicle Request"}}
         </UiAlert>
       {{/if}}
       {{#if this.rejectedVehicles}}
-        <UiAlert @type="danger">
-          {{fa-icon "ban" fixed=true right=1}} {{pluralize this.rejectedVehicles "rejected Personal Vehicle Request"}}
+        <UiAlert @type="danger" @icon="ban">
+          {{pluralize this.rejectedVehicles "rejected Personal Vehicle Request"}}
         </UiAlert>
       {{/if}}
     {{else}}
-      <UiAlert @type="warning">
-        {{fa-icon "times" right=1 fixed=true}} No vehicle requests have been submitted.
+      <UiAlert @type="warning" @icon="hand">
+        No Personal Vehicle Requests have been submitted yet.
       </UiAlert>
     {{/if}}
   {{/if}}
 
-  {{#if (and this.vehicleInfo.mvr_eligible (not this.vehicleInfo.org_vehicle_insurance))}}
-    <UiAlert @type="warning">
-      {{fa-icon "hourglass" right=1 fixed=true}} A MVR request has not been submitted, or is awaiting approval.
-    </UiAlert>
-    <h6 class="fw-bold">Wondering about the status of your MVR request?</h6>
-    <p>
-      This page will let you know when your submission has been approved. Reach out to your team's manager if you have
-      additional concerns.
-    </p>
-    <p>
-      Before you are allowed to drive the larger Ranger vehicles, such as trucks &amp; SUVs, on behalf of the Ranger
-      department,
-      a MVR request must be submitted and approved. Burning Man’s insurance company will run a check on your driving
-      record and let us know whether they are willing to cover you under the Burning Man insurance policy.
-      Part of submitting this form is providing consent for the insurance company to perform this check.
-    </p>
-    <h6 class="fw-bold">Use the following information to fill out the MVR request:</h6>
-    <ul class="mb-2">
-      <li>Select <i>Rangers</i> as the Department</li>
-      <li>
-        Use your Ranger callsign, {{this.person.callsign}}, as your Playa Name. Do not enter “Ranger” before your
-        callsign!
-      </li>
-      <li>
-        Enter <i>Wilfredo Sanchez Vega</i> as the “Manager’s Full Legal Name”.
-      </li>
-      <li>
-        Ensure you correctly enter your driver license state and number, including any leading zeros.
-      </li>
-      <li>
-        For “DOB” (Date of Birth) make sure you enter your birthdate NOT today’s date or the current year. Seriously,
-        use your birthdate, not the current date.
-      </li>
-      <li><b class="text-danger">DO NOT SUBMIT MORE THAN ONE REQUEST.</b> Doing so will delay your application and cause
-        headaches for everyone involved. Much sadness will be had.
-      </li>
-    </ul>
-    <p>
-      {{#if this.vehicleInfo.mvr_request_url}}
-        Use
-        <ExtLink @href={{this.vehicleInfo.mvr_request_url}}>THIS LINK</ExtLink>
-        (the link will open in a new window) to submit a MVR request.
-      {{else}}
-        <b class="text-danger">Uh oh, the MVR link has not been provided. Sorry, this is a bug.</b>
-      {{/if}}
-    </p>
-    <p>
-      It can take a couple of weeks for the driving record/license verification to be processed. The processing time
-      will be longer for international drivers (i.e., drivers who hold a non-US license.)
-    </p>
-    {{#unless this.vehicleInfo.vehicle_requests_allowed}}
-      <h6 class="fw-bold">Wish to drive your personal vehicle on behalf of the Rangers?</h6>
-      <p>
-        Using a Personal Vehicle while on Ranger business requires specific approval. In addition to having an approved
-        MVR, all personal vehicles must be approved (or re-approved) EACH YEAR. Contact your manager if you believe you
-        have an operational need to use your personal vehicle while on duty.
-      </p>
-    {{/unless}}
-  {{/if}}
+  <UiTab as |tab|>
+    <tab.pane @title="MVR Requests" @id="mvr">
+      <Me::MotorVehicleRecord @vehicleInfo={{this.vehicleInfo}}
+                              @toggleMute={{fn this.toggleMute "mvr"}}
+      />
+    </tab.pane>
+    <tab.pane @title="Personal Vehicle Requests" @id="personal-vehicle">
+      <Me::PersonalVehicle @vehicles={{this.vehicles}}
+                           @vehicleInfo={{this.vehicleInfo}}
+                           @reviewAgreement={{this.reviewPersonalVehicleAgreement}}
+                           @toggleMute={{fn this.toggleMute "pvr"}}
+      />
+    </tab.pane>
+  </UiTab>
 {{else}}
-  <UiAlert @type="warning">
-    {{fa-icon "exclamation" right=1}} The Motorpool Policy has not been signed.
+  <UiAlert @type="warning" @icon="exclamation">
+    The Motorpool Policy has not been signed.
   </UiAlert>
   <p>
-    Before you are allowed to submit a MVR request, the Motorppool Policy has to be agreed to first. Use the button
-    below to review and agree to the policy.
+    Before submitting MVR and Personal Vehicle requests, you first must agree to the Motorpool Policy.
+    Click the button below to review the policy and agree to it.
   </p>
   {{#if this.vehicleInfo.motorpool_agreement_available}}
     <p>
@@ -117,23 +72,12 @@
   {{/if}}
 {{/if}}
 
-{{#if this.vehicleInfo.vehicle_requests_allowed}}
-  <Me::PersonalVehicle @vehicles={{this.vehicles}}
-                       @vehicleInfo={{this.vehicleInfo}}
-                       @reviewAgreement={{this.reviewPersonalVehicleAgreement}}
-  />
-{{else}}
-  <div class="mt-2">
-    <b class="text-danger">Note: You may not drive your personal vehicle on behalf of the Rangers at this time.</b>
-    {{#unless this.vehicleInfo.mvr_eligible}}
-      Reach out to your manager if you believe you have an operational need to drive your personal vehicle while
-      volunteering for the Rangers. All personal vehicles must be approved prior to arriving to the playa.
-    {{/unless}}
-  </div>
+{{#if this.showAgreementTag}}
+  <Me::DocumentReview @tag={{this.showAgreementTag}} @onClose={{this.closeAgreement}} />
 {{/if}}
 
-
-{{#if this.showAgreementTag}}
-  TAG [ {{this.showAgreementTag}}]
-  <Me::DocumentReview @tag={{this.showAgreementTag}} @onClose={{this.closeAgreement}} />
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    One moment
+  </LoadingDialog>
 {{/if}}

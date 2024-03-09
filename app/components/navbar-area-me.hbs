@@ -1,4 +1,4 @@
-<NavbarMenu @nav={{@nav}} @title="Me" as |menu|>
+<NavbarMenu @nav={{@nav}} @title="Me" @isLarge={{true}} as |menu|>
   {{#if (not (or @user.isPastProspective @user.isProspectiveWaitlist))}}
     <NavbarMenuSection @section="Rangering">
       <NavbarMenuItem @menu={{menu}} @route="me.schedule" @item="Schedule / Sign Up"/>
@@ -19,7 +19,7 @@
           <<NavbarMenuItem @menu={{menu}} @route="me.tickets" @item="Tickets &amp; Stuff"/>
         {{/if}}
       <<NavbarMenuItem @menu={{menu}} @route="me.agreements" @item="Agreements"/>
-      {{#if (and @user.motorpool_policy_enabled (or @user.mvr_eligible @user.may_request_stickers))}}
+      {{#if (and @user.motorpool_policy_enabled (or @user.mvr_eligible @user.mvr_potential @user.may_request_stickers @user.pvr_potential))}}
         <<NavbarMenuItem @menu={{menu}} @route="me.vehicles" @item="Vehicle Dashboard"/>
       {{/if}}
     </NavbarMenuSection>
