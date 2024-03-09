@@ -577,13 +577,13 @@ export const SIGN_MOTORPOOL_AGREEMENT = {
 
     let suffix = 'to review and agree to the Ranger Motor-Pool Policy, which is required to drive a golf cart or UTV ("gator").';
 
-    if (mvr_eligible) {
+    if (mvr_eligible || milestones.mvr_potential) {
       suffix = htmlSafe(`${suffix}<div class="mt-2">Once you have signed the Motor-Pool Policy, you will be able to submit a MVR request.</div>`);
     }
 
     return {
       name,
-      result: mvr_eligible ?  ACTION_NEEDED : OPTIONAL,
+      result: mvr_eligible ? ACTION_NEEDED : OPTIONAL,
       linkedMessage: {
         route: mvr_eligible ? 'me.vehicles' : 'me.agreements',
         prefix: 'Ranger vehicles are a limited resource and issued based on availability. Vehicles are assigned according to operational need rather than convenience. Visit',
@@ -600,8 +600,8 @@ export const MVR_REQUEST = {
   check({milestones}) {
     const {mvr_eligible} = milestones;
 
-    if (!milestones.motorpool_agreement_available || !mvr_eligible) {
-      return { result: SKIP };
+    if (!milestones.motorpool_agreement_available || (!mvr_eligible && !milestones.mvr_potential)) {
+      return {result: SKIP};
     }
 
     if (milestones.org_vehicle_insurance) {
@@ -611,13 +611,22 @@ export const MVR_REQUEST = {
       }
     }
 
+    if (milestones.ignore_mvr) {
+      return {
+        name: 'Submit a MVR request (muted)',
+        result: COMPLETED,
+        message: 'You have chosen to mute the MVR request.',
+      }
+    }
+
     return {
       result: ACTION_NEEDED,
+      ignoreMVR: true,
       linkedMessage: {
         route: 'me.vehicles',
         prefix: 'You are eligible to submit a MVR request. Visit',
         text: 'Me > Vehicle Dashboard',
-        suffix: htmlSafe('for instructions on how to submit one.')
+        suffix: 'for instructions on how to submit one, or to mute this step.'
       }
     }
   }
@@ -811,53 +820,61 @@ export const VEHICLE_REQUESTS = {
   name: 'Personal Vehicle Request Eligible',
   skipPeriod: AFTER_EVENT,
   check({milestones}) {
-    if (!milestones.vehicle_requests_allowed) {
+    if (!milestones.pvr_eligible && !milestones.pvr_potential) {
       return {result: SKIP};
     }
 
     const vr = milestones.vehicle_requests;
-    if (vr.find((r) => r.status === 'approved')) {
-      return {
-        result: COMPLETED,
-        linkedMessage: {
-          route: 'me.vehicles',
-          prefix: 'Your vehicle request has been approved. Visit',
-          text: 'Me > Vehicle Dashboard',
-          suffix: 'for details.'
-        }
-      };
-    } else if (vr.find((r) => r.status === 'pending')) {
-      return {
-        result: WAITING,
-        linkedMessage: {
-          route: 'me.vehicles',
-          prefix: 'Your vehicle request is pending review. Visit',
-          text: 'Me > Vehicle Dashboard',
-          suffix: 'to adjust or delete your request.'
-        }
-      };
+    if (vr) {
+      if (vr.find((r) => r.status === 'approved')) {
+        return {
+          result: COMPLETED,
+          linkedMessage: {
+            route: 'me.vehicles',
+            prefix: 'Your vehicle request has been approved. Visit',
+            text: 'Me > Vehicle Dashboard',
+            suffix: 'for details.'
+          }
+        };
+      } else if (vr.find((r) => r.status === 'pending')) {
+        return {
+          result: WAITING,
+          linkedMessage: {
+            route: 'me.vehicles',
+            prefix: 'Your vehicle request is pending review. Visit',
+            text: 'Me > Vehicle Dashboard',
+            suffix: 'to adjust or delete your request.'
+          }
+        };
 
-    } else if (vr.find((r) => r.status === 'rejected')) {
+      } else if (vr.find((r) => r.status === 'rejected')) {
+        return {
+          result: URGENT,
+          linkedMessage: {
+            route: 'me.vehicles',
+            prefix: 'Your vehicle request has been denied. Visit',
+            text: 'Me > Vehicle Dashboard',
+            suffix: 'for details.'
+          }
+        };
+      }
+    }
+    if (milestones.ignore_pvr) {
       return {
-        result: URGENT,
-        linkedMessage: {
-          route: 'me.vehicles',
-          prefix: 'Your vehicle request has been denied. Visit',
-          text: 'Me > Vehicle Dashboard',
-          suffix: 'for details.'
-        }
-      };
-    } else {
-      return {
-        result: ACTION_NEEDED,
-        linkedMessage: {
-          route: 'me.vehicles',
-          prefix: 'You are eligible to submit vehicle requests and reauthorizations for driving stickers and other items. Visit',
-          text: 'Me > Vehicle Dashboard',
-          suffix: 'to submit a request.'
-        }
+        name: 'Personal Vehicle Request Eligible (muted)',
+        result: COMPLETED,
+        message: 'You have chosen to mute the Personal Vehicle request.',
       };
     }
+    return {
+      result: ACTION_NEEDED,
+      linkedMessage: {
+        route: 'me.vehicles',
+        prefix: 'You are eligible to submit vehicle requests and reauthorizations for driving stickers and other items. Visit',
+        text: 'Me > Vehicle Dashboard',
+        suffix: 'to submit a request or to mute this step.'
+      }
+    };
   }
 };
 
