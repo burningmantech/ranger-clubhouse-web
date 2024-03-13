@@ -1,118 +1,150 @@
 <h1>{{this.formTitle}} for {{@year}}</h1>
-<a href {{action @onCancel}} class="my-4">Back to slots listing</a>
+<p>
+  <a href {{action @onCancel}} class="my-4">Back to slots listing</a>
+</p>
 <ChForm @formId="slot"
         @formFor={{@slot}}
         @validator={{this.slotValidations}}
         @onSubmit={{@onSave}} as |f|>
-  <FormRow>
-    <f.select @name="position_id"
-              @label="Position"
-              @options={{this.positionOptions}} />
-  </FormRow>
-  <FormRow>
-    <div class="col-12">
-      The multiplier mentor/trainer's slot is used to dynamically adjust the number of mentee signups are allowed
-      based on how many mentors are signed-up. When the mentor slot is set below, the max count field on this slot
-      becomes a multiplier. (e.g. if the mentee max is 2, and two mentors sign up, then 4 mentees will be allowed to
-      sign up.)
+  <fieldset>
+    <legend>Basic Information</legend>
+    <FormRow>
+      <f.select @name="position_id"
+                @label="Position"
+                @options={{this.positionOptions}}
+      />
+    </FormRow>
+    <p>
+      When filling out the description, please avoid using "Click For More Info", or similar, phrasing.
+      The text entered in the Additional Information field will automatically be shown when the user
+      signs up for the shift.
+    </p>
+    <FormRow>
+      <f.text @name="description"
+              @label="Description"
+              @size={{40}}
+              @maxlength={{40}}
+              @showCharCount={{true}}
+      />
+    </FormRow>
+    <FormRow>
+      <f.datetime @name="begins"
+                  @label="Beginning Time"
+                  @size={{16}}
+                  @maxlength={{16}}
+                  @inline={{true}}
+      />
+      <f.datetime @name="ends"
+                  @label="Ending Time"
+                  @size={{16}}
+                  @maxlength={{16}}
+                  @inline={{true}}
+      />
+    </FormRow>
+    <FormRow>
+      <f.select @name="timezone"
+                @label="Timezone"
+                @options={{this.timezoneOptions}}
+                @inline={{true}}
+      />
+    </FormRow>
+    <div class="my-2">
+      Additional information may be given about the shift in the below area.
+      e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.khaki/meetup or email
+      women@khaki.rangers
     </div>
-  </FormRow>
-  <FormRow>
-    <f.select @name="trainer_slot_id"
-              @label="Sign Up Multiplier Mentor/Trainer's Slot"
-              @options={{this.trainerSlotsOptions}}
-              @includeBlank={{true}}
-    />
-  </FormRow>
-  {{#if f.model.trainer_slot_id}}
+    <FormRow>
+      <f.textarea @name="url"
+                  @label="Additional Information"
+                  @rows={{3}}
+                  @cols={{80}}
+                  @maxlength={{512}}
+                  @showCharCount={{true}}
+                  @hint=""/>
+    </FormRow>
+  </fieldset>
+  <fieldset>
+    <legend>Sign-Up Multiplier &amp; Parent Slot Assoc.</legend>
     <FormRow>
       <div class="col-12">
-        Warning: DO NOT link back the mentor/trainer slot to this slot. An infinite recursion loop will happen.
+        By setting the "Sign Up Multiplier Mentor/Trainer's Slot," the sign-up limit of this mentee/trainee slot will be
+        dynamically adjusted based on the number of Mentors/Trainers signed up. The max count of this slot will become a
+        multiplier. (For example, if the max count on this mentee shift is 2 and 3 mentors sign up, then 6 mentees will
+        be allowed to sign up.)
       </div>
     </FormRow>
-  {{/if}}
-  <p>
-    When a parent sign up slot is set, the parent's and this slot's sign ups counts work together.
-    The signups for this shift are counted against the parent's signup count.
-    (e.g., if the parent has 3 signups, and this slot has 2, then parent's signup count will effectively be 5.)
-  </p>
-  <FormRow>
-    <f.select @name="parent_signup_slot_id"
-              @label="Parent Sign-Up Slot"
-              @options={{this.parentSlotOptions f.model.position_id}}
-              @includeBlank={{true}}
-    />
-  </FormRow>
-
-  <FormRow>
-    <f.text @name="description"
-            @label="Description"
-            @size={{40}}
-            @maxlength={{40}}
-            @showCharCount={{true}}
-    />
-  </FormRow>
-  <FormRow>
-    <f.datetime @name="begins"
-                @label="Beginning Time"
-                @maxlength={{25}} />
-    <f.datetime @name="ends"
-                @label="Ending Time"
-                @maxlength={{20}} />
-  </FormRow>
-  <FormRow>
-    <f.select @name="timezone"
-              @label="Timezone"
-              @options={{this.timezoneOptions}}
-    />
-  </FormRow>
-  <FormRow>
-    <f.number @name="max"
-              @label={{if f.model.trainer_slot_id "Multiplier Sign Ups" "Max Sign Ups"}}
-              @size={{4}}
-              @maxlength={{4}}
-    />
-  </FormRow>
-  {{#if f.model.trainer_slot_id}}
     <FormRow>
-      <div class="col-12">
+      <f.select @name="trainer_slot_id"
+                @label="Sign Up Multiplier Mentor/Trainer's Slot"
+                @options={{this.trainerSlotsOptions}}
+                @includeBlank={{true}}
+                @inline={{true}}
+      />
+    </FormRow>
+    {{#if f.model.trainer_slot_id}}
+      <p>
+        Warning: DO NOT link back the mentor/trainer slot to this slot. An infinite recursion loop will happen.
+      </p>
+    {{/if}}
+  </fieldset>
+  <fieldset>
+    <legend>Parent Sign-Up Count Adjustments</legend>
+    <p>
+      When a parent sign up slot is set, the parent's and this slot's sign ups counts work together.
+      The signups for this shift are counted against the parent's signup count.
+      (e.g., if the parent has 3 signups, and this slot has 2, then parent's signup count will effectively be 5.)
+    </p>
+    <FormRow>
+      <f.select @name="parent_signup_slot_id"
+                @label="Parent Sign-Up Slot"
+                @options={{this.parentSlotOptions f.model.position_id}}
+                @includeBlank={{true}}
+                @inline={{true}}
+      />
+    </FormRow>
+  </fieldset>
+  <fieldset>
+    <legend>Max Sign-Ups &amp; Activation</legend>
+    {{#if f.model.trainer_slot_id}}
+      <p>
         <span class="text-danger">NOTE:</span>
         The Trainer's Slot has been set and the Max Sign Ups will act as a multiplier instead of a
-        hard count. The total sign ups allowed will be computed as the number of trainers signed up in
+        hard count. The total sign-ups allowed will be computed as the number of trainers signed up in
         the trainer's slot TIMES the Max Sign-Ups limit.
         (e.g., if 2 trainers are signed up, and the sign-up limit is 10, the total signups allowed will
         be 20.)
+      </p>
+    {{/if}}
+    <FormRow>
+      {{! template-lint-disable no-inline-styles}}
+      <f.number @name="max"
+                @label={{if f.model.trainer_slot_id "Multiplier Sign Ups" "Max Sign Ups"}}
+                @size={{4}}
+                @maxlength={{4}}
+                @inline={{true}}
+                style="width: 5em;"
+      />
+      <div class="col-auto align-self-center">
+        <f.checkbox @name="active" @label="Active"/>
       </div>
     </FormRow>
-  {{/if}}
+  </fieldset>
 
-
-  <FormRow>
-    <div class="col-auto">
-      <f.checkbox @name="active" @label="Active"/>
-    </div>
-  </FormRow>
-
-  <FormRow>
-    <f.textarea @name="url"
-                @label="Information"
-                @rows={{3}}
-                @cols={{80}}
-                @maxlength={{512}}
-                @showCharCount={{true}}
-                @hint="Additional information may be given about the shift in the above area.
-        e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.khaki/meetup or email
-        women@khaki.rangers"/>
-  </FormRow>
-
-  <f.submit @label={{if @slot.isNew "Create" "Update"}} @disabled={{@slot.isSaving}} />
-  {{#unless @slot.isNew}}
-    <f.submit @label="Create New Slot" @onSubmit={{@onClone}} />
-  {{/unless}}
-  <UiCancelButton @onClick={{@onCancel}} />
-  {{#if @slot.isSaving}}
-    <LoadingIndicator/>
-  {{/if}}
+  <div class="mt-3">
+    <f.submit @label={{if @slot.isNew "Create" "Update"}} @disabled={{@slot.isSaving}} />
+    {{#unless @slot.isNew}}
+      <f.submit @label="Create new slot from this one"
+                @onSubmit={{@onClone}}
+                @type="secondary"
+                class="ms-4"
+      />
+    {{/unless}}
+    <UiCancelButton @onClick={{@onCancel}} class="ms-4"/>
+    {{#if @slot.isSaving}}
+      <LoadingIndicator/>
+    {{/if}}
+  </div>
 </ChForm>
-
-<a href {{action @onCancel}} class="mt-4">Back to slots listing</a>
+<div class="mt-4">
+  <a href {{action @onCancel}} class="mt-4">Back to slots listing</a>
+</div>

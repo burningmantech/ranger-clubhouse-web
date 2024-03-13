@@ -7,7 +7,7 @@ export function fullDatetimeFormat([ date ]/*, hash*/) {
   }
 
   try {
-    return dayjs(date).format('dddd, MMMM Do YYYY @ HH:mm');
+    return dayjs(date).format('dddd, MMMM Do, YYYY @ HH:mm');
   } catch (exception) {
     return `invalid date [${date}]`;
   }

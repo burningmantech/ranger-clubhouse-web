@@ -268,8 +268,8 @@ export const ONLINE_COURSE = {
       // Don't tell them to read the ranger manual until online training is available.
       return {
         result: WAITING,
-        message: `The Online Course is not quite ready yet and usually not available until late March. Watch the Ranger Announce mailing list for a message on when the course will be opened.`,
-        name: `Complete The Online Course`
+        message: 'The Online Course is still being prepared and is usually available in late March or early April. Watch the Ranger Announce mailing list for a message on when the course will be opened.',
+        name: 'Complete The Online Course'
       }
     }
 
@@ -297,7 +297,7 @@ export const ONLINE_COURSE = {
 
     } else {
       message = manualLocation +
-        `<p>The Online Course, like the In-Person training, has to be completed every year. The estimate time to complete the course is ${duration}.</p> <p>Note: it may take up to 20 minutes for the Clubhouse to record your course completion.</p>`;
+        `<p>The Online Course, like the In-Person training, has to be completed every year. The estimate time to complete the course is ${duration}.</p> <p>Note: it may take up to 20 minutes, or more, for the Clubhouse to record your course completion.</p>`;
     }
     return {
       result: isNonRanger ? OPTIONAL : ACTION_NEEDED,
@@ -321,9 +321,9 @@ export const SIGN_UP_FOR_TRAINING = {
     }
 
     if (!milestones.online_course_passed) {
-      let message = 'You need to complete the Online Course first before being allowed to sign up for In-Person Training.';
+      let message = 'You must complete the Online Course before attending an In-Person Training.';
       if (!milestones.trainings_available) {
-        message += ' Note: the In-Person Training schedule is not opened until mid to late April.'
+        message += ' The In-Person Training schedule will be available in mid-to-late April.'
       }
       return {
         result: NOT_AVAILABLE,
@@ -338,7 +338,7 @@ export const SIGN_UP_FOR_TRAINING = {
       } else if (isAuditor) {
         prefix = ''; // nada.
       } else {
-        prefix = `An In-Person training must be attended each year. You will to need sign up and pass an In-Person Training before being allowed to work on playa.`;
+        prefix = 'An In-Person training must be attended each year. You will to need sign up for and pass an In-Person Training before being allowed to work on playa.';
       }
       return {
         result: ACTION_NEEDED,
@@ -353,7 +353,7 @@ export const SIGN_UP_FOR_TRAINING = {
     } else {
       return {
         result: WAITING,
-        message: 'In-Person Training sign-ups are not yet available and usually do not open until mid to late April. Please check back later.'
+        message: 'The schedule for the In-Person Trainings is still being prepared, but it is usually available by mid-to-late April.',
       };
     }
   }
@@ -384,7 +384,7 @@ export const ATTEND_TRAINING = {
         if (milestones.is_cheetah_cub) {
           return {
             result: COMPLETED,
-            message: 'You still have to attend a Cheetah Cub shift before being allowed to work on playa.'
+            message: 'You still have to attend a Cheetah Cub shift before being allowed to work on playa.',
           }
         } else {
           if (isPNV || isAuditor) {
@@ -392,21 +392,21 @@ export const ATTEND_TRAINING = {
           }
           return {
             result: COMPLETED,
-            message: 'While you are cleared to work dirt shifts, some specialized shifts may require additional training.'
+            message: 'While you are cleared to work dirt shifts, some specialized shifts may require Advanced Ranger Training (ART).'
           }
         }
 
       case 'no-show': // trainer failed to show up
         return {
           result: URGENT,
-          message: `You did not attend as a trainer to teach the training on ${dayjs(training.date).format('dddd, MMMM Do YYYY')} located at ${training.location}. You must either attend and pass training as a trainee OR teach a session in order to work on playa.`,
+          message: `You were scheduled to teach on ${dayjs(training.date).format('dddd, MMMM Do YYYY')}, but did not attend. You must either attend and pass training as a trainee OR teach a session in order to work on playa.`,
           immediate: true
         };
 
       case 'fail':
         return {
           result: URGENT,
-          message: `You did not attend or failed to complete training on ${dayjs(training.date).format('dddd, MMMM Do YYYY')} located at ${training.location}. Email the Training Academy to sign up for another session.`,
+          message: `It appears that you were absent or did not complete training on ${dayjs(training.date).format('dddd, MMMM Do YYYY')} located at ${training.location}. You must complete an In-Person before being allowed to walk an Alpha shift, and potentially become a Ranger. You are not allowed to sign up for another session through the Clubhouse at this point. Email the Training Academy, explain your absence, and request another sign-up.`,
           email: 'TrainingAcademyEmail',
           immediate: true
         };
@@ -422,7 +422,7 @@ export const ATTEND_TRAINING = {
           } else {
             prefix = 'Because you are ';
             if (milestones.is_binary) {
-              prefix += 'a Ranger with less than 2 years experience'
+              prefix += 'a Ranger with less than two events experience'
             } else if (isPNV) {
               prefix += 'a prospective Ranger'
             } else {
@@ -433,7 +433,7 @@ export const ATTEND_TRAINING = {
           dt = 'ddd MMM DD [@] HH:mm';
         } else {
           if (person.status === ACTIVE) {
-            prefix = "Because you are a Ranger with 2 or more years experience, you only need to attend the half day portion";
+            prefix = "Because you are a Ranger with two or more event experience, you only need to attend the half day portion";
           } else {
             prefix = "You only need to attend the half day training portion";
           }
@@ -502,7 +502,7 @@ export const SIGN_UP_FOR_SHIFTS = {
     if (!milestones.dirt_shifts_available && !isNonRanger) {
       return {
         result: NOT_AVAILABLE,
-        message: 'The full Ranger schedule is posted by the first or second week in July. Watch the Announce mailing list for a message on when the schedule will open.',
+        message: 'The full Ranger schedule will be posted in mid-to-late June. Check the Announce mailing list for updates on when the schedule will be available.',
       };
     }
 
