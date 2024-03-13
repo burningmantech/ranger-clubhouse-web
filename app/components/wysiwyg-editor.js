@@ -80,7 +80,8 @@ export default class WysiwygEditorComponent extends Component {
         content_style: `${contentCSS}\n${uiCSS}`,
         contextmenu: 'link image imagetools table configurepermanentpen',
         image_advtab: true,
-        min_height: 600,
+        min_height: 400,
+        max_height: 600,
         menubar: 'edit view insert format tools table tc help',
         plugins: [
           'advlist',
