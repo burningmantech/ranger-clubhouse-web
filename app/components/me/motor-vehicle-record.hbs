@@ -1,13 +1,29 @@
 {{#if @vehicleInfo.org_vehicle_insurance}}
-  <h6 class="text-danger fw-bold">
+  <h6 class="text-success fw-bold">
     Your MVR request has been approved!
   </h6>
   You are authorized to operate trucks and SUVs on behalf of the Ranger department. However,
   the MVR is not transferable between events, so a new request must be submitted each year.
+{{else if @vehicleInfo.mvr_past_deadline}}
+  <UiAlert @type="danger" @icon="hand">
+    The MVR submission deadline has past.
+    <div class="mt-2">
+      The deadline was {{full-datetime-format @vehicleInfo.mvr_deadline}} (Pacific). You are not
+      allowed to drive the larger Ranger vehicles, such as trucks &amp; SUVs, nor your personal vehicle, on behalf
+      of the Rangers.
+    </div>
+  </UiAlert>
 {{else if @vehicleInfo.mvr_eligible}}
   <UiAlert @type="warning" @icon="hand-point-right">
     A MVR Request has not been submitted, or is awaiting approval.
   </UiAlert>
+  <p>
+    <b class="text-danger">
+      Any MVR requests must be submitted before {{full-datetime-format @vehicleInfo.mvr_deadline}} (Pacific).
+    </b>
+    Failing to submit a request in a timely manner will result in your inability to drive the larger Ranger fleet
+    vehicles or your personal vehicle (if eligible) on behalf of the Rangers.
+  </p>
   <h6 class="fw-bold">Wondering about the status of your MVR request?</h6>
   <p>
     This page will let you know when your submission has been approved. Reach out to your team's manager if you

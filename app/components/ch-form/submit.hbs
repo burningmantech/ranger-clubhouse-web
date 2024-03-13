@@ -1,1 +1,1 @@
-<button class="btn btn-primary btn-submit {{@submitClass}}" type="submit" {{on "click" this.submitAction}} disabled={{@disabled}} ...attributes>{{this._label}}</button>
+<button class="btn btn-{{or @type "primary"}} btn-submit {{@submitClass}}" type="submit" {{on "click" this.submitAction}} disabled={{@disabled}} ...attributes>{{this._label}}</button>

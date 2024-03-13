@@ -179,8 +179,7 @@
           {{#if this.person.vehicle_blacklisted}}
             <UiNotice @title="Vehicle Blacklisted" @icon="car-burst" @type="danger">
               Person may not drive gators, cars, or trucks on playa for Ranger business. All vehicle flags
-              and
-              agreements are disabled.
+              and agreements are disabled.
             </UiNotice>
           {{/if}}
           <dl>
@@ -189,7 +188,7 @@
               <dd>
                 {{#if this.canSignAgreements}}
                   <f.checkbox @name="org_vehicle_insurance"
-                              @label="MVR request has approved (aka BMP insurance)"
+                              @label="MVR request has been approved (aka BMP insurance)"
                   />
                    <f.checkbox @name="mvr_eligible"
                               @label="May submit a MVR request. Use only if person does not have a MVR eligible cadre/team nor is signed up for an eligible shift."

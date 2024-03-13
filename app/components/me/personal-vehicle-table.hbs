@@ -1,0 +1,139 @@
+<UiSection>
+  <:title>Personal Vehicles ({{pluralize @vehicles.length "request"}})</:title>
+  <:body>
+    {{#unless @vehicles}}
+      <p>
+        <b class="text-danger">All vehicle requests MUST be submitted BEFORE you leave for the playa.</b>
+        Failing to do will result in your inability to drive your vehicle on behalf of the Rangers.
+      </p>
+    {{/unless}}
+    <p>
+      <UiButton @onClick={{@newAction}}>New Vehicle Request / Reauthorize Vehicle</UiButton>
+    </p>
+    {{#each @vehicles as |vehicle idx|}}
+      {{#if idx}}
+        <hr>
+      {{/if}}
+      <h3>
+        {{vehicle.vehicle_year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}} {{vehicle.vehicle_color}}
+        {{#if vehicle.license_number}}
+          (#{{vehicle.license_state}}-{{vehicle.license_number}})
+        {{/if}}
+      </h3>
+      {{#if vehicle.isPending}}
+        <p>
+          <b>{{fa-icon "hourglass-half"}} The request is awaiting review.</b>
+        </p>
+        <p>
+          <UiButton @onClick={{fn @editAction vehicle}}>
+            {{fa-icon "edit"}} Edit Request
+          </UiButton>
+          <UiButton @type="gray" @onClick={{fn @deleteAction vehicle}} class="btn-link">
+            {{fa-icon "trash"}} Delete Request
+          </UiButton>
+        </p>
+      {{else if vehicle.isApproved}}
+        <p>
+          <b class="text-success">
+            {{fa-icon "check"}} Your request has been approved for the following item(s):
+          </b>
+        </p>
+      {{else if vehicle.isRejected}}
+        <p>
+          <b class="text-light-red">
+            {{fa-icon "exclamation"}}  The request has been denied. Your vehicle is not authorized to be driven
+            on playa
+          </b>
+        </p>
+      {{else}}
+        The status [{{vehicle.status}}] is not understood. This is a bug!
+      {{/if}}
+      <dl>
+        {{#if vehicle.response}}
+          <dt>Response from Approver</dt>
+          <dd>
+            {{vehicle.response}}
+          </dd>
+        {{/if}}
+        <dt>Driving Sticker</dt>
+        <dd>
+          {{#if vehicle.isRejected}}
+            Denied
+          {{else if (or (eq vehicle.driving_sticker "prepost") (eq vehicle.driving_sticker "staff"))}}
+            {{if vehicle.isApproved "Approved" "Awaiting approval"}}
+            for a {{if (eq vehicle.driving_sticker "prepost") "Pre/Post" "Staff"}} sticker.
+          {{else}}
+            Other
+            <p>
+              {{vehicle.driving_other}}
+            </p>
+          {{/if}}
+        </dd>
+        <dt>Ranger Logo Decal</dt>
+        <dd>
+          {{#if (eq vehicle.ranger_logo "none")}}
+            None
+          {{else if vehicle.isRejected}}
+            Denied
+          {{else if (or (eq vehicle.ranger_logo "permanent-new") (eq vehicle.ranger_logo "permanent-existing") (eq vehicle.ranger_logo "event"))}}
+            {{#if vehicle.isApproved}}
+              Approved to use
+              {{#if (eq vehicle.ranger_logo "permanent-new")}}
+                a new permanent Ranger logo decal.
+              {{else if (eq vehicle.ranger_logo "permanent-existing")}}
+                your existing permanent Ranger logo decal.
+              {{else if (eq vehicle.ranger_logo "event")}}
+                an event only Ranger logo decal.
+              {{/if}}
+            {{else}}
+              Awaiting approval to use a Ranger logo decal.
+            {{/if}}
+          {{else}}
+            Uh oh, unknown logo type [{{vehicle.ranger_logo}}]
+          {{/if}}
+        </dd>
+        <dt>Fuel Chit</dt>
+        <dd>
+          {{#if (eq vehicle.fuel_chit "none")}}
+            None
+          {{else if vehicle.isRejected}}
+            Denied
+          {{else if (eq vehicle.fuel_chit "event")}}
+            {{#if vehicle.isApproved}}
+              Approved for an event fuel chit.
+            {{else}}
+              Awaiting approval for an event fuel chit.
+            {{/if}}
+          {{else if (eq vehicle.fuel_chit "single-use")}}
+            {{#if vehicle.isApproved}}
+              Approved for a single-use fuel chit.
+            {{else}}
+              Awaiting approval for a single-use fuel chit.
+            {{/if}}
+          {{/if}}
+        </dd>
+        <dt>Amber Light</dt>
+        <dd>
+          {{#if (eq vehicle.amber_light "none")}}
+            None
+          {{else if vehicle.isRejected}}
+            Denied
+          {{else if (or (eq vehicle.amber_light "department") (eq vehicle.amber_light "already-has"))}}
+            {{#if vehicle.isApproved}}
+              Approved to use
+              {{#if (eq vehicle.amber_light "department")}}
+                an amber light supplied by the Ranger department.
+              {{else}}
+                your personal amber light.
+              {{/if}}
+            {{else}}
+              Awaiting approval to use an amber light.
+            {{/if}}
+          {{else}}
+            Uh oh, unknown amber light type [{{vehicle.amber_light}}]
+          {{/if}}
+        </dd>
+      </dl>
+    {{/each}}
+  </:body>
+</UiSection>

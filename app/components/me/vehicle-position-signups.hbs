@@ -1,11 +1,10 @@
 <UiAlert @type="warning" @icon="hand-point-right">
-  You are currently ineligible to submit a {{@name}}, but you can take steps to become eligible.
+  While you are currently unable to submit a {{@name}}, you can take steps to become eligible.
 </UiAlert>
 <h6 class="fw-bold">Become eligible by signing up for a qualified shift</h6>
 <p>
-  To become eligible to submit a {{@name}}, you must first sign up for a shift of one of the following
-  qualified positions:
-</p>
+  To submit a {{@name}}, you must first sign up for one of the qualified positions listed below:
+ </p>
 <ul>
   {{#each @positions as |position|}}
     <li>{{position.title}}</li>
