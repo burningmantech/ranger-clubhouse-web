@@ -6,6 +6,10 @@
             @validator={{this.validations}}
             @onSubmit={{this.saveAction}}
             as |f|>
+      <p>
+        Please note, some document tag names are known explicitly by the Clubhouse and should not be changed.<br>
+        <b class="text-danger">Do not use spaces in the document tag name.</b>
+      </p>
       <FormRow>
         <f.text @name="tag"
                 @label="Document Tag"
@@ -22,7 +26,8 @@
         <f.editor @name="body"
                   @label="Document Text"
                   @cols={{80}}
-                  @rows={{4}}/>
+                  @rows={{20}}
+        />
       </FormRow>
       <f.submit @disabled={{this.editDocument.isSaving}} />
       <UiCancelButton @onClick={{this.cancelAction}} @disabled={{this.editDocument.isSaving}} />
@@ -36,8 +41,13 @@
         </div>
       {{/unless}}
     </ChForm>
-  {{else}}
+  {{/if}}
+
+  <div class={{if this.editDocument "d-none"}}>
     <h1>Clubhouse Documents</h1>
+    <p>
+      Please note, some document tag names are known explicitly by the Clubhouse and should not be changed.
+    </p>
     <p>
       Showing {{pluralize this.documents.length "document"}}
       <span class="ms-4">
@@ -80,5 +90,5 @@
       {{/each}}
       </tbody>
     </UiTable>
-  {{/if}}
+  </div>
 </main>
