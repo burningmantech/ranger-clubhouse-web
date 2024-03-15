@@ -5,7 +5,6 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {hourMinuteFormat} from "clubhouse/helpers/hour-minute-format";
 import dayjs from 'dayjs';
-import _ from 'lodash';
 
 const DEPARTMENT_CODE = '660';  // the Ranger department code
 
