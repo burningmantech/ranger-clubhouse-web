@@ -5,6 +5,7 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {hourMinuteFormat} from "clubhouse/helpers/hour-minute-format";
 import dayjs from 'dayjs';
+import _ from 'lodash';
 
 const DEPARTMENT_CODE = '660';  // the Ranger department code
 
@@ -49,6 +50,7 @@ const PAYROLL_CSV = [
 export default class OpsPayrollController extends ClubhouseController {
   @tracked datesForm;
   @tracked people;
+  @tracked peopleWithoutIds;
   @tracked reportWasRun;
   @tracked isSubmitting = false;
   @tracked positions;
@@ -121,7 +123,7 @@ export default class OpsPayrollController extends ClubhouseController {
     this.isSubmitting = true;
 
     try {
-      const {people} = await this.ajax.request('timesheet/payroll', {
+      const {people, people_without_ids} = await this.ajax.request('timesheet/payroll', {
         data: {
           start_time: model.start_time,
           end_time: model.end_time,
@@ -131,6 +133,7 @@ export default class OpsPayrollController extends ClubhouseController {
         }
       });
       this.people = people;
+      this.peopleWithoutIds = people_without_ids;
       this.reportWasRun = true;
       this.mealBreak = model.break_duration;
     } catch (response) {
@@ -195,10 +198,10 @@ export default class OpsPayrollController extends ClubhouseController {
    */
 
   @action
-  exportPayroll(adjustEntries) {
+  exportPayroll(adjustEntries, people) {
     const rows = [];
 
-    this.people.forEach((person) => {
+    people.forEach((person) => {
       person.shifts.forEach((entry) => {
         const adj = entry.meal_adjusted;
         if (adjustEntries) {

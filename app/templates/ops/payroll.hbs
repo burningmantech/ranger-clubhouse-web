@@ -52,15 +52,29 @@
   </ChForm>
 
   {{#if this.reportWasRun}}
+    {{#if this.peopleWithoutIds}}
+      <UiAlert @type="warning" @icon="exclamation-triangle">
+        {{pluralize this.peopleWithoutIds.length "person"}} found who worked without a Paycom ID:
+        <div class="mt-2 mb-4">
+          {{#each this.peopleWithoutIds as |person idx|}}
+            {{if idx ", "}}
+            <PersonLink @person={{person}} />
+          {{/each}}
+        </div>
+        <UiButton @onClick={{fn this.exportPayroll true this.peopleWithoutIds}} @size="sm" @type="secondary">
+          Export Payroll Without Ids
+        </UiButton>
+      </UiAlert>
+    {{/if}}
     {{#if this.people}}
       Showing {{pluralize this.entryCount "timesheet entry"}} for {{pluralize this.people.length "person"}}.
-      <UiButton @onClick={{fn this.exportPayroll true}} @size="sm">
+      <UiButton @onClick={{fn this.exportPayroll true this.people}} @size="sm">
         Export Payroll w/Meal Breaks
       </UiButton>
-      <UiButton @onClick={{fn this.exportPayroll false}} @size="sm">
+      <UiButton @onClick={{fn this.exportPayroll false this.people}} @size="sm" class="ms-3">
         Export Unadjusted Payroll
       </UiButton>
-      <UiButton @onClick={{this.exportTable}} @size="sm">
+      <UiButton @onClick={{this.exportTable}} @size="sm" class="ms-3">
         Export On Screen Table
       </UiButton>
       <UiTable class="mt-2">

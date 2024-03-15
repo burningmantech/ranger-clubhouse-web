@@ -27,10 +27,13 @@
                              @personInfoValidations={{this.personInfoValidations}}
                              @onSubmit={{this.onSubmit}}
   />
-  <Me::PiiCampInfoSection @person={{this.person}}
-                          @personInfoValidations={{this.personInfoValidations}}
-                          @onSubmit={{this.onSubmit}}
-  />
+
+  {{#unless  this.person.isPastProspective}}
+    <Me::PiiCampInfoSection @person={{this.person}}
+                            @personInfoValidations={{this.personInfoValidations}}
+                            @onSubmit={{this.onSubmit}}
+    />
+  {{/unless}}
 
   {{#unless (or this.person.isAuditor this.person.isPastProspective)}}
     <Me::PiiLanguagesSection @person={{this.person}}
