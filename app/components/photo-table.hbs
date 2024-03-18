@@ -36,9 +36,9 @@
       {{/unless}}
       <td>
         {{#if (eq photo.status "approved")}}
-          <b class="text-success">{{fa-icon "check"}} {{photo.status}}</b>
+          <b class="text-success">{{fa-icon "check" right=1}} {{photo.status}}</b>
         {{else if (eq photo.status "rejected")}}
-          <b class="text-danger">{{fa-icon "times"}} {{photo.status}}</b>
+          <b class="text-danger">{{fa-icon "times" right=1}} {{photo.status}}</b>
         {{else}}
           {{photo.status}}
         {{/if}}<br>

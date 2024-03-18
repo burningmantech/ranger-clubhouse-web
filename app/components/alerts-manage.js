@@ -9,7 +9,8 @@ import {isEmpty} from '@ember/utils';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 
-const PHONE_REGEXP = /^(?=(?:\D*\d){10,15}\D*$)\+?[0-9]{1,3}[\s-]?(?:\(0?[0-9]{1,5}\)|[0-9]{1,5})[-\s]?[0-9][\d\s-]{5,7}\s?(?:x[\d-]{0,4})?$/;
+const PHONE_REGEXP = /^\+?((?:9[679]|8[035789]|6[789]|5[90]|42|3[578]|2[1-689])|9[0-58]|8[1246]|6[0-6]|5[1-8]|4[013-9]|3[0-469]|2[70]|7|1?)(?:\W*\d){0,13}\d$/;
+
 
 class Phone {
   @tracked phone;
@@ -43,7 +44,6 @@ export default class AlertsManageComponent extends Component {
   @service session;
 
   @tracked isSubmitting = false;
-  @tracked isUpdatingNumbers = false;
 
   @tracked numbers = null;
 
@@ -189,7 +189,6 @@ export default class AlertsManageComponent extends Component {
   async saveNumbersAction(model) {
     if (model.is_same) {
       model.on_playa = model.off_playa;
-
       // Re-run the validation
       await model.validate();
     }
@@ -202,7 +201,7 @@ export default class AlertsManageComponent extends Component {
     const off_playa = model.off_playa;
     let on_playa = model.on_playa;
 
-    this.isUpdatingNumbers = true;
+    this.isSubmitting = true;
     try {
       const {numbers} = await this.ajax.request(`sms`, {
         method: 'POST',
@@ -228,7 +227,7 @@ export default class AlertsManageComponent extends Component {
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
-      this.isUpdatingNumbers = false;
+      this.isSubmitting = false;
     }
   }
 

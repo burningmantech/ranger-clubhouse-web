@@ -280,7 +280,7 @@
           {{/if}}
         </fieldset>
         <fieldset>
-          <legend>Administration Notes</legend>
+          <legend>Administration Notes (not shown to user)</legend>
           <TimesheetNotes @notes={{this.editEntry.admin_notes}} @showNoNotesMessage={{true}}  />
           {{#if this.canManageTimesheets}}
             <FormRow>
