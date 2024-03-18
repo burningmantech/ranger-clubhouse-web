@@ -29,9 +29,7 @@
         {{yield f to="edit"}}
         <div class="mt-4">
           <f.submit/>
-          <UiButton @onClick={{this.cancelEdit}} @type="secondary">
-            Cancel
-          </UiButton>
+          <UiCancelButton @onClick={{this.cancelEdit}} />
         </div>
       </ChForm>
     {{else}}

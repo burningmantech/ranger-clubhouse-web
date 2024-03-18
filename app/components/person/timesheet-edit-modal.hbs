@@ -43,7 +43,7 @@
       </fieldset>
       {{#if @canManageTimesheets}}
         <fieldset>
-          <legend>Administration Notes</legend>
+          <legend>Administration Notes (not shown to user)</legend>
           <TimesheetNotes @notes={{@entry.admin_notes}} @showNoNotesMessage={{true}} />
           <FormRow>
             <f.textarea @name="additional_admin_notes"

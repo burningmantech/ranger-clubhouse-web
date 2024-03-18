@@ -32,7 +32,7 @@
       </UiButton>
     {{/unless}}
     <UiButton @type="secondary" @onClick={{fn @onClose this.didSign}}>
-      Close
+      {{if this.didSign "Close" "Cancel"}}
     </UiButton>
     {{#if this.isSubmitting}}
       <LoadingIndicator/>

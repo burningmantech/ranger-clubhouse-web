@@ -190,11 +190,10 @@
                       @showCharCount={{true}}
           />
         </FormRow>
-        <b class="text-danger">The request will be denied if:</b><br>
-        {{fa-icon "ban" right=1}} You started late, yet are requesting the start time to updated to the scheduled shift
-        start. Credit is only given for the time you are on duty.<br>
+        <h6 class="text-danger fw-bold">The request will be denied if:</h6>
+        {{fa-icon "ban" right=1}} You are requesting credit for time you were not on duty due to a late start.<br>
         {{fa-icon "ban" right=1}} Not enough or incomplete information was provided.<br>
-        {{fa-icon "ban" right=1}} The requested changes cannot be confirmed by the shift partner(s) or the Shift Lead.
+        {{fa-icon "ban" right=1}} The requested changes cannot be confirmed by your shift partner(s) or the Shift Lead.
         Yes, we do check!<br>
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
