@@ -820,6 +820,10 @@ export const VEHICLE_REQUESTS = {
   name: 'Personal Vehicle Request Eligible',
   skipPeriod: AFTER_EVENT,
   check({milestones}) {
+    if (!milestones.motorpool_agreement_available) {
+      return {result: SKIP};
+    }
+
     if (!milestones.pvr_eligible && !milestones.pvr_potential) {
       return {result: SKIP};
     }
