@@ -121,10 +121,10 @@
   {{/if}}
 
   {{#if this.usingWAP}}
-    <TicketOverviewItem @icon="passport" @title="Work Access Pass (WAP) Claimed" @type="success">
+    <TicketOverviewItem @icon="passport" @title="Setup Access Pass (SAP) Claimed" @type="success">
       {{#if this.usingStaffCredential}}
         <p>
-          Your Staff Credential acts as your WAP. No additional document is required.
+          Your Staff Credential acts as your SAP. No additional document is required.
         </p>
       {{/if}}
 
@@ -146,26 +146,26 @@
         {{/if}}
         {{#unless this.usingStaffCredential}}
           <div class="mt-2">
-            The WAP will be emailed to you at <MailTo @to={{@person.email}} />.<br>
-            WAPs are emailed after the Ranger ticketing deadline closes and up to a week before the start of the event.
+            The SAP will be emailed to you at <MailTo @to={{@person.email}} />.<br>
+            SAPs are emailed after the Ranger ticketing deadline closes and up to a week before the start of the event.
           </div>
         {{/unless}}
       {{/if}}
     </TicketOverviewItem>
   {{else}}
-    <TicketOverviewItem @icon="ban" @title="No Work Access Pass (WAP)" @type="secondary">
+    <TicketOverviewItem @icon="ban" @title="No Setup Access Pass (SAP)" @type="secondary">
       {{#if (and this.haveStaffCredential this.allTicketsBanked)}}
-        You have a Staff Credential that has been banked. Staff Credentials also acts as a WAP. You will either need to
-        claim the Staff Credential, or email the Ranger Ticketing Team to request a separate WAP document.
+        You have a Staff Credential that has been banked. Staff Credentials also acts as a SAP. You will either need to
+        claim the Staff Credential, or email the Ranger Ticketing Team to request a separate SAP document.
       {{else}}
-        No WAP was claimed.
+        No SAP was claimed.
       {{/if}}
     </TicketOverviewItem>
   {{/if}}
   {{#if this.wapSOList}}
-    <TicketOverviewItem @icon="people-group" @title="WAPs For Significant Other Claimed" @type="secondary">
-      {{pluralize this.wapSOList.length "Significant Other WAP"}} will be emailed to you at
-      <MailTo @to={{@person.email}} /> as a PDF. The SO WAP PDF will have your name on it. The names of your SOs are stored
+    <TicketOverviewItem @icon="people-group" @title="SAPs For Significant Other Claimed" @type="secondary">
+      {{pluralize this.wapSOList.length "Significant Other SAP"}} will be emailed to you at
+      <MailTo @to={{@person.email}} /> as a PDF. The SO SAP PDF will have your name on it. The names of your SOs are stored
       elsewhere in the ticketing system.
       <br>
       <ul class="mt-2">
@@ -182,12 +182,12 @@
           </li>
         {{/each}}
       </ul>
-      SO WAPs are emailed after the ticketing deadline closes and up to a week before the start of the
+      SO SAPs are emailed after the ticketing deadline closes and up to a week before the start of the
       event.
     </TicketOverviewItem>
   {{else}}
-    <TicketOverviewItem @icon="ban" @title="No WAPs For Significant Others" @type="secondary">
-      You did not claim any WAPs for Significant Others.
+    <TicketOverviewItem @icon="ban" @title="No SAPs For Significant Others" @type="secondary">
+      You did not claim any SAPs for Significant Others.
     </TicketOverviewItem>
   {{/if}}
   {{#if (and @ticketPackage.provisionItems (not @ticketPackage.provisionsBanked))}}

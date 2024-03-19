@@ -28,16 +28,16 @@
   {{/if}}
   <p>
     {{#if @entry.wap_id}}
-      The WAP is through RAD-{{@entry.wap_id}} a {{@entry.wapTypeHuman}} status {{@entry.wap_status}}.
+      The SAP is through RAD-{{@entry.wap_id}} a {{@entry.wapTypeHuman}} status {{@entry.wap_status}}.
       {{#if @entry.wapSubmitted}}
         <br>
-        <b class="text-danger">WAP has been submitted for processing - WAP Date cannot be changed.</b>
+        <b class="text-danger">SAP has been submitted for processing - SAP Date cannot be changed.</b>
       {{else if @entry.wapBanked}}
         <br>
-        <span class="text-danger">The selected {{@entry.wapTypeHuman}} is banked. An additional WAP document may need to be issued.</span>
+        <span class="text-danger">The selected {{@entry.wapTypeHuman}} is banked. An additional SAP document may need to be issued.</span>
       {{/if}}
     {{else}}
-      <b class="text-danger">A WAP or Staff Credential could not be located - WAP Date cannot be changed.</b>
+      <b class="text-danger">A SAP or Staff Credential could not be located - SAP Date cannot be changed.</b>
     {{/if}}
   </p>
   <p>
@@ -93,7 +93,7 @@
       {{/if}}
     </f.select>
     <f.select @name="admission_date"
-              @label="WAP Date"
+              @label="SAP Date"
               @disabled={{@entry.wapDisabled}}
               @options={{@admissionDateOptions}}
               @fieldSize="sm"/>

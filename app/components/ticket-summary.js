@@ -113,12 +113,12 @@ export default class TicketSummaryComponent extends Component {
       }
 
       const text = lines.map((l) => `<div class="ms-1">${l}</div>`).join('');
-      claimed.push(htmlSafe(`A Work Access Pass for yourself<br>${text}`));
+      claimed.push(htmlSafe(`A Setup Access Pass for yourself<br>${text}`));
     }
 
     const {wapso} = pkg;
     if (wapso && wapso.find((w) => w.isClaimed)) {
-      let text = `${wapso.length} Work Access Pass${wapso.length > 1 ? 'es' : ''} for Significant Others`;
+      let text = `${wapso.length} Setup Access Pass${wapso.length > 1 ? 'es' : ''} for Significant Others`;
       claimed.push(htmlSafe(text));
     }
 
@@ -160,12 +160,12 @@ export default class TicketSummaryComponent extends Component {
 
     const wap = pkg.wap;
     if (!this.hasStaffCredential && (!wap || !wap.isClaimed)) {
-      unclaimed.push(`No Work Access Pass for yourself`);
+      unclaimed.push(`No Setup Access Pass for yourself`);
     }
 
     const wapso = pkg.wapso;
     if (!wapso || !wapso.length) {
-      unclaimed.push('No Work Access Passes for Significant Others');
+      unclaimed.push('No Setup Access Passes for Significant Others');
     }
 
     return unclaimed;

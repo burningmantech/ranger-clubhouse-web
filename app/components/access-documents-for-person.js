@@ -83,7 +83,7 @@ export default class AccessDocumentsForPersonComponent extends Component {
     } else {
       // Alert to someone having a staff credential AND WAP.
       if (doc.type === STAFF_CREDENTIAL && waps.length > 0) {
-        notes.push('SC+WAP');
+        notes.push('SC+SAP');
       }
 
       if (doc.status === CLAIMED || doc.status === BANKED || doc.status === SUBMITTED) {

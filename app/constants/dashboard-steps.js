@@ -765,7 +765,7 @@ function buildTickets(milestones, personId, house) {
 }
 
 export const TICKETING_OPEN = {
-  name: 'Claim Tickets, Vehicle Passes, and Work Access Passes',
+  name: 'Claim Tickets, Vehicle Passes, and Setup Access Passes',
   skipPeriod: AFTER_EVENT,
   check({milestones, person, house}) {
     const period = milestones.ticketing_period;

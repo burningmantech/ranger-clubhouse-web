@@ -1,17 +1,17 @@
 <div class="my-2">
   {{#if this.wapSOCount}}
     <b>
-      You are requesting {{pluralize this.wapSOCount "Work Access Pass"}} for your
+      You are requesting {{pluralize this.wapSOCount "Setup Access Pass"}} for your
       Significant {{if (eq this.wapSOCount 1) "Other" "Others"}}.
     </b>
   {{else}}
-    No Significant Other Work Access Passes have been requested, yet.
+    No Significant Other Setup Access Passes have been requested, yet.
   {{/if}}
 </div>
 
 <p>
-  You may request up to {{pluralize @ticketingInfo.wap_so_max "Significant Other Work Access Passs"}} below.
-  All Work Access passes are sent by email to your account as a PDF. The S.O. WAP PDF will have your name on it.
+  You may request up to {{pluralize @ticketingInfo.wap_so_max "Significant Other Setup Access Passs"}} below.
+  All Setup Access Passes are sent by email to your account as a PDF. The S.O. SAP PDF will have your name on it.
   The names of your SOs are stored elsewhere in the ticketing system.
 </p>
 
