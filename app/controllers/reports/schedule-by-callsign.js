@@ -8,6 +8,7 @@ export default class ReportsScheduleByCallsignController extends ClubhouseContro
 
   @tracked isExpanding = false;
   @tracked expandAll = false;
+  @tracked people;
 
   @cached
   get callsignScrollItems() {

@@ -35,7 +35,14 @@ export default class PersonPositionsComponent extends Component {
       } else {
         unassignedPositions.push(p);
       }
-    })
+    });
+
+    membership.management.forEach((m) => {
+      if (teamsById[m.id]) {
+        teamsById[m.id].is_manager = true;
+      }
+    });
+
 
     teams.sort((a, b) => a.title.localeCompare(b.title));
 
