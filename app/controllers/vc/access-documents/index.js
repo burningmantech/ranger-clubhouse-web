@@ -36,8 +36,8 @@ export default class VcAccessDocumentsIndexController extends ClubhouseControlle
       options: [
         ["Special Price Ticket", SPT],
         ["Staff Credential", STAFF_CREDENTIAL],
-        ["Work Access Pass", WAP],
-        ["S.O. Work Access Pass", WAPSO],
+        ["Setup Access Pass", WAP],
+        ["S.O. Setup Access Pass", WAPSO],
         ['Vehicle Pass', VEHICLE_PASS],
       ]
     },

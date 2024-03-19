@@ -27,8 +27,8 @@ const TRS_COLUMN = {
   [VEHICLE_PASS]: 'vp',   // VP is really a Gift VP since Rangers are not charged for it.
   [VEHICLE_PASS_GIFT]: 'vp',
   [VEHICLE_PASS_LSD]: 'lsd_vp',
-  [WAP]: 'wap',
-  [WAPSO]: 'wap'
+  [WAP]: 'sap',
+  [WAPSO]: 'sap'
 };
 
 const PAID_EXPORT_FORMAT = [
@@ -80,29 +80,29 @@ const UNPAID_EXPORT_FORMAT = [
   ['Shipping Address (Required if Mail Delivery type selected): Phone', 'not_used_phone'],
   //['Request: Gift Ticket', 'gift_ticket'],
   ['Request: Gift Vehicle Pass', 'vp'],
-  ['Request: STAFF WAP 8/6 &amp; Later', 'wap_0806'],
-  ['Request: STAFF WAP 8/7 &amp; Later', 'wap_0807'],
-  ['Request: STAFF WAP 8/8 &amp; Later', 'wap_0808'],
-  ['Request: STAFF WAP 8/9 &amp; Later', 'wap_0809'],
-  ['Request: STAFF WAP 8/10 &amp; Later', 'wap_0810'],
-  ['Request: STAFF WAP 8/11 &amp; Later', 'wap_0811'],
-  ['Request: STAFF WAP 8/12 &amp; Later', 'wap_0812'],
-  ['Request: STAFF WAP 8/13 &amp; Later', 'wap_0813'],
-  ['Request: STAFF WAP 8/14 &amp; Later', 'wap_0814'],
-  ['Request: STAFF WAP 8/15 &amp; Later', 'wap_0815'],
-  ['Request: STAFF WAP 8/16 &amp; Later', 'wap_0816'],
-  ['Request: STAFF WAP 8/17 &amp; Later', 'wap_0817'],
-  ['Request: STAFF WAP 8/18 &amp; Later', 'wap_0818'],
-  ['Request: STAFF WAP 8/19 &amp; Later', 'wap_0819'],
-  ['Request: STAFF WAP 8/20 &amp; Later', 'wap_0820'],
-  ['Request: STAFF WAP 8/21 &amp; Later', 'wap_0821'],
-  ['Request: STAFF WAP 8/22 &amp; Later', 'wap_0822'],
-  ['Request: STAFF WAP 8/23 &amp; Later', 'wap_0823'],
-  ['Request: STAFF WAP 8/24 &amp; Later', 'wap_0824'],
-  ['Request: STAFF WAP 8/25 &amp; Later', 'wap_0825'],
-  ['Request: STAFF WAP 8/26 &amp; Later', 'wap_0826'],
-  ['Request: STAFF WAP 8/5 &amp; Later', 'wap_0805'],
-  ['Request: STAFF WAP - Anytime', 'wap_anytime'],
+  ['Request: STAFF SAP 8/6 &amp; Later', 'sap_0806'],
+  ['Request: STAFF SAP 8/7 &amp; Later', 'sap_0807'],
+  ['Request: STAFF SAP 8/8 &amp; Later', 'sap_0808'],
+  ['Request: STAFF SAP 8/9 &amp; Later', 'sap_0809'],
+  ['Request: STAFF SAP 8/10 &amp; Later', 'sap_0810'],
+  ['Request: STAFF SAP 8/11 &amp; Later', 'sap_0811'],
+  ['Request: STAFF SAP 8/12 &amp; Later', 'sap_0812'],
+  ['Request: STAFF SAP 8/13 &amp; Later', 'sap_0813'],
+  ['Request: STAFF SAP 8/14 &amp; Later', 'sap_0814'],
+  ['Request: STAFF SAP 8/15 &amp; Later', 'sap_0815'],
+  ['Request: STAFF SAP 8/16 &amp; Later', 'sap_0816'],
+  ['Request: STAFF SAP 8/17 &amp; Later', 'sap_0817'],
+  ['Request: STAFF SAP 8/18 &amp; Later', 'sap_0818'],
+  ['Request: STAFF SAP 8/19 &amp; Later', 'sap_0819'],
+  ['Request: STAFF SAP 8/20 &amp; Later', 'sap_0820'],
+  ['Request: STAFF SAP 8/21 &amp; Later', 'sap_0821'],
+  ['Request: STAFF SAP 8/22 &amp; Later', 'sap_0822'],
+  ['Request: STAFF SAP 8/23 &amp; Later', 'sap_0823'],
+  ['Request: STAFF SAP 8/24 &amp; Later', 'sap_0824'],
+  ['Request: STAFF SAP 8/25 &amp; Later', 'sap_0825'],
+  ['Request: STAFF SAP 8/26 &amp; Later', 'sap_0826'],
+  ['Request: STAFF SAP 8/5 &amp; Later', 'sap_0805'],
+  ['Request: STAFF SAP - Anytime', 'sap_anytime'],
   // Yes, the dates are completely out of order for 2022.
   ['Request: Staff Credential Pickup 8/26 &amp; After', 'sc_0826'],
   ['Request: Staff Credential Pickup 8/25 &amp; After', 'sc_0825'],
@@ -203,13 +203,13 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         ]
     },
     {
-      groupName: 'Work Access Passes',
+      groupName: 'Setup Access Passes',
       options:
         [
-          ['WAP Ranger', WAP_RANGER],
-          ['WAP SO', WAPSO],
-          ['WAP PNV', WAP_PNV],
-          ['WAP All', WAP_ALL],
+          ['SAP Ranger', WAP_RANGER],
+          ['SAP SO', WAPSO],
+          ['SAP PNV', WAP_PNV],
+          ['SAP All', WAP_ALL],
         ]
     },
     {

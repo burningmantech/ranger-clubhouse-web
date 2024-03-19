@@ -16,7 +16,7 @@
   {{#if (or this.user.isRanger this.user.isPNV this.user.isNonRanger)}}
     <s.group @title="PRE-EVENT">
       {{#if this.user.isPNV}}
-        <s.link @route="me.tickets" @title="Work Access Pass" @icon="ticket-alt" @iconType="s"/>
+        <s.link @route="me.tickets" @title="Setup Access Pass" @icon="ticket-alt" @iconType="s"/>
       {{else}}
         <s.link @route="me.tickets" @title="Tickets & Stuff" @icon="ticket-alt" @iconType="s"/>
       {{/if}}

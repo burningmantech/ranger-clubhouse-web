@@ -2,7 +2,7 @@
   {{#if (or this.wap.isClaimed this.wap.isSubmitted)}}
     <p>
       <b>
-        You have claimed your Work Access Pass which allows you to enter the event
+        You have claimed your Setup Access Pass which allows you to enter the event
         {{#if this.wap.access_any_time}}
           at any time!
         {{else}}
@@ -26,29 +26,29 @@
     </p>
    {{else}}
     <p>
-      <b>You qualified for a Work Access Pass.</b>
+      <b>You qualified for a Setup Access Pass.</b>
     </p>
   {{/if}}
   {{#if this.wap.isSubmitted}}
-    <p>The Work Access Pass has been submitted to the Burning Man Ticket Request System.</p>
+    <p>The Setup Access Pass has been submitted to the Burning Man Ticket Request System.</p>
   {{else if this.wap.isQualified}}
     <p>
-      Do you wish to use your Work Access Pass?
+      Do you wish to use your Setup Access Pass?
     </p>
     <UiButton @type="primary" @class="btn-responsive"
               @onClick={{fn @setDocumentStatus this.wap "claimed"}}
               @disabled={{@isSavingDocumentStatus}}>
-      Claim Work Access Pass
+      Claim Setup Access Pass
       {{#if @isSavingDocumentStatus}}
         <SpinIcon/>
       {{/if}}
     </UiButton>
   {{else}}
-    <p>Do you no longer need the Work Access Pass?</p>
+    <p>Do you no longer need the Setup Access Pass?</p>
     <UiButton @type="primary"
               @class="btn-responsive"
               @onClick={{fn  @setDocumentStatus this.wap "qualified"}}  @disabled={{@isSavingDocumentStatus}}>
-      Release Work Access Pass
+      Release Setup Access Pass
       {{#if @isSavingDocumentStatus}}
         <SpinIcon/>
       {{/if}}
@@ -57,16 +57,16 @@
 {{else if (and this.isStaffCredentialBanked (not this.wap))}}
   <p>
     <b class="text-danger">
-      You do not have a Work Access Pass because you have banked your Staff Credential.
+      You do not have a Setup Access Pass because you have banked your Staff Credential.
     </b>
   </p>
   <p>
-    If you need a separate Work Access Pass for yourself and Significant Others, please contact
+    If you need a separate Setup Access Pass for yourself and Significant Others, please contact
     <MailTo @to={{@ticketingInfo.ranger_ticketing_email}} />
   </p>
 {{else if @ticket.isStaffCredential}}
   <p>
-    <b>Your Staff Credential acts as your Work Access Pass.</b>
+    <b>Your Staff Credential acts as your Setup Access Pass.</b>
   </p>
   {{#if @ticket.isClaimed}}
     {{#if @ticket.access_any_time}}
@@ -98,7 +98,7 @@
   <p>
     You have banked all your tickets. Contact the Ranger Ticketing Team
     <MailTo @to={{@ticketingInfo.ranger_ticketing_email}} />
-    if you intend to Ranger this event, not use your tickets, and require a WAP.
+    if you intend to Ranger this event, not use your tickets, and require a SAP.
   </p>
 {{else if this.noTicketsTouched}}
   <p>
@@ -108,8 +108,8 @@
 {{else}}
 {{! No WAP or Staff Credential}}
   <p class="text-danger">
-    <b>Uh oh, you do not have a Work Access Pass. Mostly likely this is a mistake.</b>
+    <b>Uh oh, you do not have a Setup Access Pass. Mostly likely this is a mistake.</b>
   </p>
-  All returning Rangers in good standing qualify for a Work Access Pass for arrival on Thursday @ 00:01.
+  All returning Rangers in good standing qualify for a Setup Access Pass for arrival on Thursday @ 00:01.
   Contact <MailTo @to={{@ticketingInfo.ranger_ticketing_email}} /> and let us know something is wrong.
 {{/if}}

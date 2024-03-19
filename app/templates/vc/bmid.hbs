@@ -101,7 +101,8 @@
   </p>
 
   <p>
-    <span class="d-inline-block">{{fa-icon "exclamation-circle" color="danger"}} = indicates person has not a claimed a ticket or WAP, nor signed up for an In-Person Training.</span>
+    <span class="d-inline-block">{{fa-icon "exclamation-circle" color="danger"}} = indicates person has not a claimed
+      a ticket or SAP, nor signed up for an In-Person Training.</span>
     <span class="d-inline-block">{{fa-icon "eye" color="danger"}} = person does not have an approved photo</span>
     <span class="d-inline-block"><EarnedProvisionIcon/> = is earned provision which will be used.</span>
     <span class="d-inline-block"><AllocatedProvisionIcon/> = is allocated provision which will be used.</span>
@@ -110,7 +111,7 @@
 
   {{#if this.hasUnqualifiedToPrint}}
     <UiAlert @type="warning" @icon="hand-point-right">
-      One or more BMIDs do not meet the printing qualifications (no ticket/WAP claimed, nor has an In-Person Training sign-up),
+      One or more BMIDs do not meet the printing qualifications (no ticket/SAP claimed, nor has an In-Person Training sign-up),
       and has the status "Prep".
     </UiAlert>
   {{/if}}
@@ -146,8 +147,8 @@
       <th>{{#if (eq this.sortColumn "meals")}}[Meals]{{else}}
         <a href {{action this.sortBmidsAction "meals"}}>Meals</a>{{/if}}
       </th>
-      <th class="w-10">{{#if (eq this.sortColumn "wap")}}[WAP]{{else}}
-        <a href {{action this.sortBmidsAction "wap"}}>WAP</a>{{/if}}</th>
+      <th class="w-10">{{#if (eq this.sortColumn "wap")}}[SAP]{{else}}
+        <a href {{action this.sortBmidsAction "wap"}}>SAP</a>{{/if}}</th>
       <th>{{#if (eq this.sortColumn "team")}}[Team]{{else}}
         <a href {{action this.sortBmidsAction "team"}}>Team</a>{{/if}}
       </th>
@@ -244,9 +245,9 @@
                               @disabled={{bmid.wapDisabled}} />
               {{#if bmid.wapDisabled}}
                 {{#if bmid.wapMissing}}
-                  <b class="text-danger">WAP missing</b>
+                  <b class="text-danger">SAP missing</b>
                 {{else}}
-                  <b class="text-danger">WAP submitted</b>
+                  <b class="text-danger">SAP submitted</b>
                 {{/if}}
               {{/if}}
             </td>

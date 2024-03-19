@@ -36,8 +36,8 @@ export const TypeLabels = {
   [VEHICLE_PASS]: 'Vehicle Pass',
   [VEHICLE_PASS_GIFT]: 'Gift Vehicle Pass',
   [VEHICLE_PASS_LSD]: 'LSD Vehicle Pass',
-  [WAPSO]: 'S.O. Work Access Pass',
-  [WAP]: 'Work Access Pass',
+  [WAPSO]: 'S.O. Setup Access Pass',
+  [WAP]: 'Setup Access Pass',
 };
 
 export const TypeShortLabels = {
