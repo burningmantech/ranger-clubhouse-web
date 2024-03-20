@@ -11,14 +11,27 @@ button.btn-timesheet:not(:last-child) {
   margin-right: 1vw;
 }
 
+.hq-todo-block {
+  background-color: $gray-200;
+  line-height: 1.5rem;
+  font-size: 12pt;
+  margin-bottom: 15px;
+  border: 1px rgb($gray-500, 0.5) solid;
+  padding: 15px;
+  position: sticky;
+  top: 0;
+  z-index: 1030;
+  box-shadow: 0 1px 5px 0 rgb(50 50 50 / 50%); //rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
 .hq-todo-blink {
   animation: todo-blinker 2s linear infinite;
-  color: #ff0000;
+  color: #850303;
 }
 
 @keyframes todo-blinker {
-   50% {
-     color: #ee7d7d;
-     opacity: 60%;
+  25% {
+    color: #ff0000;
+    opacity: 60%;
   }
 }

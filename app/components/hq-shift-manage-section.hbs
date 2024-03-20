@@ -1,0 +1,11 @@
+<UiSection id={{@id}} @isWarning={{@requireAction}}>
+  <:title>
+    {{#if @requireAction}}
+      {{fa-icon "arrow-right" right=2}}
+    {{/if}}
+    {{yield to="title"}}
+  </:title>
+  <:body>
+    {{yield to="body"}}
+  </:body>
+</UiSection>

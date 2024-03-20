@@ -5,7 +5,6 @@ import {service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';
 
 export default class HqTimesheetVerificationComponent extends Component {
-
   @service ajax;
   @service house;
   @service toast;
@@ -38,9 +37,7 @@ export default class HqTimesheetVerificationComponent extends Component {
     try {
       await entry.save();
       this.toast.success(`Timesheet was successfully ${isVerified ? 'un-verified' : 'marked as verified'}.`);
-      if (!this.hasUnreviewedTimesheet) {
-        this.args.completeTodo(HQ_TODO_VERIFY_TIMESHEET);
-      }
+      this._finishedCallbacks();
     } catch (response) {
       this.house.handleErrorResponse(response);
     }
@@ -67,10 +64,7 @@ export default class HqTimesheetVerificationComponent extends Component {
   @action
   ignoreEntry(entry) {
     entry.isIgnoring = true;
-
-    if (!this.hasUnreviewedTimesheet) {
-      this.args.completeTodo(HQ_TODO_VERIFY_TIMESHEET);
-    }
+    this._finishedCallbacks();
   }
 
 
@@ -103,11 +97,17 @@ export default class HqTimesheetVerificationComponent extends Component {
       this.entry.additional_notes = null; // pseudo field, not cleared on save
       this.showCorrectionForm = false;
       this.toast.success('Correction request successfully submitted.');
-      if (!this.hasUnreviewedTimesheet) {
-        this.args.completeTodo(HQ_TODO_VERIFY_TIMESHEET);
-      }
+      this._finishedCallbacks();
     } catch (response) {
       this.house.handleErrorResponse(response)
     }
+  }
+
+  _finishedCallbacks() {
+    if (this.hasUnreviewedTimesheet) {
+      return;
+    }
+    this.args.completeTodo(HQ_TODO_VERIFY_TIMESHEET);
+    this.args.onFinished?.();
   }
 }

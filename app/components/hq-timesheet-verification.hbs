@@ -1,56 +1,56 @@
 {{#if this.hasUnreviewedTimesheet}}
   <UiNotice @title="Timesheet Entry Review Needed" @icon="hand-point-right" @type="danger">
-    <p>
-      Before any shift can be started, or when a shift is ended, all timesheet entries must be reviewed.
-    </p>
+    Before any shift can be started, or when a shift is ended, all timesheet entries must be reviewed.
     The exception is during a very busy time such as the Burn Night check-in, the review can skipped by using
     the <i>Skip Review</i> button.
   </UiNotice>
 {{else}}
-  <UiNotice @title="No timesheet entries require review" @icon="thumbs-up" @type="success">
-    <p>
-      All timesheet entries have been reviewed. No action is required at this time.
-    </p>
-    If a timesheet entry requires correction, use the 'Timesheet / Corrections' link in the sidebar, and then
-    locate the entry or entries to submit a correction for.
-  </UiNotice>
+  <p>
+    If a timesheet entry requires correction, click on <LinkTo @route="hq.timesheet" @model={{this.person.id}}>Timesheet / Corrections</LinkTo>.
+  </p>
 {{/if}}
 {{#if @unverifiedTimesheets}}
-  <UiTable>
+  <UiTable @normalSize={{true}}>
     <thead>
     <tr>
-      <th>Time / Position</th>
-      <th class="text-end">Duration / Credits</th>
-      <th>Action</th>
-      <th class="w-5">&nbsp;</th>
+      <th>Time</th>
+      <th>Position</th>
+      <th class="text-end">Duration</th>
+      <th class="text-end">Credits</th>
     </tr>
     </thead>
     <tbody>
     {{#each @unverifiedTimesheets as |entry|}}
       <tr>
-        <td class="align-middle">
-          {{shift-format entry.on_duty entry.off_duty}}<br>
+        <td>
+          {{shift-format entry.on_duty entry.off_duty}}
+        </td>
+        <td>
           {{entry.position.title}}
         </td>
-        <td class="text-end align-middle">
-          {{hour-minute-words entry.duration}}<br>
+        <td class="text-end">
+          {{hour-minute-words entry.duration}}
+        </td>
+        <td class="text-end">
           {{credits-format entry.credits}} credits
         </td>
-        <td class="align-middle">
+      </tr>
+      <tr>
+        <td colspan="4">
           {{#if entry.isVerified}}
-            <span class="text-success">
-              {{fa-icon "check"}} Entry has been marked as correct.
-            </span>
+            <div class="text-success">
+              {{fa-icon "check" fixed=1 right=1}} Entry has been marked as correct.
+            </div>
           {{else if entry.isPending}}
-            <span class="text-danger">
-              {{fa-icon "hourglass"}} A correction request submitted.
-            </span>
+            <div class="text-danger">
+              {{fa-icon "hourglass" fixed=1 right=1}} A correction request submitted.
+            </div>
           {{else if entry.isIgnoring}}
-            Entry will be reviewed at a later time.
+            {{fa-icon "clock" type="r" fixed=1 right=1}} Entry will be reviewed at a later time.
           {{else}}
-            <span class="text-danger">
-              Entry requires review.
-            </span>
+            <div class="text-danger">
+              {{fa-icon "arrow-right" fixed=1 right=1}} Entry requires review.
+            </div>
           {{/if}}
           <div class=" d-flex justify-between align-items-center mt-1">
             <UiButton @type="success" @class="btn-timesheet"
@@ -80,14 +80,12 @@
                 {{fa-icon "check"}}
               {{/if}}
             </UiButton>
+            {{#if entry.isSaving}}
+              <SpinIcon/>
+            {{else}}
+              &nbsp;
+            {{/if}}
           </div>
-        </td>
-        <td class="w-5">
-          {{#if entry.isSaving}}
-            <SpinIcon/>
-          {{else}}
-            &nbsp;
-          {{/if}}
         </td>
       </tr>
     {{/each}}

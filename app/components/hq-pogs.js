@@ -128,12 +128,12 @@ export default class HqPogsComponent extends Component {
       case POG_HALF_MEAL:
       case POG_MEAL:
         if (this.hasMealPass) {
-          warnings.push(`${callsign} has a BMID Meal Pass for the current event period.`);
+          warnings.push(`${callsign} has a BMID Meal Pass for the current event period. No meal pog should be issued.`);
         }
         break;
       case POG_SHOWER:
         if (this.args.showers) {
-          warnings.push(`${callsign} already has a BMID with Wet Spot access.`);
+          warnings.push(`${callsign} already has a BMID with Wet Spot access. No shower pog should be issued`);
         }
         break;
     }

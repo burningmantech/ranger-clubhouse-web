@@ -11,6 +11,7 @@ import {
   HqTodoTask
 } from "clubhouse/constants/hq-todo";
 import {TYPE_RADIO} from "clubhouse/models/asset";
+import { schedule } from '@ember/runloop';
 
 export default class HqShiftController extends ClubhouseController {
   @tracked isMarkingOffSite = false;
@@ -26,9 +27,10 @@ export default class HqShiftController extends ClubhouseController {
 
   @tracked endedShiftEntry = null;
 
-  @tracked firstTab;
-
   @tracked askIfDone;
+
+  @tracked showUnsubmittedBarcodeDialog = false;
+  @tracked unsubmittedBarcode = '';
 
   correctionValidations = {
     additional_notes: [validatePresence(true)]
@@ -90,6 +92,7 @@ export default class HqShiftController extends ClubhouseController {
     if (asset.type === TYPE_RADIO) {
       this.completeTodo(HQ_TODO_ISSUE_RADIO);
     }
+    this.unsubmittedBarcode = '';
   }
 
   /**
@@ -124,12 +127,11 @@ export default class HqShiftController extends ClubhouseController {
   }
 
   get collectEventRadiosAtShiftEnd() {
-    let count = this.eventRadios;
-    if (count >= this.eventInfo.radio_max) {
-      count -= this.eventInfo.radio_max;
+    if ( this.eventRadios > this.eventInfo.radio_max) {
+      return this.eventRadios - this.eventInfo.radio_max;
+    } else {
+      return 0;
     }
-
-    return count;
   }
 
   /**
@@ -192,22 +194,28 @@ export default class HqShiftController extends ClubhouseController {
 
   @action
   async startShiftNotify() {
-    this.completeTodo(HQ_TODO_START_SHIFT);
-
-    if (this.askIfDone) {
-      this.askIfDone.ignore = true;
-    }
 
     try {
       await this.timesheets.update();
+      this.completeTodo(HQ_TODO_START_SHIFT);
       this._findOnDuty();
+      if (this.askIfDone) {
+        this.askIfDone.ignore = true;
+      }
       if (this.onDutyEntry?.position_id === BURN_PERIMETER) {
         this.removeTodo(HQ_TODO_ISSUE_RADIO);
         this.addTodo(HQ_TODO_NO_RADIO, true);
+      } else {
+        this._scrollToAssets();
       }
     } catch (response) {
       this.house.handleErrorResponse(response);
     }
+  }
+
+  _scrollToAssets() {
+    this.house.scrollToAccordion('assets');
+    schedule('afterRender', () => document.querySelector('#checkout-barcode')?.focus());
   }
 
   /**
@@ -397,16 +405,21 @@ export default class HqShiftController extends ClubhouseController {
   }
 
   @action
-  checkAssetCheckout(activeTabId, wantTabId, navigate) {
-    if (activeTabId === 'assets' && this.assetCallback) {
-      this.assetCallback(navigate);
-    } else {
-      navigate();
+  afterShiftReview() {
+    if (this.endedShiftEntry) {
+      this.house.scrollToAccordion('assets', 'todo-list');
+      this.house.openAccordion('pogs');
     }
   }
 
   @action
-  registerAssetCallback(callback) {
-    this.assetCallback = callback;
+  updateBarocde(name, value) {
+    this.unsubmittedBarcode = value?.trim();
+  }
+
+  @action
+  closeUnsubmittedBarcodeDialog() {
+    this.showUnsubmittedBarcodeDialog = false;
+    this._scrollToAssets();
   }
 }

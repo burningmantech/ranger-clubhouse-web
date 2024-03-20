@@ -1,20 +1,11 @@
-{{#if this.isShinyPenny}}
-  <UiNotice @type="success"
-            @icon="smile-beam"
-            @iconType="fa-regular"
-            @title="{{this.person.callsign}} is a Shiny Penny">
-    Share some Ranger love and welcome them to the family.
-  </UiNotice>
-{{/if}}
-
 {{#unless this.person.on_site}}
-  <UiNotice @type="danger"
+  <UiNotice @type="warning"
             @icon="hand-point-right"
             @title="{{this.person.callsign}} is marked as OFF SITE">
     <p>
       Follow the procedures on the Site Check In page before signing the person into a shift.
     </p>
-    <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-danger">Begin Site Check In</LinkTo>
+    <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-secondary">Begin Site Check In</LinkTo>
   </UiNotice>
 {{/unless}}
 
@@ -23,217 +14,234 @@
     <p>
       {{this.person.callsign}} has {{pluralize this.person.unread_message_count "unread Clubhouse message"}}.
     </p>
-    <LinkTo @route="hq.messages" class="btn btn-success">Read Message(s)</LinkTo>
+    <LinkTo @route="hq.messages" class="btn btn-secondary">Read Message(s)</LinkTo>
   </UiNotice>
 {{/if}}
 
-{{#if this.scheduleRecommendations.burn_weekend_shift}}
-  <UiNotice @title="Suggest Working A Burn Weekend Shift" @icon="fire-burner" @type="secondary">
-    {{this.person.callsign}} is not signed up for a Burn Weekend shift. Ask if they are interested in signing up for
-    one.
-  </UiNotice>
-{{/if}}
 
-{{#if this.todos}}
-  <div class="lh-lg mb-2 fs-4">
-    {{#if this.todoCount}}
+<div id="todo-list" class="hq-todo-block">
+  {{#if this.isShinyPenny}}
+    <div class="mb-2">
+      <span class="fw-semibold text-success">
+        {{fa-icon "smile-beam" type="r" right=2}}{{this.person.callsign}} is a Shiny Penny.</span>
+      Show some Ranger love and welcome them to the department!
+    </div>
+  {{/if}}
+  {{#if this.scheduleRecommendations.burn_weekend_shift}}
+    <div class="mb-2">
+      {{fa-icon "hand-point-right" right=1}} Ask {{this.person.callsign}} if they are interested in working a
+      Burn Weekend shift.
+    </div>
+  {{/if}}
+
+  <div class="d-flex justify-content-start">
+    <div class="flex-shrink-0 me-4 {{unless this.todoCount "text-success"}}">
       {{pluralize this.todoCount "suggested task"}}:
-    {{else}}
-      <div class="text-success">
-        All suggested tasks have been completed.
-      </div>
-    {{/if}}
-    <div class="d-flex justify-content-start flex-wrap">
+    </div>
+    <div class="d-flex justify-content-start flex-wrap flex-shrink-1">
       {{#if this.todos}}
         {{#each this.todos as |todo|}}
           <HqTodoTask @todo={{todo}} />
         {{/each}}
       {{/if}}
     </div>
-    {{#if this.askIfDone}}
-      <HqTodoTask @todo={{this.askIfDone}} />
+  </div>
+  {{#if this.askIfDone}}
+    <HqTodoTask @todo={{this.askIfDone}} />
+  {{/if}}
+  {{#if this.onDutyEntry}}
+    <div class="mt-2 fw-semibold">
+      {{fa-icon "person-walking" right=2}} {{this.person.callsign}} is signed into {{this.onDutyEntry.position.title}}.
+    </div>
+  {{/if}}
+  {{#unless this.todoCount}}
+    <div class="text-success fs-5 mt-2">
+      {{fa-icon "check" right=1}} All suggested tasks have been completed.
+    </div>
+  {{/unless}}
+</div>
+
+<HqShiftManageSection @id="shift-manage" @requireAction={{this.onDutyEntry}}>
+  <:title>
+    {{#if this.onDutyEntry}}
+      End The Shift
+    {{else}}
+      Start A Shift
     {{/if}}
-  </div>
-{{/if}}
+  </:title>
+  <:body>
+    <HqTimesheetVerification @unverifiedTimesheets={{this.unverifiedTimesheets}}
+                             @completeTodo={{this.completeTodo}}
+                             @onFinished={{this.afterShiftReview}}
+    />
+    <ShiftCheckInOut @positions={{this.positions}}
+                     @timesheets={{this.timesheets}}
+                     @person={{this.person}}
+                     @upcomingSlots={{this.upcomingSlots}}
+                     @hasUnreviewedTimesheet={{this.hasUnreviewedTimesheet}}
+                     @startShiftNotify={{this.startShiftNotify}}
+                     @endShiftNotify={{this.endShiftNotify}}
+                     @onDutyEntry={{this.onDutyEntry}}
+                     @eventInfo={{this.eventInfo}}
+                     @year={{this.session.currentYear}}
+    />
+  </:body>
+</HqShiftManageSection>
 
-<UiTab @customTabs={{true}} @activeId={{this.firstTab}}  @checkTabNavigation={{this.checkAssetCheckout}} as |tab|>
-  <UiTabCustomNav @tab={{tab}} as |nav|>
-    <nav.item @paneId="timesheet-verification" @icon="list">
-      <div>
-        Timesheet Review
-        {{#if this.unreviewedTimesheetCount}}
-          <div class="text-danger">
-            ({{pluralize this.unreviewedTimesheetCount "entry"}})
-          </div>
-        {{else}}
-          <div class="text-muted">(not needed yet)</div>
+<HqShiftManageSection @id="assets" @requireAction={{this.collectRadioCount}}>
+  <:title>
+    Radios &amp; Gear
+    {{#if this.collectRadioCount}}
+      - Collect {{pluralize this.collectRadioCount "radio"}}
+    {{/if}}
+  </:title>
+  <:body>
+    {{#unless this.personEvent.asset_authorized}}
+      <UiAlert @type="danger" @title="Radio Agreement Not Signed" @icon="ban">
+        <p>
+          The Radio Checkout Agreement has not been signed. {{this.person.callsign}} may not receive
+          radios or other gear until this is resolved. Direct {{this.person.callsign}} to the kiosk
+          shack, so they can log in into the Clubhouse, review, and sign the agreement.
+        </p>
+      </UiAlert>
+    {{/unless}}
+
+    {{#if this.mayNotNeedRadio}}
+      <UiAlert @type="warning" @title="Radio May Not Be Required" @icon="hand">
+        {{this.person.callsign}} is working a Burn Perimeter shift and may not need a radio.
+        Check with the HQ Short or Lead if in doubt.
+      </UiAlert>
+    {{/if}}
+
+    {{#if (or this.shiftRadios this.collectEventRadiosAtShiftEnd this.collectEventRadios)}}
+      <ul>
+        {{#if this.shiftRadios}}
+          <li>
+            Collect {{pluralize this.shiftRadios "shift radio"}} at the end of the shift.
+          </li>
         {{/if}}
+        {{#if this.collectEventRadiosAtShiftEnd}}
+          <li>
+            Collect {{pluralize this.collectEventRadiosAtShiftEnd "event radio"}} at the end of the shift.
+          </li>
+        {{/if}}
+      {{#if this.collectEventRadios}}
+        <li>
+          Collect {{pluralize this.collectEventRadios "event radio"}} when person is finished working the event.
+        </li>
+      {{/if}}
+        </ul>
+    {{/if}}
+
+    <div class="mb-3">
+      {{#if this.eventInfo.radio_eligible}}
+        {{this.person.callsign}} is authorized for <span class="fw-semibold">{{pluralize this.eventInfo.radio_max "event radio"}}</span>.
+      {{else}}
+        {{this.person.callsign}} is only authorized for <span class="fw-semibold">SHIFT RADIOS.</span>
+      {{/if}}
+    </div>
+
+    {{#if this.personEvent.asset_authorized}}
+      <AssetCheckoutForm @person={{this.person}}
+                         @assets={{this.assets}}
+                         @attachments={{this.attachments}}
+                         @eventInfo={{this.eventInfo}}
+                         @onCheckOut={{this.onAssetCheckOut}}
+                         @noAutoFocus={{true}}
+                         @onBarcodeChange={{this.updateBarocde}}
+      />
+    {{/if}}
+    <HqAssetTable @assetsCheckedOut={{this.assetsCheckedOut}}
+                  @attachments={{this.attachments}}
+                  @onCheckIn={{this.onAssetCheckIn}}
+    />
+    {{#if this.assets.isUpdating}}
+      <LoadingIndicator @text="Refreshing Assets"/>
+    {{/if}}
+  </:body>
+</HqShiftManageSection>
+
+<HqShiftManageSection @id="pogs" @requireAction={{if this.endedShiftEntry true false}}>
+  <:title>Meals &amp; Showers</:title>
+  <:body>
+    <HqPogs @person={{this.person}}
+            @onDutyEntry={{this.onDutyEntry}}
+            @endedShiftEntry={{this.endedShiftEntry}}
+            @period={{this.eventInfo.event_period}}
+            @eventPeriods={{this.eventPeriods}}
+            @showers={{this.eventInfo.showers}}
+            @onPogIssue={{this.onPogIssue}}
+    />
+    <HqProvisionInfo @person={{this.person}}
+                     @period={{this.eventInfo.event_period}}
+                     @eventPeriods={{this.eventPeriods}}
+                     @meals={{this.eventInfo.meals}}
+                     @showers={{this.eventInfo.showers}}
+                     @onDutyEntry={{this.onDutyEntry}} />
+  </:body>
+</HqShiftManageSection>
+
+<HqShiftManageSection @id="offsite">
+  <:title>
+    Mark Off Site
+  </:title>
+  <:body>
+    {{#if this.person.on_site}}
+      {{#if this.pendingItems}}
+        <UiNotice @icon="hand" @type="danger" @title="Pending Item(s)">
+          {{pluralize this.pendingItems "item"}} still needs to be dealt with before marking
+          this person off site:
+          <ul class="mt-2 mb-2">
+            {{#unless this.isOffDuty}}
+              <li>
+                {{this.person.callsign}} is still on duty.
+              </li>
+            {{/unless}}
+            {{#if this.assetsCheckedOut}}
+              <li>
+                {{pluralize this.assetsCheckedOut.length "asset"}} (radios, gear, etc.) not collected.
+              </li>
+            {{/if}}
+            {{#if this.unverifiedTimesheets}}
+              <li>{{pluralize this.unverifiedTimesheets.length "timesheet entry"}} not reviewed.</li>
+            {{/if}}
+          </ul>
+          You may choose to ignore this warning and proceed to mark this person off site. However, you
+          really should take care of the items listed above.
+        </UiNotice>
+      {{else}}
+        <p class="text-success">
+          {{this.person.callsign}} has no outstanding items and is cleared to be marked off-site.
+        </p>
+      {{/if}}
+      <UiButton @type="secondary" @onClick={{this.markOffSite}} @disabled={{this.isMarkingOffSite}}>
+        Mark As Off Site
+      </UiButton>
+      {{#if this.isMarkingOffSite}}
+        <SpinIcon/>
+      {{/if}}
+    {{else}}
+      <div class="alert alert-danger">
+        {{this.person.callsign}} is off site.
       </div>
-    </nav.item>
-    <nav.item @paneId="shift-manage" @icon="person-walking">
-      {{#if this.onDutyEntry}}
-        End The Shift
-      {{else}}
-        Start A Shift
-      {{/if}}
-    </nav.item>
-    <nav.item @paneId="assets" @icon="tower-broadcast">
-      Radios &amp; Gear
-    </nav.item>
-    <nav.item @paneId="pogs" @icon="utensils">
-      Pogs
-    </nav.item>
-    <nav.item @paneId="offsite" @icon="house">
-      Mark Off Site
-    </nav.item>
-  </UiTabCustomNav>
-  <div class="tab-content">
-    <tab.pane @id="timesheet-verification" @title="Timesheet Verification">
-      <HqTimesheetVerification @unverifiedTimesheets={{this.unverifiedTimesheets}}
-                               @completeTodo={{this.completeTodo}}
-      />
-    </tab.pane>
-    <tab.pane @id="shift-manage" @title={{if this.onDutyEntry "End Shift" "Start Shift"}}>
-      {{#if this.endedShiftEntry}}
-        <HqTimesheetVerification @unverifiedTimesheets={{this.unverifiedTimesheets}}
-                                 @completeTodo={{this.completeTodo}}
-        />
-      {{/if}}
-      <ShiftCheckInOut @positions={{this.positions}}
-                       @timesheets={{this.timesheets}}
-                       @person={{this.person}}
-                       @upcomingSlots={{this.upcomingSlots}}
-                       @hasUnreviewedTimesheet={{this.hasUnreviewedTimesheet}}
-                       @startShiftNotify={{this.startShiftNotify}}
-                       @endShiftNotify={{this.endShiftNotify}}
-                       @onDutyEntry={{this.onDutyEntry}}
-                       @eventInfo={{this.eventInfo}}
-                       @year={{this.session.currentYear}}
-      />
-    </tab.pane>
+    {{/if}}
+  </:body>
+</HqShiftManageSection>
 
-    <tab.pane @id="assets" @title="Radios, Gear & Assets">
-      {{#if (eq tab.activeId "assets")}}
-        {{#unless this.personEvent.asset_authorized}}
-          <UiNotice @title="Do Not Issue Radios or Gear" @type="danger" @icon="ban">
-            The Radio Checkout Agreement has not been signed. Direct {{this.person.callsign}} to the kiosk
-            shack, so they can log in into the Clubhouse, review, and sign the agreement.
-          </UiNotice>
-        {{/unless}}
-        {{#if this.collectRadioCount}}
-          <div class="alert alert-warning">
-            {{#if this.shiftRadios}}
-              Collect {{pluralize this.shiftRadios "shift radio"}} at the end of the shift.<br>
-            {{/if}}
-            {{#if this.collectEventRadiosAtShiftEnd}}
-              Collect {{pluralize this.collectEventRadiosAtShiftEnd "event radio"}} at the end of the shift.
-            {{/if}}
-          </div>
-        {{/if}}
-        {{#if this.collectEventRadios}}
-          <div class="alert alert-secondary">
-            {{pluralize this.collectEventRadios "event radio"}} is checked out.
-            Collect the radio(s) after their very last shift of the event.
-          </div>
-        {{/if}}
+{{#if this.showUnsubmittedBarcodeDialog}}
+  <ModalDialog @onEscape={{this.closeUnsubmittedBarcodeDialog}} as |Modal|>
+    <Modal.title>
+      Un-submitted Barcode
+    </Modal.title>
+    <Modal.body>
+      You entered a barcode number, yet it was not checked out. Either check out the asset, or clear the field
+      before attempting to navigate to another Clubhouse page.
+    </Modal.body>
+    <Modal.footer>
+      <UiButton @onClick={{this.closeUnsubmittedBarcodeDialog}}>
+        Close
+      </UiButton>
+    </Modal.footer>
+  </ModalDialog>
 
-        <div class="mb-2">
-          {{#if this.eventInfo.radio_eligible}}
-            <p>
-              {{this.person.callsign}} is authorized for {{pluralize this.eventInfo.radio_max "event radio"}}.
-            </p>
-          {{else}}
-            {{#if this.mayNotNeedRadio}}
-              <UiNotice @icon="hand-point-right" @type="secondary" @title="May not need radio">
-                {{this.person.callsign}} is working a Burn Perimeter shift and may not need a radio.
-                Check with the HQ Short or Lead if in doubt.
-              </UiNotice>
-            {{/if}}
-            {{this.person.callsign}} is only authorized for SHIFT RADIOS.
-          {{/if}}
-        </div>
-
-        {{#if this.personEvent.asset_authorized}}
-          <AssetCheckoutForm @person={{this.person}}
-                             @assets={{this.assets}}
-                             @attachments={{this.attachments}}
-                             @eventInfo={{this.eventInfo}}
-                             @onCheckOut={{this.onAssetCheckOut}}
-                             @registerCallback={{this.registerAssetCallback}}
-          />
-        {{/if}}
-
-        <HqAssetTable @assetsCheckedOut={{this.assetsCheckedOut}}
-                      @attachments={{this.attachments}}
-                      @onCheckIn={{this.onAssetCheckIn}}
-        />
-
-        <div>
-          {{#if this.assets.isUpdating}}
-            <LoadingIndicator @text="Refreshing Assets"/>
-          {{/if}}
-        </div>
-      {{/if}}
-    </tab.pane>
-
-    <tab.pane @id="pogs">
-      <HqPogs @person={{this.person}}
-              @onDutyEntry={{this.onDutyEntry}}
-              @endedShiftEntry={{this.endedShiftEntry}}
-              @period={{this.eventInfo.event_period}}
-              @eventPeriods={{this.eventPeriods}}
-              @showers={{this.eventInfo.showers}}
-              @onPogIssue={{this.onPogIssue}}
-      />
-      <HqProvisionInfo @person={{this.person}}
-                       @period={{this.eventInfo.event_period}}
-                       @eventPeriods={{this.eventPeriods}}
-                       @meals={{this.eventInfo.meals}}
-                       @showers={{this.eventInfo.showers}}
-                       @onDutyEntry={{this.onDutyEntry}} />
-    </tab.pane>
-
-    <tab.pane @id="offsite">
-      {{#if this.person.on_site}}
-        {{#if this.pendingItems}}
-          <UiNotice @icon="hand" @type="danger" @title="Pending Item(s)">
-            {{pluralize this.pendingItems "item"}} still needs to be dealt with before marking
-            this person off site:
-            <ul class="mt-2 mb-2">
-              {{#unless this.isOffDuty}}
-                <li>
-                  {{this.person.callsign}} is still on duty.
-                </li>
-              {{/unless}}
-              {{#if this.assetsCheckedOut}}
-                <li>{{pluralize this.assetsCheckedOut.length "asset"}} (radios, gear, etc.) not
-                  collected.
-                </li>
-              {{/if}}
-              {{#if this.unverifiedTimesheets}}
-                <li>{{pluralize this.unverifiedTimesheets.length "timesheet entry"}} not reviewed.</li>
-              {{/if}}
-            </ul>
-            You may choose to ignore this warning and proceed to mark this person off site. However, you
-            really should
-            take care of the items listed above.
-          </UiNotice>
-        {{else}}
-          <p class="text-success">
-            {{this.person.callsign}} has no outstanding items and is cleared to be marked off-site.
-          </p>
-        {{/if}}
-        <UiButton @type="secondary" @onClick={{this.markOffSite}} @disabled={{this.isMarkingOffSite}}>
-          Mark As Off Site
-        </UiButton>
-        {{#if this.isMarkingOffSite}}
-          <SpinIcon/>
-        {{/if}}
-      {{else}}
-        <div class="alert alert-danger">
-          {{this.person.callsign}} is off site.
-        </div>
-      {{/if}}
-    </tab.pane>
-  </div>
-</UiTab>
+{{/if}}
