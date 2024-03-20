@@ -9,8 +9,31 @@ import {
   HQ_TODO_DELIVERY_MESSAGE,
   HqTodoTask, HQ_TODO_OFF_SITE,
 } from "clubhouse/constants/hq-todo";
+import {isEmpty} from "lodash";
 
 export default class HqShiftRoute extends ClubhouseRoute {
+  constructor() {
+    super(...arguments);
+
+    this.router.on('routeWillChange', (transition) => {
+      const controller = this.controllerFor('hq.shift');
+
+      if (!transition.from?.find(route => route.name === this.routeName)) {
+        return;
+      }
+
+      if (isEmpty(controller.unsubmittedBarcode)) {
+        return;
+      }
+
+      if (!controller.showUnsubmittedBarcodeDialog) {
+        // May see multiple route transitions, only abort once.
+        controller.showUnsubmittedBarcodeDialog = true;
+        transition.abort();
+      }
+    });
+  }
+
   model() {
     const person_id = this.modelFor('hq').person.id;
     const year = this.house.currentYear();
@@ -26,8 +49,8 @@ export default class HqShiftRoute extends ClubhouseRoute {
     const hqModel = this.modelFor('hq');
     controller.setProperties(model);
     controller.setProperties(hqModel);
-  //  controller.unverifiedTimesheets = controller.timesheets.filter((ts) => ts.isUnverified);
     controller.endedShiftEntry = null;
+    controller.unsubmittedBarcode = '';
     controller._findOnDuty();
 
     const todos = [];
@@ -51,9 +74,6 @@ export default class HqShiftRoute extends ClubhouseRoute {
 
     if (!controller.isOffDuty) {
       todos.push(new HqTodoTask(HQ_TODO_END_SHIFT));
-      if (controller.collectRadioCount) {
-        todos.push(new HqTodoTask(HQ_TODO_COLLECT_RADIO));
-      }
     } else {
       todos.push(new HqTodoTask(HQ_TODO_START_SHIFT));
       if (!controller.eventRadios) {
@@ -61,10 +81,8 @@ export default class HqShiftRoute extends ClubhouseRoute {
       }
     }
 
-    if (!controller.unverifiedTimesheets.length) {
-      controller.firstTab = 'shift-manage';
-    } else {
-      controller.firstTab = 'timesheet-verification';
+    if (controller.collectRadioCount) {
+      todos.push(new HqTodoTask(HQ_TODO_COLLECT_RADIO));
     }
   }
 }

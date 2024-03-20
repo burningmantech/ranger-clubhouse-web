@@ -47,6 +47,11 @@ main {
   border-bottom: 1px solid #eaeded;
 }
 
+.ui-section-title-warning {
+  background-color: rgba(255, 217, 53, 0.38) !important;
+  color: #222 !important;
+}
+
 .ui-section-sub-title {
   margin: -10px -10px 10px -10px;
   padding: 10px;
@@ -692,6 +697,17 @@ summary:hover {
   background-color: #dee2e6 !important;
 }
 
+.custom-icons {
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary {
+    list-style: none;
+  }
+}
+
+
 .scroll-to-top-button {
   display: none;
   position: fixed;
@@ -728,4 +744,6 @@ summary:hover {
 .highlight-hover:hover {
   background-color: #f0f0f0;
 }
+
+
 

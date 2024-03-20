@@ -1,6 +1,6 @@
 <section class="ui-section" ...attributes>
   {{#if (has-block "title")}}
-    <div class="ui-section-title">{{yield to="title"}}</div>
+    <div class="ui-section-title {{if @isWarning "ui-section-title-warning"}}">{{yield to="title"}}</div>
   {{/if}}
   {{#if (has-block "body")}}
     {{yield to="body"}}

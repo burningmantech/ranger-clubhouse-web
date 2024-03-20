@@ -6,7 +6,8 @@
     <f.text @name="barcode"
             @placeholder="Enter Barcode"
             @size={{15}}
-            @autofocus={{true}}
+            @autofocus={{if @noAutoFocus false true}}
+            @onChange={{@onBarcodeChange}}
     />
     <f.select @name="attachment_id"
               @options={{this.attachmentOptions}}/>
@@ -18,22 +19,24 @@
     </div>
   </FormRow>
   {{#if this.barcodeNotFound}}
-    <p>
-      <b class="text-danger">Barcode "{{this.barcodeNotFound}}" was not found.</b>
-    </p>
+    <span class="fw-semibold text-danger">Barcode "{{this.barcodeNotFound}}" was not found.</span>
   {{else if this.barcodeCheckedOut}}
-    <p>
-      <b class="text-danger">Asset {{this.barcodeCheckedOut.barcode}} still checked out by
-        <LinkTo @route="person.assets"
-                @model={{this.barcodeCheckedOut.person_id}}>{{this.barcodeCheckedOut.callsign}}</LinkTo>
-        on {{shift-format this.barcodeCheckedOut.checked_out}}
-      </b>
-    </p>
-    <p>
+    <div>
+      <span class="fw-semibold text-danger">
+      Asset {{this.barcodeCheckedOut.barcode}} still checked out by
+      <LinkTo @route="person.assets"
+              @model={{this.barcodeCheckedOut.person_id}}>{{this.barcodeCheckedOut.callsign}}</LinkTo>
+      .
+      </span>
+      Check out was on {{shift-format this.barcodeCheckedOut.checked_out}}.
+    </div>
+    <div class="mb-2">
       <UiButton @type="secondary" @onClick={{this.showHistoryAction}}>
-        Show Asset History
+        Show Asset History &amp; Optionally Check Asset Back In
       </UiButton>
-    </p>
+    </div>
+  {{else}}
+    <br>
   {{/if}}
 </ChForm>
 {{#if this.showHistory}}

@@ -26,10 +26,9 @@
     </UiNotice>
   {{else}}
     {{#if this.isMentor}}
-      <div class="alert alert-danger fs-6">
-        {{fa-icon "hand-point-right" right=1}} {{@person.callsign}} is on a Mentor shift and will receive their meal
-        pogs directly from the Mentor Shack.
-      </div>
+      <UiAlert @type="danger" @icon="hand">
+        {{@person.callsign}} is on a Mentor shift and will receive their meal pogs directly from the Mentor Shack.
+      </UiAlert>
     {{/if}}
 
     <p>
@@ -43,7 +42,11 @@
   <div class="row mb-2">
     <div class="col-auto">
       <UiButton @onClick={{this.recordFullMealPog}}>
-        Record Full Meal Pog
+        {{#if this.config.meal_half_pog_enabled}}
+          Record Full Meal Pog
+        {{else}}
+          Record Meal Pog
+        {{/if}}
       </UiButton>
     </div>
     {{#if this.config.meal_half_pog_enabled}}
@@ -59,8 +62,8 @@
       </UiButton>
     </div>
   </div>
-  Showing {{pluralize this.pogs.length "pog"}}.
-  <UiTable>
+  Showing {{pluralize this.pogs.length "pog"}} recorded.
+  <UiTable @normalSize={{true}}>
     <thead>
     <tr>
       <th>Pog</th>
@@ -93,24 +96,24 @@
           {{#if pog.isCancelled}}
             -
           {{else}}
+            <UiButton @onClick={{fn this.editPog pog}} @size="sm" @type="secondary">
+              Update Note
+            </UiButton>
             {{#if (and pog.isHalfMealPog pog.isIssued)}}
               <UiButton @onClick={{fn this.redeemForFullMealPog pog}} @size="sm">
                 Redeem for Full Meal Pog
               </UiButton>
             {{else if (not pog.isCancelled)}}
-              <UiButton @onClick={{fn this.confirmPogCancel pog}} @size="sm" @type="secondary">
+              <UiButton @onClick={{fn this.confirmPogCancel pog}} @size="sm" @type="gray" class="btn-link">
                 Cancel
               </UiButton>
             {{/if}}
-            <UiButton @onClick={{fn this.editPog pog}} @size="sm" @type="secondary">
-              Update Note
-            </UiButton>
           {{/if}}
         </td>
       </tr>
     {{else}}
       <tr>
-        <td colspan="5">
+        <td colspan="6">
           No pogs have been issued yet.
         </td>
       </tr>
@@ -127,22 +130,19 @@
             @onSubmit={{this.savePog}} as |f|>
       <Modal.title>Confirm {{this.pogLabel this.pogToIssue}}</Modal.title>
       <Modal.body>
+        {{#if this.pogIssueWarnings}}
+          <UiAlert @type="danger" @icon="hand">
+            Please note the following:
+            <ul>
+              {{#each this.pogIssueWarnings as |warning|}}
+                <li class="text-danger">{{warning}}</li>
+              {{/each}}
+            </ul>
+          </UiAlert>
+        {{/if}}
         <p>
           Are you sure you want to issue a {{this.pogLabel this.pogToIssue}}?
         </p>
-        {{#if this.pogIssueWarnings}}
-          WARNING:
-          <ul>
-            {{#each this.pogIssueWarnings as |warning|}}
-              <li class="text-danger">{{warning}}</li>
-            {{/each}}
-          </ul>
-        {{/if}}
-        {{#if this.pogIssueInfo}}
-          <p>
-            {{this.pogIssueInfo}}
-          </p>
-        {{/if}}
         <FormRow>
           <f.textarea @name="notes"
                       @label="Optional note to record with this pog:"
@@ -169,12 +169,12 @@
             @onSubmit={{this.saveCancelledPog}} as |f|>
       <Modal.title>Confirm Pog Cancel</Modal.title>
       <Modal.body>
+        <UiAlert @type="danger" @icon="hand-point-right">
+          This will NOT actually cancel the PHYSICAL pog -- just the record in the Clubhouse. The physical pog
+          can still be used.
+        </UiAlert>
         <p>
           This action is intended to mark a pog record as being accidentally issued.
-        </p>
-        <p class="text-danger">
-          This does NOT actually cancel the physical pog -- just the record in the Clubhouse. The physical pog
-          can still be used.
         </p>
         <FormRow>
           <f.textarea @name="notes"
@@ -186,8 +186,8 @@
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Cancel {{this.pogToCancel.pogLabel}}"/>
-        <UiButton @onClick={{this.cancelCancelPog}} @type="secondary">
-          Close Without Pog Cancel
+        <UiButton @onClick={{this.cancelCancelPog}} @type="gray" class="btn-link">
+          Do Not Cancel Pog
         </UiButton>
       </Modal.footer>
     </ChForm>

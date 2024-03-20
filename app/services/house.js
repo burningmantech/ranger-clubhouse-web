@@ -310,11 +310,11 @@ export default class HouseService extends Service {
    * Scroll to element
    *
    * @param {string} selector Element ID to scroll to
-   * @param {boolean} scroll=true Use smooth scrolling (true) or jump scroll (false)
+   * @param {boolean} scroll  Use smooth scrolling (true) or jump scroll (false)
    * @param {boolean} scrollToTop Scroll the element to top regardless if element is in view.
    */
 
-  scrollToElement(selector, scroll = true, scrollToTop = false) {
+  scrollToElement(selector) {
     run('afterRender', () => {
       const element = (selector instanceof Element) ? selector : document.querySelector(selector);
       if (!element) {
@@ -324,12 +324,68 @@ export default class HouseService extends Service {
       const {top, bottom} = element.getBoundingClientRect();
 
       if (bottom > window.innerHeight || top < 0) {
-        element.scrollIntoView({behavior: scroll ? 'smooth' : 'auto'});
-      } else if (scrollToTop) {
-        // Element is already in view, scroll element mostly to the top.
-        window.scroll({top: top + window.scrollY - 100, behavior: scroll ? 'smooth' : 'auto'});
+        element.scrollIntoView({behavior:'smooth'});
+      } else  {
+          // Element is already in view, scroll element mostly to the top.
+          window.scroll({top: top + window.scrollY - 100, behavior: 'smooth'});
       }
     });
+  }
+
+  /**
+   * Scroll to an accordion and, if closed, open it
+   * @param {string} id
+   * @param {string|null} belowElement
+   */
+
+  scrollToAccordion(id) {
+    if (this.openAccordion(id)) {
+      // Accordion was opened, delay the scroll in case the accordion body needs to be rendered.
+      setTimeout(() => {
+        this.scrollToElement(`#${id}`);
+      }, 350);
+    } else {
+      // Accordion already opened, scroll immediately.
+      this.scrollToElement(`#${id}`);
+    }
+  }
+
+  /**
+   * Open an accordion. Return true if the accordion was previously closed.
+   *
+   * @param id
+   * @returns {boolean}
+   */
+  openAccordion(id) {
+    return this.toggleAccordion(id, true);
+  }
+
+  /**
+   * Close up an accordion. Return true if the accordion was previously opened.
+   *
+   * @param id
+   * @returns {boolean}
+   */
+
+  closeAccordion(id) {
+    return this.toggleAccordion(id, false);
+  }
+
+  /**
+   * Toggle an accordion.
+   * @param id
+   * @param {boolean} open
+   * @returns {boolean}
+   */
+  toggleAccordion(id, open) {
+    const accordion = document.querySelector(`#${id} .accordion-body`);
+    if (open !== !!accordion?.classList.contains('show')) {
+      document.querySelector(`#${id} .accordion-title`)?.click();
+      return true;
+    }
+
+    return false;
+
   }
 
   /**
@@ -471,7 +527,7 @@ export default class HouseService extends Service {
   async copyToClipboard(thing) {
     const success = 'Copied to the clipboard.';
 
-    const text = typeof thing ===  'string' ? thing : thing.textContent;
+    const text = typeof thing === 'string' ? thing : thing.textContent;
 
     if (navigator.clipboard) {
       try {
