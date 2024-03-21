@@ -35,6 +35,7 @@ const ALPHA_SHIFT_DISCLAIMER = 'Alpha shifts are only available Saturday (the da
 
 const ALPHA_STEPS = [
   DashboardStep.SIGN_RADIO_CHECKOUT_AGREEMENT,
+  DashboardStep.SIGN_MOTORPOOL_AGREEMENT,
   {
     name: 'Sign up for an Alpha shift',
     check({milestones, person}) {

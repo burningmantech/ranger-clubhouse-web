@@ -242,6 +242,10 @@ export default class ShiftCheckInOutComponent extends Component {
           this.modal.info('Not Qualified', `${callsign} has not met one or more required qualifiers needed to sign in to the shift.<br>Reason: ${result.unqualified_message}`);
           break;
 
+        case 'no-employee-id':
+          this.modal.info('Paid Position', `${position.title} is a paid position, and ${callsign} does not have a Paycom ID on file. Until the ID is entered into the Clubhouse, they may not work this position. Please have ${callsign} contact their team's manager to resolve this issue.`);
+          break;
+
         default:
           this.modal.info('Unknown Server Status', `An unknown status [${result.status}] from the server. This is a bug. Please report this to the Tech Ninjas.`);
           break;
