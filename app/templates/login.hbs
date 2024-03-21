@@ -11,13 +11,18 @@
   {{else if this.session.isTraining}}
     <UiNotice @type="success"
               @icon="circle-info"
-              @title="Welcome to the Clubhouse Training Server ">
+              @title="Welcome to the Clubhouse Training Server">
       <p>
         The login username is your callsign (stripped of spaces, dashes, and other non-alphanumeric characters)
         plus '@nomail.none'. Your password is the same as the production server.
       </p>
       <p>
         E.g., if your callsign is 'hub-cap' then your username is 'hubcap@nomail.none'.
+      </p>
+      <p>
+        <span class="fw-semibold">Your password was copied from the production server at
+          {{full-datetime-format (setting 'DatabaseCreatedOn')}}.
+        </span>
       </p>
       <p>
         The training database is reset daily at 04:00 Pacific.
@@ -40,7 +45,9 @@
         <p>
           You can use the "Forgot Your Password" link below if you cannot remember your password.
         </p>
-        Contact the Volunteer Coordinators at <VcEmail /> if you continue to have problems.
+        Contact the Volunteer Coordinators at
+        <VcEmail/>
+        if you continue to have problems.
       </UiNotice>
     {{else}}
       <UiNotice @title="Reset Password Issue" @icon="exclamation" @type="danger">
@@ -57,8 +64,9 @@
     {{else}}
       <UiNotice @type="danger" @icon="ban" @title="Login disabled">
         This account has been disabled and cannot be logged into.
-        Contact the Ranger Personnel Manager at <PersonnelEmail /> for more
-        information.
+        Contact the Ranger Personnel Manager at
+        <PersonnelEmail/>
+        for more information.
       </UiNotice>
     {{/if}}
   {{/if}}
@@ -77,7 +85,7 @@
               @onSubmit={{this.submit}} as |f|>
         <FormRow>
           <f.text @name="identification"
-                  @label={{if this.session.isTraining "Callsign plus @nomail.none" "Email"}}
+                  @label={{if this.session.isTraining "Callsign plus @nomail.none (no 'e' in nomail)" "Email"}}
                   @inputmode="email"
                   @autocomplete="username"
                   @autofocus={{true}}
@@ -105,48 +113,52 @@
         </FormRow>
       </ChForm>
     </div>
-    <div class="p-lg-4">
-      <UiSection>
-        <:title>Volunteer with the Rangers</:title>
-        <:body>
-          <p>
-            Visit
-            <ExtLink href="https://rangers.burningman.org/ranger-application-process/">
-              Becoming a Ranger
-            </ExtLink>
-            to read about our requirements and how to apply.
-          </p>
-          All past prospective Rangers must reapply each year.
-        </:body>
-      </UiSection>
-      <UiSection>
-        <:title>Attend Ranger training as a guest/auditor</:title>
-        <:body>
-          <p>
-            First visit
-            <ExtLink href="https://rangers.burningman.org/training/auditing/">
-              Auditing a Ranger Training
-            </ExtLink>
-            to read about auditor requirements and restrictions.
-          </p>
-          <p>
-            Then
-            <LinkTo @route="register">click here to create</LinkTo>
-            an auditor Clubhouse account.
-          </p>
-          Note: Auditing is not a path to becoming a Ranger.
-        </:body>
-      </UiSection>
-    </div>
+    {{#unless this.session.isTraining}}
+      <div class="p-lg-4">
+        <UiSection>
+          <:title>Volunteer with the Rangers</:title>
+          <:body>
+            <p>
+              Visit
+              <ExtLink href="https://rangers.burningman.org/ranger-application-process/">
+                Becoming a Ranger
+              </ExtLink>
+              to read about our requirements and how to apply.
+            </p>
+            All past prospective Rangers must reapply each year.
+          </:body>
+        </UiSection>
+        <UiSection>
+          <:title>Attend Ranger training as a guest/auditor</:title>
+          <:body>
+            <p>
+              First visit
+              <ExtLink href="https://rangers.burningman.org/training/auditing/">
+                Auditing a Ranger Training
+              </ExtLink>
+              to read about auditor requirements and restrictions.
+            </p>
+            <p>
+              Then
+              <LinkTo @route="register">click here to create</LinkTo>
+              an auditor Clubhouse account.
+            </p>
+            Note: Auditing is not a path to becoming a Ranger.
+          </:body>
+        </UiSection>
+      </div>
+    {{/unless}}
   </div>
   <hr>
   <p>
     <b>Questions? </b>
-    Email the Ranger Volunteer Coordinators at <VcEmail />
+    Email the Ranger Volunteer Coordinators at
+    <VcEmail/>
   </p>
   <p>
     <b>Need help logging in or registering?</b>
-    Email the Rangers Tech Ninjas at <TechSupportEmail />
+    Email the Rangers Tech Ninjas at
+    <TechSupportEmail/>
   </p>
 </main>
 {{#if this.session.isAuthenticated}}
