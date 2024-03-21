@@ -15,7 +15,6 @@ import {
 } from "clubhouse/constants/dashboard";
 import * as DashboardStep from 'clubhouse/constants/dashboard-steps';
 import {BONKED, PROSPECTIVE, UBERBONKED} from "../constants/person_status";
-import {SIGN_MOTORPOOL_AGREEMENT} from "clubhouse/constants/dashboard-steps";
 
 const SETUP_ACCOUNT_STEPS = [
   DashboardStep.UPLOAD_PHOTO,
