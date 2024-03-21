@@ -15,6 +15,7 @@ import {
 } from "clubhouse/constants/dashboard";
 import * as DashboardStep from 'clubhouse/constants/dashboard-steps';
 import {BONKED, PROSPECTIVE, UBERBONKED} from "../constants/person_status";
+import {SIGN_MOTORPOOL_AGREEMENT} from "clubhouse/constants/dashboard-steps";
 
 const SETUP_ACCOUNT_STEPS = [
   DashboardStep.UPLOAD_PHOTO,
@@ -35,6 +36,7 @@ const ALPHA_SHIFT_DISCLAIMER = 'Alpha shifts are only available Saturday (the da
 
 const ALPHA_STEPS = [
   DashboardStep.SIGN_RADIO_CHECKOUT_AGREEMENT,
+  DashboardStep.SIGN_MOTORPOOL_AGREEMENT,
   {
     name: 'Sign up for an Alpha shift',
     check({milestones, person}) {

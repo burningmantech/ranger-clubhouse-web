@@ -563,7 +563,7 @@ export const SIGN_BEHAVIORAL_AGREEMENT = {
 export const SIGN_MOTORPOOL_AGREEMENT = {
   name: 'Sign the Ranger Motorpool Policy',
   skipPeriod: AFTER_EVENT,
-  check({milestones}) {
+  check({milestones, isPNV}) {
     const {mvr_eligible} = milestones;
     const name = `Sign the Ranger Motorpool Policy ${mvr_eligible ? '' : '(optional)'}`;
 
@@ -575,10 +575,21 @@ export const SIGN_MOTORPOOL_AGREEMENT = {
       return {name, result: COMPLETED};
     }
 
+    if (isPNV && milestones.training.status !== 'pass') {
+      return {
+        result: NOT_AVAILABLE,
+        message: 'You need to pass In-Person Training first before you may sign the Motorpool Agreement Policy.'
+      };
+    }
+
+    let prefix = '';
     let suffix = 'to review and agree to the Ranger Motor-Pool Policy, which is required to drive a golf cart or UTV ("gator").';
 
-    if (mvr_eligible || milestones.mvr_potential) {
-      suffix = htmlSafe(`${suffix}<div class="mt-2">Once you have signed the Motor-Pool Policy, you will be able to submit a MVR request.</div>`);
+    if (isPNV) {
+      prefix = 'While most shifts do not involve the use of a Ranger vehicle, sometimes Khaki may ask a Ranger pair to drive a golf cart or UTV for a mission. You will not be using a vehicle during your Alpha shift.';
+    } else if (mvr_eligible || milestones.mvr_potential) {
+      prefix = 'Ranger vehicles are a limited resource and issued based on availability. Vehicles are assigned according to operational need rather than convenience. Visit';
+      suffix = htmlSafe(`${suffix}<div class="mt-2">Signing the Motor Pool Policy is optional, however by not signing you will not be eligible to drive ANY vehicle on behalf of the Rangers.</div>`);
     }
 
     return {
@@ -586,7 +597,7 @@ export const SIGN_MOTORPOOL_AGREEMENT = {
       result: mvr_eligible ? ACTION_NEEDED : OPTIONAL,
       linkedMessage: {
         route: mvr_eligible ? 'me.vehicles' : 'me.agreements',
-        prefix: 'Ranger vehicles are a limited resource and issued based on availability. Vehicles are assigned according to operational need rather than convenience. Visit',
+        prefix,
         text: mvr_eligible ? 'Me > Vehicle Dashboard' : 'Me > Agreements',
         suffix
       },

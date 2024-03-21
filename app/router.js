@@ -129,7 +129,6 @@ Router.map(function () {
     this.route('broadcast-log');
     this.route('emergency-contact');
     this.route('event-info');
-    this.route('external-ids');
     this.route('mail-log');
     this.route('membership');
     this.route('mentors');

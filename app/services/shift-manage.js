@@ -152,6 +152,13 @@ export default class ShiftManageService extends Service {
           });
         break;
 
+      case 'no-employee-id':
+        this.modal.info(
+          'Paid Shift',
+          `The shift is a paid position, and ${isMe ? 'you do' : person.callsign + ' does'} not have a Paycom ID entered into the Clubhouse. Please talk with this position's manager to resolve the issue.`
+        );
+        break;
+
       default:
         this.modal.info(
           'BUG: Unknown Status Response',
@@ -300,7 +307,7 @@ export default class ShiftManageService extends Service {
     let message = `<p>The time overlaps with the following timesheet entries:<ul>`;
 
     timesheets.forEach((entry) => {
-      message += `<li>${entry.position.title} ${shiftFormat([ entry.on_duty, entry.off_duty ], {})}</li>`
+      message += `<li>${entry.position.title} ${shiftFormat([entry.on_duty, entry.off_duty], {})}</li>`
     });
 
     message += '</ul>Use the Cancel button to correct the dates, or use Confirm to indicate the dates are correct.';
