@@ -26,7 +26,12 @@ export default class LoginController extends ClubhouseController {
     this.isSubmitting = true;
 
     try {
-      await this.session.authenticate('authenticator:oauth2', model.identification, model.password);
+      let {identification, password} = model;
+      if (this.session.isTraining) {
+        const fixup = identification.split('@');
+        identification = fixup[0].replace(/[^\w]+/, '') + '@nomail.none';
+      }
+      await this.session.authenticate('authenticator:oauth2', identification, password);
     } catch (response) {
       if (response.status === 401) {
         const data = response.responseJSON ? response.responseJSON : response.payload;
