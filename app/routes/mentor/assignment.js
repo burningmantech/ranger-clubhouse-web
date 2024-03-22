@@ -6,6 +6,8 @@ import _ from 'lodash';
 
 const MENTOR_COUNT = 3;
 
+const SHIFT_FORMAT = 'ddd MMM DD [@] HH:mm';
+
 class Mentor {
   @tracked mentor_id;
   @tracked person_mentor_id;
@@ -42,10 +44,10 @@ export default class MentorAssignmentRoute extends ClubhouseRoute {
      * Run thru the alphas and find the current mentor assignments
      */
 
-    const shifts = {};
+    const shifts = {}, walking = {}, walkingUnknown = [];
 
     const alphas = model.alphas.map((person) => {
-      const current = person.mentor_history.find((history) => history.year == year);
+      const current = person.mentor_history.find((history) => history.year === year);
       const mentors = [];
 
       if (current) {
@@ -67,24 +69,52 @@ export default class MentorAssignmentRoute extends ClubhouseRoute {
       person.mentors = mentors;
       person.error = null;
 
-      if (person.alpha_slot) {
-        shifts[person.alpha_slot.begins] = true;
+      if (person.alpha_slots) {
+        person.alpha_slots.forEach((slot) => shifts[slot.begins] = true)
+      }
+
+      const onDuty = person.on_alpha_shift;
+      if (onDuty) {
+        if (onDuty.begins) {
+          walking[onDuty.begins] = true;
+        } else {
+          walkingUnknown.push(person);
+        }
       }
       return new Alpha(person);
     });
 
-    const shiftOptions = Object.keys(shifts).sort().map((shift) => [ dayjs(shift).format('ddd MMM DD [@] HH:mm'), shift ]);
-    shiftOptions.unshift([ 'Not Checked In', 'not-checked-in' ]);
-    shiftOptions.unshift([ 'All', 'all']);
+    let walkingOptions = Object.keys(walking).sort().map((shift) => [dayjs(shift).format(SHIFT_FORMAT), 'onduty-' + shift]);
+    if (walkingOptions.length) {
+      walkingOptions.unshift({label: 'All Checked-In', value: 'onduty-all'});
+    } else {
+      walkingOptions.unshift({ label: 'No Check-Ins Found', value: 'no-checkins', disabled: true});
+    }
 
-    controller.set('alphas', alphas);
-    controller.set('mentors', model.mentors);
-    controller.set('year', year);
-    controller.set('filter', 'all');
-    controller.set('isPrinting', false);
-    controller.set('shiftFilterOptions', shiftOptions);
-    controller.set('shiftFilter', 'all');
+    let shiftOptions = Object.keys(shifts).sort().map((shift) => [dayjs(shift).format(SHIFT_FORMAT), shift]);
 
-    controller.set('selectAll', false);
+    controller.shiftFilterOptions = [
+      ['All', 'all'],
+      ['Not Checked In', 'not-checked-in'],
+      {
+        groupName: 'Checked Into Shifts',
+        options: walkingOptions,
+      },
+      {
+        groupName: 'Signed-Up For Shifts',
+        options: shiftOptions,
+      },
+    ];
+
+    controller.walkingUnknown = walkingUnknown;
+
+    controller.alphas = alphas;
+    controller.mentors = model.mentors;
+    controller.year = year;
+    controller.filter = 'all';
+    controller.isPrinting = false;
+    controller.shiftFilter = 'all';
+
+    controller.selectAll = false;
   }
 }

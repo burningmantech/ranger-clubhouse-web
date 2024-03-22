@@ -64,7 +64,7 @@ export default class MentorPostSeasonSummaryController extends ClubhouseControll
       case 'no-walk':
         return mentees.filter((m) => (m.mentor_status === 'pending' && !m.alpha_shift));
       case 'no-shift':
-        return mentees.filter((m) => (m.mentor_status === 'pending') && !m.alpha_slot)
+        return mentees.filter((m) => (m.mentor_status === 'pending') && !m.alpha_slots)
       case 'self-bonked':
         return mentees.filter((m) => m.mentor_status === 'self-bonk')
       case 'uberbonked':

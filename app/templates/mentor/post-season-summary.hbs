@@ -60,7 +60,7 @@ bonked.
       <td class="w-15">
         {{#if (eq mentee.status "uberbonked")}}
           <b class="text-danger">{{fa-icon "bell"}} UBERBONKED</b><br>
-        {{else if (and (eq mentee.mentor_status 'pending') (not mentee.alpha_slot))}}
+        {{else if (and (eq mentee.mentor_status 'pending') (not mentee.alpha_slots))}}
           <span class="text-danger">{{fa-icon "question"}} No Alpha shift</span>
         {{else}}
           {{#if (eq mentee.mentor_status "pass")}}

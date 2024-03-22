@@ -17,7 +17,7 @@ export default class MentorAlphaSignoutController extends ClubhouseController {
   @tracked alphaSignoutCount = 0;
 
   @action
-  changeSlot(value) {
+  async changeSlot(value) {
     if (value === '') {
       return; // Do nothing
     }
@@ -31,22 +31,25 @@ export default class MentorAlphaSignoutController extends ClubhouseController {
 
     if (this.shiftDate !== 'all') {
       data.on_duty_start = dayjs(value).subtract(1, 'hours').format(DT_FORMAT);
-      data.on_duty_end = dayjs(value).add(1, 'hours').format(DT_FORMAT);
+      data.on_duty_end = dayjs(value).add(2, 'hours').format(DT_FORMAT);
     }
 
-    this.ajax.request('timesheet', {data})
-      .then((result) => {
-        this.alphas = result.timesheet.map((t) => ({
-          id: t.person_id,
-          callsign: t.person.callsign,
-          selected: true,
-          on_duty: t.on_duty,
-          duration: t.duration,
-          timesheet_id: t.id
-        }));
-        this.selectAll = true;
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isLoading = false);
+    try {
+      const result = await this.ajax.request('timesheet', {data});
+      this.alphas = result.timesheet.map((t) => ({
+        id: t.person_id,
+        callsign: t.person.callsign,
+        selected: true,
+        on_duty: t.on_duty,
+        duration: t.duration,
+        timesheet_id: t.id
+      }));
+      this.selectAll = true;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   @action

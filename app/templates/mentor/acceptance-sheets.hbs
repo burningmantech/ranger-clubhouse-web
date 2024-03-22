@@ -13,7 +13,7 @@
     </div>
     <div class="col-auto">
       <UiButton @onClick={{this.printAction}}>
-        Print Selected ({{this.printAlphas.length}}
+        Print Selected ({{this.printAlphas.length}})
       </UiButton>
     </div>
   </FormRow>
@@ -48,14 +48,15 @@
           {{/each}}
         </td>
         <td>
-          {{#if alpha.alpha_slot}}
-            {{shift-format alpha.alpha_slot.begins}}
+          {{#each alpha.alpha_slots as |slot idx|}}
+            {{#if idx}}<br>{{/if}}
+            {{shift-format slot.begins}}
           {{else}}
             none
-          {{/if}}
+          {{/each}}
         </td>
         <td>
-          {{#if (and alpha.trainings alpha.trained alpha.alpha_slot)}}
+          {{#if (and alpha.trainings alpha.trained alpha.alpha_slots)}}
             <span class="text-success">{{fa-icon "check"}} none</span>
           {{else}}
             <b class="text-danger">
@@ -66,7 +67,7 @@
               {{#unless alpha.trained}}
                 Did not pass training<br>
               {{/unless}}
-              {{#unless alpha.alpha_slot}}
+              {{#unless alpha.alpha_slots}}
                 No mentor shift
               {{/unless}}
             </b>
