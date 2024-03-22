@@ -50,10 +50,11 @@
       </div>
       <div class="alpha-sheet-column">
         <div class="alpha-sheet-column-label">Schedule Shift:</div>
-        <div class="alpha-sheet-column-{{if alpha.alpha_slot "field" "input"}}">
-          {{#if alpha.alpha_slot}}
-            {{shift-format alpha.alpha_slot.begins}}
-          {{/if}}
+        <div class="alpha-sheet-column-{{if alpha.alpha_slots "field" "input"}}">
+          {{#each  alpha.alpha_slots as |slot idx|}}
+            {{#if idx}}<br>{{/if}}
+            {{shift-format slot.begins}}
+          {{/each}}
         </div>
       </div>
       <div class="alpha-sheet-column">

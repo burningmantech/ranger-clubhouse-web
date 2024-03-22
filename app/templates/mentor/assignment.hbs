@@ -22,11 +22,12 @@
         </td>
         <td>{{person.first_name}} {{person.last_name}}</td>
         <td>
-          {{#if person.alpha_slot}}
-            {{shift-format person.alpha_slot.begins}}
+          {{#each  person.alpha_slots as |slot idx|}}
+            {{#if idx}}<br>{{/if}}
+            {{shift-format slot.begins}}
           {{else}}
             -
-          {{/if}}
+          {{/each}}
         </td>
         <td>
           {{this.mentorName person 0}}
@@ -65,7 +66,7 @@
       <ChForm::Select @name="shiftFilter"
                       @value={{this.shiftFilter}}
                       @options={{this.shiftFilterOptions}}
-                      @onChange={{action (mut this.shiftFilter)}} />
+                      @onChange={{this.updateShiftFilter}} />
     </div>
     <div class="col-auto">
       <UiButton @type="secondary" @class="mb-2" @onClick={{this.togglePrinting}}>
@@ -77,10 +78,27 @@
     <MentorAssignmentFromPod @alphas={{this.viewAlphas}} @year={{this.year}} />
   </p>
   <p>
-    Legend: Mentor shift = Shift Alpha is signed up for. On Shift = Is the Alpha currently signed into an Alpha shift?
+    Legend: Mentor shift = Shift Alpha is signed up for. On Shift = Is the Alpha currently signed in to an Alpha
+    shift?<br>
+    for.
   </p>
+  {{#if this.walkingUnknown}}
+    <UiAlert @type="warning" @icon="hand">
+      The following Alphas were found who are checked in, yet it cannot be determined which shift they are walking.
+      This might be a result of a very early, or late check in.
+      <div class="my-2">The Mentor Assignment From Pod button will probably not work for these.</div>
+      <div class="mt-2">
+        {{#each this.walkingUnknown as |person idx|}}
+          {{if idx ", "~}}{{person.callsign~}}
+        {{/each}}
+      </div>
+    </UiAlert>
+  {{/if}}
   <UiSection>
-    <:title>Showing {{this.viewAlphas.length}} of {{pluralize this.alphas.length "Alpha"}}</:title>
+    <:title>
+      Showing {{this.viewAlphas.length}} of {{pluralize this.alphas.length "Alpha"}}
+      {{this.titleLabel}}
+    </:title>
     <:body>
       <p>
         <UiButton @disabled={{not this.selectedAlphas}} @onClick={{this.updateToPassed}}>
@@ -93,8 +111,8 @@
           <th><Input @type="checkbox" @checked={{this.selectAll}} {{on "change" this.toggleAll}} /></th>
           <th>Callsign</th>
           <th>Name</th>
-          <th>Mentor Shift</th>
-          <th>On Shift</th>
+          <th>Signed Up For</th>
+          <th>Checked In For</th>
           <th>Mentor 1</th>
           <th>Mentor 2</th>
           <th>Mentor 3</th>
@@ -113,14 +131,19 @@
             </td>
             <td>{{person.first_name}} {{person.last_name}}</td>
             <td>
-              {{#if person.alpha_slot}}
-                {{shift-format person.alpha_slot.begins}}
+              {{#each person.alpha_slots as |slot idx|}}
+                {{#if idx}}<br>{{/if}}
+                {{shift-format slot.begins}}
+              {{else}}
+                -
+              {{/each}}
+            </td>
+            <td>
+              {{#if person.on_alpha_shift}}
+                {{shift-format person.on_alpha_shift.begins}}
               {{else}}
                 -
               {{/if}}
-            </td>
-            <td class="text-center">
-              {{yesno person.on_alpha_shift}}
             </td>
             <td>
               <ChForm::Select @name="mentor1_{{person.id}}"

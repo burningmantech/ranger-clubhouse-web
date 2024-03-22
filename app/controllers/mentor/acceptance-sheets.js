@@ -1,29 +1,25 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import {action, set} from '@ember/object';
-import dayjs from 'dayjs';
-import {tracked} from '@glimmer/tracking';
-import _ from 'lodash';
+import {action} from '@ember/object';
+import {cached, tracked} from '@glimmer/tracking';
 
 export default class MentorAcceptanceSheetsController extends ClubhouseController {
   @tracked filter;
   @tracked alphas;
   @tracked viewAlphas;
-  @tracked printAlphas;
   @tracked isPrinting;
   @tracked selectAll;
+  @tracked filterOptions;
 
   @action
   toggleAll(event) {
     const selected = event.target.checked;
-    this.alphas.forEach((alpha) => set(alpha, 'selected', selected));
-    this._buildPrintAlphas();
+    this.alphas.forEach((alpha) => alpha.selected = selected);
   }
 
   @action
-  toggleAlpha(alpha) {
-    set(alpha, 'selected', !alpha.selected);
+  toggleAlpha() {
     this.selectAll = false;
-    this._buildPrintAlphas();
+    return true;
   }
 
   @action
@@ -37,31 +33,16 @@ export default class MentorAcceptanceSheetsController extends ClubhouseControlle
     if (filter === 'all') {
       this.viewAlphas = this.alphas;
     } else if (filter === 'no-signup') {
-      this.viewAlphas = this.alphas.filter((a) => !a.alpha_slot);
+      this.viewAlphas = this.alphas.filter((a) => !a.alpha_slots);
     } else {
-      this.viewAlphas = this.alphas.filter((a) => (a.alpha_slot && this.filter === a.alpha_slot.begins));
+      this.viewAlphas = this.alphas.filter((a) => a.alpha_slots?.find((s) => this.filter === s.begins));
     }
-
-    this._buildPrintAlphas()
   }
 
-  get filterOptions() {
-    const dates = _.uniqBy(this.alphas.filter((a) => a.alpha_slot != null), (a) => a.alpha_slot.begins)
-      .map((a) => a.alpha_slot.begins)
-      .sort();
 
-    const options = dates.map((date) => {
-      return [dayjs(date).format('ddd MMM DD [@] HH:mm'), date];
-    });
-
-    options.unshift(['No Mentor Shift', 'no-signup']);
-    options.unshift(['All', 'all']);
-
-    return options;
-  }
-
-  _buildPrintAlphas() {
-    this.printAlphas = this.viewAlphas.filter((a) => a.selected);
+  @cached
+  get printAlphas() {
+    return this.viewAlphas.filter((a) => a.selected);
   }
 
   @action
