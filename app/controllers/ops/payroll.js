@@ -65,12 +65,12 @@ export default class OpsPayrollController extends ClubhouseController {
   datesValidation = {
     start_time: [
       validatePresence({presence: true, message: 'Enter a starting date and time.'}),
-      validateDateTime({before: 'end_time'})
+      validateDateTime({before: 'end_time', beforeName: 'Ending date/time'})
     ],
 
     end_time: [
       validatePresence({presence: true, message: 'Enter an ending date and time.'}),
-      validateDateTime({after: 'start_time'})
+      validateDateTime({after: 'start_time', afterName: 'Starting date/time'})
     ],
   }
 

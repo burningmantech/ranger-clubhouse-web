@@ -1,11 +1,8 @@
 import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
-import {validatePresence} from 'ember-changeset-validations/validators';
 import {service} from '@ember/service';
-import {DIRT, TRAINING} from 'clubhouse/constants/positions';
-import validateDateTime from 'clubhouse/validators/datetime';
-import {tracked} from '@glimmer/tracking';
-import _ from 'lodash';
+import {cached,tracked} from '@glimmer/tracking';
+import positionsForTimesheetMissing from "clubhouse/utils/positions-for-timesheet-missing";
 
 export default class MeTimesheetMissingCommonComponent extends Component {
   @service house;
@@ -16,29 +13,10 @@ export default class MeTimesheetMissingCommonComponent extends Component {
   @service toast;
 
   @tracked entry = null;
-  @tracked isSubmitting = false;
 
-  timesheetValidations = {
-    on_duty: [validateDateTime({before: 'off_duty'}), validatePresence(true)],
-    off_duty: [validateDateTime({after: 'on_duty'}), validatePresence(true)],
-    additional_notes: [validatePresence(true)]
-  };
-
-  /**
-   * Create a list of positions options to check, ensure Dirt is the top most option.
-   */
-
-  constructor() {
-    super(...arguments);
-
-    const positions = this.args.positions.filter((p) => p.id !== TRAINING).map((p) => [p.title, p.id]);
-    const dirt = positions.find((p) => p[1] === DIRT);
-    if (dirt) {
-      _.pull(positions, dirt);
-      positions.unshift(dirt);
-    }
-
-    this.positionOptions = positions;
+  @cached
+  get positionOptions() {
+    return positionsForTimesheetMissing(this.args.positions);
   }
 
   get isMe() {
@@ -63,14 +41,20 @@ export default class MeTimesheetMissingCommonComponent extends Component {
    */
 
   @action
-  editAction(timesheetMissing) {
-    timesheetMissing.reload().then(() => {
+  async editAction(timesheetMissing) {
+    try {
+      await timesheetMissing.reload();
       if (timesheetMissing.isApproved) {
-        this.modal.info('Missing Timesheet Entry Request Approved!', 'Hold up! The timesheet entry has been approved since this page has been refreshed.');
+        this.modal.info(
+          'Missing Timesheet Entry Request Approved!',
+          'Hold up! The timesheet entry has been approved since this page has been refreshed.');
         return;
       }
       this.entry = timesheetMissing;
-    }).catch((response) => this.house.handleErrorResponse(response));
+
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
   }
 
   /**
@@ -82,50 +66,13 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     this.entry = null;
   }
 
-  /**
-   * Save a timesheet missing request
-   * @param {TimesheetMissingModel} model
-   * @param {boolean} isValid
-   */
-
   @action
-  async saveAction(model, isValid) {
-    if (!isValid) {
-      return;
+  saveAction(isNew) {
+    if (isNew) {
+      this.args.timesheetsMissing.update();
     }
-
-    const isNew = model.isNew;
-
-    if (!model.isDirty) {
-      this.entry = null;
-      this.modal.info('', `You did not enter any ${isNew ? 'new' : ''} information.`);
-      return;
-    }
-
-    if (model._changes['position_id'] || model._changes['on_duty'] || model._changes['off_duty']) {
-      await this.shiftManage.checkDateTime(model.position_id, model.on_duty, model.off_duty, () => this._saveCommon(model));
-    } else {
-      await this._saveCommon(model);
-    }
-  }
-
-  async _saveCommon(model) {
-    const isNew = model.isNew;
-
-    try {
-      this.isSubmitting = true;
-      await model.save();
-      this.toast.success(`Your request has been successfully ${isNew ? 'submitted' : 'updated'}.`);
-      if (isNew) {
-        this.args.timesheetsMissing.update();
-      }
-      this.entry = null;
-      set(this.args.timesheetInfo, 'timesheet_confirmed', false);
-    } catch (response) {
-      this.house.handleErrorResponse(response)
-    } finally {
-      this.isSubmitting = false;
-    }
+    this.entry = null;
+    set(this.args.timesheetInfo, 'timesheet_confirmed', false);
   }
 
   /**
@@ -159,7 +106,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     }
 
     if (ts.isPending) {
-      return 'text-bg-secondary';
+      return 'text-bg-warning';
     }
 
     return ''

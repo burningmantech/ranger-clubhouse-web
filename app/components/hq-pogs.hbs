@@ -30,9 +30,11 @@
         {{@person.callsign}} is on a Mentor shift and will receive their meal pogs directly from the Mentor Shack.
       </UiAlert>
     {{/if}}
-
     <p>
-      <b>For the current event period, issue a Full Meal Pog for every 6+ hours worked in a shift.</b>
+      <b>
+        For the current event period, issue a {{if this.config.meal_half_pog_enabled "Full"}} Meal Pog for
+        every 6+ hours worked in a shift.
+      </b>
       {{#if this.config.meal_half_pog_enabled}}
         <br>
         1/2 Meal Pogs are available for a shift worked less than 6 hours.
@@ -153,9 +155,7 @@
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Record {{this.pogLabel this.pogToIssue}}"/>
-        <UiButton @onClick={{this.cancelPogIssue}} @type="secondary">
-          Cancel
-        </UiButton>
+        <UiCancelButton @onClick={{this.cancelPogIssue}} />
       </Modal.footer>
     </ChForm>
   </ModalDialog>
@@ -223,9 +223,7 @@
       </Modal.body>
       <Modal.footer @noAlign={{true}}>
         <f.submit @label="Update"/>
-        <UiButton @onClick={{this.cancelPogEdit}} @type="secondary">
-          Cancel
-        </UiButton>
+        <UiCancelButton @onClick={{this.cancelPogEdit}} />
       </Modal.footer>
     </ChForm>
   </ModalDialog>

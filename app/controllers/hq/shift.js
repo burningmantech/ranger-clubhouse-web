@@ -228,7 +228,6 @@ export default class HqShiftController extends ClubhouseController {
   async endShiftNotify(timesheet) {
     try {
       await this.timesheets.update();
-      //this.unverifiedTimesheets = this.timesheets.filter((t) => t.isUnverified);
       this._findOnDuty()
       if (timesheet) {
         this.completeTodo(HQ_TODO_END_SHIFT);
@@ -238,6 +237,10 @@ export default class HqShiftController extends ClubhouseController {
           this.addTodo(HQ_TODO_MEAL_POG_NONE, true);
         } else {
           this.addTodo(HQ_TODO_MEAL_POG);
+        }
+        if (timesheet.position_id !== BURN_PERIMETER && !this.radioCount) {
+          this.modal.info('No Radios Checked Out?',
+            `It appears no radios were checked out for the shift. Please ask if they have a radio to return. If they have an authorized Event Radio, record it.`);
         }
       } else {
         this.removeTodo(HQ_TODO_END_SHIFT);

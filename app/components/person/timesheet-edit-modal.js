@@ -3,7 +3,9 @@ import validateDateTime from "clubhouse/validators/datetime";
 import {validatePresence} from 'ember-changeset-validations/validators';
 import {isEmpty} from '@ember/utils';
 import dayjs from 'dayjs';
-import { action } from '@ember/object';
+import {action} from '@ember/object';
+import {shiftFormat} from "clubhouse/helpers/shift-format";
+import {htmlSafe} from '@ember/template';
 
 export default class PersonTimesheetEditModalComponent extends Component {
   reviewOptions = [
@@ -63,6 +65,28 @@ export default class PersonTimesheetEditModalComponent extends Component {
 
     if (!isEmpty(entry.desired_off_duty)) {
       model.off_duty = entry.desired_off_duty;
+    }
+  }
+
+  @action
+  timeWarningsMessage() {
+    const tw = this.args.entry.time_warnings;
+
+    return htmlSafe(
+      this._alertRange('On Duty', tw.start, tw.start_status, tw.begins, tw.ends)
+      + this._alertRange('Off Duty', tw.finished, tw.finished_status, tw.begins, tw.ends)
+    );
+  }
+
+  _alertRange(label, date, status, begins, ends) {
+    if (status === 'success') {
+      return '';
+    }
+
+    if (status === 'before-begins') {
+      return `<li >The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is BEFORE the first shift</b> starting on ${shiftFormat([begins], {})}.</li>`;
+    } else {
+      return `<li>The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is AFTER the last shift</b> ending on ${shiftFormat([ends], {})}.</li>`;
     }
   }
 }

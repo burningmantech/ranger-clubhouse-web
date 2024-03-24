@@ -64,6 +64,9 @@ export default class TimesheetModel extends Model {
 
   @attr('boolean', {readOnly: true}) was_signin_forced;
 
+  @attr('', {readOnly: true}) time_warnings;
+
+
   @tracked isIgnoring = false; // Used by the HQ window interface
   @tracked selected = false;
 
@@ -112,5 +115,10 @@ export default class TimesheetModel extends Model {
 
   get isTooLong() {
     return (this.off_duty && this.slot && (this.slot.duration * 1.5) < this.duration);
+  }
+
+  get timesOutsideRange() {
+    console.log('TIMES ', this.time_warnings);
+    return this.time_warnings?.status === 'out-of-range';
   }
 }

@@ -20,7 +20,7 @@ export default class PersonTimesheetRoute extends ClubhouseRoute {
     this.store.unloadAll('timesheet');
     this.store.unloadAll('timesheet-missing');
 
-    const timesheetQuery = { person_id, year };
+    const timesheetQuery = { person_id, year, check_times: 1 };
     if (this.session.hasRole([ ADMIN, TIMESHEET_MANAGEMENT])) {
       timesheetQuery.include_admin_notes = 1;
     }
