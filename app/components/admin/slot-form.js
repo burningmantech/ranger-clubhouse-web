@@ -13,9 +13,9 @@ export default class SlotFormComponent extends Component {
   slotValidations = {
     description: [validatePresence({presence: true, message: 'Enter a description.'}),],
 
-    begins: [validatePresence({presence: true, message: 'Enter a date and time.'}), validateDateTime({before: 'ends'})],
+    begins: [validatePresence({presence: true, message: 'Enter a date and time.'}), validateDateTime({before: 'ends',beforeName: 'Ending Time'})],
 
-    ends: [validatePresence({presence: true, message: 'Enter a date and time.'}), validateDateTime({after: 'begins'})],
+    ends: [validatePresence({presence: true, message: 'Enter a date and time.'}), validateDateTime({after: 'begins', afterName: 'Beginning Time'})],
 
     position_id: [validatePresence({presence: true, message: 'Select a position.'}),],
 

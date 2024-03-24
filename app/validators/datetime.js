@@ -22,7 +22,7 @@ function getDateProperty(changes, content, name) {
 
 export default function validateDateTime(opts = {}) {
   return (key, newValue, oldValue, changes, content) => {
-    const {before, after, if_set, dateOnly, message} = opts;
+    const {before, after, if_set, dateOnly, message, beforeName, afterName} = opts;
     let date;
 
     if (if_set && !getProperty(changes, content, if_set)) {
@@ -58,7 +58,7 @@ export default function validateDateTime(opts = {}) {
       }
 
       if (!date.isBefore(beforeDate) && !date.isSame(beforeDate)) {
-        return message ?? `Date must be before ${before}`;
+        return message ?? `Date must be before ${beforeName ?? before}`;
       }
     }
 
@@ -70,7 +70,7 @@ export default function validateDateTime(opts = {}) {
       }
 
       if (!date.isAfter(afterDate) && !date.isSame(afterDate)) {
-        return message ?? `Date must be after ${after}`;
+        return message ?? `Date must be after ${afterName ?? after}`;
       }
     }
 

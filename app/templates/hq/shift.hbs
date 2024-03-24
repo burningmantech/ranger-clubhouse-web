@@ -73,6 +73,8 @@
     <HqTimesheetVerification @unverifiedTimesheets={{this.unverifiedTimesheets}}
                              @completeTodo={{this.completeTodo}}
                              @onFinished={{this.afterShiftReview}}
+                             @positions={{this.positions}}
+                             @person={{this.person}}
     />
     <ShiftCheckInOut @positions={{this.positions}}
                      @timesheets={{this.timesheets}}
@@ -97,13 +99,11 @@
   </:title>
   <:body>
     {{#unless this.personEvent.asset_authorized}}
-      <UiAlert @type="danger" @title="Radio Agreement Not Signed" @icon="ban">
-        <p>
+      <UiNotice @type="danger" @title="Radio Agreement Not Signed - Do Not Issue Radios or Gear" @icon="ban">
           The Radio Checkout Agreement has not been signed. {{this.person.callsign}} may not receive
           radios or other gear until this is resolved. Direct {{this.person.callsign}} to the kiosk
           shack, so they can log in into the Clubhouse, review, and sign the agreement.
-        </p>
-      </UiAlert>
+      </UiNotice>
     {{/unless}}
 
     {{#if this.mayNotNeedRadio}}
@@ -125,17 +125,18 @@
             Collect {{pluralize this.collectEventRadiosAtShiftEnd "event radio"}} at the end of the shift.
           </li>
         {{/if}}
-      {{#if this.collectEventRadios}}
-        <li>
-          Collect {{pluralize this.collectEventRadios "event radio"}} when person is finished working the event.
-        </li>
-      {{/if}}
-        </ul>
+        {{#if this.collectEventRadios}}
+          <li>
+            Collect {{pluralize this.collectEventRadios "event radio"}} when person is finished working the event.
+          </li>
+        {{/if}}
+      </ul>
     {{/if}}
 
     <div class="mb-3">
       {{#if this.eventInfo.radio_eligible}}
-        {{this.person.callsign}} is authorized for <span class="fw-semibold">{{pluralize this.eventInfo.radio_max "event radio"}}</span>.
+        {{this.person.callsign}} is authorized for <span class="fw-semibold">{{pluralize this.eventInfo.radio_max
+                                                                                         "event radio"}}</span>.
       {{else}}
         {{this.person.callsign}} is only authorized for <span class="fw-semibold">SHIFT RADIOS.</span>
       {{/if}}

@@ -1,7 +1,12 @@
+<div class="my-3">
+  <UiButton @onClick={{this.newRequestAction}}>
+    New Missing Timesheet Request
+  </UiButton>
+</div>
 {{#if @timesheetsMissing}}
   <NoAppreciateIcon/>
   = the shift hours do not count towards provisions and appreciations.
-  <div class="timesheet-table">
+   <div class="timesheet-table">
     <div class="timesheet-row timesheet-header">
       <div class="timesheet-time">Time</div>
       <div class="timesheet-duration">Duration</div>
@@ -33,7 +38,7 @@
         {{#if tsm.notes}}
           <div class="timesheet-row-info">
             <div class="border p-2 my-2">
-              <h5 class="mx-n2 mt-n2 p-2 bg-secondary text-white">Notes from you &amp; the Timesheet Wranglers</h5>
+              <h5 class="mx-n2 mt-n2 p-2 text-bg-gray">Notes from you &amp; the Timesheet Wranglers</h5>
               <TimesheetNotes @notes={{tsm.notes}} @isMe={{this.isMe}} />
             </div>
           </div>
@@ -44,21 +49,16 @@
               {{#if tsm.isReloading}}
                 <SpinIcon/>
               {{else if tsm.isRejected}}
-                {{fa-icon "redo"}} Submit Appeal
+                {{fa-icon "redo" right=1}} Submit Appeal
               {{else}}
-                {{fa-icon "edit"}} Edit Request
+                {{fa-icon "edit" right=1}} Edit Request
               {{/if}}
             </UiButton>
             {{#if tsm.isPending}}
               <UiButton @type="danger"
                         @onClick={{fn this.deleteAction tsm}}
                         @disabled={{or tsm.isReloading tsm.isSaving}}>
-                {{#if tsm.isSaving}}
-                  Deleting
-                  <SpinIcon/>
-                {{else}}
-                  {{fa-icon "trash"}} Delete Request
-                {{/if}}
+                {{fa-icon "trash" right=1}} Delete Request
               </UiButton>
             {{/if}}
           {{/if}}
@@ -73,75 +73,10 @@
   </p>
 {{/if}}
 
-<UiButton @onClick={{this.newRequestAction}}>
-  New Missing Timesheet Request
-</UiButton>
-
 {{#if this.entry}}
-  <ModalDialog @title="Missing Timesheet Request" @onEscape={{this.cancelAction}} as |Modal|>
-    <ChForm @formId="tm"
-            @formFor={{this.entry}}
-            @validator={{this.timesheetValidations}}
-            @onSubmit={{this.saveAction}} as |f|>
-      <Modal.body>
-        <p>
-          Use this form for <b>MISSING TIMESHEET ENTRIES ONLY</b>. If you have an existing entry that needs correction,
-          go back to the Timesheet tab and submit a correction by clicking on the "Request Correction" button.
-        </p>
-        <FormRow>
-          <f.select @name="position_id"
-                    @label="Which position was the shift for?"
-                    @options={{this.positionOptions}} />
-        </FormRow>
-        <FormRow>
-          <f.datetime @name="on_duty"
-                      @label="What was the START date & time of the shift?"
-                      @size={{15}}
-          />
-          <f.datetime @name="off_duty"
-                      @label="What was the END date & time of the shift?"
-                      @size={{15}}
-          />
-        </FormRow>
-        <FormRow>
-          <f.text @name="partner"
-                  @label="What are the callsigns of your shift partner(s) or the shift lead / manager who can corroborate your story?"
-                  @size={{20}}
-                  @maxlength={{100}}
-                  @showCharCount={{true}}
-          />
-        </FormRow>
-        {{#if this.entry.isRejected}}
-          <b class="text-danger">Sorry, the correction request has been rejected.</b>
-        {{/if}}
-        {{#if this.entry.notes}}
-          <div class="border p-2 my-2">
-            <h5 class="mx-n2 mt-n2 p-2 bg-secondary text-white">Notes from you &amp; the Timesheet Wranglers</h5>
-            <TimesheetNotes @notes={{this.entry.notes}} @isMe={{true}} />
-          </div>
-        {{/if}}
-        <FormRow>
-          <f.textarea @name="additional_notes"
-                      @label={{if this.entry.isRejected "Supply additional information for an appeal:"
-                                  "Provide a BRIEF & CONCISE explanation in 1 to 3 sentences why you should be credited for a missing shift?"}}
-                      @cols={{80}}
-                      @rows={{4}}
-                      @maxlength={{1500}}
-                      @showCharCount={{true}}
-          />
-        </FormRow>
-        <h6 class="text-danger fw-bold">The request will be denied if:</h6>
-        {{fa-icon "ban" right=1}} Not enough information was provided.<br>
-        {{fa-icon "ban" right=1}} Your story cannot be verified with your shift partner or shift lead / manager. Yes, we
-        do check!
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label={{if f.model.isNew "Submit New Request" "Update Request"}} @disabled={{this.isSubmitting}} />
-        <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelAction}} />
-        {{#if this.isSubmitting}}
-          <LoadingIndicator/>
-        {{/if}}
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
+  <Me::TimesheetMissingEdit @entry={{this.entry}}
+                            @onSave={{this.saveAction}}
+                            @onCancel={{this.cancelAction}}
+                            @positionOptions={{this.positionOptions}}
+  />
 {{/if}}

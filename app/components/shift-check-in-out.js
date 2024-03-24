@@ -47,7 +47,7 @@ export default class ShiftCheckInOutComponent extends Component {
     let {positions} = this.args;
 
     positions = positions.filter((p) => p.id !== TRAINING);
-    this.noTrainingRequiredPositions = positions.filter((p) => p.no_training_required);
+    this.noTrainingRequiredPositions = positions.filter((p) => (p.no_training_required || p.type === TYPE_TRAINING));
     if (this.noTrainingRequiredPositions.length && this.args.isSelfServe) {
       this.activePositions = this.noTrainingRequiredPositions;
     } else {
@@ -320,11 +320,11 @@ export default class ShiftCheckInOutComponent extends Component {
       this.store.pushPayload(result);
       switch (result.status) {
         case 'success':
-          endShiftNotify?.(this.store.peekRecord('timesheet', result.timesheet.id));
+          await endShiftNotify?.(this.store.peekRecord('timesheet', result.timesheet.id));
           this.toast.success(`${callsign} has been successfully signed off. Enjoy your rest.`);
           if (+this.args.person.id === this.session.userId) {
             // Update the user's navigation bar to remove the signed in position.
-            this.session.updateOnDuty();
+            await this.session.updateOnDuty();
           }
           break;
 

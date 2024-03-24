@@ -167,38 +167,42 @@
           below.
         </UiNotice>
       {{else}}
-        <UiNotice @title="Work Eligibility Issue" @icon="hand" @type="danger">
+        <UiNotice
+          @title="Work Eligibility Issue {{if this.noTrainingRequiredPositions " - Only Limited Positions Available"}}"
+          @icon="hand" @type="danger">
           <p>
             {{@person.callsign}} should not start a shift because
             {{if this.otOnly "the Online Course" "an In-Person Training"}}
             has not been completed.
+            {{#if this.noTrainingRequiredPositions}}
+              While most positions are not available to check into, a small set is available to work. See below.
+            {{/if}}
           </p>
           <p>
             In case the person attended an In-Person Training earlier in the day, the trainers may be
             delayed recording who passed the training. Have the HQ Short or Lead contact the trainers to
             verify the person attended and passed the training.
           </p>
-          {{#if this.userCanForceCheckIn}}
-            You have the privileges to force a shift start.
-          {{else}}
-            You do not have the privileges to force a shift start. A HQ Short or Lead may be able to start
-            the shift.
+          <p>
+            {{#if this.userCanForceCheckIn}}
+              {{fa-icon "hand-point-right" right=1}} You have the privileges to force a shift start.
+            {{else}}
+              You do not have the privileges to force a shift start for the position requiring an In-Person training.
+              A HQ Short or Lead may be able to start the shift.
+            {{/if}}
+          </p>
+          {{#if this.noTrainingRequiredPositions}}
+            <p>
+              The following positions are available to work that do not require passing an In-Person Training. Select the position, and the Start Shift button will
+              appear.
+            </p>
+            <div class="columns-container columns-4">
+              {{#each this.noTrainingRequiredPositions as |position|}}
+                <div>{{position.title}}</div>
+              {{/each}}
+            </div>
           {{/if}}
         </UiNotice>
-
-        {{#if this.noTrainingRequiredPositions}}
-          <UiNotice @title="Limited Positions Available" @icon="thumbs-up" @type="success">
-            <p>
-              While {{@person.callsign}} has not passed an In-Person Training session, they do have
-              positions which can be signed in to that do not require passing an In-Person Training.
-              Select such a position and the Start Shift button will appear.
-            </p>
-            No training required position(s):<br>
-            {{#each this.noTrainingRequiredPositions as |position idx|}}
-              {{if idx ", "}}{{position.title}}
-            {{/each}}
-          </UiNotice>
-        {{/if}}
       {{/if}}
     {{/if}}
 
@@ -219,7 +223,12 @@
               Force Shift Start
             </UiButton>
           {{else}}
-            <div class="text-danger mt-1">Shift start not allowed</div>
+            <div class="text-danger mt-1">
+              Cannot force start this shift.
+              {{#if this.noTrainingRequiredPositions}}
+                Other shift might be available.
+              {{/if}}
+            </div>
           {{/if}}
         {{else}}
           <UiButton @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
@@ -232,10 +241,10 @@
       </div>
     </FormRow>
     {{#if this.selectedPositionDisqualified}}
-      <div class="text-danger mb-2">
-        The selected position, {{this.selectedPosition.title}}, should not be signed in to because:<br>
+      <UiAlert @type="danger" @icon="ban" class="mb-2">
+        The selected position, {{this.selectedPosition.title}}, should not be signed in to because
         {{this.selectedPositionDisqualified}}
-      </div>
+      </UiAlert>
       {{#if this.userCanForceCheckIn}}
         <b>You do have the privileges to force the shift start.</b>
       {{else}}

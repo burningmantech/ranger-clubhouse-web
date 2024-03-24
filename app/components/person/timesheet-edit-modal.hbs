@@ -81,12 +81,20 @@
         </div>
         {{#if @entry.isTooShort}}
           <div class="text-danger">
-            Warning: Entry might be too short. Duration is less than 15 minutes.
+            Entry might be too short. Duration is less than 15 minutes.
           </div>
         {{else if @entry.isTooLong}}
           <div class="text-danger">
-            Warning: Entry might be too long. Duration is over 1.5x the scheduled shift of
+            Entry might be too long. Duration is over 1.5x the scheduled shift of
             {{hour-minute-words @entry.slot.duration}}.
+          </div>
+        {{/if}}
+        {{#if @entry.timesOutsideRange}}
+          <div>
+            The date/times are outside the scheduled sign-up date ranges. This might indicate the date/times were entered incorrectly:
+            <ul>
+              {{this.timeWarningsMessage}}
+            </ul>
           </div>
         {{/if}}
 
@@ -147,7 +155,7 @@
               Use the desired change(s)
             </UiButton>
           {{else}}
-            <b class="text-danger">No desired changes were entered?</b>
+            <div class="text-danger fw-semi-bold">The person has not entered any desired changes.</div>
           {{/if}}
           <FormRow class="mt-2">
             <f.datetime @name="on_duty"
@@ -208,7 +216,7 @@
           <FormRow>
             <div class="col-auto">
               <f.checkbox @name="suppress_duration_warning"
-                          @label="Supress duration warnings (too short / too long). Duration confirmed correct."/>
+                          @label="Supress duration warnings (too short / too long), and date/times warnings."/>
             </div>
           </FormRow>
         </fieldset>

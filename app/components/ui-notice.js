@@ -10,6 +10,6 @@ export default class UiNoticeComponent extends Component {
   }
 
   get iconColor() {
-    return this.args.iconColor ?? this.color;
+    return this.args.iconColor ?? (this.color === 'warning') ? 'black' : this.color;
   }
 }
