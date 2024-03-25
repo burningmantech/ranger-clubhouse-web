@@ -7,7 +7,7 @@ import dayjs from 'dayjs';
 import {
   ACTION_NEEDED,
   AFTER_EVENT,
-  COMPLETED,
+  COMPLETED, DURING_EVENT,
   NOT_AVAILABLE,
   NOTE,
   OPTIONAL,
@@ -255,10 +255,21 @@ const STEPS = [
       return {result: SKIP};
     }
   },
+  {
+    name: 'Fill out a Troubleshooter Mentor Survey',
+    period: DURING_EVENT,
+    check({milestones}) {
+      if (!milestones.ts_mentor_worked) {
+        return {result: SKIP};
+      }
 
-
+      return {
+        result: ACTION_NEEDED,
+        message: htmlSafe(`You worked one or more TS Mentor shifts. Use <a href="${milestones.ts_mentor_survey_url}" target="_blank" rel="noopener noreferrer">THIS LINK</a> to fill out a survey about your mentees.`),
+      };
+    }
+  },
   DashboardStep.TICKETING_CLOSED,
-
   {
     name: 'Sign the Sandman Affidavit',
     skipPeriod: AFTER_EVENT,
