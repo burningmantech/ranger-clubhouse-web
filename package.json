@@ -98,7 +98,7 @@
     "qunit": "^2.20.1",
     "qunit-dom": "^3.0.0",
     "sass": "^1.72.0",
-    "stylelint": "^16.2.1",
+    "stylelint": "^16.3.0",
     "stylelint-config-standard": "^36.0.0",
     "stylelint-prettier": "^5.0.0",
     "tinymce": "^7.0.0",
