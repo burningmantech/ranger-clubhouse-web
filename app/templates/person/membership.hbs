@@ -37,7 +37,7 @@
             </div>
         </div>
     {{/if}}
-    {{#each this.teams as |team|}}
+    {{#each this.teams key="id" as |team|}}
         <div class="masonry-item" id="team-box-{{team.id}}">
             <div class="masonry-item-header d-flex justify-content-between">
                 <div>

@@ -1,8 +1,10 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import EmberObject, {set, setProperties} from '@ember/object';
+import EmberObject, {set} from '@ember/object';
 import {action} from '@ember/object';
 import {debounce} from '@ember/runloop';
 import RSVP from 'rsvp';
+import {tracked} from '@glimmer/tracking';
+import _ from 'lodash';
 
 const EventOptions = [
   ['Agreement Signatures', 'agreement-signature'],
@@ -16,12 +18,15 @@ const EventOptions = [
   ['Person Update', 'person-update'],
   // Can't use position-% because it will match the position-credit-* events
   ['Position Changes', 'position-create,position-update,position-delete'],
-  ['Position Grant/Revokes', 'person-position-%'],
-  ['Role Grant/Revokes', 'person-role-%'],
+  ['Position Manual Grant/Revokes', 'person-position-%'],
+  ['Role Manual Grant/Revokes', 'person-role-%'],
   ['Schedule Updates', 'person-slot-%'],
   ['Setting Changes', 'setting-%'],
   ['Slot Changes', 'slot-%'],
-  ['Ticketing/Provision Changes', 'access-document-%']
+  ['Team Updates', 'team-create,team-update,team-destroy'],
+  ['Team Role Updates', 'team-role-%'],
+  ['Team Grant/Revokes', 'person-team-%'],
+  ['Ticketing/Provision Changes', 'access-document-%'],
 ];
 
 const SortOptions = [
@@ -35,6 +40,17 @@ export default class AdminActionLogController extends ClubhouseController {
   eventOptions = EventOptions;
   sortOptions = SortOptions;
 
+  @tracked person;
+  @tracked start_time;
+  @tracked end_time;
+  @tracked events;
+  @tracked sort;
+  @tracked page;
+  @tracked event_name;
+  @tracked message;
+
+  @tracked query;
+
   @action
   toggleLog(log) {
     set(log, 'showing', !log.showing);
@@ -42,12 +58,12 @@ export default class AdminActionLogController extends ClubhouseController {
 
   @action
   goNextPage() {
-    set(this, 'page', +this.currentPage + 1);
+    this.page = +this.currentPage + 1;
   }
 
   @action
   goPrevPage() {
-    set(this, 'page', +this.currentPage - 1);
+    this.page = +this.currentPage - 1;
   }
 
   _performSearch(callsign, resolve, reject) {
@@ -66,7 +82,7 @@ export default class AdminActionLogController extends ClubhouseController {
   }
 
   @action
-  searchCallsignAction(callsign) {
+  async searchCallsignAction(callsign) {
     return new RSVP.Promise((resolve, reject) => {
       debounce(this, this._performSearch, callsign, resolve, reject, 350);
     });
@@ -74,24 +90,23 @@ export default class AdminActionLogController extends ClubhouseController {
 
   @action
   resetFilters() {
-    set(this, 'query', EmberObject.create({sort: 'desc'}));
+    this.query =  EmberObject.create({sort: 'desc'});
   }
 
   @action
   searchAction() {
     const params = {};
     this.queryParams.forEach((param) => {
-      if (this.query[param]) {
+      if (!_.isEmpty(this.query[param])) {
         if (params === 'events') {
-          params[param] = this.query.events.join(',');
+          this[param] = this.query.events.join(',');
         } else {
-          params[param] = this.query[param];
+          this[param] = this.query[param];
         }
       } else {
-        params[param] = null;
+        this[param] = null;
       }
     });
-    params.page = null;
-    setProperties(this, params); // Boom! Force route to reload
+    this.page = null;
   }
 }

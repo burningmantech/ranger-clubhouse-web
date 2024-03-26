@@ -733,12 +733,12 @@ summary:hover {
 
 .blink-row {
   td {
-    animation: blink-keyframes 0.5s linear 4;
+    animation: blink-keyframes 0.75s linear 2;
   }
 }
 
 .blink-box {
-  animation: blink-keyframes 0.5s linear 4;
+  animation: blink-keyframes 0.75s linear 2;
 }
 
 .highlight-hover:hover {

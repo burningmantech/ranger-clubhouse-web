@@ -1,5 +1,6 @@
 import ChFormFieldBaseComponent from './field-base';
 import {action} from '@ember/object';
+import {cached} from '@glimmer/tracking';
 
 export default class ChFormCheckboxGroupFieldComponent extends ChFormFieldBaseComponent {
   wrapClassDefault = '';
@@ -13,10 +14,10 @@ export default class ChFormCheckboxGroupFieldComponent extends ChFormFieldBaseCo
 
   groupWrapClassDefault = 'col-auto';
 
-  constructor() {
-    super(...arguments);
-
-    this.checkedBoxes = this.buildCheckedOptions();
+  @cached
+  get checkedBoxes() {
+    // By using a function, this allows for the options to change, or the underlying model to be replaced.
+    return this.buildCheckedOptions();
   }
 
   get checkboxLabelClass() {

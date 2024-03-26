@@ -15,7 +15,7 @@ export default class PersonMembershipController extends ClubhouseController {
   }
 
   get teamsScrollList() {
-    return this.teams.map((t) => ({ id: `team-box-${t.id}`, title: t.title }));
+    return this.teams.map((t) => ({id: `team-box-${t.id}`, title: t.title}));
   }
 
   @action
@@ -66,8 +66,21 @@ export default class PersonMembershipController extends ClubhouseController {
   }
 
   @action
-  managerClick(team) {
-    team.managerSelect.selected = !team.managerSelect.selected;
+  managerClick(team, event) {
+    const isChecked = !team.managerSelect.selected;
+    if (team.type === 'team' || !isChecked) {
+      team.managerSelect.selected = isChecked;
+      return;
+    }
+
+    const target = event.target;
+    target.checked = false;
+    this.modal.confirm('Confirm Clubhouse Team Manager Assignment',
+      `<p>The Clubhouse Team <i>${team.title}</i> is a <b>${team.type}</b>.</p><p>It is recommended cadre / delegation members are NOT assigned as Clubhouse Managers for their cadre/delegation, only their team. Otherwise, they may be given the ability to mint new cadre/delegation members without approval from Council first, and unintentional privilege escalation may result.</p>Are you sure you want to do this?`,
+      () => {
+        team.managerSelect.selected = true;
+        target.checked = true;
+      });
   }
 
   @action
