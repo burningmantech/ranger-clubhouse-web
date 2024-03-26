@@ -41,7 +41,8 @@
       </div>
     </FormRow>
     <f.submit @label="Search"/>
-    <UiButton @type="secondary" @onClick={{fn this.resetFilters f.model}}>Reset</UiButton>
+    <UiButton @type="gray" class="btn-link"
+              @onClick={{fn this.resetFilters f.model}}>Clear Filters</UiButton>
   </ChForm>
 
   {{#if this.logs}}
@@ -65,7 +66,7 @@
           <td class="w-20">
             {{#if log.data}}
               <a href {{action this.toggleLog log}}>
-                {{fa-icon (if log.showing "caret-down" "caret-right")}} {{timestamp-format log.created_at}}
+                {{fa-icon (if log.showing "caret-down" "caret-right") right=1}} {{timestamp-format log.created_at}}
               </a>
             {{else}}
               &nbsp; {{log.created_at}}

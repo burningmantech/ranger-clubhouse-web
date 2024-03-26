@@ -6,7 +6,7 @@ import {setting} from 'clubhouse/utils/setting';
 import dayjs from 'dayjs';
 import {
   ACTION_NEEDED,
-  AFTER_EVENT,
+  AFTER_EVENT, BEFORE_EVENT,
   COMPLETED, DURING_EVENT,
   NOT_AVAILABLE,
   NOTE,
@@ -381,7 +381,22 @@ export default class DashboardRangerComponent extends Component {
     }
 
     if (!isAfterEvent || steps.length) {
-      groups.push(new StepGroup(isAfterEvent ? 'After Event Action Items' : 'Preparation For Playa', steps,
+      const {period} = this.args.milestones;
+      let title;
+      switch (period) {
+        case BEFORE_EVENT:
+          title = 'Preparation For Playa';
+          break;
+        case DURING_EVENT:
+          title = 'Event Action Items';
+          break;
+        default:
+          title = 'After Event Action Items';
+          break;
+      }
+      groups.push(new StepGroup(
+        title,
+        steps,
         !immediateSteps.length
       ));
     }
