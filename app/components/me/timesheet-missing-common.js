@@ -57,6 +57,11 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     }
   }
 
+  @action
+  toggleNotes(tsm) {
+    tsm.showNotes = !tsm.showNotes;
+  }
+
   /**
    * Cancel the form
    */

@@ -1,14 +1,18 @@
-{{#each @notes as |row|}}
-  <div class="mb-2">
-    <div class="mb-1 fw-medium">
-      {{shift-format row.created_at}} {{this.fromLabel row}}:
-    </div>
-    {{nl2br row.note}}
-  </div>
+{{#if @lastInfo}}
+  Last note left was on {{shift-format this.lastNote.created_at}} {{this.fromLabel this.lastNote}}.
 {{else}}
-  {{#if @showNoNotesMessage}}
+  {{#each @notes as |row|}}
     <div class="mb-2">
-      <i>No notes have been entered</i>
+      <div class="mb-1 fw-medium">
+        {{shift-format row.created_at}} {{this.fromLabel row}}:
+      </div>
+      {{nl2br row.note}}
     </div>
-  {{/if}}
-{{/each}}
+  {{else}}
+    {{#if @showNoNotesMessage}}
+      <div class="mb-2">
+        <i>No notes have been entered</i>
+      </div>
+    {{/if}}
+  {{/each}}
+{{/if}}

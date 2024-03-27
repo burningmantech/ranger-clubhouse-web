@@ -4,30 +4,30 @@
   </UiButton>
 </div>
 {{#if @timesheetsMissing}}
-  <NoAppreciateIcon/>
-  = the shift hours do not count towards provisions and appreciations.
-   <div class="timesheet-table">
+  Legend:
+  <HoursDoCountLegend/>
+  <div class="timesheet-table">
     <div class="timesheet-row timesheet-header">
       <div class="timesheet-time">Time</div>
       <div class="timesheet-duration">Duration</div>
       <div class="timesheet-position">Position</div>
     </div>
     {{#each @timesheetsMissing as |tsm|}}
-      <div class="timesheet-entry">
-        <div class="timesheet-row-header {{this.requestClass tsm}}">
-          {{#if tsm.isPending}}
-            {{fa-icon "hourglass" right=1}} The request is pending review.
+      <div class="timesheet-entry-header {{this.requestClass tsm}}">
+        {{#if tsm.isPending}}
+          {{fa-icon "hourglass" right=1}} The request is pending review.
+        {{else}}
+          {{#if tsm.isApproved}}
+            {{fa-icon "check" right=1}} The request has been APPROVED. The missing shift has been added to your
+            timesheet.
+          {{else if tsm.isRejected}}
+            {{fa-icon "ban" right=1}} The request has been rejected.
           {{else}}
-            {{#if tsm.isApproved}}
-              {{fa-icon "check" right=1}} The request has been APPROVED. The missing shift has been added to your
-              timesheet.
-            {{else if tsm.isRejected}}
-              {{fa-icon "ban" right=1}} The request has been rejected.
-            {{else}}
-              Unknown status [{{tsm.review_status}}].
-            {{/if}}
+            Unknown status [{{tsm.review_status}}].
           {{/if}}
-        </div>
+        {{/if}}
+      </div>
+      <div class="timesheet-entry">
         <div class="timesheet-row">
           <div class="timesheet-time">{{shift-format tsm.on_duty tsm.off_duty}}</div>
           <div class="timesheet-duration">
@@ -35,34 +35,51 @@
           </div>
           <div class="timesheet-position">{{tsm.position.title}}</div>
         </div>
-        {{#if tsm.notes}}
-          <div class="timesheet-row-info">
-            <div class="border p-2 my-2">
-              <h5 class="mx-n2 mt-n2 p-2 text-bg-gray">Notes from you &amp; the Timesheet Wranglers</h5>
-              <TimesheetNotes @notes={{tsm.notes}} @isMe={{this.isMe}} />
-            </div>
-          </div>
-        {{/if}}
-        <div class="timesheet-actions">
-          {{#if (or tsm.isPending tsm.isRejected)}}
-            <UiButton @onClick={{fn this.editAction tsm}} @disabled={{or tsm.isReloading tsm.isSaving}}>
-              {{#if tsm.isReloading}}
-                <SpinIcon/>
-              {{else if tsm.isRejected}}
-                {{fa-icon "redo" right=1}} Submit Appeal
-              {{else}}
-                {{fa-icon "edit" right=1}} Edit Request
-              {{/if}}
-            </UiButton>
-            {{#if tsm.isPending}}
-              <UiButton @type="danger"
-                        @onClick={{fn this.deleteAction tsm}}
-                        @disabled={{or tsm.isReloading tsm.isSaving}}>
-                {{fa-icon "trash" right=1}} Delete Request
-              </UiButton>
+        <div class="timesheet-row-info">
+          {{#if tsm.notes}}
+            {{#if tsm.showNotes}}
+              <div class="border p-2 my-2">
+                <h5 class="mx-n2 mt-n2 p-2 text-bg-gray">Notes from you &amp; the Timesheet Wranglers</h5>
+                <TimesheetNotes @notes={{tsm.notes}} @isMe={{this.isMe}} />
+              </div>
+            {{else}}
+              <div class="p-2">
+                <TimesheetNotes @notes={{tsm.notes}} @isMe={{this.isMe}} @lastInfo={{true}} />
+              </div>
             {{/if}}
           {{/if}}
         </div>
+      </div>
+      <div class="timesheet-row timesheet-actions">
+        <UiButton @type="gray" class="btn-responsive" @onClick={{fn this.toggleNotes tsm}}>
+          {{fa-icon "comments" type="r" right=1}}
+          {{#if tsm.showNotes}}
+            Hide Notes
+          {{else}}
+            Show Notes
+          {{/if}}
+        </UiButton>
+        {{#if (or tsm.isPending tsm.isRejected)}}
+          {{#if tsm.isPending}}
+            <UiButton @type="danger"
+                      class="btn-responsive"
+                      @onClick={{fn this.deleteAction tsm}}
+                      @disabled={{or tsm.isReloading tsm.isSaving}}>
+              {{fa-icon "trash" right=1}} Delete Request
+            </UiButton>
+          {{/if}}
+          <UiButton @onClick={{fn this.editAction tsm}}
+                    class="btn-responsive"
+                    @disabled={{or tsm.isReloading tsm.isSaving}}>
+            {{#if tsm.isReloading}}
+              <SpinIcon/>
+            {{else if tsm.isRejected}}
+              {{fa-icon "redo" right=1}} Submit Appeal
+            {{else}}
+              {{fa-icon "edit" right=1}} Edit Request
+            {{/if}}
+          </UiButton>
+        {{/if}}
       </div>
     {{/each}}
   </div>

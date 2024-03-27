@@ -5,6 +5,7 @@
  */
 
 .timesheet-table {
+  margin-top: 1vh;
   margin-bottom: 10px;
   max-width: 950px;
 }
@@ -40,24 +41,23 @@
   flex-direction: row;
 }
 
-.timesheet-row > div {
+.timesheet-row {
   padding: 0.125rem 0.25rem;
 }
 
 .timesheet-actions {
   width: 100%;
-  margin: -0.125rem -0.25rem;
-  padding: 0.125rem 0.25rem;
+  padding: 0.125rem 0;
 }
 
-.timesheet-row-header {
+.timesheet-entry-header {
   width: 100%;
-  margin: -0.125rem -0.25rem 0.225rem -0.25rem;
-  padding: 0.325rem 0.25rem 0.425rem 0.75rem;
+  padding: 0.325rem 0.30rem 0.425rem 0.75rem;
 }
 
 .timesheet-actions {
   margin-top: 1vh;
+
   button {
     display: inline-block;
   }
@@ -79,7 +79,7 @@
     flex-wrap: nowrap;
   }
 
-  .timesheet-row-header {
+  .timesheet-entry-header {
     font-size: 1em;
   }
 
@@ -116,12 +116,6 @@
     padding: 0.2rem 0;
   }
 
-  .timesheet-row button {
-    //    font-size: 0.9em;
-    display: inline-block;
-    width: 49% !important;
-  }
-
   .timesheet-header {
     display: none !important;
   }
@@ -154,5 +148,17 @@
   .timesheet-actions {
     order: 6;
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    button {
+      display: block;
+      width: 100%;
+    }
+
+    button:not(:last-child) {
+      margin-bottom: 1vh;
+    }
   }
 }

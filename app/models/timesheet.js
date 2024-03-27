@@ -72,6 +72,8 @@ export default class TimesheetModel extends Model {
 
   @tracked isOverlapping = false;
 
+  @tracked showNotes;
+
   // All good
   get isVerified() {
     return this.review_status === STATUS_VERIFIED;
