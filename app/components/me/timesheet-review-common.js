@@ -20,8 +20,17 @@ export default class MeTimesheetReviewCommonComponent extends Component {
     super(...arguments);
   }
 
+  get isMe() {
+    return +this.args.person.id === this.session.userId;
+  }
+
   get correctionsEnabled() {
     return this.args.year === currentYear() && this.args.timesheetInfo.correction_enabled;
+  }
+
+  @action
+  toggleNotes(ts) {
+    ts.showNotes = !ts.showNotes;
   }
 
   // Mark an entry as correct
@@ -104,7 +113,7 @@ export default class MeTimesheetReviewCommonComponent extends Component {
     this.entry = null;
   }
 
-  timesheetRowClass(ts) {
+  timesheetEntryHeaderClass(ts) {
     if (ts.stillOnDuty) {
       return 'text-danger';
     }

@@ -1,10 +1,13 @@
 import Model, {attr} from '@ember-data/model';
+import {tracked} from '@glimmer/tracking';
 
 export const APPROVED = 'approved';
 export const REJECTED = 'rejected';
 export const PENDING = 'pending';
 
 export default class TimesheetMissingModel extends Model {
+  @tracked showNotes;
+
   @attr('number') person_id;
   @attr('number') position_id;
   @attr('shiftdate') off_duty;

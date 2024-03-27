@@ -6,7 +6,7 @@
     {{#if (lt @year 2008)}}
       <UiAlert @type="warning" @icon="hand-point-right">
         You are viewing a timesheet created prior to 2008. The department did not start tracking volunteer hours
-        until 2008. Any timesheets from before 2008 are placeholders and do not represent the actual volunteer work
+        until 2008. Any timesheet entry from before 2008 are placeholders and do not represent the actual volunteer work
         performed.
       </UiAlert>
     {{/if}}
@@ -17,8 +17,8 @@
         This will not affect the hours and credits applied towards tickets and provisions.
       </p>
     {{/if}}
-    <NoAppreciateIcon/>
-    = the shift hours do not count towards provisions and appreciations.
+    Legend:
+    <HoursDoCountLegend/>
     <div class="timesheet-table">
       <div class="timesheet-row timesheet-header">
         <div class="timesheet-time">Time</div>
@@ -27,44 +27,43 @@
         <div class="timesheet-position">Position</div>
       </div>
       {{#each @timesheets key="id" as |ts|}}
+        {{#if this.correctionsEnabled}}
+          <div class="timesheet-entry-header {{this.timesheetEntryHeaderClass ts}}">
+            {{#if ts.stillOnDuty}}
+              {{fa-icon "ban" right=1}} The entry cannot be verified or a correction submitted
+              until after the shift has ended.
+            {{else if ts.isVerified}}
+              {{fa-icon "check" right=1}} Entry was verified as correct on {{shift-format ts.verified_at}} (Pacific)
+            {{else if ts.isUnverified}}
+              {{fa-icon "arrow-right" right=1}} The entry has not been verified as correct or a correction submitted.
+            {{else if ts.isApproved}}
+              {{fa-icon "arrow-right" right=1}} The correction request has been approved. You still need to mark the
+              entry as correct.
+            {{else if ts.isRejected}}
+              {{fa-icon "times" right=1}} The correction request has been denied. An appeal may be submitted.
+            {{else if ts.isPending}}
+              {{fa-icon "hourglass-half" right=1}} The correction request is pending review.
+            {{else}}
+              Unknown state? [{{ts.review_status}}]
+            {{/if}}
+          </div>
+        {{/if}}
+        {{#if (and (not ts.isVerified) ts.isTooShort)}}
+          <div class="timesheet-entry-header">
+            {{fa-icon "hand-point-right" right=1}} The entry is less than 15 minutes. Please verify this is not a
+            mistake.
+          </div>
+        {{/if}}
+        {{#if (and (not ts.isVerified) ts.isTooLong)}}
+          <div class="timesheet-entry-header">
+            <p>
+              {{fa-icon "hand-point-right" right=1}} The entry exceeds the scheduled shift duration by 1.5 times.
+              Please confirm this is not a mistake, or submit a correction.
+            </p>
+            The scheduled shift was {{hour-minute-words ts.slot.duration}} long.
+          </div>
+        {{/if}}
         <div class="timesheet-entry">
-          {{#if this.correctionsEnabled}}
-            <div class="timesheet-row-header {{this.timesheetRowClass ts}}">
-              {{#if ts.stillOnDuty}}
-                {{fa-icon "ban" right=1}} The entry cannot be verified or a correction submitted
-                until after the shift has ended.
-              {{else if ts.isVerified}}
-                {{fa-icon "check" right=1}} Entry was verified as correct on {{shift-format ts.verified_at}} (Pacific)
-              {{else if ts.isUnverified}}
-                {{fa-icon "arrow-right" right=1}} The entry has not been verified as correct or a correction submitted.
-              {{else if ts.isApproved}}
-                {{fa-icon "arrow-right" right=1}} The correction request has been approved. You will need verify the
-                correction is accurate.
-              {{else if ts.isRejected}}
-                {{fa-icon "times" right=1}} The correction request has been denied. An appeal may be submitted.
-              {{else if ts.isPending}}
-                {{fa-icon "hourglass-half" right=1}} The correction request is pending review.
-              {{else}}
-                Unknown state? [{{ts.review_status}}]
-              {{/if}}
-            </div>
-          {{/if}}
-          {{#if (and (not ts.isVerified) ts.isTooShort)}}
-            <div class="timesheet-row-header">
-              {{fa-icon "hand-point-right" right=1}} The entry is less than 15 minutes. Please verify this is not a
-              mistake.
-            </div>
-          {{/if}}
-          {{#if (and (not ts.isVerified) ts.isTooLong)}}
-            <div class="timesheet-row-header">
-              <p>
-                {{fa-icon "hand-point-right" right=1}} The entry exceeds the scheduled shift duration by 1.5 times.
-                Please
-                confirm this is not a mistake, or submit a correction.
-              </p>
-              The scheduled shift was {{hour-minute-words ts.slot.duration}} long.
-            </div>
-          {{/if}}
           <div class="timesheet-row">
             <div class="timesheet-time">
               {{#unless ts.position.count_hours}}
@@ -86,38 +85,65 @@
               {{ts.position.title}}
               {{#if (and @person.employee_id ts.position.paycode )}}
                 <div class="text-muted small">
-                  {{fa-icon "person-digging"}} Paid position.
+                  {{fa-icon "person-digging" right=1}} Paid position.
                 </div>
               {{/if}}
             </div>
           </div>
           {{#if this.correctionsEnabled}}
-            <div class="timesheet-row timesheet-actions">
-              {{#if ts.off_duty}}
-                <UiButton @type="secondary" @onClick={{fn this.markIncorrectAction ts}}
-                          @disabled={{ts.isLoading}}>
-                  {{#if ts.isPending}}
-                    Add More Info
-                  {{else if ts.isRejected}}
-                    Submit Correction Appeal
-                  {{else}}
-                    Request Correction
-                  {{/if}}
-                </UiButton>
-                {{#unless ts.isVerified}}
-                  <UiButton @type="success"
-                            @onClick={{fn this.markCorrectAction ts}}
-                            @disabled={{ts.isSaving}}>
-                    Mark Entry As Correct
-                  </UiButton>
-                {{/unless}}
-                {{#if (or ts.isReloading ts.iSaving)}}
-                  <LoadingIndicator/>
+            <div class="timesheet-row-info">
+              {{#if ts.notes}}
+                {{#if ts.showNotes}}
+                  <div class="border p-2 my-2">
+                    <h5 class="mx-n2 mt-n2 p-2 text-bg-gray">Notes from you &amp; the Timesheet Wranglers</h5>
+                    <TimesheetNotes @notes={{ts.notes}} @isMe={{this.isMe}} />
+                  </div>
+                {{else}}
+                  <div class="p-2">
+                    <TimesheetNotes @notes={{ts.notes}} @isMe={{this.isMe}} @lastInfo={{true}} />
+                  </div>
                 {{/if}}
               {{/if}}
             </div>
           {{/if}}
         </div>
+        {{#if this.correctionsEnabled}}
+          <div class="timesheet-row timesheet-actions">
+            {{#if ts.notes}}
+              <UiButton @type="gray" @onClick={{fn this.toggleNotes ts}}>
+                {{fa-icon "comments" type="r" right=1}}
+                {{#if ts.showNotes}}
+                  Hide Notes
+                {{else}}
+                  Show Notes
+                {{/if}}
+              </UiButton>
+            {{/if}}
+            {{#if ts.off_duty}}
+              <UiButton @type="secondary"
+                        @onClick={{fn this.markIncorrectAction ts}}
+                        @disabled={{ts.isLoading}}>
+                {{#if ts.isPending}}
+                  Add More Info
+                {{else if ts.isRejected}}
+                  Submit Appeal
+                {{else}}
+                  Request Correction
+                {{/if}}
+              </UiButton>
+              {{#unless ts.isVerified}}
+                <UiButton @type="success"
+                          @onClick={{fn this.markCorrectAction ts}}
+                          @disabled={{ts.isSaving}}>
+                  Mark Correct
+                </UiButton>
+              {{/unless}}
+              {{#if (or ts.isReloading ts.iSaving)}}
+                <LoadingIndicator/>
+              {{/if}}
+            {{/if}}
+          </div>
+        {{/if}}
       {{else}}
         <span class="text-danger">No entries were found for {{@year}}</span>
       {{/each}}
@@ -131,34 +157,26 @@
             @formFor={{this.entry}}
             @onSubmit={{this.saveCorrectionAction}} as |f|>
       <Modal.body>
-        Please help us understand why this entry should be fixed by providing the following information:
-        <ul class="no-indent">
-          <li><b>Provide a BRIEF &amp; CONCISE explanation</b> in 1 to 3 sentences what needs to be corrected.</li>
-          <li><b>Who was your shift partner or the Shift Lead who can corroborate your story?</b></li>
-        </ul>
         {{#if this.entry.isRejected}}
           <UiNotice @type="danger" @icon="times" @title="Correction request has been denied">
           </UiNotice>
         {{/if}}
 
-        <UiTable>
-          <thead>
-          <tr>
-            <th>Position</th>
-            <th>Time</th>
-            <th>Duration</th>
-            <th>Credits</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr>
-            <td>{{this.entry.position.title}}</td>
-            <td>{{shift-format this.entry.on_duty this.entry.off_duty}}</td>
-            <td class="text-end">{{hour-minute-words this.entry.duration}}</td>
-            <td class="text-end">{{credits-format this.entry.credits}}</td>
-          </tr>
-          </tbody>
-        </UiTable>
+        You are requesting a correction for:
+        <div class="mt-2 h5 d-flex flex-column flex-lg-row">
+          <div class="d-inline-block me-2">
+            {{this.entry.position.title}}
+          </div>
+          <div class="d-inline-block me-3">
+            {{credits-format this.entry.credits}} credits
+          </div>
+          <div class="d-inline-block me-3">
+            {{shift-format this.entry.on_duty this.entry.off_duty}}
+          </div>
+          <div class="d-inline-block">
+            {{hour-minute-words this.entry.duration}}
+          </div>
+        </div>
         {{#if this.entry.notes}}
           <div class="border p-2 my-2">
             <h5 class="mx-n2 mt-n2 p-2 bg-secondary text-white">Notes from you &amp; the Timesheet Wranglers</h5>
@@ -180,10 +198,15 @@
         <FormRow>
           <f.datetime @name="desired_off_duty" @label="Leave blank if the end time is correct" @size={{20}} />
         </FormRow>
+        Please help us understand why this entry should be fixed by providing the following information:
+        <ul class="no-indent">
+          <li><b>Provide a BRIEF &amp; CONCISE explanation</b> in 1 to 3 sentences what needs to be corrected.</li>
+          <li><b>Who was your shift partner or the Shift Lead who can corroborate your story?</b></li>
+        </ul>
         <FormRow>
           <f.textarea @name="additional_notes"
                       @label={{if this.entry.isRejected "Supply additional information for an appeal:"
-                                  "Provide a BRIEF & CONCISE explanation in 1 to 3 sentences why the entry should be corrected:"}}
+                                  "Enter your brief explanation below:"}}
                       @cols={{80}}
                       @rows={{3}}
                       @maxlength={{1000}}

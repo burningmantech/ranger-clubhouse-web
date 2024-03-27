@@ -12,8 +12,7 @@
     {{hour-minute-format @timesheetSummary.total_duration}}
     <div class="d-flex mt-1">
       <div>
-        <NoAppreciateIcon/>
-        = the shift hours do not count towards provisions and appreciations.
+        <HoursDoCountLegend />
       </div>
       {{#if this.hasOverlapping}}
         <div class="ms-2">

@@ -34,4 +34,9 @@ export default class TimesheetNotesComponent extends Component {
 
     return `${NoteTypeLabels[type] ?? type} ${callsign}`;
   }
+
+  get lastNote() {
+    const {notes} = this.args;
+    return notes.length ? notes[notes.length - 1] : {};
+  }
 }
