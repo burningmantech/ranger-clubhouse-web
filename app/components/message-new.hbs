@@ -6,7 +6,7 @@
     <Modal.body>
       <p>
         <b class="text-danger"> Messages are NOT private (will be seen by HQ staff &amp; Tech Team), for official
-        Ranger business only, and archived each year.</b>
+          Ranger business only, and archived each year.</b>
       </p>
       <p>
         Burning Man and the Rangers have a zero-tolerance policy for behavior that is non-consensual,
@@ -18,29 +18,35 @@
                   @label="From"
                   @size={{30}}
                   @maxlength={{60}}
-                  @autofocus={{not this.isFromMessage}} />
+                  @autofocus={{not this.isFromMessage}}
+          />
         {{/unless}}
         <f.search @name="recipient_callsign"
-                 @placeholder="Enter a callsign"
-                 @label="To"
-                 @size={{30}}
-                 @maxlength={{60}}
-                 @onSearch={{this.searchCallsignAction}}
-                 @autofocus={{this.isFromMessage}}
-                 @noResultsText="No callsigns found"
+                  @placeholder="Enter a callsign"
+                  @label="To"
+                  @size={{30}}
+                  @maxlength={{60}}
+                  @onSearch={{this.searchCallsignAction}}
+                  @autofocus={{this.isFromMessage}}
+                  @noResultsText="No callsigns found"
         />
-      </FormRow>
+       </FormRow>
       <FormRow>
         <f.text @name="subject"
                 @label="Subject"
                 @size={{80}}
-                @maxlength={{80}} />
+                @maxlength={{80}}
+                @showCharCount={{true}}
+        />
       </FormRow>
       <FormRow>
         <f.textarea @name="body"
-                   @label="The message (be civil, courteous, polite, & professional)"
-                   @rows={{4}}
-                   @cols={{80}} />
+                    @label="The message (be civil, courteous, polite, & professional)"
+                    @rows={{4}}
+                    @cols={{80}}
+                    @showCharCount={{true}}
+                    @maxlength={{4000}}
+        />
       </FormRow>
     </Modal.body>
     <Modal.footer @noAlign={{true}}>

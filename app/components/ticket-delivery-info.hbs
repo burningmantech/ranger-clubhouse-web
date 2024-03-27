@@ -32,7 +32,7 @@
     <p>
       <b>How do you want your {{pluralize this.itemsToDeliver.length "item"}} delivered?</b>
     </p>
-    <div class="d-flex flex-column flex-lg-row justify-lg-content-between align-self-center">
+    <div class="d-flex flex-column flex-lg-row justify-content-lg-between align-self-center">
       <div>
         <UiButton @class="responsive" @onClick={{fn this.setDeliveryMethod "postal"}} @disabled={{this.isSaving}}>
           {{fa-icon "envelope"}} Deliver By US Mail

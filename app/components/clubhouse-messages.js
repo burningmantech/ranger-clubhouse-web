@@ -27,7 +27,8 @@ export default class ClubhouseMessagesComponent extends Component {
     return this.args.messages.reduce((total, msg) => (msg.delivered ? 1 : 0) + total, 0);
   }
 
-  _updateUnreadCount() {
+  @action
+  updateUnreadCount() {
     const unreadCount = this.unreadCount;
     const {person} = this.args;
     if (person) {
@@ -37,33 +38,6 @@ export default class ClubhouseMessagesComponent extends Component {
     if (+this.session.userId === +person.id) {
       this.session.unreadMessageCount = unreadCount;
     }
-  }
-
-  @action
-  toggleMessage(message) {
-    message.showing = !message.showing;
-  }
-
-  @action
-  markReadAction(message) {
-    this._markMessage(message, true);
-  }
-
-  @action
-  markUnreadAction(message) {
-    this._markMessage(message, false);
-  }
-
-  _markMessage(message, delivered) {
-    message.isSubmitting = true;
-    this.ajax.request(`messages/${message.id}/markread`, {
-      method: 'PATCH',
-      data: {delivered}
-    }).then(() => {
-      message.delivered = delivered;
-      this._updateUnreadCount();
-    }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => message.isSubmitting = false);
   }
 
   _newMessageSetup(fields) {
@@ -87,6 +61,21 @@ export default class ClubhouseMessagesComponent extends Component {
   }
 
   @action
+  replyToAction(message) {
+    let {subject} = message;
+    if (!subject.match(/^(re)[:-]?\s+/i, '')) {
+      subject = `Re: ${subject}`;
+    }
+
+    this._newMessageSetup({
+      subject,
+      message_from: this.args.person.callsign,
+      recipient_callsign: message.message_from,
+      reply_to_id: message.id,
+    });
+  }
+
+  @action
   submitAction(model, isValid) {
     if (!isValid) {
       return;
@@ -96,7 +85,7 @@ export default class ClubhouseMessagesComponent extends Component {
     this.house.saveModel(model, `Message successfully sent to ${model.recipient_callsign}.`,
       () => {
         if (+this.newMessage.person_id === this.session.userId) {
-          this.args.messages.update().then(() => this._updateUnreadCount());
+          this.args.messages.update().then(() => this.updateUnreadCount());
         }
         this.newMessage = null;
       }).finally(() => this.isSubmitting = false);

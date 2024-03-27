@@ -1,118 +1,59 @@
-<div class="mail-container">
+<div class="max-width-900">
   <p>
-    {{#if @messages}}
-      {{pluralize @messages.length "message"}}
-      {{#if this.unreadCount}}
-        <b>({{this.unreadCount}} unread)</b>
-      {{else}}
-        (no unread)
-      {{/if}}
-    {{else}}
-      <b>
-        {{#if @isMe}}
-          You have no messages
-        {{else}}
-          {{@person.callsign}} has no messages.
-        {{/if}}
-      </b>
-    {{/if}}
+    Click on a message to show the contents.
   </p>
-  {{#if this.canSendMessages}}
-    <p>
-      {{#if @isWorkerInterface}}
-        <UiButton @class="btn-responsive" @onClick={{this.newMessageToAction}}>
-          New Message TO {{@person.callsign}}
-        </UiButton>
-        <UiButton @type="secondary" @class="ml-lg-2 btn-responsive" @onClick={{this.newMessageFromAction}}>
-          New Message FROM {{@person.callsign}}
-        </UiButton>
-      {{else}}
-        <UiButton @type="primary" @class="btn-responsive" @onClick={{this.newMessageFromAction}}>
-          {{fa-icon "plus"}} New Message
-        </UiButton>
-      {{/if}}
-    </p>
-  {{/if}}
-
-  {{#each @messages as |message|}}
-    <div class="mail {{unless message.delivered "mail-unread"}}">
-      <div class="mail-photo">
-        {{#if message.is_rbs}}
-          {{fa-icon "bullhorn"}}
-        {{else if message.sender_photo_url}}
-          <img src={{message.sender_photo_url}} loading="lazy" alt="{{message.message_from}}"/>
+  <div class="d-flex flex-column flex-xl-row flex-shrink-1 flex-xl-shrink-0 justify-content-xl-between mb-2">
+    <div class="align-self-xl-center">
+      {{#if @messages}}
+        {{pluralize @messages.length "message"}}
+        {{#if this.unreadCount}}
+          <b>({{this.unreadCount}} unread)</b>
         {{else}}
-          {{fa-icon "user"}}
+          (no unread)
         {{/if}}
-      </div>
-      <div class="mail-header {{if message.showing "mail-showing"}}"
-          {{on "click" (fn this.toggleMessage message)}}
-           role="button">
-        <div class="mail-indicator">
-          {{#if message.has_expired}}
-            {{fa-icon "ban"}}
-          {{else if message.delivered}}
-            {{fa-icon "check-circle" type="far"}}
+      {{else}}
+        <b>
+          {{#if @isMe}}
+            You have no messages
           {{else}}
-            {{fa-icon "arrow-right" color="success"}}
+            {{@person.callsign}} has no messages.
           {{/if}}
-        </div>
-        <div class="mail-from">
-          {{message.message_from}}
-        </div>
-        <div class="mail-date">
-          {{shift-format message.created_at}}
-        </div>
-        <div class="mail-subject">
-          {{message.subject}}
-        </div>
-      </div>
-      <BsCollapse @collapsed={{not message.showing}} class="mail-body">
-        {{#if message.isDictated}}
-          <div class="mail-written-by">
-            {{fa-icon "pen-alt"}} written by {{message.creator_callsign}} for {{message.message_from}}
-          </div>
-        {{/if}}
-        {{#if message.has_expired}}
-          <div class="mb-2 text-danger">
-            This message expired on {{shift-format message.expires_at}} and is no longer considered relevant.
-          </div>
-        {{else if message.expires_at}}
-          <div class="mb-2">
-            <i>This message will be no longer considered relevant after {{shift-format message.expires_at}}.</i>
-          </div>
-        {{/if}}
-        {{message.body}}
-        <div class="mail-actions">
-          {{#if message.delivered}}
-            <UiButton @onClick={{fn this.markUnreadAction message}}
-              @type="secondary" @class="responsive" @disabled={{message.isSubmitting}}>
-              Mark Unread
-              {{#if message.isSubmitting}}
-                <SpinIcon />
-              {{/if}}
-            </UiButton>
-          {{else}}
-            <UiButton @class="btn-responsive" @onClick={{fn this.markReadAction message}} @disabled={{message.isSubmitting}}>
-              Mark Read
-              {{#if message.isSubmitting}}
-                <SpinIcon />
-              {{/if}}
-            </UiButton>
-          {{/if}}
-        </div>
-      </BsCollapse>
+        </b>
+      {{/if}}
     </div>
+    {{#if this.canSendMessages}}
+      <div>
+        {{#if @isWorkerInterface}}
+          <UiButton class="btn-responsive mb-2" @onClick={{this.newMessageToAction}}>
+            New Message TO {{@person.callsign}}
+          </UiButton>
+          <UiButton @type="secondary" class="ms-xl-2 btn-responsive mb-2" @onClick={{this.newMessageFromAction}}>
+            New Message FROM {{@person.callsign}}
+          </UiButton>
+        {{else}}
+          <UiButton @type="primary" class="btn-responsive" @onClick={{this.newMessageFromAction}}>
+            {{fa-icon "plus"}} New Message
+          </UiButton>
+        {{/if}}
+      </div>
+    {{/if}}
+  </div>
+  {{#each @messages key="id" as |message|}}
+    <PersonMessage @message={{message}}
+                   @canSendMessages={{this.canSendMessages}}
+                   @onReplyTo={{fn this.replyToAction message}}
+                   @updateUnreadCount={{this.updateUnreadCount}}
+    />
   {{/each}}
+
+
+  {{#if this.newMessage}}
+    <MessageNew @message={{this.newMessage}}
+                @onSubmit={{this.submitAction}}
+                @onCancel={{this.cancelAction}}
+                @isMe={{@isMe}}
+                @isSubmitting={{this.isSubmitting}}
+    />
+  {{/if}}
 </div>
-
-
-{{#if this.newMessage}}
-  <MessageNew @message={{this.newMessage}}
-              @onSubmit={{this.submitAction}}
-              @onCancel={{this.cancelAction}}
-              @isMe={{@isMe}}
-              @isSubmitting={{this.isSubmitting}}
-  />
-{{/if}}
 
