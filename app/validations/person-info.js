@@ -47,5 +47,8 @@ export default {
 
   pronouns_custom: [
     validateCustom({ field: 'pronouns' })
+  ],
+  gender_custom: [
+    validateCustom({ field: 'gender_identity' })
   ]
 };
