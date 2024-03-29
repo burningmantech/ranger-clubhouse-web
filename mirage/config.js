@@ -310,6 +310,10 @@ function routes() {
     };
   });
 
+  this.get('/api/person-language', () => {
+    return { person_language: [ ]};
+  });
+
   this.get('/api/vehicle/:id', () => {
     return {
       vehicle: {
