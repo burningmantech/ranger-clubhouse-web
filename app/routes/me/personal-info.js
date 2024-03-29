@@ -8,12 +8,14 @@ export default class MePersonInfoRoute extends ClubhouseRoute {
     return RSVP.hash({
       shirts: this.ajax.request('swag/shirts').then(({shirts}) => shirts),
       personEvent: this.store.findRecord('person-event', `${this.session.userId}-${this.house.currentYear()}`, {reload: true}),
-      dashboardPeriod: this.ajax.request('config/dashboard-period').then(({period}) => period)
+      dashboardPeriod: this.ajax.request('config/dashboard-period').then(({period}) => period),
+      languages: this.store.query('person-language', { person_id: this.session.userId })
     });
   }
 
-  setupController(controller, {shirts, personEvent, dashboardPeriod}) {
+  setupController(controller, {shirts, personEvent, dashboardPeriod, languages}) {
     controller.set('person', this.modelFor('me'));
+    controller.set('languages', languages)
     controller.set('isSaved', false);
     controller.set('showUpdateMailingListsDialog', false);
     controller.set('isReviewing', this.isReviewing);

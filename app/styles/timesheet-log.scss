@@ -2,5 +2,5 @@
  * Timesheet log table layout
  */
 
-.timesheetlog-time { width: 150px; }
-.timesheetlog-user { width: 125px; }
+.timesheetlog-time { min-width: 175px; }
+.timesheetlog-user { min-width: 125px; }

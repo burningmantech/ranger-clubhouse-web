@@ -1,51 +1,64 @@
 <UiTab class="mt-4" as |tab|>
   <tab.pane @title="Name, Gender &amp; Pronouns" @id="name">
-    <Me::PiiGeneralSection @person={{@person}}
-                           @personInfoValidations={{this.personInfoValidations}}
-                           @onSubmit={{@savePerson}}
-                           @pronounOptions={{this.pronounOptions}}
-                           @genderIdentityOptions={{this.genderIdentityOptions}}
-    />
+    <div class="max-width-800">
+      <Me::PiiGeneralSection @person={{@person}}
+                             @personInfoValidations={{this.personInfoValidations}}
+                             @onSubmit={{@savePerson}}
+                             @pronounOptions={{this.pronounOptions}}
+                             @genderIdentityOptions={{this.genderIdentityOptions}}
+      />
+    </div>
   </tab.pane>
   <tab.pane @title="Email & Phone" @id="contact">
-    <Me::PiiContactInfoSection @person={{@person}}
-                               @personInfoValidations={{this.personInfoValidations}}
-                               @onSubmit={{@savePerson}}
-    />
+    <div class="max-width-800">
+      <Me::PiiContactInfoSection @person={{@person}}
+                                 @personInfoValidations={{this.personInfoValidations}}
+                                 @onSubmit={{@savePerson}}
+      />
+    </div>
 
   </tab.pane>
   <tab.pane @title="Camp Info" @id="camp">
-    <Me::PiiCampInfoSection @person={{@person}}
-                            @personInfoValidations={{this.personInfoValidations}}
-                            @onSubmit={{@savePerson}}
-    />
+    <div class="max-width-800">
+      <Me::PiiCampInfoSection @person={{@person}}
+                              @personInfoValidations={{this.personInfoValidations}}
+                              @onSubmit={{@savePerson}}
+      />
+    </div>
   </tab.pane>
   <tab.pane @title="Callsign Pronunciation" @id="pronounce">
-    <Me::PiiPronunciationSection @person={{@person}}
-                            @personInfoValidations={{this.personInfoValidations}}
-                            @onSubmit={{@savePerson}}
-    />
+    <div class="max-width-800">
+      <Me::PiiPronunciationSection @person={{@person}}
+                                   @personInfoValidations={{this.personInfoValidations}}
+                                   @onSubmit={{@savePerson}}
+      />
+    </div>
   </tab.pane>
   <tab.pane @title="Languages" @id="languages">
-    <Me::PiiLanguagesSection @person={{@person}}
-                             @personInfoValidations={{this.personInfoValidations}}
-                             @onSubmit={{@savePerson}}
-    />
+    <div class="max-width-800">
+      <Me::PiiLanguagesSection @person={{@person}}
+                               @languages={{@languages}}
+      />
+    </div>
   </tab.pane>
   <tab.pane @title="Clothing" @id="clothing">
-    <Me::PiiClothingSection @person={{@person}}
-                            @personInfoValidations={{this.personInfoValidations}}
-                            @onSubmit={{@savePerson}}
-                            @tshirtOptions={{@tshirtOptions}}
-                            @longSleeveOptions={{@longSleeveOptions}}
-    />
+    <div class="max-width-800">
+      <Me::PiiClothingSection @person={{@person}}
+                              @personInfoValidations={{this.personInfoValidations}}
+                              @onSubmit={{@savePerson}}
+                              @tshirtOptions={{@tshirtOptions}}
+                              @longSleeveOptions={{@longSleeveOptions}}
+      />
+    </div>
   </tab.pane>
   <tab.pane @title="Home Address" @id="home">
+    <div class="max-width-800">
 
-    <Me::PiiAddressSection @person={{@person}}
-                           @personInfoValidations={{this.personInfoValidations}}
-                           @onSubmit={{@savePerson}}
-    />
+      <Me::PiiAddressSection @person={{@person}}
+                             @personInfoValidations={{this.personInfoValidations}}
+                             @onSubmit={{@savePerson}}
+      />
+    </div>
   </tab.pane>
 </UiTab>
 {{#if @person.isSaving}}
