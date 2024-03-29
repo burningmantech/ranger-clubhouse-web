@@ -1,0 +1,76 @@
+{{#each @menteeList as |year| }}
+  <UiSection>
+    <:title>
+      {{year.year}} Mentees
+      ({{year.mentees.length}} alphas, {{year.passed}} passed, {{year.bonked}} bonked)
+    </:title>
+    <:body>
+      <div class="d-flex flex-wrap">
+        {{#each year.mentees key="person_id" as |mentee|}}
+        {{! template-lint-disable no-inline-styles}}
+          <div class="card mb-2 me-2" style="width: 12rem;">
+            {{#if mentee.profile_url}}
+              <img src={{mentee.profile_url}} class="card-img-top" alt="profile" loading="lazy">
+            {{else}}
+            {{! template-lint-disable no-inline-styles}}
+              <div class="text-center" style="height: 244px;">
+                <i class="far fa-user fa-8x my-4"></i>
+                <div class="card-text text-center mb-3">(No Photo)</div>
+              </div>
+            {{/if}}
+            <div class="card-body">
+              <h4 class="card-title">
+                {{#if @contactAction}}
+                  {{mentee.callsign}}
+                {{else}}
+                  <LinkTo @route="person.index" @model={{mentee.person_id}}>{{mentee.callsign}}</LinkTo>
+                {{/if}}
+              </h4>
+              <div class="card-subtitle h5 mb-2">
+                {{#if (eq mentee.mentor_status "pass")}}
+                  {{badge "success" "passed"}}
+                {{else if (eq mentee.mentor_status "bonk")}}
+                  {{badge "danger" "bonked"}}
+                {{else if (eq mentee.mentor_status "self-bonk")}}
+                  {{badge "gray" "self bonked"}}
+                {{else}}
+                  {{badge "warning" "pending"}}
+                {{/if}}
+              </div>
+
+              {{#if mentee.formerly_known_as}}
+                <p class="card-text">
+                  <b>Formerly Known As</b><br>
+                  {{mentee.formerly_known_as}}
+                </p>
+              {{/if}}
+              <p class="card-text">
+                <b>Mentors</b><br>
+                {{#each mentee.mentors as |mentor mentorIdx|}}
+                  {{if mentorIdx ", "}}{{mentor.callsign}}
+                {{/each}}
+              </p>
+              {{#if @contactAction}}
+                <p class="card-text">
+                  <b>Last Contact</b><br>
+                  {{#if mentee.last_contact}}
+                    {{mentee.last_contact}}
+                  {{else}}
+                    <i>never</i>
+                  {{/if}}
+                </p>
+                {{#if (eq mentee.contact_status "allow")}}
+                  <UiButton @onClick={{fn @contactAction mentee}}>Contact</UiButton>
+                {{else if (eq mentee.contact_status "block")}}
+                  <span class="text-muted">No Contact</span>
+                {{else}}
+                  -
+                {{/if}}
+              {{/if}}
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </:body>
+  </UiSection>
+{{/each}}

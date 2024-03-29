@@ -131,7 +131,7 @@ Router.map(function () {
     this.route('event-info');
     this.route('mail-log');
     this.route('membership');
-    this.route('mentors');
+    this.route('mentoring');
     this.route('messages');
     this.route('password');
     this.route('personal-info');
