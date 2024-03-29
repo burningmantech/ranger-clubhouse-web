@@ -16,8 +16,8 @@
       {{/if}}
       {{#if (or (not @isLast) @includeCancel)}}
         <div>
-          <UiButton @onClick={{this.wizard.cancelAction}} @type="secondary">
-            {{fa-icon "ban"}} Cancel
+          <UiButton @onClick={{this.wizard.cancelAction}} @type="gray" class="btn-link">
+            Cancel
           </UiButton>
         </div>
       {{/if}}

@@ -37,8 +37,7 @@
 
   {{#unless (or this.person.isAuditor this.person.isPastProspective)}}
     <Me::PiiLanguagesSection @person={{this.person}}
-                             @personInfoValidations={{this.personInfoValidations}}
-                             @onSubmit={{this.onSubmit}}
+                             @languages={{this.languages}}
     />
     <Me::PiiPronunciationSection @person={{this.person}}
                                  @personInfoValidations={{this.personInfoValidations}}
@@ -81,8 +80,8 @@
         <Me::PiiCampInfoForm @f={{f}} />
       </w.step>
       {{#unless this.person.isAuditor}}
-        <w.step @title="Languages">
-          <Me::PiiLanguagesForm @f={{f}} />
+        <w.step @title="Languages" @nextLabel="Next">
+          <Me::PiiLanguagesForm @languages={{this.languages}} @person={{this.person}} />
         </w.step>
         <w.step @title="Callsign Pronunciation">
           <Me::PiiPronunciationForm @f={{f}} />

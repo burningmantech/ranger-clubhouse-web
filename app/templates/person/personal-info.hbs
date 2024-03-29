@@ -1,28 +1,31 @@
 <h3>Personal Information for {{this.person.callsign}}</h3>
 <p>
-    {{#if this.person.reviewed_pi_at}}
-        Last updated their PII on {{timestamp-format this.person.reviewed_pi_at "MMM DD, YYYY @ HH:mm"}} (Pacific)
-    {{else}}
-        Has not updated their PII yet.
-    {{/if}}
-    <br>
-    {{#if this.person.pi_reviewed_for_dashboard_at}}
-        Last reviewed their PII for the dashboard PII step on
-        {{timestamp-format this.person.pi_reviewed_for_dashboard_at "MMM DD, YYYY @ HH:mm"}} (Pacific).
-    {{else}}
-        Has not yet reviewed their PII for the dashboard PII step.
-    {{/if}}
+  {{#if this.person.reviewed_pi_at}}
+    Last updated their PII on {{timestamp-format this.person.reviewed_pi_at "MMM DD, YYYY @ HH:mm"}} (Pacific)
+  {{else}}
+    Has not updated their PII yet.
+  {{/if}}
+  <br>
+  {{#if this.person.pi_reviewed_for_dashboard_at}}
+    Last reviewed their PII for the dashboard PII step on
+    {{timestamp-format this.person.pi_reviewed_for_dashboard_at "MMM DD, YYYY @ HH:mm"}} (Pacific).
+  {{else}}
+    Has not yet reviewed their PII for the dashboard PII step.
+  {{/if}}
 </p>
 {{#if this.canEditPersonalInfo}}
-    <PersonalInfoEdit @person={{this.person}}
-                      @savePerson={{this.savePerson}}
-                      @tshirtOptions={{this.tshirtOptions}}
-                      @longSleeveOptions={{this.longSleeveOptions}}/>
+  <PersonalInfoEdit @person={{this.person}}
+                    @savePerson={{this.savePerson}}
+                    @tshirtOptions={{this.tshirtOptions}}
+                    @longSleeveOptions={{this.longSleeveOptions}}
+                    @languages={{this.languages}}
+  />
 {{else}}
-    <PersonalInfoView @person={{this.person}}
-                      @savePerson={{this.savePerson}}
-                      @tshirtOptions={{this.tshirtOptions}}
-                      @longSleeveOptions={{this.longSleeveOptions}}
-                      @shirtsById={{this.shirtsById}}
-    />
+  <PersonalInfoView @person={{this.person}}
+                    @savePerson={{this.savePerson}}
+                    @tshirtOptions={{this.tshirtOptions}}
+                    @longSleeveOptions={{this.longSleeveOptions}}
+                    @shirtsById={{this.shirtsById}}
+                    @languages={{this.languages}}
+  />
 {{/if}}

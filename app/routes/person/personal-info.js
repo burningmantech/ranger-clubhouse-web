@@ -6,12 +6,16 @@ export default class PersonPersonalInfoRoute extends ClubhouseRoute {
   // User has to be an Admin or have Login Manage AND View Personal Info
   roleRequired = [ADMIN, [MANAGE, VIEW_PII]];
 
-  model() {
-    return this.ajax.request('swag/shirts');
+  async model() {
+    return {
+      shirts: await this.ajax.request('swag/shirts').then(({shirts}) => shirts),
+      languages: await this.store.query('person-language', { person_id: this.modelFor('person').id })
+    };
   }
 
-  setupController(controller, {shirts}) {
+  setupController(controller, model) {
     controller.person = this.modelFor('person');
-    controller.setProperties(shirtOptions(shirts));
+    controller.setProperties(shirtOptions(model.shirts));
+    controller.set('languages', model.languages)
   }
 }

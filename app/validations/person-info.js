@@ -2,7 +2,7 @@ import {
   validatePresence,  validateFormat
 } from 'ember-changeset-validations/validators';
 import validateState from 'clubhouse/validators/state';
-import validatePronouns from 'clubhouse/validators/pronouns';
+import validateCustom from 'clubhouse/validators/custom';
 
 export const REQUIRED_PII_VALIDATIONS = {
   first_name: [
@@ -46,6 +46,6 @@ export default {
   ],
 
   pronouns_custom: [
-    validatePronouns()
+    validateCustom({ field: 'pronouns' })
   ]
 };

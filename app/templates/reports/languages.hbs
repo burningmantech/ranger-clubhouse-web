@@ -1,7 +1,7 @@
 <h1>Languages Spoken</h1>
 
 <p>
-  This page will show all languages spoken by people marked as on site.
+  This page will show all languages spoken by Rangers marked as on site.
 </p>
 <p>
   Use the
@@ -9,24 +9,27 @@
   page to search for people who speak a specific language and whom may or may not be on site, have a radio, etc.
 </p>
 
-{{#each this.languages as |language|}}
-  <UiAccordion as |Accordion|>
-    <Accordion.title>{{language.language}} ({{language.people.length}})</Accordion.title>
-    <Accordion.body>
-      <div class="callsign-list">
-        {{#each language.people key="id" as |person|}}
-          <PersonLink @person={{person}} />
-        {{/each}}
-      </div>
-    </Accordion.body>
-  </UiAccordion>
-{{else}}
-  <p class="text-danger">
-    <b>
-      It appears there are no people marked as on site.
-      Try using the
-      <LinkTo @route="search.languages">Search Languages</LinkTo>
-      to find the language.
-    </b>
-  </p>
+{{#each this.languageGroups as |group idx|}}
+  <h3 class="border-bottom border-bottom-2 {{if idx "mt-4"}}">{{group.title}}</h3>
+  {{#each group.languages as |language|}}
+    <UiAccordion as |Accordion|>
+      <Accordion.title>{{language.name}} ({{language.people.length}})</Accordion.title>
+      <Accordion.body>
+        <div class="callsign-list">
+          {{#each language.people key="id" as |person|}}
+            <PersonLink @person={{person}} />
+          {{/each}}
+        </div>
+      </Accordion.body>
+    </UiAccordion>
+  {{else}}
+    <p class="text-danger">
+      <b>
+        It appears there are no people marked as on site.
+        Try using the
+        <LinkTo @route="search.languages">Search Languages</LinkTo>
+        to find the language.
+      </b>
+    </p>
+  {{/each}}
 {{/each}}

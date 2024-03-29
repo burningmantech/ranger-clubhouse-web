@@ -1,20 +1,17 @@
 <h1>Language Search</h1>
 
-<ChForm @formId="search" @formFor={{this.searchForm}} @changeSet={{false}}
+<ChForm @formId="search"
+        @formFor={{this.searchForm}}
+        @changeSet={{false}}
         @onSubmit={{this.submit}} as |f|>
-  <FormRow>
-    <label class="col-auto mt-1">Quick Search:</label>
-    <div class="col-auto">
-    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "spanish"}}>Spanish</UiButton>
-    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "chinese"}}>Chinese</UiButton>
-    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "dutch"}}>Dutch</UiButton>
-    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "french"}}>French</UiButton>
-    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "german"}}>German</UiButton>
-    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "hebrew"}}>Hebrew</UiButton>
-    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "italian"}}>Italian</UiButton>
-    <UiButton @type="secondary" @size="sm" @onClick={{action this.setLanguage "russian"}}>Russian</UiButton>
-    </div>
-  </FormRow>
+  <div>Quick Search:</div>
+  <div class="masonry-container masonry-col-6 my-2">
+    {{#each this.commonLanguages as |name|}}
+      <a href class="small masonry-item" {{action this.setLanguage name}}>
+        {{name}}
+      </a>
+    {{/each}}
+  </div>
   <FormRow>
     <f.text @label="Enter a language to search for:"
             @name="language"
@@ -38,11 +35,15 @@
 {{#if this.isLoading}}
   <LoadingPane @item="languages"/>
 {{else}}
-  <h3 class="mb-4">Reporting on Rangers who are <span class="text-danger">{{if this.searchingOffSite "ON and OFF SITE" "ON SITE ONLY"}}</span></h3>
+  <h3 class="mb-4">
+    Reporting on Rangers who are
+    <span class="text-danger">{{if this.searchingOffSite "ON and OFF SITE" "ON SITE ONLY"}}</span>
+  </h3>
   <LanguageSpeakerTable @name="On Duty Rangers"
                         @speakers={{this.onDuty.length}}
                         @group={{this.onDutyGroup}}
                         @searchLanguage={{this.searchLanguage}}
+                        @isOnDuty={{true}}
   />
   <LanguageSpeakerTable @name="Rangers With Radios"
                         @speakers={{this.hasRadio.length}}

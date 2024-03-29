@@ -1,18 +1,98 @@
 <p>
-  List the English names of the languages you are comfortable speaking with the fluency level in parentheses,
-  each separated by a comma.
+  On rare occasion, Khaki might need a Ranger to help out with translation during a shift. Could you let us know which
+  languages you'd feel comfortable acting as a translator for?
 </p>
 <p>
-  Example: <b><i>"japanese (basic), spanish (fluent)"</i></b>
-</p>
-<p>
-  Keep the list simple:<br>
-  GOOD: "french (fluent), italian (written only), spanish (basic)"<br>
-  BAD: "French - I taught in Paris and can only write in Italian. Took 1 year of high school spanish"<br>
+  You don't need to list English. We assume you already have some basic knowledge of the language.
 </p>
 
-<FormRow>
-  <@f.text @name="languages"
-          @label="Languages Spoken"
-          @size={{80}}/>
-</FormRow>
+{{#if @languages}}
+  <UiTable class="mb-2">
+    <thead>
+    <tr>
+      <th>Language</th>
+      <th>Proficiency</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each @languages as |language|}}
+      <tr>
+        <td>{{language.actualName}}</td>
+        <td>{{language.proficiencyLabel}}</td>
+        <td>
+          <UiButton @onClick={{fn this.editLanguage language}} @type="secondary" @size="sm">
+            Edit
+          </UiButton>
+          <UiButton @onClick={{fn this.deleteLanguage language}} @type="secondary" @size="sm">
+            Delete
+          </UiButton>
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </UiTable>
+{{else}}
+  <p>
+    No languages have been stated.
+  </p>
+{{/if}}
+
+<UiButton @onClick={{this.newLanguage}}>
+  {{fa-icon "plus" right=1}} Add Language
+</UiButton>
+
+{{#if this.entry}}
+  <ModalDialog as |Modal|>
+    <ChForm @formId="language"
+            @formFor={{this.entry}}
+            @validator={{this.validations}}
+            @onSubmit={{this.save}} as |f|>
+      <Modal.title>
+        {{#if this.entry.isNew}}
+          Add Language
+        {{else}}
+          Update Language
+        {{/if}}
+      </Modal.title>
+      <Modal.body>
+        <p>
+          The languages encountered most on playa are available to select. In case a language
+          is not in the list, use the "Something Else" option to add a different language.
+        </p>
+        <p>
+          You don't need to list English. We assume you already have some basic knowledge of the language.
+        </p>
+        <FormRow>
+          <f.select @name="language_name"
+                    @label="Language"
+                    @options={{this.languageOptions}}/>
+          {{#if (eq f.model.language_name "custom")}}
+            <f.text @name="language_custom"
+                    @label="What is the English name of the Language?"
+                    @size={{32}}
+                    @maxlength={{32}}
+                    @showCharCount={{true}}
+            />
+          {{/if}}
+        </FormRow>
+        <FormRow>
+          <f.radioGroup @name="proficiency"
+                        @label="What is your proficiency level?"
+                        @options={{this.proficiencyOptions}}
+          />
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit/>
+        <UiCancelButton @onClick={{this.cancelEdit}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Loading your request
+  </LoadingDialog>
+{{/if}}

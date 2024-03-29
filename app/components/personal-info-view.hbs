@@ -66,7 +66,13 @@
         Languages
     </div>
     <div>
-        <PresentOrNot @value={{@person.languages}} />
+      {{#each @languages as |language idx|}}
+        {{#if idx}}<br>{{/if}}
+        {{language.actualName}}
+        {{#if language.haveProficiency}}
+          ({{language.proficiencyLabel}})
+        {{/if}}
+      {{/each}}
     </div>
 
     <div class="grid-table-label">

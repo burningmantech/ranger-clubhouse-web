@@ -19,19 +19,23 @@
   </:title>
   <:body>
     {{#if this.isEditing}}
-      <ChForm @formId={{@formId}}
-              @formFor={{@formFor}}
-              @autocomplete="on"
-              @validator={{@validator}}
-              @onSubmit={{this.onSubmit}}
-              @onFormInit={{@onFormInit}}
-              as |f|>
-        {{yield f to="edit"}}
-        <div class="mt-4">
-          <f.submit/>
-          <UiCancelButton @onClick={{this.cancelEdit}} />
-        </div>
-      </ChForm>
+      {{#if @formFor}}
+        <ChForm @formId={{@formId}}
+                @formFor={{@formFor}}
+                @autocomplete="on"
+                @validator={{@validator}}
+                @onSubmit={{this.onSubmit}}
+                @onFormInit={{@onFormInit}}
+                as |f|>
+          {{yield f to="edit"}}
+          <div class="mt-4">
+            <f.submit/>
+            <UiCancelButton @onClick={{this.cancelEdit}} />
+          </div>
+        </ChForm>
+      {{else}}
+        {{yield this.cancelEdit to="edit"}}
+      {{/if}}
     {{else}}
       {{yield to="view"}}
     {{/if}}

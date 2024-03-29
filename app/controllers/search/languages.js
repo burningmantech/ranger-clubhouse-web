@@ -52,7 +52,7 @@ export default class SearchLanguagesController extends ClubhouseController {
   }
 
   // Build up a request and fire off a search
-  _performSearch() {
+  async _performSearch() {
     if (this.isLoading) {
       return; // in progress
     }
@@ -74,18 +74,20 @@ export default class SearchLanguagesController extends ClubhouseController {
 
     this.searchLanguage = language;
     this.isLoading = true;
-    this.ajax.request('language/speakers', {data: params})
-      .then((results) => {
-        this.onDuty = results.on_duty;
-        this.offDuty = results.off_duty;
-        this.hasRadio = results.has_radio;
-      }).catch((response) => {
+    try {
+      const results = await this.ajax.request('person-language/search', {data: params})
+      this.onDuty = results.on_duty;
+      this.offDuty = results.off_duty;
+      this.hasRadio = results.has_radio;
+    } catch (response) {
       if (response.status === 404) {
         this.notFound = language;
       } else {
         this.house.handleErrorResponse(response);
       }
-    }).finally(() => this.isLoading = false);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   @action

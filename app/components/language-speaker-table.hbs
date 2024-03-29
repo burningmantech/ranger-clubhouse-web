@@ -1,6 +1,10 @@
 <UiSection>
   <:title>{{@name}} ({{@speakers}})</:title>
   <:body>
+    Legend:
+    <div class="d-inline-block">basic = knows common phrases &amp; words.</div>
+    <div class="d-inline-block ms-2">intermediate = able to hold a causal conversation.</div>
+    <div class="d-inline-block ms-2">fluent = very proficient or native speaker</div>
     <UiTable class="mt-2">
       <thead>
       <tr>
@@ -14,9 +18,21 @@
           <td class="w-10">{{group.language_name}}</td>
           <td class="callsign-list">
             {{#each group.items as |person|}}
-              <LinkTo @route="person.index" @model={{person.person_id}}>
-                {{person.callsign}}
-              </LinkTo>
+              <div class="mb-1">
+                <LinkTo @route="person.index" @model={{person.person_id}}>
+                  {{person.callsign}}
+                </LinkTo>
+                <div>
+                  {{#if (eq person.proficiency "unknown")}}
+                    -
+                  {{else}}
+                    {{person.proficiency}}
+                  {{/if}}
+                </div>
+                {{#if @isOnDuty}}
+                  <small>{{person.position_title}}</small>
+                {{/if}}
+              </div>
             {{/each}}
           </td>
         </tr>
