@@ -4,11 +4,12 @@ import { set } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
 export default class MeMenteesController extends ClubhouseController {
-  menteeList = [];
-  totalPassed = 0;
-  totalBonked = 0;
-  firstYear = 0;
-  lastYear = 0;
+  @tracked menteeList = [];
+  @tracked totalPassed = 0;
+  @tracked totalBonked = 0;
+  @tracked totalMentees;
+  @tracked firstYear = 0;
+  @tracked lastYear = 0;
 
   @tracked contactMentee = null;
   @tracked message = '';

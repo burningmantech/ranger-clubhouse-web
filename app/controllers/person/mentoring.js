@@ -3,8 +3,15 @@ import {ADMIN, MENTOR} from 'clubhouse/constants/roles';
 import {action} from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
-export default class PersonMentorsController extends ClubhouseController {
+export default class PersonMentoringController extends ClubhouseController {
   @tracked isSubmitting = false;
+
+  @tracked menteeList = [];
+  @tracked totalPassed = 0;
+  @tracked totalBonked = 0;
+  @tracked totalMentees;
+  @tracked firstYear = 0;
+  @tracked lastYear = 0;
 
   statusOptions = [
     'pass',

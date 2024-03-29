@@ -1,0 +1,90 @@
+<h3>Mentors &amp; Mentees</h3>
+
+{{#if this.canUpdateMentors}}
+  <p>
+    You have the permissions to update the mentors' result. Updating the result will NOT convert the account status.
+  </p>
+{{/if}}
+
+{{#each this.mentors as |event|}}
+  <UiSection>
+    <:title>
+      Mentor Year {{event.year}}
+      <span class="ms-2">
+        {{#if (eq event.status "pass")}}
+          {{badge "success" "passed"}}
+        {{else if (eq event.status "bonk")}}
+          {{badge "danger" "bonked"}}
+        {{else if (eq event.status "self-bonk")}}
+          {{badge "danger" "self bonked"}}
+        {{else}}
+          {{badge "warning" "pending"}}
+        {{/if}}
+      </span>
+    </:title>
+    <:body>
+      {{#if this.canUpdateMentors}}
+        <div class="row mb-3">
+          <label class="col-auto align-middle">Update status:</label>
+          <div class="col-auto align-middle">
+            <ChForm::Select @name="status_{{event.year}}"
+                            @value={{event.newStatus}}
+                            @options={{this.statusOptions}}
+                            @onChange={{action (mut event.newStatus)}}/>
+          </div>
+          <div class="col-auto align-middle">
+            <UiButton @onClick={{action this.updateStatus event}}>
+              Update
+            </UiButton>
+          </div>
+        </div>
+      {{/if}}
+      <div class="d-flex flex-wrap">
+        {{#each event.mentors as |mentor|~}}
+        {{! template-lint-disable no-inline-styles}}
+          <div class="card me-4 mb-2" style="width: 10rem;">
+            {{#if mentor.profile_url}}
+              <img src={{mentor.profile_url}} alt="profile" class="card-img-top" loading="lazy">
+            {{else}}
+              <i class="far fa-user fa-8x text-center my-4"></i>
+              <div class="card-text text-center mb-3">(No Photo)</div>
+            {{/if}}
+            <div class="card-body">
+              <div class="card-title h4 text-center">
+                <PersonLink @person={{mentor}} />
+              </div>
+            </div>
+          </div>
+        {{/each}}
+      </div>
+    </:body>
+  </UiSection>
+{{else}}
+  <p class="text-danger fw-semibold">
+    No mentor records were found.
+  </p>
+{{/each}}
+
+{{#if this.menteeList}}
+  <p>
+    {{#if (eq this.firstYear this.lastYear)}}
+      In {{this.firstYear}}
+    {{else}}
+      From {{this.firstYear}} to {{this.lastYear}},
+    {{/if}}
+    {{this.person.callsign}} mentored {{this.totalMentees}} Alphas of whom {{this.totalPassed}} have passed,
+    and {{this.totalBonked}} were bonked.
+  </p>
+  <MenteeList @menteeList={{this.menteeList}} />
+{{else}}
+  <p class="text-danger">
+    {{this.person.callsign}} does not appear to have mentored anyone.
+  </p>
+{{/if}}
+
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Updating result
+  </LoadingDialog>
+{{/if}}
