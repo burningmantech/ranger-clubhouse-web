@@ -47,7 +47,6 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('string') callsign;
   @attr('boolean') callsign_approved;
   @attr('string') callsign_pronounce;
-  @attr('string') formerly_known_as;
   @attr('string') known_rangers;
   @attr('string') known_pnvs;
   @attr('string') status;

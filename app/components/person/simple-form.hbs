@@ -1,122 +1,129 @@
 <PersonalInfoWarning/>
-<CopyToClipboardInfo />
+<CopyToClipboardInfo/>
 <div class="grid-table">
-    {{#if (has-role "view-pii" "view-email")}}
-        <div class="grid-table-label">Email</div>
-        <div>
-            <MailTo @to={{@person.email}} />
-            <CopyToClipboard @text={{@person.email}} />
-        </div>
+  {{#if (has-role "view-pii" "view-email")}}
+    <div class="grid-table-label">Email</div>
+    <div>
+      <MailTo @to={{@person.email}} />
+      <CopyToClipboard @text={{@person.email}} />
+    </div>
 
-        {{#if (has-role "view-pii")}}
-            <div class="grid-table-label">Phone</div>
-            <div>
-                {{#if @person.home_phone}}
-                    {{phone-link @person.home_phone}}
-                    <CopyToClipboard @text={{@person.home_phone}} />
-                {{else}}
-                    <i>no primary phone #</i>
-                {{/if}}
-            </div>
-            {{#if @person.alt_phone}}
-                <div class="grid-table-label">
-                    Alt. Phone
-                </div>
-                <div>
-                    {{phone-link @person.alt_phone}}
-                    <CopyToClipboard @text={{@person.alt_phone}} />
-                </div>
-            {{/if}}
-            <div class="grid-table-label">Legal Name / Address</div>
-            <div>
-                {{@person.first_name}} {{@person.last_name}} <CopyToClipboard @text={{this.homeAddressText}} /><br>
-                {{@person.street1}} {{@person.apt}}
-                <br>
-                {{#if @person.street2}}
-                    {{@person.street2}}<br>
-                {{/if}}
-                {{@person.city}}, {{@person.state}} {{@person.zip}} <span class="ms-1">{{@person.country}}</span>
-            </div>
-        {{/if}}
-    {{/if}}
-    <div class="grid-table-label">Years</div>
-    <div>
-        {{#if @person.non_ranger_years}}
-            Non Ranger volunteer work:
-            {{pluralize @person.non_ranger_years.length 'year'}} [{{year-range @person.non_ranger_years}}]<br>
-            Ranger work:
-            {{#if @person.rangered_years}}
-                {{pluralize @person.rangered_years.length 'year'}} [{{year-range @person.rangered_years}}]
-            {{else}}
-                <i>none</i>
-            {{/if}}
-        {{else if @person.years}}
-            {{pluralize @person.years.length 'year'}} worked [{{year-range @person.years}}]
+    {{#if (has-role "view-pii")}}
+      <div class="grid-table-label">Phone</div>
+      <div>
+        {{#if @person.home_phone}}
+          {{phone-link @person.home_phone}}
+          <CopyToClipboard @text={{@person.home_phone}} />
         {{else}}
-            Has not worked yet
+          <i>no primary phone #</i>
         {{/if}}
-    </div>
-    <div class="grid-table-label">Callsign</div>
-    <div>
-        {{#if @person.callsign_approved}}
-            <div class="text-success">{{fa-icon "check"}} Approved</div>
-        {{else}}
-            <div class="text-danger">{{fa-icon "times"}} Not approved</div>
+      </div>
+      {{#if @person.alt_phone}}
+        <div class="grid-table-label">
+          Alt. Phone
+        </div>
+        <div>
+          {{phone-link @person.alt_phone}}
+          <CopyToClipboard @text={{@person.alt_phone}} />
+        </div>
+      {{/if}}
+      <div class="grid-table-label">Legal Name / Address</div>
+      <div>
+        {{@person.first_name}} {{@person.last_name}}
+        <CopyToClipboard @text={{this.homeAddressText}} />
+        <br>
+        {{@person.street1}} {{@person.apt}}
+        <br>
+        {{#if @person.street2}}
+          {{@person.street2}}<br>
         {{/if}}
-        {{#if @person.used_vanity_change}}
-            <i>
-                One-time vanity change used
-                {{#if @person.vanity_changed_at}}
-                    on {{mdy-format @person.vanity_changed_at}}
-                {{/if}}
-            </i>
+        {{@person.city}}, {{@person.state}} {{@person.zip}} <span class="ms-1">{{@person.country}}</span>
+      </div>
+    {{/if}}
+  {{/if}}
+  <div class="grid-table-label">Years</div>
+  <div>
+    {{#if @person.non_ranger_years}}
+      Non Ranger volunteer work:
+      {{pluralize @person.non_ranger_years.length 'year'}} [{{year-range @person.non_ranger_years}}]<br>
+      Ranger work:
+      {{#if @person.rangered_years}}
+        {{pluralize @person.rangered_years.length 'year'}} [{{year-range @person.rangered_years}}]
+      {{else}}
+        <i>none</i>
+      {{/if}}
+    {{else if @person.years}}
+      {{pluralize @person.years.length 'year'}} worked [{{year-range @person.years}}]
+    {{else}}
+      Has not worked yet
+    {{/if}}
+  </div>
+  <div class="grid-table-label">Callsign</div>
+  <div>
+    {{#if @person.callsign_approved}}
+      {{badge "success" "approved"}}
+    {{else}}
+      {{badge "danger" "not approved"}}
+    {{/if}}
+    {{#if @person.used_vanity_change}}
+      <i>
+        One-time vanity change used
+        {{#if @person.vanity_changed_at}}
+          on {{mdy-format @person.vanity_changed_at}}
         {{/if}}
-    </div>
-    <div class="grid-table-label">FKAs</div>
+      </i>
+    {{/if}}
+  </div>
+  <div class="grid-table-label">FKAs</div>
+  <div>
+    {{#each @personFkas as |row idx|}}
+      {{~#if idx}}, {{/if~}}
+      {{row.fka}}
+    {{else}}
+      <i>no previous callsigns</i>
+    {{/each}}
+  </div>
+  {{#if @person.has_note_on_file}}
+    <div class="grid-table-label">Personnel Note</div>
     <div>
-        <PresentOrNot @value={{@person.formerly_known_as}} @empty="no previous callsigns"/>
+      <b class="text-danger">Has note on file</b>. Contact the Personnel Manager for more information:
+      <PersonnelEmail/>
     </div>
-    {{#if @person.has_note_on_file}}
-        <div class="grid-table-label">Personnel Note</div>
-        <div>
-            <b class="text-danger">Has note on file</b>. Contact the Personnel Manager for more information:
-            <PersonnelEmail/>
-        </div>
-    {{/if}}
-    {{#if (has-role "manage")}}
-        <div class="grid-table-label">On Site</div>
-        <div>
-            <ChForm @formId="person" @formFor={{@person}} @onSubmit={{@savePersonAction}} as |f|>
-                <FormRow>
-                    <div class="col-auto">
-                        <f.radioGroup @name="on_site"
-                                      @options={{@onSiteOptions}}
-                                      @inline={{true}} />
-                    </div>
-                </FormRow>
-                <f.submit @label="Update" @size="sm" @disabled={{@person.isSaving}} />
-                {{#if @person.isSaving}}
-                    <LoadingIndicator/>
-                {{/if}}
-            </ChForm>
-        </div>
-    {{/if}}
-    <div class="grid-table-label">Team/Positions</div>
+  {{/if}}
+  {{#if (has-role "manage")}}
+    <div class="grid-table-label">On Site</div>
     <div>
-        <Person::Positions @personMembership={{@personMembership}}
-                           @showMembership={{@showMembership}}
-                           @toggleMembership={{@toggleMembership}}
-                           @canEditMembership={{@canEditMembership}}
-                           @editMembershipAction={{@editMembershipAction}}
-        />
+      <ChForm @formId="person" @formFor={{@person}} @onSubmit={{@savePersonAction}} as |f|>
+        <FormRow>
+          <div class="col-auto">
+            <f.radioGroup @name="on_site"
+                          @options={{@onSiteOptions}}
+                          @inline={{true}} />
+          </div>
+        </FormRow>
+        <f.submit @label="Update" @size="sm" @disabled={{@person.isSaving}} />
+        {{#if @person.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+      </ChForm>
     </div>
-    {{#if (has-role "manage")}}
-        <div class="grid-table-label">Permissions</div>
-        <div>
-            <Person::Permissions @roles={{@roles}}
-                                 @grantedRoles={{@grantedRoles}}
-                                 @toggleRoles={{@toggleRoles}}
-                                 @showRoles={{@showRoles}} />
-        </div>
-    {{/if}}
+  {{/if}}
+  <div class="grid-table-label">Team/Positions</div>
+  <div>
+    <Person::Positions @personMembership={{@personMembership}}
+                       @showMembership={{@showMembership}}
+                       @toggleMembership={{@toggleMembership}}
+                       @canEditMembership={{@canEditMembership}}
+                       @editMembershipAction={{@editMembershipAction}}
+    />
+  </div>
+  {{#if (has-role "manage")}}
+    <div class="grid-table-label">Permissions</div>
+    <div>
+      <Person::Permissions @roles={{@roles}}
+                           @grantedRoles={{@grantedRoles}}
+                           @toggleRoles={{@toggleRoles}}
+                           @showRoles={{@showRoles}} />
+    </div>
+  {{/if}}
 </div>

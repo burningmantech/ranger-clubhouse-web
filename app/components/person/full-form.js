@@ -27,6 +27,7 @@ export default class PersonFullFormComponent extends Component {
         try {
           await this.ajax.post(`person/${person.id}/release-callsign`, {});
           await person.reload();
+          await this.args.personFkas.update();
           f.reloadForm();
           this.toast.success('The callsign was successfully released.');
         } catch (response) {
