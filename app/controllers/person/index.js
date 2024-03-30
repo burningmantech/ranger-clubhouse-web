@@ -43,6 +43,8 @@ export default class PersonIndexController extends ClubhouseController {
 
   @tracked personTeams = null;
 
+  @tracked personFkas = null;
+
   @tracked showConfirmNoteOrMessage = false;
   @tracked showEditNote = false;
   @tracked personNote = null;
@@ -56,6 +58,7 @@ export default class PersonIndexController extends ClubhouseController {
   @tracked showPasswordDialog = false;
 
   @tracked isLoading = false;
+
 
   // Work History Tab
   @tracked workTimesheet;
@@ -93,7 +96,7 @@ export default class PersonIndexController extends ClubhouseController {
   }
 
   async _savePersonModel(model) {
-    const statusChanged = model._changes['status'];
+    const statusChanged = model._changes['status'], callsignChanged = model._changes['callsign'];
 
     this.isSaing = true;
     try {
@@ -108,6 +111,9 @@ export default class PersonIndexController extends ClubhouseController {
         return this._reloadMembershipAndRoles();
       } else {
         this._reloadUserIfMe();
+      }
+      if (callsignChanged) {
+        await this.personFkas.update();
       }
     } catch (response) {
       this.house.handleErrorResponse(response, model);

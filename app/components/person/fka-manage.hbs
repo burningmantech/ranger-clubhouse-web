@@ -1,0 +1,97 @@
+{{#each @personFkas as |row idx|}}
+  {{~#if idx~}}, {{/if~}}
+  <span class="d-inline-block">{{row.fka}}</span>
+{{else}}
+  no previous callsigns found
+{{/each}}
+<UiButton @onClick={{this.openManageDialog}} @size="sm" @type="secondary" class="ms-3">
+  Manage FKAs
+</UiButton>
+
+{{#if this.isManaging}}
+  <ModalDialog @onEscape={{this.closeManageDialog}} as |Modal|>
+    <Modal.title>
+      Manage FKAs for {{@person.callsign}}
+    </Modal.title>
+    <Modal.body>
+      <p>
+        <b>Note:</b> The old callsign will be automatically moved into the FKA list when the callsign is updated.
+      </p>
+
+      <div class="align-middle mb-1">
+        Showing {{pluralize @personFkas.length "FKA"}}
+        <UiButton @onClick={{this.newFka}} @type="primary" @size="sm" class="ms-2">
+          {{fa-icon "plus" right=1}} Add FKA
+        </UiButton>
+      </div>
+      <UiTable>
+        <thead>
+        <tr>
+          <th>Formerly Known As</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each @personFkas as |row|}}
+          <tr>
+            <td>{{row.fka}}</td>
+            <td>
+              <UiButton @onClick={{fn this.editFka row}} @type="secondary" @size="sm">
+                {{fa-icon "edit" right=1}} Edit
+              </UiButton>
+              <UiButton @onClick={{fn this.deleteFka row}} @type="secondary" @size="sm" class="ms-2">
+                {{fa-icon "trash" right=1}} Delete
+              </UiButton>
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="2">No FKAs found.</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </UiTable>
+
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closeManageDialog}} />
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.entry}}
+  <ModalDialog as |Modal|>
+    <ChForm @formId="fka"
+            @formFor={{this.entry}}
+            @validator={{this.validations}}
+            @onSubmit={{this.save}} as |f|>
+      <Modal.title>
+        {{#if this.entry.isNew}}
+          Add FKA
+        {{else}}
+          Update FKA
+        {{/if}}
+      </Modal.title>
+      <Modal.body>
+        <FormRow>
+          <f.text @name="fka"
+                  @label="Formerly Known As"
+                  @size={{20}}
+                  @maxlength={{255}}
+                  @autofocus={{true}}
+          />
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @noAlign={{true}}>
+        <f.submit/>
+        <UiCancelButton @onClick={{this.cancelEdit}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Updating the FKA(s)
+  </LoadingDialog>
+{{/if}}

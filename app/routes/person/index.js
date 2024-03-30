@@ -11,10 +11,11 @@ export default class PersonIndexRoute extends ClubhouseRoute {
 
 
     data.grantedRoles = await this.ajax.request(`person/${personId}/roles`, {data: {include_memberships: 1}});
-    data.personMembership = await this.ajax.request(`person/${person.id}/membership`).then(({membership}) => membership);
-    data.photo = await this.ajax.request(`person/${person.id}/photo`).then(({photo}) => photo);
+    data.personMembership = await this.ajax.request(`person/${personId}/membership`).then(({membership}) => membership);
+    data.photo = await this.ajax.request(`person/${personId}/photo`).then(({photo}) => photo);
     data.roles = await this.ajax.request('role').then(({role}) => role);
     data.teams = await this.ajax.request('team', {data: {can_manage: 1}}).then(({team}) => team);
+    data.personFkas = await this.store.query('person-fka', { person_id: personId });
 
     return data;
   }

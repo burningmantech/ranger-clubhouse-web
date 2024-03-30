@@ -107,7 +107,7 @@ Everyone else will see person/simple-form
           <i>(Used on {{mdy-format @person.vanity_changed_at}})</i>
         {{/if}}
       </div>
-     </FormRow>
+    </FormRow>
   {{else if @person.used_vanity_change}}
     <FormRow>
       <FormLabel @fixed={{true}}>&nbsp;</FormLabel>
@@ -123,9 +123,11 @@ Everyone else will see person/simple-form
 
   <FormRow>
     <FormLabel @fixed={{true}}>FKA</FormLabel>
-    <f.text @name="formerly_known_as"
-            @size={{55}}
-            @maxlength={{200}}/>
+    <div class="col-auto mt-2">
+      <Person::FkaManage @personFkas={{@personFkas}}
+                         @person={{@person}}
+      />
+    </div>
   </FormRow>
 
   <FormRow>

@@ -72,6 +72,8 @@
                                 @sendWelcomeMailAction={{this.sendWelcomeMailAction}}
 
                                 @showPasswordDialogAction={{this.showPasswordDialogAction}}
+
+                                @personFkas={{this.personFkas}}
               />
             {{else}}
               <Person::SimpleForm @person={{this.person}}
@@ -87,6 +89,8 @@
                                   @toggleMembership={{this.toggleMembership}}
                                   @showMembership={{this.showMembership}}
                                   @canEditMembership={{this.canEditMembership}}
+
+                                  @personFkas={{this.personFkas}}
               />
             {{/if}}
           </:body>
