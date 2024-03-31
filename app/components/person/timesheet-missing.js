@@ -1,14 +1,15 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 import validatePresenceIf from 'clubhouse/validators/presence-if';
-
+import {htmlSafe} from '@ember/template';
 import {DIRT} from 'clubhouse/constants/positions';
 import {ADMIN, TIMESHEET_MANAGEMENT} from 'clubhouse/constants/roles';
 import {APPROVED, PENDING, REJECTED} from "clubhouse/models/timesheet-missing";
+import {shiftFormat} from "clubhouse/helpers/shift-format";
 
 export default class PersonTimesheetMissingComponent extends Component {
   @tracked newEntry = null;
@@ -118,14 +119,14 @@ export default class PersonTimesheetMissingComponent extends Component {
 
     try {
       await timesheet.reload();
-      timesheet.set('new_on_duty', timesheet.on_duty);
-      timesheet.set('new_off_duty', timesheet.off_duty);
-      timesheet.set('new_position_id', timesheet.position_id);
-      timesheet.set('create_entry', 0);
-      timesheet.set('additional_notes', '');
-      timesheet.set('additional_admin_notes', '');
-      timesheet.set('additional_reviewer_notes', '');
-      timesheet.set('additional_wrangler_notes', '');
+      timesheet.new_on_duty = timesheet.on_duty;
+      timesheet.new_off_duty = timesheet.off_duty;
+      timesheet.new_position_id = timesheet.position_id;
+      timesheet.create_entry = 0;
+      timesheet.additional_notes = '';
+      timesheet.additional_admin_notes = '';
+      timesheet.additional_reviewer_notes = '';
+      timesheet.additional_wrangler_notes = '';
 
       this.editEntry = timesheet;
       this.nextEntry = nextEntry;
@@ -305,7 +306,7 @@ export default class PersonTimesheetMissingComponent extends Component {
   @action
   statusChangeAction(field, value) {
     if (value === APPROVED) {
-      (this.newEntry || this.editEntry).set('create_entry', 1);
+      (this.newEntry || this.editEntry)['create_entry'] = 1;
     }
   }
 
@@ -378,5 +379,27 @@ export default class PersonTimesheetMissingComponent extends Component {
 
   get canManageTimesheets() {
     return this.session.hasRole([ADMIN, TIMESHEET_MANAGEMENT]);
+  }
+
+  @cached
+  get timeWarningsMessage() {
+    const tw = this.editEntry.time_warnings;
+
+    return htmlSafe(
+      this._alertRange('On Duty', tw.start, tw.start_status, tw.begins, tw.ends)
+      + this._alertRange('Off Duty', tw.finished, tw.finished_status, tw.begins, tw.ends)
+    );
+  }
+
+  _alertRange(label, date, status, begins, ends) {
+    if (status === 'success') {
+      return '';
+    }
+
+    if (status === 'before-begins') {
+      return `<li >The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is BEFORE the first shift</b> starting on ${shiftFormat([begins], {})}.</li>`;
+    } else {
+      return `<li>The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is AFTER the last shift</b> ending on ${shiftFormat([ends], {})}.</li>`;
+    }
   }
 }

@@ -5,8 +5,10 @@
       <tr>
         <th>Person</th>
         <th>Attachment</th>
-        <th>Checked Out Time /<br>By Person</th>
-        <th>Checked In Time /<br>By Person</th>
+        <th>Checked Out Time</th>
+        <th>By Person</th>
+        <th>Checked In Time</th>
+        <th>By Person</th>
       </tr>
       </thead>
       <tbody>
@@ -20,29 +22,33 @@
         {{#each this.assetHistory as |row|}}
           <tr>
             <td>
-              <PersonLink @person={{row.person}} @page="assets" />
+              <PersonLink @person={{row.person}} @page="assets"/>
             </td>
-            <td><PresentOrNot @value={{row.attachment.description}} @empty="-" /></td>
             <td>
-              {{shift-format row.checked_out}}<br>
+              <PresentOrNot @value={{row.attachment.description}} @empty="-"/>
+            </td>
+            <td>
+              {{shift-format row.checked_out}}
+            </td>
+            <td>
               {{#if row.check_out_person}}
                 <PersonLink @person={{row.check_out_person}} />
               {{else}}
                 -
               {{/if}}
             </td>
-            <td>
-              {{#if row.checked_in}}
-                {{shift-format row.checked_in}}<br>
-                {{#if row.check_in_person}}
-                  <PersonLink @person={{row.check_in_person}} />
-                {{else}}
-                  -
-                {{/if}}
-              {{else}}
+            {{#if row.checked_in}}
+              <td>
+                {{shift-format row.checked_in}}
+              </td>
+              <td>
+                <PersonLink @person={{row.check_in_person}} />
+              </td>
+            {{else}}
+              <td colspan="2" class="text-center">
                 <UiButton @size="sm" @onClick={{fn this.checkin row}}>Check In</UiButton>
-              {{/if}}
-            </td>
+              </td>
+            {{/if}}
           </tr>
         {{else}}
           <tr>

@@ -101,7 +101,7 @@
                   {{else}}
                     {{fa-icon "trash-alt" type="fas" fixed=true right=1}}
                   {{/if}}
-                  &nbsp;Remove
+                  Remove
                 </button>
               {{~/if~}}
               {{#if slot.signUpInfo}}
@@ -119,10 +119,10 @@
                   disabled={{slot.isRetrievingSignUps}}>
                   {{#if slot.isRetrievingSignUps}}
                     <SpinIcon/>
-                    {{~else~}}
+                  {{else}}
                     {{fa-icon "users" type="fas" fixed=true right=1}}
                   {{/if}}
-                  &nbsp;Sign Ups
+                  Sign Ups
                 </button>
               {{/if}}
             </div>

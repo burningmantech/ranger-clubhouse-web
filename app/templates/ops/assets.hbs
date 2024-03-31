@@ -42,20 +42,17 @@
     {{#each this.viewAssets key="id" as |asset|}}
       <tr>
         <td>{{asset.barcode}}</td>
-        <td>{{this.typeLabel asset.type}}</td>
+        <td>{{asset.typeLabel}}</td>
         <td>
           <PresentOrNot @value={{asset.description}} @empty="-"/>
         </td>
-        <td>{{if asset.perm_assign "Perm" "Temp"}}</td>
+        <td class="text-center">{{asset.assignmentLabel}}</td>
         <td>
           <UiButton @type="secondary" @size="sm" @onClick={{fn this.assetHistoryAction asset}}>
-            History
+            {{fa-icon "rectangle-list" right=1}} History
           </UiButton>
-          <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteAsset asset}}>
-            {{fa-icon "trash"}} Delete
-          </UiButton>
-          <UiButton @size="sm" @onClick={{fn this.editAsset asset}}>
-            {{fa-icon "edit"}}Edit
+           <UiButton @size="sm" @onClick={{fn this.editAsset asset}}>
+            {{fa-icon "edit" right=1}} Edit
           </UiButton>
         </td>
       </tr>
@@ -134,6 +131,11 @@
           {{#if this.isSubmitting}}
             <LoadingIndicator/>
           {{/if}}
+          <div class="ms-auto">
+            <UiButton @type="danger" @onClick={{this.deleteAsset}} @disabled={{this.isSubmitting}}>
+              {{fa-icon "trash" right=1}} Delete
+            </UiButton>
+          </div>
         </Modal.footer>
       </ChForm>
     </ModalDialog>

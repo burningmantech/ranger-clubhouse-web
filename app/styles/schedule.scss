@@ -169,11 +169,16 @@
     .schedule-actions {
       order: 7;
       width: 100%;
+      display: flex;
+      justify-content: space-between;
+      button {
+        display: inline-block;
+      }
     }
 
     .schedule-row button {
       display: inline-block;
-      width: 49%;
+      width: 48%;
     }
 
     .schedule-sm-label {

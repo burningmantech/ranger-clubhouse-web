@@ -26,7 +26,19 @@
       <td>
         <PresentOrNot @value={{ap.asset.description}} @empty="-"/>
         <br>
-        {{if ap.asset.perm_assign "Permanent" "Temporary"}}
+        {{#if (eq ap.asset.type "radio")}}
+          {{#if ap.asset.perm_assign}}
+            {{badge "gray" "Event Radio"}}
+          {{else}}
+            {{badge "warning" "Shift Radio"}}
+          {{/if}}
+        {{else}}
+          {{#if ap.asset.perm_assign}}
+            {{badge "gray" "Permanent"}}
+          {{else}}
+            {{badge "warning" "Temporary"}}
+          {{/if}}
+        {{/if}}
       </td>
       <td>{{shift-format ap.checked_out}}</td>
       <td>

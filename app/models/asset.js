@@ -31,14 +31,22 @@ export default class AssetModel extends Model {
   @attr('string', {readOnly: true}) created_at;
 
   get isRadio() {
-    return this.description === TYPE_RADIO;
+    return this.type === TYPE_RADIO;
   }
 
   get isGear() {
-    return this.description === TYPE_GEAR;
+    return this.type === TYPE_GEAR;
   }
 
   get typeLabel() {
     return TypeLabels[this.type] ?? this.type;
+  }
+
+  get assignmentLabel() {
+    if (this.isRadio) {
+      return this.perm_assign ? 'Event' : 'Shift';
+    } else {
+      return this.perm_assign ? 'Permanent' : 'Temporary';
+    }
   }
 }

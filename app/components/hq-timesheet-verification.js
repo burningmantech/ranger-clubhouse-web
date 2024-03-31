@@ -4,6 +4,7 @@ import {action} from '@ember/object';
 import {service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';
 import positionsForTimesheetMissing from "clubhouse/utils/positions-for-timesheet-missing";
+import {STATUS_UNVERIFIED, STATUS_VERIFIED} from "clubhouse/models/timesheet";
 
 export default class HqTimesheetVerificationComponent extends Component {
   @service ajax;
@@ -37,8 +38,8 @@ export default class HqTimesheetVerificationComponent extends Component {
   @action
   async toggleEntryVerified(entry) {
     entry.isIgnoring = false;
-    const isVerified = entry.review_status === 'verified';
-    entry.review_status = (isVerified ? 'unverified' : 'verified');
+    const isVerified = entry.review_status === STATUS_VERIFIED;
+    entry.review_status = (isVerified ? STATUS_UNVERIFIED : STATUS_VERIFIED);
     try {
       await entry.save();
       this.toast.success(`Timesheet was successfully ${isVerified ? 'un-verified' : 'marked as verified'}.`);
@@ -91,21 +92,11 @@ export default class HqTimesheetVerificationComponent extends Component {
    */
 
   @action
-  async saveEntryCorrection(model, isValid) {
-    if (!isValid) {
-      return;
-    }
-
+  savedEntryCorrection() {
+    this.entry.additional_notes = null; // pseudo field, not cleared on save
     this.entry.isIgnoring = false;
-    try {
-      await model.save();
-      this.entry.additional_notes = null; // pseudo field, not cleared on save
-      this.showCorrectionForm = false;
-      this.toast.success('Correction request successfully submitted.');
-      this._finishedCallbacks();
-    } catch (response) {
-      this.house.handleErrorResponse(response)
-    }
+    this.showCorrectionForm = false;
+    this._finishedCallbacks();
   }
 
   _finishedCallbacks() {

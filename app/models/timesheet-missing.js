@@ -36,6 +36,8 @@ export default class TimesheetMissingModel extends Model {
 
   @attr('', {readOnly: true}) partner_info;
 
+  @attr('', {readOnly: true}) time_warnings;
+
   get isPending() {
     return this.review_status === PENDING;
   }
@@ -46,5 +48,9 @@ export default class TimesheetMissingModel extends Model {
 
   get isRejected() {
     return this.review_status === REJECTED;
+  }
+
+  get timesOutsideRange() {
+    return this.time_warnings?.status === 'out-of-range';
   }
 }

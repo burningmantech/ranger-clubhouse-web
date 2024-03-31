@@ -9,6 +9,7 @@ import {ADMIN, CAN_FORCE_SHIFT, TIMECARD_YEAR_ROUND} from 'clubhouse/constants/r
 import {TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
 import {TYPE_TRAINING} from "clubhouse/models/position";
 import _ from 'lodash';
+import {htmlSafe} from '@ember/template';
 
 export default class ShiftCheckInOutComponent extends Component {
   @service ajax;
@@ -131,7 +132,7 @@ export default class ShiftCheckInOutComponent extends Component {
   }
 
   get isReturningRanger() {
-    const { status } = this.args.person;
+    const {status} = this.args.person;
     return (status === INACTIVE || status === INACTIVE_EXTENSION || status === RETIRED);
   }
 
@@ -217,12 +218,13 @@ export default class ShiftCheckInOutComponent extends Component {
         case 'success':
           this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
 
-          if (this.args.startShiftNotify) {
-            this.args.startShiftNotify();
-          }
+          this.args?.startShiftNotify();
           if (+person.id === this.session.userId) {
             // Ensure the navigation bar is updated with the signed in to position
-            this.session.updateOnDuty();
+            await this.session.updateOnDuty();
+          }
+          if (result.slot_url) {
+            this._showShiftInfo(result.slot_url);
           }
           break;
 
@@ -255,6 +257,12 @@ export default class ShiftCheckInOutComponent extends Component {
     } finally {
       this.isSubmitting = false;
     }
+  }
+
+  _showShiftInfo(positionTitle, slotUrl) {
+    this.modal.info(`Shift Information For ${positionTitle}`,
+      htmlSafe(`<p>Convey the following information to the person:</p>${slotUrl}`)
+    );
   }
 
   /**
@@ -449,7 +457,11 @@ export default class ShiftCheckInOutComponent extends Component {
           }
           if (+person.id === this.session.userId) {
             // Ensure the navigation bar is updated with the signed in to position
-            this.session.updateOnDuty();
+            await this.session.updateOnDuty();
+          }
+
+          if (result.slot_url) {
+            this._showShiftInfo(result.position_title, result.slot_url);
           }
           return;
 

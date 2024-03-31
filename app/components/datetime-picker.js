@@ -7,7 +7,7 @@ import {later} from '@ember/runloop';
 export default class DatetimePickerComponent extends Component {
   constructor() {
     super(...arguments);
-    let {dateOnly, minDate, maxDate} = this.args;
+    let {dateOnly, minDate, maxDate, viewDate, defaultDate} = this.args;
 
     this.config = {
       allowInputToggle: true,
@@ -42,6 +42,14 @@ export default class DatetimePickerComponent extends Component {
         minutes: false,
         seconds: false
       }
+    }
+
+    if (viewDate) {
+      this.config.viewDate = new Date(viewDate);
+    }
+
+    if (defaultDate) {
+      this.config.defaultDate = new Date(defaultDate);
     }
   }
 

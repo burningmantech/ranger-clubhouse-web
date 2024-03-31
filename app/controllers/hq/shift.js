@@ -4,20 +4,20 @@ import {validatePresence} from 'ember-changeset-validations/validators';
 import {ALPHA, BURN_PERIMETER} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 import {
-  HQ_TODO_COLLECT_RADIO,
+  HQ_TODO_COLLECT_RADIO, HQ_TODO_COLLECT_RADIO_IF_DONE,
   HQ_TODO_END_SHIFT, HQ_TODO_ISSUE_RADIO, HQ_TODO_MEAL_POG, HQ_TODO_MEAL_POG_NONE, HQ_TODO_NO_RADIO, HQ_TODO_OFF_SITE,
   HQ_TODO_START_SHIFT,
   HQ_TODO_VERIFY_TIMESHEET,
   HqTodoTask
 } from "clubhouse/constants/hq-todo";
 import {TYPE_RADIO} from "clubhouse/models/asset";
-import { schedule } from '@ember/runloop';
+import {schedule} from '@ember/runloop';
 
 export default class HqShiftController extends ClubhouseController {
   @tracked isMarkingOffSite = false;
 
   @tracked timesheets;
-  // @tracked unverifiedTimesheets = [];
+  @tracked timesheetsToReview;
   @tracked onDutyEntry;
 
   @tracked assets;
@@ -47,10 +47,6 @@ export default class HqShiftController extends ClubhouseController {
     return this.timesheets.find((t) => t.position_id === ALPHA) && this.person.isActive;
   }
 
-  get unverifiedTimesheets() {
-    return this.timesheets.filter((t) => t.isUnverified);
-  }
-
   /**
    * Are there any unverified and not being ignored timesheet entries?
    * (used to determine if Start Shift can be shown)
@@ -59,7 +55,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get hasUnreviewedTimesheet() {
-    return !!this.unverifiedTimesheets.find((t) => !t.isIgnoring);
+    return !!this.timesheetsToReview.find((t) => (!t.isIgnoring && t.isUnverified));
   }
 
   /**
@@ -69,7 +65,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get unreviewedTimesheetCount() {
-    return this.unverifiedTimesheets.filter((t) => !t.isIgnoring).length;
+    return this.timesheetsToReview.filter((t) => (!t.isIgnoring && t.isUnverified)).length;
   }
 
   /**
@@ -103,6 +99,7 @@ export default class HqShiftController extends ClubhouseController {
   onAssetCheckIn() {
     if (!this.collectRadioCount) {
       this.completeTodo(HQ_TODO_COLLECT_RADIO);
+      this.completeTodo(HQ_TODO_COLLECT_RADIO_IF_DONE);
     }
   }
 
@@ -127,7 +124,7 @@ export default class HqShiftController extends ClubhouseController {
   }
 
   get collectEventRadiosAtShiftEnd() {
-    if ( this.eventRadios > this.eventInfo.radio_max) {
+    if (this.eventRadios > this.eventInfo.radio_max) {
       return this.eventRadios - this.eventInfo.radio_max;
     } else {
       return 0;
@@ -228,6 +225,19 @@ export default class HqShiftController extends ClubhouseController {
   async endShiftNotify(timesheet) {
     try {
       await this.timesheets.update();
+      const ignored = {}, previousReview = {};
+      this.timesheetsToReview.forEach((t) => {
+        previousReview[t.id] = true;
+        if (t.isIgnoring) {
+          ignored[t.id] = true;
+        }
+      })
+      this.timesheetsToReview = this.timesheets.filter((t) => previousReview[t.id] || t.isUnverified);
+      this.timesheetsToReview.forEach((t) => {
+        if (ignored[t.id]) {
+          t.isIgnoring = true;
+        }
+      });
       this._findOnDuty()
       if (timesheet) {
         this.completeTodo(HQ_TODO_END_SHIFT);
@@ -382,6 +392,16 @@ export default class HqShiftController extends ClubhouseController {
     } else {
       this.todos = [...this.todos, new HqTodoTask(task, ignore)];
     }
+  }
+
+  /**
+   * Used by the route to build up the todo list.
+   *
+   * @param task
+   */
+
+  setupTodo(task) {
+    this.todos.push(new HqTodoTask(task, false));
   }
 
   /**

@@ -35,7 +35,7 @@
   {{/if}}
 
   <div class="d-flex justify-content-start">
-    <div class="flex-shrink-0 me-4 {{unless this.todoCount "text-success"}}">
+    <div class="flex-shrink-0 me-2 {{unless this.todoCount "text-success"}}">
       {{pluralize this.todoCount "suggested task"}}:
     </div>
     <div class="d-flex justify-content-start flex-wrap flex-shrink-1">
@@ -70,7 +70,7 @@
     {{/if}}
   </:title>
   <:body>
-    <HqTimesheetVerification @unverifiedTimesheets={{this.unverifiedTimesheets}}
+    <HqTimesheetVerification @unverifiedTimesheets={{this.timesheetsToReview}}
                              @completeTodo={{this.completeTodo}}
                              @onFinished={{this.afterShiftReview}}
                              @positions={{this.positions}}
@@ -100,9 +100,9 @@
   <:body>
     {{#unless this.personEvent.asset_authorized}}
       <UiNotice @type="danger" @title="Radio Agreement Not Signed - Do Not Issue Radios or Gear" @icon="ban">
-          The Radio Checkout Agreement has not been signed. {{this.person.callsign}} may not receive
-          radios or other gear until this is resolved. Direct {{this.person.callsign}} to the kiosk
-          shack, so they can log in into the Clubhouse, review, and sign the agreement.
+        The Radio Checkout Agreement has not been signed. {{this.person.callsign}} may not receive
+        radios or other gear until this is resolved. Direct {{this.person.callsign}} to the kiosk
+        shack, so they can log in into the Clubhouse, review, and sign the agreement.
       </UiNotice>
     {{/unless}}
 
@@ -133,10 +133,10 @@
       </ul>
     {{/if}}
 
-    <div class="mb-3">
+    <div class="mb-2">
       {{#if this.eventInfo.radio_eligible}}
-        {{this.person.callsign}} is authorized for <span class="fw-semibold">{{pluralize this.eventInfo.radio_max
-                                                                                         "event radio"}}</span>.
+        {{this.person.callsign}} is authorized for
+        <span class="fw-semibold">{{pluralize this.eventInfo.radio_max "event radio"}}</span>.
       {{else}}
         {{this.person.callsign}} is only authorized for <span class="fw-semibold">SHIFT RADIOS.</span>
       {{/if}}
@@ -203,8 +203,8 @@
                 {{pluralize this.assetsCheckedOut.length "asset"}} (radios, gear, etc.) not collected.
               </li>
             {{/if}}
-            {{#if this.unverifiedTimesheets}}
-              <li>{{pluralize this.unverifiedTimesheets.length "timesheet entry"}} not reviewed.</li>
+            {{#if this.timesheetsToReview}}
+              <li>{{pluralize this.timesheetsToReview.length "timesheet entry"}} not reviewed.</li>
             {{/if}}
           </ul>
           You may choose to ignore this warning and proceed to mark this person off site. However, you

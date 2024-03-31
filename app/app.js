@@ -27,7 +27,8 @@ Ember.onerror = (error) => {
     }
 
     didAlertError = true;
-    alert("Ember exception " + error.stack);
+    console.error('Ember exception', error);
+    alert("Ember exception!\n" + error.stack);
     debugger;  // eslint-disable-line no-debugger
   } else {
     logError(error, 'client-ember-error');
@@ -51,6 +52,7 @@ window.onerror = (event, source, lineno, colno, error) => {
     return;
   }
 
+  console.error('Exception', event);
   alert("Uncaught exception " + event.message);
   // eslint-disable-next-line no-debugger
   debugger;

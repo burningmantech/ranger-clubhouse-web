@@ -170,7 +170,7 @@
                 {{! Only allow admins to remove a sign up that has started}}
                   <button type="button"
                     {{on "click" (fn @leaveSlot slot)}}
-                          class="btn btn-danger btn-sm ms-1"
+                          class="btn btn-danger btn-sm"
                           title="Remove from schedule"
                           disabled={{slot.isSubmitting}}>
                     {{#if slot.isSubmitting}}
@@ -186,7 +186,7 @@
                 {{#if slot.slot_active}}
                   {{#if (or this.canForceSignUp (and (not slot.isFull) (not slot.has_started)))}}
                     <button type="button" {{on "click" (fn @joinSlot slot)}}
-                            class="btn btn-primary btn-sm ms-1"
+                            class="btn btn-primary btn-sm"
                             title="Sign up for the shift"
                             disabled={{slot.isSubmitting}}>
                       {{#if slot.isSubmitting}}

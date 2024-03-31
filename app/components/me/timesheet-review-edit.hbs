@@ -1,0 +1,80 @@
+<ModalDialog @title="Timesheet Correction" as |Modal|>
+  <ChForm @formId="correction"
+          @formFor={{@entry}}
+          @onSubmit={{this.save}} as |f|>
+    <Modal.body>
+      {{#if @entry.isRejected}}
+        <UiNotice @type="danger" @icon="times" @title="Correction request has been denied">
+        </UiNotice>
+      {{/if}}
+
+      You are requesting a correction for:
+      <div class="mt-2 h5 d-flex flex-column flex-lg-row">
+        <div class="d-inline-block me-2">
+          {{@entry.position.title}}
+        </div>
+        <div class="d-inline-block me-3">
+          {{credits-format @entry.credits}} credits
+        </div>
+        <div class="d-inline-block me-3">
+          {{shift-format @entry.on_duty @entry.off_duty}}
+        </div>
+        <div class="d-inline-block">
+          {{hour-minute-words @entry.duration}}
+        </div>
+      </div>
+      {{#if @entry.notes}}
+        <div class="border p-2 my-2">
+          <h5 class="mx-n2 mt-n2 p-2 bg-secondary text-white">Notes from you &amp; the Timesheet Wranglers</h5>
+          <TimesheetNotes @notes={{@entry.notes}} @isMe={{@isMe}} />
+        </div>
+      {{/if}}
+      If the position <b>{{@entry.position.title}}</b> is wrong, select the correct position below:
+      <FormRow>
+        <f.select @name="desired_position_id"
+                  @options={{this.desiredPositionOptions}}
+                  @inline={{true}}
+        />
+      </FormRow>
+      If the start time of <b>{{shift-format @entry.on_duty}}</b> is wrong, enter the correct time below:
+      <FormRow>
+        <f.datetime @name="desired_on_duty"
+                    @size={{20}}
+        />
+      </FormRow>
+      If the END TIME of <b>{{shift-format @entry.off_duty}}</b> is wrong, enter the correct time below:
+      <FormRow>
+        <f.datetime @name="desired_off_duty"
+                    @size={{20}}
+        />
+      </FormRow>
+      Please help us understand why this entry should be fixed by providing the following information:
+      <ul class="no-indent">
+        <li><b>Provide a BRIEF &amp; CONCISE explanation</b> in 1 to 3 sentences what needs to be corrected.</li>
+        <li><b>Who was your shift partner or the Shift Lead who can corroborate your story?</b></li>
+      </ul>
+      <FormRow>
+        <f.textarea @name="additional_notes"
+                    @label={{if @entry.isRejected "Supply additional information for an appeal:"
+                                "Enter your brief explanation below:"}}
+                    @cols={{80}}
+                    @rows={{3}}
+                    @maxlength={{1000}}
+                    @showCharCount={{true}}
+        />
+      </FormRow>
+      <h6 class="text-danger fw-bold">The request will be denied if:</h6>
+      {{fa-icon "ban" right=1}} You are requesting credit for time you were not on duty due to a late start.<br>
+      {{fa-icon "ban" right=1}} Not enough or incomplete information was provided.<br>
+      {{fa-icon "ban" right=1}} The requested changes cannot be confirmed by your shift partner(s) or the Shift Lead.
+      Yes, we do check!<br>
+    </Modal.body>
+    <Modal.footer @noAlign={{true}}>
+      <f.submit @label="Submit Correction Request" @disabled={{@entry.isSaving}} />
+      <UiCancelButton @disabled={{@entry.isSaving}} @onClick={{@onCancel}} />
+      {{#if @entry.isSaving}}
+        <LoadingIndicator/>
+      {{/if}}
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>

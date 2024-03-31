@@ -45,6 +45,8 @@ export default class ChFormSelectComponent extends Component {
       return true;
     } else if (value === 'false') {
       return false;
+    } else if (value === 'null') {
+      return null;
     } else {
       return value;
     }
@@ -58,7 +60,7 @@ export default class ChFormSelectComponent extends Component {
       case 'object':
         // { id: value, title: 'label' }
         label = opt.title ?? opt.label;
-        value = opt.id ?? opt.value;
+        value = ('id' in opt) ? (opt.id === null ? 'null' : opt.id) : opt.value;
         if ('disabled' in opt) {
           disabled = opt.disabled;
         }
@@ -67,6 +69,9 @@ export default class ChFormSelectComponent extends Component {
       case 'array':
         // Simple [ 'label', value ]
         [label, value] = opt;
+        if (value === null) {
+          value = "null";
+        }
         if (opt.length >= 3) {
           disabled = opt[2];
         }
