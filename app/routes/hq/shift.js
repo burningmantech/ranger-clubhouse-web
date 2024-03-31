@@ -7,7 +7,7 @@ import {
   HQ_TODO_VERIFY_TIMESHEET,
   HQ_TODO_ISSUE_RADIO,
   HQ_TODO_DELIVERY_MESSAGE,
-  HqTodoTask, HQ_TODO_OFF_SITE,
+  HqTodoTask, HQ_TODO_OFF_SITE, HQ_TODO_COLLECT_RADIO_IF_DONE,
 } from "clubhouse/constants/hq-todo";
 import {isEmpty} from "lodash";
 
@@ -52,37 +52,62 @@ export default class HqShiftRoute extends ClubhouseRoute {
     controller.endedShiftEntry = null;
     controller.unsubmittedBarcode = '';
     controller._findOnDuty();
+    controller.timesheetsToReview = model.timesheets.filter((t) => t.isUnverified);
 
-    const todos = [];
-    controller.todos = todos;
+    controller.todos = [];
 
     if (controller.person.unread_message_count) {
-      todos.push(new HqTodoTask(HQ_TODO_DELIVERY_MESSAGE));
+      controller.setupTodo(HQ_TODO_DELIVERY_MESSAGE);
     }
 
-    if (controller.unverifiedTimesheets.length) {
-      todos.push(new HqTodoTask(HQ_TODO_VERIFY_TIMESHEET));
+    if (controller.timesheetsToReview.length) {
+      controller.setupTodo(HQ_TODO_VERIFY_TIMESHEET);
     }
 
     const {upcomingSlots} = model;
 
+    let noMoreScheduled = false;
     if (!upcomingSlots.imminent.length && !upcomingSlots.upcoming.length) {
       controller.askIfDone = new HqTodoTask(HQ_TODO_OFF_SITE, false, true);
+      noMoreScheduled = true;
     } else {
       controller.askIfDone = null;
     }
 
+    let radioTask = null;
     if (!controller.isOffDuty) {
-      todos.push(new HqTodoTask(HQ_TODO_END_SHIFT));
+      controller.setupTodo(HQ_TODO_END_SHIFT);
+      if (controller.collectRadioCount) {
+        radioTask = HQ_TODO_COLLECT_RADIO;
+      } else if (controller.eventRadios && noMoreScheduled) {
+        radioTask = HQ_TODO_COLLECT_RADIO_IF_DONE;
+      }
     } else {
-      todos.push(new HqTodoTask(HQ_TODO_START_SHIFT));
-      if (!controller.eventRadios) {
-        todos.push(new HqTodoTask(HQ_TODO_ISSUE_RADIO));
+      controller.setupTodo(HQ_TODO_START_SHIFT);
+      const radioMax = controller.eventInfo.radio_max;
+      if (radioMax > 0) {
+        if (controller.collectRadioCount) {
+          // Person is above the event radio checkout limit and/or has a shift radio
+          radioTask = HQ_TODO_COLLECT_RADIO;
+        } else if (noMoreScheduled && controller.eventRadios) {
+          // Has radios, and has no more upcoming shifts.
+          radioTask = HQ_TODO_COLLECT_RADIO_IF_DONE;
+        } else if (controller.eventRadios < radioMax) {
+          // Below their event radio issue count,
+          radioTask = HQ_TODO_ISSUE_RADIO;
+        }
+        // else, has an event radio, and still working - don't nag.
+      } else if (controller.collectRadioCount) {
+        // Off duty with radios, and not event authorized?
+        radioTask = HQ_TODO_COLLECT_RADIO;
+      } else {
+        // No radio - Give 'em one.
+        radioTask = HQ_TODO_ISSUE_RADIO;
       }
     }
 
-    if (controller.collectRadioCount) {
-      todos.push(new HqTodoTask(HQ_TODO_COLLECT_RADIO));
+    if (radioTask) {
+      controller.setupTodo(radioTask);
     }
   }
 }

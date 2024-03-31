@@ -4,28 +4,30 @@
     The exception is during a very busy time such as the Burn Night check-in, the review can skipped by using
     the <i>Skip Review</i> button.
   </UiNotice>
-{{else}}
-  <div class="d-flex justify-content-between mb-4">
-    <div>
-      If a timesheet entry not listed below requires correction,
-      <span class="d-inline-block">
+{{/if}}
+<div class="d-flex justify-content-between mb-2">
+  <div>
+    If a timesheet entry not listed below requires correction,
+    <span class="d-inline-block">
         click on
       <LinkTo @route="hq.timesheet" @model={{@person.id}}>Timesheet / Corrections</LinkTo>
       .
       </span>
-    </div>
-    <div>
-      <UiButton @type="secondary" @onClick={{this.newTimesheetMissingRequest}} @size="sm">
-        New Missing Timesheet Request
-      </UiButton>
-    </div>
   </div>
-{{/if}}
+  <div>
+    <UiButton @type="secondary" @onClick={{this.newTimesheetMissingRequest}} @size="sm">
+      New Missing Timesheet Request
+    </UiButton>
+  </div>
+</div>
+
 {{#if @unverifiedTimesheets}}
   <p>
-    <UiButton @onClick={{this.skipEntireReview}} @type="secondary">
-      Skip Review For All Entries
-    </UiButton>
+    {{#if this.hasUnreviewedTimesheet}}
+      <UiButton @onClick={{this.skipEntireReview}} @type="secondary">
+        Skip Review For All Entries
+      </UiButton>
+    {{/if}}
   </p>
   <UiTable @normalSize={{true}}>
     <thead>
@@ -60,7 +62,7 @@
             </div>
           {{else if entry.isPending}}
             <div class="text-danger">
-              {{fa-icon "hourglass" fixed=1 right=1}} A correction request submitted.
+              {{fa-icon "hourglass" fixed=1 right=1}} A correction request has been submitted.
             </div>
           {{else if entry.isIgnoring}}
             {{fa-icon "clock" type="r" fixed=1 right=1}} Entry will be reviewed at a later time.
@@ -111,49 +113,13 @@
 {{/if}}
 
 {{#if this.showCorrectionForm}}
-  <ModalDialog @title="Timesheet Entry Correction" @onEscape={{this.cancelEntryCorrection}} as |Modal|>
-    <ChForm @formId="correction" @formFor={{this.entry}}
-            @validator={{this.correctionValidations}}
-            @onSubmit={{this.saveEntryCorrection}} as |f|>
-      <Modal.body>
-        <dl class="row">
-          <dt class="col-sm-2">Position:</dt>
-          <dd class="col-sm-10">{{this.entry.position.title}}</dd>
+  <Me::TimesheetReviewEdit @entry={{this.entry}}
+                           @isMe={{false}}
+                           @onCancel={{this.cancelEntryCorrection}}
+                           @positions={{@positions}}
+                           @onUpdate={{this.savedEntryCorrection}}
+  />
 
-          <dt class="col-sm-2">Time:</dt>
-          <dd class="col-sm-10">{{shift-format this.entry.on_duty}} to {{shift-format this.entry.off_duty}}</dd>
-
-          <dt class="col-sm-2">Duration:</dt>
-          <dd class="col-sm-10">{{hour-minute-format this.entry.duration}}</dd>
-
-          <dt class="col-sm-2">Credits:</dt>
-          <dd class="col-sm-10">{{credits-format this.entry.credits}}</dd>
-        </dl>
-        Provide as much information as possible to help the reviewer understand why this entry should be fixed.
-        <ul>
-          <li>Why does {{this.person.callsign}} think the entry is wrong?</li>
-          <li><b>Wrong times?</b> State the correct times. Don't forget to include the month and day.</li>
-          <li><b>Is the position "{{this.entry.position.title}}" wrong?</b> State the correct position</li>
-          <li><b>Who was their shift partner(s)?</b></li>
-        </ul>
-
-        <FormRow>
-          <f.textarea @name="additional_notes"
-                      @label="Timesheet entry correction note:"
-                      @autofocus={{true}}
-                      @cols={{80}}
-                      @rows={{5}}/>
-        </FormRow>
-      </Modal.body>
-      <Modal.footer @noAlign={{true}}>
-        <f.submit @label="Submit Correction" @disabled={{this.isCorrectionSubmitting}} />
-        <UiCancelButton @disabled={{this.isCorrectionSubmitting}} @onClick={{this.cancelEntryCorrection}} />
-        {{#if this.isCorrectionSubmitting}}
-          <SpinIcon/>
-        {{/if}}
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
 {{/if}}
 
 {{#if this.timesheetMissingEntry}}

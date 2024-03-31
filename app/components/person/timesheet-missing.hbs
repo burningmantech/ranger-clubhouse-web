@@ -1,10 +1,15 @@
 <UiSection id="missing-requests">
   <:title>{{@year}} Missing Timesheet Entry Requests</:title>
   <:body>
-    <p>
-      <UiButton @type="secondary" @onClick={{this.newEntryAction}}>New Request</UiButton>
-    </p>
-    {{pluralize @timesheetMissing.length "missing entry request"}}
+    <div class="align-middle mb-1">
+      {{pluralize @timesheetMissing.length "missing entry request"}}
+      <UiButton @type="secondary"
+                @onClick={{this.newEntryAction}}
+                @size="sm"
+                class="ms-4">
+        {{fa-icon "plus" right=1}} New Request
+      </UiButton>
+    </div>
     {{#if @timesheetMissing}}
       <UiTable>
         <thead>
@@ -192,6 +197,17 @@
           </tr>
           </tbody>
         </UiTable>
+        {{#if this.editEntry.timesOutsideRange}}
+          <div class="my-1">
+            <div class="text-danger fw-semibold">
+              The date/times are outside the scheduled sign-up date ranges.
+            </div>
+            This might indicate the date/times were entered incorrectly by the person, or the wrong position selected:
+            <ul>
+              {{this.timeWarningsMessage}}
+            </ul>
+          </div>
+        {{/if}}
         {{#if (and this.editEntry.partner this.editEntry.partner_info)}}
           <UiTable>
             <thead>
@@ -228,7 +244,9 @@
             </tbody>
           </UiTable>
         {{else}}
-          <i>No partner name given</i>
+          <p class="text-danger">
+            No shift partner name(s) stated.
+          </p>
         {{/if}}
         {{#if this.havePartnerTimesheet}}
           <fieldset>

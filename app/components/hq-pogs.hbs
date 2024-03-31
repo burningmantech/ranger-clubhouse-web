@@ -79,22 +79,22 @@
     <tbody>
     {{#each this.pogs as |pog|}}
       <tr class="align-middle">
-        <td>{{pog.pogLabel}}</td>
-        <td>
+        <td class="no-wrap">{{pog.pogLabel}}</td>
+        <td class="no-wrap">
           {{#if (and pog.isHalfMealPog pog.isRedeemed)}}
             Redeemed for Full Meal Pog
           {{else}}
             {{pog.statusLabel}}
           {{/if}}
         </td>
-        <td>{{shift-format pog.issued_at}}</td>
-        <td>
+        <td class="no-wrap">{{shift-format pog.issued_at}}</td>
+        <td class="no-wrap">
           <PersonLink @person={{pog.issued_by}} />
         </td>
         <td>
           <PresentOrNot @value={{pog.notes}} @empty="-"/>
         </td>
-        <td>
+        <td class="no-wrap">
           {{#if pog.isCancelled}}
             -
           {{else}}

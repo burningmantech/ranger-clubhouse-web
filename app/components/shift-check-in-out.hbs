@@ -48,6 +48,13 @@
         {{/if}}
       </td>
     </tr>
+    {{#if (and @onDutyEntry.slot @onDutyEntry.slot.url)}}
+      <tr>
+        <td colspan="6">
+          <SlotInfoLink @description="Click for more information about this shift" @info={{@onDutyEntry.slot.url}} />
+        </td>
+      </tr>
+    {{/if}}
     </tbody>
   </UiTable>
   {{#unless @onDutyEntry.position.count_hours}}
@@ -63,7 +70,9 @@
   {{else if (not @hasUnreviewedTimesheet)}}
     {{#if this.inPersonTrainingPassed}}
       {{#if @upcomingSlots.imminent}}
-        {{@person.callsign}} can be signed into a scheduled shift OR a different shift (aka position).
+        <div class="mb-2 fw-semibold">
+          {{@person.callsign}} can be signed into a scheduled shift OR a different shift (aka position).
+        </div>
         <UiTable @normalSize={{true}}>
           <thead>
           <tr>
@@ -111,7 +120,11 @@
             {{/unless}}
             <tr>
               <td class="align-middle">
-                {{slot.position_title}}{{#if slot.slot_description}} - {{slot.slot_description}}{{/if}}
+                {{slot.position_title}}
+                {{#if slot.slot_description}}
+                  <br>
+                  <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
+                {{/if}}
               </td>
               <td class="align-middle">{{shift-format slot.slot_begins slot.slot_ends}}</td>
               <td class="align-middle">
@@ -193,7 +206,8 @@
           </p>
           {{#if this.noTrainingRequiredPositions}}
             <p>
-              The following positions are available to work that do not require passing an In-Person Training. Select the position, and the Start Shift button will
+              The following positions are available to work that do not require passing an In-Person Training. Select
+              the position, and the Start Shift button will
               appear.
             </p>
             <div class="columns-container columns-4">
@@ -349,34 +363,37 @@
       Timesheet entry might be too short
     </Modal.title>
     <Modal.body>
-      <p>
-        <b class="text-danger">The shift has not been ended. The timesheet entry might be too short at
-          {{hour-minute-words @onDutyEntry.duration}}.</b>
+      <p class="text-danger fw-semibold">
+        The shift has not been ended. The timesheet entry might be too short at
+        {{hour-minute-words @onDutyEntry.duration}}.
       </p>
       <p>
         Several options can be taken:
       </p>
-      <p>
-        If you are ending the shift because the position ({{@onDutyEntry.position.title}}) is wrong, just update
-        the position and do not end the shift.<br>
-        <UiButton @onClick={{this.updatePositionInstead}}>
-          Correct Position / Shift
-        </UiButton>
-      </p>
-      <p>
-        If the shift was started by mistake, the entry may be deleted.<br>
-        <UiButton @onClick={{this.deleteEntry}}>
-          Accidental shift start - Delete Entry
-        </UiButton>
-      </p>
-      <p>
-        If the duration is actually correct at {{hour-minute-format @onDutyEntry.duration}}, go ahead and end
-        the shift.<br>
-        <UiButton @onClick={{this.confirmEndShift}}>
-          Duration is correct - End Shift
-        </UiButton>
-      </p>
-
+      <ul>
+        <li>
+          <div class="fw-semibold mb-2">If the position {{@onDutyEntry.position.title}} is wrong, just correct the
+            position:
+          </div>
+          <UiButton @onClick={{this.updatePositionInstead}}>
+            {{fa-icon "edit" right=1}} Correct Position / Shift
+          </UiButton>
+        </li>
+        <li class="mt-4">
+          <div class="fw-semibold mb-2">If the shift was started by mistake:</div>
+          <UiButton @onClick={{this.deleteEntry}}>
+            {{fa-icon "trash" right=1}} Accidental Shift Start - Delete Entry
+          </UiButton>
+        </li>
+        <li class="mt-4">
+          <div class="fw-semibold mb-2">
+            If the duration is actually correct at {{hour-minute-words @onDutyEntry.duration}}:
+          </div>
+          <UiButton @onClick={{this.confirmEndShift}}>
+            {{fa-icon "check" right=1}} Duration is correct - End Shift
+          </UiButton>
+        </li>
+      </ul>
     </Modal.body>
     <Modal.footer>
       <UiCancelButton @onClick={{this.closeTooShortDialog}} />

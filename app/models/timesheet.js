@@ -65,6 +65,7 @@ export default class TimesheetModel extends Model {
   @attr('boolean', {readOnly: true}) was_signin_forced;
 
   @attr('', {readOnly: true}) time_warnings;
+  @attr('', {readOnly: true}) desired_warnings;
 
 
   @tracked isIgnoring = false; // Used by the HQ window interface
@@ -120,7 +121,10 @@ export default class TimesheetModel extends Model {
   }
 
   get timesOutsideRange() {
-    console.log('TIMES ', this.time_warnings);
     return this.time_warnings?.status === 'out-of-range';
+  }
+
+  get desiredOutsideRange() {
+    return this.desired_warnings?.status === 'out-of-range';
   }
 }

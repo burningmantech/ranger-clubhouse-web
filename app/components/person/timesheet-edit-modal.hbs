@@ -80,18 +80,21 @@
           {{/if}}
         </div>
         {{#if @entry.isTooShort}}
-          <div class="text-danger">
+          <div class="text-danger mb-1">
             Entry might be too short. Duration is less than 15 minutes.
           </div>
         {{else if @entry.isTooLong}}
-          <div class="text-danger">
+          <div class="text-danger mb-1">
             Entry might be too long. Duration is over 1.5x the scheduled shift of
             {{hour-minute-words @entry.slot.duration}}.
           </div>
         {{/if}}
         {{#if @entry.timesOutsideRange}}
-          <div>
-            The date/times are outside the scheduled sign-up date ranges. This might indicate the date/times were entered incorrectly:
+          <div class="mb-1">
+            <span
+              class="text-danger fw-semibold">The entry's date/times are outside the scheduled sign-up date ranges.</span>
+            A previous correction may have been done incorrectly, an accidental shift
+            start occurred, or the wrong position selected at shift check-in.
             <ul>
               {{this.timeWarningsMessage}}
             </ul>
@@ -151,6 +154,17 @@
               {{/if}}
               </tbody>
             </UiTable>
+            {{#if @entry.desiredOutsideRange}}
+              <div>
+                <span class="text-danger fw-semibold">
+                  The DESIRED date/times are outside the scheduled sign-up date ranges.
+                </span>
+                This might indicate the date/times were entered incorrectly by the person:
+                <ul>
+                  {{this.desiredWarningsMessage}}
+                </ul>
+              </div>
+            {{/if}}
             <UiButton @onClick={{fn this.populatedDesiredChanges f.model}} @size="sm" @type="secondary">
               Use the desired change(s)
             </UiButton>

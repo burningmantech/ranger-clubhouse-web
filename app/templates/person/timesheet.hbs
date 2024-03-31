@@ -5,27 +5,30 @@
             @subheader={{true}} />
 <UiTab class="mt-4" as |tab|>
   <tab.pane @title="Timesheet / Missing Entry Requests" @id="timesheet">
-    {{#if (or this.timesheetPendingCount this.missingRequestPendingCount)}}
-      <UiNotice @title="Timesheet Wrangler Review Needed" @icon="arrow-right">
-        {{#if this.timesheetPendingCount}}
-          {{pluralize this.timesheetPendingCount "timesheet entry"}} requires correction review.<br>
-        {{/if}}
-        {{#if this.missingRequestPendingCount}}
-          {{pluralize this.missingRequestPendingCount "Missing Timesheet Entry Request"}} requires attention.
-        {{/if}}
-      </UiNotice>
+    {{#if this.timesheetPendingCount}}
+      <UiAlert @icon="arrow-right" @type="warning">
+        {{pluralize this.timesheetPendingCount "timesheet entry"}} requires correction review.
+      </UiAlert>
     {{/if}}
+
+    {{#if this.missingRequestPendingCount}}
+      <UiAlert @icon="arrow-right" @type="warning">
+        {{pluralize this.missingRequestPendingCount "Missing Timesheet Entry Request"}} requires attention.
+          Jump to <a href="#missing-requests">Missing Timesheet Entry Requests</a>
+      </UiAlert>
+    {{/if}}
+
     {{#if (is-current-year this.year)}}
       {{#if this.timesheetInfo.timesheet_confirmed}}
-        <UiNotice @title="Timesheet Confirmed" @icon="check" @type="success">
-          The {{this.year}} timesheet was confirmed correct on
+        <UiAlert @icon="check" @type="success">
+          Timesheet confirmed correct on
           {{shift-format this.timesheetInfo.timesheet_confirmed_at year=true}} (Pacific). Any further updates to the
           entries will un-confirm the entire timesheet.
-        </UiNotice>
+        </UiAlert>
       {{else}}
-        <UiNotice @title="Timesheet Not Confirmed" @icon="hand">
+        <UiAlert @icon="hand" @type="secondary">
           {{this.person.callsign}} has not yet confirmed the {{this.year}} timesheet is correct.
-        </UiNotice>
+        </UiAlert>
       {{/if}}
       {{#if this.canForceConfirmation}}
         <p>
@@ -42,9 +45,6 @@
         placeholders and do not represent the actual volunteer work performed.
       </p>
     {{/if}}
-    <p>
-      Jump to <a href="#missing-requests">Missing Timesheet Entry Requests</a>
-    </p>
 
     <Person::TimesheetManage @timesheets={{this.timesheets}}
                              @person={{this.person}}

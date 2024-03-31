@@ -5,7 +5,6 @@ import {validatePresence} from 'ember-changeset-validations/validators';
 import _ from 'lodash';
 import {tracked} from '@glimmer/tracking';
 import {
-  TypeLabels,
   TYPE_AMBER,
   TYPE_GEAR,
   TYPE_KEY,
@@ -61,10 +60,6 @@ export default class OpsAssetsController extends ClubhouseController {
 
   assetValidations = {barcode: [validatePresence(true)]};
 
-  typeLabel(type) {
-    return TypeLabels[type] ?? type;
-  }
-
   get isCurrentYear() {
     return this.house.currentYear() === +this.year;
   }
@@ -101,8 +96,8 @@ export default class OpsAssetsController extends ClubhouseController {
   }
 
   get typeOptions() {
-    const options = _.uniqBy(this.assets, 'type').map((a) => a.type);
-    options.sort((a, b) => a.localeCompare(b));
+    const options = _.uniqBy(this.assets, 'type').map((a) =>[a.typeLabel, a.type]);
+    options.sort((a, b) => a[0].localeCompare(b[0]));
     options.unshift('All');
     return options;
   }
@@ -226,15 +221,20 @@ export default class OpsAssetsController extends ClubhouseController {
   }
 
   @action
-  deleteAsset(asset) {
+  deleteAsset() {
+    const asset = this.entry;
     this.modal.confirm('Confirm Asset Deletion',
       `Are you sure you wish to delete Barcode ${asset.barcode} (year ${this.year}) ${asset.type} ${asset.description ?? ''} ?`,
       async () => {
+        this.isSubmitting = true;
         try {
           await asset.destroyRecord();
           this.toast.success('Asset was successfully deleted');
+          this.entry = null;
         } catch (response) {
           this.house.handleErrorResponse(response);
+        } finally {
+          this.isSubmitting = false;
         }
       });
   }

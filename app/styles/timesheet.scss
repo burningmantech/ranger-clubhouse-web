@@ -16,19 +16,22 @@
   border-color: $table-border-color;
   font-weight: bold;
   padding: 0.125rem 0.25rem;
-}
+ }
 
 .timesheet-overlapping {
   background-color: #fbd3d3;
 }
 
 .timesheet-entry {
-  border-top: 1px solid #ddd;
   padding: 0.125rem 0.25rem;
-  margin-bottom: 1vh;
 }
 
-.timesheet-entry:nth-child(odd) {
+.timesheet-entry-container {
+  padding: 2px;
+  border: #c0dcf6 1px solid;
+  margin-bottom: 1vh;
+}
+.timesheet-entry-container:nth-child(odd) {
   background-color: $table-striped-bg;
 }
 
@@ -47,7 +50,6 @@
 
 .timesheet-actions {
   width: 100%;
-  padding: 0.125rem 0;
 }
 
 .timesheet-entry-header {
@@ -57,6 +59,7 @@
 
 .timesheet-actions {
   margin-top: 1vh;
+  margin-bottom: 0.5vh;
 
   button {
     display: inline-block;
@@ -89,6 +92,10 @@
 
   .timesheet-time {
     width: 30%;
+  }
+
+  .timesheet-header .timesheet-time {
+    margin-left: 5px;
   }
 
   .timesheet-duration {

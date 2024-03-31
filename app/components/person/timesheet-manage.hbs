@@ -10,16 +10,15 @@
     </span>
     <b>Total Hours:</b>
     {{hour-minute-format @timesheetSummary.total_duration}}
-    <div class="d-flex mt-1">
-      <div>
-        <HoursDoCountLegend />
-      </div>
-      {{#if this.hasOverlapping}}
-        <div class="ms-2">
-          {{fa-icon "flag" color="danger"}} = entry's time overlaps with another entry.
-        </div>
-      {{/if}}
+    <div class="mt-2">
+
     </div>
+    <HoursDoCountLegend/>
+    {{#if this.hasOverlapping}}
+      <div class="mt-2 text-danger">
+        Warning: multiple entries are overlapping in time.
+      </div>
+    {{/if}}
     <UiTable>
       <thead>
       <tr>
@@ -34,7 +33,7 @@
       </thead>
       <tbody>
       {{#each @timesheets key="id" as |ts|}}
-        <tr class="align-middle">
+        <tr class="align-middle {{if ts.isOverlapping "table-danger"}}">
           <td>
             {{#if (is-empty ts.off_duty)}}
               {{fa-icon "person-walking"}}
@@ -53,13 +52,15 @@
             {{/if}}
           </td>
           <td>
-            {{#if ts.isOverlapping}}
-              {{fa-icon "flag" color="danger" right=1}}
-            {{/if}}
             {{#if ts.off_duty}}
               {{shift-format ts.on_duty ts.off_duty}}
             {{else}}
               {{shift-format ts.on_duty}}
+            {{/if}}
+            {{#if ts.isOverlapping}}
+              <div class="text-danger fw-semibold">
+                Time is overlapping.
+              </div>
             {{/if}}
             {{#unless ts.suppress_duration_warning}}
               {{#if ts.isTooShort}}

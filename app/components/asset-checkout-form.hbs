@@ -21,18 +21,15 @@
   {{#if this.barcodeNotFound}}
     <span class="fw-semibold text-danger">Barcode "{{this.barcodeNotFound}}" was not found.</span>
   {{else if this.barcodeCheckedOut}}
-    <div>
+    <div class="mt-2">
       <span class="fw-semibold text-danger">
-      Asset {{this.barcodeCheckedOut.barcode}} still checked out by
-      <LinkTo @route="person.assets"
-              @model={{this.barcodeCheckedOut.person_id}}>{{this.barcodeCheckedOut.callsign}}</LinkTo>
-      .
+      Asset {{this.barcodeCheckedOut.barcode}} still checked out by {{this.barcodeCheckedOut.callsign}}.
       </span>
       Check out was on {{shift-format this.barcodeCheckedOut.checked_out}}.
     </div>
-    <div class="mb-2">
+    <div class="mt-2 mb-4">
       <UiButton @type="secondary" @onClick={{this.showHistoryAction}}>
-        Show Asset History &amp; Optionally Check Asset Back In
+        Show Asset History
       </UiButton>
     </div>
   {{else}}

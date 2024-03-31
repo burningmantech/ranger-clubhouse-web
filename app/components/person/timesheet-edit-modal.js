@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import {action} from '@ember/object';
 import {shiftFormat} from "clubhouse/helpers/shift-format";
 import {htmlSafe} from '@ember/template';
+import {cached} from '@glimmer/tracking';
 
 export default class PersonTimesheetEditModalComponent extends Component {
   reviewOptions = [
@@ -68,9 +69,19 @@ export default class PersonTimesheetEditModalComponent extends Component {
     }
   }
 
-  @action
-  timeWarningsMessage() {
+  @cached
+  get timeWarningsMessage() {
     const tw = this.args.entry.time_warnings;
+
+    return htmlSafe(
+      this._alertRange('On Duty', tw.start, tw.start_status, tw.begins, tw.ends)
+      + this._alertRange('Off Duty', tw.finished, tw.finished_status, tw.begins, tw.ends)
+    );
+  }
+
+  @cached
+  get desiredWarningsMessage() {
+    const tw = this.args.entry.desired_warnings;
 
     return htmlSafe(
       this._alertRange('On Duty', tw.start, tw.start_status, tw.begins, tw.ends)

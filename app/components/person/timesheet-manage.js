@@ -4,7 +4,7 @@ import {Role} from 'clubhouse/constants/roles';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {NON_RANGER} from "clubhouse/constants/person_status";
-import {STATUS_REJECTED} from "clubhouse/models/timesheet";
+import {STATUS_PENDING, STATUS_REJECTED} from "clubhouse/models/timesheet";
 import {TRAINING} from "clubhouse/constants/positions";
 
 export default class PersonTimesheetManageComponent extends Component {
@@ -86,7 +86,7 @@ export default class PersonTimesheetManageComponent extends Component {
       this.editEntry = timesheet;
       this._markOverlapping();
 
-    } catch (response){
+    } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
@@ -134,7 +134,7 @@ export default class PersonTimesheetManageComponent extends Component {
    * @private
    */
 
-   _saveCheckTimes(model) {
+  _saveCheckTimes(model) {
     if (model.review_status !== STATUS_REJECTED && (model._changes['position_id'] || model._changes['on_duty'] || model._changes['off_duty'])) {
       this.shiftManage.checkDateTime(model.position_id, model.on_duty, model.off_duty, () => this._checkForOverlaps(model));
     } else {
@@ -155,6 +155,17 @@ export default class PersonTimesheetManageComponent extends Component {
    */
 
   async _saveCommon(model) {
+    const changes = model._changes;
+    if (model.review_status === STATUS_PENDING && (changes['on_duty'] || changes['off_duty'] || changes['position_id'])) {
+      this.modal.confirm('Timesheet Modified',
+        'The timesheet entry was modified, but the status was left Correction Requested. Are you sure you want to save the modifications without updating the status?',
+        () => this._performSave(model))
+    } else {
+      this._performSave(model);
+    }
+  }
+
+  async _performSave(model) {
     this.house.saveModel(model, 'The timesheet entry has been successfully updated.',
       async () => {
         this.editEntry.additional_notes = '';
