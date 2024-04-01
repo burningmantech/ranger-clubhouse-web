@@ -12,6 +12,8 @@ export default class PhotoTableComponent extends Component {
 
   @tracked editPhoto = null;
 
+  @tracked isSubmitting = false;
+
   @action
   showPhotoAction(photo, event) {
     event.preventDefault();
@@ -41,13 +43,18 @@ export default class PhotoTableComponent extends Component {
    */
 
   @action
-  approveAction(photo) {
+  async approveAction(photo) {
     photo.status = 'approved';
 
-    photo.save().catch((response) => {
+    try {
+      this.isSubmitting = true;
+      await photo.save();
+    } catch (response) {
       photo.rollbackAttributes();
       this.house.handleErrorResponse(response);
-    });
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action

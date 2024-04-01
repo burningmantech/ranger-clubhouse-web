@@ -13,6 +13,8 @@ export default class PhotoRejectDialogComponent extends Component {
   @tracked rejectMail = null;
   @tracked rejectionOptions = [];
 
+  @tracked isSubmitting = false;
+
   constructor() {
     super(...arguments);
     this.rejectionOptions = this.args.reviewConfig.rejections.map((r) => [r.label, r.key]);
@@ -25,7 +27,7 @@ export default class PhotoRejectDialogComponent extends Component {
    */
 
   @action
-  onRejectSubmit(model) {
+  async onRejectSubmit(model) {
     const {photo} = this.args;
 
     if (!model.reasons.length) {
@@ -39,14 +41,15 @@ export default class PhotoRejectDialogComponent extends Component {
     photo.reject_reasons = model.reasons;
     photo.reject_message = model.message;
 
-    photo.save().then(() => {
+    try {
+      await photo.save();
       this.args.onClose();
-    }).catch((response) => {
+    } catch (response) {
       photo.rollbackAttributes();
       this.house.handleErrorResponse(response);
-    }).finally(() => {
+    } finally {
       this.isSubmitting = false;
-    });
+    }
   }
 
   /**
@@ -54,16 +57,22 @@ export default class PhotoRejectDialogComponent extends Component {
    */
 
   @action
-  rejectPreviewAction() {
+  async rejectPreviewAction() {
     const form = this.reviewForm;
     const data = {
       reject_reasons: form.reasons,
-      reject_message: form.message
+      reject_message: form.message,
     };
 
-    this.ajax.request(`person-photo/${this.args.photo.id}/reject-preview`, {method: 'GET', data})
-      .then(({mail}) => this.rejectMail = mail)
-      .catch((response) => this.house.handleErrorResponse(response));
+    this.isSubmitting = true;
+    try {
+      const {mail} = await this.ajax.request(`person-photo/${this.args.photo.id}/reject-preview`, {data});
+      this.rejectMail = mail;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   /**

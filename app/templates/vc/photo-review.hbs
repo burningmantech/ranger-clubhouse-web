@@ -17,88 +17,90 @@
             <PersonLink @person={{photo.person}} /> &lt;{{photo.person.status}}&gt;
           </h3>
           <p>
-          <UiTable>
-            <thead>
-            <tr>
-              <th>Status</th>
-              <th>ID</th>
-              <th>Uploaded</th>
-              <th>Reviewed</th>
-              <th>Edited</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-              <td>
-                {{#if (eq photo.status "approved")}}
-                  <b class="text-success">{{fa-icon "check"}} {{photo.status}}</b>
-                {{else if (eq photo.status "rejected")}}
-                  <b class="text-danger">{{fa-icon "times"}} {{photo.status}}</b>
-                {{else}}
-                  {{photo.status}}
-                {{/if}}
-              </td>
-              <td class="text-end">
-                {{photo.id}}
-              </td>
-              <td>
-                {{#if photo.uploaded_at}}
-                  {{photo.uploaded_at}}<br>
-                  by {{#if photo.upload_person}}
-                  <PersonLink @person={{photo.upload_person}} />
-                {{else}}
-                  <i>unknown</i>
-                {{/if}}
-                {{else}}
-                  <i>never</i>
-                {{/if}}
-              </td>
-              <td>
-                {{#if photo.reviewed_at}}
-                  {{photo.reviewed_at}}<br>
-                  by {{#if photo.review_person}}
-                  <PersonLink @person={{photo.review_person}} />
-                {{else}}
-                  <i>unknown</i>
-                {{/if}}
-                {{else}}
-                  <i>never</i>
-                {{/if}}
-              </td>
-              <td>
-                {{#if photo.edited_at}}
-                  {{photo.edited_at}}<br>
-                  by {{#if photo.edit_person}}
-                  <PersonLink @person={{photo.edit_person}} />
-                {{else}}
-                  <i>unknown</i>
-                {{/if}}
-                {{else}}
-                  <i>never</i>
-                {{/if}}
-              </td>
-            </tr>
-            </tbody>
-          </UiTable>
+            <UiTable>
+              <thead>
+              <tr>
+                <th>Status</th>
+                <th>ID</th>
+                <th>Uploaded</th>
+                <th>Reviewed</th>
+                <th>Edited</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>
+                  {{#if (eq photo.status "approved")}}
+                    {{badge "success" "approved"}}
+                  {{else if (eq photo.status "rejected")}}
+                    {{badge "danger" "rejected"}}
+                  {{else if (eq photo.status "submitted")}}
+                    {{badge "warning" "submitted"}}
+                  {{else}}
+                    {{photo.status}}
+                  {{/if}}
+                </td>
+                <td class="text-end">
+                  {{photo.id}}
+                </td>
+                <td>
+                  {{#if photo.uploaded_at}}
+                    {{photo.uploaded_at}}<br>
+                    by {{#if photo.upload_person}}
+                    <PersonLink @person={{photo.upload_person}} />
+                  {{else}}
+                    <i>unknown</i>
+                  {{/if}}
+                  {{else}}
+                    <i>never</i>
+                  {{/if}}
+                </td>
+                <td>
+                  {{#if photo.reviewed_at}}
+                    {{photo.reviewed_at}}<br>
+                    by {{#if photo.review_person}}
+                    <PersonLink @person={{photo.review_person}} />
+                  {{else}}
+                    <i>unknown</i>
+                  {{/if}}
+                  {{else}}
+                    <i>never</i>
+                  {{/if}}
+                </td>
+                <td>
+                  {{#if photo.edited_at}}
+                    {{photo.edited_at}}<br>
+                    by {{#if photo.edit_person}}
+                    <PersonLink @person={{photo.edit_person}} />
+                  {{else}}
+                    <i>unknown</i>
+                  {{/if}}
+                  {{else}}
+                    <i>never</i>
+                  {{/if}}
+                </td>
+              </tr>
+              </tbody>
+            </UiTable>
           </p>
           <p>
             <UiButton @type="secondary"
-                      @class="me-1"
+                      class="me-4"
                       @disabled={{photo.isSaving}}
                       @onClick={{fn this.editPhotoAction photo}}>
-              {{fa-icon "edit"}} Edit
+              {{fa-icon "edit" right=1}} Edit
             </UiButton>
             {{#if (not-eq photo.status "rejected")}}
               <UiButton @type="danger"
-                        @class="me-1"
+                        class="me-4"
                         @onClick={{fn this.showReviewPhoto photo}}
                         @disabled={{photo.isSaving}}>
-                {{fa-icon "times"}} Reject
+                {{fa-icon "times" right=1}} Reject
               </UiButton>
             {{/if}}
             {{#if (not-eq photo.status "approved")}}
               <UiButton @type="success" @onClick={{fn this.approveAction photo}} @disabled={{photo.isSaving}}>
-                {{fa-icon "check"}} Approve
+                {{fa-icon "check" right=1}} Approve
               </UiButton>
             {{/if}}
             {{#if photo.isSaving}}
@@ -151,11 +153,19 @@
 {{/if}}
 
 {{#if this.editPhoto}}
-  <PhotoEditDialog @photo={{this.editPhoto}} @onClose={{this.closeEditPhotoAction}} />
+  <PhotoEditDialog @photo={{this.editPhoto}}
+                   @onClose={{this.closeEditPhotoAction}}
+  />
 {{/if}}
 
 {{#if this.showPhoto}}
   <PhotoInfo @photo={{this.showPhoto}}
              @closeAction={{this.closePhotoInfoAction}}
              @rejectionLabels={{this.rejectionLabels}} />
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting the request
+  </LoadingDialog>
 {{/if}}

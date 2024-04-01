@@ -10,3 +10,9 @@
     <UiCancelButton @onClick={{@onClose}} />
   </modal.footer>
 </ModalDialog>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Uploading photo
+  </LoadingDialog>
+{{/if}}

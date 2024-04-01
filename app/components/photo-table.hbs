@@ -6,7 +6,7 @@
     {{#unless @person}}
       <th>Callsign</th>
     {{/unless}}
-    <th>Status</th>
+    <th class="text-center">Status</th>
     <th>Uploaded</th>
     <th>Reviewed</th>
     <th>Edited</th>
@@ -34,13 +34,15 @@
           <PersonLink @person={{photo.person}} />
         </td>
       {{/unless}}
-      <td>
+      <td class="text-center">
         {{#if (eq photo.status "approved")}}
-          <b class="text-success">{{fa-icon "check" right=1}} {{photo.status}}</b>
+          {{badge "success" "approved"}}
         {{else if (eq photo.status "rejected")}}
-          <b class="text-danger">{{fa-icon "times" right=1}} {{photo.status}}</b>
+          {{badge "danger" "rejected"}}
+        {{else if (eq photo.status "submitted")}}
+          {{badge "warning" "submitted"}}
         {{else}}
-          {{photo.status}}
+          Unknown  {{badge "gray" photo.status}}
         {{/if}}<br>
         {{#if photo.is_active}}
           <b>CURRENT</b>
@@ -86,37 +88,42 @@
       </td>
       {{#if @deletePhotoAction}}
         <td>
-          <UiButton @type="light-red" @size="sm" @onClick={{fn @deletePhotoAction photo}} @disabled={{photo.isSaving}}>
-            {{fa-icon "trash"}} Delete
+          <UiButton @type="danger"
+                    @size="sm"
+                    class="me-2"
+                    @onClick={{fn @deletePhotoAction photo}}
+                    @disabled={{photo.isSaving}}>
+            {{fa-icon "trash" right=1}} Delete
           </UiButton>
           {{#if photo.is_active}}
             <UiButton @type="secondary"
-                      @class="me-1"
+                      class="me-2"
                       @size="sm"
                       @disabled={{photo.isSaving}}
                       @onClick={{fn this.editPhotoAction photo}}>
-              {{fa-icon "edit"}} Edit
+              {{fa-icon "edit" right=1}} Edit
             </UiButton>
             {{#if (not-eq photo.status "rejected")}}
               <UiButton @type="danger"
-                        @class="me-1"
+                        class="me-2"
                         @size="sm"
                         @onClick={{fn this.showRejectDialog photo}}
                         @disabled={{photo.isSaving}}>
-                {{fa-icon "times"}} Reject
+                {{fa-icon "times" right=1}} Reject
               </UiButton>
             {{/if}}
             {{#if (not-eq photo.status "approved")}}
               <UiButton @type="success"
                         @size="sm"
+                        class="me-2"
                         @onClick={{fn this.approveAction photo}}
                         @disabled={{photo.isSaving}}>
-                {{fa-icon "check"}} Approve
+                {{fa-icon "check" right=1}} Approve
               </UiButton>
             {{/if}}
           {{else}}
             <UiButton @type="secondary" @size="sm" @onClick={{fn @activatePhotoAction photo}}>
-              {{fa-icon "star"}} Activate
+              {{fa-icon "star" right=1}} Activate
             </UiButton>
           {{/if}}
           {{#if photo.isSaving}}
@@ -139,4 +146,10 @@
 
 {{#if this.editPhoto}}
   <PhotoEditDialog @photo={{this.editPhoto}} @onClose={{this.closeEditPhotoAction}} />
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting
+  </LoadingDialog>
 {{/if}}
