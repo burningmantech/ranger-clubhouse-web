@@ -6,7 +6,7 @@
     <div class="col-auto">
       <Input @type="text" @value={{this.currentName}} id="currentName"
              @enter={{action this.checkCurrentName}}
-             class="form-control" size={{20}} {{did-insert this.focusElement}} />
+             class="form-control" size={{20}} {{on-insert this.focusElement}} />
     </div>
     <div class="col-auto">
       <UiButton @onClick={{this.checkCurrentName}}>Check handle</UiButton>

@@ -321,7 +321,7 @@ export const SIGN_UP_FOR_TRAINING = {
     }
 
     if (!milestones.online_course_passed) {
-      let message = 'You must complete the Online Course before attending an In-Person Training.';
+      let message = 'You must complete the Online Course before you can sign up for and attend an In-Person Training.';
       if (!milestones.trainings_available) {
         message += ' The In-Person Training schedule will be available in mid-to-late April.'
       }

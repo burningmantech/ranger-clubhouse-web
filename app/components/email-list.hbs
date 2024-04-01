@@ -6,7 +6,7 @@
   </a>
 </div>
 <PersonalInfoWarning />
-<div id={{this.listId}} class="mt-2" {{did-insert this.elementInserted}}>
+<div id={{this.listId}} class="mt-2" {{on-insert this.elementInserted}}>
   {{~#each @people as |person idx|~}}
     {{~#if idx}},<br>{{/if}}"{{person.callsign}}" &lt;{{person.email}}&gt;
   {{~/each~}}

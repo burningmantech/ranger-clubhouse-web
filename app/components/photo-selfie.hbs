@@ -1,6 +1,6 @@
 <div id="camera-container">
   {{!template-lint-disable require-media-caption}}
-  <video id="photo-player" autoplay="true" playsinline="true" capture="user" {{did-insert this.setupCamera}} {{will-destroy this.destroyCamera}}></video>
+  <video id="photo-player" autoplay="true" playsinline="true" capture="user" {{on-insert this.setupCamera}} {{will-destroy this.destroyCamera}}></video>
   <div class="mt-4">
     <UiButton @class="btn-block" @size="lg" @onClick={{this.snapShutterAction}} @disabled={{not this.cameraReady}}>
       {{#if this.cameraReady}}
