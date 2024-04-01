@@ -18,6 +18,7 @@ export default class NoShowsReportsController extends ClubhouseController {
   @tracked isSubmitting;
   @tracked positionsSelected;
   @tracked noShowPositions;
+  @tracked searchYear;
 
   get teamColumns() {
     return _.chunk(this.teamOptions, this.teamOptions.length / 4);
@@ -69,6 +70,7 @@ export default class NoShowsReportsController extends ClubhouseController {
       });
       this.haveResults = true;
       this.noShowPositions = positions;
+      this.searchYear = this.year;
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {

@@ -6,7 +6,7 @@
   @transitionDuration={{100}}
   @size={{or @size "lg"}}
   @fullscreen={{@fullscreen}}
-  {{did-insert this.adjustClassOnInsert}}
+  {{on-insert this.adjustClassOnInsert}}
   {{!template-lint-disable no-inline-styles}}
   style={{this.hideDialogStyle}}
   as |modal|>

@@ -63,7 +63,7 @@
 </p>
 
 {{#if this.haveResults}}
-  <UiSection id="drop-results" {{did-insert this.scrollToResults}}>
+  <UiSection id="drop-results" {{on-insert this.scrollToResults}}>
     <:title>{{pluralize this.people.length "Shift Drop"}} for {{this.year}}, within {{pluralize this.hours "hour"}} of
       shift start
     </:title>

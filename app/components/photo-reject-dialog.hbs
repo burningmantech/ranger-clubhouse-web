@@ -39,7 +39,7 @@
   <ModalDialog @title="Rejection Email Preview" @onEscape={{this.closeRejectMail}} as |modal|>
     <modal.body>
       <div class="border">
-        <iframe {{did-insert this.insertRejectMail}}
+        <iframe {{on-insert this.insertRejectMail}}
           id="mail-preview-iframe"
           class="mail-preview-iframe"
           title="rejection message preview">

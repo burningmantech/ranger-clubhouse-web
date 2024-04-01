@@ -28,7 +28,7 @@
 {{else}}
   <div id="sidebar-container"
        class="sidebar-theme-{{this.themeClass}} sidebar-expanded d-none d-lg-block d-print-none"
-    {{did-insert this.sidebarInserted}}>
+    {{on-insert this.sidebarInserted}}>
     <div class="sidebar-content">
       {{yield (hash
                       group=(component "sidebar/group"

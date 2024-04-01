@@ -70,7 +70,7 @@
 </ChForm>
 
 {{#if (and this.haveResults this.people)}}
-  <UiSection id="people" class="mt-4" {{did-insert this.scrollToOnRender}}>
+  <UiSection id="people" class="mt-4" {{on-insert this.scrollToOnRender}}>
     <:title>
       Found {{pluralize this.people.length "person"}} for
       {{#each this.positionsUsed as |position idx|~}}

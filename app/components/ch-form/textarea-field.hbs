@@ -13,7 +13,7 @@
       cols={{@cols}}
       maxlength={{@maxlength}}
       onfocus={{@onFocus}}
-      {{did-insert this.fieldInserted}}
+      {{on-insert this.fieldInserted}}
       oninput={{action this.update value="target.value"}}
     >{{get @form.model @name}}</textarea>
     {{~#if @hint~}}

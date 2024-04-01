@@ -2,11 +2,11 @@
   {{#if (and (not-eq @photo.photo_status "missing") @photo.photo_url)}}
     <img src={{or @photo.profile_url @photo.photo_url}} alt="profile">
     {{#if (eq @photo.photo_status "approved")}}
-      <span class="text-success">{{fa-icon "check"}} Approved</span>
+      {{badge "success" "approved"}}
     {{else if (eq @photo.photo_status "submitted")}}
-      <b>{{fa-icon "hourglass-half"}} Awaiting Approval</b>
+      {{badge "warning" "awaiting approval"}}
     {{else if (eq @photo.photo_status "rejected")}}
-      <b class="text-danger">{{fa-icon "times"}} Rejected</b>
+      {{badge "danger" "rejected"}}
     {{else}}
       <span class="text-danger">Status: {{@photo.photo_status}}</span>
     {{/if}}
@@ -16,9 +16,9 @@
     Wanna supply a photo?<br>
   {{/if}}
 
-  <div class="mt-1">
+  <div class="mt-2">
     {{#if (and @uploadAction this.canShowUploadButton)}}
-      <UiButton @onClick={{@uploadAction}}>Upload new photo</UiButton>
+      <UiButton @onClick={{@uploadAction}}>Upload New Photo</UiButton>
     {{else}}
       <small>Uploading is disabled</small>
     {{/if}}

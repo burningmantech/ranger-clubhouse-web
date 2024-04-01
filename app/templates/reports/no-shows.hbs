@@ -4,10 +4,10 @@
   This report will show anyone who did not work a shift they signed up for.
 </p>
 <FormRow>
+  <FormLabel @auto={{true}}>
+    Event Year
+  </FormLabel>
   <div class="col-auto">
-    <label class="col-form-label">
-      Event Year
-    </label>
     <ChForm::Select @name="year"
                     @value={{this.year}}
                     @options={{this.yearOptions}}
@@ -55,14 +55,21 @@
 </p>
 
 {{#if this.haveResults}}
-  <UiSection id="drop-results" {{did-insert this.scrollToResults}}>
+  <UiSection id="drop-results" {{on-insert this.scrollToResults}}>
     <:title>
-      {{pluralize this.noShowPositions.length "position"}} for {{this.year}}
+      {{pluralize this.noShowPositions.length "position"}} for {{this.searchYear}}
     </:title>
     <:body>
       {{#each this.noShowPositions as |position|}}
         <UiAccordion as |accordion|>
-          <accordion.title>{{position.title}}</accordion.title>
+          <accordion.title>
+            {{position.title}}
+            {{#if position.slots}}
+              ({{pluralize position.slots.length "shift"}} found)
+            {{else}}
+              - No flakes found
+            {{/if}}
+          </accordion.title>
           <accordion.body>
             {{#if position.slots}}
               <UiExportToCSVButton @onClick={{fn this.exportToCSV position}} />
@@ -78,8 +85,8 @@
               <tbody>
               {{#each position.slots as |slot|}}
                 <tr>
-                  <td>{{shift-format slot.begins}}</td>
-                  <td>{{slot.description}}</td>
+                  <td class="no-wrap">{{shift-format slot.begins}}</td>
+                  <td class="no-wrap">{{slot.description}}</td>
                   <td>
                     {{#each slot.people as |person idx|}}
                       {{if idx ", "}}
@@ -94,7 +101,7 @@
               {{else}}
                 <tr>
                   <td colspan="3">
-                   No flakes found for {{this.year}}
+                    No flakes found for {{this.searchYear}}
                   </td>
                 </tr>
               {{/each}}
