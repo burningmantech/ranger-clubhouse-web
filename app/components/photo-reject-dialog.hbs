@@ -26,12 +26,11 @@
                     @cols={{80}}
                     @hint="All email addresses and links in the message will be hyperlinked."/>
       </FormRow>
-      <f.submit @label="Reject Photo" @submitClass="btn-danger" disabled={{@photo.isSaving}} />
-      <UiCancelButton @disabled={{@photo.isSaving}} @onClick={{@onClose}} />
-      <UiButton @type="secondary" @onClick={{this.rejectPreviewAction}}>Preview Email</UiButton>
-      {{#if @photo.isSaving}}
-        <LoadingIndicator/>
-      {{/if}}
+      <f.submit @label="Reject Photo" @type="danger" disabled={{@photo.isSaving}} />
+      <UiButton @type="secondary" @onClick={{this.rejectPreviewAction}} class="ms-4">
+        Preview Email
+      </UiButton>
+      <UiCancelButton @disabled={{@photo.isSaving}} @onClick={{@onClose}} class="ms-4" />
     </ChForm>
   </modal.body>
 </ModalDialog>
@@ -53,3 +52,8 @@
   </ModalDialog>
 {{/if}}
 
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting the request
+  </LoadingDialog>
+{{/if}}

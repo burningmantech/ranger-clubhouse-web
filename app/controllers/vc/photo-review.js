@@ -38,13 +38,19 @@ export default class VcPhotoReviewController extends ClubhouseController {
    */
 
   @action
-  approveAction(photo) {
+  async approveAction(photo) {
     photo.status = 'approved';
 
-    photo.save().catch((response) => {
+    try {
+      this.isSubmitting = true;
+      await photo.save();
+    } catch (response) {
       photo.rollbackAttributes();
       this.house.handleErrorResponse(response);
-    });
+
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   /**
