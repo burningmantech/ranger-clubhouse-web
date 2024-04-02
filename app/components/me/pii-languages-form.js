@@ -108,7 +108,7 @@ export default class MePiiLanguagesFormComponent extends Component {
           this.isSubmitting = true;
           await language.destroyRecord();
           await this.args.languages.update();
-          this.toast.success = 'The language has been deleted';
+          this.toast.success('The language has been deleted.');
         } catch (response) {
           this.house.handleErrorResponse(response);
         } finally {
