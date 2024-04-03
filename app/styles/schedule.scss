@@ -1,5 +1,5 @@
 .schedule-table {
-  margin-bottom: 10px;
+  margin-bottom: 1vh;
   font-size: 0.95em;
   max-width: 1200px;
 }
@@ -21,8 +21,8 @@
   background-color: #fff3cd;
   width: 100%;
   vertical-align: middle;
-  padding-top: 5px !important;
-  padding-bottom: 10px !important;
+  padding-top: 0.5vh !important;
+  padding-bottom: 1vh !important;
 }
 
 .schedule-overlapping {
@@ -33,19 +33,19 @@
   display: flex;
   flex-wrap: wrap;
   border-top: 1px solid #ddd;
-  padding: 0 5px 10px 5px;
+  padding: 0 0.5vw 1vh 0.5vw;
   width: 100%;
   align-items: center;
 
   > div {
     display: inline-block;
-    margin-top: 5px;
+    margin-top: 0.5vh;
     align-self: center;
   }
 }
 
 .schedule-signup-row {
-  padding: 0 5px 10px 35px;
+  margin: 1vh 1vw;
   width: 100%;
 }
 
@@ -61,9 +61,13 @@
   font-size: 0.9rem;
 }
 
+.schedule-actions button:not(:last-child) {
+    margin-right: 0.75vw;
+}
+
 @media print, (min-width: map-get($grid-breakpoints, "lg")) {
   .schedule-row > div {
-    padding-right: 5px;
+    padding-right: 0.5vw;
   }
 
   .schedule-icon {
@@ -92,17 +96,12 @@
 
 
   .schedule-sub-header-text {
-    margin-left: 30px;
-    margin-right: 5px;
+    margin-left: 1.5vw;
+    margin-right: 1vw;
   }
 
   .schedule-sm-label {
     display: none;
-  }
-
-  .schedule-actions {
-    margin-left: 10px;
-    //align-self: center;
   }
 }
 
@@ -133,8 +132,8 @@
     }
 
     .schedule-sub-header {
-      padding-left: 10px;
-      padding-right: 10px;
+      padding-left: 1vw;
+      padding-right: 1vw;
     }
 
     .schedule-time-description {
@@ -161,8 +160,8 @@
     .schedule-signups {
       order: 6;
       width: 100%;
-      margin-top: 15px !important;
-      margin-bottom: 10px !important;
+      margin-top: 2vh !important;
+      margin-bottom: 1.5vh !important;
     }
 
 
@@ -183,7 +182,7 @@
 
     .schedule-sm-label {
       display: inline-block;
-      margin-right: 5px;
+      margin-right: 0.5vw;
     }
   }
 }

@@ -1,5 +1,5 @@
 <main>
-  <div class={{if (or this.showSlotCopyDialog this.slot this.showBulkEditDialog) "d-none"}}>
+  <div class={{if (or this.showSlotCopyDialog this.slot this.showBulkEditDialog this.linkGroup) "d-none"}}>
     <YearSelect @title="Clubhouse Slots"
                 @year={{this.year}}
                 @years={{this.yearList}}
@@ -32,7 +32,7 @@
                         @onChange={{this.changeActiveFilter}} />
       </div>
       <FormLabel @auto={{true}}>Actions</FormLabel>
-      <div class="col-auto">
+      <div class="col-auto hstack gap-3">
         <UiButton @onClick={{this.newSlot}}>New Slot</UiButton>
         {{#if this.slots.length}}
           <UiButton @onClick={{fn this.openSlotCopy null}} @type="secondary">Copy Slots</UiButton>
@@ -57,28 +57,36 @@
     {{/if}}
 
 
-    {{#each this.positionSlots as |position|}}
-      <UiAccordion id="position-{{position.position_id}}"
-                   @isInitOpen={{get this.positionsOpened position.position_id}}
-                   @onClick={{action this.positionClicked position}} as |box|>
+    {{#each this.positionSlots as |group|}}
+      <UiAccordion id="position-{{group.position.id}}"
+                   @isInitOpen={{get this.positionsOpened group.position.id}}
+                   @onClick={{action this.positionClicked group}} as |box|>
         <box.title>
-          {{position.title}} ({{position.slots.length}}
-          {{~#if position.inactive}}
-            / <span class="text-danger">{{position.inactive}} inactive</span>
+          {{group.position.title}} ({{group.slots.length}}
+          {{~#if group.inactive}}
+            / <span class="text-danger">{{group.inactive}} inactive</span>
           {{~/if}})
         </box.title>
         <box.body>
           {{#if box.isOpen}}
-            <p>
-              <UiButton @size="sm" @onClick={{fn this.activate position}}>Activate All</UiButton>
-              <UiButton @size="sm" @onClick={{fn this.deactivate position}}>Deactivate All</UiButton>
-              <UiButton @type="secondary" @size="sm" @onClick={{fn this.openSlotCopy position.position_id}}>
+            <div class="hstack gap-2 mb-2">
+              <UiButton @size="sm" @onClick={{fn this.activate group}}>Activate All</UiButton>
+              <UiButton @size="sm" @onClick={{fn this.deactivate group}}>Deactivate All</UiButton>
+              <UiButton @type="secondary" @size="sm" @onClick={{fn this.openSlotCopy group.position.id}}>
                 Bulk Copy
               </UiButton>
-              <UiButton @type="secondary" @size="sm" @onClick={{fn this.bulkEditOpenAction position}}>
+              <UiButton @type="secondary" @size="sm" @onClick={{fn this.bulkEditOpenAction group}}>
                 Bulk Edit
               </UiButton>
-            </p>
+              {{#if group.position.parent_position_id}}
+                <UiButton @type="secondary" @size="sm" @onClick={{fn this.openLinkSlots group "multiplier"}}>
+                  Link To Multiplier Slots
+                </UiButton>
+                <UiButton @type="secondary" @size="sm" @onClick={{fn this.openLinkSlots group "parent"}}>
+                  Link to Parent Slots
+                </UiButton>
+              {{/if}}
+            </div>
             <UiTable>
               <thead>
               <tr>
@@ -93,18 +101,32 @@
               </tr>
               </thead>
               <tbody>
-              {{#each position.slots key="id" as |slot|}}
+              {{#each group.slots key="id" as |slot|}}
                 <tr id="slot-{{slot.id}}">
                   <td class="text-end">{{slot.id}}</td>
                   <td>
                     {{shift-format slot.begins slot.ends timezone=slot.timezone_abbr}}
+                    {{#if slot.trainer_slot}}
+                      <div class="mt-1">
+                        Multiplier
+                        #{{slot.trainer_slot.id}} {{slot.trainer_slot.position.title}} {{slot.trainer_slot.description}}
+                        {{shift-format slot.trainer_slot.begins}}
+                      </div>
+                    {{/if}}
+                    {{#if slot.parent_signup_slot}}
+                      <div class="mt-1">
+                        Parent
+                        #{{slot.parent_signup_slot.id}} {{slot.parent_signup_slot.position.title}} {{slot.parent_signup_slot.description}}
+                        {{shift-format slot.parent_signup_slot.begins}}
+                      </div>
+                    {{/if}}
                   </td>
                   <td class="text-end">{{slot.max}}</td>
                   <td class="text-end">{{slot.signed_up}}</td>
                   <td class="text-end">{{credits-format slot.credits}}</td>
                   <td>
                     <SlotInfoLink @description={{slot.description}} @info={{slot.url}} />
-                  </td>
+                    </td>
                   <td class="text-center">
                     {{#if slot.active}}
                       {{fa-icon "check" color="success"}}
@@ -127,17 +149,6 @@
                     </UiButton>
                   </td>
                 </tr>
-                {{#if slot.trainer_slot}}
-                  <tr class="{{if slot.trainer_slot "tr-no-border"}}">
-                    <td colspan="8">
-                      Multiplier slot:
-                      <a href="#slot-{{slot.trainer_slot.id}}">
-                        #{{slot.trainer_slot.id}} {{slot.trainer_slot_title}} {{slot.trainer_slot.description}}
-                        {{shift-format slot.trainer_slot.begins}}
-                      </a>
-                    </td>
-                  </tr>
-                {{/if}}
               {{/each}}
               </tbody>
             </UiTable>
@@ -175,6 +186,14 @@
                          @position={{this.bulkEditPosition}}
                          @onPositionUpdate={{this.bulkEditPositionUpdatedAction}}
                          @onClose={{this.bulkEditCloseAction}}
+    />
+  {{/if}}
+
+  {{#if this.linkGroup}}
+    <SlotLinkShifts @slots={{this.linkGroup.slots}}
+                    @position={{this.linkGroup.position}}
+                    @type={{this.linkType}}
+                    @onFinish={{this.closeLinkSlots}}
     />
   {{/if}}
 </main>

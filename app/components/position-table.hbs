@@ -35,8 +35,10 @@
       <td class="text-center">{{position.min}} / {{position.max}}</td>
       <td>
         {{#if position.training_position_id}}
-          Training position:
-          <div class="ms-3">{{pluck position.training_position_id @positions "title" "-"}}</div>
+          Training position: {{pluck position.training_position_id @positions "title" "-"}}<br>
+        {{/if}}
+        {{#if position.parent_position_id}}
+          Parent position: {{pluck position.parent_position_id @positions "title" "-"}}<br>
         {{/if}}
         {{#if position.require_training_for_roles}}
           {{fa-icon "user-graduate" fixed=true}} Requires ART to be passed before roles are granted.<br>

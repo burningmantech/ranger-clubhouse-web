@@ -7,7 +7,7 @@ import {
   TEAM_CATEGORY_PUBLIC,
   TYPE_TRAINING
 } from "clubhouse/models/position";
-import { service } from '@ember/service';
+import {service} from '@ember/service';
 
 export default class PositionEditComponent extends Component {
   @service house;
@@ -24,6 +24,8 @@ export default class PositionEditComponent extends Component {
   constructor() {
     super(...arguments);
 
+    const {positions} = this.args;
+
     this.teamPositionOptions = [
       ['-', null]
     ];
@@ -34,11 +36,21 @@ export default class PositionEditComponent extends Component {
       ['-', '']
     ];
 
-    this.args.positions.forEach((position) => {
+    positions.forEach((position) => {
       if (position.type === TYPE_TRAINING && !position.title.match(/\btrainer\b/i)) {
         this.trainingOptions.push([position.title, position.id]);
       }
     });
+
+    this.parentPositionOptions = [
+      ['-', null]
+    ];
+
+    positions.forEach((position) => {
+      if (!position.parent_position_id) {
+        this.parentPositionOptions.push([position.title, position.id]);
+      }
+    })
 
     this.house.scrollToTop();
   }

@@ -29,7 +29,7 @@ export default class PositionModel extends Model {
 
   @attr('boolean', {defaultValue: false}) require_training_for_roles;
 
-  @attr('boolean', { defaultValue: false }) no_training_required;
+  @attr('boolean', {defaultValue: false}) no_training_required;
 
   @attr('') role_ids;
 
@@ -40,6 +40,7 @@ export default class PositionModel extends Model {
   @attr('string') short_title;
   @attr('string') type;
   @attr('number') training_position_id;
+  @attr('number') parent_position_id;
   @attr('boolean') prevent_multiple_enrollments;
   @attr('string') contact_email;
   @attr('boolean', {defaultValue: true}) active;
@@ -52,8 +53,8 @@ export default class PositionModel extends Model {
 
   @attr('string') resource_tag;
 
-  @attr('boolean', { defaultValue: false}) auto_sign_out;
-  @attr('number', {defaultValue: 0.0 }) sign_out_hour_cap;
+  @attr('boolean', {defaultValue: false}) auto_sign_out;
+  @attr('number', {defaultValue: 0.0}) sign_out_hour_cap;
 
   // Paycom employee paycode
   @attr('string') paycode;

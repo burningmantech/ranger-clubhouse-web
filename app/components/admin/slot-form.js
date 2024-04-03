@@ -2,7 +2,6 @@ import Component from '@glimmer/component';
 import {validatePresence, validateNumber} from 'ember-changeset-validations/validators';
 import validateDateTime from 'clubhouse/validators/datetime';
 import TimezoneOptions from 'clubhouse/constants/timezone-options';
-import _ from 'lodash';
 import dayjs from 'dayjs';
 import {MONTH_DAY_TIME} from 'clubhouse/helpers/shift-format';
 import {action} from '@ember/object';
@@ -13,9 +12,15 @@ export default class SlotFormComponent extends Component {
   slotValidations = {
     description: [validatePresence({presence: true, message: 'Enter a description.'}),],
 
-    begins: [validatePresence({presence: true, message: 'Enter a date and time.'}), validateDateTime({before: 'ends',beforeName: 'Ending Time'})],
+    begins: [validatePresence({presence: true, message: 'Enter a date and time.'}), validateDateTime({
+      before: 'ends',
+      beforeName: 'Ending Time'
+    })],
 
-    ends: [validatePresence({presence: true, message: 'Enter a date and time.'}), validateDateTime({after: 'begins', afterName: 'Beginning Time'})],
+    ends: [validatePresence({presence: true, message: 'Enter a date and time.'}), validateDateTime({
+      after: 'begins',
+      afterName: 'Beginning Time'
+    })],
 
     position_id: [validatePresence({presence: true, message: 'Select a position.'}),],
 
@@ -36,59 +41,38 @@ export default class SlotFormComponent extends Component {
   }
 
   @action
-  parentSlotOptions(positionId) {
-    const {slots, positions} = this.args;
-
+  hasParentPosition(positionId) {
     if (!positionId) {
-      return [];
+      return false;
     }
 
-    const title = positions.find((p) => +p.id === +positionId).title;
-    const matches = title.match(/^(.*)\s+mentor$/i);
-    if (!matches) {
-      return [];
-    }
-    const parentTitle = matches[1];
-
-    const parentPosition = positions.find((p) => p.title === parentTitle);
-    if (!parentPosition) {
-      return [];
-    }
-
-    const parentId = +parentPosition.id;
-
-    const parentSlots = slots.filter((s) => s.position_id === parentId).map((s) => {
-      return [`${s.position.title} - ${dayjs(s.begins).format(MONTH_DAY_TIME)}`, s.id]
-    });
-
-    return [{
-      groupName: parentTitle,
-      options: parentSlots
-    }];
+    return !!this.args.positions.find((p) => +p.id === +positionId && p.parent_position_id);
   }
 
-  get trainerSlotsOptions() {
-    const slots = this.args.trainerSlots;
-    const groupOptions = [];
+  @action
+  slotOptions(positionId) {
+    const {slots, positions} = this.args;
 
-    if (!slots || !slots.length) {
-      return [];
+    const options = [];
+
+
+    if (!positionId) {
+      return options;
     }
 
-    slots.forEach((slot) => {
-      const title = slot.position_title;
+    const position = positions.find((p) => +p.id === +positionId);
 
-      let group = groupOptions.find((opt) => title === opt.groupName);
+    if (!position.parent_position_id) {
+      return options;
+    }
 
-      if (!group) {
-        group = {groupName: title, options: []};
-        groupOptions.push(group);
-      }
+    const parentId = +position.parent_position_id;
 
-      group.options.push([`${slot.description} ${slot.begins_format}`, slot.id]);
-    });
+    slots.filter((s) => s.position_id === parentId).forEach((s) =>
+      options.push([`${s.position.title} - ${s.description} - ${dayjs(s.begins).format(MONTH_DAY_TIME)}`, s.id])
+    );
 
-    return _.sortBy(groupOptions, 'groupName');
+    return options;
   }
 }
 

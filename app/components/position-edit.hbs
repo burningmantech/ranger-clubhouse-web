@@ -43,11 +43,15 @@
       <f.number @name="min"
                 @label="Min"
                 @size={{3}}
-                @maxlength={{3}} />
+                @maxlength={{3}}
+                @inline={{true}}
+      />
       <f.number @name="max"
                 @label="Max"
                 @size={{3}}
-                @maxlength={{3}} />
+                @maxlength={{3}}
+                @inline={{true}}
+      />
     </FormRow>
   </fieldset>
 
@@ -82,12 +86,14 @@
     </UiAlert>
     <FormRow>
       <f.select @name="team_id"
-                @label="Belongs To Team"
+                @label="Team"
                 @options={{this.teamPositionOptions}}
+                @inline={{true}}
       />
       <f.select @name="team_category"
                 @label="Team Position Category"
                 @options={{this.categoryOptions}}
+                @inline={{true}}
                 @disabled={{not f.model.team_id}}
       />
     </FormRow>
@@ -145,11 +151,30 @@
       <FormRow>
         <f.select @name="training_position_id"
                   @label="Training Position"
+                  @inline={{true}}
+                  @fixedLabel={{true}}
                   @options={{this.trainingOptions}}
         />
       </FormRow>
     </fieldset>
   {{/unless}}
+  <fieldset>
+    <legend>Parent Position</legend>
+    <p>
+      Certain Mentor/Mentee (e.g., GD Mentor &amp; Mentee) shifts, and shifts where a child shift's signup count will
+      count against the parent's signups (e.g., "prime" Troubleshooter shifts &amp; TS Mentor) can be defined. The
+      parent position
+      info will be used by the slot interface to help link shifts together.
+    </p>
+    <FormRow>
+      <f.select @name="parent_position_id"
+                @label="Parent Position"
+                @inline={{true}}
+                @options={{this.parentPositionOptions}}
+      />
+    </FormRow>
+  </fieldset>
+
   <fieldset>
     <legend>Driving</legend>
     <FormRow>
@@ -227,17 +252,18 @@
       </div>
     </FormRow>
   </fieldset>
-  <div class="mt-4">
+  <div class="hstack gap-3 mt-4">
     <f.submit @disabled={{@position.isSaving}} />
     <UiCancelButton @onClick={{@cancelAction}} />
     {{#unless @position.isNew}}
-      <span class="ms-4">
+      <div class="ms-auto">
         <UiButton @type="danger" @onClick={{@deleteAction}}>
           {{fa-icon "trash"}} Delete Position
         </UiButton>
-      </span>
+      </div>
     {{/unless}}
   </div>
+
 </ChForm>
 
 {{#if @position.isSaving}}
