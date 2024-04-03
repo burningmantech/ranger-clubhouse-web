@@ -4,7 +4,7 @@ import RSVP from 'rsvp';
 
 export default class OpsSlotsRoute extends ClubhouseRoute {
   queryParams = {
-    year: { refreshModel: true }
+    year: {refreshModel: true}
   };
 
   model(params) {
@@ -14,20 +14,24 @@ export default class OpsSlotsRoute extends ClubhouseRoute {
     this.store.unloadAll('position');
 
     return RSVP.hash({
-      slots: this.store.query('slot', { year }),
+      slots: this.store.query('slot', {year}),
       positions: this.store.query('position', {}),
       year,
       yearList: this.ajax.request('slot/years').then((result) => result.years),
-      eventDate: this.ajax.request('event-dates/year', { data: { year }}).then((result) => result.event_date)
+      eventDate: this.ajax.request('event-dates/year', {data: {year}}).then((result) => result.event_date)
     });
   }
 
   setupController(controller, model) {
-    controller.set('slot', null);
     controller.setProperties(model)
-    controller.set('dayFilter', 'all');
-    controller.set('activeFilter', 'all');
-    controller.set('positionsOpened', {});
+    controller.slot = null;
+    controller.dayFilter = 'all';
+    controller.activeFilter = 'all';
+    controller.positionsOpened = {};
+    controller.positionsById = model.positions.reduce((hash, row) => {
+      hash[+row.id] = row;
+      return hash
+    }, {})
     controller._buildDisplay();
   }
 }

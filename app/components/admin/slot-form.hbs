@@ -11,17 +11,21 @@
     <FormRow>
       <f.select @name="position_id"
                 @label="Position"
+                @fixedLabel={{true}}
+                @inline={{true}}
                 @options={{this.positionOptions}}
       />
     </FormRow>
-    <p>
+    <div class="my-2">
       When filling out the description, please avoid using "Click For More Info", or similar, phrasing.
-      The text entered in the Additional Information field will automatically be shown when the user
+      The text entered in the Additional Information field will be displayed automatically when the user
       signs up for the shift.
-    </p>
+    </div>
     <FormRow>
       <f.text @name="description"
               @label="Description"
+              @fixedLabel={{true}}
+              @inline={{true}}
               @size={{40}}
               @maxlength={{40}}
               @showCharCount={{true}}
@@ -29,7 +33,8 @@
     </FormRow>
     <FormRow>
       <f.datetime @name="begins"
-                  @label="Beginning Time"
+                  @label="Start Time"
+                  @fixedLabel={{true}}
                   @size={{16}}
                   @maxlength={{16}}
                   @inline={{true}}
@@ -40,18 +45,23 @@
                   @maxlength={{16}}
                   @inline={{true}}
       />
-    </FormRow>
-    <FormRow>
       <f.select @name="timezone"
                 @label="Timezone"
                 @options={{this.timezoneOptions}}
                 @inline={{true}}
       />
     </FormRow>
+  </fieldset>
+  <fieldset class="mt-2">
+    <legend>Additional Shift Information</legend>
     <div class="my-2">
-      Additional information may be given about the shift in the below area.
-      e.g., Women of Khaki will meet at Tokyo before shift. More info at http://women.khaki/meetup or email
-      women@khaki.rangers
+      Remember to provide additional information about the shift in the area below. Any url and emails will be
+      hyperlinked automatically. When the user signs up for this shift, the following information will be displayed
+      automatically.
+    </div>
+    <div class="my-2">
+      Example: <i>Women of Khaki will meet at Tokyo before shift. More info at
+      http://women.khaki/meetup or email women@khaki.rangers</i>
     </div>
     <FormRow>
       <f.textarea @name="url"
@@ -65,43 +75,57 @@
   </fieldset>
   <fieldset>
     <legend>Sign-Up Multiplier &amp; Parent Slot Assoc.</legend>
-    <FormRow>
-      <div class="col-12">
-        By setting the "Sign Up Multiplier Mentor/Trainer's Slot," the sign-up limit of this mentee/trainee slot will be
-        dynamically adjusted based on the number of Mentors/Trainers signed up. The max count of this slot will become a
-        multiplier. (For example, if the max count on this mentee shift is 2 and 3 mentors sign up, then 6 mentees will
-        be allowed to sign up.)
-      </div>
-    </FormRow>
-    <FormRow>
-      <f.select @name="trainer_slot_id"
-                @label="Sign Up Multiplier Mentor/Trainer's Slot"
-                @options={{this.trainerSlotsOptions}}
-                @includeBlank={{true}}
-                @inline={{true}}
-      />
-    </FormRow>
-    {{#if f.model.trainer_slot_id}}
+    <p>
+      By selecting a slot below, the sign-up limit of this mentee/trainee slot will be dynamically adjusted based
+      on the number of Mentors/Trainers signed up. The max count of this slot will become a multiplier.
+      (For example, if the max count on this mentee shift is 2 and 3 mentors sign up, then 6 mentees will
+      be allowed to sign up.) <span class="fw-semibold">It is recommended to use the <i>Link To Multiplier Slots</i>
+      button on the slots listing to set the slots in bulk</span> instead of trying to do this by hand.
+    </p>
+    {{#if f.model.parent_slot_id}}
+      <div class="col-12">A parent slot has been set. A multiple slot cannot be used.</div>
+    {{else if (or @slot.trainer_slot_id (this.hasParentPosition f.model.position_id))}}
+      <FormRow>
+        <f.select @name="trainer_slot_id"
+                  @label="Sign Up Multiplier Mentor/Trainer's Slot"
+                  @options={{this.slotOptions f.model.position_id}}
+                  @includeBlank={{true}}
+                  @inline={{true}}
+        />
+      </FormRow>
       <p>
         Warning: DO NOT link back the mentor/trainer slot to this slot. An infinite recursion loop will happen.
       </p>
+
+    {{else}}
+      <p>The selected position is not a child position.</p>
     {{/if}}
   </fieldset>
   <fieldset>
     <legend>Parent Sign-Up Count Adjustments</legend>
     <p>
-      When a parent sign up slot is set, the parent's and this slot's sign ups counts work together.
-      The signups for this shift are counted against the parent's signup count.
-      (e.g., if the parent has 3 signups, and this slot has 2, then parent's signup count will effectively be 5.)
+      When this slot is linked to a "parent" slot, this slot's signup counts are combined with the parent's
+      signup count. (e.g., if the parent shift has 3 signups, and this shift has 2, then parent's signup count
+      will effectively be 5.) The combined count may not exceed the parent's signup limit.
+      <span class="fw-semibold">It is recommended to use the <i>Link To Parent Slots</i>
+      button on the slots listing to set the slots in bulk</span> instead of trying to do this by hand.
     </p>
-    <FormRow>
-      <f.select @name="parent_signup_slot_id"
-                @label="Parent Sign-Up Slot"
-                @options={{this.parentSlotOptions f.model.position_id}}
-                @includeBlank={{true}}
-                @inline={{true}}
-      />
-    </FormRow>
+    {{#if f.model.trainer_slot_id}}
+      A trainer multiple slot has been set. A parent slot cannot be set at the same time.
+    {{else if (or @slot.parent_signup_slot_id (this.hasParentPosition f.model.position_id))}}
+      <FormRow>
+        <f.select @name="parent_signup_slot_id"
+                  @label="Link to parent slot"
+                  @options={{this.slotOptions f.model.position_id}}
+                  @includeBlank={{true}}
+                  @inline={{true}}
+        />
+      </FormRow>
+    {{else}}
+      <p>
+        The select position is not a child position.
+      </p>
+    {{/if}}
   </fieldset>
   <fieldset>
     <legend>Max Sign-Ups &amp; Activation</legend>

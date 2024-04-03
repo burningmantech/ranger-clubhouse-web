@@ -38,6 +38,9 @@ export default class OpsSlotsController extends ClubhouseController {
 
   @tracked bulkEditPosition;
 
+  @tracked linkGroup;
+  @tracked linkType;
+
   @action
   changeActiveFilter(value) {
     this.activeFilter = value;
@@ -95,16 +98,15 @@ export default class OpsSlotsController extends ClubhouseController {
   _buildPositionSlots() {
     const groups = [];
 
-    this.viewSlots.forEach(function (slot) {
-      const title = slot.position_title;
-      let group = groups.find((g) => g.title === title);
+    this.viewSlots.forEach((slot) => {
+      const position = this.positionsById[slot.position_id];
+      let group = groups.find((g) => slot.position_id === +g.position.id);
 
       if (group) {
         group.slots.push(slot);
       } else {
         group = {
-          title,
-          position_id: slot.position_id,
+          position,
           slots: [slot],
           inactive: 0,
           showing: false
@@ -117,11 +119,11 @@ export default class OpsSlotsController extends ClubhouseController {
       }
     });
 
-    this.positionSlots = _.sortBy(groups, 'title');
+    this.positionSlots = _.sortBy(groups, (g) => g.position.title);
   }
 
   get positionsScrollList() {
-    return this.positionSlots.map((p) => ({id: `position-${p.position_id}`, title: p.title}));
+    return this.positionSlots.map((p) => ({id: `position-${p.position.id}`, title: p.position.title}));
   }
 
   @action
@@ -324,5 +326,17 @@ export default class OpsSlotsController extends ClubhouseController {
   bulkEditPositionUpdatedAction() {
     this._buildPositionSlots();
     this.showBulkEditDialog = false;
+  }
+
+  @action
+  openLinkSlots(group, type) {
+    this.linkGroup = group;
+    this.linkType = type;
+  }
+
+  @action
+  closeLinkSlots() {
+    this.linkGroup = null;
+    this.linkType = null;
   }
 }

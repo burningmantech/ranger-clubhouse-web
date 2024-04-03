@@ -1,0 +1,96 @@
+<h1>Link Slots to {{this.typeLabel}}</h1>
+<div class="my-2">
+  <a href {{action @onFinish}}>Back To Slots Listing</a>
+</div>
+
+<p>
+  {{#if this.didCommit}}
+    <b class="text-success">The slots have been updated.</b>
+  {{else}}
+    <b>This is a preview of what will be done.</b> If you are happy with how the shifts will be linked together, use the Commit
+    button. Any slots with errors will be skipped over.
+  {{/if}}
+</p>
+
+{{#if this.didCommit}}Updated{{else}}Previewing{{/if}} {{pluralize this.results.length "slot"}}.
+{{#if this.errorCount}}
+  <span class="fw-semibold text-danger ms-2">{{pluralize this.errorCount "error"}} encountered.</span>
+{{else}}
+  <span class="text-success ms-2">No errors encountered.</span>
+{{/if}}
+<UiTable>
+  <thead>
+  <tr>
+    <th>ID #</th>
+    <th>Position</th>
+    <th>Begins</th>
+    <th>Description</th>
+    <th>Link ID</th>
+    <th>Position</th>
+    <th>Description</th>
+    <th>&nbsp;</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.results as |row|}}
+    <tr class={{if (not-eq row.status "success") "table-warning"}}>
+      <td class="text-end">{{row.id}}</td>
+      <td>{{@position.title}}</td>
+      <td>{{shift-format row.begins}}</td>
+      <td>{{row.description}}</td>
+      {{#if (eq row.status "success")}}
+        <td class="text-end">{{row.linked_slot.id}}</td>
+        <td>{{row.linked_slot.position_title}}</td>
+        <td>{{row.linked_slot.description}}</td>
+      {{else}}
+        <td colspan="3">-</td>
+      {{/if}}
+      <td>
+        {{#if (eq row.status "success")}}
+          <span class="text-success fw-semibold">
+            {{#if this.didCommit}}
+              Successfully linked.
+            {{else}}
+              Will be linked.
+            {{/if}}
+          </span>
+        {{else}}
+          {{this.errorLabel row.status}}
+          {{#if row.slots}}
+            <table>
+              <thead>
+              <tr>
+                <th>Slot #</th>
+                <th>Position</th>
+                <th>Description</th>
+              </tr>
+              </thead>
+              <tbody>
+              {{#each row.slots as |slot|}}
+                <tr>
+                  <td class="text-end">{{slot.id}}</td>
+                  <td>{{slot.position_title}}</td>
+                  <td>{{slot.description}}</td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </table>
+          {{/if}}
+        {{/if}}
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</UiTable>
+
+{{#unless this.didCommit}}
+  <p>
+    <UiButton @onClick={{this.commit}}>Commit</UiButton>
+  </p>
+{{/unless}}
+
+<a href {{action @onFinish}}>Back To Slots Listing</a>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>Submitting the request</LoadingDialog>
+{{/if}}
