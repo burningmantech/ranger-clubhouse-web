@@ -47,9 +47,7 @@ export default class PositionEditComponent extends Component {
     ];
 
     positions.forEach((position) => {
-      if (!position.parent_position_id) {
         this.parentPositionOptions.push([position.title, position.id]);
-      }
     })
 
     this.house.scrollToTop();
