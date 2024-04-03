@@ -59,6 +59,7 @@ export default function logError(error, type, additionalData = null) {
   form.append('error_type', type);
 
   const data = {
+    name: error.name,
     exception: message,
     details: JSON.stringify(error, Object.getOwnPropertyNames(error)),
     build_timestamp: config.APP.buildTimestamp,

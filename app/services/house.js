@@ -9,6 +9,17 @@ import {isChangeset} from 'validated-changeset';
 import {AbortError, InvalidError, NotFoundError, ServerError, TimeoutError} from '@ember-data/adapter/error'
 import dayjs from "dayjs";
 import {htmlSafe} from '@ember/template';
+import logError from "clubhouse/utils/log-error";
+
+const JavascriptExceptions = [
+  AggregateError,
+  EvalError,
+  RangeError,
+  ReferenceError,
+  SyntaxError,
+  TypeError,
+  URIError,
+];
 
 export default class HouseService extends Service {
   @service router;
@@ -78,6 +89,11 @@ export default class HouseService extends Service {
       errorType = 'server';
     } else if (response instanceof NotFoundError) {
       responseErrors = 'The record was not found.';
+    } else if (JavascriptExceptions.find((e) => response instanceof e)) {
+      // Crap, a bug with the frontend.
+      errorType = 'frontend';
+      responseErrors = 'A bug was tripped over!';
+      logError(response, 'client-error');
     } else if (response) {
       let status;
 
@@ -131,6 +147,7 @@ export default class HouseService extends Service {
     } else {
       errorType = 'unknown';
     }
+
 
     if (responseErrors) {
       if (!isArray(responseErrors)) {
@@ -324,10 +341,10 @@ export default class HouseService extends Service {
       const {top, bottom} = element.getBoundingClientRect();
 
       if (bottom > window.innerHeight || top < 0) {
-        element.scrollIntoView({behavior:'smooth'});
-      } else  {
-          // Element is already in view, scroll element mostly to the top.
-          window.scroll({top: top + window.scrollY - 100, behavior: 'smooth'});
+        element.scrollIntoView({behavior: 'smooth'});
+      } else {
+        // Element is already in view, scroll element mostly to the top.
+        window.scroll({top: top + window.scrollY - 100, behavior: 'smooth'});
       }
     });
   }
