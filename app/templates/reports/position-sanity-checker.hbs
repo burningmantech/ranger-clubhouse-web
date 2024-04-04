@@ -67,7 +67,7 @@
           @columns={{(array)}}
           @people={{position.people}}
           @repairAction={{action this.repairPeople}}
-          @repairParams={{ (hash positionId=position.id) }}
+          @repairParams={{hash positionId=position.id}}
           @repairType="deactivated_positions"
           @canRepair={{this.userCanRepair}}
           @isSubmitting={{this.isSubmitting}}
@@ -129,7 +129,8 @@
   @canRepair={{this.userCanRepair}}
   @isSubmitting={{this.isSubmitting}}
 >
-  Deactivated accounts (bonked, deceased, dismissed, past prospective, resigned, uberbonked) should not have any granted positions.
+  Deactivated accounts (bonked, deceased, dismissed, past prospective, resigned, uberbonked) should not have any granted
+  positions.
 </Admin::PositionSanityCheck>
 
 <Admin::PositionSanityCheck
@@ -157,6 +158,7 @@
   @canRepair={{this.userCanRepair}}
   @isSubmitting={{this.isSubmitting}}
 >
-  All active Rangers accounts should have the positions set with the All Rangers flag, and all active accounts (auditor, non-ranger, Ranger)
+  All active Rangers accounts should have the positions set with the All Rangers flag, and all active accounts (auditor,
+  non-ranger, Ranger)
   should have the
 </Admin::PositionSanityCheck>
