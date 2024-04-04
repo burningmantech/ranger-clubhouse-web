@@ -32,9 +32,24 @@ export default class PersonRoleFormComponent extends Component {
   }
 
   @action
-  clickRole(role) {
-    role.selected = !role.selected;
+  clickRole(role, event) {
+    const isChecked = !role.selected;
+
+    if (!isChecked || (!role.teams.length && !role.positions.length)) {
+      role.selected = isChecked;
+      return;
+    }
+
+    const target = event.target;
+    target.checked = false;
+    this.modal.confirm('Confirm Manual Permission Grant',
+      `The person already has the "${role.title}" permission through a team membership and/or a position grant. Are you sure you want to manually grant the permission as well?`,
+      () => {
+        role.selected = true;
+        target.checked = true;
+      });
   }
+
 
   @action
   save() {
