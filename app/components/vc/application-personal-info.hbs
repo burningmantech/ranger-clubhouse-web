@@ -11,7 +11,7 @@
   <:view>
     {{#if @application.hasPersonalInfoIssues}}
       <UiSectionSubtitle @type="warning" @icon="exclamation">
-        One or more  fields is blank. All fields, except the Emergency Contact info, are required before a Clubhouse account can be created.
+        One or more fields is blank. All fields, except the Emergency Contact info, are required before a Clubhouse account can be created.
       </UiSectionSubtitle>
     {{else if @application.isStatusApprovedPiiIssue}}
       <UiSectionSubtitle @type="secondary" @icon="hand-point-right" class="mb-2">

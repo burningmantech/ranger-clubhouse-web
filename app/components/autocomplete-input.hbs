@@ -37,7 +37,7 @@
   {{#if (or this.isSearching this.noResultsFound this.options)}}
     <div class="autocomplete-results-box {{unless @renderBelow "autocomplete-results-box-dropdown"}}"
       {{on-insert this.resultsBoxInsertedEvent}}
-      {{will-destroy this.resultsBoxDestroy}}
+      {{before-removal this.resultsBoxDestroy}}
     >
       {{!template-lint-disable no-pointer-down-event-binding}}
       {{!template-lint-disable no-invalid-interactive}}

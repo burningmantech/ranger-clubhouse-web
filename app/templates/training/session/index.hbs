@@ -125,7 +125,7 @@
       {{/if}}
       </tbody>
     </UiTable>
-    <UiButton @onClick={{this.saveTrainers}} @disabled={{(not this.trainerCount)}}>
+    <UiButton @onClick={{this.saveTrainers}} @disabled={{not this.trainerCount}}>
       Save Trainers
     </UiButton>
     {{#if this.canAdjustRosters}}
