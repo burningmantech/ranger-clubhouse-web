@@ -370,30 +370,54 @@
       <p>
         Several options can be taken:
       </p>
-      <ul>
-        <li>
-          <div class="fw-semibold mb-2">If the position {{@onDutyEntry.position.title}} is wrong, just correct the
-            position:
-          </div>
-          <UiButton @onClick={{this.updatePositionInstead}}>
-            {{fa-icon "edit" right=1}} Correct Position / Shift
+      <UiInfoBox>
+        <:title>If the position {{@onDutyEntry.position.title}} is wrong:</:title>
+        <:body>
+          <p>
+            Use this option if the wrong position was signed in to and needs to be fixed. The shift will NOT be ended.
+          </p>
+          <UiButton @onClick={{this.updatePositionInstead}} @type="secondary" class="w-50">
+            {{fa-icon "edit" right=1}} Correct Position &amp; Remain On Shift
           </UiButton>
-        </li>
-        <li class="mt-4">
-          <div class="fw-semibold mb-2">If the shift was started by mistake:</div>
-          <UiButton @onClick={{this.deleteEntry}}>
+        </:body>
+      </UiInfoBox>
+      <UiInfoBox>
+        <:title>If the shift was started by mistake:</:title>
+        <:body>
+          <p>
+            Use this option if the shift was started by mistake, and {{@person.callsign}} is not working at this moment.<br>
+            The timesheet entry will be deleted.
+          </p>
+          <UiButton @onClick={{this.deleteEntry}}  @type="secondary" class="w-50">
             {{fa-icon "trash" right=1}} Accidental Shift Start - Delete Entry
           </UiButton>
-        </li>
-        <li class="mt-4">
-          <div class="fw-semibold mb-2">
-            If the duration is actually correct at {{hour-minute-words @onDutyEntry.duration}}:
-          </div>
-          <UiButton @onClick={{this.confirmEndShift}}>
+        </:body>
+      </UiInfoBox>
+      <UiInfoBox>
+        <:title>If the duration is actually correct at {{hour-minute-words @onDutyEntry.duration}}:</:title>
+        <:body>
+          <p>
+            Use this option if the shift was really this short in length. The shift will be ended.
+          </p>
+          <UiButton @onClick={{this.confirmEndShift}}  @type="secondary" class="w-50">
             {{fa-icon "check" right=1}} Duration is correct - End Shift
           </UiButton>
-        </li>
-      </ul>
+        </:body>
+      </UiInfoBox>
+      {{#if @allowCorrectionOnEnd}}
+        <UiInfoBox>
+          <:title>If {{@person.callsign}} did not check-in:</:title>
+          <:body>
+            <p>
+              Use this option if {{@person.callsign}} forgot to check in but is now at the end of their shift.
+              The shift will be ended, and a timesheet correction request will be opened.
+            </p>
+            <UiButton @onClick={{this.missedShiftCheckIn}}  @type="secondary" class="w-50">
+              {{fa-icon "person-walking-arrow-loop-left" right=1}} End Shift &amp; Submit Correction
+            </UiButton>
+          </:body>
+        </UiInfoBox>
+      {{/if}}
     </Modal.body>
     <Modal.footer>
       <UiCancelButton @onClick={{this.closeTooShortDialog}} />

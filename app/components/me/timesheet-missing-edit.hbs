@@ -38,11 +38,13 @@
         <b class="text-danger">Sorry, the correction request has been rejected.</b>
       {{/if}}
       {{#if @entry.notes}}
-        <div class="border p-2 my-2">
-          <h5 class="mx-n2 mt-n2 p-2 bg-secondary text-white">Notes from you &amp; the Timesheet Wranglers</h5>
-          <TimesheetNotes @notes={{@entry.notes}} @isMe={{true}} />
-        </div>
-      {{/if}}
+        <UiInfoBox>
+          <:title>Notes from you &amp; the Timesheet Wranglers</:title>
+          <:body>
+            <TimesheetNotes @notes={{@entry.notes}} @isMe={{true}} />
+          </:body>
+        </UiInfoBox>
+       {{/if}}
       <FormRow>
         <f.textarea @name="additional_notes"
                     @label={{if @entry.isRejected "Supply additional information for an appeal:"

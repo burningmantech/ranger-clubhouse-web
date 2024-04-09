@@ -224,7 +224,7 @@ export default class ShiftCheckInOutComponent extends Component {
             await this.session.updateOnDuty();
           }
           if (result.slot_url) {
-            this._showShiftInfo(result.slot_url);
+            this._showShiftInfo(position.title, result.slot_url);
           }
           break;
 
@@ -320,7 +320,7 @@ export default class ShiftCheckInOutComponent extends Component {
    * @private
    */
 
-  async _signoff() {
+  async _signoff(submitCorrection = false) {
     const {onDutyEntry, endShiftNotify} = this.args;
     try {
       const result = await this.ajax.request(`timesheet/${onDutyEntry.id}/signoff`, {method: 'POST'});
@@ -328,7 +328,7 @@ export default class ShiftCheckInOutComponent extends Component {
       this.store.pushPayload(result);
       switch (result.status) {
         case 'success':
-          await endShiftNotify?.(this.store.peekRecord('timesheet', result.timesheet.id));
+          await endShiftNotify?.(this.store.peekRecord('timesheet', result.timesheet.id), submitCorrection);
           this.toast.success(`${callsign} has been successfully signed off. Enjoy your rest.`);
           if (+this.args.person.id === this.session.userId) {
             // Update the user's navigation bar to remove the signed in position.
@@ -381,6 +381,13 @@ export default class ShiftCheckInOutComponent extends Component {
   cancelAskToDelete() {
     this.showConfirmDeletion = false;
   }
+
+  @action
+  missedShiftCheckIn() {
+    this.showTooShortDialog = false;
+    this._signoff(true);
+  }
+
 
   @action
   deleteEntry() {

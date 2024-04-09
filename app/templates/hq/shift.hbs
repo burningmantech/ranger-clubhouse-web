@@ -18,19 +18,19 @@
   </UiNotice>
 {{/if}}
 
-
 <div id="todo-list" class="hq-todo-block">
-  {{#if this.isShinyPenny}}
-    <div class="mb-2">
-      <span class="fw-semibold text-success">
-        {{fa-icon "smile-beam" type="r" right=2}}{{this.person.callsign}} is a Shiny Penny.</span>
-      Show some Ranger love and welcome them to the department!
-    </div>
-  {{/if}}
-  {{#if this.scheduleRecommendations.burn_weekend_shift}}
-    <div class="mb-2">
-      {{fa-icon "hand-point-right" right=1}} Ask {{this.person.callsign}} if they are interested in working a
-      Burn Weekend shift.
+  {{#if (or this.isShinyPenny this.scheduleRecommendations.burn_weekend_shift)}}
+    <div class="mb-2 px-3 py-2 mx-n3 mt-n3 border border-primary-subtle text-primary-emphasis bg-primary-subtle">
+      {{#if this.isShinyPenny}}
+        <div class={{if this.scheduleRecommendations.burn_weekend_shift "mb-1"}}>
+          {{fa-icon "smile-beam" type="r" right=1}} {{this.person.callsign}} is a Shiny Penny.
+          Welcome them to the department!
+        </div>
+      {{/if}}
+      {{#if this.scheduleRecommendations.burn_weekend_shift}}
+        {{fa-icon "hand-point-right" right=1}} Ask {{this.person.callsign}} if they are interested in working a
+        Burn Weekend shift.
+      {{/if}}
     </div>
   {{/if}}
 
@@ -51,7 +51,7 @@
   {{/if}}
   {{#if this.onDutyEntry}}
     <div class="mt-2 fw-semibold">
-      {{fa-icon "person-walking" right=2}} {{this.person.callsign}} is signed into {{this.onDutyEntry.position.title}}.
+      {{fa-icon "person-walking" right=1}} {{this.person.callsign}} is signed into {{this.onDutyEntry.position.title}}.
     </div>
   {{/if}}
   {{#unless this.todoCount}}
@@ -75,6 +75,7 @@
                              @onFinished={{this.afterShiftReview}}
                              @positions={{this.positions}}
                              @person={{this.person}}
+                             @registerCorrectionAction={{this.registerCorrectionAction}}
     />
     <ShiftCheckInOut @positions={{this.positions}}
                      @timesheets={{this.timesheets}}
@@ -86,6 +87,7 @@
                      @onDutyEntry={{this.onDutyEntry}}
                      @eventInfo={{this.eventInfo}}
                      @year={{this.session.currentYear}}
+                     @allowCorrectionOnEnd={{true}}
     />
   </:body>
 </HqShiftManageSection>
@@ -162,7 +164,7 @@
   </:body>
 </HqShiftManageSection>
 
-<HqShiftManageSection @id="pogs" @requireAction={{if this.endedShiftEntry true false}}>
+<HqShiftManageSection @id="pogs" @requireAction={{this.highlightMealShowers}}>
   <:title>Meals &amp; Showers</:title>
   <:body>
     <HqPogs @person={{this.person}}
