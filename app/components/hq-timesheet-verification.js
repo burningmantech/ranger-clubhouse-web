@@ -18,6 +18,12 @@ export default class HqTimesheetVerificationComponent extends Component {
   @tracked positionOptions;
   @tracked timesheetMissingEntry;
 
+  constructor() {
+    super(...arguments);
+
+    this.args.registerCorrectionAction(this.markEntryIncorrect);
+  }
+
   /**
    * Are there any unverified and not being ignored timesheet entries?
    * (used to determine if Start Shift can be shown)
@@ -51,9 +57,11 @@ export default class HqTimesheetVerificationComponent extends Component {
 
   /**
    * Show the incorrect entry form dialog.
+   * Note: may be called by the parent component.
    *
    * @param {TimesheetModel} entry
    */
+
   @action
   markEntryIncorrect(entry) {
     this.entry = entry;

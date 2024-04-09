@@ -18,7 +18,6 @@
   </UiNotice>
 {{/if}}
 
-
 <div id="todo-list" class="hq-todo-block">
   {{#if this.isShinyPenny}}
     <div class="mb-2">
@@ -51,7 +50,7 @@
   {{/if}}
   {{#if this.onDutyEntry}}
     <div class="mt-2 fw-semibold">
-      {{fa-icon "person-walking" right=2}} {{this.person.callsign}} is signed into {{this.onDutyEntry.position.title}}.
+      {{fa-icon "person-walking" right=1}} {{this.person.callsign}} is signed into {{this.onDutyEntry.position.title}}.
     </div>
   {{/if}}
   {{#unless this.todoCount}}
@@ -75,6 +74,7 @@
                              @onFinished={{this.afterShiftReview}}
                              @positions={{this.positions}}
                              @person={{this.person}}
+                             @registerCorrectionAction={{this.registerCorrectionAction}}
     />
     <ShiftCheckInOut @positions={{this.positions}}
                      @timesheets={{this.timesheets}}
@@ -86,6 +86,7 @@
                      @onDutyEntry={{this.onDutyEntry}}
                      @eventInfo={{this.eventInfo}}
                      @year={{this.session.currentYear}}
+                     @allowCorrectionOnEnd={{true}}
     />
   </:body>
 </HqShiftManageSection>
@@ -162,7 +163,7 @@
   </:body>
 </HqShiftManageSection>
 
-<HqShiftManageSection @id="pogs" @requireAction={{if this.endedShiftEntry true false}}>
+<HqShiftManageSection @id="pogs" @requireAction={{this.highlightMealShowers}}>
   <:title>Meals &amp; Showers</:title>
   <:body>
     <HqPogs @person={{this.person}}

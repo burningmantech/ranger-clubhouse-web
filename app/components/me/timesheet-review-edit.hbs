@@ -24,10 +24,12 @@
         </div>
       </div>
       {{#if @entry.notes}}
-        <div class="border p-2 my-2">
-          <h5 class="mx-n2 mt-n2 p-2 bg-secondary text-white">Notes from you &amp; the Timesheet Wranglers</h5>
-          <TimesheetNotes @notes={{@entry.notes}} @isMe={{@isMe}} />
-        </div>
+        <UiInfoBox>
+          <:title>Notes from you &amp; the Timesheet Wranglers</:title>
+          <:body>
+            <TimesheetNotes @notes={{@entry.notes}} @isMe={{@isMe}} />
+          </:body>
+        </UiInfoBox>
       {{/if}}
       If the position <b>{{@entry.position.title}}</b> is wrong, select the correct position below:
       <FormRow>
