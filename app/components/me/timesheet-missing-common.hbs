@@ -39,10 +39,12 @@
           <div class="timesheet-row-info">
             {{#if tsm.notes}}
               {{#if tsm.showNotes}}
-                <div class="border p-2 my-2">
-                  <h5 class="mx-n2 mt-n2 p-2 text-bg-gray">Notes from you &amp; the Timesheet Wranglers</h5>
-                  <TimesheetNotes @notes={{tsm.notes}} @isMe={{this.isMe}} />
-                </div>
+                <UiInfoBox>
+                  <:title>Notes from you &amp; the Timesheet Wranglers</:title>
+                  <:body>
+                    <TimesheetNotes @notes={{tsm.notes}} @isMe={{this.isMe}} />
+                  </:body>
+                </UiInfoBox>
               {{else}}
                 <div class="p-2">
                   <TimesheetNotes @notes={{tsm.notes}} @isMe={{this.isMe}} @lastInfo={{true}} />

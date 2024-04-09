@@ -222,7 +222,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   @action
-  async endShiftNotify(timesheet) {
+  async endShiftNotify(timesheet, submitCorrection) {
     try {
       await this.timesheets.update();
       const ignored = {}, previousReview = {};
@@ -257,9 +257,17 @@ export default class HqShiftController extends ClubhouseController {
       }
       this.send('updateTimesheetSummaries');
       this.endedShiftEntry = timesheet;
+      if (submitCorrection) {
+        this.correctionCallback(timesheet);
+      }
     } catch (response) {
       this.house.handleErrorResponse(response);
     }
+  }
+
+  @action
+  registerCorrectionAction(correctionCallback) {
+    this.correctionCallback = correctionCallback;
   }
 
   /**
@@ -444,5 +452,16 @@ export default class HqShiftController extends ClubhouseController {
   closeUnsubmittedBarcodeDialog() {
     this.showUnsubmittedBarcodeDialog = false;
     this._scrollToAssets();
+  }
+
+  /**
+   * Should the Meals and Showers section be highlighted?
+   *
+   * @returns {null|boolean}
+   */
+
+  get highlightMealShowers() {
+    const {eventPeriods, eventInfo: {event_period}} = this;
+    return (this.endedShiftEntry && !eventPeriods[event_period].hasPass);
   }
 }
