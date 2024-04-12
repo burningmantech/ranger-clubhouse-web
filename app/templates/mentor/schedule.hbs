@@ -9,7 +9,12 @@
   <Mentor::AlphaApparelSheet @slot={{this.apparelSlot}} />
 {{/if}}
 <div class="d-print-none">
-  <YearSelect @title="Alpha Scheduled Shift" @year={{this.year}} @onChange={{action (mut this.year)}} />
+  <YearSelect @title="Alpha Scheduled Shift"
+              @year={{this.year}}
+              @onChange={{action (mut this.year)}}
+              @minYear={{2008}}
+              @skipPandemic={{true}}
+  />
 </div>
 <div class="mt-4 {{if this.hideShiftSchedule "d-none"}}">
   {{#each this.slots key="id" as |slot|}}

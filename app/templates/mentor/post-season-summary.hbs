@@ -32,16 +32,16 @@ bonked.
 <UiTable>
   <thead>
   <tr>
-    <th class="w-15">Mentee / FKAs</th>
-    <th class="w-25">Mentors</th>
-    <th class="w-15">Pass</th>
-    <th class="w-45">Mentor Notes/Flags</th>
+    <th class="no-wrap">Mentee / FKAs</th>
+    <th class="no-wrap text-center">Outcome</th>
+    <th class="no-wrap">Mentors</th>
+    <th>Mentor Notes/Flags</th>
   </tr>
   </thead>
   <tbody>
   {{#each this.viewMentees key="id" as |mentee|}}
     <tr>
-      <td class="w-15">
+      <td class="no-wrap">
         <PersonLink @person={{mentee}} />
         <br>
         &lt;{{mentee.status}}&gt;<br>
@@ -49,34 +49,18 @@ bonked.
           {{name}}<br>
         {{/each}}
       </td>
-      <td class="w-25">
+      <td class="no-wrap text-center">
+        {{mentee-status-badge mentee.status mentee.mentor_status mentee.alpha_slots}}
+      </td>
+      <td class="no-wrap">
         {{#each mentee.mentors as |mentor idx| ~}}
-          {{#if idx}}/{{/if}}
+          {{#if idx}} / {{/if}}
           <PersonLink @person={{mentor}} />
         {{else}}
           <i>none</i>
         {{/each}}
       </td>
-      <td class="w-15">
-        {{#if (eq mentee.status "uberbonked")}}
-          <b class="text-danger">{{fa-icon "bell"}} UBERBONKED</b><br>
-        {{else if (and (eq mentee.mentor_status 'pending') (not mentee.alpha_slots))}}
-          <span class="text-danger">{{fa-icon "question"}} No Alpha shift</span>
-        {{else}}
-          {{#if (eq mentee.mentor_status "pass")}}
-            <span class="text-success">{{fa-icon "check"}} Passed</span>
-          {{else if (eq mentee.mentor_status "pending")}}
-            <span class="text-danger">{{fa-icon "shoe-prints"}} Didn't Attend</span>
-          {{else if (eq mentee.mentor_status "bonk")}}
-            <span class="text-danger">{{fa-icon "ban"}} Bonked</span>
-          {{else if (eq mentee.mentor_status "self-bonk")}}
-            <span class="text-danger">{{fa-icon "ban"}} Self Bonked</span>
-          {{else}}
-            {{mentee.mentor_status}}
-          {{/if}}
-        {{/if}}
-      </td>
-      <td class="w-60">
+      <td>
         <IntakeNotes @type="mentor" @person={{mentee}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
       </td>
     </tr>

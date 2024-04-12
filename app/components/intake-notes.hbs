@@ -1,9 +1,11 @@
 {{#each this.teamNotes as |intake|}}
   <div class="mb-2">
-    <b>{{intake.year}}
-      <IntakeRanking @rank={{intake.rank}} />
-    </b>
-    <br>
+    <div class="hstack gap-3">
+      <div class="fw-semibold">{{intake.year}}</div>
+      <div>
+        <IntakeRanking @rank={{intake.rank}} />
+      </div>
+    </div>
     {{#if intake.have_notes}}
       {{#each intake.notes as |note|}}
         {{#unless note.is_log}}
@@ -29,8 +31,12 @@
 {{/each}}
 {{#if (or this.canAddNote this.teamNotes)}}
   <div class="mb-2">
-    <UiButton @type="secondary" @size="sm" @onClick={{this.addNoteAction}}>
-      {{if this.canAddNote "Add" "View"}} {{uppercase @type}} note / rank
+    <UiButton @type="secondary" @size="sm" @onClick={{this.addNoteAction}} class="note-button">
+      {{#if this.canAddNote}}
+        Add {{uppercase @type}} Note / Rank
+      {{else}}
+        View {{uppercase @type}} Details
+      {{/if}}
     </UiButton>
   </div>
 {{/if}}

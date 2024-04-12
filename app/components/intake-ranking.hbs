@@ -1,12 +1,12 @@
 {{#if this.rank~}}
   {{#if (eq this.rank 1)}}
-    <span class="rank-1">{{fa-icon "thumbs-up"}} 1/Green</span>
+    <span class="rank-1">{{fa-icon "award" right=1}} Rank 1/Green</span>
   {{else if (eq this.rank 2)}}
-    2/Normal
+    <span class="rank-2">Rank 2/Normal</span>
   {{else if (eq this.rank 3)}}
-    <span class="rank-3">{{fa-icon "exclamation-circle"}} 3/Yellow</span>
+    <span class="rank-3">{{fa-icon "bell" type="r" right=1}} Rank 3/Yellow</span>
   {{else if (eq this.rank 4)}}
-    <span class="rank-4">{{fa-icon "flag"}} 4/FLAG</span>
+    <span class="rank-4">{{fa-icon "flag" right=1}} Rank 4/FLAG</span>
   {{else}}
     {{this.rank}}/Unknown
   {{/if}}
