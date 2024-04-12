@@ -8,7 +8,7 @@ export default class ReportsVehiclePaperworkController extends ClubhouseControll
       const CSV_COLUMNS = [
         {title: 'Callsign', key: 'callsign'},
         {title: 'Status', key: 'status'},
-        {title: `Motorpool Agreement`, key: 'signed_motorpool_agreement', yesno: true},
+        {title: `Motor Pool Protocol`, key: 'signed_motorpool_agreement', yesno: true},
         {title: `MVR Approved`, key: 'org_vehicle_insurance', yesno: true},
         {title: `MVR Eligible`, key: 'is_mvr_eligible', yesno: true},
         {title: `MVR Checkbox`, key: 'mvr_eligible', yesno: true},

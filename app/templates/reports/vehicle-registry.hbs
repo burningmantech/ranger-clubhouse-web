@@ -52,7 +52,7 @@
         <div class="vehicle-registry-fuel-chit">Fuel Chit</div>
         <div class="vehicle-registry-amber-light">Amber Light</div>
         <div class="vehicle-registry-mvr">MVR</div>
-        <div class="vehicle-registry-motorpool">Motorpool</div>
+        <div class="vehicle-registry-motorpool">Motor Pool</div>
         <div class="vehicle-registry-action">Action</div>
       </div>
       {{#each this.viewVehicles as |vehicle|}}
@@ -151,9 +151,9 @@
           </div>
           <div class="vehicle-registry-motorpool">
             {{#if this.session.isSmallScreen}}
-              <b>Has Motorpool?</b><br>
+              <b>Has Motor Pool?</b><br>
             {{/if}}
-            {{if vehicle.signed_motorpool_agreement "Motorpool" "-"}}
+            {{if vehicle.signed_motorpool_agreement "Motor Pool" "-"}}
           </div>
           <div class="vehicle-registry-action">
             {{#if this.canEditVehicles}}

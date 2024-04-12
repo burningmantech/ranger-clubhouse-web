@@ -17,63 +17,9 @@
   <UiAlert @type="warning" @icon="hand-point-right">
     A Motor Vehicle Record authorization Request form (MVR Request) has not been submitted, or is awaiting approval.
   </UiAlert>
-  <p>
-    <b class="text-danger">
-      Any MVR requests must be submitted before {{full-datetime-format @vehicleInfo.mvr_deadline}} (Pacific).
-    </b>
-    Failing to submit a request in a timely manner will result in your inability to drive the larger Ranger fleet
-    vehicles or your personal vehicle (if eligible) on behalf of the Rangers.
-  </p>
-  <h6 class="fw-bold">Wondering about the status of your MVR request?</h6>
-  <p>
-    This page will let you know when your submission has been approved, and you are authorized to drive on behalf of
-    the Rangers. Reach out to your team's manager if you have additional concerns.
-  </p>
-  <p>
-    Before you are allowed to drive the larger Ranger vehicles, such as trucks &amp; SUVs, on behalf of the Ranger
-    department, a MVR request must be submitted and approved. Burning Man’s insurance company will run a check on your
-    driving record and let us know whether you are authorized to drive on behalf of the Rangers.
-    Part of submitting this form is providing consent for the insurance company to perform this check.
-  </p>
-  <h6 class="fw-bold">Use the following information to fill out the MVR request:</h6>
-  <ul class="mb-2">
-    <li>
-      Select <i>Rangers</i> as the Department, otherwise we will not be notified you submitted the MVR Request.
-    </li>
-    <li>
-      Use your Ranger callsign, {{this.person.callsign}}, as your Playa Name. Do not enter “Ranger” before your
-      callsign! Otherwise, we will not be notified you submitted the MVR Request.
-    </li>
-    <li>
-      Enter <i>Wilfredo Sanchez Vega</i> as the “Manager’s Full Legal Name”. Otherwise, we will not be notified
-      whether you are authorized to drive.
-    </li>
-    <li>
-      Ensure you correctly enter your driver license state and number, including any leading zeros.
-    </li>
-    <li>
-      For “DOB” (Date of Birth) make sure you enter your birthdate NOT today’s date or the current year.
-      Seriously, use your birthdate, not the current date.
-    </li>
-  </ul>
-  <p>
-    {{#if @vehicleInfo.mvr_request_url}}
-      Use
-      <ExtLink @href={{@vehicleInfo.mvr_request_url}}>THIS LINK</ExtLink>
-      (the link will open in a new window) to submit a MVR request.
-    {{else}}
-      <b class="text-danger">Uh oh, the MVR link has not been provided. Sorry, this is a bug.</b>
-    {{/if}}
-  </p>
-  <p>
-    License and driving record verification can take 2 weeks or more. Longer for non-US license holders.
-  </p>
-  <h6 class="fw-bold">Wish to drive your personal vehicle on behalf of the Rangers?</h6>
-  <p>
-    Using a Personal Vehicle while on Ranger business requires specific approval. In addition to having an
-    approved MVR request, all personal vehicles must be approved (or re-approved) EACH YEAR. Contact your manager
-    if you believe you have an operational need to use your personal vehicle while on duty.
-  </p>
+
+  <DocumentShow @tag={{@vehicleInfo.mvr_form_instructions_tag}} />
+
   <Me::VehicleStepMute @name="MVR Request"
                        @ignoring={{@vehicleInfo.ignore_mvr}}
                        @toggleMute={{@toggleMute}}

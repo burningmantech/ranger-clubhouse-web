@@ -11,8 +11,8 @@ export default class MeVehiclesRoute extends ClubhouseRoute {
 
     if (!user.motorpool_policy_enabled) {
       this.modal.info(
-        'Motorpool Policy Agreement Not Available Yet',
-        'Once the Motorpool Policy is available, and IF you are eligible to submit a MVR Request, or Personal Vehicle Request, the page will accessible.'
+        'Motor Pool Protocol Not Available Yet',
+        'Once the Motor Pool Protocol is available, and IF you are eligible to submit a MVR Request, or Personal Vehicle Request, the page will accessible.'
       );
       this.router.transitionTo('me.homepage');
       return;
