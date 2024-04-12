@@ -176,7 +176,7 @@
         </UiSection>
       {{else}}
         <UiSection>
-          <:title>{{fa-icon "car"}} Motorpool Policy</:title>
+          <:title>{{fa-icon "car"}} Motor Pool Protocol</:title>
           <:body>
             {{#if this.eventInfo.signed_motorpool_agreement}}
               {{badge "success" "Authorized"}} You are authorized to drive golf carts &amp; gators (UTVs) on playa for
@@ -184,7 +184,7 @@
             {{else}}
               {{badge "warning" "Not Authorized"}} You are NOT authorized to drive golf carts &amp; gators (UTVs) on
               the playa for Ranger business. You can fix this by agreeing to the
-              <LinkTo @route="me.agreements">Motorpool Policy</LinkTo>
+              <LinkTo @route="me.agreements">Motor Pool Protocol</LinkTo>
               .
             {{/if}}
           </:body>

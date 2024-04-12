@@ -5,7 +5,7 @@
 
 {{#if this.vehicleInfo.motorpool_agreement_signed}}
   <UiAlert @type="success">
-    {{fa-icon "check" right=1 fixed=true}} The Motorpool Policy has been agreed to.<br>
+    {{fa-icon "check" right=1 fixed=true}} The Motor Pool Protocol has been agreed to.<br>
     {{#if this.vehicleInfo.org_vehicle_insurance}}
       {{fa-icon "check" right=1 fixed=true}} The MVR request has been approved. You are cleared to drive larger
       Ranger vehicles.<br>
@@ -55,19 +55,19 @@
   </UiTab>
 {{else}}
   <UiAlert @type="warning" @icon="exclamation">
-    The Motorpool Policy has not been signed.
+    The Motor Pool Protocol has not been signed.
   </UiAlert>
   <p>
-    You must agree to the Ranger Motor Pool Policy before you can submit a Motor Vehicle Record authorization Request
+    You must agree to the Ranger Motor Pool Protocol before you can submit a Motor Vehicle Record authorization Request
     (MVR).
   </p>
   {{#if this.vehicleInfo.motorpool_agreement_available}}
     <p>
-      <UiButton @onClick={{this.reviewMotorpoolPolicy}}>Review &amp; Sign The Motorpool Policy</UiButton>
+      <UiButton @onClick={{this.reviewMotorpoolPolicy}}>Review &amp; Sign The Motor Pool Protocol</UiButton>
     </p>
   {{else}}
     <p class="text-danger">
-      Uh oh, it appears the Motorpool Agreement Policy is not available yet. This might be an issue!
+      Uh oh, it appears the Motor Pool Protocol is not available yet. This might be an issue!
     </p>
   {{/if}}
 {{/if}}

@@ -240,7 +240,7 @@
                     to legal liability.
                   </div>
                   <f.checkbox @name="signed_motorpool_agreement"
-                              @label="Signed Motorpool Policy Agreement"
+                              @label="Signed Motor Pool Protocol"
                   />
                   <f.checkbox @name="signed_personal_vehicle_agreement"
                               @label="Signed Personal Vehicle Policy Agreement"
@@ -255,7 +255,7 @@
                     {{else}}
                       <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
                     {{/if}}
-                    the {{this.year}} Motorpool Agreement policy.
+                    the {{this.year}} Motor Pool Protocol.
                   </p>
                   {{#if this.personEvent.signed_personal_vehicle_agreement}}
                     <b class="text-success"> {{fa-icon "check"}} Signed</b>

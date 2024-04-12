@@ -108,7 +108,7 @@ export default class WysiwygEditorComponent extends Component {
           'wordcount',
         ],
         promotion: false,
-        quickbars_selection_toolbar: 'bold italic | quicklink h2 h3 blockquote quickimage quicktable',
+        toolbar1: 'undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | indent outdent | wordcount',
         resize: true,
         skin: false,
         toolbar_mode: 'sliding',
