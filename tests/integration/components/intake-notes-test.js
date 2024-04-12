@@ -27,6 +27,6 @@ module('Integration | Component | intake-notes', function (hooks) {
       noteSubmitted() { }
     });
     await render(hbs`<IntakeNotes @type="rrn" @person={{this.person}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />`);
-    assert.dom('button').hasText('Add RRN note / rank');
+    assert.dom('button').hasText('Add RRN Note / Rank');
   });
 });
