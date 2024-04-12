@@ -6,7 +6,7 @@
           Year {{intake.year}}
           <IntakeRanking @rank={{intake.rank}} />
         </h4>
-        {{#each intake.notes as |note idx|}}
+        {{#each intake.notes as |note|}}
           <div class="p-2">
             <b>{{shift-format note.created_at year=true}} (Pacific)
               {{#if note.person_source}}
