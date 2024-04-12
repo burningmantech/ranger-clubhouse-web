@@ -1,24 +1,29 @@
 <ModalDialog @title="Add note for {{@person.callsign}}" @size="xl" @onEscape={{@closeNoteAction}} as |Modal|>
   <Modal.body>
     {{#each @teamNotes as |intake|}}
-      <h4 class="p-2 bg-light-gray">
-        Year {{intake.year}}
-        <IntakeRanking @rank={{intake.rank}} />
-      </h4>
-      {{#each intake.notes as |note idx|}}
-        <div class="p-2 {{if (mod idx 2) "tr-stripped"}}">
-          {{note.created_at}} (Pacific)
-          {{#if note.person_source}}
-            written by {{note.person_source.callsign}}
-          {{else}}
-            <i>* imported *</i>
-          {{/if}}
-          <br>
-          {{nl2br note.note}}
-        </div>
-      {{else}}
-        <i>No {{@viewYear}} {{uppercase @type}} notes are present.</i>
-      {{/each}}
+      <div class="mb-3">
+        <h4 class="text-bg-gray p-2">
+          Year {{intake.year}}
+          <IntakeRanking @rank={{intake.rank}} />
+        </h4>
+        {{#each intake.notes as |note|}}
+          <div class="p-2">
+            <b>{{shift-format note.created_at year=true}} (Pacific)
+              {{#if note.person_source}}
+                by {{note.person_source.callsign}}
+              {{else}}
+                <i>* imported *</i>
+              {{/if}}:</b> <br>
+            {{#if note.is_log}}
+              <i>{{note.note}}</i>
+            {{else}}
+              {{nl2br note.note}}
+            {{/if}}
+          </div>
+        {{else}}
+          <i>No {{@viewYear}} {{uppercase @type}} notes are present.</i>
+        {{/each}}
+      </div>
     {{else}}
       <b>No prior notes left.</b>
     {{/each}}

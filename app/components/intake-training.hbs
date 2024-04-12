@@ -1,35 +1,43 @@
 {{#if @trainings}}
   {{#each @trainings as |training|}}
     <div class="mb-2">
-      {{#if training.slot_has_ended}}
-        <b>
+      <div class="hstack gap-4">
+        <div>
           <LinkTo @route="training.session.index" @models={{array 13 training.slot_id}}>
-            {{ymd-format training.slot_begins}}
+            {{mdy-format training.slot_begins}}
           </LinkTo>
-          <span class="d-inline-block">&lt;{{training.person_status}}&gt;</span>
-          <span class="d-inline-block">{{if training.training_passed "Passed" "NOT PASSED"}}</span>
-          <IntakeRanking @rank={{training.training_rank}} @type="Training"/>
-        </b>
-        <br>
+        </div>
+        <div>
+          &lt;{{training.person_status}}&gt;
+        </div>
+        {{#if training.slot_has_ended}}
+          <div>
+            {{training-pass-badge training.training_passed}}
+          </div>
+          <div>
+            <IntakeRanking @rank={{training.training_rank}} @type="Training"/>
+          </div>
+        {{else}}
+          <div>
+            {{badge "secondary" "Training Pending"}}
+          </div>
+        {{/if}}
+      </div>
+      {{#if training.slot_has_ended}}
         {{#each training.training_notes as |note|}}
           {{#unless note.is_log}}
-          &mdash; {{note.note}}<br>
+            &mdash; {{note.note}}<br>
           {{/unless}}
         {{else}}
           <i>No training notes</i>
         {{/each}}
-      {{else}}
-        <b>
-          <LinkTo @route="training.session.index" @models={{array 13 training.slot_id}}>{{ymd-format
-                  training.slot_begins}}</LinkTo> &lt;{{training.person_status}}&gt;
-          <i>Training Pending</i></b>
       {{/if}}
     </div>
   {{/each}}
 
   <div class="my-2">
-    <UiButton @type="secondary" @size="sm" @onClick={{this.showHistoryAction}}>
-      View Training
+    <UiButton @type="secondary" @size="sm" @onClick={{this.showHistoryAction}} class="note-button">
+      View Training Details
     </UiButton>
   </div>
 {{else}}
@@ -37,57 +45,66 @@
 {{/if}}
 
 {{#if this.showHistory}}
-  <ModalDialog @title="{{@person.callsign}} Training History" @size="xl" @onEscape={{this.closeHistoryAction}} as |Modal|>
+  <ModalDialog @title="{{@person.callsign}} Training History"
+               @size="xl"
+               @onEscape={{this.closeHistoryAction}} as |Modal|>
     <Modal.body>
-      <UiTable>
-        <thead>
-        <tr>
-          <th class="w-15">Date</th>
-          <th class="w-15">Location</th>
-          <th class="w-10">Status</th>
-          <th class="w-5">Passed?</th>
-          <th class="w-5">Rank</th>
-          <th class="w-50">Notes</th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each @trainings as |row|}}
-          <tr>
-            <td class="w-15">{{ymd-format row.slot_begins}}</td>
-            <td class="w-15">{{row.slot_description}}</td>
-            <td class="w-10">{{row.person_status}}</td>
+
+      {{#each @trainings as |row|}}
+        <div class="mb-3">
+          <h4 class="text-bg-gray p-2">
+            {{mdy-format row.slot_begins}}
+            {{row.slot_description}}
+          </h4>
+          <div class="p-2">
+            <div class="hstack gap-4 mb-2">
+              <div>
+                Status &lt;{{row.person_status}}&gt;
+              </div>
+              {{#if row.slot_has_ended}}
+                <div>
+                  {{training-pass-badge row.training_passed}}
+                </div>
+                <div>
+                  <IntakeRanking @rank={{row.training_rank}} />
+                </div>
+              {{else}}
+                <div>
+                  Pending
+                </div>
+              {{/if}}
+            </div>
             {{#if row.slot_has_ended}}
-              <td class="w-5 text-center">{{yesno row.training_passed}}</td>
-              <td class="w-5 text-center">
-                <PresentOrNot @value={{row.training_rank}} @empty="no rank" />
-              </td>
-              <td class="w-50">
-                {{#if row.training_notes}}
-                  {{#each row.training_notes as |note|}}
-                    <div class="mb-2">
-                      Timestamp {{note.created_at}} by
-                      {{if note.person_source_id note.person_source.callsign "* imported *"}}:<br>
-                      {{nl2br note.note}}
-                    </div>
-                  {{/each}}
-                  <p>
-                    {{#if row.feedback_delivered}}
-                      {{fa-icon "check"}} Lead trainer feedback given.
+              {{#if row.training_notes}}
+                {{#each row.training_notes as |note|}}
+                  <div class="fw-semibold mb-1">
+                    {{shift-format note.created_at year=true}} (Pacific) by
+                    {{if note.person_source_id note.person_source.callsign "* imported *"}}:
+                  </div>
+                  <div class="mb-2">
+                    {{#if note.is_log}}
+                      <i>{{note.note}}</i>
                     {{else}}
-                      {{fa-icon "times"}} Lead trainer feedback NOT given.
+                      {{nl2br note.note}}
                     {{/if}}
-                  </p>
+                  </div>
+                {{/each}}
+                {{#if row.feedback_delivered}}
+                  <span class="text-success">
+                    {{fa-icon "check" right=1}} Lead trainer delivered feedback to trainee.
+                  </span>
                 {{else}}
-                  <i>no notes</i>
+                  <span class="text-bg-warning">
+                    {{fa-icon "times" right=1}} Lead trainer did not deliver feedback to trainee.
+                  </span>
                 {{/if}}
-              </td>
-            {{else}}
-              <td colspan="4" class="w-70"><i>PENDING</i></td>
+              {{else}}
+                <i>No note left</i>
+              {{/if}}
             {{/if}}
-          </tr>
-        {{/each}}
-        </tbody>
-      </UiTable>
+          </div>
+        </div>
+      {{/each}}
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeHistoryAction}} />

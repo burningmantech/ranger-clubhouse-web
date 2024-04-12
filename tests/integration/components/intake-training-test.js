@@ -13,7 +13,7 @@ module('Integration | Component | intake-training', function(hooks) {
     });
 
     await render(hbs`<IntakeTraining @trainings={{this.trainings}} @person={{this.person}}/>`);
-    assert.dom('button').exists().hasText('View Training');
+    assert.dom('button').exists().hasText('View Training Details');
 
     this.set('noTrainings', []);
     await render(hbs`<IntakeTraining @trainings={{this.noTrainings}} @person={{this.person}}/>`);

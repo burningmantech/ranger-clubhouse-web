@@ -466,22 +466,33 @@ legend {
 // Rank 1 / Green, above average
 .rank-1 {
   color: #28a745;
+  border-color: #28a745;
 }
 
 // Rank 2 - no styling
 
 // Rank 3 - Yellow / Problem
 .rank-3 {
-  color: #9a9005;
+  color: #9f6800;
+  border-color:  #9a9005;
 }
 
 // Rank 4 - FLAG
 .rank-4 {
   color: #dc3545;
+  border-color: #dc3545;
 }
 
 .rank-1, .rank-2, .rank-3, .rank-4, .rank-none {
   display: inline-block;
+  border: 1px solid;
+  padding: 0.35em 0.65em;
+  border-radius: 15px;
+  font-size: 0.85em;
+}
+
+.note-button {
+  width: 25ch;
 }
 
 .homepage-title {

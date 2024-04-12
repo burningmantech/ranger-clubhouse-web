@@ -8,6 +8,6 @@ module('Integration | Component | intake-ranking', function(hooks) {
 
   test('it renders', async function(assert) {
     await render(hbs`<div id="intake-rank-test"><IntakeRanking @type="training" @rank={{2}} /></div>`);
-    assert.dom('div#intake-rank-test').hasText('2/Normal');
+    assert.dom('div#intake-rank-test').hasText('Rank 2/Normal');
   });
 });
