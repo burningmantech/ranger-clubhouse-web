@@ -1,7 +1,8 @@
 {{#if (or @person.isAlpha @person.isProspective)}}
-  <UiSection>
-    Information about Setup Access Passes will be made available in June or July. Please check back at that time.
-  </UiSection>
+  <UiNotice @icon="ticket" @type="secondary" @title="Setup Access Passes">
+    Information about Setup Access Passes for Ranger applicants who will be attending an Alpha shift
+    will be made available in July. Please check back at that time.
+  </UiNotice>
 {{else}}
   {{#if @ticketPackage.giftTickets}}
     <UiNotice @icon="ticket" @type="success" @title="Gift Ticket(s)">

@@ -63,7 +63,7 @@ export default class RegisterController extends ClubhouseController {
   ];
 
   @action
-  createAccount(model, isValid) {
+  async createAccount(model, isValid) {
     if (!isValid) {
       return;
     }
@@ -84,10 +84,8 @@ export default class RegisterController extends ClubhouseController {
     });
 
     this.isSaving = true;
-    this.ajax.request(`person/register`, {
-      method: 'POST',
-      data: {person, intent},
-    }).then((result) => {
+    try {
+      const result = await this.ajax.post('person/register', {data: {person, intent}});
       switch (result.status) {
         case 'success':
           this.modal.info('Account Successfully Created', 'Congratulations Auditor! You have successfully created a Clubhouse account. After closing this dialog, you will be redirected the login. Go ahead and login.', () => {
@@ -96,11 +94,14 @@ export default class RegisterController extends ClubhouseController {
           break;
 
         default:
-          this.toast.error(`Unknown response received from the server [${result.status}]`);
+          this.modal.info('Unknown Status', `An unknown response received from the server [${result.status}]`);
           break;
       }
-    }).catch((response) => this.house.handleErrorResponse(response, model))
-      .finally(() => this.isSaving = false);
+    } catch (response) {
+      this.house.handleErrorResponse(response, model)
+    } finally {
+      this.isSaving = false;
+    }
   }
 
   @action

@@ -19,8 +19,10 @@ export default class TicketingLandingComponent extends Component {
 
   constructor() {
     super(...arguments);
+    const {person,ticketingInfo} = this.args;
     this.ticketPackage = new TicketPackage(this.args.ticketingPackage, this.args.person.id, this.house);
-    this.ticketComponent = TicketingPeriodComponents[this.args.ticketingInfo.period];
+    this.ticketComponent = TicketingPeriodComponents[ticketingInfo.period];
+    this.showFaqs = !person.isPNV || (ticketingInfo.period !== 'announce');
   }
 
   @action

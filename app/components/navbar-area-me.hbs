@@ -3,10 +3,10 @@
     <NavbarMenuSection @section="Rangering">
       <NavbarMenuItem @menu={{menu}} @route="me.schedule" @item="Schedule / Sign Up"/>
       {{#if (or @user.isAlpha @user.isRanger)}}
-        <<NavbarMenuItem @menu={{menu}}  @route="me.timesheet" @item="Timesheets"/>
+        <NavbarMenuItem @menu={{menu}}  @route="me.timesheet" @item="Timesheets"/>
       {{/if}}
       {{#unless @user.isAuditor}}
-        <<NavbarMenuItem @menu={{menu}} @route="me.event-info" @item="Event Info"/>
+        <NavbarMenuItem @menu={{menu}} @route="me.event-info" @item="Event Info"/>
       {{/unless}}
     </NavbarMenuSection>
   {{/if}}
@@ -14,41 +14,41 @@
   {{#if (or @user.isRanger @user.isPNV @user.isNonRanger)}}
     <NavbarMenuSection @section="Pre-Event">
         {{#if (or @user.isPNV)}}
-          <<NavbarMenuItem @menu={{menu}} @route="me.tickets" @item="Setup Access Pass"/>
+          <NavbarMenuItem @menu={{menu}} @route="me.tickets" @item="Setup Access Pass"/>
         {{else}}
-          <<NavbarMenuItem @menu={{menu}} @route="me.tickets" @item="Tickets &amp; Stuff"/>
+          <NavbarMenuItem @menu={{menu}} @route="me.tickets" @item="Tickets &amp; Stuff"/>
         {{/if}}
-      <<NavbarMenuItem @menu={{menu}} @route="me.agreements" @item="Agreements"/>
+      <NavbarMenuItem @menu={{menu}} @route="me.agreements" @item="Agreements"/>
       {{#if (and @user.motorpool_policy_enabled (or @user.mvr_eligible @user.mvr_potential @user.may_request_stickers @user.pvr_potential))}}
-        <<NavbarMenuItem @menu={{menu}} @route="me.vehicles" @item="Vehicle Dashboard"/>
+        <NavbarMenuItem @menu={{menu}} @route="me.vehicles" @item="Vehicle Dashboard"/>
       {{/if}}
     </NavbarMenuSection>
   {{/if}}
 
   <NavbarMenuSection @section="Communication">
-    <<NavbarMenuItem @menu={{menu}} @route="me.alerts" @item="Alert Preferences"/>
+    <NavbarMenuItem @menu={{menu}} @route="me.alerts" @item="Alert Preferences"/>
     {{#if (or @user.isRanger @user.isPNV @user.isAuditor)}}
-      <<NavbarMenuItem @menu={{menu}} @route="me.announcements" @item="Announcements"/>
+      <NavbarMenuItem @menu={{menu}} @route="me.announcements" @item="Announcements"/>
     {{/if}}
     {{#if @user.isRanger}}
-      <<NavbarMenuItem @menu={{menu}} @route="me.messages" @item="Messages"/>
-      <<NavbarMenuItem @menu={{menu}} @route="me.contact" @item="Contact Ranger"/>
+      <NavbarMenuItem @menu={{menu}} @route="me.messages" @item="Messages"/>
+      <NavbarMenuItem @menu={{menu}} @route="me.contact" @item="Contact Ranger"/>
     {{/if}}
     {{#if @user.teacher.have_mentored}}
-      <<NavbarMenuItem @menu={{menu}} @route="me.mentees" @item="My Mentees"/>
+      <NavbarMenuItem @menu={{menu}} @route="me.mentees" @item="My Mentees"/>
     {{/if}}
     {{#if @user.isRanger}}
-      <<NavbarMenuItem @menu={{menu}} @route="me.mentors" @item="My Mentors"/>
+      <NavbarMenuItem @menu={{menu}} @route="me.mentors" @item="My Mentors"/>
     {{/if}}
     {{#if @user.teacher.have_feedback}}
-      <<NavbarMenuItem @menu={{menu}} @route="me.trainer-feedback" @item="Trainer/Mentor Feedback"/>
+      <NavbarMenuItem @menu={{menu}} @route="me.trainer-feedback" @item="Trainer/Mentor Feedback"/>
     {{/if}}
   </NavbarMenuSection>
   <NavbarMenuSection @section="My Account">
-    <<NavbarMenuItem @menu={{menu}} @route="me.personal-info" @item="Personal Info"/>
+    <NavbarMenuItem @menu={{menu}} @route="me.personal-info" @item="Personal Info"/>
     {{#if (or @user.isPNV @user.isRanger)}}
-      <<NavbarMenuItem @menu={{menu}} @route="me.emergency-contact" @item="Emergency Contact"/>
+      <NavbarMenuItem @menu={{menu}} @route="me.emergency-contact" @item="Emergency Contact"/>
     {{/if}}
-    <<NavbarMenuItem @menu={{menu}} @route="me.password" @item="Change Password"/>
+    <NavbarMenuItem @menu={{menu}} @route="me.password" @item="Change Password"/>
   </NavbarMenuSection>
 </NavbarMenu>
