@@ -13,17 +13,22 @@
       <div class="card-text">
         {{#if agreement.available}}
           {{#if agreement.signed}}
-            <span class="text-success">{{fa-icon "check"}} You have agreed to this document.</span>
+            <p>
+              <span class="text-success">{{fa-icon "check" right=1}} You have agreed to this document.</span>
+            </p>
+            <UiButton @onClick={{fn this.showAgreement agreement}}>
+              View Agreement
+            </UiButton>
           {{else}}
             <p>
               Please review and agree to the document.
             </p>
-            <UiButton @onClick={{fn this.reviewAgreement agreement}}>
-              Review Document
+            <UiButton @onClick={{fn this.reviewAgreementToSign agreement}}>
+              Review Agreement &amp; Sign
             </UiButton>
           {{/if}}
         {{else}}
-          <span class="text-muted">Check back later, the document is not available to sign at the moment.</span>
+          <span class="text-muted">{{fa-icon "hand" right=1}} Check back later, the document is not available to sign at the moment.</span>
         {{/if}}
       </div>
     </div>
@@ -32,6 +37,18 @@
   There are no agreements available to view or sign. Check back later.
 {{/each}}
 
-{{#if this.showAgreement}}
-  <Me::DocumentReview @tag={{this.showAgreement.tag}} @onClose={{this.closeAgreement}} />
+{{#if this.showAgreementForSigning}}
+  <Me::DocumentReview @tag={{this.showAgreementForSigning.tag}} @onClose={{this.closeAgreementToSign}} />
+{{/if}}
+
+{{#if this.showAgreementToView}}
+  <ModalDialog as |Modal|>
+    <Modal.title>{{this.showAgreementToView.title}}</Modal.title>
+    <Modal.body>
+      <DocumentShow @tag={{this.showAgreementToView.tag}} />
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closeAgreementView}} />
+    </Modal.footer>
+  </ModalDialog>
 {{/if}}

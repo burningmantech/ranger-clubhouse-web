@@ -1,18 +1,29 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import { tracked }from '@glimmer/tracking';
-import { action }from '@ember/object';
+import {tracked} from '@glimmer/tracking';
+import {action} from '@ember/object';
 
 export default class MeAgreementsController extends ClubhouseController {
-  @tracked showAgreement;
+  @tracked showAgreementForSigning;
+  @tracked showAgreementToView;
 
   @action
-  reviewAgreement(agreement) {
-    this.showAgreement = agreement;
+  reviewAgreementToSign(agreement) {
+    this.showAgreementForSigning = agreement;
   }
 
   @action
-  closeAgreement(signed) {
-    this.showAgreement.signed = signed;
-    this.showAgreement = null;
+  closeAgreementToSign(signed) {
+    this.showAgreementForSigning.signed = signed;
+    this.showAgreementForSigning = null;
+  }
+
+  @action
+  showAgreement(agreement) {
+    this.showAgreementToView = agreement;
+  }
+
+  @action
+  closeAgreementView() {
+    this.showAgreementToView = null;
   }
 }
