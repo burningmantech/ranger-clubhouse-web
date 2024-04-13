@@ -12,7 +12,7 @@ const TrainingStatusLabels = {
 export function trainingStatusBadge([status] /*, named*/) {
   let color, label;
 
-  if (status === 'none') {
+  if (status === 'none' || isEmpty(status)) {
     return 'no training sign-up'
   }
 

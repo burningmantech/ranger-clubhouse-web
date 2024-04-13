@@ -96,34 +96,30 @@
           <thead>
           <tr>
             <th>Year</th>
-            <th>Training</th>
-            <th>Mentor</th>
+            <th>In-Person Training</th>
+            <th>Alpha Shift Outcome</th>
           </tr>
           </thead>
           <tbody>
-          {{#each-in this.history.pnv_history as |pnvYear info|}}
+          {{#each this.pnvHistory as |info|}}
             <tr>
-              <td>{{pnvYear}}</td>
-              <td>
-                {{#if (is-empty info.training_status)}}
-                  NONE
-                {{else}}
-                  {{info.training_status}}
-                {{/if}}
-              </td>
+              <td>{{info.year}}</td>
+              <td>{{training-status-badge info.training_status}}</td>
               <td>
                 {{#if info.was_auditor}}
-                  Auditor
-                {{else if (not-eq info.mentor_status 'none')}}
-                  {{info.mentor_status}}
-                {{else if info.have_alpha_shift}}
-                  Walked w/No Mentors?
+                  was auditor
+                {{else if info.passedPreviously}}
+                  active status
                 {{else}}
-                  No Alpha shift
+                  {{mentee-status-badge this.person.status info.mentor_status info.have_alpha_shift}}
                 {{/if}}
               </td>
             </tr>
-          {{/each-in}}
+          {{else}}
+          <tr>
+            <td colspan="3">No information available.</td>
+          </tr>
+          {{/each}}
           </tbody>
         </UiTable>
       </:body>
