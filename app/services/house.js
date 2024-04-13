@@ -127,6 +127,9 @@ export default class HouseService extends Service {
           if (haveChangeset && response.payload && response.payload.errors) {
             // Populate change set model with the validation errors
             response.payload.errors.forEach(({title, detail, source}) => {
+              if (!source) {
+                return;
+              }
               const attr = source.pointer.replace('/data/attributes/', '');
               changeSet.pushErrors(attr, (detail ?? title));
             });
