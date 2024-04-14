@@ -41,8 +41,8 @@ export default class MePersonalVehicleEditComponent extends Component {
 
   rangerLogoOptions = [
     {id: 'none', title: 'None'},
-    {id: 'permanent-new', title: 'Permanent - Re-Authorization'},
-    {id: 'permanent-existing', title: 'Permanent - New'},
+    {id: 'permanent-new', title: 'Reauthorize'},
+    {id: 'permanent-existing', title: 'Authorize New'},
     {id: 'event', title: 'Event Only'}
   ];
 
