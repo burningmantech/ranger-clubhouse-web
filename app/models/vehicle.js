@@ -28,8 +28,8 @@ export const FuelChitLabels = {
 
 export const RangerLogoLabels = {
   none: '-',
-  'permanent-new': 'Permanent New',
-  'permanent-existing': 'Permanent Reauthorized',
+  'permanent-new': 'Authorize New',
+  'permanent-existing': 'Reauthorize',
   event: 'Event Only'
 };
 
