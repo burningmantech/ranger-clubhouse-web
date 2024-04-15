@@ -24,7 +24,7 @@ export default class JsonFormatComponent extends Component {
 
   @action
   componentInserted(element) {
-    const formatter = new JSONFormatter(this.json, 1, {
+    const formatter = new JSONFormatter(this.json, 0, {
       animateOpen: false,
       animateClose: false,
     });
