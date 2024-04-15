@@ -1,13 +1,10 @@
 <main>
-  <h1>Error Log</h1>
-
+  <h1>Error Logs</h1>
+  <p>
+    Any exceptions trapped by the front or backend will be recorded here.
+  </p>
   {{#if this.error_logs}}
-    <p>
-      <UiButton @type="danger" @onClick={{this.purgeLog}}>Purge Log</UiButton>
-    </p>
-    <p>
-      Showing {{this.page}} of {{this.total_pages}} pages. Total {{pluralize this.total "found row"}}
-    </p>
+    Showing {{this.page}} of {{this.total_pages}} pages. Total {{pluralize this.total "found row"}}
     <UiTable>
       <thead>
       <tr>
@@ -20,63 +17,81 @@
       </thead>
 
       <tbody>
-      {{#each this.error_logs as |log|}}
+      {{#each this.error_logs as |row|}}
         <tr>
           <td>
-            <a href {{action this.toggleLog log}}>
-              {{fa-icon (if log.showing "caret-down" "caret-right")}} {{log.created_at}}
+            <a href {{action this.toggleLog row}}>
+              {{fa-icon (if row.showing "caret-down" "caret-right")}} {{row.created_at}}
             </a>
           </td>
           <td>
-            {{#if log.person}}
-              <PersonLink @person={{log.person}} />
+            {{#if row.person}}
+              <PersonLink @person={{row.person}} />
             {{else}}
               -
             {{/if}}
           </td>
           <td>
-            {{log.error_type}}
+            {{row.error_type}}
           </td>
           <td>
-            {{log.ip}}
+            {{row.ip}}
           </td>
           <td>
-            {{log.url}}
+            {{row.url}}
           </td>
-         </tr>
+        </tr>
 
-        {{#if log.showing}}
+        {{#if row.showing}}
           <tr>
             {{! template-lint-disable no-inline-styles}}
             <td colspan="5" style="overflow-x: scroll">
-              User Agent: {{log.user_agent}}<br>
-              <JsonFormat @json={{log.data}} />
+              <div class="grid-table">
+                <div class="grid-table-label">User Agent</div>
+                <div>
+                  {{row.user_agent}}
+                </div>
+                {{#if (this.isClientException row)}}
+                  {{#let (this.exceptionDetails row.data) as |details|}}
+                    <div class="grid-table-label">Exception</div>
+                    <div>
+                      {{details.exceptionName}}
+                    </div>
+                    <div class="grid-table-label">Message</div>
+                    <div>
+                      {{details.exceptionMessage}}
+                    </div>
+                    <div class="grid-table-label">Stack</div>
+                    <div>
+                      {{nl2br details.stack}}
+                    </div>
+                  {{/let}}
+                {{/if}}
+                <div class="grid-table-label">Raw Object</div>
+                <div>
+                  <JsonFormat @json={{row.data}} />
+                </div>
+              </div>
             </td>
           </tr>
         {{/if}}
       {{/each}}
       </tbody>
     </UiTable>
-    <div class="row">
-      <div class="col-sm-12 col-md-6">
-        {{#if (not-eq this.page 1)}}
-          <LinkTo @route="admin.error-log" @query={{hash page=this.previousPage}} class="btn btn-primary">Prev Page
-          </LinkTo>
-        {{else}}
-          &nbsp;
-        {{/if}}
-      </div>
-      <div class="col-sm-12 col-md-6">
-        {{#if (not-eq this.page this.total_pages)}}
-          <LinkTo @route="admin.error-log" @query={{hash page=this.nextPage}} class="btn btn-primary">Next Page</LinkTo>
-        {{else}}
-          &nbsp;
-        {{/if}}
-      </div>
+    <div class="hstack gap-3">
+      {{#if (not-eq this.page 1)}}
+        <LinkTo @route="admin.error-row" @query={{hash page=this.previousPage}} class="btn btn-primary">
+          Prev Page
+        </LinkTo>
+      {{/if}}
+      {{#if (not-eq this.page this.total_pages)}}
+        <LinkTo @route="admin.error-row" @query={{hash page=this.nextPage}} class="btn btn-primary">Next Page</LinkTo>
+      {{/if}}
+      <UiButton @type="secondary" @onClick={{this.purgeLog}} @size="sm">Delete All Logs</UiButton>
     </div>
   {{else}}
     <p>
-      <b class="text-danger">No log entries were found</b>
+      <b class="text-danger">No row entries were found</b>
     </p>
   {{/if}}
 </main>
