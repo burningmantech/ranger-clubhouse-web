@@ -1,7 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {set} from '@ember/object';
 import {action} from '@ember/object';
-import {nl2br} from 'clubhouse/helpers/nl2br';
 
 export default class AdminErrorLogController extends ClubhouseController {
 
