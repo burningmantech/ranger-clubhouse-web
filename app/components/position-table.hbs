@@ -41,43 +41,48 @@
           Parent position: {{pluck position.parent_position_id @positions "title" "-"}}<br>
         {{/if}}
         {{#if position.require_training_for_roles}}
-          {{fa-icon "user-graduate" fixed=true}} Requires ART to be passed before roles are granted.<br>
+          {{fa-icon "user-graduate" ffixed=true right=1}} Requires ART to be passed before roles are granted.<br>
         {{/if}}
         {{#if position.new_user_eligible}}
-          {{fa-icon "globe" fixed=true}} Grant to New Accounts<br>
+          {{fa-icon "globe" fixed=true right=1}} Grant to New Accounts<br>
         {{/if}}
         {{#if position.all_rangers}}
-          {{fa-icon "universal-access" fixed=true}} Grant To All Rangers<br>
+          {{fa-icon "universal-access" fixed=true right=1}} Grant To All Rangers<br>
         {{/if}}
         {{#if position.count_hours}}
-          {{fa-icon "clock" fixed=true}} Hours count towards appreciations<br>
+          {{fa-icon "clock" fixed=true right=1}} Hours count towards appreciations<br>
         {{/if}}
         {{#if position.on_sl_report}}
-          {{fa-icon "list" fixed=true}} On Shift Lead Report<br>
+          {{fa-icon "list" fixed=true right=1}} On Shift Lead Report<br>
         {{/if}}
         {{#if position.on_trainer_report}}
-          {{fa-icon "rectangle-list" fixed=true}} On Trainer's Report<br>
+          {{fa-icon "rectangle-list" fixed=true right=1}} On Trainer's Report<br>
         {{/if}}
         {{#if position.prevent_multiple_enrollments}}
-          {{fa-icon "ban" fixed=true}} Multiple Enrollments Prevented<br>
+          {{fa-icon "ban" fixed=true right=1}} Multiple Enrollments Prevented<br>
         {{/if}}
         {{#if position.alert_when_no_trainers}}
-          {{fa-icon "bell" fixed=true}} Alert when this trainer/mentor slot becomes empty while the trainee/mentee slot
+          {{fa-icon "bell" fixed=true right=1}} Alert when this trainer/mentor slot becomes empty while the
+          trainee/mentee slot
           still has signups.<br>
         {{/if}}
         {{#if position.alert_when_becomes_empty}}
-          {{fa-icon "bell" fixed=true}} Alert when slot becomes empty of signups.<br>
+          {{fa-icon "bell" fixed=true right=1}} Alert when slot becomes empty of signups.<br>
         {{/if}}
         {{#if position.no_training_required}}
-          {{fa-icon "person-walking" fixed=true}} In-Person training not required to check in.<br>
+          {{fa-icon "person-walking" fixed=true right=1}} In-Person training not required to check in.<br>
         {{/if}}
         {{#if position.pvr_eligible}}
-          {{fa-icon "car" fixed=true}} Position grants Personal Vehicle eligibility.<br>
+          {{fa-icon "car" fixed=true right=1}} Position grants Personal Vehicle eligibility.<br>
         {{/if}}
         {{#if position.mvr_eligible}}
-          {{fa-icon "truck-monster" fixed=true}} Position grants MVR eligibility.<br>
+          {{fa-icon "truck-monster" fixed=true right=1}} Position grants MVR eligibility.<br>
+        {{/if}}
+        {{#if position.not_timesheet_eligible}}
+          {{fa-icon "ban" fixed=true right=1}} Used only for scheduling. Timesheet entries may not be created.<br>
         {{/if}}
         {{#if position.contact_email}}
+          Contact email:
           <MailTo @to={{position.contact_email}} />
         {{/if}}
       </td>

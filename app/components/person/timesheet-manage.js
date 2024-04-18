@@ -5,7 +5,6 @@ import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {NON_RANGER} from "clubhouse/constants/person_status";
 import {STATUS_PENDING, STATUS_REJECTED} from "clubhouse/models/timesheet";
-import {TRAINING} from "clubhouse/constants/positions";
 
 export default class PersonTimesheetManageComponent extends Component {
   @service ajax;
@@ -71,7 +70,7 @@ export default class PersonTimesheetManageComponent extends Component {
     const {positions} = this.args;
 
     // The positions the person can be part of
-    this.positionOptions = positions.filter((p) => p.id !== TRAINING).map((p) => [p.title, p.id]);
+    this.positionOptions = positions.filter((p) => !p.not_timesheet_eligible).map((p) => [p.title, p.id]);
 
     if (!positions.find((p) => p.id === timesheet.position_id)) {
       // Might be something like a mentee shift and the person no longer has the position grant, yet

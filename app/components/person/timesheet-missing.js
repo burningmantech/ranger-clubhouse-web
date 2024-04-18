@@ -68,18 +68,25 @@ export default class PersonTimesheetMissingComponent extends Component {
     this.newEntryValidations = {
       on_duty: [validateDateTime({before: 'off_duty'}), validatePresence({presence: true})],
       off_duty: [validateDateTime({after: 'on_duty'}), validatePresence({presence: true})],
+      partner: [validatePresence({
+        presence: true,
+        message: 'Enter a shift partner(s) - use "none" if this was a solo shift.'
+      })]
     };
 
     if (this.hasTimesheetManagement) {
-      this.newEntryValidations.additional_notes = [validatePresenceIf({
-        if_blank: 'additional_wrangler_notes',
-        message: 'Either a requester or reviewer note must be entered.'
-      })]
+      this.newEntryValidations.additional_notes = [
+        validatePresenceIf({
+          if_blank: 'additional_wrangler_notes',
+          message: 'Either a requester or reviewer note must be entered.'
+        })
+      ];
 
       this.newEntryValidations.additional_wrangler_notes = [validatePresenceIf({
         if_blank: 'additional_notes',
         message: 'Either a requester or reviewer note must be entered.'
-      })];
+      })
+      ];
     } else {
       this.newEntryValidations.additional_notes = [validatePresence({
         presence: true,
@@ -173,7 +180,7 @@ export default class PersonTimesheetMissingComponent extends Component {
     }
 
     if (model.create_entry) {
-      this.shiftManage.checkDateTime(model.position_id, model.new_on_duty, model.new_off_duty, () => this._checkSaveOverlap(model, nextEntry));
+      this.shiftManage.checkDateTime(model.new_position_id, model.new_on_duty, model.new_off_duty, () => this._checkSaveOverlap(model, nextEntry));
     } else {
       this._saveCommon(model, nextEntry);
     }

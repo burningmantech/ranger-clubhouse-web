@@ -56,6 +56,8 @@ export default class PositionModel extends Model {
   @attr('boolean', {defaultValue: false}) auto_sign_out;
   @attr('number', {defaultValue: 0.0}) sign_out_hour_cap;
 
+  @attr('boolean', { defaultValue: false }) not_timesheet_eligible;
+
   // Paycom employee paycode
   @attr('string') paycode;
 

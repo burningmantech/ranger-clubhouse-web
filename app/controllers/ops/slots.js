@@ -193,6 +193,7 @@ export default class OpsSlotsController extends ClubhouseController {
       })
   }
 
+  @action
   async _updateSlots() {
     try {
       await this.slots.update();

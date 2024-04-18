@@ -1,7 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 import {ADMIN, TIMESHEET_MANAGEMENT} from "clubhouse/constants/roles";
-import {TRAINING} from "clubhouse/constants/positions";
 
 export default class PersonTimesheetRoute extends ClubhouseRoute {
   queryParams = {
@@ -27,7 +26,7 @@ export default class PersonTimesheetRoute extends ClubhouseRoute {
         .then((result) => result.info),
       timesheetMissing: await this.store.query('timesheet-missing', { person_id, year, check_times: 1}),
       positions: await this.ajax.request(`person/${person_id}/positions`,{ data: { include_mentee: 1, include_training: 1, year } })
-        .then((results) => results.positions.filter((p) => p.id !== TRAINING)),
+        .then((results) => results.positions.filter((p) => !p.not_timesheet_eligible)),
       timesheetSummary: await this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }})
         .then((result) => result.summary),
       eventInfo: await this.ajax.request(`person/${person_id}/event-info`, { data: { year } })
