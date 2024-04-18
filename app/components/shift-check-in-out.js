@@ -232,6 +232,10 @@ export default class ShiftCheckInOutComponent extends Component {
           this.modal.info('Position Not Held', `${callsign} does hold the '${position.title}' in order to start the shift.`);
           break;
 
+        case 'position-not-eligible':
+          this.modal.info('Position Eligible To Work', `The '${position.title}' is ineligible to be signed into.`);
+          break;
+
         case 'already-on-duty':
           this.modal.info('Already On Shift', `${callsign} is already on duty.`);
           break;
@@ -474,6 +478,10 @@ export default class ShiftCheckInOutComponent extends Component {
 
         case 'position-not-held':
           this.changePositionError = 'Person does not hold the position. Timesheet entry cannot be updated.';
+          break;
+
+        case 'position-not-eligible':
+          this.changePositionError = 'The position is ineligible to be signed into.';
           break;
 
         case 'not-trained':
