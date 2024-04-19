@@ -3,10 +3,10 @@ import {tracked} from '@glimmer/tracking';
 import {DEPT_NDA_TAG} from "clubhouse/models/document";
 import {htmlSafe} from '@ember/template';
 import {action} from '@ember/object';
-import { service } from '@ember/service';
+import {service} from '@ember/service';
 
 export default class MeDocumentReviewComponent extends Component {
-  @tracked document;
+  @tracked agreement;
   @tracked isLoading = true;
   @tracked isSubmitting = false;
   @tracked didSign = false;
@@ -19,15 +19,22 @@ export default class MeDocumentReviewComponent extends Component {
 
   constructor() {
     super(...arguments);
+    this._loadDocument();
+  }
 
-    this.ajax.request(`agreements/${this.session.userId}/${this.args.tag}`).then((agreement) => {
-      this.agreement = agreement;
+  async _loadDocument() {
+    try {
+      this.agreement = await this.ajax.request(`agreements/${this.session.userId}/${this.args.tag}`);
       this.notAvailable = this.agreement.status === 'not-available';
       if (!this.notAvailable) {
         this.bodyText = htmlSafe(this.agreement.text);
         this.didSign = this.agreement.signature;
       }
-    }).catch((response) => this.house.handleErrorResponse(response));
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   @action
