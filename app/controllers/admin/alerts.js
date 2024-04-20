@@ -46,11 +46,13 @@ export default class AdminAlertsController extends ClubhouseController {
   }
 
   @action
-  deleteAlert(alert) {
-    this.modal.confirm(`Confirm alert deletion`, `Are you sure you want to delete "${alert.title}?"`,
+  deleteAlert() {
+    this.modal.confirm(`Confirm alert deletion`, `Are you sure you want to delete "${this.entry.title}?"`,
       async () => {
         try {
-          await alert.destroyRecord();
+          await this.entry.destroyRecord();
+          this.entry = null;
+          this.toast.success('Alert has been deleted.');
         } catch (response) {
           this.house.handleErrorResponse(response);
         }

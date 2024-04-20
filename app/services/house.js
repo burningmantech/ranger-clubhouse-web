@@ -12,7 +12,7 @@ import {htmlSafe} from '@ember/template';
 import logError from "clubhouse/utils/log-error";
 
 const JavascriptExceptions = [
-  AggregateError,
+ // AggregateError, -- not defined for Safari 12.
   EvalError,
   RangeError,
   ReferenceError,

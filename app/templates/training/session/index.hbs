@@ -125,15 +125,17 @@
       {{/if}}
       </tbody>
     </UiTable>
-    <UiButton @onClick={{this.saveTrainers}} @disabled={{not this.trainerCount}}>
-      Save Trainers
-    </UiButton>
-    {{#if this.canAdjustRosters}}
-      <UiButton @onClick={{this.showAddTrainerAction}}
-                @type="secondary">
-        Add Trainer
+    <UiButtonRow>
+      <UiButton @onClick={{this.saveTrainers}} @disabled={{not this.trainerCount}}>
+        Save Trainers
       </UiButton>
-    {{/if}}
+      {{#if this.canAdjustRosters}}
+        <UiButton @onClick={{this.showAddTrainerAction}}
+                  @type="secondary">
+          Add Trainer
+        </UiButton>
+      {{/if}}
+    </UiButtonRow>
   </:body>
 </UiSection>
 
@@ -162,36 +164,36 @@
     <div class="my-2">
       {{! Desktop Display }}
       <div class="d-none d-lg-block">
-        <LinkTo @route="training.session.trainers-report"
-                @models={{array this.training.id this.slot.id}}
-                class="btn btn-secondary">
-          {{fa-icon "list-alt"}} Trainer's Report
-        </LinkTo>
-        <LinkTo @route="training.session.signup-sheet" @models={{array this.training.id this.slot.id}}
-                class="btn btn-secondary ms-1">
-          {{fa-icon "clipboard-check"}} Sign up Sheet
-        </LinkTo>
-        <UiButton @type="secondary"
-                  @onClick={{this.toggleEmailListAction}}
-                  @disabled={{is-empty this.students}}
-                  @class="ms-1">
-          {{fa-icon "envelope"}} {{if this.showEmails "Hide Emails" "List Emails"}}
-        </UiButton>
-        {{#if this.canAdjustRosters}}
+        <UiButtonRow>
+          <LinkTo @route="training.session.trainers-report"
+                  @models={{array this.training.id this.slot.id}}
+                  class="btn btn-secondary">
+            {{fa-icon "list-alt"}} Trainer's Report
+          </LinkTo>
+          <LinkTo @route="training.session.signup-sheet"
+                  @models={{array this.training.id this.slot.id}}
+                  class="btn btn-secondary">
+            {{fa-icon "clipboard-check"}} Sign up Sheet
+          </LinkTo>
           <UiButton @type="secondary"
-                    @onClick={{this.showAddTraineeAction}}
-                    @class="ms-1">
-            {{fa-icon "plus-square"}} Add Person
+                    @onClick={{this.toggleEmailListAction}}
+                    @disabled={{is-empty this.students}}>
+            {{fa-icon "envelope"}} {{if this.showEmails "Hide Emails" "List Emails"}}
           </UiButton>
-        {{/if}}
-        {{#if this.offersGraduation}}
-          <UiButton @type="secondary"
-                    @onClick={{this.showGraduateStudentsAction}}
-                    @disabled={{is-empty this.students}}
-                    @class="ms-1">
-            {{fa-icon "graduation-cap"}} Graduate Trainees
-          </UiButton>
-        {{/if}}
+          {{#if this.canAdjustRosters}}
+            <UiButton @type="secondary"
+                      @onClick={{this.showAddTraineeAction}}>
+              {{fa-icon "plus-square"}} Add Person
+            </UiButton>
+          {{/if}}
+          {{#if this.offersGraduation}}
+            <UiButton @type="secondary"
+                      @onClick={{this.showGraduateStudentsAction}}
+                      @disabled={{is-empty this.students}}>
+              {{fa-icon "graduation-cap"}} Graduate Trainees
+            </UiButton>
+          {{/if}}
+        </UiButtonRow>
       </div>
 
       {{! Cellphone/Tablet display }}
@@ -207,16 +209,16 @@
             Sign up Sheet
           </menu.linkTo>
           <div class="dropdown-divider"></div>
-          <menu.item>
-            {{#if this.students}}
+          {{#if this.students}}
+            <menu.item>
               <a href {{action this.toggleEmailListAction dd.closeDropdown}} class="dropdown-item">
                 {{if this.showEmails "Hide" "List"}} Emails
               </a>
-            {{/if}}
-          </menu.item>
+            </menu.item>
+          {{/if}}
           {{#if this.canAdjustRosters}}
             <div class="dropdown-divider"></div>
-            <a href class="dropdown-item" {{action this.showAddPersonAction}}>Add Person</a>
+            <a href class="dropdown-item" {{action this.showAddTraineeAction}}>Add Person</a>
           {{/if}}
           {{#if this.offersGraduation}}
             <div class="dropdown-divider"></div>
@@ -398,7 +400,7 @@
           {{/unless}}
         {{/let}}
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label="Save {{this.editStudent.callsign}} info"/>
         <UiCancelButton @onClick={{this.cancelStudentAction}} />
         <div class="ms-auto">
@@ -496,7 +498,7 @@
                       @autofocus={{true}}/>
         </FormRow>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit/>
         <UiCancelButton @onClick={{this.cancelNoteAction}} />
       </Modal.footer>

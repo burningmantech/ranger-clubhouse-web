@@ -30,10 +30,10 @@
 </div>
 
 {{#if this.canEditVehicles}}
-  <div class="my-3">
+  <UiButtonRow class="my-3">
     <UiButton @onClick={{this.newEditAction}}>New Vehicle</UiButton>
     <UiButton @type="secondary" @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
-  </div>
+  </UiButtonRow>
 {{/if}}
 
 <UiSection>
@@ -156,16 +156,18 @@
             {{if vehicle.signed_motorpool_agreement "Motor Pool" "-"}}
           </div>
           <div class="vehicle-registry-action">
-            {{#if this.canEditVehicles}}
+            <UiButtonRow>
+              {{#if this.canEditVehicles}}
+                <UiButton @type="secondary" @size="sm"
+                          @onClick={{fn this.editEntryAction vehicle}}>
+                  {{fa-icon "edit"}} Edit
+                </UiButton>
+              {{/if}}
               <UiButton @type="secondary" @size="sm"
-                        @onClick={{fn this.editEntryAction vehicle}}>
-                {{fa-icon "edit"}} Edit
+                        @onClick={{fn this.editStickerAction vehicle}}>
+                {{fa-icon "plus"}} View / Add Sticker
               </UiButton>
-            {{/if}}
-            <UiButton @type="secondary" @size="sm"
-                      @onClick={{fn this.editStickerAction vehicle}}>
-              {{fa-icon "plus"}} View / Add Sticker
-            </UiButton>
+            </UiButtonRow>
           </div>
         </div>
       {{else}}

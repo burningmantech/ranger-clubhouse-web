@@ -293,7 +293,7 @@
         <b class="text-danger">{{this.changePositionError}}</b>
       {{/if}}
     </Modal.body>
-    <Modal.footer @noAlign={{true}}>
+    <Modal.footer @align="start">
       <UiButton @onClick={{this.updatePositionAction}} @disabled={{this.isSubmitting}}>
         Update Position
       </UiButton>
@@ -307,7 +307,7 @@
     <Modal.body>
       You are about to check in the person early for a shift. Are you sure you wish to do this?
     </Modal.body>
-    <Modal.footer @noAlign={{true}}>
+    <Modal.footer @align="start">
       <UiButton @type="warning" @onClick={{this.confirmEarlyShiftAction}}>
         Confirm Early Shift Start
       </UiButton>

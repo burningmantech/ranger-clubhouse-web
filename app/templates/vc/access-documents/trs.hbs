@@ -93,7 +93,7 @@
       <tr>
         <th>
           <Input @type="checkbox" @checked={{this.selectAll}}
-                  {{on "change" this.toggleAll}}
+            {{on "change" this.toggleAll}}
                  disabled={{eq this.filter "all"}} />
         </th>
         <th>Callsign</th>
@@ -123,7 +123,9 @@
             <PersonLink @person={{rec.person}} @page="tickets-provisions"/>
           </td>
           <td>{{rec.person.first_name}} {{rec.person.last_name}}</td>
-          <td><MailTo @to={{rec.person.email}} /></td>
+          <td>
+            <MailTo @to={{rec.person.email}} />
+          </td>
           <td>{{this.deliveryLabel rec}}</td>
           <td>
             {{rec.trsNote}}
@@ -136,28 +138,30 @@
       </tbody>
     </UiTable>
 
-    <UiButton @onClick={{this.exportSelectedAction}}
-              @disabled={{or this.isSubmitting
-                             (gt this.selectedCount this.MAX_BATCH_SIZE)
-                             (eq this.selectedCount 0)
-                             (eq this.filter "all")}}>
-      {{#if (eq this.filter "all")}}
-        Export Disabled For "All" View
-      {{else}}
-        Export {{pluralize this.selectedCount "Selected Document"}}
+    <UiButtonRow>
+      <UiButton @onClick={{this.exportSelectedAction}}
+                @disabled={{or this.isSubmitting
+                               (gt this.selectedCount this.MAX_BATCH_SIZE)
+                               (eq this.selectedCount 0)
+                               (eq this.filter "all")}}>
+        {{#if (eq this.filter "all")}}
+          Export Disabled For "All" View
+        {{else}}
+          Export {{pluralize this.selectedCount "Selected Document"}}
+        {{/if}}
+      </UiButton>
+      <UiButton @type="secondary"
+                @onClick={{this.markSubmitted}}
+                @disabled={{or this.isSubmitting (eq this.selectedCount 0) (eq this.filter "all")}}>
+        Mark Selected As Submitted
+      </UiButton>
+      {{#if (gt this.selectedCount this.MAX_BATCH_SIZE)}}
+        <div class="text-danger">
+          <b>{{this.selectedCount}} items has been selected which exceeds the max. TRS batch size
+            of {{this.MAX_BATCH_SIZE}} items. Reduce the number selected.</b>
+        </div>
       {{/if}}
-    </UiButton>
-    <UiButton @type="secondary"
-              @onClick={{this.markSubmitted}}
-              @disabled={{or this.isSubmitting (eq this.selectedCount 0) (eq this.filter "all")}}>
-      Mark Selected As Submitted
-    </UiButton>
-    {{#if (gt this.selectedCount this.MAX_BATCH_SIZE)}}
-      <div class="text-danger">
-        <b>{{this.selectedCount}} items has been selected which exceeds the max. TRS batch size
-          of {{this.MAX_BATCH_SIZE}} items. Reduce the number selected.</b>
-      </div>
-    {{/if}}
+    </UiButtonRow>
 
     {{#if this.isSubmitting}}
       <LoadingDialog>

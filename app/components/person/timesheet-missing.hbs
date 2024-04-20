@@ -151,7 +151,7 @@
           </fieldset>
         {{/if}}
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label="Create" @disabled={{this.newEntry.isSaving}} />
         <UiCancelButton @disabled={{this.newEntry.isSaving}} @onClick={{this.cancelNewEntryAction}} />
         {{#if this.newEntry.isSaving}}
@@ -342,7 +342,7 @@
           </fieldset>
         {{/if}}
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         {{#if this.nextEntry}}
           <f.submit @label="Update & Review Next"
                     @onSubmit={{this.saveAndManageNextEntryAction}}

@@ -60,7 +60,7 @@
       {{fa-icon "ban" right=1}} Your story cannot be verified with your shift partner or shift lead / manager. Yes, we
       do check!
     </Modal.body>
-    <Modal.footer @noAlign={{true}}>
+    <Modal.footer @align="start">
       <f.submit @label={{if f.model.isNew "Submit New Request" "Update Request"}} />
       <UiCancelButton  @onClick={{@onCancel}} />
      </Modal.footer>

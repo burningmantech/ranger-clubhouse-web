@@ -80,7 +80,7 @@
     {{/if}}
   </Modal.body>
 
-  <Modal.footer @noAlign={{true}}>
+  <Modal.footer @align="start">
     {{#unless this.isLoading}}
       <UiButton @onClick={{this.saveGraduateAction}} @disabled={{or (not this.selectedCount) this.isSubmitting}}>
         Graduate {{pluralize this.selectedCount "Trainee"}}

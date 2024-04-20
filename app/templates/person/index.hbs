@@ -222,7 +222,7 @@
       </p>
       Would you rather send a Clubhouse Message?
     </Modal.body>
-    <Modal.footer @noAlign={{true}}>
+    <Modal.footer @align="start">
       <UiButton @onClick={{this.sendClubhouseMessage}}>Send Clubhouse Message</UiButton>
       <UiButton @class="mx-3" @onClick={{this.editNote}}>Add Note</UiButton>
       <UiCancelButton @onClick={{this.closeConfirmNoteOrMessage}} />
@@ -255,7 +255,7 @@
                       @rows={{6}}/>
         </FormRow>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label="Save Note"/>
         <UiCancelButton @onClick={{this.closeNote}} />
       </Modal.footer>

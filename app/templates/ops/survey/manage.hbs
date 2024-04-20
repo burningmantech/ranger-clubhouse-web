@@ -14,12 +14,12 @@
     <ReadMore @text={{this.survey.epilogue}} />
   </dd>
 </dl>
-<p>
+<UiButtonRow class="my-4">
   <UiButton @onClick={{this.newGroupAction}}>{{fa-icon "plus"}} Add Group</UiButton>
   <UiButton @type="secondary" @onClick={{this.editSurveyAction}}>
     {{fa-icon "edit"}} Edit Survey
   </UiButton>
-</p>
+</UiButtonRow>
 
 {{#each this.orderedGroups as |group idx|}}
   <div class="bg-light-gray p-2">
@@ -38,36 +38,34 @@
         </div>
       </div>
     </div>
-    <div class="mt-2">
-      <UiButton @size="sm" @onClick={{fn this.newQuestionAction group}} @disabled={{group.isSaving}}>
-        {{fa-icon "plus"}} Add Question
-      </UiButton>
+  </div>
+  <UiButtonRow class="my-2">
+    <UiButton @size="sm" @onClick={{fn this.newQuestionAction group}} @disabled={{group.isSaving}}>
+      {{fa-icon "plus"}} Add Question
+    </UiButton>
+    <UiButton @type="secondary"
+              @size="sm"
+              @onClick={{fn this.editGroupAction group}}
+              @disabled={{group.isSaving}}>
+      {{fa-icon "edit"}} Edit Group
+    </UiButton>
+    {{#if (not-eq idx 0)}}
       <UiButton @type="secondary"
                 @size="sm"
-                @onClick={{fn this.editGroupAction group}}
+                @onClick={{fn this.moveGroupAction group -1}}
                 @disabled={{group.isSaving}}>
-        {{fa-icon "edit"}} Edit Group
+        {{fa-icon "arrow-up"}} Move Group Up
       </UiButton>
-      <span class="ms-4">
-        {{#if (not-eq idx 0)}}
-          <UiButton @type="secondary"
-                    @size="sm"
-                    @onClick={{fn this.moveGroupAction group -1}}
-                    @disabled={{group.isSaving}}>
-            {{fa-icon "arrow-up"}} Move Group Up
-          </UiButton>
-        {{/if}}
-        {{#if (this.isNotLast group this.orderedGroups)}}
-          <UiButton @type="secondary"
-                    @size="sm"
-                    @onClick={{fn this.moveGroupAction group 1}}
-                    @disabled={{group.isSaving}}>
-            {{fa-icon "arrow-down"}} Move Group Down
-          </UiButton>
-        {{/if}}
-      </span>
-    </div>
-  </div>
+    {{/if}}
+    {{#if (this.isNotLast group this.orderedGroups)}}
+      <UiButton @type="secondary"
+                @size="sm"
+                @onClick={{fn this.moveGroupAction group 1}}
+                @disabled={{group.isSaving}}>
+        {{fa-icon "arrow-down"}} Move Group Down
+      </UiButton>
+    {{/if}}
+  </UiButtonRow>
   <UiTable>
     <thead>
     <tr>
@@ -76,7 +74,7 @@
       <th class="w-5">Type</th>
       <th class="w-5 text-center">Req?</th>
       <th class="w-10">Action</th>
-      <th class="w-25 text-end">Move Position</th>
+      <th class="w-25">Move Position</th>
     </tr>
     </thead>
     <tbody>
@@ -91,19 +89,21 @@
             {{fa-icon "edit"}} Edit
           </UiButton>
         </td>
-        <td class="w-25 text-end">
-          {{#if (not-eq idx 0)}}
-            <UiButton @type="secondary" @size="sm" @onClick={{fn this.moveQuestionAction group question -1}}
-                      @disabled={{question.isSaving}}>
-              {{fa-icon "arrow-up"}} Move Up
-            </UiButton>
-          {{/if}}
-          {{#if (this.isNotLast question group.surveyQuestions)}}
-            <UiButton @type="secondary" @size="sm" @onClick={{fn this.moveQuestionAction group question 1}}
-                      @disabled={{question.isSaving}}>
-              {{fa-icon "arrow-down"}} Move Down
-            </UiButton>
-          {{/if}}
+        <td class="w-25">
+          <UiButtonRow>
+            {{#if (not-eq idx 0)}}
+              <UiButton @type="secondary" @size="sm" @onClick={{fn this.moveQuestionAction group question -1}}
+                        @disabled={{question.isSaving}}>
+                {{fa-icon "arrow-up"}} Move Up
+              </UiButton>
+            {{/if}}
+            {{#if (this.isNotLast question group.surveyQuestions)}}
+              <UiButton @type="secondary" @size="sm" @onClick={{fn this.moveQuestionAction group question 1}}
+                        @disabled={{question.isSaving}}>
+                {{fa-icon "arrow-down"}} Move Down
+              </UiButton>
+            {{/if}}
+          </UiButtonRow>
         </td>
       </tr>
     {{else}}
@@ -151,15 +151,15 @@
                       @cols={{80}}/>
         </FormRow>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label={{if this.groupEntry.isNew "Create" "Save"}} @disabled={{this.groupEntry.isSaving}} />
         <UiCancelButton @onClick={{this.cancelGroupAction}} />
         {{#if this.groupEntry.isSaving}}
           <LoadingIndicator/>
         {{/if}}
         <div class="ms-auto">
-          <UiButton @type="light-red" @onClick={{this.deleteGroupAction}} @disabled={{this.groupEntry.isDeleting}}>
-            {{fa-icon "trash"}} Delete Group
+          <UiButton @type="danger" @onClick={{this.deleteGroupAction}} @disabled={{this.groupEntry.isDeleting}} @size="sm">
+            {{fa-icon "trash" right=1}} Delete Group
           </UiButton>
         </div>
       </Modal.footer>
@@ -205,15 +205,15 @@
                       @disabled={{not-eq f.model.type "options"}} />
         </FormRow>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label={{if this.questionEntry.isNew "Create" "Save"}} @disabled={{this.questionEntry.isSaving}} />
         <UiCancelButton @onClick={{this.cancelQuestionAction}} @disabled={{this.questionEntry.isSaving}} />
         {{#if this.questionEntry.isSaving}}
           <LoadingIndicator/>
         {{/if}}
         <div class="ms-auto">
-          <UiButton @type="light-red" @class="ms-auto" @onClick={{this.deleteQuestionAction}}>
-            {{fa-icon "trash"}} Delete
+          <UiButton @type="danger" class="ms-auto" @onClick={{this.deleteQuestionAction}}>
+            {{fa-icon "trash" right=1}} Delete
           </UiButton>
         </div>
       </Modal.footer>

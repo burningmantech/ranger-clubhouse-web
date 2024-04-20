@@ -6,7 +6,7 @@
       </div>
       <div class="{{if @editButtonNoRightAlign "ms-4"}}">
         {{#if this.isEditing}}
-          <UiButton @onClick={{this.cancelEdit}} @type="secondary" @size="sm">
+          <UiButton @onClick={{this.cancelEdit}} @type="gray" @size="sm" class="btn-link">
             Cancel
           </UiButton>
         {{else}}

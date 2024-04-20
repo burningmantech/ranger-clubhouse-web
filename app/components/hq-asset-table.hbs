@@ -76,7 +76,7 @@
                     @options={{this.attachmentOptions}}/>
         </FormRow>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label="Update" @disabled={{this.isSubmitting}} />
         <UiCancelButton @onClick={{this.cancelAttachmentDialog}} />
       </Modal.footer>

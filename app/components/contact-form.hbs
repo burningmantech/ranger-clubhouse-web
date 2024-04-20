@@ -38,7 +38,7 @@
         />
       </FormRow>
     </Modal.body>
-    <Modal.footer @noAlign={{true}}>
+    <Modal.footer @align="start">
       <f.submit @label={{if this.isSending "Sending" "Send Message"}} @disabled={{this.isSending}} />
       <UiCancelButton @disabled={{this.isSending}} @onClick={{this.cancelAction}}/>
       {{#if this.isSending}}

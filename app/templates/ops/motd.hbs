@@ -2,7 +2,10 @@
   <h1>Clubhouse Announcements / Messages Of The Day (MOTD)</h1>
 
   <p>
-    Announces are shown on the user's homepage and can be targeted to active Rangers, Prospectives and/or Auditors.
+    Announcements are shown on the user's homepage and can be targeted to active Rangers, Prospectives and/or Auditors.
+  </p>
+  <p>
+    Expired announcements will be automatically deleted within 24 hours of the expiration.
   </p>
 
   <ChForm @formId="query" @formFor={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
@@ -20,7 +23,7 @@
                 @inline={{true}}
                 @options={{this.sortOptions}} />
       <div class="col-auto">
-        <f.submit @label="Search"/>
+        <f.submit @label="Filter"/>
       </div>
     </FormRow>
   </ChForm>
@@ -115,6 +118,9 @@
                           @inline={{true}} />
             </div>
           </FormRow>
+          <p class="fw-semibold">
+            The announcement will be automatically deleted within 24 hours of the expiration date.
+          </p>
           <FormRow>
             <FormLabel @fixed={{true}}>Expires At</FormLabel>
             <f.datetime @name="expires_at"/>
@@ -132,7 +138,7 @@
                       @cols={{80}}/>
           </FormRow>
         </Modal.body>
-        <Modal.footer @noAlign={{true}}>
+        <Modal.footer @align="start">
           <f.submit @disabled={{this.entry.isSaving }}/>
           <UiCancelButton @onClick={{this.cancelEntry}} @disabled={{this.entry.isSaving }}/>
           {{#if this.entry.isSaving}}

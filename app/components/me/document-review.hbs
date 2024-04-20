@@ -30,7 +30,7 @@
         {{/if}}
       {{/if}}
     </Modal.body>
-    <Modal.footer @noAlign={{true}}>
+    <Modal.footer @align="start">
       {{#unless this.didSign}}
         <UiButton @type="primary"
                   @onClick={{this.signDocument}}

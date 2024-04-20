@@ -142,7 +142,7 @@
           <f.text @name="location" @label="Deployment Location" @size={{30}} @maxlength={{80}} />
         </FormRow>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label="Save"/>
         <UiCancelButton @onClick={{this.cancelPod}} />
       </Modal.footer>
@@ -201,7 +201,7 @@
           {{/if}}
         </fieldset>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label="Add" @disabled={{and (not f.model.currentPeopleIds) (not f.model.priorPeopleIds)}} />
         <UiCancelButton @onClick={{this.closeAddDialog}} />
       </Modal.footer>

@@ -81,7 +81,7 @@
         {{/if}}
       {{/unless}}
     </Modal.body>
-    <Modal.footer @noAlign={{true}}>
+    <Modal.footer @align="start">
       {{#unless @entry.isRejected}}
         <f.submit @label="Update" @disabled={{@entry.isSaving}} />
       {{/unless}}

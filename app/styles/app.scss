@@ -362,7 +362,7 @@ legend {
   background-color: #f0f0f0;
 }
 
-.modal-footer-no-align {
+.modal-footer-align-start {
   justify-content: inherit !important;
 }
 
@@ -756,5 +756,25 @@ summary:hover {
   background-color: #f0f0f0;
 }
 
+.ui-button-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-self: stretch;
+  gap: 1rem;
+  width: 100%;
 
+}
 
+@include media-breakpoint-down(xl) {
+  .ui-button-row {
+    flex-direction: column !important;
+    align-items: start !important;
+
+    button, a {
+      display: block !important;
+      margin-top: 1vh;
+      width: 100%;
+    }
+  }
+}

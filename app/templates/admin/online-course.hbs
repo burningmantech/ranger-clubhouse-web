@@ -76,7 +76,7 @@
           <f.select @label="Course For" @name="course_for" @options={{this.courseForOptions}} />
         </FormRow>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label="Save"/>
         <UiCancelButton @onClick={{this.cancelEntry}} />
         {{#unless this.entry.isNew}}

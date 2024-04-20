@@ -64,7 +64,7 @@ Showing {{pluralize @positionLineups.length "position lineup"}}
                            @options={{this.positionOptions}} />
         </FormRow>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label="Save"/>
         <UiCancelButton @onClick={{this.cancel}} />
       </Modal.footer>

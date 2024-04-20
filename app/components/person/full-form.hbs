@@ -209,48 +209,40 @@ Everyone else will see person/simple-form
 
   <FormRow>
     <FormLabel @fixed={{true}}>&nbsp;</FormLabel>
-    <div class="col-sm-12 col-xl-auto mb-4">
-      <f.submit @label="Update" @disabled={{or @person.isSaving (not f.model.isDirty)}}
-                @submitClass="btn-responsive"/>
-    </div>
-    <div class="col-sm-12 col-xl-auto mb-4">
-      {{#if (has-role "admin" "vc")}}
-        {{#if @person.message}}
-          <UiButton @type="secondary" @class="btn-responsive" @onClick={{@editNote}}>
-            Update Note
-          </UiButton>
-        {{else}}
-          <UiButton @type="secondary" @class="btn-responsive" @onClick={{@confirmNoteOrMessage}}>
-            Add Banner Note
+    <div class="col-sm-12 col-xl-10 mt-2 d-flex justify-content-between">
+      <UiButtonRow>
+        <f.submit @label="Update"
+                  @disabled={{or @person.isSaving (not f.model.isDirty)}}/>
+        {{#if (has-role "admin" "vc")}}
+          {{#if @person.message}}
+            <UiButton @type="secondary" @onClick={{@editNote}}>
+              Update Note
+            </UiButton>
+          {{else}}
+            <UiButton @type="secondary" @onClick={{@confirmNoteOrMessage}}>
+              Add Banner Note
+            </UiButton>
+          {{/if}}
+        {{/if}}
+        {{#if (and (has-role "admin" "vc") @person.isProspective)}}
+          <UiButton @type="secondary" @onClick={{@sendWelcomeMailAction}}>
+            Resend Welcome Email
           </UiButton>
         {{/if}}
-      {{/if}}
-    </div>
-    {{#if (and (has-role "admin" "vc") @person.isProspective)}}
-      <div class="col-sm-12 col-xl-auto mb-4">
-        <UiButton @type="secondary" @class="btn-responsive" @onClick={{@sendWelcomeMailAction}}>
-          Resend Welcome Email
-        </UiButton>
-      </div>
-    {{/if}}
 
-    {{#if (has-role "admin")}}
-      <div class="col-sm-12 col-xl-auto mb-4">
-        <UiButton @type="secondary" @class="btn-responsive" @onClick={{@showPasswordDialogAction}}>
-          Change Password
-        </UiButton>
-      </div>
-    {{/if}}
+        {{#if (has-role "admin")}}
+          <UiButton @type="secondary" @onClick={{@showPasswordDialogAction}}>
+            Change Password
+          </UiButton>
+        {{/if}}
 
-    <div class="col-sm-12 col-xl-auto mb-4">
-      {{#if @person.isSaving}}
-        <LoadingIndicator/>
-      {{/if}}
+        {{#if @person.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+        {{#if (has-role "admin")}}
+          <UiButton @type="secondary" @size="sm" class="ms-auto" @onClick={{@removePersonAction}}>Remove</UiButton>
+        {{/if}}
+      </UiButtonRow>
     </div>
-    {{#if (has-role "admin")}}
-      <div class="col-sm-12 col-xl-auto ms-auto mt-1">
-        <UiButton @type="secondary" @size="sm" @onClick={{@removePersonAction}}>Remove</UiButton>
-      </div>
-    {{/if}}
   </FormRow>
 </ChForm>

@@ -69,7 +69,7 @@
         </box.title>
         <box.body>
           {{#if box.isOpen}}
-            <div class="hstack gap-2 mb-2">
+            <UiButtonRow class="mb-2">
               <UiButton @size="sm" @onClick={{fn this.activate group}}>Activate All</UiButton>
               <UiButton @size="sm" @onClick={{fn this.deactivate group}}>Deactivate All</UiButton>
               <UiButton @type="secondary" @size="sm" @onClick={{fn this.openSlotCopy group.position.id}}>
@@ -86,7 +86,7 @@
                   Link to Parent Slots
                 </UiButton>
               {{/if}}
-            </div>
+            </UiButtonRow>
             <UiTable>
               <thead>
               <tr>
@@ -126,7 +126,7 @@
                   <td class="text-end">{{credits-format slot.credits}}</td>
                   <td>
                     <SlotInfoLink @description={{slot.description}} @info={{slot.url}} />
-                    </td>
+                  </td>
                   <td class="text-center">
                     {{#if slot.active}}
                       {{fa-icon "check" color="success"}}
@@ -135,18 +135,20 @@
                     {{/if}}
                   </td>
                   <td>
-                    <UiButton @type="secondary" @size="sm" @onClick={{fn this.repeatSlot slot}}>
-                      {{fa-icon "clone"}} Repeat
-                    </UiButton>
-                    <UiButton @type="secondary" @size="sm" @onClick={{fn this.repeatSlotAdd24Hours slot}}>
-                      {{fa-icon "clone"}} Repeat+24
-                    </UiButton>
-                    <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteSlot slot}}>
-                      {{fa-icon "trash-alt"type="fas"}} Delete
-                    </UiButton>
-                    <UiButton @onClick={{fn this.editSlot slot}} @size="sm">
-                      {{fa-icon "edit"}} Edit
-                    </UiButton>
+                    <UiButtonRow>
+                      <UiButton @type="secondary" @size="sm" @onClick={{fn this.repeatSlot slot}}>
+                        {{fa-icon "clone"}} Repeat
+                      </UiButton>
+                      <UiButton @type="secondary" @size="sm" @onClick={{fn this.repeatSlotAdd24Hours slot}}>
+                        {{fa-icon "clone"}} Repeat+24
+                      </UiButton>
+                      <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteSlot slot}}>
+                        {{fa-icon "trash-alt"type="fas"}} Delete
+                      </UiButton>
+                      <UiButton @onClick={{fn this.editSlot slot}} @size="sm">
+                        {{fa-icon "edit"}} Edit
+                      </UiButton>
+                    </UiButtonRow>
                   </td>
                 </tr>
               {{/each}}

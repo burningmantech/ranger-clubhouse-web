@@ -71,7 +71,7 @@
       {{fa-icon "ban" right=1}} The requested changes cannot be confirmed by your shift partner(s) or the Shift Lead.
       Yes, we do check!<br>
     </Modal.body>
-    <Modal.footer @noAlign={{true}}>
+    <Modal.footer @align="start">
       <f.submit @label="Submit Correction Request" @disabled={{@entry.isSaving}} />
       <UiCancelButton @disabled={{@entry.isSaving}} @onClick={{@onCancel}} />
       {{#if @entry.isSaving}}

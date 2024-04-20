@@ -58,7 +58,7 @@
         </tbody>
       </UiTable>
     </Modal.body>
-    <Modal.footer @noAlign={{true}}>
+    <Modal.footer @align="start">
       <f.submit @label="Update" @disabled={{@isSaving}} />
       <UiCancelButton @onClick={{@onCancel}} @disabled={{@isSaving}} />
       {{#if @isSaving}}

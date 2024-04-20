@@ -65,7 +65,6 @@
   </FormRow>
   <FormRow>
     <FormLabel @auto={{true}}>Callsign, title, team, notes filter:</FormLabel>
-
     <div class="col-auto">
       <Input @type="text"
              @value={{this.textFilterInput}}
@@ -74,21 +73,25 @@
       <div class="text-muted small">Regular Expression allowed</div>
     </div>
     <div class="col-auto">
-      <UiButton @size="sm" @class="ms-1" @onClick={{this.textFilterAction}}>
-        Filter
-      </UiButton>
-      <UiButton @type="secondary" @size="sm" @class="ms-1" @onClick={{this.clearTextFilterAction}}>
-        Clear
-      </UiButton>
+      <UiButtonRow>
+        <UiButton @size="sm" @onClick={{this.textFilterAction}}>
+          Filter
+        </UiButton>
+        <UiButton @type="secondary" @size="sm" @onClick={{this.clearTextFilterAction}}>
+          Clear
+        </UiButton>
+      </UiButtonRow>
     </div>
 
     <div class="col-auto">
-      <UiButton @type="secondary" @size="sm" @onClick={{this.toggleEditMode}}>
-        {{#if this.editMode}}{{fa-icon "table"}} Table View{{else}}{{fa-icon "edit"}} Edit Mode{{/if}}
-      </UiButton>
-      <UiButton @type="secondary" @size="sm" @onClick={{this.exportCSV}}>
-        {{fa-icon "file-export"}} Export CSV
-      </UiButton>
+      <UiButtonRow>
+        <UiButton @type="secondary" @size="sm" @onClick={{this.toggleEditMode}}>
+          {{#if this.editMode}}{{fa-icon "table"}} Table View{{else}}{{fa-icon "edit"}} Edit Mode{{/if}}
+        </UiButton>
+        <UiButton @type="secondary" @size="sm" @onClick={{this.exportCSV}}>
+          {{fa-icon "file-export"}} Export CSV
+        </UiButton>
+      </UiButtonRow>
     </div>
     {{#if this.textFilterError}}
       <div class="text-danger col-12">{{this.textFilterError}}</div>
@@ -111,7 +114,8 @@
 
   {{#if this.hasUnqualifiedToPrint}}
     <UiAlert @type="warning" @icon="hand-point-right">
-      One or more BMIDs do not meet the printing qualifications (no ticket/SAP claimed, nor has an In-Person Training sign-up),
+      One or more BMIDs do not meet the printing qualifications (no ticket/SAP claimed, nor has an In-Person Training
+      sign-up),
       and has the status "Prep".
     </UiAlert>
   {{/if}}
@@ -147,7 +151,7 @@
       <th>{{#if (eq this.sortColumn "meals")}}[Meals]{{else}}
         <a href {{action this.sortBmidsAction "meals"}}>Meals</a>{{/if}}
       </th>
-      <th class="w-10">{{#if (eq this.sortColumn "wap")}}[SAP]{{else}}
+      <th class="w-10 text-center">{{#if (eq this.sortColumn "wap")}}[SAP]{{else}}
         <a href {{action this.sortBmidsAction "wap"}}>SAP</a>{{/if}}</th>
       <th>{{#if (eq this.sortColumn "team")}}[Team]{{else}}
         <a href {{action this.sortBmidsAction "team"}}>Team</a>{{/if}}
@@ -236,7 +240,7 @@
                 </div>
               {{/if}}
             </td>
-            <td>
+            <td class="text-center">
               <ChForm::Select @name={{concat "admission_date" bmid.person.id}}
                               @value={{bmid.admission_date}}
                               @options={{this.admissionDateOptions}}
@@ -245,9 +249,9 @@
                               @disabled={{bmid.wapDisabled}} />
               {{#if bmid.wapDisabled}}
                 {{#if bmid.wapMissing}}
-                  <b class="text-danger">SAP missing</b>
+                  {{badge "danger" "SAP missing"}}
                 {{else}}
-                  <b class="text-danger">SAP submitted</b>
+                  {{badge "danger" "SAP submitted"}}
                 {{/if}}
               {{/if}}
             </td>
@@ -314,9 +318,9 @@
               {{/if}}
               {{bmid.effectiveMealsHuman}}
             </td>
-            <td class="w-10">
+            <td class="w-10 text-center">
               {{#if bmid.wapMissing}}
-                <strong class="text-danger">missing</strong>
+                {{badge "warning" "SAP missing"}}
               {{else}}
                 {{bmid.admissionDateShort}}
               {{/if}}
