@@ -33,13 +33,15 @@ Showing {{pluralize this.surveys.length "survey"}}
         {{survey.title}}
       </td>
       <td>
-        <LinkTo @route="ops.survey.manage" @model={{survey.id}} class="btn btn-primary btn-sm">Manage</LinkTo>
-        <UiButton @type="secondary" @size="sm" @onClick={{fn this.duplicateSurveyAction survey}}>
-          Duplicate
-        </UiButton>
-        <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteSurveyAction survey}}>
-          {{fa-icon "trash"}} Delete
-        </UiButton>
+        <UiButtonRow>
+          <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteSurveyAction survey}}>
+            {{fa-icon "trash"}} Delete
+          </UiButton>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn this.duplicateSurveyAction survey}}>
+            Duplicate
+          </UiButton>
+          <LinkTo @route="ops.survey.manage" @model={{survey.id}} class="btn btn-primary btn-sm">Manage</LinkTo>
+        </UiButtonRow>
       </td>
     </tr>
   {{else}}

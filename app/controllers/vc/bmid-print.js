@@ -12,9 +12,15 @@ export default class VcBmidPrintController extends ClubhouseController {
   filterOptions = [
     ['Specials (titles, meals, showers, or early arrival)', 'special'],
     ['Alphas', 'alpha'],
-    ['Vets w/shift after 8/10 OR PASSED training; excludes PNVs', 'signedup'],
+    ['Vets w/claimed tickets/WAPs OR In-Person training sign-ups', 'qualified'],
     ['In-Prep', IN_PREP],
-    ['Ready To Print', READY_TO_PRINT]
+    ['Ready To Print', READY_TO_PRINT],
+    {
+      groupName: 'Deprecated',
+      options: [
+        ['Vets w/shift after 8/10 OR PASSED training', 'signedup'],
+      ]
+    },
   ];
 
   textFilterFields = [

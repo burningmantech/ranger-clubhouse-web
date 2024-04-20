@@ -67,7 +67,7 @@
           </tbody>
         </UiTable>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <UiButton @disabled={{@isSaving}} @onClick={{this.saveAction}} @type="primary">Save</UiButton>
         <UiCancelButton @onClick={{@onCancel}} @disabled={{@isSaving}} />
         {{#if @isSaving}}

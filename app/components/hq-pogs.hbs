@@ -153,7 +153,7 @@
           />
         </FormRow>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label="Record {{this.pogLabel this.pogToIssue}}"/>
         <UiCancelButton @onClick={{this.cancelPogIssue}} />
       </Modal.footer>
@@ -184,7 +184,7 @@
           />
         </FormRow>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label="Cancel {{this.pogToCancel.pogLabel}}"/>
         <UiButton @onClick={{this.cancelCancelPog}} @type="gray" class="btn-link">
           Do Not Cancel Pog
@@ -221,7 +221,7 @@
           />
         </FormRow>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label="Update"/>
         <UiCancelButton @onClick={{this.cancelPogEdit}} />
       </Modal.footer>

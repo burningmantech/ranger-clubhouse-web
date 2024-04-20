@@ -249,7 +249,7 @@
         <b>Review Status:</b> {{@entry.review_status}}
       {{/if}}
     </Modal.body>
-    <Modal.footer @noAlign={{true}}>
+    <Modal.footer @align="start">
       {{#if @canManageTimesheets}}
         <f.submit @label="Update" @disabled={{@entry.isSaving}} />
         <UiCancelButton @disabled={{@entry.isSaving}} @onClick={{@cancelEntryAction}} />

@@ -42,75 +42,82 @@
         </div>
       </FormRow>
 
-      <p class="mt-4">
-    <span class="d-inline">
-      Total BMIDs: {{this.totalBmids}}
-    </span>
-        <span class="d-inline {{if this.doNotPrint "text-danger"}}">
-      Do Not Print: {{this.doNotPrint.length}}
-    </span>
-        <span class="d-inline {{if this.issues "text-danger"}}">
-      Issues: {{this.issues.length}}
-    </span>
-        <span class="d-inline {{if this.noPhoto.length "text-danger"}}">
-      No Photo: {{this.noPhoto.length}}
-    </span>
-        <span class="d-inline {{if this.unusualStatus "text-danger"}}">
-      Unusual Person Status: {{this.unusualStatus.length}}
-    </span>
-        <span class="d-inline">
-      Printed: {{this.printed.length}}
-    </span>
-        <span class="d-inline">
-      Submitted: {{this.submitted.length}}
-    </span>
-      </p>
+      <div class="hstack gap-4 mt-4">
+        <div>
+          Total BMIDs: {{this.totalBmids}}
+        </div>
+        <div class="{{if this.doNotPrint "text-danger"}}">
+          Do Not Print: {{this.doNotPrint.length}}
+        </div>
+        <div class="{{if this.issues "text-danger"}}">
+          Issues: {{this.issues.length}}
+        </div>
+        <div class="{{if this.noPhoto.length "text-danger"}}">
+          No Photo: {{this.noPhoto.length}}
+        </div>
+        <div class="{{if this.unusualStatus "text-danger"}}">
+          Unusual Person Status: {{this.unusualStatus.length}}
+        </div>
+        <div class="d-inline">
+          Printed: {{this.printed.length}}
+        </div>
+        <div class="d-inline">
+          Submitted: {{this.submitted.length}}
+        </div>
+      </div>
 
       {{#if this.doNotPrint}}
         <div class="border p-2">
           <b class="text-danger">Do not print:</b>
-          {{#each this.doNotPrint as |bmid idx|~}}
-            {{~if idx ", "}}
-            <PersonLink @person={{bmid.person}} />
-          {{/each}}
+          <div class="callsign-list">
+            {{#each this.doNotPrint as |bmid|~}}
+              <PersonLink @person={{bmid.person}} />
+            {{/each}}
+          </div>
         </div>
       {{/if}}
 
       {{#if this.issues}}
         <div class="border p-2 my-2">
           <b class="text-danger">Issues:</b>
-          {{#each this.issues as |bmid idx|~}}
-            {{~if idx ", "}}
-            <PersonLink @person={{bmid.person}} />
-          {{/each}}
+          <div class="callsign-list">
+            {{#each this.issues as |bmid|~}}
+              <PersonLink @person={{bmid.person}} />
+            {{/each}}
+          </div>
         </div>
       {{/if}}
 
       {{#if this.unusualStatus}}
         <div class="border p-2 my-2">
           Unusual Status:
-          {{#each this.unusualStatus as |bmid idx|~}}
-            {{~if idx ","}}<span class="d-inline-block"><PersonLink @person={{bmid.person}} />
-        ({{bmid.person.status}})</span>
-          {{/each}}
+          <div class="callsign-list">
+            {{#each this.unusualStatus as |bmid|~}}
+              <div>
+                <PersonLink @person={{bmid.person}} @showStatus={{true}} />
+              </div>
+            {{/each}}
+          </div>
         </div>
       {{/if}}
 
       {{#if this.noPhoto}}
         <div class="border p-2 my-2">
-          <b class="text-danger">No approved photo:</b>
-          {{#each this.noPhoto as |bmid idx|~}}
-            {{~if idx ","}}<span class="d-inline-block"><PersonLink @person={{bmid.person}} />
-        ({{bmid.person.status}})</span>
-          {{/each}}
+          <b class="text-danger">No Approved Photo (these have been deselected in the export list):</b>
+          <div class="callsign-list">
+            {{#each this.noPhoto as |bmid|~}}
+              <div>
+                <PersonLink @person={{bmid.person}} @showStatus={{true}} />
+              </div>
+            {{/each}}
+          </div>
           <br>
-          The BMID(s) without approved photos are listed below however have not been selected.
         </div>
       {{/if}}
       <div class="mt-2">
         Showing {{this.viewBmids.length}} of {{this.bmids.length}} ({{this.bmidsSelectedCount}} selected)
         {{#if this.textFilter}}
-          <span class="ms-2 font-weight-bold">Text filtering by "{{this.textFilter}}"</span>
+          <span class="ms-2 font-weight-semibold">Text filtering by "{{this.textFilter}}"</span>
         {{/if}}
       </div>
       <UiTable>
@@ -125,7 +132,7 @@
           <th>MVR</th>
           <th>Showers</th>
           <th>Meals</th>
-          <th>WAP</th>
+          <th class="text-center">SAP</th>
           <th>Note</th>
         </tr>
         </thead>
@@ -174,12 +181,18 @@
             </td>
             <td class="w-10">
               {{#if bmid.wapMissing}}
-                <strong class="text-danger">missing</strong>
+                {{badge "danger" "SAP missing"}}
               {{else}}
                 {{bmid.admissionDateShort}}
               {{/if}}
             </td>
-            <td>{{nl2br bmid.notes}}</td>
+            <td>
+              {{#if bmid.notes}}
+                {{nl2br bmid.notes}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
           </tr>
         {{else}}
           <tr>

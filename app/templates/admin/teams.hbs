@@ -139,7 +139,7 @@
           </FormRow>
         </fieldset>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
         <UiCancelButton @onClick={{this.cancelTeam}}
                         @disabled={{this.entry.isSaving}} />

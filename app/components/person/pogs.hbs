@@ -47,7 +47,7 @@ Showing {{pluralize @personPogs.length "pog"}}
           <f.textarea @name="notes" @label="Notes (optional)" @rows={{2}} @cols={{80}} />
         </FormRow>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @disabled={{this.entry.isSaving}} />
         <UiButton @onClick={{this.closeEntry}} @disabled={{this.entry.isSaving}} @type="secondary">
           Cancel

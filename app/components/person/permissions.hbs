@@ -1,133 +1,137 @@
 <div>
-  <UiButton @type="secondary" @size="sm" @onClick={{@toggleRoles}}>
-    {{if @showRoles "Hide" "Show"}} Permissions
-  </UiButton>
-  {{#if this.isAdmin}}
-    <UiButton @type="secondary" @size="sm" @class="ms-2" @onClick={{@editRolesAction}}>
-      Edit Permissions
+  <UiButtonRow>
+    <UiButton @type="secondary" @size="sm" @onClick={{@toggleRoles}}>
+      {{if @showRoles "Hide" "Show"}} Permissions
     </UiButton>
-  {{/if}}
-  {{#if this.isTechNinja}}
-    <BsDropdown @type="secondary" as |dd|>
-      <dd.button @size="sm" class="ms-2">
-        Diagnostics
-        <span class="caret"></span>
-      </dd.button>
-      <dd.menu>
-        <a class="dropdown-item" href {{action this.showCachedRolesAction}}>
-          Inspect Cache
-        </a>
-        <a class="dropdown-item" href {{action this.clearRoleCacheAction}}>
-          Clear Cache
-        </a>
-      </dd.menu>
-    </BsDropdown>
-  {{/if}}
-</div>
-{{#unless this.combinedRoles}}
-  <div class="mt-2">
-    No additional permissions granted.
-  </div>
-{{/unless}}
-{{#if @showRoles}}
-  <p class="mt-2">
-    Effective permissions are a union of manual assignments, team membership with associated permissions,
-    and position assignments with associated permissions.
-  </p>
-  <UiTable>
-    <thead>
-    <tr>
-      <th>Permission</th>
-      <th>Active?</th>
-      <th class="text-center">Manually<br>Assigned?</th>
-      <th>Thru<br>Teams</th>
-      <th>Thru<br>Positions</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each this.combinedRoles as |role| }}
-      <tr>
-        <td class="text-nowrap">
-          {{#unless role.active}}
-            {{fa-icon "ban"}}
-          {{/unless}}
-          {{role.title}}
-        </td>
-        <td class="text-center">
-          {{#if role.active}}
-            Y
-          {{else}}
-            <b class="text-danger">N</b>
-          {{/if}}
-        </td>
-        <td class="text-center">
-          {{yesno role.granted}}
-        </td>
-        <td>
-          {{#each role.teams as |team idx|}}
-            {{#if idx}}<br>{{/if}}
-            {{team.title}}
-          {{else}}
-            <i class="text-muted">none</i>
-          {{/each}}
-        </td>
-        <td>
-          {{#unless role.active}}
-            <div class="text-danger small">
-              Since the appropriate ART training(s) have not been passed for the year, the permission has not been assigned.
-            </div>
-          {{/unless}}
-          {{#each role.positions as |position idx|}}
-            {{#if idx}}<br>{{/if}}
-            {{position.title}}
-            {{#if position.require_training_for_roles}}
-              {{#if position.is_trained}}
-                (trained)
-              {{else}}
-                <span class="text-danger">(NOT TRAINED)</span>
-              {{/if}}
-            {{/if}}
-          {{else}}
-            <i class="text-muted">none</i>
-          {{/each}}
-        </td>
-      </tr>
-    {{/each}}
-    </tbody>
-  </UiTable>
-{{/if}}
-{{#if this.cachedRoles}}
-  {{#if this.cachedRoles.not_cached}}
-    <div class="my-2">
-      No permissions are currently cached.
+    {{#if this.isAdmin}}
+      <UiButton @type="secondary" @size="sm" @onClick={{@editRolesAction}}>
+        Edit Permissions
+      </UiButton>
+    {{/if}}
+    {{#if this.isTechNinja}}
+      <BsDropdown @type="secondary" as |dd|>
+        <dd.button class="btn-sm">
+          Diagnostics
+          <span class="caret"></span>
+        </dd.button>
+        <dd.menu>
+          <a class="dropdown-item" href {{action this.showCachedRolesAction}}>
+            Inspect Cache
+          </a>
+          <a class="dropdown-item" href {{action this.clearRoleCacheAction}}>
+            Clear Cache
+          </a>
+        </dd.menu>
+      </BsDropdown>
+    {{/if}}
+  </UiButtonRow>
+  {{#unless this.combinedRoles}}
+    <div class="mt-2">
+      No permissions granted.
     </div>
-  {{else}}
-    <div class="my-2">
-      The following permissions are currently cached:
-    </div>
+  {{/unless}}
+  {{#if @showRoles}}
+    <p class="mt-2">
+      Effective permissions are a union of manual assignments, team membership with associated permissions,
+      and position assignments with associated permissions.
+    </p>
     <UiTable>
       <thead>
       <tr>
-        <th>ID</th>
-        <th>Title</th>
-        <th>Attributes</th>
+        <th>Permission</th>
+        <th>Active?</th>
+        <th class="text-center">Manually<br>Granted?</th>
+        <th>Thru<br>Teams</th>
+        <th>Thru<br>Positions</th>
       </tr>
       </thead>
       <tbody>
-      {{#each this.cachedRoles.roles as |role|}}
+      {{#each this.combinedRoles as |role| }}
         <tr>
-          <td>{{role.id}}</td>
-          <td>{{role.title}}</td>
-          <td>
-            {{#if role.is_masquerading}}
-              Masquerade permission activated because corresponding Clubhouse setting is enabled.
+          <td class="text-nowrap">
+            {{role.title}}
+          </td>
+          <td class="text-center">
+            {{#if role.active}}
+              {{badge "success" "active"}}
+            {{else}}
+              {{badge "warning" "not activated"}}
+            {{/if}}
+          </td>
+          <td class="text-center">
+            {{#if role.granted}}
+              {{badge "danger" "manually granted"}}
             {{else}}
               -
             {{/if}}
+          </td>
+          <td>
+            {{#each role.teams as |team idx|}}
+              {{#if idx}}<br>{{/if}}
+              {{team.title}}
+            {{else}}
+              <i class="text-muted">none</i>
+            {{/each}}
+          </td>
+          <td>
+            {{#unless role.active}}
+              <div class="text-danger small">
+                Since the appropriate ART training(s) have not been passed for the year, the permission has not been
+                assigned.
+              </div>
+            {{/unless}}
+            {{#each role.positions as |position idx|}}
+              {{#if idx}}<br>{{/if}}
+              {{position.title}}
+              {{#if position.require_training_for_roles}}
+                {{#if position.is_trained}}
+                  (trained)
+                {{else}}
+                  <span class="text-danger">(NOT TRAINED)</span>
+                {{/if}}
+              {{/if}}
+            {{else}}
+              <i class="text-muted">none</i>
+            {{/each}}
           </td>
         </tr>
       {{/each}}
       </tbody>
     </UiTable>
   {{/if}}
-{{/if}}
+  {{#if this.cachedRoles}}
+    {{#if this.cachedRoles.not_cached}}
+      <div class="my-2">
+        No permissions are currently cached.
+      </div>
+    {{else}}
+      <div class="my-2">
+        The following permissions are currently cached:
+      </div>
+      <UiTable>
+        <thead>
+        <tr>
+          <th>ID</th>
+          <th>Title</th>
+          <th>Attributes</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each this.cachedRoles.roles as |role|}}
+          <tr>
+            <td>{{role.id}}</td>
+            <td>{{role.title}}</td>
+            <td>
+              {{#if role.is_masquerading}}
+                Masquerade permission activated because corresponding Clubhouse setting is enabled.
+              {{else}}
+                -
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </UiTable>
+    {{/if}}
+  {{/if}}
+</div>

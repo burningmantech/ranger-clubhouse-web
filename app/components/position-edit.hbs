@@ -12,7 +12,8 @@
   <fieldset>
     <legend>Description</legend>
     <FormRow>
-      <f.text @name="title" @label="Title"
+      <f.text @name="title"
+              @label="Title"
               @maxlength={{40}}
               @size={{40}}
               @showCharCount={{true}}
@@ -256,17 +257,15 @@
       </div>
     </FormRow>
   </fieldset>
-  <div class="hstack gap-3 mt-4">
+  <UiButtonRow class="mt-4">
     <f.submit @disabled={{@position.isSaving}} />
     <UiCancelButton @onClick={{@cancelAction}} />
     {{#unless @position.isNew}}
-      <div class="ms-auto">
-        <UiButton @type="danger" @onClick={{@deleteAction}}>
-          {{fa-icon "trash"}} Delete Position
-        </UiButton>
-      </div>
+      <UiButton @type="danger" @onClick={{@deleteAction}} class="ms-auto">
+        {{fa-icon "trash"}} Delete Position
+      </UiButton>
     {{/unless}}
-  </div>
+  </UiButtonRow>
 
 </ChForm>
 

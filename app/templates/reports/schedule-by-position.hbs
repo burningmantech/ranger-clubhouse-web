@@ -82,7 +82,7 @@
                            @options={{this.positionOptions}}/>
         </FormRow>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label="Export {{pluralize f.model.positionIds.length "position"}}"
                   @disabled={{not f.model.positionIds.length}} />
         <UiCancelButton @onClick={{this.cancelExport}} />

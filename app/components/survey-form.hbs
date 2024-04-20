@@ -31,7 +31,7 @@
                     @rows={{4}}/>
       </FormRow>
     </Modal.body>
-    <Modal.footer @noAlign={{true}}>
+    <Modal.footer @align="start">
       <f.submit @label={{if @survey.isNew "Create" "Save"}}  />
       <UiCancelButton @onClick={{this.cancelSurveyAction}} />
     </Modal.footer>

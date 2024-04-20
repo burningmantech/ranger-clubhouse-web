@@ -25,10 +25,12 @@
             <PresentOrNot @value={{pc.issued_on}} @empty="-"/>
           </td>
           <td>
-            {{#if this.canManage}}
-              <UiButton @onClick={{fn this.editAction pc}} @size="sm" @type="secondary">Edit</UiButton>
-            {{/if}}
-            <UiButton @onClick={{fn this.showAction pc}} @size="sm" @type="secondary">Show Details</UiButton>
+            <UiButtonRow>
+              {{#if this.canManage}}
+                <UiButton @onClick={{fn this.editAction pc}} @size="sm" @type="secondary">Edit</UiButton>
+              {{/if}}
+              <UiButton @onClick={{fn this.showAction pc}} @size="sm" @type="secondary">Show Details</UiButton>
+            </UiButtonRow>
           </td>
         </tr>
       {{/each}}
@@ -94,7 +96,7 @@
           <f.textarea @name="notes" @rows="4" @cols="60" @label="Notes"/>
         </FormRow>
       </Dialog.body>
-      <Dialog.footer @noAlign={{true}}>
+      <Dialog.footer @align="start">
         <f.submit @label="Save"/>
         <UiCancelButton @onClick={{this.cancelAction}} />
         {{#unless this.editEntry.isNew}}

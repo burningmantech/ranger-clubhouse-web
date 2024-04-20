@@ -42,7 +42,7 @@
 {{/if}}
 
 {{#if this.showAgreementToView}}
-  <ModalDialog as |Modal|>
+  <ModalDialog @size="xl" as |Modal|>
     <Modal.title>{{this.showAgreementToView.title}}</Modal.title>
     <Modal.body>
       <DocumentShow @tag={{this.showAgreementToView.tag}} />

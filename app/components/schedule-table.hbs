@@ -160,7 +160,7 @@
       Changes or updates to your schedule will not be reflected in your calendar. You will need to export
       your schedule again after making any changes.
     </Modal.body>
-    <Modal.footer @noAlign={{true}}>
+    <Modal.footer @align="start">
       <UiButton @onClick={{this.calendarExportConfirmed}}>Download calendar file (.ics)</UiButton>
       <UiCancelButton @onClick={{this.cancelCalendarExport}} />
     </Modal.footer>

@@ -63,7 +63,7 @@
           />
         </div>
       </Modal.body>
-      <Modal.footer @noAlign={{true}}>
+      <Modal.footer @align="start">
         <f.submit @label={{if this.editNote "Update" "Add"}} />
         <UiCancelButton @onClick={{this.cancelDialog}} />
       </Modal.footer>

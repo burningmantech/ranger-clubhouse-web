@@ -88,44 +88,42 @@
       </td>
       {{#if @deletePhotoAction}}
         <td>
-          <UiButton @type="danger"
-                    @size="sm"
-                    class="me-2"
-                    @onClick={{fn @deletePhotoAction photo}}
-                    @disabled={{photo.isSaving}}>
-            {{fa-icon "trash" right=1}} Delete
-          </UiButton>
-          {{#if photo.is_active}}
-            <UiButton @type="secondary"
-                      class="me-2"
+          <UiButtonRow>
+            <UiButton @type="danger"
                       @size="sm"
-                      @disabled={{photo.isSaving}}
-                      @onClick={{fn this.editPhotoAction photo}}>
-              {{fa-icon "edit" right=1}} Edit
+                      @onClick={{fn @deletePhotoAction photo}}
+                      @disabled={{photo.isSaving}}>
+              {{fa-icon "trash" right=1}} Delete
             </UiButton>
-            {{#if (not-eq photo.status "rejected")}}
-              <UiButton @type="danger"
-                        class="me-2"
+            {{#if photo.is_active}}
+              <UiButton @type="secondary"
                         @size="sm"
-                        @onClick={{fn this.showRejectDialog photo}}
-                        @disabled={{photo.isSaving}}>
-                {{fa-icon "times" right=1}} Reject
+                        @disabled={{photo.isSaving}}
+                        @onClick={{fn this.editPhotoAction photo}}>
+                {{fa-icon "edit" right=1}} Edit
+              </UiButton>
+              {{#if (not-eq photo.status "rejected")}}
+                <UiButton @type="danger"
+                          @size="sm"
+                          @onClick={{fn this.showRejectDialog photo}}
+                          @disabled={{photo.isSaving}}>
+                  {{fa-icon "times" right=1}} Reject
+                </UiButton>
+              {{/if}}
+              {{#if (not-eq photo.status "approved")}}
+                <UiButton @type="success"
+                          @size="sm"
+                          @onClick={{fn this.approveAction photo}}
+                          @disabled={{photo.isSaving}}>
+                  {{fa-icon "check" right=1}} Approve
+                </UiButton>
+              {{/if}}
+            {{else}}
+              <UiButton @type="secondary" @size="sm" @onClick={{fn @activatePhotoAction photo}}>
+                {{fa-icon "star" right=1}} Activate
               </UiButton>
             {{/if}}
-            {{#if (not-eq photo.status "approved")}}
-              <UiButton @type="success"
-                        @size="sm"
-                        class="me-2"
-                        @onClick={{fn this.approveAction photo}}
-                        @disabled={{photo.isSaving}}>
-                {{fa-icon "check" right=1}} Approve
-              </UiButton>
-            {{/if}}
-          {{else}}
-            <UiButton @type="secondary" @size="sm" @onClick={{fn @activatePhotoAction photo}}>
-              {{fa-icon "star" right=1}} Activate
-            </UiButton>
-          {{/if}}
+           </UiButtonRow>
           {{#if photo.isSaving}}
             <LoadingIndicator/>
           {{/if}}

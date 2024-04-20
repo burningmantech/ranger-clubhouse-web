@@ -40,20 +40,22 @@
         </ChForm>
         {{#if (and this.isCurrentYear this.canManageOnlineCourse)}}
           <div class="mt-2">
-            {{#unless this.eventInfo.online_course_passed}}
-              <UiButton @type="secondary" @onClick={{this.markOnlineCourseCompleted}} @size="sm">
-                Force Mark As Completed
+            <UiButtonRow>
+              {{#unless this.eventInfo.online_course_passed}}
+                <UiButton @type="secondary" @onClick={{this.markOnlineCourseCompleted}} @size="sm">
+                  Force Mark As Completed
+                </UiButton>
+              {{/unless}}
+              <UiButton @type="secondary" @onClick={{this.getUserInfo}} @size="sm">
+                Online Course Account Info
               </UiButton>
-            {{/unless}}
-            <UiButton @type="secondary" @onClick={{this.getUserInfo}} @size="sm">
-              Online Course Account Info
-            </UiButton>
-            <UiButton @type="secondary" @onClick={{this.syncAccountInfo}} @size="sm">
-              Sync Account Info
-            </UiButton>
-            <UiButton @type="secondary" @onClick={{this.resetPassword}} @size="sm">
-              Reset Password
-            </UiButton>
+              <UiButton @type="secondary" @onClick={{this.syncAccountInfo}} @size="sm">
+                Sync Account Info
+              </UiButton>
+              <UiButton @type="secondary" @onClick={{this.resetPassword}} @size="sm">
+                Reset Password
+              </UiButton>
+            </UiButtonRow>
           </div>
           {{#if this.haveUserInfo}}
             <div class="mt-2">
@@ -190,7 +192,7 @@
                   <f.checkbox @name="org_vehicle_insurance"
                               @label="MVR request has been approved (aka BMP insurance)"
                   />
-                   <f.checkbox @name="mvr_eligible"
+                  <f.checkbox @name="mvr_eligible"
                               @label="May submit a MVR request. Use only if person does not have a MVR eligible cadre/team nor is signed up for an eligible shift."
                   />
                   <f.checkbox @name="ignore_mvr"

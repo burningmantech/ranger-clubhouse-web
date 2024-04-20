@@ -1,56 +1,66 @@
-<UiButton @onClick={{@toggleMembership}} @type="secondary" @size="sm" @class="me-2">
+<UiButtonRow>
+  <UiButton @onClick={{@toggleMembership}} @type="secondary" @size="sm" @class="me-2">
     {{if @showMembership "Hide" "Show"}} Teams / Positions
-</UiButton>
-{{#if @canEditMembership}}
+  </UiButton>
+  {{#if @canEditMembership}}
     <LinkTo @route="person.membership" class="btn btn-secondary btn-sm">
-        Edit Teams / Positions
+      Edit Teams / Positions
     </LinkTo>
-{{/if}}
+  {{/if}}
+</UiButtonRow>
 {{#if this.hasNoPositions}}
-    <div class="mt-2">
-        No teams or positions.
-    </div>
+  <div class="mt-2">
+    No teams or positions.
+  </div>
 {{else if @showMembership}}
-    <UiTable class="mt-2">
-        <thead>
-        <tr>
-            <th>Team</th>
-            <th>Member?</th>
-            <th>Manager?</th>
-            <th>Positions Granted</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td><i class="text-muted">General Positions</i></td>
-            <td>-</td>
-            <td>-</td>
-            <td>
-                {{#each this.membership.unassignedPositions key="id" as |pos|}}
-                    {{position-label pos}}<br>
-                {{else}}
-                    <i>none</i>
-                {{/each}}
-            </td>
-        </tr>
-        {{#each this.membership.teams key="id" as |team|}}
-            <tr>
-                <td>{{team-title team}}</td>
-                <td>
-                    {{if team.is_member "Y" "-"}}
-                </td>
-                <td>
-                    {{if team.is_manager "Y" "-"}}
-                </td>
-                <td>
-                    {{#each team.positions as |p|}}
-                        {{position-label p}}<br>
-                    {{else}}
-                        <i class="text-muted">No team positions granted.</i>
-                    {{/each}}
-                </td>
-            </tr>
+  <UiTable class="mt-2">
+    <thead>
+    <tr>
+      <th>Team</th>
+      <th class="text-center">Member?</th>
+      <th class="text-center">Manager?</th>
+      <th>Positions Granted</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <td><i class="text-muted">General Positions</i></td>
+      <td class="text-center">-</td>
+      <td class="text-center">-</td>
+      <td>
+        {{#each this.membership.unassignedPositions key="id" as |pos|}}
+          {{position-label pos}}<br>
+        {{else}}
+          <i>none</i>
         {{/each}}
-        </tbody>
-    </UiTable>
+      </td>
+    </tr>
+    {{#each this.membership.teams key="id" as |team|}}
+      <tr>
+        <td>{{team-title team}}</td>
+        <td class="text-center">
+          {{#if team.is_member}}
+            {{badge "secondary" "member"}}
+          {{else}}
+            -
+          {{/if}}
+        </td>
+        <td class="text-center">
+          {{#if team.is_manager}}
+            {{badge "success" "manager"}}
+          {{else}}
+            -
+          {{/if}}
+        </td>
+        <td>
+          {{#each team.positions as |p|}}
+            {{position-label p}}<br>
+          {{else}}
+            <i class="text-muted">No team positions granted.</i>
+          {{/each}}
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </UiTable>
 {{/if}}

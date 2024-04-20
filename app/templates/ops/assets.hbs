@@ -125,7 +125,7 @@
             </FormRow>
           {{/if}}
         </Modal.body>
-        <Modal.footer @noAlign={{true}}>
+        <Modal.footer @align="start">
           <f.submit @label={{if f.model.isNew "Create" "Update"}} @disabled={{this.isSubmitting}} />
           <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelAsset}} />
           {{#if this.isSubmitting}}
