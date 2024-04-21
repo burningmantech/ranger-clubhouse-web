@@ -474,7 +474,7 @@ legend {
 // Rank 3 - Yellow / Problem
 .rank-3 {
   color: #9f6800;
-  border-color:  #9a9005;
+  border-color: #9a9005;
 }
 
 // Rank 4 - FLAG
@@ -619,11 +619,12 @@ legend {
 }
 
 .callsign-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(8em, 10em));
+  /* display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(8em, 10em));*/
 
-  /* column-count: auto;
-   column-width: 18ch;*/
+  column-count: auto;
+  column-width: 18ch;
+  column-gap: 15px;
 
   > a {
     display: block;
@@ -631,8 +632,7 @@ legend {
 
   > div, > a {
     overflow-wrap: break-word;
-    padding: 0 5px;
-    margin-bottom: 5px;
+    margin-bottom: 0.5vh;
   }
 
   > div:hover, > a:hover {
@@ -738,8 +738,12 @@ summary:hover {
 }
 
 @keyframes blink-keyframes {
-  from { background-color: #FFC300; }
-  to { background-color: inherit; }
+  from {
+    background-color: #FFC300;
+  }
+  to {
+    background-color: inherit;
+  }
 }
 
 .blink-row {
