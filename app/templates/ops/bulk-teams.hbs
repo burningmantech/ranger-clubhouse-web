@@ -23,8 +23,8 @@
         {{else if this.errorCount}}
           <h4 class="text-danger">{{pluralize this.errorCount "error" }} encountered</h4>
           <p>
-            Correct the errors and try again. No changes have been committed.
-          </p>
+            No changes have been committed. You can correct the errors and try again, or proceed with the bulk operation
+            on the callsigns that do not have errors. </p>
         {{else}}
           <h4>Review Callsigns</h4>
           <p>
@@ -50,7 +50,7 @@
             <tr class="{{if person.errors "table-danger"}}">
               <td>
                 {{#if person.errors}}
-                  <span class="text-danger">{{fa-icon "exclamation-triangle"}}</span>
+                  {{fa-icon "exclamation-triangle" right=1}}
                 {{/if}}
                 {{#if person.id}}
                   <PersonLink @person={{person}} />
@@ -72,17 +72,18 @@
           </tbody>
         </UiTable>
 
-        {{#if (and (not this.errorCount) (not this.committed))}}
-          <div class="mt-2 mb-2">
-            <UiButton @disabled={{this.isSubmitting}} @onClick={{this.commitAction}}>
+        <div class="my-2">
+          {{#if this.committed}}
+            Bulk operation performed.
+          {{else if this.successCount}}
+            <UiButton @onClick={{this.commitAction}}>
               {{if this.granted "Grant" "Revoke"}} "{{this.teamTitle}}" {{if this.granted "to" "from"}}
-              {{pluralize this.people.length "person"}}
+              {{pluralize this.successCount "person"}}
             </UiButton>
-            {{#if this.isSubmitting}}
-              <LoadingIndicator/>
-            {{/if}}
-          </div>
-        {{/if}}
+          {{else}}
+            All submitted callsigns have errors.
+          {{/if}}
+        </div>
       </div>
     {{/if}}
 
@@ -112,11 +113,14 @@
       <p>
         Don't worry, you'll have a chance to review the callsigns and team before actually committing the changes.
       </p>
-      <f.submit @label="Verify Callsign(s)"/>
+
+      <f.submit @label="Verify Callsign(s)" @disabled={{or (is-empty f.model.teamId) (is-empty f.model.callsigns)}}/>
     </ChForm>
   {{else}}
-    <b class="text-danger">You are not a Clubhouse Team Manager and therefor may not bulk grant/revoke team
-      memberships.</b>
+    <b class="text-danger">
+      You are not a Clubhouse Team Manager and therefor may not bulk grant/revoke team
+      memberships.
+    </b>
   {{/if}}
 </main>
 {{#if this.isSubmitting}}
