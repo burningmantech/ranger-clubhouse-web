@@ -10,6 +10,7 @@ export default class OpsBulkPositionsController extends ClubhouseController {
   @tracked successCount = 0;
   @tracked errorCount = 0;
   @tracked isSubmitting = false;
+  @tracked granted;
 
   grantRevokeOptions = [
     ['Grant Position', true],
@@ -49,7 +50,6 @@ export default class OpsBulkPositionsController extends ClubhouseController {
       this.people = people;
       if (commit && !this.errorCount) {
         this.committed = true;
-        this.bulkForm.callsigns = '';
       }
 
       this.errorCount = people.filter((p) => p.errors).length;
