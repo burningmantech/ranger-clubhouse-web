@@ -9,18 +9,18 @@
                id="position-{{position.id}}"
                class="form-check-input"
                checked={{position.selected}}
-          {{on "change" (fn @itemClick position)}}
+          {{on "change" (fn @positionClick position)}}
         />
         <label for="position-{{position.id}}" class="form-check-label">
           {{position.title}}
           {{#if position.all_rangers}}
-            <span class="text-muted me-1">{{fa-icon "universal-access"}} <small>All Rangers</small></span>
+            <span class="text-muted mx-1">{{fa-icon "universal-access" right=1}} <small>All Rangers</small></span>
           {{/if}}
           {{#if position.new_user_eligible}}
-            <span class="text-muted me-1">{{fa-icon "globe"}} <small>All Accounts</small></span>
+            <span class="text-muted mx-1">{{fa-icon "globe" right=1}} <small>All Accounts</small></span>
           {{/if}}
           {{#if position.deselect_on_team_join}}
-            <span class="text-muted me-1">{{fa-icon "power-off"}} <small>Deselected when person joins the team</small></span>
+            <span class="text-muted mx-1">{{fa-icon "power-off" right=1}} <small>Deselected when person joins the team</small></span>
           {{/if}}
           {{#unless position.active}}
             <small class="ms-1 text-danger">[inactive]</small>

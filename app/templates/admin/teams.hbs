@@ -1,21 +1,5 @@
 <main>
   <h1>Clubhouse Teams</h1>
-  <p>
-    {{#if this.canManageTeams}}
-      <button type="button" class="btn btn-primary" {{action this.newTeam}}>New Team</button>
-    {{else}}
-      <UiNotice @type="secondary" @icon="hand-point-right" @title="Need Clubhouse Team Help?">
-        Contact the Tech Team to create new teams or adjust existing ones.<br>
-        <TechSupportEmail/>
-      </UiNotice>
-    {{/if}}
-  </p>
-  <p>
-    Legend:<br>
-    <i>MVR Eligible</i> = Allows the team member to submit Motor Vehicle Requests<br>
-    <i>PVR Eligible</i> = Allows the team member to submit Personal Vehicle Requests<br>
-  </p>
-
   <FormRow>
     <FormLabel @auto={{true}}>Active Filter</FormLabel>
     <div class="col-auto">
@@ -30,6 +14,9 @@
                       @value={{this.mvrEligibilityFilter}}
                       @options={{this.mvrEligibleOptions}}
                       @onChange={{action (mut this.mvrEligibilityFilter)}} />
+    </div>
+    <div class="col-auto">
+      <UiButton @onClick={{this.newTeam}} @size="sm">New Team</UiButton>
     </div>
   </FormRow>
   <p>
@@ -47,12 +34,9 @@
       <th colspan="2">Active / Title</th>
       <th>Type</th>
       <th>Associated Roles</th>
-      <th>MVR Eligible?</th>
-      <th>PVR Eligible?</th>
+      <th>Attributes</th>
       <th>Managers</th>
-      {{#if this.canManageTeams}}
-        <th>Actions</th>
-      {{/if}}
+      <th>Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -73,11 +57,13 @@
             <i>None</i>
           {{/if}}
         </td>
-        <td class="text-center">
-          {{if team.mvr_eligible "MVR" "-"}}
-        </td>
-        <td class="text-center">
-          {{if team.pvr_eligible "PVR" "-"}}
+        <td>
+          {{#if team.mvr_eligible}}
+            MVR Eligible<br>
+          {{/if}}
+          {{#if team.pvr_eligible}}
+            PVR Eligible<br>
+          {{/if}}
         </td>
         <td>
           {{#each team.managers as |person|}}
@@ -87,20 +73,18 @@
             -
           {{/each}}
         </td>
-        {{#if this.canManageTeams}}
-          <td>
-            <UiButton @onClick={{fn this.editTeam team}} @size="sm">
-              {{fa-icon "edit"}} Edit
-            </UiButton>
-          </td>
-        {{/if}}
+        <td>
+          <UiButton @onClick={{fn this.editTeam team}} @size="sm">
+            {{fa-icon "edit"}} Edit
+          </UiButton>
+        </td>
       </tr>
     {{else}}
-    <tr>
-      <td colspan="{{if this.canManageTeams 9 8}}" class="text-danger">
-        No teams found.
-      </td>
-    </tr>
+      <tr>
+        <td colspan="9" class="text-danger">
+          No teams found.
+        </td>
+      </tr>
     {{/each}}
     </tbody>
   </UiTable>
@@ -134,9 +118,15 @@
         </fieldset>
         <fieldset>
           <legend>Team Role Grants</legend>
-          <FormRow>
-            <f.checkboxGroup @name="role_ids" @options={{this.roleOptions}} />
-          </FormRow>
+          {{#if this.isTechNinja}}
+            <FormRow>
+              <f.checkboxGroup @name="role_ids" @options={{this.roleOptions}} />
+            </FormRow>
+          {{else}}
+            <p>
+              Contact the Tech Team to adjust the associated permissions.
+            </p>
+          {{/if}}
         </fieldset>
       </Modal.body>
       <Modal.footer @align="start">

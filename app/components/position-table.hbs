@@ -7,9 +7,7 @@
     <th>Min / Max</th>
     <th>Attributes</th>
     <th>Associated Roles</th>
-    {{#if @canManagePositions}}
-      <th>Action</th>
-    {{/if}}
+    <th>Action</th>
   </tr>
   </thead>
   <tbody>
@@ -93,17 +91,15 @@
           <i class="text-muted">None</i>
         {{/if}}
       </td>
-      {{#if @canManagePositions}}
-        <td>
-          <UiButton @size="sm" @onClick={{fn @editAction position}}>
-            {{fa-icon "edit"}} Edit
-          </UiButton>
-        </td>
-      {{/if}}
+      <td>
+        <UiButton @size="sm" @onClick={{fn @editAction position}}>
+          {{fa-icon "edit"}} Edit
+        </UiButton>
+      </td>
     </tr>
   {{else}}
     <tr>
-      <td colspan="{{if @canManagePositions 7 6}}"><b class="text-danger">No positions found</b></td>
+      <td colspan="7"><b class="text-danger">No positions found</b></td>
     </tr>
   {{/each}}
   </tbody>

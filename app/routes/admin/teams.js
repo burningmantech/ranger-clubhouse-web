@@ -22,9 +22,7 @@ export default class AdminTeamsRoute extends ClubhouseRoute {
     controller.activeFilter = 'all';
     controller.mvrEligibilityFilter = 'all';
     controller.roleById = _.keyBy(roles, (r) => r.id);
-    controller.roleOptions = roles.filter((r) => (r.id !== ADMIN && r.id !== TECH_NINJA)).map((r) => ({
-      id: r.id,
-      title: r.title
-    }));
+    controller.roleOptions = roles.map((r) => ({id: r.id, title: r.title}));
+    controller.isTechNinja = this.session.hasRole(TECH_NINJA);
   }
 }

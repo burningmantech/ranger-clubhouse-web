@@ -1,7 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
-import {TECH_NINJA} from 'clubhouse/constants/roles';
 import {TypeLabels, TYPE_CADRE, TYPE_TEAM, TYPE_DELEGATION} from 'clubhouse/models/team';
 import {htmlSafe} from '@ember/template';
 
@@ -81,10 +80,6 @@ export default class AdminTeamsController extends ClubhouseController {
     const roles = roleIds.map((id) => this.roleById[id].title ?? `Role #${id}`);
     roles.sort();
     return htmlSafe(roles.join('<br>'));
-  }
-
-  get canManageTeams() {
-    return this.session.hasRole(TECH_NINJA);
   }
 
   @action

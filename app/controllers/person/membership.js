@@ -19,12 +19,30 @@ export default class PersonMembershipController extends ClubhouseController {
   }
 
   @action
-  itemClick(item) {
-    item.selected = !item.selected;
+  positionClick(position, event) {
+    if (position.selected || !position.hasDangerousPermissions) {
+      position.selected = !position.selected;
+      return;
+    }
+
+    this._confirmDangerousGrant(event, position, 'position', () => {
+      position.selected = true;
+    });
   }
 
   @action
-  teamClick(team) {
+  teamClick(team, event) {
+    if (team.selected || !team.hasDangerousPermissions) {
+      this._performTeamClick(team);
+      return;
+    }
+
+    this._confirmDangerousGrant(event, team, 'Clubhouse Team', () => {
+      this._performTeamClick(team);
+    });
+  }
+
+  _performTeamClick(team) {
     team.selected = !team.selected;
     if (team.selected) {
       team.allMembers.forEach((p) => {
@@ -43,6 +61,18 @@ export default class PersonMembershipController extends ClubhouseController {
       });
     }
   }
+
+  _confirmDangerousGrant(event, entity, title, callback) {
+    const target = event.target;
+    target.checked = false;
+    this.modal.confirm('Confirm grant with dangerous permissions associated.',
+      `<p>The ${title} <i>${entity.title}</i> has the permission(s) ${entity.hasDangerousPermissions} associated. Normally, such permission grants require approval from Council and the Tech Team first.</p>Are you sure you want to do this?`,
+      () => {
+        target.checked = true;
+        callback();
+      });
+  }
+
 
   /**
    * Deselect those positions recommended to be removed when a person joins a team.

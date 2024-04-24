@@ -4,11 +4,11 @@
 </p>
 <p class="small">
     Legend:<br>
-    {{fa-icon "universal-access"}} All Rangers = position is granted to all Rangers (usually at the time a Shiny Penny
+    {{fa-icon "universal-access" right=1}} All Rangers = position is granted to all Rangers (usually at the time a Shiny Penny
     is minted) regardless of team membership.<br>
-    {{fa-icon "globe"}} All Accounts = position is granted to all accounts (Rangers, applicants, auditors, etc.) usually
+    {{fa-icon "globe" right=1}} All Accounts = position is granted to all accounts (Rangers, applicants, auditors, etc.) usually
     at the time the account is created.<br>
-    {{fa-icon "power-off"}} Deselected when person joins the team = When the person is marked as having join the team,
+    {{fa-icon "power-off" right=1}} Deselected when person joins the team = When the person is marked as having join the team,
     the position will be deselected. Typically used for mentee positions.<br>
     <i>Is Team Manager</i> = person may grant or revoke the team's membership and positions to anyone.<br>
     <i>[N permission]</i> = Indicates permission(s) will be assigned when the team or position is granted. Click on the
@@ -31,7 +31,7 @@
     {{#if this.canManageGeneralPositions}}
         <div class="masonry-item">
             <div class="masonry-item-header">General Positions / Unassociated with a Clubhouse Team</div>
-            <MembershipPosition @positions={{this.generalPositions}} @itemClick={{this.itemClick}} />
+            <MembershipPosition @positions={{this.generalPositions}} @positionClick={{this.positionClick}} />
             <div class="ms-2 mt-3">
                 <UiButton @onClick={{this.saveAction}} @size="sm">Save</UiButton>
             </div>
@@ -82,17 +82,17 @@
             {{#if (or team.allMembers team.optional team.allRangers)}}
                 <MembershipPosition @title="Positions all team members are recommended to have"
                                     @positions={{team.allMembers}}
-                                    @itemClick={{this.itemClick}}
+                                    @positionClick={{this.positionClick}}
                                     @saveAction={{this.saveAction}}
                 />
                 <MembershipPosition @title="Optional positions (membership in team recommended)"
                                     @positions={{team.optional}}
-                                    @itemClick={{this.itemClick}}
+                                    @positionClick={{this.positionClick}}
                                     @saveAction={{this.saveAction}}
                 />
                 <MembershipPosition @title="Public positions (team membership not required)"
                                     @positions={{team.allRangers}}
-                                    @itemClick={{this.itemClick}}
+                                    @positionClick={{this.positionClick}}
                                     @saveAction={{this.saveAction}}
                 />
             {{else}}

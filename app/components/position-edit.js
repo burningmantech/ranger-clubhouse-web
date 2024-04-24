@@ -8,9 +8,11 @@ import {
   TYPE_TRAINING
 } from "clubhouse/models/position";
 import {service} from '@ember/service';
+import {TECH_NINJA} from "clubhouse/constants/roles";
 
 export default class PositionEditComponent extends Component {
   @service house;
+  @service session;
 
   positionTypes = PositionTypes;
   positionValidations = PositionValidations;
@@ -51,5 +53,7 @@ export default class PositionEditComponent extends Component {
     })
 
     this.house.scrollToTop();
+
+    this.isTechNinja = this.session.hasRole(TECH_NINJA);
   }
 }
