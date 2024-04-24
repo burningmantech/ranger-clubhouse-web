@@ -3,6 +3,7 @@ import RSVP from 'rsvp';
 import Selectable from 'clubhouse/utils/selectable';
 import {tracked} from '@glimmer/tracking';
 import {TEAM_CATEGORY_ALL_MEMBERS, TEAM_CATEGORY_PUBLIC} from "clubhouse/models/position";
+import {ADMIN, TECH_NINJA} from "clubhouse/constants/roles";
 
 class SelectItem extends Selectable {
   @tracked showRoles = false;
@@ -74,6 +75,7 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
       team.positions = [];
 
       team.managerSelect = new SelectItem({}, !!managementById[teamId]);
+      this.buildDangerousRoles(team);
 
       let haveTeamPositions = false;
       positions.forEach((p) => {
@@ -88,6 +90,7 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
           return;
         }
 
+        this.buildDangerousRoles(p);
         (team.positions ??= []).push(p);
 
         const teamPosition = new SelectItem(p, granted);
@@ -110,6 +113,20 @@ export default class PersonMembershipRoute extends ClubhouseRoute {
 
     controller.generalPositions = positions.filter((p) => !p.team_id && (p.active || positionsByIds[p.id]))
       .map((p) => new SelectItem(p, !!positionsByIds[p.id]));
+  }
+
+  buildDangerousRoles(entity) {
+    const dangerous = [];
+    entity.role_ids?.forEach((id) => {
+      if (id === TECH_NINJA) {
+        dangerous.push('Tech Ninja');
+      } else if (id === ADMIN) {
+        dangerous.push('Admin');
+      }
+    });
+    if (dangerous.length > 0) {
+      entity.hasDangerousPermissions = dangerous.join(' and ');
+    }
   }
 
   buildRoles(ids, rolesById) {

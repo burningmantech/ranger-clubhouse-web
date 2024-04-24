@@ -130,20 +130,27 @@
   </fieldset>
 
   <fieldset>
-    <legend>Position Role Grants</legend>
-    <p>
-      Adjustments to role associations will take immediate effect upon pushing the Save button.
-    </p>
-    <FormRow>
-      <div class="col-12">
-        <f.checkbox @name="require_training_for_roles"
-                    @label="ART training must be passed each year before roles are granted"/>
-      </div>
-    </FormRow>
-    <FormRow>
-      <f.checkboxGroup @label="Roles to assign when position is granted" @name="role_ids"
-                       @options={{@roleOptions}} />
-    </FormRow>
+    <legend>Position Permission Grants</legend>
+    {{#if this.isTechNinja}}
+      <p>
+        Adjustments to permission associations will take immediate effect upon pushing the Save button.
+      </p>
+      <FormRow>
+        <div class="col-12">
+          <f.checkbox @name="require_training_for_roles"
+                      @label="ART training must be passed each year before roles are granted"/>
+        </div>
+      </FormRow>
+      <FormRow>
+        <f.checkboxGroup @label="Permissions to assign when position is granted"
+                         @name="role_ids"
+                         @options={{@roleOptions}} />
+      </FormRow>
+    {{else}}
+      <p>
+        Contact the Tech Team to adjust the associated permissions.
+      </p>
+    {{/if}}
   </fieldset>
 
   {{#unless (eq f.model.type "Training")}}
@@ -168,8 +175,7 @@
     <p>
       Certain Mentor/Mentee (e.g., GD Mentor &amp; Mentee) shifts, and shifts where a child shift's signup count will
       count against the parent's signups (e.g., "prime" Troubleshooter shifts &amp; TS Mentor) can be defined. The
-      parent position
-      info will be used by the slot interface to help link shifts together.
+      parent position info will be used by the slot interface to help link shifts together.
     </p>
     <FormRow>
       <f.select @name="parent_position_id"

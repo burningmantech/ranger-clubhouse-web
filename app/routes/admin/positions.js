@@ -29,9 +29,7 @@ export default class AdminPositionRoute extends ClubhouseRoute {
     });
     controller.teamById = _.keyBy(model.teams, 'id');
     controller.roleById = _.keyBy(roles, 'id');
-    controller.roleOptions = roles.filter((r) => (r.id !== ADMIN && r.id !== TECH_NINJA)).map((r) => ({
-      id: r.id,
-      title: r.title
-    }));
+    controller.roleOptions = roles.map((r) => ({id: r.id, title: r.title}));
+    controller.isTechNinja = this.session.hasRole(TECH_NINJA);
   }
 }

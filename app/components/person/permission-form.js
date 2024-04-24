@@ -25,7 +25,7 @@ export default class PersonRoleFormComponent extends Component {
       selected: this.roleIds.includes(role.id),
       positions: grantedRoles.position_roles.filter((p) => p.role_id === role.id),
       teams: grantedRoles.team_roles.filter((p) => p.role_id === role.id),
-      disabled: ((role.id === TECH_NINJA || role.id === ADMIN) && !isTechNinja),
+      disabled: (role.id === TECH_NINJA && !isTechNinja),
     }));
 
     this.roleGroups = inGroups(this.roles, 3);
