@@ -461,7 +461,7 @@ export const TAKE_STUDENT_SURVEY = {
     if (milestones.surveys.sessions.length > 0) {
       return {
         result: OPTIONAL,
-        message: 'Please take a moment to provide feedback on your In-Person Training experience:',
+        message: 'Please take a few moments to share your feedback about your training experience:',
         survey: 'student'
       };
 
