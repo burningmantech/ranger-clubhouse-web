@@ -29,6 +29,13 @@
               @title="Untrained People"
               @icon="exclamation-circle" @iconType="s"
       />
+      {{#if this.canManageSurveys}}
+        <s.link @route="training.survey.index"
+                @routeArg={{this.training.id}}
+                @title="ART Surveys"
+                @icon="poll"
+                @iconType="s"/>
+      {{/if}}
     {{else}}
       {{#if this.showOnlineCourseProgress}}
         <s.link @route="training.online-course-progress"

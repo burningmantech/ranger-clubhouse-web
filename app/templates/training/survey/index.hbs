@@ -17,12 +17,13 @@
       <td>{{survey.title}}</td>
       <td>
         {{#each survey.reports as |report|}}
-          <LinkTo @route="training.survey.report"
-                  @models={{array this.training.id survey.id}}
-                  @query={{hash type=report.type report_id=report.id}}>
-            {{report.title}}
-          </LinkTo>
-          <br>
+          <div class="mb-2">
+            <LinkTo @route="training.survey.report"
+                    @models={{array this.training.id survey.id}}
+                    @query={{hash type=report.type report_id=report.id}}>
+              {{report.title}}
+            </LinkTo>
+          </div>
         {{/each}}
       </td>
     </tr>

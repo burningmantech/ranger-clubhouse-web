@@ -29,6 +29,11 @@
     <b class="text-danger">No Trainer-on-Trainer feedback has been given yet.</b>
   {{/each}}
 {{else}}
+  {{#if (and (not this.report.summarized_ratings) (not this.report.trainers) (not this.report.questions))}}
+    <p class="text-danger">
+      No responses or questions found for this survey report?
+    </p>
+  {{/if}}
   {{#each this.report.summarized_ratings as |summary|}}
     <UiAccordion as |Accordion|>
       <Accordion.title>{{summary.description}}</Accordion.title>
