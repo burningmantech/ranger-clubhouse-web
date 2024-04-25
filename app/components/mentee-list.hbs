@@ -19,12 +19,13 @@
               </div>
             {{/if}}
             <div class="card-body">
-              <h4 class="card-title">
+              <h4 class="card-title mb-1">
                 {{#if @contactAction}}
                   {{mentee.callsign}}
                 {{else}}
                   <LinkTo @route="person.index" @model={{mentee.person_id}}>{{mentee.callsign}}</LinkTo>
                 {{/if}}
+                <div class="h6">&lt;{{mentee.status}}&gt;</div>
               </h4>
               <div class="card-subtitle h5 mb-2">
                 {{#if (eq mentee.mentor_status "pass")}}
@@ -50,6 +51,16 @@
                   {{if mentorIdx ", "}}{{mentor.callsign}}
                 {{/each}}
               </p>
+              {{#if (eq mentee.mentor_status "pass")}}
+                <p class="card-text">
+                  <b>Last Worked</b><br>
+                  {{#if mentee.last_worked}}
+                    {{mentee.last_worked}}
+                  {{else}}
+                    <i>never</i>
+                  {{/if}}
+                </p>
+              {{/if}}
               {{#if @contactAction}}
                 <p class="card-text">
                   <b>Last Contact</b><br>
