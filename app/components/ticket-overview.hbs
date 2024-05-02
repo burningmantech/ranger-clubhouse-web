@@ -25,6 +25,9 @@
             Note: Due to Burning Man ticketing policies, Staff Credentials cannot be mailed.
           </p>
           <p>
+            The Staff Credential is provided free of charge.
+          </p>
+          <p>
             {{#if this.ticket.access_any_time}}
               Your Staff Credential is available to pick up any time from the following locations:
             {{else if this.ticket.access_date}}
@@ -48,8 +51,9 @@
           {{/if}}
         {{else}}
           <div class="mt-2">
-            The ticket must be paid for. An invoice will be sent. Failing to pay in a timely manner may result in
-            your inability to attend the event.
+            The ticket must be paid for. An invoice will be sent for ${{@ticketingInfo.spt_cost}} (USD). Failing to pay
+            in
+            a timely manner may result in your inability to attend the event.
           </div>
         {{/if}}
       </TicketOverviewItem>
@@ -63,6 +67,14 @@
         {{else}}
           The vehicle pass will be mailed to you.
         {{/if}}
+        <div class="mt-2">
+          {{#if this.ticket.isSpecialPriceTicket}}
+            The Vehicle Pass must be paid for. An invoice will be sent for ${{@ticketingInfo.sp_vp_cost}} (USD).
+            Failing to pay in a timely manner may result in your inability to drive into the event.
+          {{else}}
+            Because you will be using a Staff Credential, the Vehicle Pass is provided free of charge.
+          {{/if}}
+        </div>
       </TicketOverviewItem>
     {{else}}
       <TicketOverviewItem @icon="ban" @title="No Vehicle Pass" @type="secondary">
@@ -76,9 +88,7 @@
                         @title="{{singular-or-pluralize this.giftTicketCount "Gift Ticket" capitalize=true}} Claimed"
                         @type="success">
       <p>
-        {{singular-or-pluralize this.giftTicketCount "Gift Ticket" capitalize=true}}
-        {{~#if this.giftVPCount~}}, and {{singular-or-pluralize this.giftVPCount "Gift Vehicle Pass"}}{{/if}}
-        has been claimed.
+        {{singular-or-pluralize this.giftTicketCount "Gift Ticket" capitalize=true}} has been claimed.
       </p>
       <p>
         <TicketGiftConditions/>
@@ -146,7 +156,9 @@
         {{/if}}
         {{#unless this.usingStaffCredential}}
           <div class="mt-2">
-            The SAP will be emailed to you at <MailTo @to={{@person.email}} />.<br>
+            The SAP will be emailed to you at
+            <MailTo @to={{@person.email}} />
+            .<br>
             SAPs are emailed after the Ranger ticketing deadline closes and up to a week before the start of the event.
           </div>
         {{/unless}}
@@ -165,7 +177,8 @@
   {{#if this.wapSOList}}
     <TicketOverviewItem @icon="people-group" @title="SAPs For Significant Other Claimed" @type="secondary">
       {{pluralize this.wapSOList.length "Significant Other SAP"}} will be emailed to you at
-      <MailTo @to={{@person.email}} /> as a PDF. The SO SAP PDF will have your name on it. The names of your SOs are stored
+      <MailTo @to={{@person.email}} />
+      as a PDF. The SO SAP PDF will have your name on it. The names of your SOs are stored
       elsewhere in the ticketing system.
       <br>
       <ul class="mt-2">

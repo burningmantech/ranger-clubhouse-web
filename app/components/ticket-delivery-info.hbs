@@ -4,11 +4,10 @@
     Credentialing under your legal name <b>"{{@person.first_name}} {{@person.last_name}}"</b>.
   </p>
   <p>
-    Sorry, Staff Credentials cannot be mailed due to Burning Man organization policies.
+    Please note that we are unable to mail Staff Credentials due to Burning Man organization policies.
   </p>
   <p>
-    The Ticketing Summary section (available after you complete all ticketing steps) will show the various
-    pickup locations.
+    The Ticketing Summary section will display the available pickup locations once you've completed all ticketing steps.
   </p>
 {{else if (or @ticket.isClaimed this.vehiclePass.isClaimed)}}
   <p>
@@ -32,26 +31,20 @@
     <p>
       <b>How do you want your {{pluralize this.itemsToDeliver.length "item"}} delivered?</b>
     </p>
-    <div class="d-flex flex-column flex-lg-row justify-content-lg-between align-self-center">
-      <div>
-        <UiButton @class="responsive" @onClick={{fn this.setDeliveryMethod "postal"}} @disabled={{this.isSaving}}>
-          {{fa-icon "envelope"}} Deliver By US Mail
-          {{#if this.isSaving}}
-            <SpinIcon/>{{/if}}
-        </UiButton>
-      </div>
-      <div class="mx-auto mx-lg-3 my-2">OR</div>
-      <div>
-        <UiButton @class="responsive"
-                  @onClick={{fn this.setDeliveryMethod "will_call"}}
-                  @disabled={{this.isSaving}}>
-          {{fa-icon "user" type="far"}} Pickup At Will Call
-          {{#if this.isSaving}}
-            <SpinIcon/>
-          {{/if}}
-        </UiButton>
-      </div>
-    </div>
+    <UiButton class="btn-responsive" @onClick={{fn this.setDeliveryMethod "postal"}} @disabled={{this.isSaving}}>
+      {{fa-icon "envelope"}} Deliver By US Mail
+      {{#if this.isSaving}}
+        <SpinIcon/>{{/if}}
+    </UiButton>
+    <span class="h5 mx-auto mx-xl-4 my-sm-2 my-xl-none d-sm-block d-xl-inline-block">- OR -</span>
+    <UiButton class="btn-responsive"
+              @onClick={{fn this.setDeliveryMethod "will_call"}}
+              @disabled={{this.isSaving}}>
+      {{fa-icon "user" type="far"}} Pickup At Will Call
+      {{#if this.isSaving}}
+        <SpinIcon/>
+      {{/if}}
+    </UiButton>
   {{else if this.isDeliveryPostal}}
     <p>
       You will be asked for your mailing address when you visit the Burning Man Ticketing website. Information will be
@@ -60,7 +53,7 @@
     <p>
       <b>Would you rather use Will Call?</b>
     </p>
-    <UiButton @class="responsive" @onClick={{fn  this.setDeliveryMethod "will_call"}} @disabled={{this.isSaving}}>
+    <UiButton class="btn-responsive" @onClick={{fn  this.setDeliveryMethod "will_call"}} @disabled={{this.isSaving}}>
       {{fa-icon "user" type="far"}} Pickup at Will Call
       {{#if this.isSaving}}
         <SpinIcon/>

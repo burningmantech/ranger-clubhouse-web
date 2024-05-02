@@ -8,12 +8,9 @@
   <td class={{this.vpTickets.style}}>{{or this.vpTickets.text "-"}}</td>
   <td class="text-end {{this.significantOtherCount.style}}">{{or this.significantOtherCount.text "-"}}</td>
   <td>
-    {{#if (or this.giftTickets this.giftVPs this.lsdTickets this.lsdVPs)}}
+    {{#if (or this.giftTickets this.lsdTickets this.lsdVPs)}}
       {{#if this.giftTickets}}
         {{this.giftTickets.length}} Gift<br>
-      {{/if}}
-      {{#if this.giftVPs}}
-        {{this.giftVPs.length}} Gift VP<br>
       {{/if}}
       {{#if this.lsdTickets}}
         {{this.lsdTickets.length}} LSD<br>

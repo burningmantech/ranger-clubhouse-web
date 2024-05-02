@@ -6,8 +6,8 @@ import {
   GIFT_TICKET,
   LSD_TICKET, QUALIFIED,
   SPT,
-  STAFF_CREDENTIAL, SUBMITTED, TURNED_DOWN,
-  VEHICLE_PASS,
+  STAFF_CREDENTIAL, SUBMITTED,
+  VEHICLE_PASS_SP,
   VEHICLE_PASS_GIFT, VEHICLE_PASS_LSD, WAP, WAPSO
 } from "clubhouse/models/access-document";
 
@@ -38,14 +38,14 @@ export default class VcAccessDocumentsIndexController extends ClubhouseControlle
         ["Staff Credential", STAFF_CREDENTIAL],
         ["Setup Access Pass", WAP],
         ["S.O. Setup Access Pass", WAPSO],
-        ['Vehicle Pass', VEHICLE_PASS],
+        ['Vehicle Pass (Gift)', VEHICLE_PASS_GIFT],
+        ['Vehicle Pass (Special Price)', VEHICLE_PASS_SP],
       ]
     },
     {
       groupName: 'Gift Items',
       options: [
         ["Gift Ticket", GIFT_TICKET],
-        ['Gift Vehicle Pass', VEHICLE_PASS_GIFT],
       ]
     },
     {
@@ -63,7 +63,6 @@ export default class VcAccessDocumentsIndexController extends ClubhouseControlle
     ["Claimed", CLAIMED],
     ["Qualified", QUALIFIED],
     ["Submitted", SUBMITTED],
-    ["Turned Down", TURNED_DOWN],
   ];
 
   @cached

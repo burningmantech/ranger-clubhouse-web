@@ -13,41 +13,21 @@ export default class TicketInfoComponent extends Component {
 
   @action
   async chooseTicketAction(item) {
-    const {tickets, vehiclePass} = this.args.ticketPackage;
+    const {tickets} = this.args.ticketPackage;
 
     this.isSubmitting = true;
     let haveErrors = false;
 
-    const statuses = [];
-    for (const ticket of tickets) {
-      let status;
-      if (item === 'none') {
-        status = BANKED;
-      } else {
-        status = (ticket.id === item.id) ? CLAIMED : BANKED;
+    if (item === 'none') {
+      for (const ticket of tickets) {
+        const success = await this._updateStatus(ticket, BANKED);
+        if (!success) {
+          haveErrors = true;
+        }
       }
-      statuses.push({id: ticket.id, status});
-    }
-
-    try {
-      const result = await this.ajax.request(`access-document/statuses`, {
-        method: 'PATCH',
-        data: {statuses}
-      });
-      this.house.pushPayload('access-document', result.access_document);
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-      haveErrors = true;
-    }
-
-    if (vehiclePass) {
-      try {
-        // vehicle pass may have been released if all tickets were banked -- the backend will
-        // attempt to prevent a person from trying to game the system by banking all tickets
-        // and claim the VP.
-        await vehiclePass.reload();
-      } catch (response) {
-        this.house.handleErrorResponse(response);
+    } else {
+      if (!(await this._updateStatus(item, CLAIMED))) {
+        haveErrors = true;
       }
     }
 
@@ -55,6 +35,19 @@ export default class TicketInfoComponent extends Component {
 
     if (!haveErrors) {
       this.toast.success('Your choice has been successfully saved.');
+    }
+  }
+
+  async _updateStatus(ticket, status) {
+    try {
+      const {access_document} = await this.ajax.patch(`access-document/${ticket.id}/status`, {
+        data: {status}
+      });
+      this.house.pushPayload('access-document', access_document);
+      return true;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+      return false;
     }
   }
 

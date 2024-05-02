@@ -12,7 +12,13 @@
     {{#each @ticketPackage.tickets as |item|}}
       <tr class={{if item.isClaimed "table-success"}}>
         <td>
-          {{item.typeLabel}} earned in {{item.source_year}}<br>
+          {{item.typeLabel}} earned in {{item.source_year}}
+          {{#if item.isSpecialPriceTicket}}
+            (cost ${{@ticketingInfo.spt_cost}} USD)
+          {{else}}
+            (free of charge)
+          {{/if}}
+          <br>
           <div class="text-muted">Expires {{mdy-format item.expiry_date}}</div>
         </td>
         <td>
@@ -40,8 +46,8 @@
     </tbody>
   </UiTable>
   <p>
-    While you have multiple tickets to choose from, only ONE ticket may be used in any given year.
-    The rest will be banked, and cannot be transferred to other people.
+    While you can choose from multiple tickets, only one can be used per year. The rest will be banked and cannot be
+    transferred.
   </p>
   <p>
     {{#if @ticket}}
@@ -116,7 +122,8 @@
   {{/if}}
 {{else}}
   <p>
-    <b>Sorry, it doesn't appear you qualified for a Special Price Ticket (fka Reduced-Price Ticket) or Staff Credential.</b>
+    <b>Sorry, it doesn't appear you qualified for a Special Price Ticket (fka Reduced-Price Ticket) or Staff
+      Credential.</b>
   </p>
   You earned {{credits-format @ticketPackage.credits_earned}} credits last event. The minimum credits needed to earn
   a Special Price Ticket was {{credits-format @ticketingInfo.spt_credits}}, and a Staff Credential was
