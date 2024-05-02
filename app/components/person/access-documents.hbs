@@ -106,9 +106,10 @@
         {{/if}}
 
         {{#if (or
-                (eq f.model.type "special_price_ticket")
-                (eq f.model.type "vehicle_pass")
                 (eq f.model.type "gift_ticket")
+                (eq f.model.type "special_price_ticket")
+                (eq f.model.type "vehicle_pass_gift")
+                (eq f.model.type "vehicle_pass_sp")
               )}}
           {{#if this.isTicketingOpen}}
             <p class="text-danger">

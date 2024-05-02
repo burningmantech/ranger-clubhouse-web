@@ -1,47 +1,57 @@
-{{#if this.vehiclePass}}
-  <p>
-    <b class="text-danger">
-      Only claim a Vehicle Pass if you intend to use it. These passes are a limited resource and have an impact on the
-      Bureau Of Land Management event permit, and as a result, the ticket prices of the event.
-    </b>
-  </p>
+{{#if @ticketPackage.vehiclePass}}
+  <UiAlert @type="danger" @icon="hand-point-right">
+    Please only claim a Vehicle Pass if you truly plan to use it. As Vehicle Passes are a very limited resource,
+    they have a direct and significant impact on ticket prices and the Bureau of Land Management event permit.
+  </UiAlert>
   {{#if (or (not @ticket) @ticket.isBanked @ticket.isQualified)}}
     <p>
-      <b>Claim your event ticket first before claiming your Vehicle Pass.</b>
+      <b>Please claim your event ticket first before claiming your vehicle pass.</b>
     </p>
-  {{else if this.vehiclePass.isQualified}}
-    <p>
-      <b>You qualify for a Vehicle Pass for this year's event.</b>
-    </p>
-    <div class="mt-2 mb-2">Do you want to claim your Vehicle Pass?</div>
-    <UiButton @class="btn-responsive"
-              @onClick={{fn @setDocumentStatus this.vehiclePass "claimed"}}
-              @disabled={{@isSavingDocumentStatus}}>
-      Claim Vehicle Pass
-      {{#if @isSavingDocumentStatus}}
-        <SpinIcon/>
-      {{/if}}
-    </UiButton>
   {{else}}
-    <p>
+    {{#if @ticket.isStaffCredential}}
+      <p>
+        By using your Staff Credential, you can claim a free Vehicle Pass.
+      </p>
+    {{else}}
+      <p>
+        Starting in 2024, the cost of a Vehicle Pass claimed with a Special Price Ticket is
+        ${{@ticketingInfo.sp_vp_cost}} (USD).
+      </p>
+    {{/if}}
+    {{#if @ticketPackage.vehiclePass.isQualified}}
+      <p>
+        <b>You qualify for a vehicle pass for this year's event.</b>
+      </p>
+      <div class="mt-2 mb-2">Do you want to claim a Vehicle Pass?</div>
+      <UiButton @class="btn-responsive"
+                @onClick={{fn @setDocumentStatus @ticketPackage.vehiclePass "claimed"}}
+                @disabled={{@isSavingDocumentStatus}}>
+        Claim Vehicle Pass
+        {{#if @isSavingDocumentStatus}}
+          <SpinIcon/>
+        {{/if}}
+      </UiButton>
+    {{else}}
       <b>You will be using the Vehicle Pass.</b>
-    </p>
-    <div class="mt-2 mb-2"> Do you no longer need a Vehicle Pass?</div>
-    <UiButton @class="btn-responsive"
-              @onClick={{fn @setDocumentStatus this.vehiclePass "qualified"}}
-              @disabled={{@isSavingDocumentStatus}}>
-      Release Vehicle Pass
-      {{#if @isSavingDocumentStatus}}
-        <SpinIcon/>
-      {{/if}}
-    </UiButton>
+      <div class="my-2"> Do you no longer need a Vehicle Pass?</div>
+      <UiButton @class="btn-responsive"
+                @onClick={{fn @setDocumentStatus @ticketPackage.vehiclePass "qualified"}}
+                @disabled={{@isSavingDocumentStatus}}>
+        Release Vehicle Pass
+        {{#if @isSavingDocumentStatus}}
+          <SpinIcon/>
+        {{/if}}
+      </UiButton>
+    {{/if}}
   {{/if}}
 {{else if @ticketPackage.tickets.length}}
   <p>
-    You should have qualified for a free Vehicle Pass, however, we do not have one on file.
+    You should have qualified for a Vehicle Pass, however, we do not have one on file.
   </p>
   <p>
-    Contact <MailTo @to={{@ticketingInfo.ranger_ticketing_email}} /> and let us know something is wrong.
+    Contact
+    <MailTo @to={{@ticketingInfo.ranger_ticketing_email}} />
+    and let us know something is wrong.
   </p>
 {{else}}
   <p>

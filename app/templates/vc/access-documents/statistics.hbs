@@ -64,7 +64,7 @@
     </UiTable>
   </div>
   <div class="col-auto">
-    <b>Vehicle Passes</b>
+    <b>Special Price Vehicle Passes</b>
     <UiTable>
       <thead>
       <tr>
@@ -75,9 +75,28 @@
       </thead>
       <tbody>
       <tr>
-        <td class="text-end">{{this.statistics.vp_claimed}}</td>
-        <td class="text-end">{{this.statistics.vp_unclaimed}}</td>
-        <td class="text-end">{{this.statistics.vp_submitted}}</td>
+        <td class="text-end">{{this.statistics.sp_vp_claimed}}</td>
+        <td class="text-end">{{this.statistics.sp_vp_unclaimed}}</td>
+        <td class="text-end">{{this.statistics.sp_vp_submitted}}</td>
+      </tr>
+      </tbody>
+    </UiTable>
+  </div>
+  <div class="col-auto">
+    <b>Gift Vehicle Passes</b>
+    <UiTable>
+      <thead>
+      <tr>
+        <th>Claimed</th>
+        <th>Unclaimed</th>
+        <th>Submitted</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="text-end">{{this.statistics.gift_vp_claimed}}</td>
+        <td class="text-end">{{this.statistics.gift_vp_unclaimed}}</td>
+        <td class="text-end">{{this.statistics.gift_vp_submitted}}</td>
       </tr>
       </tbody>
     </UiTable>
@@ -139,25 +158,6 @@
         <td class="text-end">{{this.statistics.gift_claimed}}</td>
         <td class="text-end">{{this.statistics.gift_unclaimed}}</td>
         <td class="text-end">{{this.statistics.gift_submitted}}</td>
-      </tr>
-      </tbody>
-    </UiTable>
-  </div>
-  <div class="col-auto">
-    <b>Gift Vehicle Passes</b>
-    <UiTable>
-      <thead>
-      <tr>
-        <th>Claimed</th>
-        <th>Unclaimed</th>
-        <th>Submitted</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td class="text-end">{{this.statistics.gift_vp_claimed}}</td>
-        <td class="text-end">{{this.statistics.gift_vp_unclaimed}}</td>
-        <td class="text-end">{{this.statistics.gift_vp_submitted}}</td>
       </tr>
       </tbody>
     </UiTable>

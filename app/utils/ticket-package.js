@@ -14,13 +14,14 @@ export default class TicketPackage {
 
     this.accessDocuments = docs;
     this.tickets = docs.filter((d) => d.isRegularTicket);
-    this.vehiclePass = docs.find((d) => d.isVehiclePass);
+    this.vehiclePasses = docs.filter((d) => d.isVehiclePass);
+    this.vehiclePassSP = docs.find((d) => d.isVehiclePassSP);
+    this.vehiclePassGift = docs.find((d) => d.isVehiclePassGift);
     this.wap = docs.find((d) => d.isWAP);
     this.wapso = docs.filter((d) => d.isWAPSO);
 
     const giftItems = pkg.gift_items.map((ad) => house.pushPayload('access-document', ad));
     this.giftTickets = giftItems.filter((i) => i.isGiftTicket);
-    this.giftVPs = giftItems.filter((i) => i.isVehiclePassGift);
 
     const lsdItems = pkg.lsd_items.map((ad) => house.pushPayload('access-document', ad));
     this.lsdTickets = lsdItems.filter((i) => i.isLSDTicket);
@@ -87,6 +88,15 @@ export default class TicketPackage {
     } else {
       return null;
     }
+  }
+
+  @cached
+  get vehiclePass() {
+    if (!this.ticket) {
+      return null;
+    }
+
+    return this.ticket.isStaffCredential ? this.vehiclePassGift : this.vehiclePassSP;
   }
 
   /**

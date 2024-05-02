@@ -10,7 +10,7 @@ import {
   LSD_TICKET,
   SPT,
   STAFF_CREDENTIAL,
-  VEHICLE_PASS,
+  VEHICLE_PASS_SP,
   VEHICLE_PASS_GIFT,
   VEHICLE_PASS_LSD,
   WAP,
@@ -24,8 +24,8 @@ const TRS_COLUMN = {
   [SPT]: 'spt',
   [GIFT_TICKET]: 'gift_ticket',
   [LSD_TICKET]: 'lsd',
-  [VEHICLE_PASS]: 'vp',   // VP is really a Gift VP since Rangers are not charged for it.
-  [VEHICLE_PASS_GIFT]: 'vp',
+  [VEHICLE_PASS_SP]: 'sp_vp',
+  [VEHICLE_PASS_GIFT]: 'gift_vp',
   [VEHICLE_PASS_LSD]: 'lsd_vp',
   [WAP]: 'sap',
   [WAPSO]: 'sap'
@@ -51,14 +51,14 @@ const PAID_EXPORT_FORMAT = [
   ['Request: $225 Ticket', 'spt'],
   ['Request: $150 Vehicle Pass', 'paid_vp'],
   ['Request: Gift Ticket', 'not_used_gift_ticket'],
-  ['Request: Gift Vehicle Pass', 'vp'],
+  ['Request: Gift Vehicle Pass', 'gift_vp'],
   ['Request: Transferrable $225 Ticket', 'spt_xfer'],
   ['Request: Transferrable $150 Vehicle Pass', 'vp_xfer'],
   ['Request: Transferrable Gift Ticket', 'gift_ticket'],
   ['Request: Transferrable Gift Vehicle Pass', 'vehicle_pass_gift'],
   // New for 2023, not used currently.
   ['Request: Transferrable $75 Vehicle Pass', 'discount_vp_xfer'],
-  ['Request: $75 Vehicle Pass', 'discount_vp'],
+  ['Request: $75 Vehicle Pass', 'sp_vp'],
 ];
 
 const UNPAID_EXPORT_FORMAT = [
@@ -79,7 +79,7 @@ const UNPAID_EXPORT_FORMAT = [
   ['Shipping Address (Required if Mail Delivery type selected): Zip', 'not_used_zip'],
   ['Shipping Address (Required if Mail Delivery type selected): Phone', 'not_used_phone'],
   //['Request: Gift Ticket', 'gift_ticket'],
-  ['Request: Gift Vehicle Pass', 'vp'],
+  ['Request: Gift Vehicle Pass', 'gift_vp'],
   ['Request: STAFF SAP 8/6 &amp; Later', 'sap_0806'],
   ['Request: STAFF SAP 8/7 &amp; Later', 'sap_0807'],
   ['Request: STAFF SAP 8/8 &amp; Later', 'sap_0808'],
@@ -182,24 +182,17 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
       options:
         [
           ['Staff Credentials', STAFF_CREDENTIAL],
-          ['Staff Credentials + VP', STAFF_CREDENTIAL_VP],
+          ['Staff Credentials + Gift VP', STAFF_CREDENTIAL_VP],
+          ['Gift VP', VEHICLE_PASS_GIFT],
         ]
     },
     {
       groupName: 'SPTs',
       options:
         [
+          ['SP Tickets + SP Vehicle Pass', SPT_VP],
           ['Special Price Tickets', SPT],
-          ['Special Price Tickets + VP', SPT_VP],
-        ]
-    },
-    {
-      groupName: 'Vehicle Passes',
-      options:
-        [
-          ['Vehicle Passes', VEHICLE_PASS],
-          ['Gift Vehicle Passes', VEHICLE_PASS_GIFT],
-          ['LSD Vehicle Passes', VEHICLE_PASS_LSD],
+          ['SP Vehicle Pass', VEHICLE_PASS_SP],
         ]
     },
     {
@@ -213,12 +206,12 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         ]
     },
     {
-      groupName: 'Special Tickets',
+      groupName: 'Other Tickets',
       options: [
         ['Gift Tickets', GIFT_TICKET],
-        ['Gift Tickets + VP', GIFT_TICKET_VP],
         ['LSD Tickets', LSD_TICKET],
         ['LSD Tickets + VP', LSD_TICKET_VP],
+        ['LSD Vehicle Passes', VEHICLE_PASS_LSD],
       ]
     }
   ];
@@ -275,7 +268,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
           case WAP:
           case WAPSO:
             if (doc.access_any_time) {
-              dateInfo = ' Anytime';
+              dateInfo = 'Anytime';
               trsColumn = 'anytime';
             } else if (isEmpty(doc.access_date)) {
               dateInfo = ' UNSPECIFIED ACCESS DATE';
@@ -351,10 +344,10 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         let ticketType, vpType;
         if (filter === STAFF_CREDENTIAL_VP) {
           ticketType = STAFF_CREDENTIAL;
-          vpType = VEHICLE_PASS;
+          vpType = VEHICLE_PASS_GIFT;
         } else if (filter === SPT_VP) {
           ticketType = SPT;
-          vpType = VEHICLE_PASS;
+          vpType = VEHICLE_PASS_SP;
         } else if (filter === GIFT_TICKET_VP) {
           ticketType = GIFT_TICKET;
           vpType = VEHICLE_PASS_GIFT;
@@ -486,7 +479,6 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     const exportedBy = `exported by CHID #${this.session.user.id}`;
 
     if (this.filter === STAFF_CREDENTIAL_VP
-      || this.filter === GIFT_TICKET_VP
       || this.filter === SPT_VP
       || this.filter === LSD_TICKET_VP) {
       rows = [];
@@ -543,18 +535,22 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         switch (doc.type) {
           case SPT:
           case GIFT_TICKET:
-          case VEHICLE_PASS_GIFT:
           case LSD_TICKET:
           case VEHICLE_PASS_LSD:
             row.delivery_type = isPostal ? 'USPS' : 'Will Call';
             break;
 
-          case VEHICLE_PASS:
+          case VEHICLE_PASS_GIFT:
             if (doc.has_staff_credential) {
               row.delivery_type = 'Credential Pick Up';
             } else {
+              // a Gift VP should always be paired with a SC but ya never know.
               row.delivery_type = isPostal ? 'USPS' : 'Credential Pick Up';
             }
+            break;
+
+          case VEHICLE_PASS_SP:
+            row.delivery_type = isPostal ? 'USPS' : 'Credential Pick Up';
             break;
 
           case STAFF_CREDENTIAL:
@@ -569,18 +565,6 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
         row[doc.trsColumn] = 1;
 
-        /*
-        if ((doc.type === GIFT_TICKET || doc.type === VEHICLE_PASS) && isPostal) {
-          row.address1 = doc.street1;
-          row.city = doc.city;
-          row.state = doc.state;
-          row.zip = doc.postal_code;
-          row.phone = isBlank(doc.phone) ? '' : doc.phone;
-          row.country = 'US';
-        } else {
-          this._fillAddress(person, row);
-        }*/
-
         return row;
       });
 
@@ -591,10 +575,8 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     switch (this.filter) {
       case SPT:
       case SPT_VP:
-      case GIFT_TICKET:
-      case GIFT_TICKET_VP:
-      case VEHICLE_PASS_GIFT:
-       case VEHICLE_PASS_LSD:
+      case VEHICLE_PASS_LSD:
+      case VEHICLE_PASS_SP:
         format = PAID_EXPORT_FORMAT;
         break;
 
@@ -614,11 +596,10 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
     // Mark the records as exported first.
     try {
-      await this.ajax.request('access-document/bulk-comment', {
-        method: 'POST',
+      await this.ajax.post('access-document/bulk-comment', {
         data: {
           ids: exportedIds,
-          comment: 'exported' // Bulk comment API will add the user's callsign and a timestamp
+          comment: `exported with filter ${this.filter}` // Bulk comment API will add the user's callsign and a timestamp
         }
       });
       this.toast.success('An export comment was successfully added to the exported items.');

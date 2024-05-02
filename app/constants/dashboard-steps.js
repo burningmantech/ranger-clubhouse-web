@@ -744,12 +744,6 @@ function buildTickets(milestones, personId, house) {
     }
   });
 
-  pkg.giftVPs.forEach((t) => {
-    if (usingTicket(t)) {
-      claimed.push(t);
-    }
-  });
-
   pkg.lsdTickets.forEach((t) => {
     if (usingTicket(t)) {
       claimed.push(t);
@@ -761,7 +755,6 @@ function buildTickets(milestones, personId, house) {
       claimed.push(t);
     }
   })
-
 
   return {
     claimed,

@@ -6,19 +6,16 @@
   <TicketOpenApplicant @ticketingInfo={{@ticketingInfo}} />
 {{else}}
   {{#if (and @ticketPackage.giftTickets (not this.claimedGiftTicket))}}
-    <div class="alert alert-secondary">
-      {{singular-or-pluralize @ticketPackage.giftTickets.length "Gift Ticket" capitalize=true}}
-      {{~#if @ticketPackage.giftVPs~}}
-        , and {{singular-or-pluralize @ticketPackage.giftVPs.length "Gift Vehicle Pass"}}
-      {{/if}} is available.
+    <UiAlert @type="secondary">
+      {{singular-or-pluralize @ticketPackage.giftTickets.length "Gift Ticket" capitalize=true}} is available.
       To claim the {{pluralize  @ticketPackage.giftTickets.length "ticket" without-count=true}}, click on the ticketing
       button below.
-    </div>
+    </UiAlert>
   {{/if}}
   {{#if @ticketPackage.lsdTickets}}
-    <div class="alert alert-secondary">
+    <UiAlert @type="secondary">
       <TicketLsdAvailable @ticketPackage={{@ticketPackage}} @ticketingInfo={{@ticketingInfo}} />
-    </div>
+    </UiAlert>
   {{/if}}
 
   {{#if this.showTicketingWizard}}

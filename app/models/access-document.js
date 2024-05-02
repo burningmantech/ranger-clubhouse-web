@@ -6,7 +6,7 @@ export const GIFT_TICKET = 'gift_ticket';
 export const LSD_TICKET = 'lsd_ticket';
 export const SPT = 'special_price_ticket';
 export const STAFF_CREDENTIAL = 'staff_credential';
-export const VEHICLE_PASS = 'vehicle_pass';
+export const VEHICLE_PASS_SP = 'vehicle_pass_sp';
 export const VEHICLE_PASS_GIFT = 'vehicle_pass_gift';
 export const VEHICLE_PASS_LSD = 'vehicle_pass_lsd';
 export const WAP = 'work_access_pass';
@@ -33,8 +33,8 @@ export const TypeLabels = {
   [LSD_TICKET]: 'LSD Ticket',
   [SPT]: 'Special Price Ticket',
   [STAFF_CREDENTIAL]: 'Staff Credential',
-  [VEHICLE_PASS]: 'Vehicle Pass',
-  [VEHICLE_PASS_GIFT]: 'Gift Vehicle Pass',
+  [VEHICLE_PASS_SP]: 'Vehicle Pass (Special Price)',
+  [VEHICLE_PASS_GIFT]: 'Vehicle Pass (Gift)',
   [VEHICLE_PASS_LSD]: 'LSD Vehicle Pass',
   [WAPSO]: 'S.O. Setup Access Pass',
   [WAP]: 'Setup Access Pass',
@@ -45,7 +45,7 @@ export const TypeShortLabels = {
   [SPT]: 'SPT',
   [GIFT_TICKET]: 'GIFT',
   [LSD_TICKET]: 'LSD',
-  [VEHICLE_PASS]: 'VP',
+  [VEHICLE_PASS_SP]: 'SPVP',
   [VEHICLE_PASS_GIFT]: 'GIFTVP',
   [VEHICLE_PASS_LSD]: 'LSDVP',
   [WAP]: 'WAP',
@@ -67,7 +67,7 @@ export const StatusLabels = {
   [EXPIRED]: 'expired',
   [QUALIFIED]: 'qualified',
   [SUBMITTED]: 'submitted',
-  [TURNED_DOWN]: 'turned down',
+  // [TURNED_DOWN]: 'turned down',
   [USED]: 'used',
 };
 
@@ -98,7 +98,7 @@ export default class AccessDocumentModel extends Model {
   @attr('string', {defaultValue: 'US'}) country;
   @attr('string') postal_code;
 
-  @attr('', { readOnly: true }) person;
+  @attr('', {readOnly: true}) person;
 
   get isRegularTicket() {
     return (this.type === STAFF_CREDENTIAL || this.type === SPT);
@@ -145,12 +145,17 @@ export default class AccessDocumentModel extends Model {
   }
 
   get isVehiclePass() {
-    return this.type === VEHICLE_PASS;
+    return this.type === VEHICLE_PASS_SP || this.type === VEHICLE_PASS_GIFT;
+  }
+
+  get isVehiclePassSP() {
+    return this.type === VEHICLE_PASS_SP;
   }
 
   get isVehiclePassGift() {
     return this.type === VEHICLE_PASS_GIFT;
   }
+
   get isVehiclePassLSD() {
     return this.type === VEHICLE_PASS_LSD;
   }

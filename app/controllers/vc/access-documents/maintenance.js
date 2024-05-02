@@ -40,7 +40,7 @@ const TASK_GROUPS = [
       {
         action: 'grant-vps',
         title: 'Grant Vehicle Passes',
-        description: "Grant Vehicle Passes to anyone with a current Staff Credential or Special Price Ticket (banked, qualified, or claimed) who doesn't have one already.",
+        description: "Grant Gift VPs to current Staff Credential holders and Special Price VPs to Special Price Ticket holders who doesn't have one already. People with a SC and SPT will receive both VP types.",
         controller: 'access-document',
         component: GrantVPs,
       },

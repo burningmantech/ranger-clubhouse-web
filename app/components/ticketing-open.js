@@ -61,17 +61,9 @@ export default class TicketingOpenComponent extends Component {
   async setDocumentStatus(document, status, callback = null) {
     this.isSavingDocumentStatus = true;
     try {
-      const result = await this.ajax.request(`access-document/statuses`, {
-        method: 'PATCH',
-        data: {statuses: [{id: document.id, status}]}
-      });
+      const result = await this.ajax.patch(`access-document/${document.id}/status`, {data: {status}});
       this.house.pushPayload('access-document', result.access_document);
       this.toast.success('Your choice has been successfully saved.');
-      const {vehiclePass} = this.args.ticketPackage;
-      if (vehiclePass && document.isRegularTicket) {
-        // Vehicle Pass may have been released because all tickets were banked.
-        await vehiclePass.reload();
-      }
       callback?.();
     } catch (response) {
       this.house.handleErrorResponse(response)

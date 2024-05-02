@@ -55,7 +55,7 @@
   {{else if ticket.isQualified}}
     <h4>A {{ticket.typeLabel}} is available</h4>
     <TicketGiftConditions/>
-    <div class="d-flex align-items-center flex-column justify-content-sm-between flex-lg-row justify-content-lg-start">
+    <div class="d-flex align-items-center flex-column justify-content-sm-between flex-lg-row justify-content-lg-start mb-4">
       <UiButton @class="btn-responsive"
                 @onClick={{fn this.claimAndSetDeliveryMethod ticket "postal"}}
                 @disabled={{@isSavingDocumentStatus}}>
@@ -74,6 +74,7 @@
         {{/if}}
       </UiButton>
     </div>
+    If you wish to pass on claiming a Gift Ticket, use the Next button below.
   {{else}}
     <p>
       Uh oh, I don't know the state of the ticket [{{ticket.status}}], id #{{ticket.id}}.
