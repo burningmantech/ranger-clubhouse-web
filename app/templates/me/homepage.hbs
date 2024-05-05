@@ -1,8 +1,10 @@
 {{#if this.person.isPastProspective}}
   <DashboardPastProspective/>
+{{else if this.person.isBonked}}
+  <DashboardBonked/>
 {{else if this.person.isProspectiveWaitlist}}
   <DashboardProspectiveWaitlist/>
-{{else if (or this.person.isProspective this.person.isAlpha this.person.isBonked)}}
+{{else if (or this.person.isProspective this.person.isAlpha)}}
   <DashboardPnv @milestones={{this.milestones}}
                 @person={{this.person}}
                 @photo={{this.photo}}
