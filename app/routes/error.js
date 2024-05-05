@@ -21,6 +21,7 @@ export default class ErrorRoute extends ClubhouseRoute {
       || error.name === 'NetworkError'
       || message?.match(/NetworkError/)
       || message?.match(/Network request failed/i)
+      || message?.match(/Failed to fetch/i)
     );
 
     controller.set('isOffline', isOffline);
