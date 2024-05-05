@@ -6,6 +6,8 @@
   </UiNotice>
   {{#if @person.isPastProspective}}
     <DashboardPastProspective/>
+  {{else if @person.isBonked}}
+    <DashboardBonked/>
   {{else if @person.isProspectiveWaitlist}}
     <DashboardProspectiveWaitlist/>
   {{else if (or @person.isProspective @person.isAlpha @person.isBonked)}}
