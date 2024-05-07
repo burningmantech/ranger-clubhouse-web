@@ -1,4 +1,13 @@
 <h1>ID #{{this.survey.id}}: {{this.survey.title}}</h1>
+{{#if this.survey.active}}
+  <UiAlert @type="success" @icon="check">
+    The survey has been activated. It will appear on the Clubhouse Dashboard.
+  </UiAlert>
+{{else}}
+  <UiAlert @type="danger" @icon="ban">
+    The survey has not been activated. It will not appear on the Clubhouse Dashboard.
+  </UiAlert>
+{{/if}}
 <p>
   <LinkTo @route="ops.survey" @query={{hash year=this.survey.year}}>
     Back to {{this.survey.year}} Survey Administration
@@ -7,11 +16,19 @@
 <dl>
   <dt>Prologue:</dt>
   <dd>
-    <ReadMore @text={{this.survey.prologue}} />
+    {{#if this.survey.prologue}}
+      {{this.safeHtmlString this.survey.prologue}}
+    {{else}}
+      <i>No prologue text given.</i>
+    {{/if}}
   </dd>
   <dt>Epilogue:</dt>
   <dd>
-    <ReadMore @text={{this.survey.epilogue}} />
+    {{#if this.survey.epilogue}}
+      {{this.safeHtmlString this.survey.epilogue}}
+    {{else}}
+      <i>No epilogue text given.</i>
+    {{/if}}
   </dd>
 </dl>
 <UiButtonRow class="my-4">
@@ -158,7 +175,8 @@
           <LoadingIndicator/>
         {{/if}}
         <div class="ms-auto">
-          <UiButton @type="danger" @onClick={{this.deleteGroupAction}} @disabled={{this.groupEntry.isDeleting}} @size="sm">
+          <UiButton @type="danger" @onClick={{this.deleteGroupAction}} @disabled={{this.groupEntry.isDeleting}}
+                    @size="sm">
             {{fa-icon "trash" right=1}} Delete Group
           </UiButton>
         </div>

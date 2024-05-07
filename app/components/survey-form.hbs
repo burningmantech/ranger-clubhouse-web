@@ -12,6 +12,14 @@
                   @label="Position"
                   @options={{if (eq f.model.type "alpha") this.alphaOption this.positionOptions}}/>
       </FormRow>
+      <p>
+        Only activate the survey when the survey has been finalized, and it is ready to be published.
+      </p>
+      <FormRow>
+        <div class="col-auto">
+          <f.checkbox @name="active" @label="Active"/>
+        </div>
+      </FormRow>
       <FormRow>
         <f.text @name="title"
                 @label="Title"
@@ -19,13 +27,13 @@
                 @maxlength={{190}}/>
       </FormRow>
       <FormRow>
-        <f.textarea @name="prologue"
+        <f.editor @name="prologue"
                     @label="Prologue text to show at the very beginning of the survey (HTML allowed):"
                     @cols={{80}}
                     @rows={{4}}/>
       </FormRow>
       <FormRow>
-        <f.textarea @name="epilogue"
+        <f.editor @name="epilogue"
                     @label="Epilogue text to shown at the very end of the survey (HTML allowed):"
                     @cols={{80}}
                     @rows={{4}}/>
