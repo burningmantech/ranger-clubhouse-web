@@ -3,6 +3,7 @@ import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {TYPE_NORMAL, TYPE_TRAINER, TYPE_SEPARATE, TYPE_SUMMARY} from 'clubhouse/models/survey-group';
 import _ from 'lodash';
+import {htmlSafe} from '@ember/template';
 
 export default class OpsSurveyManageController extends ClubhouseController {
   @tracked groupEntry = null;
@@ -35,13 +36,19 @@ export default class OpsSurveyManageController extends ClubhouseController {
   }
 
   @action
+  safeHtmlString(string) {
+    return htmlSafe(string);
+  }
+
+  @action
   newGroupAction() {
     const lastGroup = _.last(this.surveyGroups);
 
     this.groupEntry = this.store.createRecord('survey-group', {
       survey_id: this.survey.id,
       sort_index: lastGroup ? lastGroup.sort_index + 1 : 1,
-      type: TYPE_NORMAL
+      type: TYPE_NORMAL,
+      active: false
     });
   }
 
