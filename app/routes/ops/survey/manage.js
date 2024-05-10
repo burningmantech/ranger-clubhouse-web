@@ -12,23 +12,34 @@ export default class OpsSurveyManageRoute extends ClubhouseRoute {
       survey: this.store.findRecord('survey', survey_id),
       surveyGroups: this.store.query('survey-group', {survey_id}),
       surveyQuestions: this.store.query('survey-question', {survey_id}),
-      positions: this.ajax.request('position', {data: { type: 'Training'}}).then((result) => {
-        return result.position.filter((p) => p.title.includes('Training'));
-      })
+      positions: this.ajax.request('position', {data: {type: 'Training'}}).then(({position}) => {
+        return position.filter((p) => p.title.includes('Training'));
+      }),
+      mentorPositions: this.ajax.request('position', {data: {mentor: 1}}).then(({position}) => position),
+      menteePositions: this.ajax.request('position', {data: {mentee: 1}}).then(({position}) => position)
     });
   }
 
   setupController(controller, model) {
-    controller.set('survey', model.survey);
-    controller.set('surveyGroups', model.surveyGroups);
-    controller.set('surveyQuestions', model.surveyQuestions);
-    controller.set('positions', model.positions);
+    controller.survey = model.survey;
+    controller.surveyGroups = model.surveyGroups;
+    controller.surveyQuestions = model.surveyQuestions;
     controller._assignQuestions();
     controller._buildOrderedGroups();
+    controller.positionOptions = this._buildPositionOptions(model.positions);
+    controller.mentorPositionOptions = this._buildPositionOptions(model.mentorPositions);
+    controller.menteePositionOptions = this._buildPositionOptions(model.menteePositions);
   }
 
   @action
   refreshRoute() {
     this.refresh();
   }
+
+  _buildPositionOptions(positions) {
+    const options = positions.map((p) => ({id: p.id, title: p.active ? p.title : `${p.title} [inactive]`}));
+    options.unshift({id: null, title: '----'});
+    return options;
+  }
+
 }

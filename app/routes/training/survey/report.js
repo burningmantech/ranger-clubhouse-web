@@ -1,4 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import {TYPE_MENTEES_FOR_MENTOR, TYPE_MENTOR_FOR_MENTEES} from "clubhouse/models/survey";
 
 export default class TrainingSurveyReportRoute extends ClubhouseRoute {
   queryParams = {
@@ -24,13 +25,26 @@ export default class TrainingSurveyReportRoute extends ClubhouseRoute {
   setupController(controller, model) {
     const {survey, report_id} = model;
 
-    controller.set('survey', survey);
-    controller.set('training', this.modelFor('training'));
-    controller.set('reportId', report_id);
+    controller.survey = survey;
+    controller.training = this.modelFor('training');
+    controller.reportId = report_id;
+
+    switch (survey.type) {
+      case TYPE_MENTEES_FOR_MENTOR:
+        controller.personTitle = 'Mentor';
+        break;
+      case TYPE_MENTOR_FOR_MENTEES:
+        controller.personTitle = 'Mentee';
+        break;
+      default:
+        controller.personTitle = 'Trainer';
+        break;
+    }
+
     if (survey.type === 'trainer') {
-      controller.set('trainers', model.trainers);
+      controller.people = model.trainers;
     } else {
-      controller.set('report', model.reports.find((r) => r.id == report_id));
+      controller.report = model.reports.find((r) => r.id == report_id);
     }
   }
 }

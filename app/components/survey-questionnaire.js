@@ -5,7 +5,7 @@ import {htmlSafe} from '@ember/template';
 import _ from 'lodash';
 import {service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';
-import {TYPE_ALPHA, TYPE_TRAINER} from "clubhouse/models/survey";
+import {TYPE_ALPHA, TYPE_MENTEES_FOR_MENTOR, TYPE_MENTOR_FOR_MENTEES, TYPE_TRAINER} from "clubhouse/models/survey";
 import currentYear from "clubhouse/utils/current-year";
 
 export default class SurveyQuestionnaireComponent extends Component {
@@ -39,10 +39,19 @@ export default class SurveyQuestionnaireComponent extends Component {
     const groups = [];
     this.isTrainerSurvey = (survey.type === TYPE_TRAINER);
 
-    if (survey.type === TYPE_ALPHA) {
-      this.trainerName = 'Mentor';
-    } else {
-      this.trainerName = 'Trainer';
+    switch (survey.type) {
+      case TYPE_ALPHA:
+        this.trainerName = 'Mentor';
+        break;
+      case TYPE_MENTOR_FOR_MENTEES:
+        this.trainerName = 'Mentee';
+        break;
+      case TYPE_MENTEES_FOR_MENTOR:
+        this.trainerName = 'Mentor';
+        break;
+      default:
+        this.trainerName = 'Trainer';
+        break;
     }
 
     if (this.isTrainerSurvey) {

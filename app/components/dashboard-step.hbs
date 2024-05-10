@@ -54,10 +54,10 @@
 
     {{#if @step.survey}}
       {{#if (eq @step.survey "student")}}
-        {{#each @milestones.surveys.sessions as |slot|}}
+        {{#each @milestones.surveys.sessions as |survey|}}
           <p class="my-1">
-            <LinkTo @route="me.survey" @query={{hash slot_id=slot.id type="training"}} disabled={{@isNotUser}}>
-              {{slot.position_title}} - {{slot.description}} {{shift-format slot.begins}}
+            <LinkTo @route="me.survey" @query={{hash slot_id=survey.id type=survey.type}} disabled={{@isNotUser}}>
+              {{survey.position_title}} - {{survey.description}} {{shift-format survey.begins}}
             </LinkTo>
           </p>
         {{/each}}

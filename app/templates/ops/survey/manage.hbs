@@ -241,7 +241,10 @@
 
 {{#if this.surveyEdit}}
   <SurveyForm @survey={{this.surveyEdit}}
-              @positions={{this.positions}}
+              @positionOptions={{this.positionOptions}}
+              @mentorPositionOptions={{this.mentorPositionOptions}}
+              @menteePositionOptions={{this.menteePositionOptions}}
               @onCancel={{this.cancelSurveyAction}}
-              @onSave={{this.saveSurveyAction}} />
+              @onSave={{this.saveSurveyAction}}
+  />
 {{/if}}

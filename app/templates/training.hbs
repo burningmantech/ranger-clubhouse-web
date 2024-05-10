@@ -32,9 +32,26 @@
       {{#if this.canManageSurveys}}
         <s.link @route="training.survey.index"
                 @routeArg={{this.training.id}}
-                @title="ART Surveys"
+                @query={{hash position_id=this.training.id}}
+                @title="Training Surveys"
                 @icon="poll"
                 @iconType="s"/>
+        {{#if this.training.mentor_position_id}}
+          <s.link @route="training.survey.index"
+                  @routeArg={{this.training.id}}
+                  @query={{hash position_id=this.training.mentor_position_id}}
+                  @title="Mentor Surveys"
+                  @icon="poll"
+                  @iconType="s"
+          />
+          <s.link @route="training.survey.index"
+                  @routeArg={{this.training.id}}
+                  @query={{hash position_id=this.training.mentee_position_id}}
+                  @title="Mentee Surveys"
+                  @icon="poll"
+                  @iconType="s"
+          />
+        {{/if}}
       {{/if}}
     {{else}}
       {{#if this.showOnlineCourseProgress}}

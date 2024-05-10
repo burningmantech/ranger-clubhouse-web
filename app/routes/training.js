@@ -1,7 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {ADMIN, INTAKE, TRAINER, VC, MENTOR, SURVEY_MANAGEMENT, ART_TRAINER} from 'clubhouse/constants/roles';
+import {TRAINING} from "clubhouse/constants/positions";
 
-import { TRAINING} from "clubhouse/constants/positions";
 /*
  * Top level training route "/training"
  *

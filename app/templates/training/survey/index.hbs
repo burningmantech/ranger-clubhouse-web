@@ -1,11 +1,10 @@
-<YearSelect @title="Training Surveys" @year={{this.year}} @minYear={{2012}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="{{this.headerTitle}} Surveys" @year={{this.year}} @minYear={{2012}} @onChange={{action (mut this.year)}} />
 
 <UiTable class="mt-2">
   <thead>
   <tr>
     <th>ID</th>
-    <th>Type</th>
-    <th>Title</th>
+    <th>Title / Type</th>
     <th>Reports</th>
   </tr>
   </thead>
@@ -13,8 +12,10 @@
   {{#each this.surveys as |survey|}}
     <tr>
       <td>{{survey.id}}</td>
-      <td>{{survey.type}}</td>
-      <td>{{survey.title}}</td>
+      <td>
+        {{survey.title}}<br>
+        {{this.surveyTitle survey.type}}
+      </td>
       <td>
         {{#each survey.reports as |report|}}
           <div class="mb-2">

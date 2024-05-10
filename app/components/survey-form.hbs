@@ -1,4 +1,7 @@
-<ModalDialog @title="{{if @surveyEntry.isNew "Create" "Edit"}} Survey" @onEscape={{this.cancelSurveyAction}} as |Modal|>
+<ModalDialog @title="{{if @surveyEntry.isNew "Create" "Edit"}} Survey"
+             @size="xl"
+             @onEscape={{this.cancelSurveyAction}}
+             as |Modal|>
   <ChForm @formId="survey"
           @formFor={{@survey}}
           @validator={{this.surveyValidations}}
@@ -9,8 +12,14 @@
                   @label="Type"
                   @options={{this.typeOptions}}/>
         <f.select @name="position_id"
-                  @label="Position"
-                  @options={{if (eq f.model.type "alpha") this.alphaOption this.positionOptions}}/>
+                  @label={{this.positionLabel f.model.type}}
+                  @options={{this.positionOptions f.model.type}}/>
+        {{#if (this.isMentorOrMenteeType f.model.type)}}
+          <f.select @name="mentoring_position_id"
+                    @label={{this.mentoringPositionLabel f.model.type}}
+                    @options={{this.mentoringPositionOptions f.model.type}}
+          />
+        {{/if}}
       </FormRow>
       <p>
         Only activate the survey when the survey has been finalized, and it is ready to be published.
