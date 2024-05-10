@@ -21,10 +21,14 @@ Showing {{pluralize this.surveys.length "survey"}}
   {{#each this.surveys as |survey|}}
     <tr>
       <td>{{survey.id}}</td>
-      <td>{{survey.type}}</td>
+      <td>{{survey.typeLabel}}</td>
       <td>
         {{#if survey.position_id}}
-          <PresentOrNot @value={{get this.positionsById survey.position_id}} @empty="Unknown #{{survey.position_id}}"/>
+          {{survey.position_title}}
+          {{#if survey.mentoring_position_id}}
+            <br>&rarr;
+            {{survey.mentoring_position_title}}
+          {{/if}}
         {{else}}
           -
         {{/if}}
@@ -54,9 +58,12 @@ Showing {{pluralize this.surveys.length "survey"}}
 
 {{#if this.surveyEntry}}
   <SurveyForm @survey={{this.surveyEntry}}
-              @positions={{this.positions}}
+              @positionOptions={{this.positionOptions}}
+              @mentorPositionOptions={{this.mentorPositionOptions}}
+              @menteePositionOptions={{this.menteePositionOptions}}
               @onCancel={{this.cancelSurveyAction}}
-              @onSave={{this.saveSurveyAction}} />
+              @onSave={{this.saveSurveyAction}}
+  />
 {{/if}}
 
 {{#if this.isDuplicating}}

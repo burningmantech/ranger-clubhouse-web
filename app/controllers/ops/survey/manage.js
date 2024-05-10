@@ -13,6 +13,9 @@ export default class OpsSurveyManageController extends ClubhouseController {
   @tracked surveyQuestions;
   @tracked surveyEdit;
   @tracked orderedGroups;
+  @tracked positionOptions;
+  @tracked mentorPositionOptions;
+  @tracked menteePositionOptions;
 
   typeOptions = [
     {id: 'rating', title: 'Rating 1 to 7'},
@@ -24,7 +27,7 @@ export default class OpsSurveyManageController extends ClubhouseController {
     {id: TYPE_NORMAL, title: 'Normal: Group questions are on the main report'},
     {
       id: TYPE_TRAINER,
-      title: 'Trainer/Mentor: Group questions are repeated for each trainer/mentor who taught. Responses are collated on the Trainers\' Report'
+      title: 'Trainer/Mentor/Mentee: Group questions are repeated for each trainer (type Training), each mentor who mentored (mentees rating their mentors), or mentees who were mentored (type mentor-for-mentee). Responses are collated on the Trainers\' Report'
     },
     {id: TYPE_SEPARATE, title: 'Separate: Group is a separate report with session breakdown (report title req.)'},
     {id: TYPE_SUMMARY, title: 'Summary: Group is a separate report with NO session breakdown (report title req.)'},
@@ -63,20 +66,24 @@ export default class OpsSurveyManageController extends ClubhouseController {
   }
 
   @action
-  saveGroupAction(model, isValid) {
+  async saveGroupAction(model, isValid) {
     if (!isValid) {
       return;
     }
 
     const isNew = model.isNew;
 
-    model.save().then(() => {
+    try {
+      await model.save();
       this.toast.success(`The survey group was successfully ${isNew ? 'created' : 'updated'}.`);
       this.groupEntry = null;
       if (isNew) {
-        this.surveyGroups.update().then(() => this._buildOrderedGroups());
+        await this.surveyGroups.update();
+        this._buildOrderedGroups();
       }
-    }).catch((response) => this.house.handleErrorResponse(response, model));
+    } catch (response) {
+      this.house.handleErrorResponse(response, model)
+    }
   }
 
   @action

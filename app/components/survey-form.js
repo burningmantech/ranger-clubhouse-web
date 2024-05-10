@@ -2,18 +2,17 @@ import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import {service} from '@ember/service';
-import {TYPE_ALPHA, TYPE_TRAINER, TYPE_TRAINING} from "clubhouse/models/survey";
-import { ALPHA } from "clubhouse/constants/positions";
+import {
+  TYPE_ALPHA,
+   TYPE_MENTOR_FOR_MENTEES,
+  TYPE_MENTEES_FOR_MENTOR,
+  TypeOptions
+} from "clubhouse/models/survey";
+import {ALPHA} from "clubhouse/constants/positions";
 
 export default class SurveyFormComponent extends Component {
   @service house;
   @service toast;
-
-  typeOptions = [
-    {id: TYPE_TRAINING, title: 'Trainee-for-Training Survey'},
-    {id: TYPE_TRAINER, title: 'Trainer-for-Trainer Survey'},
-    {id: TYPE_ALPHA, title: 'Alpha Survey'}
-  ];
 
   surveyValidations = {
     title: [validatePresence(true)],
@@ -23,15 +22,10 @@ export default class SurveyFormComponent extends Component {
   };
 
   alphaOption = [
-    [ 'Alpha', ALPHA ]
+    ['Alpha', ALPHA]
   ];
 
-  get positionOptions() {
-    const positions = this.args.positions.map((p) => ({id: p.id, title: p.title}));
-    positions.unshift({id: null, title: '----'});
-
-    return positions
-  }
+  typeOptions = TypeOptions;
 
   @action
   async saveSurveyAction(model, isValid) {
@@ -57,5 +51,47 @@ export default class SurveyFormComponent extends Component {
   @action
   cancelSurveyAction() {
     this.args.onCancel();
+  }
+
+  @action
+  positionOptions(type) {
+    switch (type) {
+      case TYPE_ALPHA:
+        return this.alphaOption;
+      case TYPE_MENTOR_FOR_MENTEES:
+        return this.args.mentorPositionOptions;
+      case TYPE_MENTEES_FOR_MENTOR:
+        return this.args.menteePositionOptions;
+      default:
+        return this.args.positionOptions;
+    }
+  }
+
+  positionLabel(type) {
+    switch (type) {
+      case TYPE_ALPHA:
+        return 'Alpha Position';
+      case TYPE_MENTOR_FOR_MENTEES:
+        return 'Mentor Position';
+      case TYPE_MENTEES_FOR_MENTOR:
+        return 'Mentee Position';
+      default:
+        return 'Training Position';
+    }
+  }
+
+  @action
+  isMentorOrMenteeType(type){
+    return type === TYPE_MENTEES_FOR_MENTOR || type === TYPE_MENTOR_FOR_MENTEES;
+  }
+
+  @action
+  mentoringPositionLabel(type) {
+    return type === TYPE_MENTOR_FOR_MENTEES ? 'Mentee Position' : 'Mentor Position';
+  }
+
+  @action
+  mentoringPositionOptions(type) {
+    return type === TYPE_MENTEES_FOR_MENTOR ? this.args.mentorPositionOptions : this.args.menteePositionOptions;
   }
 }
