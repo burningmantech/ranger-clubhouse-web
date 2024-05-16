@@ -23,7 +23,7 @@
           The following items have been submitted for processing:
           {{#each this.submittedItems as |item|}}
             <div class="mb-1">
-              {{fa-icon "check" color="success"}}<span class="ms-2">{{item}}</span>
+              {{fa-icon "check" color="success" right=1 fixed=true}} {{item}}
             </div>
           {{/each}}
         </:body>
@@ -48,10 +48,11 @@
       <TicketSummaryCard @type="danger" @icon="triangle-exclamation">
         <:title>{{pluralize this.unclaimedItems.length "Unclaimed Item"}}</:title>
         <:body>
-          The following items have not been claimed and may, or may not, affect your ability to Ranger on playa:
+          The following items have not been claimed and may or may not affect your ability to serve as a Ranger on the
+          playa:
           <div class="ms-2">
             {{#each this.unclaimedItems as |item|}}
-              <div class="mt-2"><span class="me-1">{{fa-icon "ban" color="danger"}}</span> {{item}}</div>
+              <div class="mt-2">{{fa-icon "ban" color="danger" right=1 fixed=true}} {{item}}</div>
             {{/each}}
           </div>
         </:body>

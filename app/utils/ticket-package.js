@@ -93,7 +93,7 @@ export default class TicketPackage {
   @cached
   get vehiclePass() {
     if (!this.ticket) {
-      return null;
+      return this.vehiclePassGift ?? this.vehiclePassSP;
     }
 
     return this.ticket.isStaffCredential ? this.vehiclePassGift : this.vehiclePassSP;

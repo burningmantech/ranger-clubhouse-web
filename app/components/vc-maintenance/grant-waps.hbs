@@ -1,7 +1,7 @@
 {{#if @results.people}}
   <p>
     {{pluralize @results.people.length "person"}} {{if (eq @results.people.length 1) "has" "have"}} been
-    granted WAPs
+    granted SAPs
   </p>
   <UiTable>
     <thead>
@@ -24,6 +24,6 @@
 {{else}}
   <p class="text-danger">
     No qualifying {{if (eq @taskAction "grant-alpha-waps") "Alphas" "active/inactive Rangers"}} were found
-      to grant WAPs to.
+      to grant SAPs to.
   </p>
 {{/if}}

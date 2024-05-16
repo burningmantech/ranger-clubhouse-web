@@ -30,6 +30,7 @@ export default class TicketOverviewComponent extends Component {
 
     const pass = ticketPackage.vehiclePass;
     this.usingVehiclePass = (pass && pass.isUsing);
+    this.vehiclePass = pass;
     this.haveVP = (pass && (pass.isUsing || pass.isQualified));
 
     // Figure out if SPT or VP requires a delivery method?

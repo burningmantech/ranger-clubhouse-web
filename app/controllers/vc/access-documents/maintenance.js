@@ -32,7 +32,7 @@ const TASK_GROUPS = [
       },
       {
         action: 'grant-waps',
-        title: 'Grant Ranger WAPs',
+        title: 'Grant Ranger SAPs',
         description: "Grant Setup Access Passes to any active or inactive Ranger who doesn't have one already and who has worked in the last 3 official event years (2020 and 2021 are skipped over.)",
         controller: 'access-document',
         component: GrantWAPs
@@ -58,8 +58,8 @@ const TASK_GROUPS = [
     tasks: [
       {
         action: 'grant-alpha-waps',
-        title: 'Grant Alpha WAPs',
-        description: "Grant Setup Access Passes to alphas, plus to prospectives who have signed up for a yet-to-come training. Alpha WAPs created will be marked as claimed.",
+        title: 'Grant Alpha SAPs',
+        description: "Grant Setup Access Passes to alphas, plus to prospectives who have signed up for a yet-to-come training. Alpha SAPs created will be marked as claimed.",
         controller: 'access-document',
         component: GrantWAPs,
       },
