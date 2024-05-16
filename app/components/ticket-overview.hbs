@@ -68,11 +68,11 @@
           The vehicle pass will be mailed to you.
         {{/if}}
         <div class="mt-2">
-          {{#if this.ticket.isSpecialPriceTicket}}
+          {{#if this.vehiclePass.isVehiclePassSP}}
             The Vehicle Pass must be paid for. An invoice will be sent for ${{@ticketingInfo.sp_vp_cost}} (USD).
             Failing to pay in a timely manner may result in your inability to drive into the event.
           {{else}}
-            Because you will be using a Staff Credential, the Vehicle Pass is provided free of charge.
+            The Vehicle Pass is provided free of charge because you have a claimed or banked Staff Credential.
           {{/if}}
         </div>
       </TicketOverviewItem>

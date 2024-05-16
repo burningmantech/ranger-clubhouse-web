@@ -111,11 +111,7 @@ export default class TicketDeliverInfoComponent extends Component {
 
     const item = ticket ?? vehiclePass;
 
-    if (item && item.isUsing) {
-      return ticket;
-    }
-
-    return null;
+    return item?.isUsing ? item : null;
   }
 
 
@@ -145,7 +141,7 @@ export default class TicketDeliverInfoComponent extends Component {
    */
 
   get isDeliveryNone() {
-    return this.itemToDeliver && this.itemToDeliver.isDeliveryNone;
+    return this.itemToDeliver?.isDeliveryNone;
   }
 
   /**
