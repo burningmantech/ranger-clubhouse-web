@@ -137,6 +137,7 @@ export default class SearchItemBarComponent extends Component {
   onModalInsert(element) {
     this.modalElement = element;
   }
+
   /**
    * Build up the options for search type
    *
@@ -452,10 +453,18 @@ export default class SearchItemBarComponent extends Component {
 
     if (isHQSearch) {
       // restrict search to callsign and a handful of active-like statuses
+
+      const match = query.match(/^name\s*:\s*(.*)$/i)
       params = {
-        search_fields: 'callsign',
         statuses: HqStatuses
       };
+      if (match) {
+        params.status_groups = 1;
+        params.search_fields = 'callsign,name';
+        query = match[1];
+      } else {
+        params.search_fields = 'callsign';
+      }
     } else if (query.startsWith('+')) {
       params = {search_fields: 'id'};
     } else {
@@ -581,6 +590,7 @@ export default class SearchItemBarComponent extends Component {
 
     if (this.searchMode === 'hq') {
       fields.push('callsign');
+      fields.push('name:real name');
     } else {
       fields.push('callsign');
       fields.push('name');
