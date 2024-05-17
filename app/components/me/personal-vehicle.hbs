@@ -1,13 +1,19 @@
-{{#if (and (not @vehicleInfo.pvr_eligble) (not @vehicleInfo.pvr_positions))}}
+{{#unless @vehicleInfo.pvr_eligible}}
   <UiAlert @type="danger" @icon="hand">
     You are not permitted to use your personal vehicle for Ranger business currently.
+    {{#if @vehicleInfo.pvr_positions}}
+      While you are currently unable to submit a Personal Vehicle Request, you can take steps to become eligible. See
+      below for instructions on how to become eligible.
+    {{/if}}
   </UiAlert>
-  <h6 class="fw-bold">Talk with your manager regarding eligibility</h6>
-  <p>
-    Reach out to your manager if you believe you have an operational need to drive your personal vehicle while
-    volunteering for the Rangers.
-  </p>
-{{/if}}
+  {{#unless @vehicleInfo.pvr_positions}}
+    <h6 class="fw-bold">Talk with your manager regarding eligibility</h6>
+    <p>
+      Reach out to your manager if you believe you have an operational need to drive your personal vehicle while
+      volunteering for the Rangers.
+    </p>
+  {{/unless}}
+{{/unless}}
 
 <h6 class="fw-bold">Vehicle Requests Must Be Submitted Each &amp; Every Year</h6>
 Please note the following regarding Personal Vehicle requests:
