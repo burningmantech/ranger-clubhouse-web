@@ -38,7 +38,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
       burgerMenu.click();
     }
 
-    if (!transition.isActive) {
+    if (!transition.isActive && !transition.isAborted) {
       this.send('collectTitleTokens', []);
     }
 
@@ -144,8 +144,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
       this.authSetup = true;
     } catch (response) {
       if (response.status === 401 || response.status === 403) {
-        this.session.invalidate();
-        return;
+        throw response;
       }
       // Can't retrieve the configuration. Consider the application offline for the moment.
       this.router.transitionTo('offline');
@@ -167,12 +166,8 @@ export default class ApplicationRoute extends ClubhouseRoute {
   @action
   error(error) {
     if (error instanceof UnauthorizedError || error.status === 401) {
-      // 401 error - not logged in, or JWT expired.
-      if (this.session.isAuthenicated) {
-        this.modal.info(null, 'Your session has timed out. Please login again', () => this.session.invalidate());
-      } else {
-        this.router.transitionTo('login');
-      }
+      // 401 error - not logged in, or session expired.
+      this.session.sessionExpiredNotification();
       return false;
     }
     // allow the error to transition to ErrorRoute

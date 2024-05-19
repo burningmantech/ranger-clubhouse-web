@@ -5,22 +5,12 @@ export default class MeHomepageRoute extends ClubhouseRoute {
     const user = this.session.user;
     const data = {};
 
-    try {
-      data.bullentins = await this.ajax.request('motd/bulletin', {data: {type: 'unread', page_size: 100}});
-      data.milestones = await this.ajax.request(`person/${user.id}/milestones`).then((result) => result.milestones);
-      if (!user.isPastProspective && !user.isAuditor) {
-        // Auditors and past prospectives do not have agreements.
-        data.agreements = await this.ajax.request(`agreements/${user.id}`).then(({agreements}) => agreements);
-      }
-    } catch (response) {
-      if (response.status === 401) {
-        // Token expired.
-        this.session.invalidate();
-      } else {
-        throw response;
-      }
+    data.bullentins = await this.ajax.request('motd/bulletin', {data: {type: 'unread', page_size: 100}});
+    data.milestones = await this.ajax.request(`person/${user.id}/milestones`).then((result) => result.milestones);
+    if (!user.isPastProspective && !user.isAuditor) {
+      // Auditors and past prospectives do not have agreements.
+      data.agreements = await this.ajax.request(`agreements/${user.id}`).then(({agreements}) => agreements);
     }
-
     return data;
   }
 

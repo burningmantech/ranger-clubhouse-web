@@ -20,6 +20,7 @@ const MAILBOX_KEY = 'clubhouse_mailbox';
 export default class extends SessionService {
   @service ajax;
   @service house;
+  @service modal;
   @service router;
 
   // The logged-in user
@@ -161,6 +162,15 @@ export default class extends SessionService {
         super.handleAuthentication(...arguments);
       }
     });
+  }
+
+  /**
+   * Let the user know the session expired.
+   **/
+
+  sessionExpiredNotification() {
+    alert('Your session has expired. Please login again.');
+    this.session.invalidate();
   }
 
   /**
