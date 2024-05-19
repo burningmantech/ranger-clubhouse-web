@@ -113,6 +113,11 @@ export default class WysiwygEditorComponent extends Component {
         skin: false,
         toolbar_mode: 'sliding',
 
+        force_p_newlines : false,
+        force_br_newlines : true,
+        convert_newlines_to_brs : false,
+        remove_linebreaks : true,
+
         init_instance_callback: (editor) => {
           this.editor = editor;
           editor.on('Change', () => this.args.onChange(editor.getContent()));
