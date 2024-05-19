@@ -12,7 +12,7 @@ import {htmlSafe} from '@ember/template';
 import logError from "clubhouse/utils/log-error";
 
 const JavascriptExceptions = [
- // AggregateError, -- not defined for Safari 12.
+  // AggregateError, -- not defined for Safari 12.
   EvalError,
   RangeError,
   ReferenceError,
@@ -59,8 +59,7 @@ export default class HouseService extends Service {
     }
 
     if (response.status === 401 && this.session.isAuthenticated) {
-      this.toast.warning('Your session has timed out. Please login again.')
-      this.session.invalidate();
+      this.session.sessionExpiredNotification();
       return;
     }
 
@@ -173,6 +172,7 @@ export default class HouseService extends Service {
 
     this.modal.info('An error occurred', htmlSafe(message));
   }
+
 
   /**
    * Save an Ember Data record or Change Set object
