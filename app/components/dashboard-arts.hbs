@@ -19,7 +19,7 @@
           {{else if (or (eq art.status "no-show") (eq art.status "fail"))}}
             {{fa-icon "times" color="danger"}}
           {{else if (eq art.status "no-shift")}}
-            {{fa-icon "arrow-right" color="success"}}
+            &nbsp;
           {{else}}
             {{fa-icon "hourglass-half"}}
           {{/if}}
@@ -29,18 +29,19 @@
         </div>
         <div class="dashboard-art-status">
           {{#if (eq art.status "pass")}}
+            {{badge "success" "completed"}}
             Completed
           {{else if (or (eq art.status "no-show") (eq art.status "fail"))}}
-            NOT PASSED
+            {{badge "danger" "not passed"}}
           {{else if (eq art.status "no-shift")}}
-            Not signed up
+            {{badge "secondary" "not signed up"}}
           {{else}}
-            Pending
+            {{badge "warning" "pending"}}
           {{/if}}
         </div>
         <div class="dashboard-art-location">
           {{#if art.date}}
-            {{shift-format art.date}}<br>
+            {{shift-format art.date}} ({{art.timezone_abbr}})<br>
             {{art.location}}
             {{#if art.is_trainer}}
               <br><i>(as trainer)</i>
@@ -54,7 +55,7 @@
         <div class="dashboard-art-required-for">
           Required to work:
           {{#each art.requiredTitles as |title|}}
-            <span class="d-inline-block">{{title}}</span>
+            <span class="d-inline-block me-1">{{title}}</span>
           {{/each}}
         </div>
       </div>
@@ -63,6 +64,5 @@
 </div>
 
 {{#if (not-eq @step.result "completed")}}
-  Visit
-  <LinkTo @route="me.schedule">Me &gt; Schedule / Sign Up</LinkTo> to sign up for an ART(s).
+  Visit <LinkTo @route="me.schedule">Me &gt; Schedule / Sign Up</LinkTo> to sign up for an ART(s).
 {{/if}}
