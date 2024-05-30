@@ -2,7 +2,15 @@ import Component from '@glimmer/component';
 import {set} from '@ember/object';
 import {action} from '@ember/object';
 import {service} from '@ember/service';
-import {DIRT, DIRT_SHINY_PENNY, TRAINING, BURN_PERIMETER, NVO_RANGER, DPW_RANGER} from 'clubhouse/constants/positions';
+import {
+  DIRT,
+  DIRT_SHINY_PENNY,
+  TRAINING,
+  BURN_PERIMETER,
+  NVO_RANGER,
+  DPW_RANGER,
+  FIELD_SUPPORT
+} from 'clubhouse/constants/positions';
 import {cached, tracked} from '@glimmer/tracking';
 import {INACTIVE, INACTIVE_EXTENSION, NON_RANGER, RETIRED} from 'clubhouse/constants/person_status';
 import {ADMIN, CAN_FORCE_SHIFT, TIMECARD_YEAR_ROUND} from 'clubhouse/constants/roles';
@@ -10,6 +18,7 @@ import {TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
 import {TYPE_TRAINING} from "clubhouse/models/position";
 import _ from 'lodash';
 import {htmlSafe} from '@ember/template';
+import hyperlinkText from "clubhouse/utils/hyperlink-text";
 
 export default class ShiftCheckInOutComponent extends Component {
   @service ajax;
@@ -143,7 +152,8 @@ export default class ShiftCheckInOutComponent extends Component {
    */
 
   get mayNotNeedRadio() {
-    return this.args.onDutyEntry?.position_id === BURN_PERIMETER;
+    const id = this.args.onDutyEntry?.position_id;
+    return  id === BURN_PERIMETER || id === FIELD_SUPPORT;
   }
 
   /**
@@ -265,7 +275,7 @@ export default class ShiftCheckInOutComponent extends Component {
 
   _showShiftInfo(positionTitle, slotUrl) {
     this.modal.info(`Shift Information For ${positionTitle}`,
-      htmlSafe(`<p>Convey the following information to the person:</p>${slotUrl}`)
+      htmlSafe(`<p>Convey the following information to the person:</p>${hyperlinkText(slotUrl)}`)
     );
   }
 
