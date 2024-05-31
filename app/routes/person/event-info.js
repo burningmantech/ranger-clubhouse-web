@@ -1,6 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
-import RSVP from 'rsvp';
 import {TRAINING} from "clubhouse/constants/positions";
 import {TECH_NINJA} from "clubhouse/constants/roles";
 
