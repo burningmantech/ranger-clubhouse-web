@@ -1,0 +1,16 @@
+<div class="mt-2">
+  {{#if @list}}
+    <b>{{pluralize @list.length @name}}:</b>
+  {{else}}
+    No {{@name}}s
+  {{/if}}
+  {{#if @list}}
+    <div class="columns columns-4">
+      {{#each @list as |item|}}
+        <div>
+          {{item.title}}
+        </div>
+      {{/each}}
+    </div>
+  {{/if}}
+</div>
