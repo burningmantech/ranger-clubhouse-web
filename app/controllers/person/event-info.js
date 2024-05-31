@@ -18,6 +18,7 @@ export default class PersonEventInfoController extends ClubhouseController {
   @tracked onlineCourses;
   @tracked onlineCourseOptions;
   @tracked courseForm;
+  @tracked vehicleInfo;
 
   get isCurrentYear() {
     return +this.year === this.house.currentYear();

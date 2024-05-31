@@ -288,6 +288,18 @@
         </:body>
       </UiSection>
     {{/if}}
+    <UiSection>
+      <:title>MVR &amp; Personal Vehicle eligible Teams and Positions</:title>
+      <:body>
+        <Person::VehicleEligibilityList @list={{this.vehicleInfo.mvr_teams}} @name="MVR Team"/>
+        <hr>
+        <Person::VehicleEligibilityList @list={{this.vehicleInfo.mvr_positions}} @name="MVR eligible position"/>
+        <hr>
+        <Person::VehicleEligibilityList @list={{this.vehicleInfo.pvr_teams}} @name="Personal Vehicle eligible team"/>
+        <hr>
+        <Person::VehicleEligibilityList @list={{this.vehicleInfo.pvr_positions}} @name="Personal Vehicle eligible position"/>
+      </:body>
+    </UiSection>
   </tab.pane>
   <tab.pane @title="Certifications" @id="certifications">
     <Person::Certifications @personId={{this.person.id}} />
