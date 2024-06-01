@@ -120,20 +120,8 @@
           Meals and Showers are a union of allocated (job) provisions, non-banked earned provisions, and what
           has been explicitly set on the BMID.
           <dl class="mt-2">
-            <dt>Meals</dt>
-            <dd>
-              <MealInfo @eventInfo={{this.eventInfo}} />
-            </dd>
-
-            <dt>Showers</dt>
-            <dd>
-              {{#if this.eventInfo.showers}}
-                {{badge "success" "Wet Spot"}} BMID allows access to the Wet Spot.
-              {{else}}
-                {{badge "secondary" "Shower Pogs"}} Wet Spot shower pog granted for every 40 hours
-                worked.
-              {{/if}}
-            </dd>
+            <MealInfo @eventInfo={{this.eventInfo}} />
+            <ShowerInfo @eventInfo={{this.eventInfo}} />
 
             <dt>Radio Checkout</dt>
             <dd>

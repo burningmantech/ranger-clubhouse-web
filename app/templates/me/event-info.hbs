@@ -126,40 +126,40 @@
       <UiSection>
         <:title>Provisions</:title>
         <:body>
-          <h3 class="border-bottom">{{fa-icon "utensils"}} Meals</h3>
-          <p>
+          <dl>
             <MealInfo @eventInfo={{this.eventInfo}} />
-          </p>
-          <h3 class="border-bottom mt-2">{{fa-icon "shower"}} Showers</h3>
-          <p>
-            {{#if this.eventInfo.showers}}
-              {{badge "secondary" "Wet Spot"}} Your BMID will allow you to take showers at the Wet Spot.
-            {{else}}
-              {{badge "secondary""Shower Pogs"}} For every 40 hours you work on playa, you can get a shower
-              pog from HQ, good for one shower at the Wet Spot.
-            {{/if}}
-          </p>
-          {{#if (or this.person.isRanger this.person.isAlpha this.person.isNonRanger)}}
-            <h3 class="border-bottom mt-2">{{fa-icon "broadcast-tower"}} Radios</h3>
-            {{#if this.eventInfo.radio_info_available}}
-              {{#if this.eventInfo.radio_eligible}}
-                <p>
-                  {{badge "success" "Event Radio"}}
-                  {{#if (eq this.eventInfo.radio_max 1)}}
-                    You may check out an Event radio for the duration of the event.
+            <ShowerInfo @eventInfo={{this.eventInfo}} />
+            {{#if (or this.person.isRanger this.person.isAlpha this.person.isNonRanger)}}
+              <dt>
+                {{fa-icon "broadcast-tower" right=1}}
+                {{#if this.eventInfo.radio_info_available}}
+                  {{#if this.eventInfo.radio_eligible}}
+                    Event Radio Eligible
                   {{else}}
-                    You may check out up to {{this.eventInfo.radio_max}} Event radios for the duration of the event.
+                    Shift Radios Only
                   {{/if}}
-                </p>
-                <EventRadioDisclaimer/>
-              {{else}}
-                {{badge "success" "Shift Radio"}} You will need to check out a radio each time you show up to Ranger HQ
-                for shift (and check it in at the end of your shift!).
-              {{/if}}
-            {{else}}
-              Radio eligibility for this year is not yet available.
+                {{else}}
+                  Radios
+                {{/if}}
+              </dt>
+              <dd>
+                {{#if this.eventInfo.radio_info_available}}
+                  {{#if this.eventInfo.radio_eligible}}
+                    <p>
+                      You may check out up to {{pluralize this.eventInfo.radio_max "Event radio"}} for the duration of
+                      the event.
+                    </p>
+                    <EventRadioDisclaimer/>
+                  {{else}}
+                    You will need to check out a radio each time you show up to Ranger HQ
+                    for shift and return it at the end of your shift!
+                  {{/if}}
+                {{else}}
+                  Radio eligibility for this year is not yet available.
+                {{/if}}
+              </dd>
             {{/if}}
-          {{/if}}
+          </dl>
         </:body>
       </UiSection>
     </tab.pane>

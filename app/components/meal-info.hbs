@@ -1,9 +1,12 @@
-<b>{{this.title}}</b>: {{this.description}}
-{{#if this.isBanked}}
-  <p>
-    <b>Note: The earned meal pass for this event has been banked.</b>
-  </p>
-{{/if}}
-{{#if this.isMealPass}}
-  <p class="my-2">Helpful date info: {{setting "MealDates"}}</p>
-{{/if}}
+<dt>{{fa-icon "utensils" right=1}} Meals - {{this.title}}</dt>
+<dd>
+  {{this.description}}
+  {{#if this.isBanked}}
+    <p>
+      <b>Note: The earned meal pass for this event has been banked.</b>
+    </p>
+  {{/if}}
+  {{#if this.isMealPass}}
+    <p class="my-2">Helpful date info: {{setting "MealDates"}}</p>
+  {{/if}}
+</dd>
