@@ -1,4 +1,6 @@
 import Component from '@glimmer/component';
+import {cached} from '@glimmer/tracking';
+import {TRAINING} from "clubhouse/constants/positions";
 
 export default class TrainingInfoComponent extends Component {
   get hasNotGrantedPositions() {
@@ -14,5 +16,19 @@ export default class TrainingInfoComponent extends Component {
     });
 
     return notGranted;
+  }
+
+  @cached
+  get trainings() {
+    let trainings = this.args.trainings;
+    const idx = trainings.findIndex((t) => t.position_id === TRAINING);
+    if (idx !== -1) {
+      const training = trainings[idx];
+      trainings.splice(idx, 1);
+      training.position_title = 'In-Person Training';
+      trainings.unshift(training);
+    }
+
+    return trainings;
   }
 }
