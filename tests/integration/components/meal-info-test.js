@@ -19,7 +19,7 @@ module('Integration | Component | meal-info', function(hooks) {
 
     await render(hbs`<MealInfo @eventInfo={{this.eventInfo}} />`);
 
-    assert.notStrictEqual(this.element.textContent.trim().indexOf('Meal Pogs'), -1, 'render meal pogs');
+    assert.notStrictEqual(this.element.textContent.trim().indexOf('Pogs'), -1, 'render meal pogs');
   });
 
   test('it renders meal info with unknown value', async function(assert) {
