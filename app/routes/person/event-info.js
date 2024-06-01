@@ -42,7 +42,9 @@ export default class PersonEventInfoRoute extends ClubhouseRoute {
   setupController(controller, model) {
     const {eventInfo, courses} = model;
     const options = courses?.map((c) => [`${c.name} (course id ${c.course_id})`, c.id]) ?? [];
-    options.unshift(['-', 0]);
+    if (options.length) {
+      options.unshift(['-', 0]);
+    }
     controller.year = this.year;
     controller.person = this.modelFor('person');
     controller.eventInfo = eventInfo;

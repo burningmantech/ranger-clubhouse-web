@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {ADMIN, TECH_NINJA, VC} from 'clubhouse/constants/roles';
+import {ADMIN, TECH_NINJA} from 'clubhouse/constants/roles';
 import {htmlSafe} from '@ember/template';
 import {TRAINING} from "clubhouse/constants/positions";
 
@@ -29,7 +29,7 @@ export default class PersonEventInfoController extends ClubhouseController {
   }
 
   get canSignAgreements() {
-    return this.session.hasRole([ADMIN, VC]);
+    return this.session.hasRole(ADMIN);
   }
 
   @action
@@ -153,9 +153,9 @@ export default class PersonEventInfoController extends ClubhouseController {
   }
 
   @action
-  resetPassword() {
-    this.modal.confirm('Confirm Password Reset',
-      "Please confirm you wish to reset the Online Course account's password. You will be shown the new password, AND an email sent to the user with the new password.",
+  generatePassword() {
+    this.modal.confirm('Confirm Generating New Password',
+      "Please confirm you wish to generate a new Moodle password. You will be shown the new password, AND an email sent to the user with the new password.",
       async () => {
         try {
           this.isSubmitting = true;

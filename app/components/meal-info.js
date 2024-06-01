@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import { isEmpty} from '@ember/utils';
+import {isEmpty} from '@ember/utils';
 
 const MEALS = {
   'all': {
@@ -57,7 +57,7 @@ export default class MealInfoComponent extends Component {
       this.title = mealInfo.title;
       this.description = mealInfo.description;
       this.isBanked = eventInfo.meals_status === 'banked';
-      this.isMealPass = (meals === 'all');
+      this.isMealPass = (meals === 'all' || meals === 'event');
     } else {
       this.title = 'Unknown';
       this.description = `Unknown meal type ${this.args.meals}. This is a bug.`;
