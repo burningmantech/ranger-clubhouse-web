@@ -5,41 +5,49 @@
             @onChange={{action (mut this.year)}} />
 <UiTab class="mt-4" as |tab|>
   <tab.pane @title="Training & ARTs" @id="trainings">
+    {{#if this.person.isNonRanger}}
+      <UiAlert @type="secondary" @icon="hand-point-right">
+        {{this.person.callsign}} is a non-Ranger. Completing the Online Course or passing an
+        In-Person Training is not required.
+      </UiAlert>
+    {{/if}}
     <UiSection>
       <:title>{{this.year}} Training &amp; ARTs</:title>
       <:body>
-        <ChForm @formFor={{this.courseForm}} @formId="course" @onSubmit={{this.saveOnlineCourse}} as |f|>
-          <div class="row">
-            <div class="col-auto">
-              {{this.year}} Online Course Completion<br>
-              {{#if this.eventInfo.online_course_passed}}
-                {{shift-format this.eventInfo.online_course_date year=true}}
-              {{else}}
-                not completed
-              {{/if}}
-            </div>
-            {{#if this.canManageOnlineCourse}}
-              <div class="col-auto">
-                <div class="row">
-                  <div class="col-auto">
-                    {{#if this.onlineCourseOptions}}
-                      <f.select @name="id"
-                                @label="Update Course"
-                                @options={{this.onlineCourseOptions}}
-                                @hint="Note: updating the course will not enroll the person under Moodle."
-                      />
-                    {{else}}
-                      No Online Courses defined for {{this.year}}
-                    {{/if}}
-                    <f.submit @disabled={{this.personEvent.isSaving}} @submitClass="btn-sm"/>
-                  </div>
-                </div>
-              </div>
+        <div class="d-flex mb-4">
+          <div class="fw-bold me-4">{{this.year}} Online Course Completion</div>
+          <div>
+            {{#if this.eventInfo.online_course_passed}}
+              {{shift-format this.eventInfo.online_course_date year=true}}
+            {{else}}
+              {{badge "secondary" "not completed"}}
             {{/if}}
           </div>
-        </ChForm>
+        </div>
+        {{#if this.canManageOnlineCourse}}
+          <ChForm @formFor={{this.courseForm}} @formId="course" @onSubmit={{this.saveOnlineCourse}} as |f|>
+            <div class="row">
+              {{#if this.onlineCourseOptions}}
+                <f.select @name="id"
+                          @label="Update Moodle Enrollment"
+                          @options={{this.onlineCourseOptions}}
+                          @inline={{true}}
+                          @hint="Note: updating the course will not enroll the person under Moodle."
+                />
+                <div class="col-auto">
+                  <f.submit @disabled={{this.personEvent.isSaving}} @submitClass="btn-sm"/>
+                </div>
+              {{else}}
+                <div class="col-auto">
+                  No Online Courses defined for {{this.year}}
+                </div>
+              {{/if}}
+            </div>
+          </ChForm>
+        {{/if}}
         {{#if (and this.isCurrentYear this.canManageOnlineCourse)}}
-          <div class="mt-2">
+          <div class="my-4 d-flex">
+            <div class="fw-bold no-wrap me-2">Moodle Actions</div>
             <UiButtonRow>
               {{#unless this.eventInfo.online_course_passed}}
                 <UiButton @type="secondary" @onClick={{this.markOnlineCourseCompleted}} @size="sm">
@@ -50,10 +58,10 @@
                 Online Course Account Info
               </UiButton>
               <UiButton @type="secondary" @onClick={{this.syncAccountInfo}} @size="sm">
-                Sync Account Info
+                Sync Moodle Account Info w/Clubhouse Account
               </UiButton>
-              <UiButton @type="secondary" @onClick={{this.resetPassword}} @size="sm">
-                Reset Password
+              <UiButton @type="secondary" @onClick={{this.generatePassword}} @size="sm">
+                Generate New Moodle Password
               </UiButton>
             </UiButtonRow>
           </div>
@@ -100,10 +108,6 @@
           {{/if}}
         {{/if}}
 
-        <div class="mt-2"><b>Trainings</b></div>
-        {{#if this.person.isNonRanger}}
-          <p>Non Rangers are not required to pass the In-Person Training.</p>
-        {{/if}}
         <TrainingInfo @trainings={{this.eventInfo.trainings}} />
       </:body>
     </UiSection>
@@ -124,7 +128,7 @@
             <dt>Showers</dt>
             <dd>
               {{#if this.eventInfo.showers}}
-                {{badge "secondary" "Wet Spot"}} BMID allows access to the Wet Spot.
+                {{badge "success" "Wet Spot"}} BMID allows access to the Wet Spot.
               {{else}}
                 {{badge "secondary" "Shower Pogs"}} Wet Spot shower pog granted for every 40 hours
                 worked.
@@ -161,11 +165,11 @@
                 </ChForm>
               {{else}}
                 {{#if this.personEvent.asset_authorized}}
-                  <b class="text-success"> {{fa-icon "check"}} Signed</b>
+                  {{badge "success" "signed"}}
                 {{else}}
-                  <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+                  {{badge "warning" "not signed"}}
                 {{/if}}
-                the Radio Checkout Agreement.
+                {{this.year}} Radio Checkout Agreement
               {{/if}}
             </dd>
           </dl>
@@ -204,12 +208,14 @@
                 {{else}}
                   <p>
                     {{#if this.personEvent.org_vehicle_insurance}}
-                      <b class="text-success"> {{fa-icon "check"}} Authorized</b>
+                      {{badge "success" "authorized"}}
                     {{else}}
-                      <b class="text-danger">{{fa-icon "times"}} NOT AUTHORIZED</b>
+                      {{badge "danger" "not authorized"}}
                     {{/if}}
-                    for the {{this.year}} event to drive Ranger vehicles (including own personal
-                    vehicle) on playa for Ranger business. Vehicle must have a valid Burning Man driving sticker.
+                    for the {{this.year}} event to drive Ranger vehicles on playa for Ranger business.
+                    Vehicle must have a valid Burning Man driving sticker. Note: any personal vehicles to drive on
+                    behalf
+                    of the department must be pre-approved prior to arrival on playa.
                   </p>
                 {{/if}}
               </dd>
@@ -226,10 +232,10 @@
                     <f.submit class="btn-sm"/>
                   </div>
                 {{else}}
-                  {{#if this.personEvent.may_request_stickers}}
-                    <b class="text-success">{{fa-icon "check"}} Allowed</b>
+                  {{#if this.vehicleInfo.pvr_eligible}}
+                    {{badge "success" "permitted"}}
                   {{else}}
-                    <b class="text-danger">{{fa-icon "times"}} NOT ALLOWED</b>
+                    {{badge "danger" "not permitted"}}
                   {{/if}}
                   to submit Personal Vehicle Requests.<br>
                 {{/if}}
@@ -251,18 +257,16 @@
                     <f.submit class="btn-sm"/>
                   </div>
                 {{else}}
-                  <p>
-                    {{#if this.personEvent.signed_motorpool_agreement}}
-                      <b class="text-success"> {{fa-icon "check"}} Signed</b>
-                    {{else}}
-                      <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
-                    {{/if}}
-                    the {{this.year}} Motor Pool Protocol.
-                  </p>
-                  {{#if this.personEvent.signed_personal_vehicle_agreement}}
-                    <b class="text-success"> {{fa-icon "check"}} Signed</b>
+                  {{#if this.personEvent.signed_motorpool_agreement}}
+                    {{badge "success" "signed"}}
                   {{else}}
-                    <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+                    {{badge "warning" "not signed"}}
+                  {{/if}}
+                  the {{this.year}} Motor Pool Protocol.<br>
+                  {{#if this.personEvent.signed_personal_vehicle_agreement}}
+                    {{badge "success" "signed"}}
+                  {{else}}
+                    {{badge "warning" "not signed"}}
                   {{/if}}
                   the {{this.year}} Personal Vehicle Agreement.
                 {{/if}}
@@ -291,13 +295,27 @@
     <UiSection>
       <:title>MVR &amp; Personal Vehicle eligible Teams and Positions</:title>
       <:body>
-        <Person::VehicleEligibilityList @list={{this.vehicleInfo.mvr_teams}} @name="MVR Team"/>
+        <Person::VehicleEligibilityList @list={{this.vehicleInfo.mvr_teams}}
+                                        @title="MVR team"
+                                        @name="MVR"
+        />
         <hr>
-        <Person::VehicleEligibilityList @list={{this.vehicleInfo.mvr_positions}} @name="MVR eligible position"/>
+        <Person::VehicleEligibilityList @list={{this.vehicleInfo.mvr_positions}}
+                                        @title="MVR eligible position"
+                                        @name="MVR"
+                                        @isPosition={{true}}
+        />
         <hr>
-        <Person::VehicleEligibilityList @list={{this.vehicleInfo.pvr_teams}} @name="Personal Vehicle eligible team"/>
+        <Person::VehicleEligibilityList @list={{this.vehicleInfo.pvr_teams}}
+                                        @title="Personal Vehicle eligible team"
+                                        @name="Personal Vehicle"
+        />
         <hr>
-        <Person::VehicleEligibilityList @list={{this.vehicleInfo.pvr_positions}} @name="Personal Vehicle eligible position"/>
+        <Person::VehicleEligibilityList @list={{this.vehicleInfo.pvr_positions}}
+                                        @title="Personal Vehicle eligible position"
+                                        @name="Personal Vehicle"
+                                        @isPosition={{true}}
+        />
       </:body>
     </UiSection>
   </tab.pane>
@@ -332,16 +350,16 @@
               {{else}}
                 <p>
                   {{this.year}} Sandman Affidavit {{#if this.personEvent.sandman_affidavit}}
-                  <b class="text-success"> {{fa-icon "check"}} Signed</b>
+                  {{badge "success" "signed"}}
                 {{else}}
-                  <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+                  {{badge "secondary" "not signed"}}
                 {{/if}}
                 </p>
                 {{this.year}} Ranger NDA
                 {{#if this.personEvent.signed_nda}}
-                  <b class="text-success"> {{fa-icon "check"}} Signed</b>
+                  {{badge "success" "signed"}}
                 {{else}}
-                  <b class="text-danger">{{fa-icon "times"}} NOT SIGNED</b>
+                  {{badge "secondary" "not signed"}}
                 {{/if}}
               {{/if}}
             </dd>
@@ -357,8 +375,12 @@
                   <f.submit/>
                 </ChForm>
               {{else}}
-                Behavioral Standards Agreement {{if @person.behavioral_agreement "signed" "NOT SIGNED"}}
-                <br>
+                Behavioral Standards Agreement
+                {{#if @person.behavioral_agreement}}
+                  {{badge "success" "signed"}}
+                {{else}}
+                  {{badge "secondary" "not signed"}}
+                {{/if}}
               {{/if}}
             </dd>
           </dl>
