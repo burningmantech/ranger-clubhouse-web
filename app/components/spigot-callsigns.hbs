@@ -1,0 +1,13 @@
+{{#if @callsigns}}
+  <Popover @text={{@callsigns.length}} @title="{{@day}} {{@title}}">
+    <div class="columns-container columns-4">
+      {{#each @callsigns as |person|}}
+        <div>
+          <PersonLink @person={{person}} />
+        </div>
+      {{/each}}
+    </div>
+  </Popover>
+{{else}}
+  -
+{{/if}}

@@ -5,6 +5,7 @@ import {cached, tracked} from '@glimmer/tracking';
 const CSV_COLUMNS = [
   {title: 'Date', key: 'day'},
   {title: 'Imported', key: 'imported'},
+  {title: 'First Login', key: 'first_login'},
   {title: 'BMID Photo Approved', key: 'photo_approved'},
   {title: 'Online Trained', key: 'online_trained'},
   {title: 'Sign Up For Training', key: 'training_signups'},
@@ -15,18 +16,22 @@ const CSV_COLUMNS = [
 
 export default class VcSpigotController extends ClubhouseController {
   @tracked showPeople = null;
+  @tracked days;
 
   queryParams = ['year'];
 
   @action
   exportToCSV() {
     // Run thru each row and build up the counts
-    const data = this.model.days.map((row) => {
+    const data = this.days.map((row) => {
       const info = {};
       Object.keys(row).forEach((key) => {
         if (key === 'day') {
           // It's the day, not a count
           info.day = row[key];
+          if (info.day === 0) {
+            info.day = 'Prev. Year';
+          }
         } else {
           if (row[key]) {
             // Count how many people
@@ -54,10 +59,11 @@ export default class VcSpigotController extends ClubhouseController {
   @cached
   get totals() {
     let imported = 0, photo_approved = 0, online_trained = 0, training_signups = 0,
-      training_passed = 0, dropped = 0, alpha_signups = 0;
+      training_passed = 0, dropped = 0, alpha_signups = 0, first_login = 0;
 
-    this.model.days.forEach((day) => {
+    this.days.forEach((day) => {
       imported += day.imported?.length ?? 0;
+      first_login += day.first_login?.length ?? 0;
       photo_approved += day.photo_approved?.length ?? 0;
       online_trained += day.online_trained?.length ?? 0;
       training_signups += day.training_signups?.length ?? 0;
@@ -67,7 +73,7 @@ export default class VcSpigotController extends ClubhouseController {
     });
 
     return {
-      imported, photo_approved, online_trained, training_signups, training_passed, dropped, alpha_signups
+      imported, photo_approved, online_trained, training_signups, training_passed, dropped, alpha_signups, first_login
     };
   }
 }

@@ -1,9 +1,18 @@
 <main>
-  <YearSelect @title="Spigot Flow" @year={{this.year}} @onChange={{action (mut this.year)}} />
+  <YearSelect @title="Spigot Flow"
+              @year={{this.year}}
+              @minYear={{2010}}
+              @skipPandemic={{true}}
+              @onChange={{action (mut this.year)}}
+  />
 
   <p>
     The Spigot Flow report show the Prospective counts in a given year. Each date represents a day when one or more
     Prospectives completes a milestone. (e.g., completed the online course, signed up for in-person training,etc.)
+  </p>
+  <p>
+    Previous year indicates the action was taken by the applicant in a prior intake cycle and was carried forward.
+    Currently only applies to approved photos.
   </p>
   <p>
     Legend: Imported = imported from Salesforce or converted to Prospective.
@@ -14,12 +23,13 @@
   <p>
     <UiButton @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
   </p>
-  Showing {{pluralize @model.days.length "day"}}.
+  Showing {{pluralize this.days.length "day"}}.
   <UiTable>
     <thead>
     <tr>
       <th>Date</th>
       <th>Imported</th>
+      <th>First Login</th>
       <th>Photo Approved</th>
       <th>Online Course</th>
       <th>Signed Up for Training</th>
@@ -33,6 +43,9 @@
       <td><b>Totals</b></td>
       <td class="text-end">
         {{this.totals.imported}}
+      </td>
+      <td class="text-end">
+        {{this.totals.first_login}}
       </td>
       <td class="text-end">
         {{this.totals.photo_approved}}
@@ -53,115 +66,38 @@
         {{this.totals.alpha_signups}}
       </td>
     </tr>
-    {{#each @model.days key="day" as |day|}}
+    {{#each this.days key="day" as |day|}}
       <tr>
         <td>
-          <PresentOrNot @value={{day.day}} @empty="-"/>
-        </td>
-        <td class="text-end">
-          {{#if day.imported}}
-            <Popover @text={{day.imported.length}} @title={{concat day.day " Imported"}}>
-              <div class="row g-0">
-                {{#each day.imported as |person|}}
-                  <div class="col-6">
-                    <PersonLink @person={{person}} />
-                  </div>
-                {{/each}}
-              </div>
-            </Popover>
+          {{#if (eq day.day 0)}}
+            Previous Year(s)
           {{else}}
-            -
+            <PresentOrNot @value={{day.day}} @empty="-"/>
           {{/if}}
         </td>
         <td class="text-end">
-          {{#if day.photo_approved}}
-            <Popover @text={{day.photo_approved.length}} @title={{concat day.day " BMID Photo Approved"}}>
-              <div class="row g-0">
-                {{#each day.photo_approved as |person|}}
-                  <div class="col-6">
-                    <PersonLink @person={{person}} />
-                  </div>
-                {{/each}}
-              </div>
-            </Popover>
-          {{else}}
-            -
-          {{/if}}
+          <SpigotCallsigns @callsigns={{day.imported}} @title="Imported" @day={{day.day}} />
         </td>
         <td class="text-end">
-          {{#if day.online_trained}}
-            <Popover @text={{day.online_trained.length}} @title={{concat day.day " Online Course"}}>
-              <div class="row g-0">
-                {{#each day.online_trained as |person|}}
-                  <div class="col-6">
-                    <PersonLink @person={{person}} />
-                  </div>
-                {{/each}}
-              </div>
-            </Popover>
-          {{else}}
-            -
-          {{/if}}
+          <SpigotCallsigns @callsigns={{day.first_login}} @title="First Login" @day={{day.day}} />
         </td>
         <td class="text-end">
-          {{#if day.training_signups}}
-            <Popover @text={{day.training_signups.length}} @title={{concat day.day " Training Signups"}}>
-              <div class="row g-0">
-                {{#each day.training_signups as |person|}}
-                  <div class="col-6">
-                    <PersonLink @person={{person}} />
-                  </div>
-                {{/each}}
-              </div>
-            </Popover>
-          {{else}}
-            -
-          {{/if}}
+          <SpigotCallsigns @callsigns={{day.photo_approved}} @title="BMID Photo Approved" @day={{day.day}} />
         </td>
         <td class="text-end">
-          {{#if day.training_passed}}
-            <Popover @text={{day.training_passed.length}} @title={{concat day.day " Training Passed"}}>
-              <div class="row g-0">
-                {{#each day.training_passed as |person|}}
-                  <div class="col-6">
-                    <PersonLink @person={{person}} />
-                  </div>
-                {{/each}}
-              </div>
-            </Popover>
-          {{else}}
-            -
-          {{/if}}
+          <SpigotCallsigns @callsigns={{day.online_trained}} @title="Online Course" @day={{day.day}} />
         </td>
         <td class="text-end">
-          {{#if day.dropped}}
-            <Popover @text={{day.dropped.length}} @title={{concat day.day " Dropped"}}>
-              <div class="row g-0">
-                {{#each day.dropped as |person|}}
-                  <div class="col-6">
-                    <PersonLink @person={{person}} />
-                  </div>
-                {{/each}}
-              </div>
-            </Popover>
-          {{else}}
-            -
-          {{/if}}
+          <SpigotCallsigns @callsigns={{day.training_signups}} @title="Training Signups" @day={{day.day}} />
         </td>
         <td class="text-end">
-          {{#if day.alpha_signups}}
-            <Popover @text={{day.alpha_signups.length}} @title={{concat day.day " Alpha Signups"}}>
-              <div class="row g-0">
-                {{#each day.alpha_signups as |person|}}
-                  <div class="col-6">
-                    <PersonLink @person={{person}} />
-                  </div>
-                {{/each}}
-              </div>
-            </Popover>
-          {{else}}
-            -
-          {{/if}}
+          <SpigotCallsigns @callsigns={{day.training_passed}} @title="Training Passed" @day={{day.day}} />
+        </td>
+        <td class="text-end">
+          <SpigotCallsigns @callsigns={{day.dropped}} @title="Dropped" @day={{day.day}} />
+        </td>
+        <td class="text-end">
+          <SpigotCallsigns @callsigns={{day.alpha_signups}} @title="Alpha Signups" @day={{day.day}} />
         </td>
       </tr>
     {{/each}}

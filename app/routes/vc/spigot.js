@@ -15,10 +15,10 @@ export default class VcSpigotRoute extends ClubhouseRoute {
     return this.ajax.request('intake/spigot', {data: {year}});
   }
 
-  setupController(controller) {
-    super.setupController(...arguments);
-    controller.set('year', this.year);
-    controller.set('showPeople', null);
+  setupController(controller, model) {
+    controller.year = this.year;
+    controller.days = model.days;
+    controller.showPeople = null;
   }
 
   resetController(controller, isExiting) {
