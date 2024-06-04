@@ -125,10 +125,15 @@
           <i>Line format:</i><br>
           {{nl2br this.uploadHelp}}
         </p>
-        {{#if this.usesDefaultYears}}
+        {{#if this.usesTicketDefaultYears}}
           <p class="text-danger">
-            Source year defaults to {{this.defaultSourceYear}}, and expiry year defaults to
-            {{this.defaultExpiryYear}}
+            Ticket source year defaults to {{this.ticketDefaultSourceYear}}, and expiry year defaults to
+            {{this.ticketDefaultExpiryYear}}
+          </p>
+        {{else if this.usesProvisionDefaultYears}}
+          <p class="text-danger">
+            Provision source year defaults to {{this.provisionDefaultSourceYear}}, and expiry year defaults to
+            {{this.provisionDefaultExpiryYear}}
           </p>
         {{/if}}
       {{/if}}
