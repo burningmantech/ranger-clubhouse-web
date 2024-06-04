@@ -31,8 +31,10 @@ export default class AdminBulkUploadRoute extends ClubhouseRoute {
       resultSuccesses: [],
       resultFailures: [],
       resultWarnings: [],
-      defaultSourceYear: model.default_source_year,
-      defaultExpiryYear: model.default_expiry_year,
+      ticketDefaultSourceYear: model.ticket_default_source_year,
+      ticketDefaultExpiryYear: model.ticket_default_expiry_year,
+      provisionDefaultSourceYear: model.provision_default_source_year,
+      provisionDefaultExpiryYear: model.provision_default_expiry_year,
     });
   }
 }
