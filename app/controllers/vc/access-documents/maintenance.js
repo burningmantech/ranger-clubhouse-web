@@ -97,14 +97,14 @@ const TASK_GROUPS = [
       {
         action: 'clean-provisions',
         title: 'Clean Provisions From Prior Event',
-        description: 'Mark all submitted provisions as used, and mark allocated provisions either expired (unused) or used (claimed/submitted).',
+        description: 'Mark all submitted provisions as used, and mark allocated provisions either expired (unused) or used (claimed/submitted). Any earned event radios not banked and not consumed will be expired. Run BEFORE Bank Provisions.',
         controller: 'provision',
         component: CleanProvisions,
       },
       {
         action: 'bank-provisions',
         title: 'Bank Provisions From Prior Event',
-        description: 'Mark all qualified provisions (does not check for expiration)',
+        description: 'Mark all qualified provisions (does not check for expiration). Only run AFTER Clean Provisions so event radios are properly handled.',
         controller: 'provision',
         component: CleanProvisions,
       },
