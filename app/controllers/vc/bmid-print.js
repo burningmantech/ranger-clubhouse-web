@@ -12,7 +12,7 @@ export default class VcBmidPrintController extends ClubhouseController {
   filterOptions = [
     ['Specials (titles, meals, showers, or early arrival)', 'special'],
     ['Alphas', 'alpha'],
-    ['Vets w/claimed tickets/WAPs OR In-Person training sign-ups', 'qualified'],
+    ['Vets w/claimed tickets/SAPs OR In-Person training sign-ups', 'qualified'],
     ['In-Prep', IN_PREP],
     ['Ready To Print', READY_TO_PRINT],
     {

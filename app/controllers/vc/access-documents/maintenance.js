@@ -71,7 +71,7 @@ const TASK_GROUPS = [
       {
         action: 'clean-access-documents',
         title: 'Clean Access Docs From Prior Event',
-        description: 'Mark all submitted Access Docs as used, and mark all non-bankable and un-submitted Access Docs (Vehicle Passes, WAPs) as expired.',
+        description: 'Mark all submitted Access Docs as used, and mark all non-bankable and un-submitted Access Docs (Vehicle Passes, SAPs) as expired.',
         controller: 'access-document',
         component: CleanAccessDocuments,
       },

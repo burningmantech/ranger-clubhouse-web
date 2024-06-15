@@ -89,7 +89,7 @@ export default class TicketWapSoInfoComponent extends Component {
         // Update the list
         this.args.ticketPackage.wapso = result.map((w) => this.house.pushPayload('access-document', w));
         this.buildWAPSOList();
-        this.toast.success('Your Significant Other WAPs have been successfully updated.');
+        this.toast.success('Your Significant Other SAPs have been successfully updated.');
         this.isSaved = true;
       }).catch((response) => this.house.handleErrorResponse(response))
       .finally(() => this.isSaving = false);
