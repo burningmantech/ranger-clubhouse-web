@@ -24,7 +24,7 @@
         {{#if mail.did_complain}}
           {{fa-icon "bell"}}
         {{/if}}
-        <a href {{action this.showMailLogAction mail}}>
+        <a href {{on-click this.showMailLogAction mail}}>
           {{mail.created_at}}
         </a>
       </td>

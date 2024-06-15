@@ -1,6 +1,6 @@
 <h1>{{this.formTitle}} for {{@year}}</h1>
 <p>
-  <a href {{action @onCancel}} class="my-4">Back to slots listing</a>
+  <a href {{on-click @onCancel}} class="my-4">Back to slots listing</a>
 </p>
 <ChForm @formId="slot"
         @formFor={{@slot}}
@@ -170,5 +170,5 @@
   </div>
 </ChForm>
 <div class="mt-4">
-  <a href {{action @onCancel}} class="mt-4">Back to slots listing</a>
+  <a href {{on-click @onCancel}} class="mt-4">Back to slots listing</a>
 </div>

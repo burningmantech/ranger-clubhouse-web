@@ -1,4 +1,4 @@
-<YearSelect @title="People By Location" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+<YearSelect @title="People By Location" @year={{this.year}} @onChange={{set-value this 'year'}}  />
 {{#if this.session.canViewEmail}}
   <PersonalInfoWarning />
 {{/if}}
@@ -9,7 +9,7 @@
     <ChForm::Select @name="filter"
                     @value={{this.filter}}
                     @options={{this.filterOptions}}
-                    @onChange={{action this.updateFilter}} />
+                    @onChange={{this.updateFilter}} />
   </div>
   <div class="col-auto">
     <UiButton @onClick={{this.exportAllToCSV}} @disabled={{if this.viewPeople false true}}>

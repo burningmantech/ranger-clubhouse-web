@@ -2,7 +2,7 @@
             @year={{this.year}}
             @minYear={{2008}}
             @skipPandemic={{true}}
-            @onChange={{action (mut this.year)}}  />
+            @onChange={{set-value this 'year'}}  />
 
 <FormRow>
   <FormLabel @auto={{true}}>Active Filter:</FormLabel>
@@ -10,7 +10,7 @@
     <ChForm::Select @name="activeFilter"
                     @value={{this.activeFilter}}
                     @options={{this.activeOptions}}
-                    @onChange={{action (mut this.activeFilter)}} />
+                    @onChange={{set-value this 'activeFilter'}} />
   </div>
 </FormRow>
 <p>

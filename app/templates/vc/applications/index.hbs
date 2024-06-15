@@ -1,6 +1,6 @@
 <YearSelect @title="Prospective Applications"
             @year={{this.year}}
-            @onChange={{action (mut this.year)}}
+            @onChange={{set-value this 'year'}}
             @skipPandemic={{true}}
             @minYear={{2015}}
 />
@@ -18,7 +18,7 @@
       <ChForm::Select @name="statusFilter"
                       @value={{this.statusFilter}}
                       @options={{this.statusFilterOptions}}
-                      @onChange={{action (mut this.statusFilter)}} />
+                      @onChange={{set-value this 'statusFilter'}} />
     </div>
 
     <FormLabel @auto={{true}}>Assigned To</FormLabel>
@@ -26,14 +26,14 @@
       <ChForm::Select @name="assignedTo"
                       @value={{this.assignedToFilter}}
                       @options={{this.assignedOptions}}
-                      @onChange={{action (mut this.assignedToFilter)}} />
+                      @onChange={{set-value this 'assignedToFilter'}} />
     </div>
     <FormLabel @auto={{true}}>Last Name Filter</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="nameFilter"
                       @value={{this.nameFilter}}
                       @options={{this.nameFilterList}}
-                      @onChange={{action (mut this.nameFilter)}} />
+                      @onChange={{set-value this 'nameFilter'}} />
     </div>
   </FormRow>
 

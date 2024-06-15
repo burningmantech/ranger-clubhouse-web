@@ -95,11 +95,11 @@
       Application is unassigned
     {{/if}}
     {{#unless this.isAssignedToMe}}
-      <a href class="mx-3" {{action this.assignToSelf}}>Assign To Self</a>
+      <a href class="mx-3" {{on-click this.assignToSelf}}>Assign To Self</a>
     {{/unless}}
-    <a href class="mx-3" {{action this.openAssignDialog}}>Assign To VC</a>
+    <a href class="mx-3" {{on-click this.openAssignDialog}}>Assign To VC</a>
     {{#if this.application.assigned_person_id}}
-      <a href {{action this.unassignApplication}} class="ms-3">Clear Assignment</a>
+      <a href {{on-click this.unassignApplication}} class="ms-3">Clear Assignment</a>
     {{/if}}
   </div>
 </div>

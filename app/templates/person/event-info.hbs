@@ -2,7 +2,7 @@
             @year={{this.year}}
             @years={{this.person.all_years}}
             @subheader={{true}}
-            @onChange={{action (mut this.year)}} />
+            @onChange={{set-value this 'year'}} />
 <UiTab class="mt-4" as |tab|>
   <tab.pane @title="Training & ARTs" @id="trainings">
     {{#if this.person.isNonRanger}}

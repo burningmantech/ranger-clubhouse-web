@@ -45,9 +45,9 @@
                 Pod #{{pod.sort_index}}
               </div>
               <div>
-                <a href {{action this.editExistingPod pod}} class="d-print-none">{{fa-icon "edit" right=1}} Edit</a>
+                <a href {{on-click this.editExistingPod pod}} class="d-print-none">{{fa-icon "edit" right=1}} Edit</a>
               </div>
-              <a href {{action this.removePod pod}} class="d-print-none small">{{fa-icon "trash" right=1}} Delete</a>
+              <a href {{on-click this.removePod pod}} class="d-print-none small">{{fa-icon "trash" right=1}} Delete</a>
             </div>
             <div class="p-2 d-flex justify-content-between">
               <div>
@@ -81,13 +81,13 @@
                 {{/if}}
               </div>
             {{/if}}
-            <a href {{action this.setupToAdd pod}} class="d-block d-print-none text-center mb-1 p-2 bg-light-gray fs-4">
+            <a href {{on-click this.setupToAdd pod}} class="d-block d-print-none text-center mb-1 p-2 bg-light-gray fs-4">
               {{fa-icon "plus" right=1}} Add Person
             </a>
             {{#if pod.people}}
               <div class="rollcall-grid">
                 {{#each pod.people key="id" as |person|}}
-                  <a href {{action this.removePerson pod person}} class="rollcall-person">
+                  <a href {{on-click this.removePerson pod person}} class="rollcall-person">
                     <div class="rollcall-photo">
                       {{#if person.photo_url}}
                         <img src={{person.photo_url}} alt={{person.callsign}} loading="lazy"/>
@@ -186,7 +186,7 @@
             People who might be on a prior shift
           </legend>
           {{#if this.priorShiftOptions}}
-            <a href {{action this.togglePriorShift}} class="my-2">
+            <a href {{on-click this.togglePriorShift}} class="my-2">
               {{if this.showPriorShift "Hide" "Show"}} {{pluralize this.priorShiftOptions.length "person"}}
             </a>
             {{#if this.showPriorShift}}

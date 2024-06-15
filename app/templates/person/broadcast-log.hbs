@@ -1,4 +1,4 @@
-<YearSelect @title="Broadcast Messages" @year={{this.year}} @years={{this.person.all_years}} @subheader={{true}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="Broadcast Messages" @year={{this.year}} @years={{this.person.all_years}} @subheader={{true}} @onChange={{set-value this 'year'}} />
 
 <UiTable>
   <thead>

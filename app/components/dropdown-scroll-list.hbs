@@ -8,7 +8,7 @@
       <dd.menu as |ddm|>
         {{#each letter.items as |item|}}
           <ddm.item>
-            <a href {{action this.scrollToItem item.id dd.closeDropdown}} class="d-block p-2 dropdown-item">
+            <a href {{on-click this.scrollToItem item.id dd.closeDropdown}} class="d-block p-2 dropdown-item">
               {{item.title}}
             </a>
           </ddm.item>

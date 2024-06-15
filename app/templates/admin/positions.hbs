@@ -15,28 +15,28 @@
           <ChForm::Select @name="typeFilter"
                           @value={{this.typeFilter}}
                           @options={{this.typeOptions}}
-                          @onChange={{action (mut this.typeFilter)}} />
+                          @onChange={{set-value this 'typeFilter'}} />
         </div>
         <FormLabel @auto={{true}}>Active Filter</FormLabel>
         <div class="col-auto">
           <ChForm::Select @name="activeFilter"
                           @value={{this.activeFilter}}
                           @options={{this.activeOptions}}
-                          @onChange={{action (mut this.activeFilter)}} />
+                          @onChange={{set-value this 'activeFilter'}} />
         </div>
         <FormLabel @auto={{true}}>View as</FormLabel>
         <div class="col-auto">
           <ChForm::Select @name="activeFilter"
                           @value={{this.viewAs}}
                           @options={{this.viewAsOptions}}
-                          @onChange={{action (mut this.viewAs)}} />
+                          @onChange={{set-value this 'viewAs'}} />
         </div>
         <FormLabel @auto={{true}}>Vehicle Eligibility Filter</FormLabel>
         <div class="col-auto">
           <ChForm::Select @name="vehicleEligibilityFilter"
                           @value={{this.vehicleEligibilityFilter}}
                           @options={{this.vehicleEligibleOptions}}
-                          @onChange={{action (mut this.vehicleEligibilityFilter)}} />
+                          @onChange={{set-value this 'vehicleEligibilityFilter'}} />
         </div>
         {{#if this.canManagePositions}}
           <div class="col-auto">

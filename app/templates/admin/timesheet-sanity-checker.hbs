@@ -1,5 +1,5 @@
 <main>
-  <YearSelect @title="Timesheet Sanity Checker" @year={{this.year}} @onChange={{action (mut this.year)}}  />
+  <YearSelect @title="Timesheet Sanity Checker" @year={{this.year}} @onChange={{set-value this 'year'}}  />
   <UiAccordion as |Accordion|>
     <Accordion.title>{{pluralize this.on_duty.length "person"}} still on duty</Accordion.title>
     <Accordion.body>

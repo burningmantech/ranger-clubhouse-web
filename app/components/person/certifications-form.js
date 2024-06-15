@@ -63,4 +63,9 @@ export default class PersonRoleFormComponent extends Component {
   updateColumn(cert, column, value) {
     cert[column] = value;
   }
+
+  @action
+  notesInputEvent(cert, event) {
+    cert.notes = event.target.value;
+  }
 }

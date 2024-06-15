@@ -10,7 +10,7 @@
       <ChForm::Select @name="year"
                       @value={{this.year}}
                       @options={{this.yearOptions}}
-                      @onChange={{action (mut this.year)}}
+                      @onChange={{set-value this 'year'}}
                       @inline={{true}}
       />
     </div>

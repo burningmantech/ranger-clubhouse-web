@@ -1,7 +1,7 @@
 <@nav.item @active={{eq @tab.activeId @paneId}}>
 <a href="#{{@paneId}}"
    class="nav-link {{if (eq @tab.activeId @paneId) "active"}}"
-  {{action @tab.select @paneId}}>
+  {{on-click @tab.select @paneId}}>
   {{#if @icon}}
     {{fa-icon @icon fixed=true right=2}}
   {{/if}}

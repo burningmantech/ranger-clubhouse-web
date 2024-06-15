@@ -32,7 +32,7 @@
       <tbody>
       {{#each this.provisions key="id" as |provision|}}
         <tr>
-          <td><a href {{action this.editProvision provision}}>RP-{{provision.id}}</a></td>
+          <td><a href {{on-click this.editProvision provision}}>RP-{{provision.id}}</a></td>
           <td>
             {{#if provision.is_allocated}}
               <AllocatedProvisionIcon/>

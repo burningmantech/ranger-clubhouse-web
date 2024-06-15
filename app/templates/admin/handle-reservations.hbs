@@ -35,7 +35,7 @@
           <ChForm::Select @name="typeFilter"
                           @value={{this.typeFilter}}
                           @options={{this.typeFilterOptions}}
-                          @onChange={{action (mut this.typeFilter)}}
+                          @onChange={{set-value this 'typeFilter'}}
           />
         </div>
       </FormRow>
@@ -248,7 +248,7 @@
         {{/if}}
         {{#unless this.entry.isNew}}
           <div class="ms-auto">
-            <button {{action this.removeHandleReservation}} type="button" class="btn btn-danger btn-sm">
+            <button {{on-click this.removeHandleReservation}} type="button" class="btn btn-danger btn-sm">
               {{fa-icon "trash-alt" type="fas"}} Delete
             </button>
           </div>

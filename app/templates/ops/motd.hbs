@@ -102,7 +102,7 @@
     <ModalDialog @title={{if this.entry.isNew "New Message" "Edit Message"}} @onEscape={{this.cancelEntry}} @size="xl" as |Modal|>
       <ChForm @formId="entry" @formFor={{this.entry}}
               @validator={{this.motdValidations}}
-              @onSubmit={{action this.saveEntry}} as |f|>
+              @onSubmit={{this.saveEntry}} as |f|>
         <Modal.body>
           <FormRow>
             <FormLabel @fixed={{true}}>Audience</FormLabel>

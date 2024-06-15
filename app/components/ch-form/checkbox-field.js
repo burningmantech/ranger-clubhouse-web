@@ -1,4 +1,5 @@
 import ChFormFieldBaseComponent from './field-base';
+import { action } from '@ember/object';
 
 export default class ChFormTextFieldComponent extends ChFormFieldBaseComponent {
   controlClassDefault = 'form-check-input';
@@ -7,4 +8,10 @@ export default class ChFormTextFieldComponent extends ChFormFieldBaseComponent {
   wrapClassDefault = 'form-check';
   wrapInlineClassDefault = 'form-check form-check-inline';
   inputInlineWrapClassDefault = '';
+
+  @action
+  clickEvent(event) {
+    event.preventDefault();
+    this._updateValue(event.target.checked);
+  }
 }

@@ -1,7 +1,7 @@
 <main>
   <YearSelect @title="Manage BMIDs"
               @year={{this.year}}
-              @onChange={{action (mut this.year)}}
+              @onChange={{set-value this 'year'}}
               @minYear={{2017}}
   />
   {{#if this.notCurrentYear}}
@@ -24,7 +24,7 @@
       <label>Filter:</label>
       <ChForm::Select @name="filter" @value={{this.filter}}
                       @options={{this.filterOptions}}
-                      @onChange={{action this.changeFilter 'filter'}}
+                      @onChange={{fn this.changeFilter 'filter'}}
                       @fieldSize="sm"/>
     </div>
     <div class="col-auto">
@@ -32,7 +32,7 @@
       <ChForm::Select @name="titleFilter"
                       @value={{this.titleFilter}}
                       @options={{this.titleFilterOptions}}
-                      @onChange={{action this.changeFilter 'titleFilter'}}
+                      @onChange={{fn this.changeFilter 'titleFilter'}}
                       @fieldSize="sm"/>
     </div>
     <div class="col-auto">
@@ -40,7 +40,7 @@
       <ChForm::Select @name="teamFilter"
                       @value={{this.teamFilter}}
                       @options={{this.teamFilterOptions}}
-                      @onChange={{action this.changeFilter 'teamFilter'}}
+                      @onChange={{fn this.changeFilter 'teamFilter'}}
                       @fieldSize="sm"/>
 
     </div>
@@ -49,7 +49,7 @@
       <ChForm::Select @name="wantFilter"
                       @value={{this.wantsFilter}}
                       @options={{this.wantFilterOptions}}
-                      @onChange={{action this.changeFilter 'wantFilter'}}
+                      @onChange={{fn this.changeFilter 'wantFilter'}}
                       @fieldSize="sm"/>
 
     </div>
@@ -58,7 +58,7 @@
       <ChForm::Select @name="qualifiedFilter"
                       @value={{this.qualifiedFilter}}
                       @options={{this.qualifiedFilterOptions}}
-                      @onChange={{action this.changeFilter 'qualifiedFilter'}}
+                      @onChange={{fn this.changeFilter 'qualifiedFilter'}}
                       @fieldSize="sm"/>
 
     </div>
@@ -69,7 +69,7 @@
       <Input @type="text"
              @value={{this.textFilterInput}}
              class="form-control form-control-sm ms-2"
-             @enter={{action this.textFilterAction}}  />
+             @enter={{this.textFilterAction}}  />
       <div class="text-muted small">Regular Expression allowed</div>
     </div>
     <div class="col-auto">
@@ -132,32 +132,32 @@
     <tr>
       <th>&nbsp;</th>
       <th>{{#if (eq this.sortColumn "callsign")}}[Callsign]{{else}}
-        <a href {{action this.sortBmidsAction "callsign"}}>Callsign</a>{{/if}}</th>
+        <a href {{on-click this.sortBmidsAction "callsign"}}>Callsign</a>{{/if}}</th>
       {{#unless this.editMode}}
         <th>Action</th>
       {{/unless}}
       <th>{{#if (eq this.sortColumn "status")}}[Status]{{else}}
-        <a href {{action this.sortBmidsAction "status"}}>Status</a>{{/if}}</th>
+        <a href {{on-click this.sortBmidsAction "status"}}>Status</a>{{/if}}</th>
       <th class="w-10">{{#if (eq this.sortColumn "title1")}}[Title 1]{{else}}
-        <a href {{action this.sortBmidsAction "title1"}}>Title 1</a>{{/if}}</th>
+        <a href {{on-click this.sortBmidsAction "title1"}}>Title 1</a>{{/if}}</th>
       <th class="w-10">{{#if (eq this.sortColumn "title2")}}[Title 2]{{else}}
-        <a href {{action this.sortBmidsAction "title2"}}>Title 2</a>{{/if}}</th>
+        <a href {{on-click this.sortBmidsAction "title2"}}>Title 2</a>{{/if}}</th>
       <th class="w-10">{{#if (eq this.sortColumn "title3")}}[Title 3]{{else}}
-        <a href {{action this.sortBmidsAction "title3"}}>Title 3</a>{{/if}}</th>
-      <th>{{#if (eq this.sortColumn "mvr")}}[MVR]{{else}}<a href {{action this.sortBmidsAction "mvr"}}>MVR</a>{{/if}}
+        <a href {{on-click this.sortBmidsAction "title3"}}>Title 3</a>{{/if}}</th>
+      <th>{{#if (eq this.sortColumn "mvr")}}[MVR]{{else}}<a href {{on-click this.sortBmidsAction "mvr"}}>MVR</a>{{/if}}
       </th>
       <th>{{#if (eq this.sortColumn "showers")}}[Showers]{{else}}
-        <a href {{action this.sortBmidsAction "showers"}}>Showers</a>{{/if}}</th>
+        <a href {{on-click this.sortBmidsAction "showers"}}>Showers</a>{{/if}}</th>
       <th>{{#if (eq this.sortColumn "meals")}}[Meals]{{else}}
-        <a href {{action this.sortBmidsAction "meals"}}>Meals</a>{{/if}}
+        <a href {{on-click this.sortBmidsAction "meals"}}>Meals</a>{{/if}}
       </th>
       <th class="w-10 text-center">{{#if (eq this.sortColumn "wap")}}[SAP]{{else}}
-        <a href {{action this.sortBmidsAction "wap"}}>SAP</a>{{/if}}</th>
+        <a href {{on-click this.sortBmidsAction "wap"}}>SAP</a>{{/if}}</th>
       <th>{{#if (eq this.sortColumn "team")}}[Team]{{else}}
-        <a href {{action this.sortBmidsAction "team"}}>Team</a>{{/if}}
+        <a href {{on-click this.sortBmidsAction "team"}}>Team</a>{{/if}}
       </th>
       <th class="w-30">{{#if (eq this.sortColumn "notes")}}[Notes]{{else}}
-        <a href {{action this.sortBmidsAction "notes"}}>Notes</a>{{/if}}</th>
+        <a href {{on-click this.sortBmidsAction "notes"}}>Notes</a>{{/if}}</th>
       {{#if this.editMode}}
         <th>Action</th>
       {{/if}}
@@ -188,7 +188,7 @@
               <ChForm::Select @name={{concat "status" bmid.person.id}}
                               @value={{bmid.status}}
                               @options={{this.bmidStatusOptions}}
-                              @onChange={{action (mut bmid.status)}}
+                              @onChange={{set-value bmid 'status'}}
                               @controlClass=""/>
             </td>
             {{!
@@ -200,15 +200,15 @@
 
                 editBmid is the changeset object which the data is manipulated in.
               }}
-            <td><input value={{bmid.title1}} onblur={{action this.updateColumn bmid "title1"}} size="30"></td>
-            <td><input value={{bmid.title2}} onblur={{action this.updateColumn bmid "title2"}} size="15"></td>
-            <td><input value={{bmid.title3}} onblur={{action this.updateColumn bmid "title3"}} size="5"></td>
+            <td><input value={{bmid.title1}} {{on "blur" (fn this.updateColumn bmid "title1")}} size="30"></td>
+            <td><input value={{bmid.title2}} {{on "blur" (fn this.updateColumn bmid "title2")}} size="15"></td>
+            <td><input value={{bmid.title3}} {{on "blur" (fn this.updateColumn bmid "title3")}} size="5"></td>
             <td>{{if bmid.org_vehicle_insurance "M" "-"}}</td>
             <td>
               <ChForm::Select @name={{concat "showers" bmid.person.id}}
                               @value={{bmid.showers}}
                               @options={{this.showerOptions}}
-                              @onChange={{action (mut bmid.showers)}}
+                              @onChange={{set-value bmid 'showers'}}
                               @controlClass=""/>
               {{#if bmid.allocated_showers}}
                 <div class="align-middle text-success">
@@ -227,7 +227,7 @@
               <ChForm::Select @name={{concat "meals" bmid.person.id}}
                               @value={{bmid.meals}}
                               @options={{this.mealOptions}}
-                              @onChange={{action (mut bmid.meals)}}
+                              @onChange={{set-value bmid 'meals'}}
                               @controlClass=""/>
               {{#if bmid.allocated_meals}}
                 <div>
@@ -244,7 +244,7 @@
               <ChForm::Select @name={{concat "admission_date" bmid.person.id}}
                               @value={{bmid.admission_date}}
                               @options={{this.admissionDateOptions}}
-                              @onChange={{action (mut bmid.admission_date)}}
+                              @onChange={{set-value bmid 'admission_date'}}
                               @controlClass=""
                               @disabled={{bmid.wapDisabled}} />
               {{#if bmid.wapDisabled}}
@@ -255,12 +255,12 @@
                 {{/if}}
               {{/if}}
             </td>
-            <td><input value={{bmid.team}} onblur={{action this.updateColumn bmid "team"}} size="10"></td>
-            <td><textarea cols="40" rows="1" onfocus={{action this.focusNote}}
-                          onblur={{action this.blurNote bmid}}>{{bmid.notes}}</textarea>
+            <td><input value={{bmid.team}} {{on "blur" (fn this.updateColumn bmid "team")}} size="10"></td>
+            <td><textarea cols="40" rows="1" {{on "focus" this.focusNote}}
+                          {{on "blur" (fn this.blurNote bmid)}}>{{bmid.notes}}</textarea>
             </td>
             <td>
-              <button type="button" {{action this.saveInlineBmid bmid}}>Save</button>
+              <button type="button" {{on-click this.saveInlineBmid bmid}}>Save</button>
             </td>
           </tr>
         {{/each}}
@@ -282,7 +282,7 @@
                 Deleted #{{bmid.person_id}}
               {{/if}}
             </td>
-            <td><a href {{action this.editBmid bmid}}>Edit</a></td>
+            <td><a href {{on-click this.editBmid bmid}}>Edit</a></td>
             <td>{{bmid.statusHuman}}</td>
             <td class="w-10">
               <PresentOrNot @value={{bmid.title1}} @empty="-"/>

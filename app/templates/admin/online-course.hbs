@@ -1,7 +1,7 @@
 <main>
   <YearSelect @title="Online Course Definitions"
               @year={{this.year}}
-              @onChange={{action (mut this.year)}}
+              @onChange={{set-value this 'year'}}
               @minYear={{2022}}
   />
   <p>

@@ -12,7 +12,7 @@
           <ChForm::Select @name="filterDay"
                           @value={{this.filterDay}}
                           @options={{this.dayOptions}}
-                          @onChange={{action (mut this.filterDay)}} />
+                          @onChange={{set-value this 'filterDay'}} />
         </div>
       </FormRow>
       <p>

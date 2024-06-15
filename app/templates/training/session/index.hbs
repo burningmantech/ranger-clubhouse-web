@@ -92,7 +92,7 @@
               <td>
                 <ChForm::Select @name="trainer-{{trainer.id}}-status"
                                 @value={{trainer.status}}
-                                @onChange={{action (mut trainer.status)}}
+                                @onChange={{set-value trainer 'status'}}
                                 @options={{this.trainerStatusOptions}} />
               </td>
               <td class="align-middle">
@@ -211,18 +211,18 @@
           <div class="dropdown-divider"></div>
           {{#if this.students}}
             <menu.item>
-              <a href {{action this.toggleEmailListAction dd.closeDropdown}} class="dropdown-item">
+              <a href {{on-click this.toggleEmailListAction dd.closeDropdown}} class="dropdown-item">
                 {{if this.showEmails "Hide" "List"}} Emails
               </a>
             </menu.item>
           {{/if}}
           {{#if this.canAdjustRosters}}
             <div class="dropdown-divider"></div>
-            <a href class="dropdown-item" {{action this.showAddTraineeAction}}>Add Person</a>
+            <a href class="dropdown-item" {{on-click this.showAddTraineeAction}}>Add Person</a>
           {{/if}}
           {{#if this.offersGraduation}}
             <div class="dropdown-divider"></div>
-            <a href class="dropdown-item" {{action this.showGraduateStudentsAction}}>Graduate Trainees</a>
+            <a href class="dropdown-item" {{on-click this.showGraduateStudentsAction}}>Graduate Trainees</a>
           {{/if}}
         </dd.menu>
       </BsDropdown>
@@ -421,7 +421,7 @@
     <ChForm @formId="search"
             @formFor={{this.addPersonForm}}
             @changeSet={{false}}
-            @onFormChange={{action this.searchPeopleAction}}
+            @onFormChange={{this.searchPeopleAction}}
             @onEscape={{this.cancelSearchAction}}
             as |f|>
       <Modal.body>
@@ -434,7 +434,7 @@
               <ChForm::Select @name="addTrainerSlotId"
                               @value={{this.addTrainerSlotId}}
                               @options={{this.addTrainerOptions}}
-                              @onChange={{action (mut this.addTrainerSlotId)}}
+                              @onChange={{set-value this 'addTrainerSlotId'}}
               />
             </div>
           </FormRow>

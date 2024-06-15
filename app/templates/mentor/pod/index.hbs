@@ -1,7 +1,7 @@
 <YearSelect @title="Alpha / Mentor Pod Management"
             @year={{this.year}}
             @minYear={{2023}}
-            @onChange={{action (mut this.year)}}
+            @onChange={{set-value this 'year'}}
 />
 <p>
   Click on the time to manage the Mentor &amp; Alpha pods. Only activated shifts are shown.

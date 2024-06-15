@@ -48,7 +48,7 @@
           {{#each this.shiftOptions as |slot|}}
             <tr>
               <td>
-                <a href {{action this.populateShift slot}}>{{shift-format slot.begins}}</a>
+                <a href {{on-click this.populateShift slot}}>{{shift-format slot.begins}}</a>
               </td>
               <td>
                 {{slot.description}}

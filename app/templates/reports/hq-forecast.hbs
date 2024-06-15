@@ -2,23 +2,23 @@
             @year={{this.year}}
             @minYear={{2008}}
             @skipPandemic={{true}}
-            @onChange={{action (mut this.year)}} />
+            @onChange={{set-value this 'year'}} />
 
 <FormRow>
   <FormLabel @auto={{true}}>Interval</FormLabel>
   <div class="col-auto">
     <ChForm::Select @name="interval" @value={{this.interval}} @options={{this.intervalOptions}}
-                    @onChange={{action (mut this.interval)}} />
+                    @onChange={{set-value this 'interval'}} />
   </div>
   <FormLabel @auto={{true}}>Day Filter</FormLabel>
   <div class="col-auto">
     <ChForm::Select @name="dayFilter" @value={{this.dayFilter}} @options={{this.dayOptions}}
-                    @onChange={{action (mut this.dayFilter)}}/>
+                    @onChange={{set-value this 'dayFilter'}}/>
   </div>
   <FormLabel @auto={{true}}>Staffing Filter</FormLabel>
   <div class="col-auto">
     <ChForm::Select @name="staffFilter" @value={{this.staffFilter}} @options={{this.staffOptions}}
-                    @onChange={{action (mut this.staffFilter)}}/>
+                    @onChange={{set-value this 'staffFilter'}}/>
   </div>
 </FormRow>
 

@@ -1,6 +1,6 @@
 <YearSelect @title="Timesheet By Position"
             @year={{this.year}}
-            @onChange={{action (mut this.year)}}
+            @onChange={{set-value this 'year'}}
             @minYear={{2008}}
             @skipPandemic={{true}}
 />

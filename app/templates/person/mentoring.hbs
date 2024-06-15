@@ -30,10 +30,10 @@
             <ChForm::Select @name="status_{{event.year}}"
                             @value={{event.newStatus}}
                             @options={{this.statusOptions}}
-                            @onChange={{action (mut event.newStatus)}}/>
+                            @onChange={{set-value event 'newStatus'}}/>
           </div>
           <div class="col-auto align-middle">
-            <UiButton @onClick={{action this.updateStatus event}}>
+            <UiButton @onClick={{fn this.updateStatus event}}>
               Update
             </UiButton>
           </div>

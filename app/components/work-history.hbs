@@ -51,7 +51,7 @@
           <td class="text-end">{{hour-format this.totalDuration}}</td>
           {{#each this.years as |year|}}
             <td class="text-end">
-              <a href {{action this.showEntireYearAction year}}>
+              <a href {{on-click this.showEntireYearAction year}}>
                 {{hour-format (get (get this.yearTotals year) "duration")}}
               </a>
             </td>
@@ -61,13 +61,13 @@
           <tr>
             <td>{{position.title}}</td>
             <td class="text-end">
-              <a href {{action this.showPositionAllEntriesAction position.id}}>{{hour-format position.duration}}</a>
+              <a href {{on-click this.showPositionAllEntriesAction position.id}}>{{hour-format position.duration}}</a>
             </td>
             {{#each this.years as |year|}}
               {{#let (get (get this.positionsByYear year) position.id) as |work|}}
                 {{#if work}}
                   <td class="text-end">
-                    <a href {{action this.showPositionYearSummaryAction position.id year}}>
+                    <a href {{on-click this.showPositionYearSummaryAction position.id year}}>
                       {{hour-format work.duration}}
                     </a>
                   </td>

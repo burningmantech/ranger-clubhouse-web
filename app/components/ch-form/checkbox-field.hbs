@@ -6,7 +6,7 @@
            name={{@name}}
            checked={{this.modelValue}}
            disabled={{@disabled}}
-           onclick={{action this.update value="target.checked"}}
+           {{on "change" this.clickEvent}}
     >
     {{#if @label~}}
       <label class="{{this.labelClass}} {{if @disabled "text-muted"}}" for={{this.domId}}>{{@label}}</label>
