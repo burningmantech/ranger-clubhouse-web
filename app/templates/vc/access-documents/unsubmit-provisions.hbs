@@ -6,7 +6,7 @@
   Legend: Ticket = claimed or submitted SPT or SC, "-" means no claimed/submitted ticket.<br>
   BMID Printed? = BMID was sent to be printed.<br>
   Sign Ups? = Has non-training sign ups in {{this.year}}.<br>
-  WAP? = Has claimed or submitted WAP or Staff Credential.
+  SAP? = Has claimed or submitted SAP or Staff Credential.
 </p>
 <p>
   <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
@@ -19,7 +19,7 @@ Showing {{pluralize this.people.length "person"}}
     <th>Callsign</th>
     <th>Status</th>
     <th>Ticket</th>
-    <th>WAP?</th>
+    <th>SAP?</th>
     <th>BMID Printed?</th>
     <th>{{this.year }} Sign Ups?</th>
     <th>ID</th>

@@ -60,7 +60,7 @@ export default class AccessDocumentsForPersonComponent extends Component {
     const waps = docs.filter((doc) => (doc.type === WAP));
 
     if (waps.length > 1) {
-      notes.push(`${waps.length} WAPs`);
+      notes.push(`${waps.length} SAPs`);
     }
 
     // Find a claimed SC
