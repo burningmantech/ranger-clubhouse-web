@@ -4,7 +4,7 @@
                 @year={{this.year}}
                 @minYear={{2012}}
                 @skipPandemic={{true}}
-                @onChange={{action (mut this.year)}} />
+                @onChange={{set-value this 'year'}} />
 
     <FormRow>
       <FormLabel @auto={{true}}>Day Filter</FormLabel>
@@ -43,7 +43,7 @@
 
     {{#each this.positionCredits as |position|}}
       <UiAccordion @isInitOpen={{get this.positionsOpened position.position_id}}
-                   @onClick={{action this.positionClicked position}} as |accordion|>
+                   @onClick={{fn this.positionClicked position}} as |accordion|>
         <accordion.title>
           {{position.title}} ({{position.credits.length}})
           {{#if position.isNonExistent}}

@@ -1,7 +1,7 @@
 <YearSelect @title={{if this.failed "Ranger Failed Broadcast Log" "Ranger Broadcast Log"}}
             @year={{this.year}}
             @minYear={{2018}}
-            @onChange={{action (mut this.year)}} />
+            @onChange={{set-value this 'year'}} />
 <p>
   <LinkTo @route="ops.rbs">Back to RBS</LinkTo>
 </p>

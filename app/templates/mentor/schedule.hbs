@@ -1,17 +1,17 @@
 {{#if this.signupSheetSlot}}
-  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{action this.clearSignupSheet}} />
+  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{this.clearSignupSheet}} />
   <Mentor::AlphaSignupSheet @slot={{this.signupSheetSlot}} />
 {{else if this.signedInSlot}}
-  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{action this.clearSignedInSheet}} />
+  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{this.clearSignedInSheet}} />
   <Mentor::AlphasSignedInSheet @slot={{this.signedInSlot}} />
 {{else if this.apparelSlot}}
-  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{action this.clearAlphaApparel}} />
+  <PrintInstruction @backLabel="Back to Alpha Schedule" @backAction={{this.clearAlphaApparel}} />
   <Mentor::AlphaApparelSheet @slot={{this.apparelSlot}} />
 {{/if}}
 <div class="d-print-none">
   <YearSelect @title="Alpha Scheduled Shift"
               @year={{this.year}}
-              @onChange={{action (mut this.year)}}
+              @onChange={{set-value this 'year'}}
               @minYear={{2008}}
               @skipPandemic={{true}}
   />
@@ -144,7 +144,7 @@
               {{#each group.people key="id" as |person|}}
                 <tr>
                   <td class="w-25">
-                    <a href {{action this.addPersonAction person this.slot}}>
+                    <a href {{on-click this.addPersonAction person this.slot}}>
                       {{person.callsign}}
                     </a>
                   </td>

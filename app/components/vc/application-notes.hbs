@@ -8,8 +8,8 @@
         <i>imported from Salesforce</i>
       {{/if}}
     </span>
-    <a href {{action this.deleteNote note}} class="ms-2">delete</a>
-    <a href {{action this.openDialog note}} class="ms-2">edit</a>
+    <a href {{on-click this.deleteNote note}} class="ms-2">delete</a>
+    <a href {{on-click this.openDialog note}} class="ms-2">edit</a>
     <br>
     {{nl2br note.note}}
   </p>
@@ -17,7 +17,7 @@
   <i>no {{if @isComment "comments" "notes"}}</i>
 {{/each}}
 <div class="mt-2">
-  <UiButton @type="secondary" @size="sm" @onClick={{action this.openDialog null}}>
+  <UiButton @type="secondary" @size="sm" @onClick={{fn this.openDialog null}}>
     Add {{if @isComment "Comment" "Unified Flagging VC Note"}}
   </UiButton>
 </div>

@@ -131,7 +131,7 @@
             This page shows the identifiers used to associate this Clubhouse account with external websites
             such as Burner Profiles, the Moodle Learning Management System, etc.
           </p>
-          <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{action this.savePersonAction}} as |f|>
+          <ChForm @formId="person" @formFor={{this.person}} @onSubmit={{this.savePersonAction}} as |f|>
             <FormRow>
               <f.text @name="bpguid"
                       @label="Burner Profile Global UID (BPGUID)"

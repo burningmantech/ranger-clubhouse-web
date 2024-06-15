@@ -6,7 +6,7 @@
         <ChForm::Select @name="filter"
                         @value={{this.filter}}
                         @options={{this.filterOptions}}
-                        @onChange={{action (mut this.filter)}} />
+                        @onChange={{set-value this 'filter'}} />
     </div>
 </FormRow>
 <p class="mt-2">

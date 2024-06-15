@@ -17,7 +17,7 @@
   <div class="col-auto">
 
     <ChForm::Select @options={{this.viewFilterOptions}}
-                    @onChange={{action (mut this.viewFilter)}}
+                    @onChange={{set-value this 'viewFilter'}}
                     @value={{this.viewFilter}}
                     @fieldSize="sm"
     />
@@ -32,8 +32,8 @@
   <p>
     Showing {{pluralize this.viewPeople.length "person"}}
   </p>
-  <a href {{action this.selectAll}}>select all</a>
-  <a href {{action this.deselectAll}} class="ms-4">deselect all</a>
+  <a href {{on-click this.selectAll}}>select all</a>
+  <a href {{on-click this.deselectAll}} class="ms-4">deselect all</a>
   <UiButton @size="sm" @type="secondary" @onClick={{this.revokeSelected}} class="ms-4">
     Revoke Team Membership ({{pluralize this.selectedPeople.length "person"}})
   </UiButton>

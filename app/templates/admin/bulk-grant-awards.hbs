@@ -19,14 +19,14 @@
           <ChForm::Select @name="serviceYears"
                           @value={{this.serviceYears}}
                           @options={{this.serviceYearOptions}}
-                          @onChange={{action (mut this.serviceYears)}} />
+                          @onChange={{set-value this 'serviceYears'}} />
         </div>
         <div class="col-auto">
           <label>Award</label>
           <ChForm::Select @name="awardId"
                           @value={{this.awardId}}
                           @options={{this.awardOptions}}
-                          @onChange={{action (mut this.awardId)}} />
+                          @onChange={{set-value this 'awardId'}} />
         </div>
       </FormRow>
       <UiButton @onClick={{this.previewServiceYearGrant}}>Preview Grant</UiButton>
@@ -87,7 +87,7 @@
           <ChForm::Select @name="awardId"
                           @value={{this.awardId}}
                           @options={{this.awardOptions}}
-                          @onChange={{action (mut this.awardId)}} />
+                          @onChange={{set-value this 'awardId'}} />
         </div>
       </FormRow>
       <FormRow>

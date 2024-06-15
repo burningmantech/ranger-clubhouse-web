@@ -75,7 +75,7 @@
       </tbody>
     </UiTable>
 
-    <UiButton @onClick={{action this.submit}} @disabled={{or this.isSubmitting (not this.selectedCount)}}>
+    <UiButton @onClick={{this.submit}} @disabled={{or this.isSubmitting (not this.selectedCount)}}>
       {{#if this.isVintage}}
         Mark as Vintage ({{this.selectedCount}})
       {{else}}

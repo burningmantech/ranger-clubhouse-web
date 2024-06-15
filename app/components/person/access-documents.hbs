@@ -18,7 +18,7 @@
       <tbody>
       {{#each this.documents key="id" as |document|}}
         <tr>
-          <td><a href {{action this.editAccessDocument document}}>RAD-{{document.id}}</a></td>
+          <td><a href {{on-click this.editAccessDocument document}}>RAD-{{document.id}}</a></td>
           <td>
             {{document.typeLabel}}
             {{#if document.isWAPSO}}

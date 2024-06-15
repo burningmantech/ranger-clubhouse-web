@@ -9,7 +9,7 @@
               @inline={{true}}
               @size={{60}} />
       <div class="col-auto mt-1">
-        <UiButton @onClick={{action this.clearQuery f.model}} @size="sm" @type="secondary">
+        <UiButton @onClick={{fn this.clearQuery f.model}} @size="sm" @type="secondary">
           Clear Query
         </UiButton>
       </div>
@@ -18,7 +18,7 @@
 
   {{#if this.results}}
     <div class="my-4">
-      Found {{pluralize this.results.length "application"}} <a href {{action this.clearResults}} class="ms-4">Clear results</a>
+      Found {{pluralize this.results.length "application"}} <a href {{on-click this.clearResults}} class="ms-4">Clear results</a>
       <UiTable>
         <thead>
         <tr>
@@ -51,7 +51,7 @@
   {{else if this.noneFound}}
     <div class="my-4">
       <b class="text-danger">No applications found with the query "{{this.query}}"</b>
-      <a href {{action this.clearResults}} class="ms-4">Clear message</a>
+      <a href {{on-click this.clearResults}} class="ms-4">Clear message</a>
     </div>
   {{/if}}
   {{outlet}}

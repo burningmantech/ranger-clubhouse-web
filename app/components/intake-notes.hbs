@@ -13,8 +13,8 @@
             &mdash; {{note.note}}
             {{#if this.canAddNote}}
               <div class="mt-2 mb-3">
-                <a href {{action this.updateNoteAction note}} class="me-4">Update</a>
-                <a href {{action this.deleteNoteAction note}}>Delete</a>
+                <a href {{on-click this.updateNoteAction note}} class="me-4">Update</a>
+                <a href {{on-click this.deleteNoteAction note}}>Delete</a>
               </div>
             {{/if}}
           </div>

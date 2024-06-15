@@ -11,7 +11,7 @@
     {{else}}
       {{#if @person.is_member}}
         {{fa-icon "check" color="success" fixed=true right=1}}
-        <a href {{action @onRevoke @person}}>revoke</a>
+        <a href {{on-click @onRevoke @person}}>revoke</a>
       {{else}}
         <span class="text-danger">
          {{fa-icon "times" fixed=true right=1}} not member

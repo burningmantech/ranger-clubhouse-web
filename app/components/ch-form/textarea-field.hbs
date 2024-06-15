@@ -14,7 +14,7 @@
       maxlength={{@maxlength}}
       onfocus={{@onFocus}}
       {{on-insert this.fieldInserted}}
-      oninput={{action this.update value="target.value"}}
+      {{on "input" this.inputEvent}}
     >{{get @form.model @name}}</textarea>
     {{~#if @hint~}}
       <ChForm::Hint @hint={{@hint}} />

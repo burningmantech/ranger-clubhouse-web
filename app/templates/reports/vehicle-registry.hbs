@@ -1,7 +1,7 @@
 <YearSelect @title="Vehicle Registry"
             @year={{this.year}}
             @minYear={{2019}}
-            @onChange={{action (mut this.year)}}
+            @onChange={{set-value this 'year'}}
 />
 <div class="row">
   <FormLabel @auto={{true}}>Filter by Status</FormLabel>
@@ -9,14 +9,14 @@
     <ChForm::Select @name="filter"
                     @value={{this.filter}}
                     @options={{this.filterOptions}}
-                    @onChange={{action (mut this.filter)}} />
+                    @onChange={{set-value this 'filter'}} />
   </div>
   <FormLabel @auto={{true}}>Filter by type</FormLabel>
   <div class="col-sm-12 col-xl-auto">
     <ChForm::Select @name="filter"
                     @value={{this.typeFilter}}
                     @options={{this.filterTypeOptions}}
-                    @onChange={{action (mut this.typeFilter)}} />
+                    @onChange={{set-value this 'typeFilter'}} />
   </div>
   <FormLabel @auto={{true}}>Filter by rental, driving, or license #:</FormLabel>
   <div class="col-sm-6 col-xl-auto">

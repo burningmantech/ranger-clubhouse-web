@@ -10,4 +10,9 @@ export default class ChFormTextareaFieldComponent extends ChFormFieldBaseCompone
       focusElement(element);
     }
   }
+
+  @action
+  inputEvent(event) {
+    this._updateValue(event.target.value);
+  }
 }

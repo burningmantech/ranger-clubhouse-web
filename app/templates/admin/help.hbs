@@ -47,7 +47,7 @@
                  @onEscape={{this.cancelHelp}} as |Modal|>
       <ChForm @formId="help"
               @formFor={{this.entry}}
-              @onSubmit={{action this.saveHelp}} as |f|>
+              @onSubmit={{this.saveHelp}} as |f|>
         <Modal.body>
           <FormRow>
             <f.text @name="slug"

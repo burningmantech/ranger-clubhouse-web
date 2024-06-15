@@ -10,7 +10,7 @@
             {{fa-icon "arrow-right" color="success"}}
           {{/if}}
         </div>
-        <a href {{action this.toggleMotd motd}}>{{motd.subject}}</a>
+        <a href {{on-click this.toggleMotd motd}}>{{motd.subject}}</a>
         {{#if motd.has_read}}
           <span class="text-success text-muted">(read)</span>
         {{/if}}

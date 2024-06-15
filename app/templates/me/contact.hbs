@@ -40,7 +40,7 @@
         <tr>
           <td>
             {{#if ranger.allow_contact}}
-              <a href {{action "contactRanger" ranger}}>{{ranger.callsign}}</a>
+              <a href {{on-click this.contactRanger ranger}}>{{ranger.callsign}}</a>
             {{else}}
               <span class="text-danger">{{ranger.callsign}} does not want to be contacted through the Clubhouse.</span>
             {{/if}}
@@ -59,6 +59,6 @@
                @recipientId={{this.ranger.id}}
                @isInactive={{this.ranger.is_inactive}}
                @contactType="ranger"
-               @onDone={{action this.doneAction}} />
+               @onDone={{this.doneAction}} />
 {{/if}}
 

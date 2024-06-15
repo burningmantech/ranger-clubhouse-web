@@ -1,6 +1,6 @@
 <YearSelect @title="Timesheet By Callsign"
             @year={{this.year}}
-            @onChange={{action (mut this.year)}}
+            @onChange={{set-value this 'year'}}
             @minYear={{2008}}
             @skipPandemic={{true}}
 />

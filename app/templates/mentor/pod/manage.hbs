@@ -37,7 +37,7 @@
             <th>
               <div class="d-flex justify-content-between">
                 <div>Pod #{{pod.sort_index}}</div>
-                <a href {{action this.removePod pod}} class="ps-4 d-block d-print-none small fw-normal">
+                <a href {{on-click this.removePod pod}} class="ps-4 d-block d-print-none small fw-normal">
                   Delete
                 </a>
               </div>
@@ -71,7 +71,7 @@
             <td>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="fw-bold">Mentors ({{pod.person_count}})</div>
-                <a href {{action this.addMentor pod}} class="ps-4 d-block d-print-none small">Add</a>
+                <a href {{on-click this.addMentor pod}} class="ps-4 d-block d-print-none small">Add</a>
               </div>
             </td>
           {{/each}}
@@ -103,7 +103,7 @@
                                   <ChForm::Select @name="relocatePod"
                                                   @value={{this.podIndex}}
                                                   @options={{this.podOptions}}
-                                                  @onChange={{action (mut this.podIndex)}}
+                                                  @onChange={{set-value this 'podIndex'}}
                                   />
                                 </div>
                               </FormRow>
@@ -142,7 +142,7 @@
             <td>
               <div class="d-flex justify-content-between align-items-center">
                 <div class="fw-bold">MITtens ({{pod.mittenPod.person_count}})</div>
-                <a href {{action this.addMITten pod.mittenPod}} class="ps-4 d-block d-print-none small">
+                <a href {{on-click this.addMITten pod.mittenPod}} class="ps-4 d-block d-print-none small">
                   Add
                 </a>
               </div>
@@ -171,7 +171,7 @@
                                   <ChForm::Select @name="relocatePod"
                                                   @value={{this.podIndex}}
                                                   @options={{this.podOptions}}
-                                                  @onChange={{action (mut this.podIndex)}}
+                                                  @onChange={{set-value this 'podIndex'}}
                                   />
                                 </div>
                               </FormRow>
@@ -208,7 +208,7 @@
                 <div class="fw-bold">
                   Alphas ({{pod.alphaPod.person_count}})
                 </div>
-                <a href {{action this.addAlpha pod.alphaPod}} class="ps-4 d-block d-print-none small">
+                <a href {{on-click this.addAlpha pod.alphaPod}} class="ps-4 d-block d-print-none small">
                   Add
                 </a>
               </div>
@@ -238,7 +238,7 @@
                                   <ChForm::Select @name="relocatePod"
                                                   @value={{this.podIndex}}
                                                   @options={{this.podOptions}}
-                                                  @onChange={{action (mut this.podIndex)}}
+                                                  @onChange={{set-value this 'podIndex'}}
                                   />
                                 </div>
                               </FormRow>
@@ -319,7 +319,7 @@
           <FormRow>
             <div class="col-auto">
               {{#if this.offDutyOptions}}
-                <a href {{action this.toggleOffDuty}} class="d-block mb-2">
+                <a href {{on-click this.toggleOffDuty}} class="d-block mb-2">
                   {{if this.showOffDuty "Hide" "Show" }} {{pluralize this.offDutyOptions.length
                                                                      (concat "Other " this.addType)}}
                 </a>
@@ -338,7 +338,7 @@
           <FormRow>
             <div class="col-auto">
               {{#if this.peoplePositionsOptions}}
-                <a href {{action this.togglePeoplePositions}} class="d-block mb-2">
+                <a href {{on-click this.togglePeoplePositions}} class="d-block mb-2">
                   {{if this.showPeoplePositions "Hide" "Show" }} {{pluralize this.peoplePositionsOptions.length
                                                                      (concat "Not Checked In " this.addType)}}
                 </a>

@@ -1,6 +1,6 @@
 <h1>{{this.year}} Alpha Mentor Assignments</h1>
 {{#if this.isPrinting}}
-  <PrintInstruction @backLabel="Back to Mentor Assignments" @backAction={{action this.togglePrinting}} />
+  <PrintInstruction @backLabel="Back to Mentor Assignments" @backAction={{this.togglePrinting}} />
   <UiTable>
     <caption>Showing {{this.viewAlphas.length}} of {{this.alphas.length}}</caption>
     <thead>
@@ -172,7 +172,7 @@
             <td>
               <ChForm::Select @name="status_{{person.id}}"
                               @value={{person.mentor_status}}
-                              @onChange={{action (mut person.mentor_status)}}
+                              @onChange={{set-value person 'mentor_status'}}
                               @options={{this.statusOptions}}
                               @controlClass={{this.selectClass person}}
               />

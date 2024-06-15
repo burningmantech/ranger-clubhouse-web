@@ -11,14 +11,14 @@
             <ChForm::Select @name="positionId"
                             @value={{this.positionId}}
                             @options={{this.positionOptions}}
-                            @onChange={{action this.selectPosition}}
+                            @onChange={{this.selectPosition}}
             />
           </div>
           <div class="col-sm-12 col-lg-auto">
             <FormLabel>Shift</FormLabel>
             <ChForm::Select @name="slotId" @value={{this.slotId}}
                             @options={{this.slotOptions}}
-                            @onChange={{action this.selectSlot}}
+                            @onChange={{this.selectSlot}}
                             @disabled={{eq this.positionId 0}}
             />
           </div>
@@ -47,7 +47,7 @@
           {{#each this.people as |person|}}
             <a href
                class="rollcall-person {{if person.on_duty "rollcall-problem" (if person.signedIn "rollcall-success")}}"
-              {{action this.clickPerson person}}>
+              {{on-click this.clickPerson person}}>
               <div class="rollcall-photo">
                 {{#if person.photo_url}}
                   <img src={{person.photo_url}} alt={{person.callsign}} loading="lazy"/>

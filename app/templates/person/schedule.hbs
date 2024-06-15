@@ -1,6 +1,6 @@
 <YearSelect @title="Schedule / Sign Up" @year={{this.year}} @years={{this.person.all_years}}
             @subheader={{true}}
-            @onChange={{action (mut this.year)}} />
+            @onChange={{set-value this 'year'}} />
 
 <ScheduleManage @person={{this.person}}
                 @slots={{this.slots}}

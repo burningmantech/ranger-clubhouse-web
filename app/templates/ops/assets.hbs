@@ -3,14 +3,14 @@
               @year={{this.year}}
               @minYear={{2009}}
               @skipPandemic={{true}}
-              @onChange={{action (mut this.year)}} />
+              @onChange={{set-value this 'year'}} />
   <FormRow>
     <FormLabel @auto={{true}}>Type Filter</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="typeFilter"
                       @value={{this.typeFilter}}
                       @options={{this.typeOptions}}
-                      @onChange={{action (mut this.typeFilter)}}
+                      @onChange={{set-value this 'typeFilter'}}
       />
     </div>
     <FormLabel @auto={{true}}>Description Filter</FormLabel>
@@ -18,7 +18,7 @@
       <ChForm::Select @name="descriptionFilter"
                       @value={{this.descriptionFilter}}
                       @options={{this.descriptionOptions}}
-                      @onChange={{action (mut this.descriptionFilter)}} />
+                      @onChange={{set-value this 'descriptionFilter'}} />
     </div>
     <FormLabel @auto={{true}}>Action</FormLabel>
     <div class="col-auto">
@@ -71,7 +71,7 @@
       <ChForm @formId="asset"
               @formFor={{this.entry}}
               @validator={{this.assetValidations}}
-              @onSubmit={{action this.saveAsset}} as |f|>
+              @onSubmit={{this.saveAsset}} as |f|>
         <Modal.body>
           <FormRow>
             <f.select @name="type"
@@ -146,6 +146,6 @@
     </LoadingDialog>
   {{/if}}
   {{#if this.assetForHistory}}
-    <ModalAssetHistory @assetId={{this.assetForHistory.id}} @onClose={{action this.closeAssetHistory}} />
+    <ModalAssetHistory @assetId={{this.assetForHistory.id}} @onClose={{this.closeAssetHistory}} />
   {{/if}}
 </main>

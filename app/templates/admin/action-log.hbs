@@ -65,7 +65,7 @@
         <tr>
           <td class="w-20">
             {{#if log.data}}
-              <a href {{action this.toggleLog log}}>
+              <a href {{on-click this.toggleLog log}}>
                 {{fa-icon (if log.showing "caret-down" "caret-right") right=1}} {{timestamp-format log.created_at}}
               </a>
             {{else}}

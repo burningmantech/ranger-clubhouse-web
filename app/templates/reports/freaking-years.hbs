@@ -1,7 +1,7 @@
 <h1>Freaking Years Report</h1>
 
 <p>
-  <RadioGroup @options={{this.showOptions}} @onChange={{action (mut this.showAll)}} @value={{this.showAll}} />
+  <RadioGroup @options={{this.showOptions}} @onChange={{set-value this 'showAll'}} @value={{this.showAll}} />
 </p>
 
 <p>

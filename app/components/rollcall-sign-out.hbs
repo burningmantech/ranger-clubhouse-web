@@ -10,7 +10,7 @@
           <ChForm::Select @name="positionId"
                           @value={{this.positionId}}
                           @options={{this.positionOptions}}
-                          @onChange={{action this.selectPosition}}
+                          @onChange={{this.selectPosition}}
                           @controlClass="form-select"/>
         </div>
       </FormRow>
@@ -29,7 +29,7 @@
         <div class="rollcall-grid">
           {{#each this.position.people key="id" as |person|}}
             <a href class="rollcall-person {{unless person.isSignedIn "text-muted"}}"
-              {{action this.clickPerson person}}>
+              {{on-click this.clickPerson person}}>
               <div class="rollcall-photo">
                 {{#if person.photo_url}}
                   <img src={{person.photo_url}} alt={{person.callsign}} loading="lazy"/>

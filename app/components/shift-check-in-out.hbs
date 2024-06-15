@@ -286,7 +286,7 @@
           <ChForm::Select @name="newPositionId"
                           @value={{this.newPositionId}}
                           @options={{this.signinPositions}}
-                          @onChange={{action (mut this.newPositionId)}}/>
+                          @onChange={{set-value this 'newPositionId'}}/>
         </div>
       </FormRow>
       {{#if this.changePositionError}}
