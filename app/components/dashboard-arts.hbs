@@ -30,7 +30,6 @@
         <div class="dashboard-art-status">
           {{#if (eq art.status "pass")}}
             {{badge "success" "completed"}}
-            Completed
           {{else if (or (eq art.status "no-show") (eq art.status "fail"))}}
             {{badge "danger" "not passed"}}
           {{else if (eq art.status "no-shift")}}
