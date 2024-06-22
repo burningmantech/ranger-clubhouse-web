@@ -1,5 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {ADMIN, INTAKE, TRAINER, VC, MENTOR, SURVEY_MANAGEMENT, ART_TRAINER} from 'clubhouse/constants/roles';
+import {ADMIN, INTAKE, TRAINER, VC, MENTOR, SURVEY_MANAGEMENT} from 'clubhouse/constants/roles';
 import {TRAINING} from "clubhouse/constants/positions";
 
 /*
@@ -9,9 +9,11 @@ import {TRAINING} from "clubhouse/constants/positions";
  */
 
 export default class TrainingRoute extends ClubhouseRoute {
-  roleRequired = [ADMIN, TRAINER, VC, MENTOR, ART_TRAINER];
+  roleRequired = [ADMIN, TRAINER, VC, MENTOR];
 
   model({position_id}) {
+    this.checkForARTPositionTrainer(position_id);
+
     const positionId = (position_id === 'dirt' ? TRAINING : position_id);
     return this.ajax.request(`training/${positionId}`);
   }

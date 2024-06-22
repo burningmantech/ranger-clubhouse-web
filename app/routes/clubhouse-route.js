@@ -2,6 +2,7 @@ import Route from '@ember/routing/route';
 import {service} from '@ember/service';
 import {isArray} from '@ember/array';
 import {action} from '@ember/object';
+import {ART_TRAINER_BASE} from "clubhouse/constants/roles";
 
 /**
  * Base Clubhouse Route
@@ -56,6 +57,20 @@ export default class ClubhouseRoute extends Route {
     this.toast.error('You are not authorized for that action');
     this.router.transitionTo('me.homepage');
     return false;
+  }
+
+  checkForARTPositionTrainer(position_id) {
+    if (!this.roleRequired || this.session.hasRole(this.roleRequired)) {
+      return;
+    }
+
+    if (this.session.hasRole(ART_TRAINER_BASE | position_id)) {
+      return;
+    }
+
+    // Wah-wah, not authorized!
+    this.modal.info('Not authorized', 'You are not authorized for that action');
+    this.router.transitionTo('me.homepage');
   }
 
   @action
