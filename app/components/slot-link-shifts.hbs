@@ -1,6 +1,6 @@
 <h1>Link Slots to {{this.typeLabel}}</h1>
 <div class="my-2">
-  <a href {{on-click @onFinish}}>Back To Slots Listing</a>
+  <a href {{on-click (fn @onFinish this.didCommit)}}>Back To Slots Listing</a>
 </div>
 
 <p>
@@ -89,7 +89,7 @@
   </p>
 {{/unless}}
 
-<a href {{on-click @onFinish}}>Back To Slots Listing</a>
+<a href {{on-click (fn @onFinish this.didCommit)}}>Back To Slots Listing</a>
 
 {{#if this.isSubmitting}}
   <LoadingDialog>Submitting the request</LoadingDialog>
