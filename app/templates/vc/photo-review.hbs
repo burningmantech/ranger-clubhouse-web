@@ -31,11 +31,11 @@
               <tr>
                 <td>
                   {{#if (eq photo.status "approved")}}
-                    {{badge "success" "approved"}}
+                    <UiBadge @text="approved" @type="success" />
                   {{else if (eq photo.status "rejected")}}
-                    {{badge "danger" "rejected"}}
+                    <UiBadge @text="rejected" @type="danger" />
                   {{else if (eq photo.status "submitted")}}
-                    {{badge "warning" "submitted"}}
+                    <UiBadge @text="submitted" @type="warning" />
                   {{else}}
                     {{photo.status}}
                   {{/if}}

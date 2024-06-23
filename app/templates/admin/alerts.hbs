@@ -28,7 +28,7 @@
         <td>{{alert.title}}<br>{{alert.description}}</td>
         <td class="no-wrap">
           {{#if alert.on_playa}}
-            {{badge "secondary" "on playa"}}
+            <UiBadge @text="on playa" @type="secondary" />
           {{else}}
             -
           {{/if}}

@@ -20,7 +20,7 @@
             {{#if this.eventInfo.online_course_passed}}
               {{shift-format this.eventInfo.online_course_date year=true}}
             {{else}}
-              {{badge "secondary" "not completed"}}
+              <UiBadge @text="not completed" @type="secondary" />
             {{/if}}
           </div>
         </div>
@@ -153,9 +153,9 @@
                 </ChForm>
               {{else}}
                 {{#if this.personEvent.asset_authorized}}
-                  {{badge "success" "signed"}}
+                  <UiBadge @text="signed" @type="success" />
                 {{else}}
-                  {{badge "warning" "not signed"}}
+                  <UiBadge @text="not signed" @type="warning" />
                 {{/if}}
                 {{this.year}} Radio Checkout Agreement
               {{/if}}
@@ -196,9 +196,9 @@
                 {{else}}
                   <p>
                     {{#if this.personEvent.org_vehicle_insurance}}
-                      {{badge "success" "authorized"}}
+                      <UiBadge @text="authorized" @type="success" />
                     {{else}}
-                      {{badge "danger" "not authorized"}}
+                      <UiBadge @text="not authorized" @type="danger" />
                     {{/if}}
                     for the {{this.year}} event to drive Ranger vehicles on playa for Ranger business.
                     Vehicle must have a valid Burning Man driving sticker. Note: any personal vehicles to drive on
@@ -221,9 +221,9 @@
                   </div>
                 {{else}}
                   {{#if this.vehicleInfo.pvr_eligible}}
-                    {{badge "success" "permitted"}}
+                    <UiBadge @text="permitted" @type="success" />
                   {{else}}
-                    {{badge "danger" "not permitted"}}
+                    <UiBadge @text="not permitted" @type="danger" />
                   {{/if}}
                   to submit Personal Vehicle Requests.<br>
                 {{/if}}
@@ -246,15 +246,15 @@
                   </div>
                 {{else}}
                   {{#if this.personEvent.signed_motorpool_agreement}}
-                    {{badge "success" "signed"}}
+                    <UiBadge @text="signed" @type="success" />
                   {{else}}
-                    {{badge "warning" "not signed"}}
+                    <UiBadge @text="not signed" @type="warning" />
                   {{/if}}
                   the {{this.year}} Motor Pool Protocol.<br>
                   {{#if this.personEvent.signed_personal_vehicle_agreement}}
-                    {{badge "success" "signed"}}
+                    <UiBadge @text="signed" @type="success" />
                   {{else}}
-                    {{badge "warning" "not signed"}}
+                    <UiBadge @text="not signed" @type="warning" />
                   {{/if}}
                   the {{this.year}} Personal Vehicle Agreement.
                 {{/if}}
@@ -338,16 +338,16 @@
               {{else}}
                 <p>
                   {{this.year}} Sandman Affidavit {{#if this.personEvent.sandman_affidavit}}
-                  {{badge "success" "signed"}}
+                  <UiBadge @text="signed" @type="success" />
                 {{else}}
-                  {{badge "secondary" "not signed"}}
+                  <UiBadge @text="not signed" @type="secondary" />
                 {{/if}}
                 </p>
                 {{this.year}} Ranger NDA
                 {{#if this.personEvent.signed_nda}}
-                  {{badge "success" "signed"}}
+                  <UiBadge @text="signed" @type="success" />
                 {{else}}
-                  {{badge "secondary" "not signed"}}
+                  <UiBadge @text="not signed" @type="secondary" />
                 {{/if}}
               {{/if}}
             </dd>
@@ -365,9 +365,9 @@
               {{else}}
                 Behavioral Standards Agreement
                 {{#if @person.behavioral_agreement}}
-                  {{badge "success" "signed"}}
+                  <UiBadge @text="signed" @type="success" />
                 {{else}}
-                  {{badge "secondary" "not signed"}}
+                  <UiBadge @text="not signed" @type="secondary" />
                 {{/if}}
               {{/if}}
             </dd>

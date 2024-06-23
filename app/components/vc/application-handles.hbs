@@ -90,8 +90,9 @@
                     {{#each handle.reserved_handles as |reserved idx|}}
                       {{if idx ", "}}
                       {{reserved.handle}}
-                      <span class="ms-1">{{badge "secondary"
-                                                 (this.reservedHandleType reserved.reservation_type)}}</span>
+                      <UiBadge @type="secondary"
+                               @text={{this.reservedHandleType reserved.reservation_type}}
+                               class="ms-1"/>
                     {{/each}}
                   {{/if}}
                 </td>

@@ -249,9 +249,9 @@
                               @disabled={{bmid.wapDisabled}} />
               {{#if bmid.wapDisabled}}
                 {{#if bmid.wapMissing}}
-                  {{badge "danger" "SAP missing"}}
+                  <UiBadge @text="SAP missing" @type="danger" />
                 {{else}}
-                  {{badge "danger" "SAP submitted"}}
+                  <UiBadge @text="SAP submitted" @type="danger" />
                 {{/if}}
               {{/if}}
             </td>
@@ -320,7 +320,7 @@
             </td>
             <td class="w-10 text-center">
               {{#if bmid.wapMissing}}
-                {{badge "warning" "SAP missing"}}
+                <UiBadge @text="SAP missing" @type="warning" />
               {{else}}
                 {{bmid.admissionDateShort}}
               {{/if}}

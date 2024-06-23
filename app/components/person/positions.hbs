@@ -40,14 +40,14 @@
         <td>{{team-title team}}</td>
         <td class="text-center">
           {{#if team.is_member}}
-            {{badge "secondary" "member"}}
+            <UiBadge @text="member" @type="secondary" />
           {{else}}
             -
           {{/if}}
         </td>
         <td class="text-center">
           {{#if team.is_manager}}
-            {{badge "success" "manager"}}
+            <UiBadge @text="manager" @type="success" />
           {{else}}
             -
           {{/if}}

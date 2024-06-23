@@ -189,7 +189,7 @@
             </td>
             <td class="w-10">
               {{#if bmid.wapMissing}}
-                {{badge "danger" "SAP missing"}}
+                <UiBadge @text="SAP missing" @type="danger" />
               {{else}}
                 {{bmid.admissionDateShort}}
               {{/if}}

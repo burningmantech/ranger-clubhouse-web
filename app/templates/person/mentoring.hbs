@@ -12,13 +12,13 @@
       Mentor Year {{event.year}}
       <span class="ms-2">
         {{#if (eq event.status "pass")}}
-          {{badge "success" "passed"}}
+          <UiBadge @text="passed" @type="success" />
         {{else if (eq event.status "bonk")}}
-          {{badge "danger" "bonked"}}
+          <UiBadge @text="bonked" @type="danger" />
         {{else if (eq event.status "self-bonk")}}
-          {{badge "danger" "self bonked"}}
+          <UiBadge @text="self bonked" @type="danger" />
         {{else}}
-          {{badge "warning" "pending"}}
+          <UiBadge @text="pending" @type="warning" />
         {{/if}}
       </span>
     </:title>

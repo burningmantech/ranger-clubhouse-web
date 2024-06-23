@@ -43,11 +43,11 @@
             <td>{{tm.position.title}}</td>
             <td class="text-center">
               {{#if tm.isPending}}
-                {{badge "danger" "Review Needed"}}
+                <UiBadge @text="Review Needed" @type="danger" />
               {{else if tm.isRejected}}
-                {{badge "warning" "Request Rejected"}}
+                <UiBadge @text="Request Rejected" @type="warning" />
               {{else if tm.isApproved}}
-                {{badge "success" "Approved"}}
+                <UiBadge @text="Approved" @type="success" />
               {{else}}
                 [Unknown {{tm.status}}]
               {{/if}}

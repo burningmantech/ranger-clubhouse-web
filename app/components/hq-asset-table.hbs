@@ -28,15 +28,15 @@
         <br>
         {{#if (eq ap.asset.type "radio")}}
           {{#if ap.asset.perm_assign}}
-            {{badge "gray" "Event Radio"}}
+            <UiBadge @text="Event Radio" @type="gray" />
           {{else}}
-            {{badge "warning" "Shift Radio"}}
+            <UiBadge @text="Shift Radio" @type="warning" />
           {{/if}}
         {{else}}
           {{#if ap.asset.perm_assign}}
-            {{badge "gray" "Permanent"}}
+            <UiBadge @text="Permanent" @type="gray" />
           {{else}}
-            {{badge "warning" "Temporary"}}
+            <UiBadge @text="Temporary" @type="warning" />
           {{/if}}
         {{/if}}
       </td>

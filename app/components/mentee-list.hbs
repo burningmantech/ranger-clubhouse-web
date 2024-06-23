@@ -29,13 +29,13 @@
               </h4>
               <div class="card-subtitle h5 mb-2">
                 {{#if (eq mentee.mentor_status "pass")}}
-                  {{badge "success" "passed"}}
+                  <UiBadge @text="passed" @type="success" />
                 {{else if (eq mentee.mentor_status "bonk")}}
-                  {{badge "danger" "bonked"}}
+                  <UiBadge @text="bonked" @type="danger" />
                 {{else if (eq mentee.mentor_status "self-bonk")}}
-                  {{badge "gray" "self bonked"}}
+                  <UiBadge @text="self bonked" @type="gray" />
                 {{else}}
-                  {{badge "warning" "pending"}}
+                  <UiBadge @text="pending" @type="warning" />
                 {{/if}}
               </div>
 
