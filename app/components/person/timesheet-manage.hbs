@@ -96,18 +96,18 @@
           </td>
           <td class="text-center">
             {{#if (is-empty ts.off_duty)}}
-              {{badge "warning" "Still On Duty"}}
+              <UiBadge @text="Still On Duty" @type="warning" />
             {{else if ts.isVerified}}
-              {{badge "success" "Verified"}}
+              <UiBadge @text="Verified" @type="success" />
             {{else if ts.isApproved}}
-              {{badge "success" "Correction Approved"}}<br>
-              {{badge "secondary" "Verification still needed"}}
+              <UiBadge @text="Correction Approved" @type="success" /><br>
+              <UiBadge @text="Verification still needed" @type="secondary" />
             {{else if ts.isUnverified}}
-              {{badge "secondary" "Unverified"}}
+              <UiBadge @text="Unverified" @type="secondary" />
             {{else if ts.isPending}}
-              {{badge "danger" "Correction Requested"}}
+              <UiBadge @text="Correction Requested" @type="danger" />
             {{else if ts.isRejected}}
-              {{badge "warning" "Correction Rejected"}}
+              <UiBadge @text="Correction Rejected" @type="warning" />
             {{else}}
               &nbsp;
             {{/if}}

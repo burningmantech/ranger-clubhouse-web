@@ -71,11 +71,9 @@
                     {{else}}
                       {{handle.name}}
                     {{/if}}
-                    <span class="ms-2">
-                      {{badge "secondary" (this.entityTypeLabel handle.entityType)}}
-                    </span>
+                    <UiBadge @text={{this.entityTypeLabel handle.entityType}} @type="secondary" class="ms-2"/>
                     {{#if handle.personVintage}}
-                      <span class="ms-2">{{badge "danger" "vintage"}}</span>
+                      <UiBadge @text="vintage" @type="danger" class="ms-2"/>
                     {{/if}}
                     {{#if handle.reason}}
                       <div class="mt-2">

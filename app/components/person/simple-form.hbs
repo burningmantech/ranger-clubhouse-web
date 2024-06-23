@@ -61,9 +61,9 @@
   <div class="grid-table-label">Callsign</div>
   <div>
     {{#if @person.callsign_approved}}
-      {{badge "success" "approved"}}
+      <UiBadge @text="approved" @type="success" />
     {{else}}
-      {{badge "danger" "not approved"}}
+      <UiBadge @text="not approved" @type="danger" />
     {{/if}}
     {{#if @person.used_vanity_change}}
       <i>

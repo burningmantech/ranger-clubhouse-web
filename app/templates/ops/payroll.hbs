@@ -104,11 +104,11 @@
               </td>
               <td class="text-center">
                 {{#if row.still_on_duty}}
-                  {{badge "warning" "still on duty"}}
+                  <UiBadge @text="still on duty" @type="warning" />
                 {{else if row.verified}}
-                  {{badge "success" "verified"}}
+                  <UiBadge @text="verified" @type="success" />
                 {{else}}
-                  {{badge "danger" "unverified"}}
+                  <UiBadge @text="unverified" @type="danger" />
                 {{/if}}
               </td>
               <td>

@@ -53,14 +53,14 @@
           </td>
           <td class="text-center">
             {{#if role.active}}
-              {{badge "success" "active"}}
+              <UiBadge @text="active" @type="success" />
             {{else}}
-              {{badge "warning" "not activated"}}
+              <UiBadge @text="not activated" @type="warning" />
             {{/if}}
           </td>
           <td class="text-center">
             {{#if role.granted}}
-              {{badge "danger" "manually granted"}}
+              <UiBadge @text="manually granted" @type="danger" />
             {{else}}
               -
             {{/if}}

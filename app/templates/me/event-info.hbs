@@ -170,7 +170,7 @@
         <UiSection>
           <:title>Driving Prohibited</:title>
           <:body>
-            {{badge "danger" "Blacklisted"}} We're sorry, but you cannot drive gators, cars, or trucks on playa for
+            <UiBadge @text="Blacklisted" @type="danger" /> We're sorry, but you cannot drive gators, cars, or trucks on playa for
             Ranger business.
           </:body>
         </UiSection>
@@ -179,10 +179,10 @@
           <:title>{{fa-icon "car"}} Motor Pool Protocol</:title>
           <:body>
             {{#if this.eventInfo.signed_motorpool_agreement}}
-              {{badge "success" "Authorized"}} You are authorized to drive golf carts &amp; gators (UTVs) on playa for
+              <UiBadge @text="Authorized" @type="success" /> You are authorized to drive golf carts &amp; gators (UTVs) on playa for
               Ranger business. Vehicle must have a valid Burning Man driving sticker.
             {{else}}
-              {{badge "warning" "Not Authorized"}} You are NOT authorized to drive golf carts &amp; gators (UTVs) on
+              <UiBadge @text="Not Authorized" @type="warning" /> You are NOT authorized to drive golf carts &amp; gators (UTVs) on
               the playa for Ranger business. You can fix this by agreeing to the
               <LinkTo @route="me.agreements">Motor Pool Protocol</LinkTo>
               .
@@ -194,14 +194,14 @@
             <:title>{{fa-icon "truck-pickup"}} Motor Vehicle Record (MVR)</:title>
             <:body>
               {{#if this.personEvent.org_vehicle_insurance}}
-                {{badge "success" "Authorized" }} You are authorized to operate cars and trucks (including your own
+                <UiBadge @text="Authorized" @type="success" /> You are authorized to operate cars and trucks (including your own
                 personal vehicle, provided you have an approved Personal Vehicle Request) on the playa for Ranger
                 business. The vehicle must be equipped with a valid Burning Man driving sticker issued for the
                 current event. Please note that stickers are not transferable from year to year.
               {{else if this.eventInfo.mvr_eligible}}
-                {{badge "success" "MVR Eligible"}} You are eligible to submit a MVR request.
+                <UiBadge @text="MVR Eligible" @type="success" /> You are eligible to submit a MVR request.
               {{else}}
-                {{badge "warning" "Not Authorized" }} You are NOT authorized to operate cars and trucks (including
+                <UiBadge @text="Not Authorized" @type="warning" /> You are NOT authorized to operate cars and trucks (including
                 your own personal vehicle) on the playa for Ranger business. If you believe this capability is
                 necessary for your Ranger duties on the playa, please contact your team lead.
               {{/if}}
