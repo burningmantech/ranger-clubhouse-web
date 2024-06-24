@@ -13,6 +13,7 @@ import {ART_TRAINER_BASE} from "clubhouse/constants/roles";
 export default class ClubhouseRoute extends Route {
   @service ajax;
   @service house;
+  @service modal;
   @service session;
   @service store;
   @service toast;
@@ -59,8 +60,8 @@ export default class ClubhouseRoute extends Route {
     return false;
   }
 
-  checkForARTPositionTrainer(position_id) {
-    if (!this.roleRequired || this.session.hasRole(this.roleRequired)) {
+  checkForARTPositionTrainer(position_id, roles = null) {
+    if (roles && this.session.hasRole(roles)) {
       return;
     }
 
