@@ -29,6 +29,12 @@ export default class ReportsScheduleByPositionRoute extends ClubhouseRoute {
             assoc.people = assoc.people.map((personId) => people[personId])
           });
         }
+        if (slot.child) {
+          slot.child.people = slot.child.sign_ups.map((personId) => people[personId]);
+        }
+        if (slot.parent) {
+          slot.parent.people = slot.parent.sign_ups.map((personId) => people[personId]);
+        }
       })
     });
 
