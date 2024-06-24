@@ -10,8 +10,12 @@
     No one is signed up for this shift. Be the first!
   {{/if}}
   {{#if @info.parent}}
-    <div class="my-2 fw-bold">
-      {{pluralize @info.parent.people.length "sign-up"}} in the parent {{@info.parent.position_title}} shift:
+    <div class="my-2 small">
+      This shift is linked to a parent shift. The combined signup counts for both this shift and the parent shift may
+      not exceed the parent's signup limit.
+    </div>
+    <div class="small fw-bold">
+      {{pluralize @info.parent.people.length "signup"}} in the parent {{@info.parent.position_title}} shift:
     </div>
     {{#if @info.parent.people}}
       <div class="callsign-list">
@@ -24,8 +28,12 @@
     {{/if}}
   {{/if}}
   {{#if @info.child}}
-    <div class="my-2 fw-bold">
-      {{pluralize @info.child.people.length "sign-up"}} in the {{@info.child.position_title}} sub-shift:
+    <div class="my-2 small">
+      This shift is linked to a child shift. The combined signup counts for both this shift and the child shift may
+      not exceed this shift's signup limit.
+    </div>
+    <div class="small fw-bold">
+      {{pluralize @info.child.people.length "signup"}} in the {{@info.child.position_title}} child shift:
     </div>
     {{#if @info.child.people}}
       <div class="callsign-list">
@@ -40,8 +48,8 @@
 
   {{#if @info.assoc_signups}}
     {{#each @info.assoc_signups as |assoc|}}
-      <div class="mt-2 fw-bold">
-        {{pluralize assoc.people.length "sign-up"}} in the corresponding {{assoc.position_title}} shift:
+      <div class="mt-2 small fw-bold">
+        {{pluralize assoc.people.length "signup"}} in the corresponding {{assoc.position_title}} shift:
       </div>
       <div class="mt-2">
         {{#if assoc.people}}
