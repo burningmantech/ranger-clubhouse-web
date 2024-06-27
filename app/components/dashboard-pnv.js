@@ -69,7 +69,7 @@ const ALPHA_STEPS = [
 
       return {
         result: WAITING,
-        message: 'Not Available Yet. Alpha shifts will be available on July 15th OR the Wednesday AFTER you complete training, which ever is later. ' + ALPHA_SHIFT_DISCLAIMER,
+        message: `Not Available Yet. Alpha shifts will be available on ${dayjs(milestones.alpha_shift_publish_date).format('MMMM Do')} OR the Wednesday AFTER you complete training, which ever is later. ${ALPHA_SHIFT_DISCLAIMER}`,
       };
     }
   },
