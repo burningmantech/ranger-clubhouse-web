@@ -3,7 +3,7 @@ import {cached} from '@glimmer/tracking';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {action} from '@ember/object';
-import {MANAGE_ON_PLAYA, TECH_NINJA, TRAINER_SEASONAL} from 'clubhouse/constants/roles';
+import {MANAGE_ON_PLAYA, TECH_NINJA} from 'clubhouse/constants/roles';
 import {setting} from "clubhouse/utils/setting";
 
 export default class PersonRolesComponent extends Component {
