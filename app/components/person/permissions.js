@@ -3,7 +3,8 @@ import {cached} from '@glimmer/tracking';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {action} from '@ember/object';
-import { TECH_NINJA} from 'clubhouse/constants/roles';
+import {MANAGE_ON_PLAYA, TECH_NINJA, TRAINER_SEASONAL} from 'clubhouse/constants/roles';
+import {setting} from "clubhouse/utils/setting";
 
 export default class PersonRolesComponent extends Component {
   @service ajax;
@@ -36,7 +37,10 @@ export default class PersonRolesComponent extends Component {
       }
 
       let active = true;
-
+      if (role.id === MANAGE_ON_PLAYA) {
+        active = !!setting('LoginManageOnPlayaEnabled');
+        // Fall thru..
+      }
       // See if the role is only granted thru the positions, said positions require training before the roles
       // are granted, and the person is not (ART) trained.
       if (!granted
