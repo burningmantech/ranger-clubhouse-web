@@ -117,7 +117,8 @@ const ALPHA_STEPS = [
 
       return {result: NOT_AVAILABLE, message: 'Please sign up for an Alpha shift.'}
     }
-  }
+  },
+  DashboardStep.TAKE_ALPHA_SURVEY,
 ]
 
 const STEP_GROUPS = [
