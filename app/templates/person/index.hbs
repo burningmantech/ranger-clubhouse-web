@@ -166,9 +166,6 @@
             </FormRow>
 
             <f.submit @label="Update"/>
-            {{#if this.person.isSaving}}
-              <LoadingIndicator/>
-            {{/if}}
           </ChForm>
         </:body>
       </UiSection>
@@ -252,4 +249,10 @@
       </Modal.footer>
     </ChForm>
   </ModalDialog>
+{{/if}}
+
+{{#if this.isSaving}}
+  <LoadingDialog>
+    Updating the record
+  </LoadingDialog>
 {{/if}}

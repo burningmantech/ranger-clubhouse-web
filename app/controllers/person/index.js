@@ -98,7 +98,7 @@ export default class PersonIndexController extends ClubhouseController {
   async _savePersonModel(model) {
     const statusChanged = model._changes['status'], callsignChanged = model._changes['callsign'];
 
-    this.isSaing = true;
+    this.isSaving = true;
     try {
       await model.save()
       this.showEditNote = false;
@@ -108,17 +108,16 @@ export default class PersonIndexController extends ClubhouseController {
       // When the status changes, the positions & roles are likely changed.
       // Reload the roles & positions
       if (statusChanged) {
-        return this._reloadMembershipAndRoles();
-      } else {
-        this._reloadUserIfMe();
+        await this._reloadMembershipAndRoles();
       }
-      if (callsignChanged) {
+      this._reloadUserIfMe();
+      if (callsignChanged || statusChanged) {
         await this.personFkas.update();
       }
     } catch (response) {
       this.house.handleErrorResponse(response, model);
     } finally {
-      this.iSaving = false
+      this.isSaving = false
     }
   }
 
@@ -316,9 +315,9 @@ export default class PersonIndexController extends ClubhouseController {
             );
             return;
           case UBERBONKED:
-              this.modal.confirm('Confirm Uberbonked conversion',
-                htmlSafe(`<p>You are about to uberbonk an account. The account will be locked and no further logins allowed.</p>Are you sure you want to do this?`),
-                () => this._savePersonModel(model));
+            this.modal.confirm('Confirm Uberbonked conversion',
+              htmlSafe(`<p>You are about to uberbonk an account. The account will be locked and no further logins allowed.</p>Are you sure you want to do this?`),
+              () => this._savePersonModel(model));
             return;
         }
       }
