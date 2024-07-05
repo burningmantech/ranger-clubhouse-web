@@ -336,8 +336,15 @@ export default class OpsSlotsController extends ClubhouseController {
   }
 
   @action
-  closeLinkSlots() {
+  async closeLinkSlots(didUpdate) {
     this.linkGroup = null;
     this.linkType = null;
+    if (didUpdate) {
+      try {
+        await this.slots.update();
+      } catch (e) {
+        this.house.handleErrorResponse(e);
+      }
+    }
   }
 }

@@ -2,7 +2,7 @@
   <YearSelect @title="Radio Eligibility Report"
               @year={{this.year}}
               @minYear={{2010}}
-              @onChange={{action (mut this.year)}}
+              @onChange={{set-value this 'year'}}
               @skipPandemic={{true}}
   />
   <p>

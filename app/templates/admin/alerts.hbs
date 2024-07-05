@@ -28,7 +28,7 @@
         <td>{{alert.title}}<br>{{alert.description}}</td>
         <td class="no-wrap">
           {{#if alert.on_playa}}
-            {{badge "secondary" "on playa"}}
+            <UiBadge @text="on playa" @type="secondary" />
           {{else}}
             -
           {{/if}}
@@ -51,7 +51,7 @@
 
   {{#if this.entry}}
     <ModalDialog @title="{{if this.entry.isNew "New" "Edit"}} Alert" @onEscape={{this.cancelAlert}} as |Modal|>
-      <ChForm @formId="alert" @formFor={{this.entry}} @onSubmit={{action this.saveAlert}} as |f|>
+      <ChForm @formId="alert" @formFor={{this.entry}} @onSubmit={{this.saveAlert}} as |f|>
         <Modal.body>
           <FormRow>
             <f.text @name="title"

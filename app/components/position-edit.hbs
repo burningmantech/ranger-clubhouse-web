@@ -188,17 +188,22 @@
 
   <fieldset>
     <legend>Driving</legend>
+    <UiAlert @type="warning" @icon="hand-point-right">
+      Do not set either checkbox below for a position that has been granted to all Rangers or new users. Doing so will
+      cause the respective homepage dashboard MVR or PVR prompts to appear for everyone regardless if they are signed up
+      for this shift or not.
+    </UiAlert>
     <FormRow>
       <div class="col-12">
         <f.checkbox @name="mvr_eligible"
                     @inline={{true}}
-                    @label="The person will become MVR eligible when granted the position AND signs up for a shift"
+                    @label="MVR Eligibility: The person will be shown a MVR submission link under the Vehicle Dashboard when granted the position AND signs up for this shift. The homepage dashboard MVR prompt will always appear regardless if the person has signed up for this shift or not."
         />
       </div>
       <div class="col-12">
         <f.checkbox @name="pvr_eligible"
                     @inline={{true}}
-                    @label="The person will become Personal Vehicle Request eligible when granted the position AND signs up for a shift"
+                    @label="Personal Vehicle Request Eligibility: The person will be allowed to submit a PVR under the Vehicle Dashboard when granted the position AND signs up for this shift. The homepage dashboard PVR prompt will always appear regardless if the person has signed up for this shift or not."
         />
       </div>
     </FormRow>
@@ -250,7 +255,7 @@
       </div>
       <div class="col-12">
         <f.checkbox @name="alert_when_becomes_empty"
-                    @label="Send email to contact email when a slot signups become empty."
+                    @label="Send email to contact email when signups become empty and when LMOP is active."
         />
       </div>
     </FormRow>

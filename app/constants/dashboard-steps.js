@@ -477,7 +477,7 @@ export const TAKE_ALPHA_SURVEY = {
     if (milestones.surveys.alpha_survey) {
       return {
         result: OPTIONAL,
-        message: 'Congratulations on passing your Alpha shift. Welcome to the Ranger family! Please take a moment to provide feedback on your experience with the Alpha shift and your Mentors:',
+        message: 'Please take a moment to provide feedback on your experience with the Alpha shift and your Mentors:',
         survey: 'alpha'
       };
 

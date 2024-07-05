@@ -2,7 +2,7 @@
             @year={{this.year}}
             @minYear={{2008}}
             @skipPandemic={{true}}
-            @onChange={{action (mut this.year)}}  />
+            @onChange={{set-value this 'year'}}  />
 
 <FormRow>
   <FormLabel @auto={{true}}>Shift Type</FormLabel>
@@ -10,14 +10,14 @@
     <ChForm::Select @name="type"
                     @value={{this.type}}
                     @options={{this.typeOptions}}
-                    @onChange={{action (mut this.type)}} />
+                    @onChange={{set-value this 'type'}} />
   </div>
   <FormLabel @auto={{true}}>Day Filter</FormLabel>
   <div class="col-auto">
     <ChForm::Select @name="type"
                     @value={{this.dayFilter}}
                     @options={{this.dayOptions}}
-                    @onChange={{action (mut this.dayFilter)}} />
+                    @onChange={{set-value this 'dayFilter'}} />
   </div>
 </FormRow>
 

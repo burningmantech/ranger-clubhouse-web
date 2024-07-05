@@ -20,7 +20,7 @@
       {{#each this.error_logs as |row|}}
         <tr>
           <td>
-            <a href {{action this.toggleLog row}}>
+            <a href {{on-click this.toggleLog row}}>
               {{fa-icon (if row.showing "caret-down" "caret-right")}} {{row.created_at}}
             </a>
           </td>

@@ -2,7 +2,7 @@
             @year={{this.year}}
             @minYear={{2010}}
             @skipPandemic={{true}}
-            @onChange={{action (mut this.year)}}
+            @onChange={{set-value this 'year'}}
 />
 <p>
   <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>

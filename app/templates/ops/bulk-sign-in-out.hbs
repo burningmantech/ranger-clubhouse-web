@@ -117,7 +117,8 @@
     {{/if}}
   </ChForm>
   <div class="mt-4">
-    <UiButton @onClick={{action this.toggleHelp}} @type="success">{{if this.showHelp "Hide" "Show"}} supported formats
+    <UiButton @onClick={{this.toggleHelp}} @type="success">
+      {{if this.showHelp "Hide" "Show"}} supported formats
     </UiButton>
   </div>
 

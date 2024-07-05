@@ -1,7 +1,7 @@
 <YearSelect @year={{this.year}} @title="Forced Sign-Ins Report"
             @minYear={{2018}}
             @skipPandemic={{true}}
-            @onChange={{action (mut this.year)}}
+            @onChange={{set-value this 'year'}}
 />
 <p>
   This shows what shift sign-ins were forced and what blockers were overridden.

@@ -3,7 +3,7 @@
     <YearSelect @title="Clubhouse Slots"
                 @year={{this.year}}
                 @years={{this.yearList}}
-                @onChange={{action (mut this.year)}} />
+                @onChange={{set-value this 'year'}} />
 
     {{#if (and this.eventDate.pre_event_slot_start this.eventDate.pre_event_slot_end)}}
       <p class="mt-2">
@@ -60,7 +60,7 @@
     {{#each this.positionSlots as |group|}}
       <UiAccordion id="position-{{group.position.id}}"
                    @isInitOpen={{get this.positionsOpened group.position.id}}
-                   @onClick={{action this.positionClicked group}} as |box|>
+                   @onClick={{fn this.positionClicked group}} as |box|>
         <box.title>
           {{group.position.title}} ({{group.slots.length}}
           {{~#if group.inactive}}

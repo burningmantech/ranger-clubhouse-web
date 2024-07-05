@@ -16,4 +16,9 @@ export default class ChFormInputFieldComponent extends ChFormFieldBaseComponent 
       focusElement(element);
     }
   }
+
+  @action
+  inputEvent(event) {
+    this._updateValue(event.target.value);
+  }
 }

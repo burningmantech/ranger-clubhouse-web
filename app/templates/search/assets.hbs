@@ -1,4 +1,4 @@
-<YearSelect @title="Asset Search" @year={{this.year}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="Asset Search" @year={{this.year}} @onChange={{set-value this 'year'}} />
 
 <ChForm @formId="search-form"
         @formFor={{this.assetForm}}

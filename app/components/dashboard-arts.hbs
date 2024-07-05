@@ -29,14 +29,13 @@
         </div>
         <div class="dashboard-art-status">
           {{#if (eq art.status "pass")}}
-            {{badge "success" "completed"}}
-            Completed
+            <UiBadge @text="completed" @type="success" />
           {{else if (or (eq art.status "no-show") (eq art.status "fail"))}}
-            {{badge "danger" "not passed"}}
+            <UiBadge @text="not passed" @type="danger" />
           {{else if (eq art.status "no-shift")}}
-            {{badge "secondary" "not signed up"}}
+            <UiBadge @text="not signed up" @type="secondary" />
           {{else}}
-            {{badge "warning" "pending"}}
+            <UiBadge @text="pending" @type="warning" />
           {{/if}}
         </div>
         <div class="dashboard-art-location">

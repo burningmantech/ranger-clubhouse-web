@@ -6,21 +6,21 @@
     <ChForm::Select @name="typeFilter"
                     @value={{this.typeFilter}}
                     @options={{this.typeOptions}}
-                    @onChange={{action (mut this.typeFilter)}}/>
+                    @onChange={{set-value this 'typeFilter'}}/>
   </div>
   <FormLabel @auto={{true}}>Status</FormLabel>
   <div class="col-auto">
     <ChForm::Select @name="statusFilter"
                     @value={{this.statusFilter}}
                     @options={{this.statusOptions}}
-                    @onChange={{action (mut this.statusFilter)}}/>
+                    @onChange={{set-value this 'statusFilter'}}/>
   </div>
   <FormLabel @auto={{true}}>Allocated</FormLabel>
   <div class="col-auto">
     <ChForm::Select @name="allocatedFilter"
                     @value={{this.allocatedFilter}}
                     @options={{this.allocatedOptions}}
-                    @onChange={{action (mut this.allocatedFilter)}}/>
+                    @onChange={{set-value this 'allocatedFilter'}}/>
   </div>
 </FormRow>
 

@@ -15,10 +15,10 @@
           <span class="caret"></span>
         </dd.button>
         <dd.menu>
-          <a class="dropdown-item" href {{action this.showCachedRolesAction}}>
+          <a class="dropdown-item" href {{on-click this.showCachedRolesAction}}>
             Inspect Cache
           </a>
-          <a class="dropdown-item" href {{action this.clearRoleCacheAction}}>
+          <a class="dropdown-item" href {{on-click this.clearRoleCacheAction}}>
             Clear Cache
           </a>
         </dd.menu>
@@ -39,7 +39,7 @@
       <thead>
       <tr>
         <th>Permission</th>
-        <th>Active?</th>
+        <th class="text-center">Active?</th>
         <th class="text-center">Manually<br>Granted?</th>
         <th>Thru<br>Teams</th>
         <th>Thru<br>Positions</th>
@@ -53,14 +53,14 @@
           </td>
           <td class="text-center">
             {{#if role.active}}
-              {{badge "success" "active"}}
+              <UiBadge @text="active" @type="success" />
             {{else}}
-              {{badge "warning" "not activated"}}
+              <UiBadge @text="not activated" @type="warning" />
             {{/if}}
           </td>
           <td class="text-center">
             {{#if role.granted}}
-              {{badge "danger" "manually granted"}}
+              <UiBadge @text="manually granted" @type="danger" />
             {{else}}
               -
             {{/if}}

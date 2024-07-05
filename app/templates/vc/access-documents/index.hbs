@@ -49,14 +49,14 @@
           <ChForm::Select @name="filterType"
                           @value={{this.filterType}}
                           @options={{this.typeOptions}}
-                          @onChange={{action (mut this.filterType)}}/>
+                          @onChange={{set-value this 'filterType'}}/>
         </div>
         <FormLabel @auto={{true}}>Status</FormLabel>
         <div class="col-auto">
           <ChForm::Select @name="filterStatus"
                           @value={{this.filterStatus}}
                           @options={{this.statusOptions}}
-                          @onChange={{action (mut this.filterStatus)}}/>
+                          @onChange={{set-value this 'filterStatus'}}/>
         </div>
       </FormRow>
       <p>

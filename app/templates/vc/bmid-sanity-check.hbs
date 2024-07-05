@@ -17,11 +17,11 @@
       <UiAccordion as |Accordion|>
         <Accordion.title>
           {{#if (eq asylum.type "shifts-before-access-date")}}
-            Signed Up For Shifts Earlier Than Non-Submitted WAP Access Date
+            Signed Up For Shifts Earlier Than Non-Submitted SAP Access Date
           {{else if (eq asylum.type "shifts-before-submitted-wap")}}
-            Signed Up For Shifts Earlier Than Submitted WAP Access Date
+            Signed Up For Shifts Earlier Than Submitted SAP Access Date
           {{else if (eq asylum.type "shifts-no-wap")}}
-            Signed Up For Pre-Event Shifts But No WAP
+            Signed Up For Pre-Event Shifts But No SAP
           {{else if (eq asylum.type "spt-before-box-office")}}
             Special Price Ticket Access Before Box Office Open {{mdy-format asylum.box_office}}
           {{else}}

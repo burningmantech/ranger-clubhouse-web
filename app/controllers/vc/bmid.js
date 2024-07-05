@@ -49,7 +49,7 @@ export default class VcBmidController extends ClubhouseController {
   filterOptions = [
     ['Specials (titles, meals, showers, or early arrival)', 'special'],
     ['Alphas', 'alpha'],
-    ['Vets w/claimed tickets/WAPs OR In-Person training sign-ups', 'qualified'],
+    ['Vets w/claimed tickets/SAPs OR In-Person training sign-ups', 'qualified'],
     ['BMIDs marked as "Issues" or "Do Not Print"', 'nonprint'],
     ['No shift signups', 'no-shifts'],
     ['In Prep', IN_PREP],

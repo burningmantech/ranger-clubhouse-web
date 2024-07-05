@@ -27,19 +27,19 @@
       </td>
       {{#if (eq training.status "no-shift")}}
         <td class="text-center">
-          {{badge "secondary" "no sign up"}}
+          <UiBadge @text="no sign up" @type="secondary" />
         </td>
         <td colspan="2">&nbsp;</td>
       {{else}}
         <td class="text-center">
           {{#if (eq training.status "pass")}}
-            {{badge "success" "passed"}}
+            <UiBadge @text="passed" @type="success" />
           {{else if (eq training.status "pending")}}
-            {{badge "warning" "pending"}}
+            <UiBadge @text="pending" @type="warning" />
           {{else if (eq training.status "no-show")}}
-            {{badge "danger" "no show"}}
+            <UiBadge @text="no show" @type="danger" />
           {{else}}
-            {{badge "danger" "not passed"}}
+            <UiBadge @text="not passed" @type="danger" />
           {{/if}}
           {{#if training.is_trainer}}
             (as trainer)

@@ -2,7 +2,7 @@
   <ChForm @formId="contact"
           @formFor={{this.contactForm}}
           @validator={{this.contactValidation}}
-          @onSubmit={{action this.sendAction}}
+          @onSubmit={{this.sendAction}}
           as |f|>
     <Modal.body>
       {{#if @isInactive}}

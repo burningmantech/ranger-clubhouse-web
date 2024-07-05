@@ -69,7 +69,7 @@
                   {{handle.handle}}
                 </td>
                 <td class="p-1">
-                  <a href {{action this.assignCallsign handle.handle}}>
+                  <a href {{on-click this.assignCallsign handle.handle}}>
                     assign callsign
                   </a>
                 </td>
@@ -90,8 +90,9 @@
                     {{#each handle.reserved_handles as |reserved idx|}}
                       {{if idx ", "}}
                       {{reserved.handle}}
-                      <span class="ms-1">{{badge "secondary"
-                                                 (this.reservedHandleType reserved.reservation_type)}}</span>
+                      <UiBadge @type="secondary"
+                               @text={{this.reservedHandleType reserved.reservation_type}}
+                               class="ms-1"/>
                     {{/each}}
                   {{/if}}
                 </td>
@@ -123,7 +124,7 @@
             </div>
             <div class="mt-1">
               {{#if reject.message}}
-                <a href {{action this.toggleRejectionMessage reject}}>
+                <a href {{on-click this.toggleRejectionMessage reject}}>
                   {{if reject.showMessage "Hide" "Show"}} rejection message
                 </a>
               {{else}}

@@ -81,7 +81,7 @@ Everyone else will see person/simple-form
   </div>
 </div>
 
-<ChForm @formId="person" @formFor={{@person}} @onSubmit={{action @savePersonAction}} as |f|>
+<ChForm @formId="person" @formFor={{@person}} @onSubmit={{@savePersonAction}} as |f|>
   <FormRow>
     <FormLabel @fixed={{true}}>Callsign</FormLabel>
     <f.text @name="callsign"

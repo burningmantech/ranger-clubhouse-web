@@ -1,7 +1,7 @@
 <YearSelect @title="Timesheet"
             @year={{this.year}}
             @years={{this.person.all_years}}
-            @onChange={{action (mut this.year)}}
+            @onChange={{set-value this 'year'}}
             @subheader={{true}} />
 <UiTab class="mt-4" as |tab|>
   <tab.pane @title="Timesheet / Missing Entry Requests" @id="timesheet">

@@ -21,6 +21,7 @@ export default class SlotModel extends Model {
   @attr('number', {readOnly: true}) credits;
   @attr('', {readOnly: true}) position;
   @attr('', {readOnly: true}) trainer_slot;
+  @attr('', { readOnly: true}) parent_signup_slot;
 
   @attr('string', {defaultValue: 'America/Los_Angeles'}) timezone;
   @attr('string', {readOnly: true}) timezone_abbr;

@@ -1,6 +1,6 @@
 <YearSelect @title="Timesheet Unconfirmed Report"
             @year={{this.year}}
-            @onChange={{action (mut this.year)}}
+            @onChange={{set-value this 'year'}}
             @minYear={{2018}}
             @skipPandemic={{true}}
 />

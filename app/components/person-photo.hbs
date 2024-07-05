@@ -2,11 +2,11 @@
   {{#if (and (not-eq @photo.photo_status "missing") @photo.photo_url)}}
     <img src={{or @photo.profile_url @photo.photo_url}} alt="profile">
     {{#if (eq @photo.photo_status "approved")}}
-      {{badge "success" "approved"}}
+      <UiBadge @text="approved" @type="success" />
     {{else if (eq @photo.photo_status "submitted")}}
-      {{badge "warning" "awaiting approval"}}
+      <UiBadge @text="awaiting approval" @type="warning" />
     {{else if (eq @photo.photo_status "rejected")}}
-      {{badge "danger" "rejected"}}
+      <UiBadge @text="rejected" @type="danger" />
     {{else}}
       <span class="text-danger">Status: {{@photo.photo_status}}</span>
     {{/if}}

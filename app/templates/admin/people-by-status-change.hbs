@@ -11,7 +11,7 @@
       <ChForm::Select @name="period"
                       @value={{this.period}}
                       @options={{this.periodOptions}}
-                      @onChange={{action (mut this.period)}} />
+                      @onChange={{set-value this 'period'}} />
     </div>
   </FormRow>
   <p>

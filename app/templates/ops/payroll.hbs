@@ -11,10 +11,10 @@
       <f.checkboxGroup @name="position_ids" @options={{this.positionOptions}}>
         <:selectors as |setValues|>
           <div class="col-12 my-2">
-            <a href class="me-2" {{action this.selectPayCode "all" setValues}}>select all</a>
-            <a href class="me-2" {{action this.selectPayCode "none" setValues}}>deselect all</a>
+            <a href class="me-2" {{on-click this.selectPayCode "all" setValues}}>select all</a>
+            <a href class="me-2" {{on-click this.selectPayCode "none" setValues}}>deselect all</a>
             {{#each this.paycodeOptions as |code|}}
-              <a href {{action this.selectPayCode code setValues}} class="me-2">select {{code}}</a>
+              <a href {{on-click this.selectPayCode code setValues}} class="me-2">select {{code}}</a>
             {{/each}}
           </div>
         </:selectors>
@@ -104,11 +104,11 @@
               </td>
               <td class="text-center">
                 {{#if row.still_on_duty}}
-                  {{badge "warning" "still on duty"}}
+                  <UiBadge @text="still on duty" @type="warning" />
                 {{else if row.verified}}
-                  {{badge "success" "verified"}}
+                  <UiBadge @text="verified" @type="success" />
                 {{else}}
-                  {{badge "danger" "unverified"}}
+                  <UiBadge @text="unverified" @type="danger" />
                 {{/if}}
               </td>
               <td>

@@ -49,7 +49,7 @@
           <NavbarAreaTraining @nav={{nav}} />
         {{/if}}
 
-        {{#if (has-role "art-trainer")}}
+        {{#if this.user.teacher.arts}}
           <NavbarAreaArts @nav={{nav}} @user={{this.user}} />
         {{/if}}
 
@@ -111,7 +111,7 @@
                 ({{this.user.onduty_position.title}})
               {{/if}}
             </dropdown.toggle>
-            <dropdown.menu class="dropdown-menu-right"  as |menu|>
+            <dropdown.menu class="dropdown-menu-right" as |menu|>
               <menu.item>
                 {{#if this.user.isRanger}}
                   <LinkTo @route="me.messages" class="dropdown-item">

@@ -1,4 +1,4 @@
-<YearSelect @title="{{this.headerTitle}} Surveys" @year={{this.year}} @minYear={{2012}} @onChange={{action (mut this.year)}} />
+<YearSelect @title="{{this.headerTitle}} Surveys" @year={{this.year}} @minYear={{2012}} @onChange={{set-value this 'year'}} />
 
 <UiTable class="mt-2">
   <thead>

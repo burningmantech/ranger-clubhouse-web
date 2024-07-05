@@ -60,7 +60,8 @@
                   disabled={{not cert.selected}}
                   rows="2"
                   cols="60"
-                  oninput={{action (mut cert.notes) value="target.value"}}>{{cert.notes}}</textarea>
+                  {{on "input" this.notesInputEvent cert}}
+                  >{{cert.notes}}</textarea>
               </td>
             </tr>
           {{/each}}

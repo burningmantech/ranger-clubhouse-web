@@ -4,8 +4,8 @@
   {{~/if~}}
   {{#if @includeToggleControls}}
     <div class="my-2">
-    <a href class="me-2" {{action this.toggleAll true}}>select all</a>
-    <a href {{action this.toggleAll false}}>deselect all</a>
+    <a href class="me-2" {{on-click this.toggleAll true}}>select all</a>
+    <a href {{on-click this.toggleAll false}}>deselect all</a>
     </div>
   {{/if}}
   {{#if (has-block "selectors")}}

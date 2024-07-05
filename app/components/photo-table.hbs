@@ -36,13 +36,14 @@
       {{/unless}}
       <td class="text-center">
         {{#if (eq photo.status "approved")}}
-          {{badge "success" "approved"}}
+          <UiBadge @text="approved" @type="success"/>
         {{else if (eq photo.status "rejected")}}
-          {{badge "danger" "rejected"}}
+          <UiBadge @text="rejected" @type="danger"/>
         {{else if (eq photo.status "submitted")}}
-          {{badge "warning" "submitted"}}
+          <UiBadge @text="submitted" @type="warning"/>
         {{else}}
-          Unknown  {{badge "gray" photo.status}}
+          Unknown status
+          <UiBadge @text={{photo.status}} @type="gray"/>
         {{/if}}<br>
         {{#if photo.is_active}}
           <b>CURRENT</b>
@@ -123,7 +124,7 @@
                 {{fa-icon "star" right=1}} Activate
               </UiButton>
             {{/if}}
-           </UiButtonRow>
+          </UiButtonRow>
           {{#if photo.isSaving}}
             <LoadingIndicator/>
           {{/if}}

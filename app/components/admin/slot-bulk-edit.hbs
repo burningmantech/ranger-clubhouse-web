@@ -1,6 +1,6 @@
 <h1>Bulk Edit {{@position.title}}</h1>
 
-<a href {{action @onClose}} class="my-4">Back to slots listing</a>
+<a href {{on-click @onClose}} class="my-4">Back to slots listing</a>
 
 <ChForm @formId="bulkEdit"
         @formFor={{this.editForm}}

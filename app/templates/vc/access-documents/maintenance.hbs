@@ -5,7 +5,7 @@
   </LoadingDialog>
 {{else if this.task}}
   <p>
-    <a href {{action this.showIndex}}>{{fa-icon "angle-double-left"}} Back to Maintenance Tasks</a>
+    <a href {{on-click this.showIndex}}>{{fa-icon "angle-double-left"}} Back to Maintenance Tasks</a>
   </p>
   <h3>The task "{{this.task.title}}" was completed.</h3>
   <this.task.component @results={{this.results}} @taskAction={{this.taskAction}} />

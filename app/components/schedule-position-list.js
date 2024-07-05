@@ -13,7 +13,7 @@ import {
   UBERBONKED,
 } from 'clubhouse/constants/person_status';
 import {service} from '@ember/service';
-import {ADMIN, ART_TRAINER} from "clubhouse/constants/roles";
+import {ADMIN, ART_TRAINER, ART_TRAINER_BASE} from "clubhouse/constants/roles";
 import {TYPE_TRAINING} from "clubhouse/models/position";
 
 export default class SchedulePositionListComponent extends Component {
@@ -33,7 +33,7 @@ export default class SchedulePositionListComponent extends Component {
       this.canForceSignUp = true;
     } else if ((this.isTrainingPosition || position_id === TRAINER_POSITION) && this.session.isRealTrainer) {
       this.canForceSignUp = true;
-    } else if (this.isTrainingType && this.session.hasRole(ART_TRAINER)) {
+    } else if (this.isTrainingType && (this.session.hasRole(ART_TRAINER) || this.session.hasRole(ART_TRAINER_BASE | position_id))) {
       this.canForceSignUp = false;
     }
 

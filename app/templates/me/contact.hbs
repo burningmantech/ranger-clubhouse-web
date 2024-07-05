@@ -2,24 +2,25 @@
 <BackToHome/>
 
 <p>
-  Use this page to send a contact message, via email, to a Ranger. Messages may only be
-  sent to currently active or inactive Rangers. (An inactive Ranger is a person
-  who has not rangered the last three years.) Individuals who are prospectives,
-  alphas, bonked, retired, etc. may not be sent a message through this service.
+  Use this page to send a contact message via email to a Ranger. You may only send messages to currently active or
+  inactive Rangers. An inactive Ranger is a person who has not served as a Ranger in the last three events. Individuals
+  who are prospectives, alphas, retired, dismissed, etc., may be sent messages through this service.
 </p>
 
 {{#if this.isSearchingParam}}
   <LoadingIndicator @text={{concat "Searching for " this.searchForm.callsign}} />
 {{else}}
   <p>
-    Neither your email address nor the email address of the receiving Ranger will
-    be revealed by the Clubhouse.
+    The Clubhouse will not reveal your email address or the email address of the receiving Ranger.
   </p>
   <p>
-    <b>A Ranger callsign may not appear in the search results if the person is no longer active.</b>
+    <b>A Ranger callsign will not appear in the search results if the person is no longer active.</b>
   </p>
 
-  <ChForm @formId="search" @formFor={{this.searchForm}} @changeSet={{false}} @onFormChange={{this.searchOnChange}}
+  <ChForm @formId="search"
+          @formFor={{this.searchForm}}
+          @changeSet={{false}}
+          @onFormChange={{this.searchOnChange}}
           as |f|>
     <FormRow>
       <f.text @name="callsign"
@@ -40,9 +41,9 @@
         <tr>
           <td>
             {{#if ranger.allow_contact}}
-              <a href {{action "contactRanger" ranger}}>{{ranger.callsign}}</a>
+              <a href {{on-click this.contactRanger ranger}}>{{ranger.callsign}}</a>
             {{else}}
-              <span class="text-danger">{{ranger.callsign}} does not want to be contacted through the Clubhouse.</span>
+              <span class="text-danger">{{ranger.callsign}} does not want to be contacted.</span>
             {{/if}}
           </td>
         </tr>
@@ -59,6 +60,6 @@
                @recipientId={{this.ranger.id}}
                @isInactive={{this.ranger.is_inactive}}
                @contactType="ranger"
-               @onDone={{action this.doneAction}} />
+               @onDone={{this.doneAction}} />
 {{/if}}
 

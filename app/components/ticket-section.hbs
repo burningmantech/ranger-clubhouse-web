@@ -1,5 +1,5 @@
 <div class="accordion-container" id="ticket-{{@id}}">
-  <a class="accordion-title" href {{action @toggleCard @id}}>
+  <a class="accordion-title" href {{on-click @toggleCard @id}}>
     <div class="accordion-title-icon">
       {{fa-icon (if (get @showing @id) "minus" "plus")}}
     </div>
