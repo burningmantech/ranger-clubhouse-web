@@ -153,7 +153,7 @@ export default class ShiftCheckInOutComponent extends Component {
 
   get mayNotNeedRadio() {
     const id = this.args.onDutyEntry?.position_id;
-    return  id === BURN_PERIMETER || id === FIELD_SUPPORT;
+    return  id === BURN_PERIMETER;
   }
 
   /**

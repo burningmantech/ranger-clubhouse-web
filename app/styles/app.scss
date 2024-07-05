@@ -633,6 +633,7 @@ legend {
   > div, > a {
     overflow-wrap: break-word;
     margin-bottom: 0.5vh;
+    break-inside: avoid-column;
   }
 
   > div:hover, > a:hover {

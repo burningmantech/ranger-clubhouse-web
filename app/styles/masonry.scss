@@ -30,7 +30,7 @@
 
 
 /* Masonry on medium-sized screens */
-@include media-breakpoint-up(lg) {
+@include media-breakpoint-up(xl) {
   .masonry-container {
     column-count: 3;
   }
