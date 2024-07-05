@@ -9,7 +9,6 @@ import {
   BURN_PERIMETER,
   NVO_RANGER,
   DPW_RANGER,
-  FIELD_SUPPORT
 } from 'clubhouse/constants/positions';
 import {cached, tracked} from '@glimmer/tracking';
 import {INACTIVE, INACTIVE_EXTENSION, NON_RANGER, RETIRED} from 'clubhouse/constants/person_status';
