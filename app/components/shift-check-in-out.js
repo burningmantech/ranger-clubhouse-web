@@ -9,7 +9,6 @@ import {
   BURN_PERIMETER,
   NVO_RANGER,
   DPW_RANGER,
-  FIELD_SUPPORT
 } from 'clubhouse/constants/positions';
 import {cached, tracked} from '@glimmer/tracking';
 import {INACTIVE, INACTIVE_EXTENSION, NON_RANGER, RETIRED} from 'clubhouse/constants/person_status';
@@ -153,7 +152,7 @@ export default class ShiftCheckInOutComponent extends Component {
 
   get mayNotNeedRadio() {
     const id = this.args.onDutyEntry?.position_id;
-    return  id === BURN_PERIMETER || id === FIELD_SUPPORT;
+    return  id === BURN_PERIMETER;
   }
 
   /**
