@@ -65,7 +65,7 @@ export default class HqRoute extends ClubhouseRoute {
     controller.set('userIsMentor', (onduty?.subtype === 'mentor'));
 
     // Show a warning if the person is a PNV and the user is NOT a mentor.
-    controller.set('showAlphaWarning', (person.isPNV && (!onduty || onduty.subtype !== 'mentor')));
+    controller.set('showHatRackInstruction', (person.isPNV && onduty?.subtype !== 'mentor'));
 
     // User should be signed in to a shift
     controller.set('showSignInWarning', !onduty);

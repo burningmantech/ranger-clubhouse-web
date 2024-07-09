@@ -41,7 +41,9 @@
             {{this.person.callsign}} has the status "{{this.person.status}}" which prevents the person
             from working a shift. The HQ Window Interface cannot be used.
           </p>
-          Contact the HQ Lead, HQ Supervisor or the Personnel Manager <PersonnelEmail />.
+          Contact the HQ Lead, HQ Supervisor or the Personnel Manager
+          <PersonnelEmail/>
+          .
         </UiNotice>
       {{else if this.person.needsBpguid}}
         <UiNotice @type="danger" @icon="exclamation-triangle">
@@ -123,8 +125,8 @@
       <UiCloseButton @onClick={{this.closeSignInWarning}} />
     </Modal.footer>
   </ModalDialog>
-{{else if this.showAlphaWarning}}
-  <ModalDialog @onEscape={{this.closeAlphaWarning}} as |Modal|>
+{{else if this.showHatRackInstruction}}
+  <ModalDialog @onEscape={{this.closeHatRackInstructions}} as |Modal|>
     <Modal.body>
       <div class="d-flex">
         <div class="mt-2 mx-3">
@@ -135,14 +137,19 @@
             DO NOT CHECK IN &mdash; DIRECT PERSON TO THE HAT RACK.
           </h3>
           <h3>
-            {{this.person.callsign}} is {{if this.person.isAlpha "an Alpha" "a Prospective"}} and will be handled by
+            {{this.person.callsign}} is
+            {{#if this.person.isRetired}}
+              a retired Ranger
+            {{else}}
+              {{if this.person.isAlpha "an Alpha" "a Prospective"}}
+            {{/if}} and will be handled by
             the Mentors.
           </h3>
         </div>
       </div>
     </Modal.body>
     <Modal.footer>
-      <UiCloseButton @onClick={{this.closeAlphaWarning}}/>
+      <UiCloseButton @onClick={{this.closeHatRackInstructions}}/>
     </Modal.footer>
   </ModalDialog>
 {{/if}}

@@ -57,6 +57,10 @@ const PersonMixin = (superclass) => class extends superclass {
     return (this.status === PROSPECTIVE || this.status === ALPHA);
   }
 
+  get isRetired() {
+    return (this.status === RETIRED);
+  }
+
   get isResigned() {
     return (this.status === RESIGNED);
   }

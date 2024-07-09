@@ -11,7 +11,7 @@ import {
   DPW_RANGER,
 } from 'clubhouse/constants/positions';
 import {cached, tracked} from '@glimmer/tracking';
-import {INACTIVE, INACTIVE_EXTENSION, NON_RANGER, RETIRED} from 'clubhouse/constants/person_status';
+import {INACTIVE, INACTIVE_EXTENSION, NON_RANGER} from 'clubhouse/constants/person_status';
 import {ADMIN, CAN_FORCE_SHIFT, TIMECARD_YEAR_ROUND} from 'clubhouse/constants/roles';
 import {TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
 import {TYPE_TRAINING} from "clubhouse/models/position";
@@ -141,7 +141,7 @@ export default class ShiftCheckInOutComponent extends Component {
 
   get isReturningRanger() {
     const {status} = this.args.person;
-    return (status === INACTIVE || status === INACTIVE_EXTENSION || status === RETIRED);
+    return (status === INACTIVE || status === INACTIVE_EXTENSION);
   }
 
   /**
@@ -152,7 +152,7 @@ export default class ShiftCheckInOutComponent extends Component {
 
   get mayNotNeedRadio() {
     const id = this.args.onDutyEntry?.position_id;
-    return  id === BURN_PERIMETER;
+    return id === BURN_PERIMETER;
   }
 
   /**
@@ -260,6 +260,11 @@ export default class ShiftCheckInOutComponent extends Component {
         case 'no-employee-id':
           this.modal.info('Paid Position', `${position.title} is a paid position, and ${callsign} does not have a Paycom ID on file. Until the ID is entered into the Clubhouse, they may not work this position. Please have ${callsign} contact their team's manager to resolve this issue.`);
           break;
+
+        case 'is-retired':
+          this.modal.info('Is Retired Ranger', `${callsign} is a retired Ranger. Before they are allowed to check into a non-training shift, they first must walk a Cheetah Cub shift, and be converted back to active status by the Mentors.`);
+          break;
+
 
         default:
           this.modal.info('Unknown Server Status', `An unknown status [${result.status}] from the server. This is a bug. Please report this to the Tech Ninjas.`);
