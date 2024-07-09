@@ -9,7 +9,7 @@ export default class HqController extends ClubhouseController {
 
   @tracked userIsMentor = false;
 
-  @tracked showAlphaWarning = false;
+  @tracked showHatRackInstruction = false;
   @tracked showSignInWarning = false;
   @tracked showTicketsAndProvisions = false;
   @tracked showNotAllowedToWork = false;
@@ -18,8 +18,8 @@ export default class HqController extends ClubhouseController {
   @tracked eventPeriods;
 
   @action
-  closeAlphaWarning() {
-    this.showAlphaWarning = false;
+  closeHatRackInstructions() {
+    this.showHatRackInstruction = false;
   }
 
   @action
