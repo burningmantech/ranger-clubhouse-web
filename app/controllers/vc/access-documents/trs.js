@@ -31,7 +31,7 @@ const TRS_COLUMN = {
   [WAPSO]: 'sap'
 };
 
-const PAID_EXPORT_FORMAT = [
+const PAID_AND_GIFT_TICKET_EXPORT_FORMAT = [
   ['First Name', 'first_name'],
   ['Last Name', 'last_name'],
   ['Email', 'email'],
@@ -50,7 +50,7 @@ const PAID_EXPORT_FORMAT = [
   ['Shipping Address (Required if Mail Delivery type selected):: Phone', 'not_used_phone'],
   ['Request: $225 Ticket', 'spt'],
   ['Request: Vehicle Pass $150', 'paid_vp'],
-  ['Request: Gift Ticket', 'not_used_gift_ticket'],
+  ['Request: Gift Ticket', 'not_used_gift_ticket'], // We use the transfferrable gift ticket
   ['Request: Gift Vehicle Pass', 'gift_vp'],
   ['Request: Transferrable $225 Ticket', 'spt_xfer'],
   ['Request: Transferrable $150 Vehicle Pass', 'vp_xfer'],
@@ -115,8 +115,6 @@ const UNPAID_EXPORT_FORMAT = [
   ['Request: Staff Credential Pickup 8/10 &amp; After', 'sc_0810'],
   ['Request: Staff Credential Pickup 8/11 &amp; After', 'sc_0811'],
   ['Request: Staff Credential Pickup 8/12 &amp; After', 'sc_0812'],
-  ['Request: Staff Credential Pickup 8/13 &amp; After', 'sc_0813'],
-  ['Request: Staff Credential Pickup 8/14 &amp; After', 'sc_0814'],
   ['Request: Staff Credential Pickup 8/15 &amp; After', 'sc_0815'],
   ['Request: Staff Credential Pickup 8/16 &amp; After', 'sc_0816'],
   ['Request: Staff Credential Pickup 8/17 &amp; After', 'sc_0817'],
@@ -184,17 +182,17 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
       options:
         [
           ['Staff Credentials', STAFF_CREDENTIAL],
-          ['Staff Credentials + Gift VP', STAFF_CREDENTIAL_VP],
-          ['Gift VP', VEHICLE_PASS_GIFT],
+          ['Staff Credentials + Gift VPs (must have both)', STAFF_CREDENTIAL_VP],
+          ['Gift Vehicle Passes', VEHICLE_PASS_GIFT],
         ]
     },
     {
-      groupName: 'SPTs',
+      groupName: 'Special Price',
       options:
         [
-          ['SP Tickets + SP Vehicle Pass', SPT_VP],
+          ['SP Tickets + SP VPs (must have both)', SPT_VP],
           ['Special Price Tickets', SPT],
-          ['SP Vehicle Pass', VEHICLE_PASS_SP],
+          ['SP Vehicle Passes', VEHICLE_PASS_SP],
         ]
     },
     {
@@ -202,8 +200,8 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
       options:
         [
           ['SAP Ranger', WAP_RANGER],
-          ['SAP SO', WAPSO],
-          ['SAP PNV', WAP_PNV],
+          ['SAP Significant Other', WAPSO],
+          ['SAP Prospective / Alpha', WAP_PNV],
           ['SAP All', WAP_ALL],
         ]
     },
@@ -212,7 +210,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
       options: [
         ['Gift Tickets', GIFT_TICKET],
         ['LSD Tickets', LSD_TICKET],
-        ['LSD Tickets + VP', LSD_TICKET_VP],
+        ['LSD Tickets + LSD VP (must have both)', LSD_TICKET_VP],
         ['LSD Vehicle Passes', VEHICLE_PASS_LSD],
       ]
     }
@@ -577,13 +575,14 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     switch (this.filter) {
       case SPT:
       case SPT_VP:
-      case VEHICLE_PASS_LSD:
       case VEHICLE_PASS_SP:
-        format = PAID_EXPORT_FORMAT;
+      case GIFT_TICKET:
+        format = PAID_AND_GIFT_TICKET_EXPORT_FORMAT;
         break;
 
       case LSD_TICKET:
       case LSD_TICKET_VP:
+      case VEHICLE_PASS_LSD:
         format = LSD_EXPORT_FORMAT;
         break;
 
