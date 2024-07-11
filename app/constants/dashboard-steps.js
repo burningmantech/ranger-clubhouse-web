@@ -403,13 +403,23 @@ export const ATTEND_TRAINING = {
           immediate: true
         };
 
-      case 'fail':
+      case 'fail': {
+        let message = `It appears that you were absent or did not complete training on ${dayjs(training.date).format('dddd, MMMM Do YYYY')} located at ${training.location}. You must complete an In-Person before being allowed to `;
+
+        if (isPNV) {
+          message += 'walk an Alpha shift, and potentially become a Ranger.';
+        } else {
+          message += 'work on playa. You will be turned away at HQ Window.';
+        }
+
+        message += ' You are prevented from signing up for another session at this point. To sign up for another session, email the Training Academy and explain your absence:';
         return {
           result: URGENT,
-          message: `It appears that you were absent or did not complete training on ${dayjs(training.date).format('dddd, MMMM Do YYYY')} located at ${training.location}. You must complete an In-Person before being allowed to walk an Alpha shift, and potentially become a Ranger. You are not allowed to sign up for another session through the Clubhouse at this point. Email the Training Academy, explain your absence, and request another sign-up.`,
+          message,
           email: 'TrainingAcademyEmail',
           immediate: true
         };
+      }
 
       case 'pending': {
         let prefix, dt;
