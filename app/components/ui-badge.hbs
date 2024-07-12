@@ -1,1 +1,7 @@
-<span class="badge text-bg-{{@type}}" ...attributes>{{@text}}</span>
+<span class="badge text-bg-{{@type}}" ...attributes>
+  {{#if (has-block)}}
+    {{yield}}
+  {{else}}
+    {{@text}}
+  {{/if}}
+</span>

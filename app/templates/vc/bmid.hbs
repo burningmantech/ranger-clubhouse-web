@@ -86,10 +86,10 @@
     <div class="col-auto">
       <UiButtonRow>
         <UiButton @type="secondary" @size="sm" @onClick={{this.toggleEditMode}}>
-          {{#if this.editMode}}{{fa-icon "table"}} Table View{{else}}{{fa-icon "edit"}} Edit Mode{{/if}}
+          {{#if this.editMode}}{{fa-icon "table" right=1}} Table View{{else}}{{fa-icon "edit" right=1}} Edit Mode{{/if}}
         </UiButton>
         <UiButton @type="secondary" @size="sm" @onClick={{this.exportCSV}}>
-          {{fa-icon "file-export"}} Export CSV
+          {{fa-icon "file-export" right=1}} Export CSV
         </UiButton>
       </UiButtonRow>
     </div>
@@ -104,9 +104,9 @@
   </p>
 
   <p>
-    <span class="d-inline-block">{{fa-icon "exclamation-circle" color="danger"}} = indicates person has not a claimed
+    <span class="d-inline-block">{{fa-icon "exclamation-circle" color="danger" right=1}} = indicates person has not a claimed
       a ticket or SAP, nor signed up for an In-Person Training.</span>
-    <span class="d-inline-block">{{fa-icon "eye" color="danger"}} = person does not have an approved photo</span>
+    <span class="d-inline-block">{{fa-icon "eye" color="danger" right=1}} = person does not have an approved photo</span>
     <span class="d-inline-block"><EarnedProvisionIcon/> = is earned provision which will be used.</span>
     <span class="d-inline-block"><AllocatedProvisionIcon/> = is allocated provision which will be used.</span>
     <span class="d-inline-block"><SetProvisionIcon/>= explicitly set provision</span>
