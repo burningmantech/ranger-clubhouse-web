@@ -19,18 +19,22 @@
           </div>
         {{else}}
           <div>
-            <UiBadge @text="Training Pending" @type="secondary" />
+            <UiBadge @text="training pending" @type="warning"/>
           </div>
         {{/if}}
       </div>
       {{#if training.slot_has_ended}}
-        {{#each training.training_notes as |note|}}
-          {{#unless note.is_log}}
-            &mdash; {{note.note}}<br>
-          {{/unless}}
+        {{#if training.training_notes}}
+          <ul class="no-indent">
+            {{#each training.training_notes as |note|}}
+              {{#unless note.is_log}}
+                <li>{{note.note}}</li>
+              {{/unless}}
+            {{/each}}
+          </ul>
         {{else}}
           <i>No training notes</i>
-        {{/each}}
+        {{/if}}
       {{/if}}
     </div>
   {{/each}}

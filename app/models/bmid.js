@@ -2,6 +2,7 @@ import Model, {attr} from '@ember-data/model';
 import {isEmpty} from '@ember/utils';
 import {ticketTypeLabel} from 'clubhouse/constants/ticket-types';
 import dayjs from 'dayjs';
+import {NON_RANGER} from "clubhouse/constants/person_status";
 
 export const MEALS_ALL = 'all';
 export const MEALS_EVENT = 'event';
@@ -261,6 +262,10 @@ export default class BmidModel extends Model {
   }
 
   get notQualifiedToPrint() {
-    return !this.has_ticket && !this.training_signed_up;
+    if (this.person?.status === NON_RANGER) {
+      return !this.has_signups;
+    } else {
+      return !this.has_ticket && !this.training_signed_up;
+    }
   }
 }

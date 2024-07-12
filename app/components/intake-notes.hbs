@@ -7,19 +7,21 @@
       </div>
     </div>
     {{#if intake.have_notes}}
-      {{#each intake.notes as |note|}}
-        {{#unless note.is_log}}
-          <div class="mb-1">
-            &mdash; {{note.note}}
-            {{#if this.canAddNote}}
-              <div class="mt-2 mb-3">
-                <a href {{on-click this.updateNoteAction note}} class="me-4">Update</a>
-                <a href {{on-click this.deleteNoteAction note}}>Delete</a>
-              </div>
-            {{/if}}
-          </div>
-        {{/unless}}
-      {{/each}}
+      <ul class="no-indent">
+        {{#each intake.notes as |note|}}
+          {{#unless note.is_log}}
+            <li>
+              {{note.note}}
+              {{#if this.canAddNote}}
+                <div class="mt-2 mb-3">
+                  <a href {{on-click this.updateNoteAction note}} class="me-4">Update</a>
+                  <a href {{on-click this.deleteNoteAction note}}>Delete</a>
+                </div>
+              {{/if}}
+            </li>
+          {{/unless}}
+        {{/each}}
+      </ul>
     {{else}}
       <i>no notes</i>
     {{/if}}

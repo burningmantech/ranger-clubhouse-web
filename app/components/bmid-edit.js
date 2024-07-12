@@ -4,14 +4,14 @@ import {
   BmidStatusOptions,
   ShowerOptions
 } from 'clubhouse/models/bmid';
+import {NON_RANGER} from "clubhouse/constants/person_status";
 
 export default class BmidEditComponent extends Component {
   bmidStatusOptions = BmidStatusOptions;
   mealOptions = MealOptions;
   showerOptions = ShowerOptions;
 
-  get notQualified() {
-    const {entry} = this.args;
-    return !entry.has_ticket && !entry.training_signed_up;
+  get isNonRanger() {
+    return this.args.entry.person.status === NON_RANGER;
   }
 }
