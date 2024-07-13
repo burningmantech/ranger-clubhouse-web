@@ -83,9 +83,17 @@ export default class ClubhouseMessagesComponent extends Component {
 
     this.isSubmitting = true;
     this.house.saveModel(model, `Message successfully sent to ${model.recipient_callsign}.`,
-      () => {
-        if (+this.newMessage.person_id === this.session.userId) {
-          this.args.messages.update().then(() => this.updateUnreadCount());
+      async () => {
+      const personId = +this.args.person.id;
+        if (+this.newMessage.person_id === personId) {
+          try {
+            await this.args.messages.update();
+            if (this.session.userId === personId) {
+              this.updateUnreadCount();
+            }
+          } catch (response) {
+            this.house.handleErrorResponse(response);
+          }
         }
         this.newMessage = null;
       }).finally(() => this.isSubmitting = false);

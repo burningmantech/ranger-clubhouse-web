@@ -73,7 +73,7 @@
         <div class="mb-2 fw-semibold">
           {{@person.callsign}} can be signed into a scheduled shift OR a different shift (aka position).
         </div>
-        <UiTable @normalSize={{true}}>
+        <UiTable @normalSize={{true}} @noStriped={{true}}>
           <thead>
           <tr>
             <th>Shift</th>
@@ -118,13 +118,9 @@
                 </td>
               </tr>
             {{/unless}}
-            <tr>
+            <tr class="{{if slot.slot_description "tr-no-border"}}">
               <td class="align-middle">
                 {{slot.position_title}}
-                {{#if slot.slot_description}}
-                  <br>
-                  <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
-                {{/if}}
               </td>
               <td class="align-middle">{{shift-format slot.slot_begins slot.slot_ends}}</td>
               <td class="align-middle">
@@ -153,6 +149,14 @@
                 {{/if}}
               </td>
             </tr>
+            {{#if slot.slot_description}}
+              <tr class="tr-no-top-padding">
+                <td colspan="3">
+                  <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
+                </td>
+              </tr>
+            {{/if}}
+
           {{/each}}
           </tbody>
         </UiTable>
@@ -240,8 +244,9 @@
             <div class="text-danger mt-1">
               Cannot force start this shift.
               {{#if this.noTrainingRequiredPositions}}
-                Other shift might be available.
+                Other shifts might be available.
               {{/if}}
+              Consult with the HQ Short or HQ Lead if this is an error.
             </div>
           {{/if}}
         {{else}}
