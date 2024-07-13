@@ -362,6 +362,37 @@
   </ModalDialog>
 {{/if}}
 
+{{#if this.showMayNotForceCheckIn}}
+  <ModalDialog @title="Shift Check-In Requirements Not Met" @onEscape={{this.closeMayNotForceCheckIn}} as |Modal|>
+    <Modal.body>
+      <p>
+        <b class="text-danger">
+          {{@person.callsign}} has not meet all the qualifications to start a {{this.forcePosition.title}} shift
+        </b>
+      </p>
+      <ul>
+        {{#if
+          (and (not this.inPersonTrainingPassed) (not this.forcePosition.is_untrained) (not this.forcePosition.is_unqualified))}}
+          <li>In-Person Training has not been completed.</li>
+        {{/if}}
+        {{#if this.forcePosition.is_untrained}}
+          <li>{{this.forcePosition.training_title}} has not been completed</li>
+        {{/if}}
+        {{#if this.forcePosition.is_unqualified}}
+          <li>{{this.forcePosition.unqualified_message}}</li>
+        {{/if}}
+      </ul>
+      <p>
+        Consult with the HQ Short or Lead if this is an error. They may be able to force the check-in.
+      </p>
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closeMayNotForceCheckIn}} />
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
+
 {{#if this.showTooShortDialog}}
   <ModalDialog as |Modal|>
     <Modal.title>
