@@ -72,6 +72,10 @@ caption {
   color: #000;
 }
 
+.tr-no-top-padding {
+  padding-top: 0 !important;
+}
+
 @media not print {
   .table-sticky {
     thead tr:nth-child(1) th {
