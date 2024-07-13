@@ -45,6 +45,7 @@ export default class ShiftCheckInOutComponent extends Component {
 
   @tracked showForceStartConfirm = false;
   @tracked forcePosition = null;
+  @tracked showMayNotForceCheckIn = false;
 
   @tracked noTrainingRequiredPositions;
 
@@ -175,7 +176,11 @@ export default class ShiftCheckInOutComponent extends Component {
 
     this.forcePosition = position;
     this.forceSlotId = slotId;
-    this.showForceStartConfirm = true;
+    if (this.userCanForceCheckIn) {
+      this.showForceStartConfirm = true;
+    } else {
+      this.showMayNotForceCheckIn = true;
+    }
   }
 
   /**
@@ -195,6 +200,13 @@ export default class ShiftCheckInOutComponent extends Component {
   @action
   closeForceStartConfirm() {
     this.showForceStartConfirm = false;
+    this.forcePosition = null;
+    this.forceSlotId = null;
+  }
+
+  @action
+  closeMayNotForceCheckIn() {
+    this.showMayNotForceCheckIn = false;
     this.forcePosition = null;
     this.forceSlotId = null;
   }
