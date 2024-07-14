@@ -12,6 +12,7 @@ import {
   RETIRED,
 } from 'clubhouse/constants/person_status';
 import requestYear from 'clubhouse/utils/request-year';
+import {DO_NOT_PRINT, ISSUES, SUBMITTED} from "clubhouse/models/bmid";
 
 const ALLOWED_STATUSES = [
   ACTIVE,
@@ -43,7 +44,7 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     const bmids = [], doNotPrint = [], issues = [],
-      printed = [], submitted = [], unusualStatus = [], noPhoto = [];
+      printed = [], submitted = [], unusualStatus = [], noPhoto = [], notQualifiedToPrint = [];
 
     controller.set('year', model.year);
     controller.set('filter', model.filter);
@@ -55,11 +56,11 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
     model.bmids.forEach((bmid) => {
       bmid = bmid.id ? this.house.pushPayload('bmid', bmid) : this.store.createRecord('bmid', bmid);
       switch (bmid.status) {
-        case 'do_not_print':
+        case DO_NOT_PRINT:
           doNotPrint.push(bmid);
           return;
 
-        case 'issues':
+        case ISSUES:
           issues.push(bmid);
           return;
 
@@ -67,7 +68,7 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
           printed.push(bmid);
           return;
 
-        case 'submitted':
+        case SUBMITTED:
           submitted.push(bmid);
           return;
       }
@@ -78,16 +79,18 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
         return;
       }
 
-      if (bmid.has_approved_photo) {
+      if (bmid.has_approved_photo && !bmid.notQualifiedToPrint) {
         set(bmid, 'selected', 1);
-      } else {
+      } else if (!bmid.has_approved_photo) {
         noPhoto.push(bmid);
+      } else {
+        notQualifiedToPrint.push(bmid);
       }
       bmids.push(bmid);
     });
 
     controller.setProperties({
-      bmids, doNotPrint, issues, printed, submitted, unusualStatus, noPhoto
+      bmids, doNotPrint, issues, printed, submitted, unusualStatus, noPhoto, notQualifiedToPrint
     });
 
     controller.set('totalBmids', model.bmids.length);
