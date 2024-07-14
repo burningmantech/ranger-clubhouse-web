@@ -46,6 +46,14 @@ export default class VcBmidPrintController extends ClubhouseController {
   @tracked isExporting = false;
   @tracked exportList = [];
 
+  @tracked doNotPrint;
+  @tracked issues;
+  @tracked printed;
+  @tracked submitted;
+  @tracked unusualStatus;
+  @tracked noPhoto;
+  @tracked notQualifiedToPrint;
+
   _buildViewBmids() {
     let bmids = this.bmids;
 

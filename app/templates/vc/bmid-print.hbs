@@ -115,11 +115,22 @@
           <div class="callsign-list">
             {{#each this.noPhoto as |bmid|~}}
               <div>
-                <PersonLink @person={{bmid.person}} @showStatus={{true}} />
+                <PersonLink @person={{bmid.person}} @showStatus={{true}}  @statusNewline={{true}}/>
               </div>
             {{/each}}
           </div>
-          <br>
+        </div>
+      {{/if}}
+      {{#if this.notQualifiedToPrint}}
+        <div class="border p-2 my-2">
+          <b class="text-danger">No claimed Ticket / SAP or In-Person Training signup (these have been deselected in the export list):</b>
+          <div class="callsign-list">
+            {{#each this.notQualifiedToPrint as |bmid|~}}
+              <div>
+                <PersonLink @person={{bmid.person}} @showStatus={{true}} @statusNewline={{true}}/>
+              </div>
+            {{/each}}
+          </div>
         </div>
       {{/if}}
       <div class="mt-2">
@@ -151,13 +162,16 @@
             <td><Input @type="checkbox" @checked={{bmid.selected}} {{on "change" (fn this.toggleBmid bmid)}}/></td>
             <td>
               {{bmid.statusHuman}}
-              {{#unless bmid.has_approved_photo}}
-                <div class="text-danger">{{fa-icon "eye" color="danger"}} NO APPROVED PHOTO</div>
-              {{/unless}}
             </td>
             <td class="no-wrap">
-              {{bmid.person.callsign}}<br>
+              <PersonLink @person={{bmid.person}} /><br>
               {{bmid.person.first_name}} {{bmid.person.last_name}}
+              {{#unless bmid.has_approved_photo}}
+                <div class="text-danger">No approved photo</div>
+              {{/unless}}
+              {{#if bmid.notQualifiedToPrint}}
+                <div class="text-danger">No ticket/SAP claimed or In-Person Training signup</div>
+              {{/if}}
             </td>
             <td class="no-wrap">
               <PresentOrNot @value={{bmid.title1}} @empty="-"/>

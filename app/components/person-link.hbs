@@ -4,5 +4,8 @@
   <LinkTo @route={{this.routePath}} @model={{@personId}} @query={{hash year=@year}} ...attributes>{{@callsign}}</LinkTo>
 {{~/if~}}
 {{#if @showStatus}}
+  {{#if @statusNewline}}
+    <br>
+  {{/if}}
   &lt;{{@person.status}}&gt;
 {{/if}}
