@@ -3,8 +3,12 @@ import {action} from '@ember/object';
 import focusElement from "clubhouse/utils/focus-element";
 import tempusdominus from '@eonasdan/tempus-dominus';
 import {later} from '@ember/runloop';
+import { service } from '@ember/service';
+import {setting} from "clubhouse/utils/setting";
 
 export default class DatetimePickerComponent extends Component {
+  @service session;
+
   constructor() {
     super(...arguments);
     let {dateOnly, minDate, maxDate, viewDate, defaultDate} = this.args;
@@ -46,6 +50,8 @@ export default class DatetimePickerComponent extends Component {
 
     if (viewDate) {
       this.config.viewDate = new Date(viewDate);
+    } else if (this.session.isGroundhogDayServer) {
+      this.config.viewDate = new Date(setting('GroundhogDayTime'));
     }
 
     if (defaultDate) {
