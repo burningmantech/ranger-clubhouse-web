@@ -117,8 +117,7 @@
           <UiNotice @type="danger"
                     @title="Emergency Contact Info access during the off season not allowed"
                     @icon="exclamation">
-            Sorry, you only have privileges to view and update the Emergency Contact information while the event is
-            happening.
+            Sorry, the Emergency Contact information is only available while Ranger operations are running on playa.
           </UiNotice>
         {{/if}}
       </w.step>
@@ -207,3 +206,8 @@
   </UiNotice>
 {{/if}}
 
+{{#if this.person.isSaving}}
+  <LoadingDialog>
+    Saving the record.
+  </LoadingDialog>
+{{/if}}
