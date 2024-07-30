@@ -5,6 +5,7 @@ import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {NON_RANGER} from "clubhouse/constants/person_status";
 import {STATUS_PENDING, STATUS_REJECTED} from "clubhouse/models/timesheet";
+import {APPROVED} from "clubhouse/models/timesheet-missing";
 
 export default class PersonTimesheetManageComponent extends Component {
   @service ajax;
@@ -155,9 +156,15 @@ export default class PersonTimesheetManageComponent extends Component {
 
   async _saveCommon(model) {
     const changes = model._changes;
-    if (model.review_status === STATUS_PENDING && (changes['on_duty'] || changes['off_duty'] || changes['position_id'])) {
-      this.modal.confirm('Timesheet Modified',
-        'The timesheet entry was modified, but the status was left Correction Requested. Are you sure you want to save the modifications without updating the status?',
+    const didChange = (changes['on_duty'] || changes['off_duty'] || changes['position_id']);
+
+    if (model.review_status === STATUS_PENDING && didChange) {
+      this.modal.confirm('Entry modified but not approved',
+        'The on duty time, off duty time, and/or position has been updated, but not saved yet, and the status remains as "Correction Requested." Are you sure you want to save the modifications without updating the status?',
+        () => this._performSave(model))
+    } else if (model.review_status === APPROVED && changes['review_status'] && !didChange) {
+      this.modal.confirm('No changes happened',
+        'You have indicated that the correction request is to be approved, but no changes have been made (i.e., neither the on duty time, off duty time, nor position was changed). Do you still want to proceed with updating the status to approved?',
         () => this._performSave(model))
     } else {
       this._performSave(model);
