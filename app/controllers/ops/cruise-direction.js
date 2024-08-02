@@ -13,7 +13,8 @@ import {
   DIRT_POST_EVENT,
   DIRT_PRE_EVENT,
   DIRT_SHINY_PENNY, GREEN_DOT_MENTEE, GREEN_DOT_MENTOR,
-  TROUBLESHOOTER, TROUBLESHOOTER_MENTEE, TROUBLESHOOTER_MENTOR
+  TROUBLESHOOTER, TROUBLESHOOTER_MENTEE, TROUBLESHOOTER_MENTOR,
+  DOUBLE_O_7, RNR
 } from "clubhouse/constants/positions";
 
 export default class OpsCruiseDirectionController extends ClubhouseController {
@@ -236,8 +237,10 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
             DIRT_POST_EVENT,
             DIRT_PRE_EVENT,
             DIRT_SHINY_PENNY,
+            DOUBLE_O_7,
             GREEN_DOT_MENTEE,
             GREEN_DOT_MENTOR,
+            RNR,
             TROUBLESHOOTER,
             TROUBLESHOOTER_MENTEE,
             TROUBLESHOOTER_MENTOR
