@@ -311,10 +311,10 @@ export default class HouseService extends Service {
       const {document} = window;
       const anchor = document.createElement('a');
       anchor.href = url;
-      anchor.download = true;
+      anchor.download = url.split('/').pop();
       document.body.appendChild(anchor);
       anchor.click();
-      anchor.remove();
+      document.body.removeChild(anchor);
     });
   }
 
