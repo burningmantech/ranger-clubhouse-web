@@ -135,11 +135,23 @@ export default class PersonTimesheetManageComponent extends Component {
    */
 
   _saveCheckTimes(model) {
-    if (model.review_status !== STATUS_REJECTED && (model._changes['position_id'] || model._changes['on_duty'] || model._changes['off_duty'])) {
-      this.shiftManage.checkDateTime(model.position_id, model.on_duty, model.off_duty, () => this._checkForOverlaps(model));
+    if (model._changes['position_id'] || model._changes['on_duty'] || model._changes['off_duty']) {
+      if (model.review_status === STATUS_REJECTED) {
+        model.rollbackProperty('position_id');
+        model.rollbackProperty('on_duty');
+        model.rollbackProperty('off_duty');
+        this.modal.info('Correction Rejected - Position and times not changed',
+          `You changed position and/or times while corrections were rejected. The new positions and/or times have NOT be saved.`, this._saveCheckTimesCommon(model));
+      } else {
+        this._saveCheckTimesCommon(model);
+      }
     } else {
       this._saveCommon(model);
     }
+  }
+
+  _saveCheckTimesCommon(model) {
+    this.shiftManage.checkDateTime(model.position_id, model.on_duty, model.off_duty, () => this._checkForOverlaps(model));
   }
 
   _checkForOverlaps(model) {

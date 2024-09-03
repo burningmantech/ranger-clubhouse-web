@@ -304,15 +304,15 @@ export default class ShiftManageService extends Service {
       return callback();
     }
 
-    let message = `<p>The time overlaps with the following timesheet entries:<ul>`;
+    let message = `<p class="text-danger">The time overlaps with the following timesheet entries:<ul>`;
 
     timesheets.forEach((entry) => {
       message += `<li>${entry.position.title} ${shiftFormat([entry.on_duty, entry.off_duty], {})}</li>`
     });
 
-    message += '</ul>Use the Cancel button to correct the dates, or use Confirm to indicate the dates are correct.';
+    message += '</ul>The entries may not overlap. Double-check the times are correct. Update the status to Correction Rejected if this is a correction request.';
 
-    this.modal.confirm('Overlapping Timesheet Entries', message, callback);
+    this.modal.info('Overlapping Timesheet Entries', message);
   }
 
 }
