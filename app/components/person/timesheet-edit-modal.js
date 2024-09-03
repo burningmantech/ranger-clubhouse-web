@@ -7,8 +7,11 @@ import {action} from '@ember/object';
 import {shiftFormat} from "clubhouse/helpers/shift-format";
 import {htmlSafe} from '@ember/template';
 import {cached} from '@glimmer/tracking';
+import {service } from '@ember/service';
 
 export default class PersonTimesheetEditModalComponent extends Component {
+  @service modal;
+
   reviewOptions = [
     ['Correction approved', 'approved'],
     ['Correction rejected', 'rejected'],
@@ -57,6 +60,11 @@ export default class PersonTimesheetEditModalComponent extends Component {
     const {entry} = this.args;
 
     if (!isEmpty(entry.desired_position_id)) {
+      if (!this.args.positions.find((p) => +p.id === +entry.desired_position_id)) {
+        this.modal.info('Position not found',
+          'The desired position was not granted to the individual. It is likely that the position was revoked between the time the correction was submitted and now. Please contact the appropriate cadre to inquire about what happened.');
+        return;
+      }
       model.position_id = entry.desired_position_id;
     }
 
