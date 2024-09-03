@@ -96,18 +96,19 @@
           </td>
           <td class="text-center">
             {{#if (is-empty ts.off_duty)}}
-              <UiBadge @text="Still On Duty" @type="warning" />
+              <UiBadge @text="Still On Duty" @type="warning"/>
             {{else if ts.isVerified}}
-              <UiBadge @text="Verified" @type="success" />
+              <UiBadge @text="Verified" @type="success"/>
             {{else if ts.isApproved}}
-              <UiBadge @text="Correction Approved" @type="success" /><br>
-              <UiBadge @text="Verification still needed" @type="secondary" />
+              <UiBadge @text="Correction Approved" @type="success"/>
+              <br>
+              <UiBadge @text="Verification still needed" @type="secondary"/>
             {{else if ts.isUnverified}}
-              <UiBadge @text="Unverified" @type="secondary" />
+              <UiBadge @text="Unverified" @type="secondary"/>
             {{else if ts.isPending}}
-              <UiBadge @text="Correction Requested" @type="danger" />
+              <UiBadge @text="Correction Requested" @type="danger"/>
             {{else if ts.isRejected}}
-              <UiBadge @text="Correction Rejected" @type="warning" />
+              <UiBadge @text="Correction Rejected" @type="warning"/>
             {{else}}
               &nbsp;
             {{/if}}
@@ -153,6 +154,7 @@
                               @positionOptions={{this.positionOptions}}
                               @showDeleteDialogAction={{this.showDeleteDialogAction}}
                               @cancelEntryAction={{this.cancelEntryAction}}
+                              @positions={{@positions}}
   />
 {{/if}}
 
