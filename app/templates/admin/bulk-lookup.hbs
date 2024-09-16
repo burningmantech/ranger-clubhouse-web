@@ -40,11 +40,18 @@
             <tr>
               <th>Callsign</th>
               <th>Status</th>
-              <th>Name</th>
+              <th>Legal Name</th>
+              <th>Preferred Name</th>
               <th>Email</th>
               <th>Last worked</th>
               <th>Vintage</th>
               <th>Years Worked</th>
+              <th>Address</th>
+              <th>City</th>
+              <th>State</th>
+              <th>Postal Code</th>
+              <th>Country</th>
+              <th>Home Phone</th>
             </tr>
             </thead>
             <tbody>
@@ -55,16 +62,46 @@
                 </td>
                 <td>{{person.status}}</td>
                 <td>{{person.first_name}} {{person.last_name}}</td>
-                <td><MailTo @to={{person.email}} /></td>
                 <td>
+                  {{#if person.preferred_name}}
+                    {{person.preferred_name}}
+                  {{else}}
+                    -
+                  {{/if}}
+                </td>
+                <td>
+                  <MailTo @to={{person.email}} />
+                </td>
+                <td class="text-end">
                   {{#if person.last_worked}}
                     {{person.last_worked}}
                   {{else}}
                     <i>never</i>
                   {{/if}}
                 </td>
-                <td>{{yesno person.vintage}}</td>
-                <td>{{person.years_worked}}</td>
+                <td class="text-center">{{yesno person.vintage}}</td>
+                <td class="text-end">{{person.years_worked}}</td>
+                <td>
+                  {{person.street1}} {{person.apt}}
+                  {{#if person.street2}}
+                    <br>{{person.street2}}
+                  {{/if}}
+                </td>
+                <td>
+                  {{person.city}}
+                </td>
+                <td>
+                  {{person.state}}
+                </td>
+                <td>
+                  {{person.zip}}
+                </td>
+                <td>
+                  {{person.country}}
+                </td>
+                <td>
+                  {{person.home_phone}}
+                </td>
               </tr>
             {{/each}}
             </tbody>

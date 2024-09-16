@@ -5,13 +5,22 @@ import {service} from '@ember/service';
 
 const FOUND_CSV_COLUMNS = [
   {title: 'Callsign', key: 'callsign'},
-  {title: 'First Name', key: 'first_name'},
+  {title: 'Legal First Name', key: 'first_name'},
+  {title: 'Preferred Name', key: 'preferred_name'},
   {title: 'Last Name', key: 'last_name'},
   {title: 'Status', key: 'status'},
   {title: 'Email', key: 'email'},
   {title: 'Last Worked', key: 'last_worked'},
   {title: 'Vintage', key: 'vintage', yesno: true},
   {title: 'Years Worked', key: 'years_worked'},
+  {title: 'Home Phone', key: 'home_phone'},
+  {title: 'Address', key: 'street1'},
+  {title: 'Apt', key: 'apt'},
+  {title: 'Address 2', key: 'street2'},
+  {title: 'City', key: 'city'},
+  {title: 'State', key: 'state'},
+  {title: 'Country', key: 'country'},
+  {title: 'Zip', key: 'zip'},
 ];
 
 const NOT_FOUND_CSV_COLUMNS = [
