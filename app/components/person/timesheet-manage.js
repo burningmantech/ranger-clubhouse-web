@@ -19,6 +19,8 @@ export default class PersonTimesheetManageComponent extends Component {
   @tracked editVerification = false;
   @tracked deleteEntry = null;
 
+  @tracked correctingInProgress = false;
+
   @tracked positionOptions = [];
 
 
@@ -85,7 +87,6 @@ export default class PersonTimesheetManageComponent extends Component {
       this.editVerification = false;
       this.editEntry = timesheet;
       this._markOverlapping();
-
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
@@ -142,6 +143,8 @@ export default class PersonTimesheetManageComponent extends Component {
         model.rollbackProperty('off_duty');
         this.modal.info('Correction Rejected - Position and times not changed',
           `You changed position and/or times while corrections were rejected. The new positions and/or times have NOT be saved.`, this._saveCheckTimesCommon(model));
+      } else if (model.stillOnDuty) {
+        this._saveCommon(model);
       } else {
         this._saveCheckTimesCommon(model);
       }

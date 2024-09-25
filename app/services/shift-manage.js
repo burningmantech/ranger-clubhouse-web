@@ -269,9 +269,9 @@ export default class ShiftManageService extends Service {
     }
 
     if (status === 'before-begins') {
-      return `<li >The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is BEFORE the first shift</b> starting on ${shiftFormat([begins], {})}.</li>`;
+      return `<li >The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is BEFORE the very first shift of the event</b> starting on ${shiftFormat([begins], {})}.</li>`;
     } else {
-      return `<li>The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is AFTER the last shift</b> ending on ${shiftFormat([ends], {})}.</li>`;
+      return `<li>The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is AFTER the very last shift of the event</b> ending on ${shiftFormat([ends], {})}.</li>`;
     }
   }
 
