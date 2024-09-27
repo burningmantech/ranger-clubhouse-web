@@ -7,15 +7,6 @@ import dayjs from 'dayjs';
 import {TYPE_SHIFT, TransportOptions} from "clubhouse/models/pod";
 import {movePod} from 'clubhouse/utils/pod';
 import {htmlSafe} from '@ember/template';
-import {
-  DIRT,
-  DIRT_GREEN_DOT,
-  DIRT_POST_EVENT,
-  DIRT_PRE_EVENT,
-  DIRT_SHINY_PENNY, GREEN_DOT_MENTEE, GREEN_DOT_MENTOR,
-  TROUBLESHOOTER, TROUBLESHOOTER_MENTEE, TROUBLESHOOTER_MENTOR,
-  DOUBLE_O_7, RNR
-} from "clubhouse/constants/positions";
 
 export default class OpsCruiseDirectionController extends ClubhouseController {
   @tracked shifts;
@@ -37,6 +28,10 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
   @tracked editPod;
 
   @tracked isNewPod = false;
+
+  @tracked positions;
+
+  @tracked showingPositions = false;
 
   transportOptions = TransportOptions;
 
@@ -92,6 +87,11 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
   changeShift(selected) {
     this.selectedShift = selected.period.slot;
     this._loadSelectedPod();
+  }
+
+  @action
+  togglePositions() {
+    this.showingPositions = !this.showingPositions;
   }
 
   /**
@@ -231,20 +231,7 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
       this.timesheets = (await this.ajax.request('timesheet', {
         data: {
           is_on_duty: 1,
-          position_ids: [
-            DIRT,
-            DIRT_GREEN_DOT,
-            DIRT_POST_EVENT,
-            DIRT_PRE_EVENT,
-            DIRT_SHINY_PENNY,
-            DOUBLE_O_7,
-            GREEN_DOT_MENTEE,
-            GREEN_DOT_MENTOR,
-            RNR,
-            TROUBLESHOOTER,
-            TROUBLESHOOTER_MENTEE,
-            TROUBLESHOOTER_MENTOR
-          ],
+          position_ids: this.positionIds,
           include_photo: 1
         }
       })).timesheet;

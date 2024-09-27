@@ -79,6 +79,9 @@
         {{#if position.not_timesheet_eligible}}
           {{fa-icon "ban" fixed=true right=1}} Used only for scheduling. Timesheet entries may not be created.<br>
         {{/if}}
+        {{#if position.cruise_direction}}
+          {{fa-icon "people-group" fixed=true right=1}} Selectable on the Cruise Direction interface<br>
+        {{/if}}
         {{#if position.contact_email}}
           Contact email:
           <MailTo @to={{position.contact_email}} />
