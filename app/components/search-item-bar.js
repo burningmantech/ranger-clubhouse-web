@@ -150,14 +150,13 @@ export default class SearchItemBarComponent extends Component {
 
   @cached
   get modeOptions() {
-    const user = this.session.user;
     const options = [{value: 'account', label: 'Person Manage'}];
 
     if (setting('HQWindowInterfaceEnabled')) {
       options.unshift({value: 'hq', label: 'HQ Window'});
     }
 
-    if (this.session.hasRole([Role.ADMIN, Role.TIMESHEET_MANAGEMENT]) || user.has_hq_window) {
+    if (this.session.hasRole([Role.ADMIN, Role.TIMESHEET_MANAGEMENT])) {
       options.push({value: 'timesheet', label: 'Timesheet Manage'});
     }
 

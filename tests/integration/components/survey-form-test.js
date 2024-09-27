@@ -2,12 +2,20 @@ import {module, test} from 'qunit';
 import {setupRenderingTest} from 'ember-qunit';
 import {render} from '@ember/test-helpers';
 import {hbs} from 'ember-cli-htmlbars';
+import {authenticateUser} from "../../helpers/authenticate-user";
+import { run } from '@ember/runloop';
 
 module('Integration | Component | survey-form', function (hooks) {
   setupRenderingTest(hooks);
 
   test('it renders', async function (assert) {
-    this.set('surveyEntry', {});
+    const person = this.server.create('person');
+    await authenticateUser(person.id);
+
+    const store = this.owner.lookup('service:store');
+    const survey = run(() => store.createRecord('survey', {}));
+
+    this.set('surveyEntry', survey);
     this.set('positionOptions', []);
     this.set('mentorPositionOptions', []);
     this.set('menteePositionOptions', []);

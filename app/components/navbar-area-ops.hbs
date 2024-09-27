@@ -32,7 +32,7 @@
       {{/if}}
     </NavbarMenuSection>
   {{/if}}
-  {{#if (has-role "admin" "edit-assets" "edit-slots" "survey-management")}}
+  {{#if (or (has-role "admin" "edit-assets" "edit-slots") this.session.hasSurveyManagement)}}
     <NavbarMenuSection @section="Event Records">
       {{#if (has-role "admin" "edit-assets")}}
         <NavbarMenuItem @menu={{menu}} @route="ops.assets" @item="Assets"/>
@@ -44,7 +44,7 @@
       {{#if (has-role "admin" "edit-slots")}}
         <NavbarMenuItem @menu={{menu}} @route="ops.slots" @item="Schedule Slots"/>
       {{/if}}
-      {{#if (has-role "admin" "survey-management")}}
+      {{#if (or (has-role "admin") this.session.hasSurveyManagement)}}
         <NavbarMenuItem @menu={{menu}} @route="ops.survey" @item="Surveys"/>
       {{/if}}
       {{#if (has-role "admin" "edit-swag")}}

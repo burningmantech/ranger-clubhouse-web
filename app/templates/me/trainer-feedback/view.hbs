@@ -5,7 +5,7 @@
     {{this.year}} In-Person Training Survey Responses
   {{/if}}
 </h1>
-<LinkTo @route="me.trainer-feedback.index" class="my-2 d-block">Back to Trainer Surveys</LinkTo>
+<LinkTo @route="me.trainer-feedback.index" class="my-2 d-block">Back to Survey Listing</LinkTo>
 
 {{#each this.surveys as |survey|}}
   <UiAccordion as |Accordion|>
@@ -38,4 +38,4 @@
     </Accordion.body>
   </UiAccordion>
 {{/each}}
-<LinkTo @route="me.trainer-feedback.index" class="mt-2 d-block">Back to Trainer Surveys</LinkTo>
+<LinkTo @route="me.trainer-feedback.index" class="mt-2 d-block">Back to Survey Listing</LinkTo>

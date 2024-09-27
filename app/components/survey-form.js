@@ -4,14 +4,19 @@ import {validatePresence} from 'ember-changeset-validations/validators';
 import {service} from '@ember/service';
 import {
   TYPE_ALPHA,
-   TYPE_MENTOR_FOR_MENTEES,
+  TYPE_MENTOR_FOR_MENTEES,
   TYPE_MENTEES_FOR_MENTOR,
-  TypeOptions
+  AlphaTypeOptions,
+  ARTTypeOptions,
+  TrainerTypeOptions,
 } from "clubhouse/models/survey";
 import {ALPHA} from "clubhouse/constants/positions";
+import {cached} from '@glimmer/tracking';
+import {SURVEY_MANAGEMENT, SURVEY_MANAGEMENT_BASE} from "clubhouse/constants/roles";
 
 export default class SurveyFormComponent extends Component {
   @service house;
+  @service session;
   @service toast;
 
   surveyValidations = {
@@ -25,7 +30,24 @@ export default class SurveyFormComponent extends Component {
     ['Alpha', ALPHA]
   ];
 
-  typeOptions = TypeOptions;
+  @cached
+  get typeOptions() {
+    let options = [];
+
+    if (this.session.hasRole(SURVEY_MANAGEMENT_BASE | ALPHA)) {
+      options = [...AlphaTypeOptions];
+    }
+
+    if (this.session.hasARTSurveyManagement) {
+      options = [...options, ...ARTTypeOptions];
+    }
+
+    if (this.session.hasARTSurveyManagement || this.session.hasRole(SURVEY_MANAGEMENT)) {
+      options = [...options, ...TrainerTypeOptions];
+    }
+
+    return options;
+  }
 
   @action
   async saveSurveyAction(model, isValid) {
@@ -81,7 +103,7 @@ export default class SurveyFormComponent extends Component {
   }
 
   @action
-  isMentorOrMenteeType(type){
+  isMentorOrMenteeType(type) {
     return type === TYPE_MENTEES_FOR_MENTOR || type === TYPE_MENTOR_FOR_MENTEES;
   }
 

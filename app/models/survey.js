@@ -7,15 +7,21 @@ export const TYPE_ALPHA = 'alpha';
 export const TYPE_MENTOR_FOR_MENTEES = 'mentor-for-mentees'; // rate mentees by the mentors
 export const TYPE_MENTEES_FOR_MENTOR = 'mentees-for-mentor'; // rate the mentors by the mentees
 
-export const TypeOptions = [
+export const TrainerTypeOptions = [
   [ 'Trainee-for-Training Survey', TYPE_TRAINING ],
   [ 'Trainer-for-Trainer Survey', TYPE_TRAINER ],
+];
+
+export const AlphaTypeOptions = [
   [ 'Alpha Feedback for Mentor Survey', TYPE_ALPHA ],
+];
+
+export const ARTTypeOptions = [
   [ 'ART Mentor Feedback for ART Mentees Survey', TYPE_MENTOR_FOR_MENTEES ],
   [ 'ART Mentees Feedback for ART Mentors Survey', TYPE_MENTEES_FOR_MENTOR ],
 ];
 
-export const TypeLabels = optionsToLabels(TypeOptions);
+export const TypeLabels = optionsToLabels([...AlphaTypeOptions, ...ARTTypeOptions, ...TrainerTypeOptions]);
 
 export default class SurveyModel extends Model {
   @attr('boolean') active;
