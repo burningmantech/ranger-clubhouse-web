@@ -33,10 +33,11 @@ export const MEGAPHONE_TEAM_ONPLAYA = 121;  // On-Playa Megaphone permission
 export const MEGAPHONE_EMERGENCY_ONPLAYA = 122;    // Allows access to the broadcast all emergency
 export const ANNOUNCEMENT_MANAGEMENT = 123;    // Allow announcements to be created and deleted.
 
+export const ROLE_BASE_MASK = 0x7f000000;
 export const POSITION_MASK = 0x0fff;
 
-export const ART_TRAINER_BASE = 0x800;
-export const SURVEY_MANAGEMENT_BASE = 0x900;
+export const ART_TRAINER_BASE = 0x1000000;
+export const SURVEY_MANAGEMENT_BASE = 0x2000000;
 
 export const Role = {
   ADMIN,

@@ -1,6 +1,6 @@
 {{#unless @noheader}}
   <div class="font-italic mb-1">
-    <b>{{#if @trainer}}Trainer {{@trainer.callsign}}: {{/if}}{{@question.description}}</b>
+    <b>{{#if @trainer}}{{if (eq @survey.type "alpha") "Mentor" "Trainer"}} {{@trainer.callsign}}: {{/if}}{{@question.description}}</b>
   </div>
 {{/unless}}
 <div class="ms-2">

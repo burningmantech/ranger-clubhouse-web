@@ -7,9 +7,19 @@ import SessionService from "ember-simple-auth/services/session";
 import User from "clubhouse/records/user";
 import ENV from 'clubhouse/config/environment';
 import {setting} from 'clubhouse/utils/setting';
-import {ADMIN, MANAGE, TRAINER, VC, VIEW_PII, VIEW_EMAIL} from 'clubhouse/constants/roles';
+import {
+  ADMIN,
+  MANAGE,
+  TRAINER,
+  VC,
+  VIEW_PII,
+  VIEW_EMAIL,
+  SURVEY_MANAGEMENT,
+  ROLE_BASE_MASK, SURVEY_MANAGEMENT_BASE
+} from 'clubhouse/constants/roles';
 import MobileDetect from 'mobile-detect';
 import BrowserDetector from "../utils/browser-detect";
+import {ALPHA} from "clubhouse/constants/positions";
 
 const MOBILE_MAX_WIDTH = 960;
 const RESIZE_DEBOUNCE_DELAY = 250;
@@ -421,6 +431,23 @@ export default class extends SessionService {
     })
 
     return haveIt;
+  }
+
+  get hasSurveyManagement() {
+    if (this.hasRole([ADMIN, SURVEY_MANAGEMENT])) {
+      return true;
+    }
+
+    return !!this.user.roles.find((role) => (role & ROLE_BASE_MASK) === SURVEY_MANAGEMENT_BASE);
+  }
+
+  get hasARTSurveyManagement() {
+    if (this.hasRole(ADMIN)) {
+      return true;
+    }
+
+    return !!this.user.roles.find((role) =>
+      (role !== (SURVEY_MANAGEMENT_BASE | ALPHA)) && (role & ROLE_BASE_MASK) === SURVEY_MANAGEMENT_BASE);
   }
 
   /**
