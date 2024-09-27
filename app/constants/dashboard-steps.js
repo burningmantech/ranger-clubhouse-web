@@ -920,8 +920,7 @@ export const SIGN_NDA = {
 };
 
 export const AFTER_EVENT_STATUS_ADVISORY = {
-  period: AFTER_EVENT,
-
+  immediate: true,
   check({person}) {
     const {status} = person;
 
@@ -934,18 +933,19 @@ export const AFTER_EVENT_STATUS_ADVISORY = {
         name: 'Retired Status',
         email: 'VCEmail',
         result: ACTION_NEEDED,
-        message: htmlSafe("<p>Because you have not worked in 5 or more events, your status is now 'retired.'</p>" +
+        message: htmlSafe("<p>Your status has been changed to <i>retired</i> because you have not rangered 5 or more consecutive events.</p>" +
           "<p>If you wish to volunteer with the Rangers next event, you will need to attend a full day's " +
-          "In-Person Training, and walk a Cheetah Cub shift with a Mentor.</p> Contact the Volunteer Coordinators for more information.")
+          "In-Person Training, and walk a Cheetah Cub shift with a Mentor.</p><p>The Mentor Cadre will restore your active status at the end of the Cheetah Cub shift if they determine you are fit to resume rangering.</p>Contact the Volunteer Coordinators for more information.")
       };
     } else {
       return {
         name: `Inactive ${person.status === INACTIVE_EXTENSION ? 'Extension ' : ''}Status`,
         email: 'VCEmail',
         result: ACTION_NEEDED,
-        message: htmlSafe(`<p>Because you have not worked in 3 or more events, your status is now '${status}.'<p>` +
+        message: htmlSafe(
+          `<p>Your status has been changed to <i>${person.status}</i> because you have not rangered 3 or more consecutive events.<p>` +
           "<p>If you wish to volunteer with the Rangers next event, you will need to attend a full day's " +
-          "In-Person Training, and work a shift.</p>Contact the Volunteer Coordinators for more information.")
+          "In-Person Training, and work a non-training, non-mentee shift.</p><p>Your active status will be automatically restored upon completing a shift that is neither a training nor a mentee shift.</p> Contact the Volunteer Coordinators for more information.")
       };
     }
   }

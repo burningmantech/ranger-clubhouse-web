@@ -12,9 +12,7 @@ export default class OpsSurveyIndexRoute extends ClubhouseRoute {
     this.year = year;
     return RSVP.hash({
       surveys: this.store.query('survey', {year}),
-      positions: this.ajax.request('position', {data: {type: 'Training'}}).then(({position}) => {
-        return position.filter((p) => p.title.includes('Training'));
-      }),
+      positions: this.ajax.request('survey/positions').then(({positions}) => positions),
       mentorPositions: this.ajax.request('position', {data: {mentor: 1}}).then(({position}) => position),
       menteePositions: this.ajax.request('position', {data: {mentee: 1}}).then(({position}) => position)
     });

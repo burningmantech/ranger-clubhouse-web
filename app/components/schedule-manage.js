@@ -236,6 +236,8 @@ export default class ScheduleManageComponent extends Component {
     slot.isRetrievingSignUps = true;
     try {
       slot.signUpInfo = await this.ajax.request(`slot/${slot.id}/people`);
+      slot.slot_signed_up = slot.signUpInfo.signed_up;
+      slot.slot_max = slot.signUpInfo.max;
      } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {

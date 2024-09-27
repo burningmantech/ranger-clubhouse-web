@@ -7,7 +7,7 @@ import {action} from '@ember/object';
 import {shiftFormat} from "clubhouse/helpers/shift-format";
 import {htmlSafe} from '@ember/template';
 import {cached} from '@glimmer/tracking';
-import {service } from '@ember/service';
+import {service} from '@ember/service';
 
 export default class PersonTimesheetEditModalComponent extends Component {
   @service modal;
@@ -21,9 +21,17 @@ export default class PersonTimesheetEditModalComponent extends Component {
   ];
 
   timesheetValidations = {
-    on_duty: [validateDateTime({before: 'off_duty'}), validatePresence({presence: true})],
     off_duty: [validateDateTime({after: 'on_duty'})],
   };
+
+  constructor() {
+    super(...arguments);
+
+    this.timesheetValidations.on_duty = [
+      this.args.entry.stillOnDuty ? validateDateTime() : validateDateTime({before: 'off_duty'}),
+      validatePresence({presence: true})
+    ];
+  }
 
   /**
    * Return the duration in hours & minutes. Takes into account invalid or blank dates.
@@ -79,6 +87,10 @@ export default class PersonTimesheetEditModalComponent extends Component {
 
   @cached
   get timeWarningsMessage() {
+    if(this.args.entry.stillOnDuty) {
+      return '';
+    }
+
     const tw = this.args.entry.time_warnings;
 
     return htmlSafe(
@@ -89,6 +101,9 @@ export default class PersonTimesheetEditModalComponent extends Component {
 
   @cached
   get desiredWarningsMessage() {
+    if(this.args.entry.stillOnDuty) {
+      return '';
+    }
     const tw = this.args.entry.desired_warnings;
 
     return htmlSafe(
@@ -98,14 +113,14 @@ export default class PersonTimesheetEditModalComponent extends Component {
   }
 
   _alertRange(label, date, status, begins, ends) {
-    if (status === 'success') {
+    if(this.args.entry.stillOnDuty || status === 'success') {
       return '';
     }
 
     if (status === 'before-begins') {
-      return `<li >The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is BEFORE the first shift</b> starting on ${shiftFormat([begins], {})}.</li>`;
+      return `<li >The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is BEFORE the very first shift of the event</b> starting on ${shiftFormat([begins], {})}.</li>`;
     } else {
-      return `<li>The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is AFTER the last shift</b> ending on ${shiftFormat([ends], {})}.</li>`;
+      return `<li>The ${label} time ${shiftFormat([date], {})} <b class="text-danger">is AFTER the very last shift of the event</b> ending on ${shiftFormat([ends], {})}.</li>`;
     }
   }
 }
