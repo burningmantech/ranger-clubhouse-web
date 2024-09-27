@@ -2,8 +2,18 @@
   <h1>Cruise Direction Pod Management</h1>
 
   <p>
-    This page manages the Ranger pairs (aka pods) who are deployed in the field. Only individuals working Dirt,
-    Dirt - Pre-Event, Dirt Post-Event, Dirt - Shiny Penny, Dirt - Green Dot, RNR, and 007 shifts are available to select.
+    This page manages the Ranger pairs (aka pods) who are deployed in the field.
+  </p>
+  <p>
+  <a href {{action this.togglePositions}}>{{if this.showingPositions "Hide" "Show"}} Selectable Positions</a>
+    {{#if this.showingPositions}}
+      <div class="mt-1">
+        The following positions are selectable under this interface.
+      </div>
+      {{#each this.positions as |position|}}
+        {{position.title}}<br>
+      {{/each}}
+    {{/if}}
   </p>
   <p>
     <LargeSelect
@@ -173,7 +183,10 @@
               {{#if this.currentShiftOptions}}
                 <f.checkboxGroup @name="currentPeopleIds" @options={{this.currentShiftOptions}} @cols={{4}} />
               {{else}}
-                No checked-in people found for Dirt, Dirt - Shiny Penny, Dirt Pre-Event or Dirt Post-Event shifts.
+                No checked-in people found for
+                {{#each this.positions as |position idx|~}}
+                  {{~if idx ", "}}{{position.title~}}
+                {{~/each~}}.
               {{/if}}
             </div>
           </FormRow>
