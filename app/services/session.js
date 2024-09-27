@@ -34,7 +34,7 @@ export default class extends SessionService {
   @service router;
 
   // The logged-in user
-  @tracked user = null;
+  @tracked user = { roles: []};
 
   // How many unread messages the user has
   @tracked unreadMessageCount = 0;
