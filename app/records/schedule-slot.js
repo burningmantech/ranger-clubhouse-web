@@ -13,6 +13,7 @@ export default class ScheduleSlotModel {
   @tracked signUpInfo = null;
 
   @tracked slot_signed_up = 0;
+  @tracked slot_max = 0;
 
   constructor(data) {
     Object.assign(this, data);
