@@ -44,6 +44,6 @@ export default class ReportsRadioCheckoutRoute extends ClubhouseRoute {
   }
 
   _isSet(value) {
-    return (parseInt(value) || value == 'true');
+    return (parseInt(value) || value === 'true');
   }
 }
