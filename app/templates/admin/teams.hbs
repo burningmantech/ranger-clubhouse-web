@@ -36,6 +36,7 @@
       <th>Associated Roles</th>
       <th>Attributes</th>
       <th>Managers</th>
+      <th>Email</th>
       <th>Actions</th>
     </tr>
     </thead>
@@ -74,14 +75,21 @@
           {{/each}}
         </td>
         <td>
+          {{#if team.email}}
+            {{team.email}}
+          {{else}}
+            -
+          {{/if}}
+        </td>
+        <td>
           <UiButton @onClick={{fn this.editTeam team}} @size="sm">
-            {{fa-icon "edit"}} Edit
+            {{fa-icon "edit" right=1}} Edit
           </UiButton>
         </td>
       </tr>
     {{else}}
       <tr>
-        <td colspan="9" class="text-danger">
+        <td colspan="10" class="text-danger">
           No teams found.
         </td>
       </tr>
@@ -101,6 +109,7 @@
         <FormRow>
           <f.text @name="title" @label="Team Title" @maxlength={{40}} @size={{25}}/>
           <f.select @name="type" @label="Team Type" @options={{this.typeOptions}} />
+          <f.text @name="email" @label="Contact Email" @maxlength={{255}} @size={{35}} />
         </FormRow>
         <fieldset>
           <legend>Team Flags</legend>
