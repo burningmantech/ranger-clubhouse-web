@@ -33,20 +33,8 @@
 <UiSection id="contacts">
   <:title>Who To Contact For Help</:title>
   <:body>
-    <p>
-      Contact the Volunteer Coordinators for general questions &amp; support, callsign changes, and photo wrangling:<br>
-      <VcEmail/>
-    </p>
-
-    <p>
-      Contact the Training Academy for questions about the Online Course &amp; In-Person Trainings:<br>
-      <TrainingAcademyEmail/>
-    </p>
-
-    <p>
-      Contact the Tech Ninjas for Clubhouse technical support:<br>
-      <TechSupportEmail/>
-    </p>
+    {{!template-lint-disable no-triple-curlies}}
+    {{{this.milestones.contacts}}}
   </:body>
 </UiSection>
 
