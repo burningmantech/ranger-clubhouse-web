@@ -62,6 +62,7 @@ export default class extends SessionService {
   @tracked showOfflineDialog = false;
 
   @tracked isOffline = false;
+  @tracked showingBookmark = false;
 
   constructor() {
     super(...arguments);
