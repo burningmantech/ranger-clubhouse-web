@@ -17,6 +17,7 @@ Router.map(function () {
   this.route('reset-password');
   this.route('register');
   // this.route('sso'); -- uncomment if will SSO is ever implemented
+  this.route('bookmark', { path: '/bookmark/:bookmark_id'});
 
   this.route('me', function () {
     this.route('homepage', {path: '/'});

@@ -1,0 +1,35 @@
+<main>
+  <div class="d-flex flex-column flex-md-row justify-content-between text-muted text-small px-2">
+    <div>
+      {{#unless this.notFound}}
+        {{#if this.isLoading}}
+          <SpinIcon/>
+          Refreshing page
+        {{else if this.refreshTime}}
+          Page refresh in
+          {{this.formatTimeLeft}}
+        {{/if}}
+      {{/unless}}
+    </div>
+    {{#if this.content}}
+      <div>
+        Document updated {{dayjs-format this.updatedAt "dddd, MMM DD @ HH:mm"}}
+      </div>
+    {{/if}}
+    <div>
+      Current time {{dayjs-format this.now "ddd, MMM DD @ HH:mm"}}
+    </div>
+  </div>
+  <div class="p-2 mt-3">
+    {{#if this.notFound}}
+      <div class="fs-3 fw-bold">
+        Bookmark document was not found.
+      </div>
+    {{else if this.content}}
+    {{!template-lint-disable no-triple-curlies}}
+      {{{this.content}}}
+    {{else if this.isLoading}}
+      <LoadingDialog/>
+    {{/if}}
+  </div>
+</main>
