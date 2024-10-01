@@ -933,7 +933,7 @@ export const AFTER_EVENT_STATUS_ADVISORY = {
         name: 'Retired Status',
         email: 'VCEmail',
         result: ACTION_NEEDED,
-        message: htmlSafe("<p>Your status has been changed to <i>retired</i> because you have not rangered 5 or more consecutive events.</p>" +
+        message: htmlSafe("<p>Your status has been changed to <i>retired</i> because you have not rangered in 5 or more events.</p>" +
           "<p>If you wish to volunteer with the Rangers next event, you will need to attend a full day's " +
           "In-Person Training, and walk a Cheetah Cub shift with a Mentor.</p><p>The Mentor Cadre will restore your active status at the end of the Cheetah Cub shift if they determine you are fit to resume rangering.</p>Contact the Volunteer Coordinators for more information.")
       };
@@ -943,7 +943,7 @@ export const AFTER_EVENT_STATUS_ADVISORY = {
         email: 'VCEmail',
         result: ACTION_NEEDED,
         message: htmlSafe(
-          `<p>Your status has been changed to <i>${person.status}</i> because you have not rangered 3 or more consecutive events.<p>` +
+          `<p>Your status has been changed to <i>${person.status}</i> because you have not rangered in 3 or more events.<p>` +
           "<p>If you wish to volunteer with the Rangers next event, you will need to attend a full day's " +
           "In-Person Training, and work a non-training, non-mentee shift.</p><p>Your active status will be automatically restored upon completing a shift that is neither a training nor a mentee shift.</p> Contact the Volunteer Coordinators for more information.")
       };

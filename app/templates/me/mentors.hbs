@@ -2,15 +2,15 @@
 
 <BackToHome/>
 <p>
-  You may send a contact message to one of your Mentors by clicking on the 'Contact' button below their callsign.
-  A Mentor may not be able to receive a message if they are no longer with the department.
+  You can send a message to one of your Mentors by clicking the ‘Contact’ button next to their callsign. Please note
+  that if a Mentor is no longer with the department, it is possible they may not receive the message.
 </p>
 {{#each this.mentors as |event|}}
   <UiSection>
     <:title>
       Year {{event.year}}
       {{#if (eq event.status "pass")}}
-        - <span class="text-success">{{fa-icon "check"}} Passed</span>
+        - <UiBadge @type="success">passed</UiBadge>
       {{/if}}
     </:title>
     <:body>
