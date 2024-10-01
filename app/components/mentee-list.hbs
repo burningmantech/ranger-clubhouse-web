@@ -29,26 +29,20 @@
               </h4>
               <div class="card-subtitle h5 mb-2">
                 {{#if (eq mentee.mentor_status "pass")}}
-                  <UiBadge @text="passed" @type="success" />
+                  <UiBadge @text="passed" @type="success"/>
                 {{else if (eq mentee.mentor_status "bonk")}}
-                  <UiBadge @text="bonked" @type="danger" />
+                  <UiBadge @text="bonked" @type="danger"/>
                 {{else if (eq mentee.mentor_status "self-bonk")}}
-                  <UiBadge @text="self bonked" @type="gray" />
+                  <UiBadge @text="self bonked" @type="gray"/>
                 {{else}}
-                  <UiBadge @text="pending" @type="warning" />
+                  <UiBadge @text="pending" @type="warning"/>
                 {{/if}}
               </div>
 
-              {{#if mentee.formerly_known_as}}
-                <p class="card-text">
-                  <b>Formerly Known As</b><br>
-                  {{mentee.formerly_known_as}}
-                </p>
-              {{/if}}
-              <p class="card-text">
+               <p class="card-text">
                 <b>Mentors</b><br>
-                {{#each mentee.mentors as |mentor mentorIdx|}}
-                  {{if mentorIdx ", "}}{{mentor.callsign}}
+                {{#each mentee.mentors as |mentor |}}
+                  {{mentor.callsign}}<br>
                 {{/each}}
               </p>
               {{#if (eq mentee.mentor_status "pass")}}
@@ -61,11 +55,17 @@
                   {{/if}}
                 </p>
               {{/if}}
+              {{#if mentee.formerly_known_as}}
+                <p class="card-text">
+                  <b>Formerly Known As</b><br>
+                  {{mentee.formerly_known_as}}
+                </p>
+              {{/if}}
               {{#if @contactAction}}
                 <p class="card-text">
                   <b>Last Contact</b><br>
                   {{#if mentee.last_contact}}
-                    {{mentee.last_contact}}
+                    {{mdy-format mentee.last_contact}}
                   {{else}}
                     <i>never</i>
                   {{/if}}
