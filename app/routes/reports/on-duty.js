@@ -1,46 +1,38 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import _ from 'lodash';
-
+E
 export default class ReportsOnDutyRoute extends ClubhouseRoute {
   queryParams = {
-    over_hours: {refreshModel: true},
+    has_excessive_duration: {refreshModel: true},
     duty_date: {refreshModel: true}
   };
 
-  model({over_hours, duty_date}) {
+  model({has_excessive_duration, duty_date}) {
     const data = {};
 
     if (duty_date) {
       data.duty_date = duty_date;
+      this.duty_date = duty_date;
     } else {
-      data.is_on_duty = 1;
+      this.duty_date = null;
     }
 
-    this.duty_date = duty_date;
-
-    over_hours = parseInt(over_hours);
-    if (over_hours) {
-      data.over_hours = over_hours;
+    if (has_excessive_duration) {
+      data.has_excessive_duration = 1;
     }
 
-    return this.ajax.request('timesheet', {data});
+    return this.ajax.request('timesheet/on-duty-report', {data});
   }
 
   setupController(controller, model) {
-    const positions = _.sortBy(_.map(_.groupBy(model.timesheet, (ts) => ts.position_id), (timesheets, position_id) => {
-      return {id: position_id, title: timesheets[0].position.title, timesheets};
-    }), ['title']);
-
-    controller.set('positions', positions);
-    controller.set('dateForm', {date: this.duty_date});
-    controller.set('timesheet', model.timesheet);
-    controller.set('expandAll', false);
+    controller.positions = model.positions;
+    controller.totalPeople = model.total_people;
+    controller.dateForm = {date: this.duty_date};
+    controller.expandAll = false;
   }
 
   resetController(controller, isExiting) {
     if (isExiting) {
-      controller.set('over_hours', null);
-      controller.set('duty_date', null);
+      controller.duty_date = null;
     }
   }
 }

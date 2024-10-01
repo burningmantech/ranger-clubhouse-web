@@ -7,8 +7,10 @@ import validateDateTime from 'clubhouse/validators/datetime';
 export default class ReportsOnDutyController extends ClubhouseController {
   @tracked expandAll = false;
   @tracked duty_date;
+  @tracked positions;
+  @tracked totalPeople;
 
-  queryParams = ['over_hours', 'duty_date'];
+  queryParams = ['duty_date', 'has_excessive_duration'];
 
   dateValidations = {
     date: [validateDateTime({presence: true})]

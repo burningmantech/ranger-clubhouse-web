@@ -16,8 +16,8 @@
     <NavbarMenuItem @menu={{menu}} @route="reports.people-by-clubhouse-teams" @item="People By Clubhouse Teams"/>
   </NavbarMenuSection>
   <NavbarMenuSection @section="Timesheets">
-    <NavbarMenuItem @menu={{menu}} @route="reports.on-duty" @query={{hash over_hours=null}} @item="People On Duty"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.on-duty" @query={{hash over_hours=6}} @item="... Over 6 Hours"/>
+    <NavbarMenuItem @menu={{menu}} @route="reports.on-duty" @query={{hash has_excessive_duration=null}} @item="People On Duty"/>
+    <NavbarMenuItem @menu={{menu}} @route="reports.on-duty" @query={{hash has_excessive_duration=true}} @item="... longer than normal"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.flakes" @item="Flake Report"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.shift-drop" @item="Shift Drop"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.no-shows" @item="No Shows"/>

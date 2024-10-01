@@ -1,10 +1,10 @@
 <h1>
-  {{#if this.over_hours}}
-    Currently On Duty Over {{this.over_hours}} Hours
+  {{#if this.has_excessive_duration}}
+    Currently on duty for longer than usual
   {{else if this.duty_date}}
-    On Duty at {{full-datetime-format this.duty_date}}
+    On duty at {{full-datetime-format this.duty_date}}
   {{else}}
-    Currently On Duty
+    Currently on duty
   {{/if}}
 </h1>
 
@@ -26,44 +26,55 @@
     </FormRow>
   </ChForm>
 {{/unless}}
-
-{{#if this.timesheet}}
+<p>
+  An entry will be flagged if the duration exceeds 1.5 times the scheduled shift length or exceeds 1.5 times of 6 hours
+  if no shift is associated.
+</p>
+{{#if this.positions}}
   <DropdownScrollList @items={{this.scrollList}}  @openAccordion={{true}} @thing="position"/>
 {{/if}}
 <p>
-  Showing {{pluralize this.timesheet.length "person"}} on duty in {{pluralize this.positions.length "position"}}.
+  Showing {{pluralize this.totalPeople "person"}} on duty in {{pluralize this.positions.length "position"}}.
 </p>
 {{#each this.positions key="id" as |position|}}
-  <div class="max-width-700">
+  <div class="max-width-1000">
     <UiAccordion id="position-{{position.id}}" as |accordion|>
       <accordion.title>
         {{position.title}} - {{pluralize position.timesheets.length "person"}}
+        {{#if (and position.excessive_count (not this.has_excessive_duration))}}
+          <small>({{pluralize position.excessive_count "entry"}} possibly longer than normal)</small>
+        {{/if}}
       </accordion.title>
       <accordion.body>
         {{#if accordion.isOpen}}
           <UiTable>
             <thead>
             <tr>
-              <th class="w-25">Callsign</th>
+              <th>Callsign</th>
+              <th>On Duty</th>
               {{#if this.duty_date}}
-                <th class="w-30">On Duty</th>
-                <th class="w-30">Off Duty</th>
-              {{else}}
-                <th class="w-60">On Duty Since</th>
+                <th>Off Duty</th>
               {{/if}}
-              <th class="text-end w-15">Duration</th>
+              <th class="text-end">Duration</th>
+              <th>Assoc. Shift Start</th>
+              <th>Shift Duration</th>
+              <th>Over Duration</th>
+              <th>Over %</th>
             </tr>
             </thead>
 
             <tbody>
             {{#each position.timesheets key="id" as |ts|}}
-              <tr>
-                <td class="w-25">
-                  <PersonLink @person={{ts.person}} />
+              <tr class={{if ts.excessive_duration "table-warning"}}>
+                <td>
+                  {{#if ts.excessive_duration}}
+                    {{fa-icon "triangle-exclamation" right=1}}
+                  {{/if}}
+                  <PersonLink @personId={{ts.person_id}} @callsign={{ts.callsign}} />
                 </td>
-                <td class={{if this.duty_date "w-30" "w-60"}}>{{shift-format ts.on_duty}}</td>
+                <td>{{shift-format ts.on_duty}}</td>
                 {{#if this.duty_date}}
-                  <td class="w-30">
+                  <td>
                     {{#if ts.off_duty}}
                       {{shift-format ts.off_duty}}
                     {{else}}
@@ -71,7 +82,27 @@
                     {{/if}}
                   </td>
                 {{/if}}
-                <td class="w-15 text-end">{{hour-minute-format ts.duration}}</td>
+                <td class="text-end">{{hour-minute-format ts.duration}}</td>
+                {{#if ts.slot}}
+                  <td>{{shift-format ts.slot.begins}}</td>
+                  <td class="text-end">{{hour-minute-format ts.slot.duration}}</td>
+                {{else}}
+                  <td colspan="2"><i>- no shift associated -</i></td>
+                {{/if}}
+                <td class="text-end">
+                  {{#if ts.excessive_duration}}
+                    {{hour-minute-format ts.excessive_duration}}
+                  {{else}}
+                    -
+                  {{/if}}
+                </td>
+                <td class="text-end">
+                  {{#if ts.excessive_duration}}
+                    {{ts.excessive_percentage}}%
+                  {{else}}
+                    -
+                  {{/if}}
+                </td>
               </tr>
             {{/each}}
             </tbody>
