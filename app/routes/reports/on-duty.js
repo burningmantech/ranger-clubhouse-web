@@ -1,5 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-E
+
 export default class ReportsOnDutyRoute extends ClubhouseRoute {
   queryParams = {
     has_excessive_duration: {refreshModel: true},
