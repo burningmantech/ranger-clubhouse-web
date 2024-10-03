@@ -84,7 +84,6 @@ Router.map(function () {
 
     this.route('teams');
     this.route('thank-you-cards');
-    this.route('timesheet-sanity-checker');
     this.route('timesheet-slot-repair');
     this.route('top-hour-earners');
     this.route('oauth-client');
@@ -236,6 +235,7 @@ Router.map(function () {
     this.route('timesheet-by-position');
     this.route('timesheet-correction-requests');
     this.route('timesheet-correction-stats');
+    this.route('timesheet-sanity-checker');
     this.route('timesheet-totals');
     this.route('timesheet-unconfirmed');
     this.route('vehicle-paperwork');
