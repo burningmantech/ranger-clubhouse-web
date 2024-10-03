@@ -2,7 +2,7 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 import {ADMIN, TIMESHEET_MANAGEMENT} from 'clubhouse/constants/roles';
 
-export default class AdminTimesheetSanityCheckerRoute extends ClubhouseRoute {
+export default class ReportsTimesheetSanityCheckerRoute extends ClubhouseRoute {
   roleRequired = [ADMIN, TIMESHEET_MANAGEMENT];
 
   queryParams = {
