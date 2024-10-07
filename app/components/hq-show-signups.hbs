@@ -1,0 +1,32 @@
+{{this.label}}:
+{{#if @count}}
+  <Popover @text={{@count}}
+           @title={{concat "Period " (shift-format @period) " - " this.desc}}
+           @onShow={{this.onShow}}
+           @onHide={{this.onClose}}>
+    {{#if this.isOpen}}
+      {{#if this.isLoading}}
+        <LoadingIndicator @text="Retrieving signups"/>
+      {{else}}
+        <table class="table table-width-auto">
+          <thead>
+          <tr>
+            <th>Shift start</th>
+            <th>Callsign</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.people as |person|}}
+            <tr>
+              <td>{{shift-format person.begins}}</td>
+              <td>{{person.callsign}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </table>
+      {{/if}}
+    {{/if}}
+  </Popover>
+{{else}}
+  0
+{{/if}}
