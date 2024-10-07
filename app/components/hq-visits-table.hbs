@@ -7,25 +7,47 @@
         <th>Time ({{@interval}} min interval)</th>
         <th class="text-end">Check In</th>
         <th class="text-end">Check Out</th>
+        <th class="text-end">Leads</th>
+        <th class="text-end">Shorts</th>
         <th class="text-end">Windows</th>
         <th class="text-end">Runners</th>
-        <th class="text-end">Shorts</th>
-        <th class="text-end">Leads</th>
       </tr>
       </thead>
       <tbody>
       {{#each @visits key="period" as |visit|}}
-        <tr class="{{if (and (not visit.windows) (not visit.shorts) (not visit.leads)) "text-bg-highlight"}}">
+        <tr class="{{if (and (not visit.windows) (not visit.shorts) (not visit.leads)) "table-warning"}}">
           <td>
-            {{if (and (not visit.windows) (not visit.shorts) (not visit.leads)) (fa-icon "exclamation-triangle")}}
+            {{#if (and (not visit.windows) (not visit.shorts) (not visit.leads))}}
+              {{fa-icon "exclamation-triangle" right=1}}
+            {{/if}}
             {{shift-format visit.period}}
           </td>
           <td class="text-end">{{visit.checkin}}</td>
           <td class="text-end">{{visit.checkout}}</td>
-          <td class="text-end">{{visit.windows}}</td>
-          <td class="text-end">{{visit.runners}}</td>
-          <td class="text-end">{{visit.shorts}}</td>
-          <td class="text-end">{{visit.leads}}</td>
+          <td class="text-end">
+            <HqShowSignups @count={{visit.leads}}
+                           @period={{visit.period}}
+                           @interval={{@interval}}
+                           @type="lead"/>
+          </td>
+          <td class="text-end">
+            <HqShowSignups @count={{visit.shorts}}
+                           @period={{visit.period}}
+                           @interval={{@interval}}
+                           @type="short"/>
+          </td>
+          <td class="text-end">
+            <HqShowSignups @count={{visit.windows}}
+                           @period={{visit.period}}
+                           @interval={{@interval}}
+                           @type="window"/>
+          </td>
+          <td class="text-end">
+            <HqShowSignups @count={{visit.runners}}
+                           @period={{visit.period}}
+                           @interval={{@interval}}
+                           @type="runner"/>
+          </td>
         </tr>
       {{/each}}
       </tbody>
