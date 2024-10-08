@@ -38,16 +38,16 @@
         </div>
       {{/if}}
       {{#if @message.has_expired}}
-        <div class="mb-2 text-danger">
+        <UiAlert @type="danger" @icon="ban">
           This message expired on {{shift-format @message.expires_at}} (Pacific) and is no longer considered relevant.
-        </div>
+        </UiAlert>
       {{else if @message.expires_at}}
-        <div class="mb-2">
-          <i>This message will be no longer considered relevant after {{shift-format @message.expires_at}}
-            (Pacific).</i>
-        </div>
+        <UiAlert @type="warning" @icon="hand-point-right">
+            This message will no longer be considered relevant after {{shift-format @message.expires_at}}
+            (Pacific).
+        </UiAlert>
       {{/if}}
-      {{@message.body}}
+      {{nl2br @message.body}}
       <div class="mail-actions">
         {{#if (and @canSendMessages (not @message.is_rbs))}}
           <UiButton @onClick={{@onReplyTo}}
@@ -77,5 +77,5 @@
         {{/if}}
       </div>
     {{/if}}
-  </div>
+</div>
 </div>
