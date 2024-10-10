@@ -46,6 +46,7 @@ Router.map(function () {
     this.route('vehicles');
     this.route('welcome');
     this.route('oauth2-grant');
+    this.route('directory');
   });
 
   this.route('search', function () {

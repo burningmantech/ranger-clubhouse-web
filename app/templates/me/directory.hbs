@@ -1,0 +1,17 @@
+<h1>Ranger Cadre &amp; Delegation Email Directory</h1>
+<p>
+  Descriptions of the Cadres and Delegations, along with their roles and responsibilities, can be found in the
+  <ExtLink @href={{setting "JoiningRangerSpecialTeamsUrl"}} class="d-inline-block">
+    Ranger Special Teams and How to Join Them
+  </ExtLink>
+  document.
+</p>
+<div class="masonry-container masonry-col-2">
+  {{#each this.teams as |team|}}
+    <div class="mb-2 masonry-item">
+      {{team.title}}<br>
+      <MailTo @to={{team.email}} />
+    </div>
+  {{/each}}
+</div>
+
