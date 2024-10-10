@@ -21,7 +21,8 @@
         <s.link @route="me.tickets" @title="Tickets & Stuff" @icon="ticket-alt" @iconType="s"/>
       {{/if}}
       <s.link @route="me.agreements" @title="Agreements" @icon="file-signature" @iconType="s"/>
-      {{#if (and this.user.motorpool_policy_enabled (or this.user.mvr_eligible this.user.mvr_potential this.user.may_request_stickers this.user.pvr_potential))}}
+      {{#if
+        (and this.user.motorpool_policy_enabled (or this.user.mvr_eligible this.user.mvr_potential this.user.may_request_stickers this.user.pvr_potential))}}
         <s.link @route="me.vehicles" @title="Vehicle Dashboard" @icon="truck-monster" @iconType="s"/>
       {{/if}}
     </s.group>
@@ -48,6 +49,9 @@
 
     {{#if (or this.user.isActive this.user.isInactive)}}
       <s.link @route="me.contact" @title="Contact Ranger" @icon="comments" @iconType="s"/>
+    {{/if}}
+    {{#if this.user.isRanger}}
+      <s.link @route="me.directory" @title="Cadre Directory" @icon="address-book" @iconType="s"/>
     {{/if}}
   </s.group>
 

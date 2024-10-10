@@ -13,13 +13,14 @@
 
   {{#if (or @user.isRanger @user.isPNV @user.isNonRanger)}}
     <NavbarMenuSection @section="Pre-Event">
-        {{#if (or @user.isPNV)}}
-          <NavbarMenuItem @menu={{menu}} @route="me.tickets" @item="Setup Access Pass"/>
-        {{else}}
-          <NavbarMenuItem @menu={{menu}} @route="me.tickets" @item="Tickets &amp; Stuff"/>
-        {{/if}}
+      {{#if (or @user.isPNV)}}
+        <NavbarMenuItem @menu={{menu}} @route="me.tickets" @item="Setup Access Pass"/>
+      {{else}}
+        <NavbarMenuItem @menu={{menu}} @route="me.tickets" @item="Tickets &amp; Stuff"/>
+      {{/if}}
       <NavbarMenuItem @menu={{menu}} @route="me.agreements" @item="Agreements"/>
-      {{#if (and @user.motorpool_policy_enabled (or @user.mvr_eligible @user.mvr_potential @user.may_request_stickers @user.pvr_potential))}}
+      {{#if
+        (and @user.motorpool_policy_enabled (or @user.mvr_eligible @user.mvr_potential @user.may_request_stickers @user.pvr_potential))}}
         <NavbarMenuItem @menu={{menu}} @route="me.vehicles" @item="Vehicle Dashboard"/>
       {{/if}}
     </NavbarMenuSection>
@@ -42,6 +43,9 @@
     {{/if}}
     {{#if @user.teacher.have_feedback}}
       <NavbarMenuItem @menu={{menu}} @route="me.trainer-feedback" @item="Trainer/Mentor Feedback"/>
+    {{/if}}
+    {{#if @user.isRanger}}
+      <NavbarMenuItem @menu={{menu}} @route="me.directory" @item="Cadre Directory"/>
     {{/if}}
   </NavbarMenuSection>
   <NavbarMenuSection @section="My Account">
