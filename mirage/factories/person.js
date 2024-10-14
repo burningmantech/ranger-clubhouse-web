@@ -1,4 +1,4 @@
-import { Factory } from 'miragejs';
+import {Factory} from 'miragejs';
 import {faker} from '@faker-js/faker';
 import dayjs from 'dayjs';
 
@@ -15,10 +15,10 @@ export default Factory.extend({
   gender_custom: '',
   has_reviewed_pi: false,
 
-  years_combined: [2017, 2018],
-  years_seen: [2017, 2018],
-  years_as_ranger: [2018],
-  years_as_contributor: [2020],
+  years_combined: [2017, 2018], //eslint-disable-line ember/avoid-leaking-state-in-ember-objects
+  years_seen: [2017, 2018],//eslint-disable-line ember/avoid-leaking-state-in-ember-objects
+  years_as_ranger: [2018],//eslint-disable-line ember/avoid-leaking-state-in-ember-objects
+  years_as_contributor: [2020],//eslint-disable-line ember/avoid-leaking-state-in-ember-objects
 
   callsign() {
     return faker.string.uuid();
@@ -53,7 +53,7 @@ export default Factory.extend({
   },
 
   state() {
-    return faker.location.state({ abbreviated: true });
+    return faker.location.state({abbreviated: true});
   },
   zip() {
     return faker.location.zipCode();
