@@ -1,29 +1,35 @@
-<YearSelect @title="Broadcast Messages" @year={{this.year}} @years={{this.person.all_years}} @subheader={{true}} @onChange={{set-value this 'year'}} />
+<YearSelect @title="Broadcast Messages"
+            @year={{this.year}}
+            @years={{this.person.years_seen}}
+            @subheader={{true}}
+            @onChange={{set-value this 'year'}} />
 
 <UiTable>
   <thead>
-      <tr>
-          <th>Timestamp</th>
-          <th>Broadcast ID</th>
-          <th>Address</th>
-          <th>Status / Command</th>
-          <th>Direction</th>
-      </tr>
+  <tr>
+    <th>Timestamp</th>
+    <th>Broadcast ID</th>
+    <th>Address</th>
+    <th>Status / Command</th>
+    <th>Direction</th>
+  </tr>
   </thead>
   <tbody>
   {{#each this.messages as |msg|}}
-      <tr>
-          <td>{{msg.created_at}}</td>
-          <td><PresentOrNot @value={{msg.broadcast_id}} @empty="-" /></td>
-          <td>{{msg.address}}</td>
-          <td>{{msg.status}}</td>
-          <td>{{msg.direction}}</td>
-      </tr>
-      {{#if msg.message}}
+    <tr>
+      <td>{{msg.created_at}}</td>
+      <td>
+        <PresentOrNot @value={{msg.broadcast_id}} @empty="-"/>
+      </td>
+      <td>{{msg.address}}</td>
+      <td>{{msg.status}}</td>
+      <td>{{msg.direction}}</td>
+    </tr>
+    {{#if msg.message}}
       <tr class="no-border">
-          <td colspan="5">{{nl2br msg.message}}</td>
+        <td colspan="5">{{nl2br msg.message}}</td>
       </tr>
-      {{/if}}
+    {{/if}}
   {{else}}
     <tr>
       <td colspan="5" class="text-danger">No broadcast messages found for {{this.year}}</td>

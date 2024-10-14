@@ -1,6 +1,6 @@
 <YearSelect @title="Timesheet For {{this.session.user.callsign}}"
             @year={{this.year}}
-            @years={{this.session.user.all_years}}
+            @years={{this.session.user.years_combined}}
             @onChange={{set-value this 'year'}} />
 <BackToHome/>
 

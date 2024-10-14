@@ -153,10 +153,10 @@ function routes() {
           callsign_approved: true,
           status: person.status,
           unread_message_count: 2,
-          years: [2017, 2018],
-          all_years: [2017, 2018],
-          rangered_years: [2018],
-          non_ranger_years: [2020],
+          years_combined: [2017, 2018],
+          years_seen: [2017, 2018],
+          years_as_ranger: [2018],
+          years_as_contributor: [2020],
           roles: person.roles,
           teacher: {
             is_trainer: false,
@@ -168,16 +168,6 @@ function routes() {
       }
     }
   )
-
-
-  this.get('/api/person/:id/years', ({people}, request) => { // eslint-disable-line no-unused-vars
-    return {
-      years: [2017, 2018],
-      all_years: [2017, 2018],
-      rangered_years: [2018],
-      non_ranger_years: [2020],
-    };
-  });
 
   this.get('/api/person/:id/unread-message-count', ({people}, request) => { // eslint-disable-line no-unused-vars
     return {unread_message_count: 2};
@@ -311,7 +301,7 @@ function routes() {
   });
 
   this.get('/api/person-language', () => {
-    return { person_language: [ ]};
+    return {person_language: []};
   });
 
   this.get('/api/vehicle/:id', () => {

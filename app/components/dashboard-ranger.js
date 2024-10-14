@@ -346,8 +346,8 @@ export default class DashboardRangerComponent extends Component {
   }
 
   get serviceInfo() {
-    const {non_ranger_years, rangered_years} = this.args.years;
-    const rangerYears = rangered_years.length, nonRangerYears = non_ranger_years.length;
+    const {years_as_ranger, years_as_contributor} = this.args.person;
+    const rangerYears = years_as_ranger.length, nonRangerYears = years_as_contributor.length;
 
     if (!rangerYears && !nonRangerYears) {
       return 'stopping by';
