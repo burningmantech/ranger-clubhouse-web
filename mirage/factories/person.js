@@ -15,6 +15,11 @@ export default Factory.extend({
   gender_custom: '',
   has_reviewed_pi: false,
 
+  years_combined: [2017, 2018],
+  years_seen: [2017, 2018],
+  years_as_ranger: [2018],
+  years_as_contributor: [2020],
+
   callsign() {
     return faker.string.uuid();
   },

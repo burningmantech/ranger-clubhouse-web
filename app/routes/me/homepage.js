@@ -16,19 +16,12 @@ export default class MeHomepageRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     const bullentins = model.bullentins;
-    const {user} = this.session;
 
     controller.set('person', this.modelFor('me'));
     controller.set('photo', model.milestones.photo);
     controller.set('motds', bullentins.motd);
     controller.set('motdsMeta', bullentins.meta.total);
     controller.set('milestones', model.milestones);
-    controller.set('years', {
-      years: user.years,
-      all_years: user.all_years,
-      rangered_years: user.rangered_years,
-      non_ranger_years: user.non_ranger_years,
-    });
     controller.set('showUploadDialog', false);
   }
 }

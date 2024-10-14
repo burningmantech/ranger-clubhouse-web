@@ -3,20 +3,12 @@ import {action} from '@ember/object';
 import {humanize} from 'ember-cli-string-helpers/helpers/humanize';
 import {ADMIN, MANAGE, VC, MENTOR, TRAINER} from 'clubhouse/constants/roles';
 import {NotFoundError} from '@ember-data/adapter/error';
-import RSVP from 'rsvp';
 
 export default class PersonRoute extends ClubhouseRoute {
-  roleRequired = [ ADMIN, MANAGE, VC, MENTOR, TRAINER ];
+  roleRequired = [ADMIN, MANAGE, VC, MENTOR, TRAINER];
 
   async model({person_id}) {
-    const {person, years} = await RSVP.hash({
-      person: this.store.findRecord('person', person_id, {reload: true}),
-      years: this.ajax.request(`person/${person_id}/years`)
-    });
-
-    Object.assign(person, years);
-
-    return person;
+    return await this.store.findRecord('person', person_id, {reload: true});
   }
 
   setupController(controller, model) {

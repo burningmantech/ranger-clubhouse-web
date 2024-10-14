@@ -10,8 +10,8 @@
 <p>
   {{#if @person.isNonRanger}}
     Hello Volunteer {{@person.callsign}}.
-    {{#if @years.non_ranger_years}}
-      Thank you for volunteering with the Rangers for {{pluralize @years.non_ranger_years.length "year"}}.
+    {{#if @person.years_as_ranger}}
+      Thank you for volunteering with the Rangers for {{pluralize @person.years_as_ranger.length "year"}}.
     {{else}}
       Thank you for helping the Rangers.
     {{/if}}

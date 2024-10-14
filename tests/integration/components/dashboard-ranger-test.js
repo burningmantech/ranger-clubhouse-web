@@ -1,37 +1,40 @@
-import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
-import { hbs } from 'ember-cli-htmlbars';
+import {module, test} from 'qunit';
+import {setupRenderingTest} from 'ember-qunit';
+import {render} from '@ember/test-helpers';
+import {hbs} from 'ember-cli-htmlbars';
 import Service from '@ember/service';
 
 // Stub out session
 
 class SessionStub extends Service {
-  user = { isAdmin: true, isVC: true };
+  user = {isAdmin: true, isVC: true};
   userId = 0;
 }
 
-module('Integration | Component | dashboard-ranger', function(hooks) {
+module('Integration | Component | dashboard-ranger', function (hooks) {
   setupRenderingTest(hooks);
 
   hooks.beforeEach(function () {
     this.owner.register('service:session', SessionStub);
   });
-  test('it renders', async function(assert) {
-    const person = this.server.create('person', { roles: [  ]});
+  test('it renders', async function (assert) {
+    const person = this.server.create('person', {
+      roles: [],
+      years_as_contributor: [2020],
+      years_as_ranger: [2018, 2019]
+    });
 
     this.sessionService = this.owner.lookup('service:session');
     this.set('sessionService.userId', person.id);
     this.set('person', person);
-    this.set('milestones', { period: 'after-event', training: { status: 'pending' }, alpha_shift: { status: 'pending' }});
-    this.set('photo', { });
+    this.set('milestones', {period: 'after-event', training: {status: 'pending'}, alpha_shift: {status: 'pending'}});
+    this.set('photo', {});
     this.set('motds', [])
-    this.set('noop', () => { });
-    this.set('years', { non_ranger_years: [ 2020], rangered_years: [ 2018, 2019 ]});
+    this.set('noop', () => {});
+
     await render(hbs`<DashboardRanger
                     @milestones={{this.milestones}}
                     @person={{this.person}}
-                    @years={{this.years}}
                     @photo={{this.photo}}
                     @motds={{this.motds}}
                     @debugUpdateAction={{this.noop}}
