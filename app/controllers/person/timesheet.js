@@ -19,14 +19,17 @@ export default class PersonTimesheetController extends ClubhouseController {
     this._updateTimesheetSummary();
   }
 
-  _updateTimesheetSummary() {
-    this.ajax.request(`person/${this.person.id}/timesheet-summary`, {data: {year: this.year}})
-      .then((result) => this.timesheetSummary = result.summary)
-      .catch((response) => this.house.handleErrorResponse(response));
+  async _updateTimesheetSummary() {
+    try {
+      const {summary} = await this.ajax.request(`person/${this.person.id}/timesheet-summary`, {data: {year: this.year}});
+      this.timesheetSummary = summary;
 
-    this.ajax.request('timesheet/info', {data: {person_id: this.person.id}})
-      .then((result) => this.timesheetInfo = result.info)
-      .catch((response) => this.house.handleErrorResponse(response));
+      const {info} = this.ajax.request('timesheet/info', {data: {person_id: this.person.id}});
+      this.timesheetInfo = info;
+      await this.person.reload();
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
   }
 
   get canForceConfirmation() {
@@ -57,12 +60,13 @@ export default class PersonTimesheetController extends ClubhouseController {
     const confirmed = this.timesheetInfo.timesheet_confirmed ? 0 : 1;
     this.modal.confirm(`${confirmed ? 'Confirm' : 'Un-confirm'} Timesheet?`,
       `Are you sure you want to ${confirmed ? 'CONFIRM' : 'UN-CONFIRM'} the timesheet? The action will be logged.`,
-      () => {
-        this.isSubmitting = true;
-        this.ajax.request('timesheet/confirm', {
-          method: 'POST',
-          data: {person_id: this.person.id, confirmed}
-        }).then((result) => {
+      async () => {
+        try {
+          this.isSubmitting = true;
+          const result = await this.ajax.request('timesheet/confirm', {
+            method: 'POST',
+            data: {person_id: this.person.id, confirmed}
+          })
           const {timesheet_confirmed, timesheet_confirmed_at} = result.confirm_info;
           this.timesheetInfo = {
             ...this.timesheetInfo,
@@ -70,8 +74,11 @@ export default class PersonTimesheetController extends ClubhouseController {
             timesheet_confirmed_at
           };
           this.toast.success(`Timesheet has been ${timesheet_confirmed ? 'CONFIRMED' : 'UN-CONFIRMED'}`);
-        }).catch((response) => this.house.handleErrorResponse(response))
-          .finally(() => this.isSubmitting = false);
+        } catch (response) {
+          this.house.handleErrorResponse(response)
+        } finally {
+          this.isSubmitting = false;
+        }
       });
   }
 
