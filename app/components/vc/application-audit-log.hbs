@@ -25,24 +25,17 @@
           </td>
           <td>
             {{#if row.data}}
-              <table>
-                <tbody>
-                {{#each-in row.data as |column changes|}}
-                  <tr>
-                    <td class="pe-2">{{this.columnLabel column}}</td>
-                    <td>
-                      {{this.changeValues changes column row.meta}}
-                    </td>
-                  </tr>
-                {{/each-in}}
-                </tbody>
-              </table>
+              {{#each-in row.data as |column changes|}}
+                <div class="mb-2">
+                  <b>{{this.columnLabel column}}</b><br>
+                  {{this.changeValues changes column row.meta}}
+                </div>
+              {{/each-in}}
             {{/if}}
           </td>
         </tr>
       {{/each}}
       </tbody>
     </UiTable>
-
   </:body>
 </UiSection>

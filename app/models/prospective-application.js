@@ -16,11 +16,13 @@ export const EXPERIENCE_BRC1R1 = 'brc1r1';
 export const EXPERIENCE_BRC2 = 'brc2';
 export const EXPERIENCE_NONE = 'none';
 
-export const ExperienceLabels = {
-  [EXPERIENCE_NONE]: 'None',
-  [EXPERIENCE_BRC1R1]: 'BRC1 + R1',
-  [EXPERIENCE_BRC2]: 'BRC2'
-};
+export const ExperienceOptions = [
+  ['None', EXPERIENCE_NONE],
+  ['BRC1 + R1', EXPERIENCE_BRC1R1],
+  ['BRC2', EXPERIENCE_BRC2]
+];
+
+export const ExperienceLabels = optionsToLabels(ExperienceOptions);
 
 export const STATUS_PENDING = 'pending';
 export const STATUS_APPROVED = 'approved';
@@ -95,6 +97,19 @@ export const WhyVolunteerReviewLabels = {
   [WHY_VOLUNTEER_REVIEW_UNREVIEWED]: 'Unreviewed'
 };
 
+export const StatusesThatSendEmail = [
+  STATUS_APPROVED,
+  STATUS_APPROVED_PII_ISSUE,
+  STATUS_MORE_HANDLES,
+  STATUS_REJECT_REGIONAL,
+  STATUS_REJECT_TOO_YOUNG,
+  STATUS_REJECT_UNQUALIFIED,
+  STATUS_HOLD_RRN_CHECK,
+  STATUS_HOLD_QUALIFICATION_ISSUE,
+  STATUS_REJECT_RETURNING_RANGER,
+];
+
+
 export const ColumnLabels = {
   status: 'Status',
   events_attended: 'Events Attended',
@@ -134,7 +149,7 @@ export const ColumnLabels = {
 export const BadHandleRegexps = [
   [/^\d\s*[.)-]?\s*\b/, 'Priority indicators detected (e.g., 1., 2), 3 -, etc) - remove the indicators.'],
   [/\branger\b/i, 'The word "Ranger" detected - remove the word.'],
-    [/[,."'!&-]/, 'Punctuation (commas, periods, quotes, ampersands, exclamations) detected - remove all punctuations. Dashes are okay IF its part of the actual handle'],
+  [/[,."'!&-]/, 'Punctuation (commas, periods, quotes, ampersands, exclamations) detected - remove all punctuations. Dashes are okay IF its part of the actual handle'],
 ];
 export default class ProspectiveApplicationModel extends Model {
   @attr('string', {defaultVault: STATUS_PENDING}) status;
@@ -374,12 +389,12 @@ export default class ProspectiveApplicationModel extends Model {
   get handleListIssues() {
     const issues = [];
 
-     BadHandleRegexps.forEach((regexp) => {
-       if (this.handles.match(regexp[0])) {
-         issues.push(regexp[1]);
-       }
-     });
+    BadHandleRegexps.forEach((regexp) => {
+      if (this.handles.match(regexp[0])) {
+        issues.push(regexp[1]);
+      }
+    });
 
-     return issues;
+    return issues;
   }
 }
