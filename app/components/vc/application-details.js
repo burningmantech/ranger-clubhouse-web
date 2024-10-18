@@ -228,7 +228,7 @@ export default class VcApplicationDetailsComponent extends Component {
   }
 
   @action
-  async previewEmailAction(model, status) {
+  async previewEmailAction(model) {
     const data = {
       status: this.newStatus,
     };
