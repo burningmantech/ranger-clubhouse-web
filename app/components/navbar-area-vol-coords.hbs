@@ -14,12 +14,10 @@
       <NavbarMenuItem @menu={{menu}} @route="vc.photos" @item="Photos"/>
     </NavbarMenuSection>
     <NavbarMenuSection @section="Applications">
-      {{#if false}}
-        <NavbarMenuItem @menu={{menu}} @route="vc.applications" @item="Prospective Applications"/>
-        {{#if (has-role "admin" "salesforce-import")}}
-          <NavbarMenuItem @menu={{menu}} @route="vc.application-import" @item="Application Import"/>
-          <NavbarMenuItem @menu={{menu}} @route="vc.create-prospectives" @item="Create Prospectives"/>
-        {{/if}}
+      <NavbarMenuItem @menu={{menu}} @route="vc.applications" @item="Prospective Applications"/>
+      {{#if (has-role "admin" "salesforce-import")}}
+        <NavbarMenuItem @menu={{menu}} @route="vc.application-import" @item="Application Import"/>
+        <NavbarMenuItem @menu={{menu}} @route="vc.create-prospectives" @item="Create Prospectives"/>
       {{/if}}
       {{#if (has-role "admin" "salesforce-import")}}
         <NavbarMenuItem @menu={{menu}} @route="vc.salesforce" @item="Salesforce Import"/>

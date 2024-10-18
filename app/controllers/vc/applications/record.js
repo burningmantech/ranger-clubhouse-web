@@ -27,6 +27,8 @@ export default class VcApplicationsRecordController extends ClubhouseController 
 
   @tracked initialTabId;
 
+  @tracked emailToPreview;
+
   emailValidation = {
     subject: [validatePresence({presence: true, message: "Please supply a subject."})],
     message: [validatePresence({presence: true, message: "Please supply a message to the applicant."})],
@@ -227,6 +229,49 @@ export default class VcApplicationsRecordController extends ClubhouseController 
       this.isSubmitting = false;
     }
   }
+
+  @action
+  previewRawEmail(model) {
+    this.previewEmail({
+      subject: model.subject,
+      message: model.message,
+      is_raw_email: 1
+    });
+  }
+
+  @action
+  async previewEmail(data) {
+    this.isSubmitting = true;
+    try {
+      const {mail} = await this.ajax.request(`prospective-application/${this.application.id}/preview-email`, {data});
+      this.emailToPreview = mail;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
+  }
+
+  @action
+  closePreviewEmailDialog() {
+    this.emailToPreview = null;
+  }
+
+  /**
+   * Load up the newly inserted iframe with the rejection email
+   *
+   * @param {HTMLElement} element
+   */
+
+  @action
+  insertPreviewEmail(element) {
+    const iframe = element.contentWindow.document;
+
+    iframe.open();
+    iframe.write(this.emailToPreview);
+    iframe.close();
+  }
+
 
   @action
   openStatusDialog() {

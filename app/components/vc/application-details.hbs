@@ -35,7 +35,7 @@
       <div class="col-auto">
         <b>BRC Events</b><br>
         {{#if @application.eventsList}}
-            {{pluralize @application.eventsList.length
+          {{pluralize @application.eventsList.length
                       (if @application.hasPandemicEvents "total event" "event")}}
           [{{year-range @application.eventsList}}]
           {{#if @application.hasPandemicEvents}}
@@ -160,6 +160,17 @@
   <:edit as |f|>
     <FormRow>
       <FormLabel @fixed={{true}}>
+        Experience
+      </FormLabel>
+      <div class="col-auto">
+        <f.select @name="experience"
+                  @options={{this.experienceOptions}}
+        />
+      </div>
+    </FormRow>
+
+    <FormRow>
+      <FormLabel @fixed={{true}}>
         BRC Events Attended
       </FormLabel>
       <div class="col-auto">
@@ -256,10 +267,24 @@
         {{else}}
           Please confirm updating the status to "{{this.statusLabel this.newStatus}}"
         {{/if}}
+        <div class="mt-3">
+          {{#if this.doesStatusSendEmail}}
+            This action will email the applicant.
+          {{else}}
+            No emails will be sent to the applicant.
+          {{/if}}
+        </div>
       </Modal.body>
       <Modal.footer @align="start">
-        <f.submit @label={{if this.askForMessage "Submit" "Confirm"}} />
-        <UiCancelButton @onClick={{this.cancelStatusMessageDialog}} />
+        <UiButtonRow>
+          <f.submit @label={{if this.askForMessage "Submit" "Confirm"}} />
+          {{#if this.doesStatusSendEmail}}
+            <UiButton @onClick={{fn this.previewEmailAction f.model}} @type="secondary">
+              Preview Email
+            </UiButton>
+          {{/if}}
+          <UiCancelButton @onClick={{this.cancelStatusMessageDialog}} />
+        </UiButtonRow>
       </Modal.footer>
     </ChForm>
   </ModalDialog>

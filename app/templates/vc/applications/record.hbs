@@ -89,7 +89,7 @@
     {{else if this.assignedToOther}}
       <b class="text-danger">
         {{fa-icon "hand" right=1}}
-         Assigned to {{this.application.assigned_person.callsign}}.
+        Assigned to {{this.application.assigned_person.callsign}}.
       </b>
     {{else if (not this.application.assigned_person_id)}}
       Application is unassigned
@@ -162,14 +162,19 @@
 
   <div class="tab-content">
     <tab.pane @id="details">
-      <Vc::ApplicationDetails @application={{this.application}} />
+      <Vc::ApplicationDetails @application={{this.application}}
+                              @previewEmail={{this.previewEmail}}
+      />
     </tab.pane>
     <tab.pane @id="handles">
-      <Vc::ApplicationHandles @application={{this.application}} />
+      <Vc::ApplicationHandles @application={{this.application}}
+                              @previewEmail={{this.previewEmail}}
+      />
     </tab.pane>
     <tab.pane @id="personal-info">
       <Vc::ApplicationPersonalInfo @application={{this.application}}
                                    @onSubmit={{this.save}}
+
       />
     </tab.pane>
     <tab.pane @id="related">
@@ -233,8 +238,13 @@
         </FormRow>
       </Modal.body>
       <Modal.footer @align="start">
-        <f.submit @label="Send Email"/>
-        <UiCancelButton @onClick={{this.cancelSendEmailDialog}} />
+        <UiButtonRow>
+          <f.submit @label="Send Email"/>
+          <UiButton @onClick={{fn this.previewRawEmail f.model}} @type="secondary">
+            Preview Email
+          </UiButton>
+          <UiCancelButton @onClick={{this.cancelSendEmailDialog}} />
+        </UiButtonRow>
       </Modal.footer>
     </ChForm>
   </ModalDialog>
@@ -282,6 +292,24 @@
     </ChForm>
   </ModalDialog>
 {{/if}}
+
+{{#if this.emailToPreview}}
+  <ModalDialog @title="Preview Email " @onEscape={{this.closePreviewEmailDialog}} as |modal|>
+    <modal.body>
+      <div class="border">
+        <iframe {{on-insert this.insertPreviewEmail}}
+          id="mail-preview-iframe"
+          class="mail-preview-iframe"
+          title="preview email">
+        </iframe>
+      </div>
+    </modal.body>
+    <modal.footer>
+      <UiCloseButton @onClick={{this.closePreviewEmailDialog}} />
+    </modal.footer>
+  </ModalDialog>
+{{/if}}
+
 
 {{#if this.isSubmitting}}
   <LoadingDialog>

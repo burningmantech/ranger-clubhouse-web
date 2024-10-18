@@ -6,7 +6,8 @@ import {
   STATUS_REJECT_UNQUALIFIED, STATUS_HOLD_RRN_CHECK,
   StatusLabels,
   WHY_VOLUNTEER_REVIEW_OKAY,
-  WHY_VOLUNTEER_REVIEW_PROBLEM
+  WHY_VOLUNTEER_REVIEW_PROBLEM,
+  ExperienceOptions, StatusesThatSendEmail
 } from "clubhouse/models/prospective-application";
 import {TYPE_VC_COMMENT} from "clubhouse/models/prospective-application-note";
 import {service} from '@ember/service';
@@ -31,6 +32,8 @@ export default class VcApplicationDetailsComponent extends Component {
 
   @tracked showStatusWithMessageDialog;
   @tracked showProblemReviewDialog;
+
+  experienceOptions = ExperienceOptions;
 
   @cached
   get eventYearOptions() {
@@ -187,7 +190,6 @@ export default class VcApplicationDetailsComponent extends Component {
     }
   }
 
-
   _setupToAskMessage(status, askForMessage = null, message = '') {
     this.showStatusWithMessageDialog = true;
     this.newStatus = status;
@@ -206,6 +208,11 @@ export default class VcApplicationDetailsComponent extends Component {
     }
   }
 
+  get doesStatusSendEmail() {
+    return StatusesThatSendEmail.includes(this.newStatus);
+
+  }
+
   @action
   cancelStatusMessageDialog() {
     this.showStatusWithMessageDialog = false;
@@ -218,6 +225,19 @@ export default class VcApplicationDetailsComponent extends Component {
     }
 
     await this._submitStatusUpdate(this.newStatus, this.askForMessage ? model.message : null);
+  }
+
+  @action
+  async previewEmailAction(model) {
+    const data = {
+      status: this.newStatus,
+    };
+
+    if (this.askForMessage) {
+      data.message = model.message;
+    }
+
+    this.args.previewEmail(data);
   }
 
   @action
