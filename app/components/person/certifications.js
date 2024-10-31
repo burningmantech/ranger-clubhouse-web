@@ -15,7 +15,7 @@ export default class PersonCertificationsComponent extends Component {
 
   @tracked editEntry = null;
   @tracked showEntry = null;
-  @tracked isLoading = false;
+  @tracked isLoading = true;
   @tracked certifications;
   @tracked personCertifications;
   @tracked certificationOptions;
@@ -30,24 +30,32 @@ export default class PersonCertificationsComponent extends Component {
   constructor() {
     super(...arguments);
 
-    this.canManage = this.session.hasRole([ ADMIN, CERTIFICATION_MGMT]);
+    this.canManage = this.session.hasRole([ADMIN, CERTIFICATION_MGMT]);
+    this._loadRecords();
+  }
 
-    this.isLoading = true;
+  async _loadRecords() {
     const {personId} = this.args;
-    this.store.query('person-certification', {person_id: personId}).then((certs) => {
+    try {
+      const certs = await this.store.query('person-certification', {person_id: personId});
       this.personCertifications = certs;
-      return this.ajax.request('certification').then(({certification}) => {
-        this.certifications = certification;
-        this.isLoading = false;
-        this.certificationOptions = certification.map((c) => [c.title, c.id]);
-        this.certificationOptions.unshift({id: null, title: 'Select Certification', disabled: true});
-      });
-    }).catch((response) => this.house.handleErrorResponse(response));
+      const {certification} = await this.ajax.request('certification');
+      this.certifications = certification;
+      this.certificationOptions = certification.map((c) => [c.title, c.id]);
+      this.certificationOptions.unshift({id: null, title: 'Select Certification', disabled: true});
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   @action
   newAction() {
-    this.editEntry = this.store.createRecord('person-certification', {person_id: this.args.personId});
+    this.editEntry = this.store.createRecord('person-certification', {
+      person_id: this.args.personId,
+      certification_id: this.certifications[0]?.id,
+    });
     this.frontBlob = null;
     this.backBlob = null;
   }
