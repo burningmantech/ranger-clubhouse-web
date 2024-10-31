@@ -32,7 +32,7 @@
       {{/if}}
     </NavbarMenuSection>
   {{/if}}
-  {{#if (or (has-role "admin" "edit-assets" "edit-slots") this.session.hasSurveyManagement)}}
+  {{#if (or (has-role "admin" "edit-assets" "edit-slots" "edit-swag") this.session.hasSurveyManagement)}}
     <NavbarMenuSection @section="Event Records">
       {{#if (has-role "admin" "edit-assets")}}
         <NavbarMenuItem @menu={{menu}} @route="ops.assets" @item="Assets"/>
