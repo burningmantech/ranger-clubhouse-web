@@ -92,14 +92,12 @@ const ALPHA_STEPS = [
               `<p>Please read "<a href="${milestones.alpha_shift_prep_link}" target="_blank" rel="noopener noreferrer">Becoming a Ranger: On-playa Alpha Shifts</a>"`
               + ` on the Ranger website.</p>Your Alpha shift starts ${dayjs(milestones.alpha_shift.begins).format('ddd MMM DD [@] HH:mm')}.`
               + `<p class="text-danger"><b>ARRIVE 30 MINUTES EARLY.</b> Late arrivals will be turned away.</p>`
-              + `<p>Alpha shifts are long 10+ hours. The first 2 hours are review, and practice. 6 hours are spent in
-                the field with Mentors. The last 2+ hours are Mentor evaluations and may involve a lot of waiting. (We
-                have a lot of Alphas to assess at the end of the day, and it takes time.)</p>`
+              + `<p>Alpha shifts are over 10 hours long. The first 2 hours are review and practice, followed by 6 hours of fieldwork alongside Mentors, with meal and rest breaks included. The final 2+ hours are for Mentor evaluations, which may require some waiting as we assess many Alphas at the end of the day. Thank you for your patience and commitment to the process!</p>`
               + `<p>Show up prepared with snacks and a meal, layered clothing, a hat, sunglasses, comfortable walking shoes,
             sunscreen, a water container (water and electrolytes are offered), a pen or pencil, a notebook, and, if
             attending a swing shift (2pm til midnight), a flashlight or headlamp. </p>`
               + `<p>Check-in at the Hat Rack located at Ranger HQ, 5:45 &amp; the Esplanade close to Center Camp.</p>`
-              + `If you know you won't be able to make your Alpha shift please email the Mentor Cadre or stop by Ranger HQ on playa.`),
+              + `If you are unable to make your Alpha shift, promptly notify the Mentor Cadre by email or visit Ranger HQ on playa.`),
             email: 'MentorEmail'
           };
         } else {

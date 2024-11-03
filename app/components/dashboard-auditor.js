@@ -3,11 +3,11 @@ import {service} from '@ember/service';
 import {setting} from 'clubhouse/utils/setting';
 import {htmlSafe} from '@ember/template';
 import {
-  ACTION_NEEDED,
+  ACTION_NEEDED, AFTER_EVENT,
   BLOCKED,
   COMPLETED,
   NOT_AVAILABLE,
-  OPTIONAL,
+  OPTIONAL, POST_EVENT,
   SKIP,
   URGENT
 } from "clubhouse/constants/dashboard";
@@ -41,7 +41,8 @@ export default class DashboardAuditorComponent extends Component {
   @service session;
 
   get isOffSeason() {
-    return this.args.milestones.period === 'after-event';
+    const {period} = this.args.milestones;
+    return period === AFTER_EVENT || period === POST_EVENT;
   }
 
   /**
@@ -92,6 +93,6 @@ export default class DashboardAuditorComponent extends Component {
   }
 
   get isNotUser() {
-    return this.session.userId != this.args.person.id;
+    return this.session.userId !== this.args.person.id;
   }
 }

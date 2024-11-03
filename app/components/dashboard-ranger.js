@@ -10,7 +10,7 @@ import {
   COMPLETED, DURING_EVENT,
   NOT_AVAILABLE,
   NOTE,
-  OPTIONAL,
+  OPTIONAL, POST_EVENT,
   SKIP,
   URGENT,
   WAITING
@@ -47,7 +47,7 @@ class StepGroup {
 const STEPS = [
   {
     name: 'BMID will not be printed',
-    skipPeriod: AFTER_EVENT,
+    skipPeriod: [POST_EVENT, AFTER_EVENT],
     immediate: true,
     check({milestones}) {
       const month = (new Date()).getMonth();
@@ -78,7 +78,7 @@ const STEPS = [
   DashboardStep.ATTEND_TRAINING,
   {
     name: 'Sign up for a Green Dot Mentee shift',
-    skipPeriod: AFTER_EVENT,
+    skipPeriod: [POST_EVENT, AFTER_EVENT],
     check({milestones}) {
       const {art_trainings: arts} = milestones;
       const gd = arts.find((a) => a.is_green_dot_mentee);
@@ -106,7 +106,7 @@ const STEPS = [
 
   {
     name: 'Attend & Pass a Green Dot Mentee shift',
-    skipPeriod: AFTER_EVENT,
+    skipPeriod: [POST_EVENT, AFTER_EVENT],
     check({milestones}) {
       const {art_trainings: arts} = milestones;
       const gd = arts.find((a) => a.is_green_dot_mentee);
@@ -135,7 +135,7 @@ const STEPS = [
 
   {
     name: 'Sign Up For & Attend Advanced Ranger Training (ART)',
-    skipPeriod: AFTER_EVENT,
+    skipPeriod: [POST_EVENT, AFTER_EVENT],
     check({milestones}) {
       const {art_trainings: arts} = milestones;
       if (!arts.length || !milestones.online_course_enabled || !milestones.trainings_available) {
@@ -170,7 +170,7 @@ const STEPS = [
 
   {
     name: 'Sign up for a Burn Weekend shift (highly recommended)',
-    skipPeriod: AFTER_EVENT,
+    skipPeriod: [POST_EVENT, AFTER_EVENT],
     check({milestones}) {
       if (milestones.burn_weekend_signup) {
         return {
@@ -216,7 +216,7 @@ const STEPS = [
 
   {
     name: 'Contact the Mentors to sign up for a Cheetah Cub shift',
-    skipPeriod: AFTER_EVENT,
+    skipPeriod: [POST_EVENT, AFTER_EVENT],
     check({milestones}) {
       if (!milestones.is_cheetah_cub) {
         return {result: SKIP};
@@ -236,7 +236,7 @@ const STEPS = [
 
   {
     name: 'Attend your Cheetah Cub shift',
-    skipPeriod: AFTER_EVENT,
+    skipPeriod: [POST_EVENT, AFTER_EVENT],
     check({milestones}) {
       if (!milestones.is_cheetah_cub) {
         return {result: SKIP};
@@ -257,7 +257,7 @@ const STEPS = [
   },
   {
     name: 'Fill out a Troubleshooter Mentor Survey',
-    period: DURING_EVENT,
+    period: [DURING_EVENT, POST_EVENT],
     check({milestones}) {
       if (!milestones.ts_mentor_worked) {
         return {result: SKIP};
@@ -272,7 +272,7 @@ const STEPS = [
   DashboardStep.TICKETING_CLOSED,
   {
     name: 'Sign the Sandman Affidavit',
-    skipPeriod: AFTER_EVENT,
+    skipPeriod: [ POST_EVENT, AFTER_EVENT],
     check({milestones}) {
       if (milestones.sandman_affidavit_signed) {
         return {result: COMPLETED};
@@ -324,7 +324,7 @@ const NON_RANGER_STEPS = [
 const AFTER_EVENT_NO_MORE_THINGS_STEP = {
   name: 'Watch Announce and Thank You!',
   result: NOTE,
-  message: htmlSafe("The Clubhouse has nothing for you to do at the moment. Watch Announce for next steps and additional information.<br><br>Thank you for your volunteering efforts, and hope to see you at the next event or Ranger gathering!"),
+  message: htmlSafe("While the Clubhouse has nothing for you to do at the moment, please watch Announce for next steps and additional information.<br><br>Thank you for your volunteering efforts, and hope to see you at the next event or Ranger gathering!"),
   isActive: true
 };
 
@@ -334,6 +334,19 @@ const BEFORE_EVENT_NO_MORE_THINGS_STEP = {
   result: ACTION_NEEDED,
   message: 'The Clubhouse has nothing for you to do at the moment.  Watch Announce for next steps and additional information.',
   isActive: true
+}
+
+function matchPeriod(actionPeriod, currentPeriod, doesNotEqual) {
+  if (!actionPeriod) {
+    return false;
+  }
+
+  if (doesNotEqual) {
+    return (Array.isArray(actionPeriod) ? !actionPeriod.includes(currentPeriod) : actionPeriod !== currentPeriod);
+
+  } else {
+    return (Array.isArray(actionPeriod) ? actionPeriod.includes(currentPeriod) : actionPeriod === currentPeriod);
+  }
 }
 
 export default class DashboardRangerComponent extends Component {
@@ -368,6 +381,7 @@ export default class DashboardRangerComponent extends Component {
   get stepGroups() {
     const groups = [];
     const isAfterEvent = (this.args.milestones.period === AFTER_EVENT);
+    const isPostEvent = (this.args.milestones.period === POST_EVENT);
     const {
       immediateSteps,
       steps,
@@ -377,10 +391,10 @@ export default class DashboardRangerComponent extends Component {
     if (immediateSteps.length) {
       groups.push(new StepGroup('IMMEDIATE ACTION REQUIRED', immediateSteps, true, true));
     } else if (!steps.length) {
-      steps.push(isAfterEvent ? AFTER_EVENT_NO_MORE_THINGS_STEP : BEFORE_EVENT_NO_MORE_THINGS_STEP);
+      steps.push((isPostEvent || isAfterEvent) ? AFTER_EVENT_NO_MORE_THINGS_STEP : BEFORE_EVENT_NO_MORE_THINGS_STEP);
     }
 
-    if (!isAfterEvent || steps.length) {
+    if (!isAfterEvent || !isPostEvent || steps.length) {
       const {period} = this.args.milestones;
       let title;
       switch (period) {
@@ -390,8 +404,11 @@ export default class DashboardRangerComponent extends Component {
         case DURING_EVENT:
           title = 'Event Action Items';
           break;
+        case AFTER_EVENT:
+          title = 'Off Season Action Items';
+          break;
         default:
-          title = 'After Event Action Items';
+          title = 'Post Event Action Items';
           break;
       }
       groups.push(new StepGroup(
@@ -419,8 +436,8 @@ export default class DashboardRangerComponent extends Component {
     const steps = [], immediateSteps = [], completed = [];
 
     checks.forEach((step) => {
-      if ((step.period && step.period !== period)
-        || (step.skipPeriod && step.skipPeriod === period)) {
+      if (matchPeriod(step.period, period, true)
+        || matchPeriod(step.skipPeriod, period, false)) {
         return;
       }
 

@@ -20,9 +20,9 @@ import {
   ACTION_NEEDED,
   AFTER_EVENT,
   BEFORE_EVENT,
-  COMPLETED,
+  COMPLETED, DURING_EVENT,
   NOT_AVAILABLE,
-  OPTIONAL,
+  OPTIONAL, POST_EVENT,
   SKIP,
   URGENT,
   WAITING
@@ -99,8 +99,8 @@ export const UPLOAD_PHOTO = {
       case 'missing':
         if (!photo.upload_enabled) {
           let message;
-          if (milestones.period === BEFORE_EVENT) {
-            message = 'Photo uploading has been disabled in preparation to have the BMIDs printed.'
+          if (milestones.period === BEFORE_EVENT || milestones.period === DURING_EVENT) {
+            message = 'Photo uploading has been disabled as we prepare to print the BMIDs.'
           } else {
             message = 'Photo uploading is disabled until early November so the Photo Wranglers have time to recover.'
           }
@@ -175,7 +175,7 @@ export const MISSING_BPGUID = {
 export const VERIFY_TIMESHEETS = {
   name: 'Verify timesheet entries and confirm entire timesheet as final (if done working)',
   immediate: true,
-  skipPeriod: BEFORE_EVENT,
+  skipPeriod: [BEFORE_EVENT, AFTER_EVENT],
   check({milestones}) {
     const {did_work, timesheets_unverified, timesheet_confirmed} = milestones;
     if (!did_work || (!timesheets_unverified && timesheet_confirmed)) {
@@ -212,7 +212,7 @@ export const VERIFY_TIMESHEETS = {
 };
 
 export const VERIFY_PERSONAL_INFO = {
-  skipPeriod: AFTER_EVENT,
+  skipPeriod: [POST_EVENT, AFTER_EVENT],
   name: 'Review and Update Personal Information',
   check({milestones, person, isPNV}) {
     if (milestones.has_reviewed_pi) {
@@ -253,7 +253,7 @@ export const VERIFY_PERSONAL_INFO = {
 
 export const ONLINE_COURSE = {
   //name: 'Read the Ranger Manual & Complete The Online Course',
-  skipPeriod: AFTER_EVENT,
+  skipPeriod: [POST_EVENT, AFTER_EVENT],
   check({milestones, isPNV, prevCompleted, person}) {
     let name = `Read the Ranger Manual & Complete The Online Course`;
     if (milestones.online_course_passed) {
@@ -310,7 +310,7 @@ export const ONLINE_COURSE = {
 
 export const SIGN_UP_FOR_TRAINING = {
   name: 'Sign up for In-Person Training',
-  skipPeriod: AFTER_EVENT,
+  skipPeriod: [POST_EVENT, AFTER_EVENT],
   check({milestones, isPNV, isAuditor}) {
     if (milestones.online_course_only) {
       return {result: SKIP};
@@ -361,7 +361,7 @@ export const SIGN_UP_FOR_TRAINING = {
 
 export const ATTEND_TRAINING = {
   name: 'Attend In-Person Training',
-  skipPeriod: AFTER_EVENT,
+  skipPeriod: [POST_EVENT, AFTER_EVENT],
   check({milestones, person, isPNV, isAuditor}) {
     if (milestones.online_course_only) {
       return {result: SKIP};
@@ -498,7 +498,7 @@ export const TAKE_ALPHA_SURVEY = {
 
 export const SIGN_UP_FOR_SHIFTS = {
   name: 'Sign up for shifts',
-  skipPeriod: AFTER_EVENT,
+  skipPeriod: [POST_EVENT, AFTER_EVENT],
 
   check({milestones, isPNV, isAuditor, person}) {
     const isNonRanger = (person.status === NON_RANGER);
@@ -550,7 +550,7 @@ export const SIGN_UP_FOR_SHIFTS = {
 
 export const SIGN_BEHAVIORAL_AGREEMENT = {
   name: 'Sign the Burning Man Behavioral Standards Agreement (optional)',
-  skipPeriod: AFTER_EVENT,
+  skipPeriod: [POST_EVENT, AFTER_EVENT],
   check({milestones, isPNV}) {
     if (milestones.behavioral_agreement) {
       return {result: isPNV ? COMPLETED : SKIP};
@@ -572,7 +572,7 @@ export const SIGN_BEHAVIORAL_AGREEMENT = {
 
 export const SIGN_MOTOR_POOL_PROTOCOL = {
   name: 'Sign the Ranger Motor Pool Protocol',
-  skipPeriod: AFTER_EVENT,
+  skipPeriod: [POST_EVENT, AFTER_EVENT],
   check({milestones, isPNV}) {
     const {mvr_eligible} = milestones;
     const name = `Sign the Ranger Motor Pool Protocol ${mvr_eligible ? '' : '(optional)'}`;
@@ -655,7 +655,7 @@ export const MVR_REQUEST = {
 
 export const VERIFY_TIMESHEETS_FINISHED = {
   name: 'Verify timesheet entries and confirm entire timesheet as correct',
-  skipPeriod: BEFORE_EVENT,
+  skipPeriod: [AFTER_EVENT, BEFORE_EVENT],
   check({milestones}) {
     const {did_work, timesheets_unverified, timesheet_confirmed} = milestones;
     if (!did_work || timesheets_unverified || !timesheet_confirmed) {
@@ -672,7 +672,7 @@ export const VERIFY_TIMESHEETS_FINISHED = {
 
 export const SIGN_RADIO_CHECKOUT_AGREEMENT = {
   name: 'Sign the Ranger Radio Checkout Agreement',
-  skipPeriod: AFTER_EVENT,
+  skipPeriod: [POST_EVENT, AFTER_EVENT],
   check({milestones, isPNV, person}) {
     if (milestones.asset_authorized) {
       return {result: COMPLETED};
@@ -780,7 +780,7 @@ function buildTickets(milestones, personId, house) {
 
 export const TICKETING_OPEN = {
   name: 'Claim Tickets, Vehicle Passes, and Setup Access Passes',
-  skipPeriod: AFTER_EVENT,
+  skipPeriod: [POST_EVENT, AFTER_EVENT],
   check({milestones, person, house}) {
     const period = milestones.ticketing_period;
 
@@ -832,7 +832,7 @@ export const TICKETING_CLOSED = {
 
 export const VEHICLE_REQUESTS = {
   name: 'Personal Vehicle Request Eligible',
-  skipPeriod: AFTER_EVENT,
+  skipPeriod: [POST_EVENT, AFTER_EVENT],
   check({milestones}) {
     if (!milestones.motorpool_agreement_available) {
       return {result: SKIP};
@@ -933,7 +933,7 @@ export const AFTER_EVENT_STATUS_ADVISORY = {
         name: 'Retired Status',
         email: 'VCEmail',
         result: ACTION_NEEDED,
-        message: htmlSafe("<p>Your status has been changed to <i>retired</i> because you have not rangered in 5 or more events.</p>" +
+        message: htmlSafe("<p>Your status has been changed to <i>retired</i> because you have not rangered in 5 or more consecutive events.</p>" +
           "<p>If you wish to volunteer with the Rangers next event, you will need to attend a full day's " +
           "In-Person Training, and walk a Cheetah Cub shift with a Mentor.</p><p>The Mentor Cadre will restore your active status at the end of the Cheetah Cub shift if they determine you are fit to resume rangering.</p>Contact the Volunteer Coordinators for more information.")
       };
@@ -943,7 +943,7 @@ export const AFTER_EVENT_STATUS_ADVISORY = {
         email: 'VCEmail',
         result: ACTION_NEEDED,
         message: htmlSafe(
-          `<p>Your status has been changed to <i>${person.status}</i> because you have not rangered in 3 or more events.<p>` +
+          `<p>Your status has been changed to <i>${person.status}</i> because you have not rangered in 3 or more consecutive events.<p>` +
           "<p>If you wish to volunteer with the Rangers next event, you will need to attend a full day's " +
           "In-Person Training, and work a non-training, non-mentee shift.</p><p>Your active status will be automatically restored upon completing a shift that is neither a training nor a mentee shift.</p> Contact the Volunteer Coordinators for more information.")
       };
