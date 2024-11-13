@@ -1,6 +1,7 @@
 import ClubhouseRoute from "clubhouse/routes/clubhouse-route";
 import {VOLUNTEER_COORDINATOR} from "clubhouse/constants/positions";
-import { NotFoundError } from '@ember-data/adapter/error';
+import {NotFoundError} from '@ember-data/adapter/error';
+import {schedule, later} from '@ember/runloop';
 
 export default class VcApplicationsRecordRoute extends ClubhouseRoute {
   async model({application_id}) {
@@ -26,12 +27,29 @@ export default class VcApplicationsRecordRoute extends ClubhouseRoute {
     controller.relatedApplications = related;
     controller.VCs = VCs;
 
+    /*
     if (application.isProcessingCallsign) {
       controller.initialTabId = 'handles';
-    } else if ((application.isStatusApproved && application.hasPersonalInfoIssues) || application.isStatusApprovedPiiIssue) {
+    } else if ((application.isStatusApproved && application.hasPersonalInfoIssues) || application.hasPersonalInfoIssue) {
       controller.initialTabId = 'personal-info';
     } else {
       controller.initialTabId = 'details';
+    }
+
+     */
+    let id;
+    if (application.isProcessingCallsign) {
+      id = 'handles';
+    } else if ((application.isStatusApproved && application.hasPersonalInfoIssues) || application.hasPersonalInfoIssue) {
+      id = 'personal-info';
+    } else {
+      id = 'details';
+    }
+
+    if (id) {
+      later(() => schedule('afterRender', () => {
+        this.house.scrollToElement(`#${id}`)
+      }), 100);
     }
   }
 }

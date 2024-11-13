@@ -8,7 +8,7 @@
 {{#if this.application.isBonked}}
   <UiAlert @type="danger" class="mb-2">
     {{fa-icon "ban" right=1}} Application has been bonked. Take no further action. Do not contact the individual unless
-    instructed to do so by the V.C. Cadre.
+    instructed to do so by the V.C. Cadre or the Personnel Managers.
   </UiAlert>
 {{/if}}
 
@@ -23,44 +23,41 @@
   </UiAlert>
 {{/if}}
 
+{{#if this.application.existingAccount}}
+  {{#if this.application.isStatusCreated}}
+    <UiAlert @type="success" @icon="check">
+      Application was approved, and an account created.
+      <PersonLink @person={{this.application.person}} @showStatus={{true}} />
+    </UiAlert>
+  {{else if this.application.isReturningApplicant}}
+    <UiAlert @type="info" @icon="hand-point-right">
+      Application belongs to a returning Past Prospective.
+      <PersonLink @person={{this.application.existingAccount}} @showStatus={{true}} />
+    </UiAlert>
+  {{else if this.application.wasUberbonkedPreviously}}
+    <UiAlert @type="danger" @icon="ban">
+      Applicant was Uberbonked in a prior year. Double-check the application, and Clubhouse
+      account.
+      <PersonLink @person={{this.application.existingAccount}} @showStatus={{true}} />
+    </UiAlert>
+  {{else if this.application.isReturningRanger}}
+    <UiAlert @type="danger" @icon="hand-point-right">
+      Application may to belong to a returning Ranger. Verify this is not a mistake.
+      <PersonLink @person={{this.application.existingAccount}} @showStatus={{true}} />
+    </UiAlert>
+  {{else}}
+    <UiAlert @type="warning" @icon="hand-point-right">
+      Application may be associated with an existing Clubhouse account.
+      <PersonLink @person={{this.application.existingAccount}} @showStatus={{true}} />
+    </UiAlert>
+  {{/if}}
+{{/if}}
 
-<div class="sticky-top bg-light-gray fs-5 align-middle border border-dark-gray border-opacity-50">
+<div class="sticky-top bg-light-gray fs-5 align-middle border border-dark-gray border-opacity-50 mb-2">
   {{#if this.notCurrentYear}}
     <div class="text-bg-warning p-2">
       {{fa-icon "exclamation" right=1}} You are viewing an application from a prior year.
     </div>
-  {{/if}}
-  {{#if this.application.existingAccount}}
-    {{#if this.application.isStatusCreated}}
-      <div class="text-success p-2">
-        {{fa-icon "check" right=1}} Application was approved. The Clubhouse account is
-        <PersonLink @person={{this.application.person}} @showStatus={{true}} />
-      </div>
-    {{else if this.application.isReturningApplicant}}
-      <div class="p-2">
-        {{fa-icon "hand-point-right" right=1}} Application belongs to a returning Past Prospective.
-        <PersonLink @person={{this.application.existingAccount}} @showStatus={{true}} />
-      </div>
-    {{else if this.application.wasUberbonkedPreviously}}
-      <div class="text-bg-danger p-2">
-        {{fa-icon "ban" right=1}} Applicant may have been Uberbonked. Double-check the application, and Clubhouse
-        account.
-        <PersonLink @person={{this.application.existingAccount}} @showStatus={{true}} />
-      </div>
-    {{else if this.application.isReturningRanger}}
-      <div class="text-danger p-2">
-        {{fa-icon "hand-point-right" right=1}} Application may to belong to a returning Ranger.
-        Verify this is not a mistake.
-        <PersonLink @person={{this.application.existingAccount}} @showStatus={{true}} />
-      </div>
-    {{else}}
-      <div class="p-2">
-        {{fa-icon "hand-point-right" right=1}} Application may be associated with an existing Clubhouse account.
-        However, the status is unknown. Double-check the application and account to verify this is not a
-        returning Ranger, nor a problematic individual.
-        <PersonLink @person={{this.application.existingAccount}} @showStatus={{true}} />
-      </div>
-    {{/if}}
   {{/if}}
   <div class="d-flex justify-content-between p-2">
     <div>
@@ -72,140 +69,86 @@
       <span class="ms-4"><MailTo @to={{this.application.email}} /></span>
     </div>
     <div>
-      <UiButton @size="sm" @type="secondary" @onClick={{this.openStatusDialog}} class="me-2">
-        Adjust Status
-      </UiButton>
-      <UiButton @onClick={{this.deleteApplication}} @type="secondary" @size="sm" class="me-2">
-        Delete Application
-      </UiButton>
-      <UiButton @onClick={{this.openSendEmailDialog}} @type="secondary" @size="sm">
+        <UiButton @onClick={{this.openSendEmailDialog}} @type="secondary" @size="sm">
         Send Email
       </UiButton>
     </div>
   </div>
-  <div class="small p-2">
-    {{#if this.isAssignedToMe}}
-      {{fa-icon "thumbs-up" right=1}} You are assigned to this application.
-    {{else if this.assignedToOther}}
-      <b class="text-danger">
-        {{fa-icon "hand" right=1}}
-        Assigned to {{this.application.assigned_person.callsign}}.
-      </b>
-    {{else if (not this.application.assigned_person_id)}}
-      Application is unassigned
-    {{/if}}
-    {{#unless this.isAssignedToMe}}
-      <a href class="mx-3" {{on-click this.assignToSelf}}>Assign To Self</a>
-    {{/unless}}
-    <a href class="mx-3" {{on-click this.openAssignDialog}}>Assign To VC</a>
-    {{#if this.application.assigned_person_id}}
-      <a href {{on-click this.unassignApplication}} class="ms-3">Clear Assignment</a>
-    {{/if}}
+  <div class="d-flex justify-content-between p-2">
+    <div>
+      {{#if this.isAssignedToMe}}
+        {{fa-icon "thumbs-up" right=1}} You are assigned to this application.
+      {{else if this.assignedToOther}}
+        <b class="text-danger">
+          {{fa-icon "hand" right=1}}
+          Assigned to {{this.application.assigned_person.callsign}}.
+        </b>
+      {{else if (not this.application.assigned_person_id)}}
+        Application is unassigned
+      {{/if}}
+      {{#unless this.isAssignedToMe}}
+        <a href class="mx-3" {{on-click this.assignToSelf}}>Assign To Self</a>
+      {{/unless}}
+      <a href class="mx-3" {{on-click this.openAssignDialog}}>Assign To VC</a>
+      {{#if this.application.assigned_person_id}}
+        <a href {{on-click this.unassignApplication}} class="ms-3">Clear Assignment</a>
+      {{/if}}
+    </div>
+    <div>
+      {{#if this.application.updated_by_person}}
+        Last updated at {{shift-format this.application.updated_by_person_at}}
+        by {{this.application.updated_by_person.callsign}}
+      {{else}}
+        <i>Application has not been updated yet.</i>
+      {{/if}}
+    </div>
+    <div>
+      Salesforce ID
+      <ExtLink @href="https://burningman.my.salesforce.com/{{this.application.salesforce_id}}">
+        {{this.application.salesforce_name}}
+      </ExtLink>
+    </div>
   </div>
 </div>
 
-<div class="my-2 d-flex justify-content-between">
-  <div>
-    {{#if this.application.updated_by_person}}
-      Last updated at {{shift-format this.application.updated_by_person_at}}
-      by {{this.application.updated_by_person.callsign}}
-    {{else}}
-      <i>Application has not been updated yet.</i>
-    {{/if}}
-  </div>
-  <div>
-    Salesforce record
-    <ExtLink @href="https://burningman.my.salesforce.com/{{this.application.salesforce_id}}">
-      {{this.application.salesforce_name}}
-    </ExtLink>
-  </div>
-</div>
+<Vc::ApplicationDetails @application={{this.application}}
+                        @previewEmail={{this.previewEmail}}
+/>
+<Vc::ApplicationHandles @application={{this.application}}
+                        @previewEmail={{this.previewEmail}}
+/>
+<Vc::ApplicationPersonalInfo @application={{this.application}}
+                             @onSubmit={{this.save}}
 
-<UiTab @customTabs={{true}} @initialTabId={{this.initialTabId}} as |tab|>
-  <UiTabCustomNav @tab={{tab}} as |nav|>
-    <nav.item @paneId="details" @icon={{if (eq this.initialTabId "details") "arrow-right"}}>
-      <div>
-        Details
-      </div>
-    </nav.item>
-    <nav.item @paneId="handles" @icon={{if (eq this.initialTabId "handles") "arrow-right"}}>
-      <div>
-        Handles
-      </div>
-    </nav.item>
-    <nav.item @paneId="personal-info" @icon={{if this.application.hasPersonalInfoIssues "circle-exclamation"}}>
-      <div>
-        Personal Info
-      </div>
-    </nav.item>
-    <nav.item @paneId="related">
-      <div>
-        Related Applications {{if this.relatedApplications (concat " (" this.relatedApplications.length ")")}}
-      </div>
-    </nav.item>
-    <nav.item @paneId="mail-log">
-      <div>
-        Mail Log ({{this.application.mail_logs.length}})
-      </div>
-    </nav.item>
-    <nav.item @paneId="audit-log">
-      <div>
-        Audit Log ({{this.application.audit_logs.length}})
-      </div>
-    </nav.item>
-    <nav.item @paneId="misc">
-      <div>
-        Misc
-      </div>
-    </nav.item>
-  </UiTabCustomNav>
-
-  <div class="tab-content">
-    <tab.pane @id="details">
-      <Vc::ApplicationDetails @application={{this.application}}
-                              @previewEmail={{this.previewEmail}}
-      />
-    </tab.pane>
-    <tab.pane @id="handles">
-      <Vc::ApplicationHandles @application={{this.application}}
-                              @previewEmail={{this.previewEmail}}
-      />
-    </tab.pane>
-    <tab.pane @id="personal-info">
-      <Vc::ApplicationPersonalInfo @application={{this.application}}
-                                   @onSubmit={{this.save}}
-
-      />
-    </tab.pane>
-    <tab.pane @id="related">
-      <Vc::ApplicationRelated @relatedApplications={{this.relatedApplications}} />
-    </tab.pane>
-    <tab.pane @id="mail-log">
-      <UiSection>
-        <:title>Mail Log</:title>
-        <:body>
-          <MailLogTable @logs={{this.application.mail_logs}} />
-        </:body>
-      </UiSection>
-    </tab.pane>
-    <tab.pane @id="audit-log">
-      <Vc::ApplicationAuditLog @application={{this.application}} />
-    </tab.pane>
-    <tab.pane @id="misc">
-      <UiSection>
-        <:title>Misc.</:title>
-        <:body>
-          <UiGridTable as |t|>
-            <t.label>BPGUID</t.label>
-            <t.column>{{this.application.bpguid}}</t.column>
-            <t.label>SFUID</t.label>
-            <t.column>{{this.application.sfuid}}</t.column>
-          </UiGridTable>
-        </:body>
-      </UiSection>
-    </tab.pane>
-  </div>
-</UiTab>
+/>
+<Vc::ApplicationRelated @relatedApplications={{this.relatedApplications}} />
+<UiSection>
+  <:title>Mail Log</:title>
+  <:body>
+    <MailLogTable @logs={{this.application.mail_logs}} />
+  </:body>
+</UiSection>
+<Vc::ApplicationAuditLog @application={{this.application}} />
+<UiSection>
+  <:title>Misc.</:title>
+  <:body>
+    <UiGridTable as |t|>
+      <t.label>BPGUID</t.label>
+      <t.column>{{this.application.bpguid}}</t.column>
+      <t.label>SFUID</t.label>
+      <t.column>{{this.application.sfuid}}</t.column>
+      <t.label>Actions</t.label>
+      <t.column>
+        <UiButton @size="sm" @type="secondary" @onClick={{this.openStatusDialog}} class="me-2">
+          Adjust Status
+        </UiButton>
+        <UiButton @onClick={{this.deleteApplication}} @type="secondary" @size="sm" class="me-2">
+          Delete Application
+        </UiButton>
+      </t.column>
+    </UiGridTable>
+  </:body>
+</UiSection>
 <div class="mt-3">
   <LinkTo @route="vc.applications.index" @query={{hash year=this.application.year}}>
     Back to {{this.application.year}} Prospective Applications Listing
@@ -275,6 +218,13 @@
     <ChForm @formId="assign" @formFor={{this.application}} @onSubmit={{this.submitStatus}} as |f|>
       <Modal.title>Adjust Application Status</Modal.title>
       <Modal.body>
+        <UiAlert @type="danger" @icon="hand">
+          This is considered an emergency fix feature. Please note:
+          <ul>
+            <li>No emails wil be sent when updating the status through this dialog.</li>
+            <li>Confirm with your fellow V.C.s that this action is appropriate.</li>
+          </ul>
+        </UiAlert>
         <p>
           <b class="text-danger">No emails will be sent when updating the status through this dialog.</b>
         </p>

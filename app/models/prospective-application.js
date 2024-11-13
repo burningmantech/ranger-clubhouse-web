@@ -26,7 +26,7 @@ export const ExperienceLabels = optionsToLabels(ExperienceOptions);
 
 export const STATUS_PENDING = 'pending';
 export const STATUS_APPROVED = 'approved';
-export const STATUS_APPROVED_PII_ISSUE = 'approved-pii-issue';
+export const STATUS_PII_ISSUE = 'pii-issue';
 export const STATUS_CREATED = 'created';
 
 export const STATUS_REASON_ISSUE = 'reason-issue';
@@ -53,7 +53,7 @@ export const WHY_VOLUNTEER_REVIEW_UNREVIEWED = 'unreviewed';
 
 export const StatusOptions = [
   ['Approved - Awaiting Account Creation', STATUS_APPROVED],
-  ['Approved - Personal Info Issue', STATUS_APPROVED_PII_ISSUE],
+  ['Personal Info Issue', STATUS_PII_ISSUE],
   ['Duplicate Application', STATUS_DUPLICATE],
   ['In Callsign Processing', STATUS_HANDLE_CHECK],
   ['Account Created', STATUS_CREATED],
@@ -74,7 +74,7 @@ export const StatusLabels = optionsToLabels(StatusOptions);
 
 export const StatusColors = {
   [STATUS_APPROVED]: 'text-bg-success',
-  [STATUS_APPROVED_PII_ISSUE]: 'text-bg-warning',
+  [STATUS_PII_ISSUE]: 'text-bg-warning',
   [STATUS_DUPLICATE]: 'text-bg-danger',
   [STATUS_HANDLE_CHECK]: 'text-bg-gray',
   [STATUS_CREATED]: 'text-bg-success',
@@ -99,14 +99,14 @@ export const WhyVolunteerReviewLabels = {
 
 export const StatusesThatSendEmail = [
   STATUS_APPROVED,
-  STATUS_APPROVED_PII_ISSUE,
+  STATUS_HOLD_QUALIFICATION_ISSUE,
+  STATUS_HOLD_RRN_CHECK,
   STATUS_MORE_HANDLES,
+  STATUS_PII_ISSUE,
   STATUS_REJECT_REGIONAL,
+  STATUS_REJECT_RETURNING_RANGER,
   STATUS_REJECT_TOO_YOUNG,
   STATUS_REJECT_UNQUALIFIED,
-  STATUS_HOLD_RRN_CHECK,
-  STATUS_HOLD_QUALIFICATION_ISSUE,
-  STATUS_REJECT_RETURNING_RANGER,
 ];
 
 
@@ -149,7 +149,7 @@ export const ColumnLabels = {
 export const BadHandleRegexps = [
   [/^\d\s*[.)-]?\s*\b/, 'Priority indicators detected (e.g., 1., 2), 3 -, etc) - remove the indicators.'],
   [/\branger\b/i, 'The word "Ranger" detected - remove the word.'],
-  [/[,."'!&-]/, 'Punctuation (commas, periods, quotes, ampersands, exclamations) detected - remove all punctuations. Dashes are okay IF its part of the actual handle'],
+    [/[,."'!()]/, 'Punctuation (commas, periods, quotes, exclamations, parentheses) detected - remove all punctuations. Dashes are okay IF its part of the actual handle'],
 ];
 export default class ProspectiveApplicationModel extends Model {
   @attr('string', {defaultVault: STATUS_PENDING}) status;
@@ -279,8 +279,8 @@ export default class ProspectiveApplicationModel extends Model {
     return this.status === STATUS_PENDING;
   }
 
-  get isStatusApprovedPiiIssue() {
-    return this.status === STATUS_APPROVED_PII_ISSUE
+  get hasPersonalInfoIssue() {
+    return this.status === STATUS_PII_ISSUE
   }
 
   get isBonked() {
@@ -292,32 +292,41 @@ export default class ProspectiveApplicationModel extends Model {
   }
 
   get experienceIssue() {
-    switch (this.experience) {
-      case EXPERIENCE_NONE:
-        return 'NO BRC OR REGIONAL EXPERIENCE';
-
-      case EXPERIENCE_BRC2:
-        if (this.qualifiedEvents.length < 2) {
-          return 'LESS THAN TWO BRC QUALIFIED EVENTS';
-        } else if (!this.hasEventYearWithinRange) {
-          return 'NO EVENT YEAR WITHIN THE LAST 10';
-        } else {
-          return null;
-        }
-      case EXPERIENCE_BRC1R1:
-        if (!this.qualifiedEvents.length) {
-          return 'NO BRC EVENTS';
-        } else if (!this.hasEventYearWithinRange) {
-          return 'NO EVENT YEAR WITHIN THE LAST 10';
-        } else if (isEmpty(this.regional_experience)) {
-          return 'NO REGIONAL EXP. LISTED';
-        }
-
-        return null;
-
-      default:
-        return null;
+    if (!this.qualifiedEvents.length) {
+      return 'NO QUALIFIED EVENT YEARS LISTED';
+    } else if (!this.hasEventYearWithinRange) {
+      return 'NO EVENT YEAR WITHIN THE LAST 10';
     }
+
+    return null;
+    /*
+          switch (this.experience) {
+          case EXPERIENCE_NONE:
+            return 'NO BRC OR REGIONAL EXPERIENCE';
+
+          case EXPERIENCE_BRC2:
+            if (this.qualifiedEvents.length < 2) {
+              return 'LESS THAN TWO BRC QUALIFIED EVENTS';
+            } else if (!this.hasEventYearWithinRange) {
+              return 'NO EVENT YEAR WITHIN THE LAST 10';
+            } else {
+              return null;
+            }
+          case EXPERIENCE_BRC1R1:
+            if (!this.qualifiedEvents.length) {
+              return 'NO BRC EVENTS';
+            } else if (!this.hasEventYearWithinRange) {
+              return 'NO EVENT YEAR WITHIN THE LAST 10';
+            } else if (isEmpty(this.regional_experience)) {
+              return 'NO REGIONAL EXP. LISTED';
+            }
+
+            return null;
+
+          default:
+            return null;
+        }
+     */
   }
 
   get isBRCExperienceOkay() {

@@ -1,8 +1,10 @@
 import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
 import {
+  STATUS_APPROVED,
   STATUS_CREATED,
   STATUS_PENDING,
-  STATUS_APPROVED, WHY_VOLUNTEER_REVIEW_PROBLEM, STATUS_APPROVED_PII_ISSUE,
+  STATUS_PII_ISSUE,
+  WHY_VOLUNTEER_REVIEW_PROBLEM,
 } from "clubhouse/models/prospective-application";
 import {cached, tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
@@ -12,7 +14,7 @@ const statusFilterDescription = {
   pending: 'awaiting V.C. review',
   handles: 'in callsign processing',
   held: 'on hold, awaiting applicant response, RRN reply, or further investigation needed',
-  'approved-pii-issues': 'approved, however, Personal Info issues must be resolved first before an account is created.',
+  'pii-issues': 'Personal Info issues must be resolved first before an account is created.',
   approved: 'approved, callsign assigned, awaiting account creation',
   created: 'application approved, Clubhouse account(s) created',
   rejected: 'rejected due to lack of experience, age, pre-bonk, uber-bonk, is returning Ranger, or is duplicate submission.',
@@ -38,7 +40,7 @@ export default class VcApplicationsIndexController extends ClubhouseController {
     ['Pending', 'pending'],
     ['Handle Processing', 'handles'],
     ['On Hold', 'held'],
-    ['Approved w/PII Issues', 'approved-pii-issues'],
+    ['Personal Info Issues', 'pii-issues'],
     ['Approved', 'approved'],
     ['Created Accounts', 'created'],
     ['Rejected', 'rejected'],
@@ -116,8 +118,8 @@ export default class VcApplicationsIndexController extends ClubhouseController {
       case 'held':
         apps = this.applications.filter((a) => a.hasHeldStatus);
         break;
-      case 'approved-pii-issues':
-        apps = this.applications.filter((a) => a.status === STATUS_APPROVED_PII_ISSUE);
+      case 'pii-issues':
+        apps = this.applications.filter((a) => a.status === STATUS_PII_ISSUE);
         break;
       case 'approved':
         apps = this.applications.filter((a) => a.status === STATUS_APPROVED);

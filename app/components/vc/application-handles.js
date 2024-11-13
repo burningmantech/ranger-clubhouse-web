@@ -5,7 +5,7 @@ import {service} from '@ember/service';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import {
   STATUS_APPROVED,
-  STATUS_APPROVED_PII_ISSUE,
+  STATUS_PII_ISSUE,
   STATUS_MORE_HANDLES
 } from "clubhouse/models/prospective-application";
 import {ReservationTypeLabels} from "clubhouse/models/handle-reservation";
@@ -33,6 +33,8 @@ export default class VcApplicationHandlesComponent extends Component {
   @tracked approvedHandleForm;
 
   @tracked showEditAndApproveCallsign;
+
+  @tracked extractedHandlesForm = null;
 
   moreHandlesValidation = {
     message: [validatePresence({presence: true, message: 'Please supply a reason / message.'})]
@@ -177,7 +179,7 @@ export default class VcApplicationHandlesComponent extends Component {
       this.isSubmitting = true;
       await this.ajax.post(`prospective-application/${application.id}/status`, {
         data: {
-          status: application.hasPersonalInfoIssues ? STATUS_APPROVED_PII_ISSUE : STATUS_APPROVED,
+          status: application.hasPersonalInfoIssues ? STATUS_PII_ISSUE : STATUS_APPROVED,
           approved_handle: model.approved_handle,
         }
       });
@@ -210,4 +212,37 @@ export default class VcApplicationHandlesComponent extends Component {
     return ReservationTypeLabels[type] ?? `Bug: ${type}`;
   }
 
+  @action
+  async extractHandles() {
+    try {
+      this.isSubmitting = true;
+      const { handles } = await this.ajax.request(`prospective-application/handles-extract`, { data: { text: this.args.application.handles}});
+      this.extractedHandlesForm = EmberObject.create({ handles: handles.join("\n") });
+    } catch(response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
+  }
+
+  @action
+  cancelExtractedHandles() {
+    this.extractedHandlesForm = null;
+  }
+
+  @action
+  async saveExtractedHandles(model) {
+    try {
+      this.isSubmitting = true;
+      const { application } = this.args;
+      application.handles = model.handles;
+      await application.save();
+      this.toast.success('The handles has been saved successfully.');
+      this.extractedHandlesForm = null;
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
+  }
 }
