@@ -18,66 +18,69 @@
         Unreviewed paragraph
       </UiSectionSubtitle>
     {{/if}}
-    <div class="row">
-      <div class="col-auto">
-        <b>Experience</b><br>
-        {{@application.experienceLabel}}
-        {{#if @application.isBRCExperienceOkay}}
-          <div class="text-success">BRC exp. appears to be okay</div>
-          {{#if @application.isBRC1R1}}
-            Regional exp. may need verification.
-          {{/if}}
-        {{/if}}
-        {{#if @application.experienceIssue}}
-          <div class="text-danger">{{@application.experienceIssue}}</div>
-        {{/if}}
-      </div>
-      <div class="col-auto">
-        <b>BRC Events</b><br>
+    <UiGridTable as |t|>
+      <t.label>
+        BRC Events
+      </t.label>
+      <t.column>
         {{#if @application.eventsList}}
-          {{pluralize @application.eventsList.length
-                      (if @application.hasPandemicEvents "total event" "event")}}
-          [{{year-range @application.eventsList}}]
+          {{#if @application.isBRCExperienceOkay}}
+            <UiBadge @type="success">{{fa-icon "check" right=1}} Experience is okay</UiBadge>
+          {{else}}
+            <UiBadge @type="danger">{{fa-icon "hand" right=1}} Experience issue</UiBadge>
+          {{/if}}
+          <div>
+            {{pluralize @application.eventsList.length
+                        (if @application.hasPandemicEvents "total event" "event")}}
+            [{{year-range @application.eventsList}}]
+          </div>
           {{#if @application.hasPandemicEvents}}
             <div class="text-danger">
-              Pandemic year(s) present.<br>
+              {{fa-icon "hand" right=1}} Pandemic year(s) selected.
             </div>
           {{/if}}
         {{else}}
-          <span class="text-danger">No events listed.</span>
+          <UiBadge @type="danger">{{fa-icon "hand" right=1}} No events selected</UiBadge>
         {{/if}}
-      </div>
-      <div class="col-auto">
-        <b>Is 18 Or Older?</b><br>
+      </t.column>
+      <t.label>Age</t.label>
+      <t.column>
         {{#if @application.is_over_18}}
-          <span class="text-success">{{fa-icon "check" right=1}} Yes</span>
+          <UiBadge @type="success">{{fa-icon "check" right=1}} Is 18 or older</UiBadge>
         {{else}}
-          <span class="text-danger">{{fa-icon "times" right=1}} NO - Individual is under 18.</span>
+          <UiBadge @type="danger">{{fa-icon "times" right=1}} Under 18</UiBadge>
         {{/if}}
-      </div>
-    </div>
-    <div class="row mt-2">
-      <div class="col-4">
-        <b>Known Rangers</b><br>
-        <PresentOrNot @value={{@application.known_rangers}} @empty="none stated"/>
-      </div>
-      <div class="col-4">
-        <b>Known Applicants</b><br>
-        <PresentOrNot @value={{@application.known_applicants}} @empty="none stated"/>
-      </div>
-    </div>
+      </t.column>
 
-    <div class="grid-table mt-1">
-      <div class="grid-table-label">
+      <t.label>
+        Known Rangers
+      </t.label>
+      <t.column>
+        <PresentOrNot @value={{@application.known_rangers}} @empty="none stated"/>
+      </t.column>
+      <t.label>
+        Known Applicants
+      </t.label>
+      <t.column>
+        <PresentOrNot @value={{@application.known_applicants}} @empty="none stated"/>
+      </t.column>
+      <t.label>
         Why Ranger?
-      </div>
-      <div>
+      </t.label>
+      <t.column>
         {{#if (eq @application.why_volunteer_review 'okay')}}
-          <span class="text-success">{{fa-icon "check" right=1}} Paragraph is okay</span>
+          <UiBadge @type="success">
+            {{fa-icon "check" right=1}} paragraph okay
+          </UiBadge>
+          <span class="text-success"></span>
         {{else if (eq @application.why_volunteer_review 'problem')}}
-          <span class="text-danger">{{fa-icon "ban" right=1}} Problem paragraph</span>
+          <UiBadge @type="danger">
+            {{fa-icon "ban" right=1}} problem paragraph
+          </UiBadge>
         {{else}}
-          <span>{{fa-icon "question" right=1}} Unreviewed paragraph</span>
+          <UiBadge @type="warning">
+            {{fa-icon "question" right=1}} unreviewed paragraph
+          </UiBadge>
         {{/if}}
         {{#if @application.reviewed_at}}
           <span class="ms-2 text-muted">
@@ -102,33 +105,38 @@
             Mark As Problem
           </UiButton>
         {{/if}}
-      </div>
-      <div class="grid-table-label">Regional Experience</div>
-      <div>
+      </t.column>
+      <t.label>Regional Experience</t.label>
+      <t.column>
         {{#if @application.regional_experience}}
           {{nl2br @application.regional_experience}}
         {{else}}
           <i>none stated</i>
         {{/if}}
-      </div>
-      <div class="grid-table-label">Comments</div>
-      <div>
+      </t.column>
+      <t.label>Comments</t.label>
+      <t.column>
         <Vc::ApplicationNotes @application={{@application}} @isComment={{true}} />
-      </div>
+      </t.column>
 
-      <div class="grid-table-label">Unified Flagging Notes</div>
-      <div>
+      <t.label>Unified Flagging Notes</t.label>
+      <t.column>
         <Vc::ApplicationNotes @application={{@application}} @isComment={{false}} />
-      </div>
-      <div class="grid-table-label">Actions</div>
-      <div class="ui-button-row">
+      </t.column>
+      <t.label>Actions</t.label>
+      <t.column class="ui-button-row">
+        <UiButton @type="secondary" @size="sm" @onClick={{this.approveForCallsignProcessing}}>
+          Approve for Callsign Processing
+        </UiButton>
         <UiDropdownButton @label="Reject Application" as |dd|>
           <dd.item @onSelect={{this.rejectQualification}}>
             Lacking Event Experience
           </dd.item>
+          {{!--
           <dd.item @onSelect={{this.rejectRegional}}>
             Failed Regional Verification
           </dd.item>
+          --}}
           <dd.item @onSelect={{this.rejectTooYoung}}>
             Too Young (&lt; 18 years old)
           </dd.item>
@@ -142,20 +150,19 @@
             Returning Ranger
           </dd.item>
         </UiDropdownButton>
+        {{!--
         <UiButton @type="secondary" @size="sm" @onClick={{this.requestRRNCheck}}>Request RRN Check</UiButton>
+        --}}
         <UiDropdownButton @label="Hold Application" as |dd|>
           <dd.item @onSelect={{this.whyRangerIssue}}>
             Why Ranger Answer Issue
           </dd.item>
           <dd.item @onSelect={{this.qualificationIssue}}>
-            Ask for Qualification Confirmation
+            Ask for Experience Confirmation
           </dd.item>
         </UiDropdownButton>
-        <UiButton @type="secondary" @size="sm" @onClick={{this.approveForCallsignProcessing}}>
-          Approve for Callsign Processing
-        </UiButton>
-      </div>
-    </div>
+      </t.column>
+    </UiGridTable>
   </:view>
   <:edit as |f|>
     <FormRow>
