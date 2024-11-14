@@ -14,7 +14,7 @@
     {{#if this.missingRequestPendingCount}}
       <UiAlert @icon="arrow-right" @type="warning">
         {{pluralize this.missingRequestPendingCount "Missing Timesheet Entry Request"}} requires attention.
-          Jump to <a href="#missing-requests">Missing Timesheet Entry Requests</a>
+        Jump to <a href="#missing-requests">Missing Timesheet Entry Requests</a>
       </UiAlert>
     {{/if}}
 
@@ -30,14 +30,18 @@
           {{this.person.callsign}} has not yet confirmed the {{this.year}} timesheet is correct.
         </UiAlert>
       {{/if}}
-      {{#if this.canForceConfirmation}}
-        <p>
-          As a Tech Ninja, you may {{if this.timesheetInfo.timesheet_confirmed "un-confirm" "confirm"}} the timesheet.
-          <UiButton @onClick={{this.confirmTimesheetAction}} @type="secondary" @size="sm">
-            {{if this.timesheetInfo.timesheet_confirmed "Un-Confirm" "Confirm"}} Timesheet
-          </UiButton>
-        </p>
-      {{/if}}
+    {{/if}}
+    {{#if this.session.isAdmin}}
+      <div class="d-flex justify-content-end mb-2">
+        <div>
+          <UiButtonRow>
+            <UiButton @onClick={{this.confirmTimesheetAction}} @type="secondary" @size="sm">
+              {{if this.timesheetInfo.timesheet_confirmed "Un-Confirm" "Confirm"}} Timesheet
+            </UiButton>
+            <Person::TimesheetBackfill @person={{this.person}} />
+          </UiButtonRow>
+        </div>
+      </div>
     {{/if}}
     {{#if (lt this.year 2008)}}
       <p class="text-danger">

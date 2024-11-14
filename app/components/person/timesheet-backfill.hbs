@@ -1,0 +1,31 @@
+{{#if this.session.isAdmin}}
+  <UiButton @type="secondary" @size="sm" @onClick={{this.openDialog}}>
+    Back Fill Service Years
+  </UiButton>
+{{/if}}
+
+{{#if this.yearsForm}}
+  <ModalDialog @onEscape={{this.cancelDialog}} as |Modal|>
+    <ChForm @formFor={{this.yearsForm}} @formId="years" @onSubmit={{this.submitYears}} as |f|>
+      <Modal.title>Select Years To Back Fill</Modal.title>
+      <Modal.body>
+        <p>
+          For each selected year, a single Dirt timesheet entry will be created with an on-duty time of Jan 1st at
+          12:00:00 and an off-duty time of Jan 1st at 12:01:00. Any year that already has any timesheet entries,
+          regardless of position, will be skipped.
+        </p>
+        <FormRow>
+          <f.checkboxGroup @name="years" @label="Years" @options={{this.yearOptions}} />
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @align="start">
+        <f.submit @label="Submit"/>
+        <UiCancelButton @onClick={{this.cancelDialog}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog/>
+{{/if}}
