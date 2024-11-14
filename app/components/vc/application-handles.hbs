@@ -67,23 +67,30 @@
           <table>
             <tbody>
             {{#each @application.screened_handles as |handle|}}
-              <tr class="mb-1 highlight-hover">
-                <td class="p-1">
+              <tr class="mb-1 highlight-hover ">
+                <td class="p-1 {{if handle.is_applicant "text-success fw-bold"}}">
+                  {{#if handle.existing_person}}
+                    {{#if handle.is_applicant}}
+                      {{fa-icon "check" right=1}}
+                    {{else}}
+                      {{fa-icon "ban" right=1 }}
+                    {{/if}}
+                  {{/if}}
                   {{handle.handle}}
                 </td>
                 {{#if (or handle.reserved_handles handle.existing_person)}}
                   <td colspan="2" class="p-1">
                     {{#if handle.existing_person}}
-                      {{#if handle.is_applicant1}}
+                      {{#if handle.is_applicant}}
                         <UiBadge @type="warning">
                           already assigned to this applicant
                         </UiBadge>
                       {{else}}
-                        <UiBadge @type="warning">
+                        <UiBadge @type="danger">
                           taken by existing account
                         </UiBadge>
+                        <PersonLink @person={{handle.existing_person}} @showStatus={{true}} />
                       {{/if}}
-                      <PersonLink @person={{handle.existing_person}} @showStatus={{true}} />
                     {{else if handle.reserved_handles}}
                       Conflicts with reserved handles / terms:
                       {{#each handle.reserved_handles as |reserved idx|}}
@@ -241,7 +248,8 @@
       <Modal.body>
         {{#if @application.isStatusCreated}}
           <UiAlert @type="danger">
-            {{fa-icon "hand-point-right" right=1}} Account has been created. Updating the callsign here will not update
+            {{fa-icon "hand-point-right" right=1}} Account has been created. Updating the callsign here will not
+            update
             the Clubhouse account.
           </UiAlert>
         {{/if}}
