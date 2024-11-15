@@ -41,10 +41,11 @@ export default class VcApplicationsIndexController extends ClubhouseController {
     ['Handle Processing', 'handles'],
     ['On Hold', 'held'],
     ['Personal Info Issues', 'pii-issues'],
-    ['Approved', 'approved'],
+    ['Personal Info Issues', 'pii-issues'],
     ['Created Accounts', 'created'],
     ['Rejected', 'rejected'],
     ['Why Ranger Problems', 'why-ranger'],
+    ['Duplicate', 'duplicate'],
   ];
 
 
@@ -132,6 +133,9 @@ export default class VcApplicationsIndexController extends ClubhouseController {
         break;
       case 'why-ranger':
         apps = this.applications.filter((a) => a.why_volunteer_review === WHY_VOLUNTEER_REVIEW_PROBLEM);
+        break;
+      case 'duplicate':
+        apps = this.applications.filter((a) => a.isStatusDuplicate);
         break;
       default:
         apps = this.applications;

@@ -7,7 +7,7 @@ import {
   StatusLabels,
   WHY_VOLUNTEER_REVIEW_OKAY,
   WHY_VOLUNTEER_REVIEW_PROBLEM,
-  ExperienceOptions, StatusesThatSendEmail
+  ExperienceOptions, StatusesThatSendEmail, STATUS_DUPLICATE
 } from "clubhouse/models/prospective-application";
 import {TYPE_VC_COMMENT} from "clubhouse/models/prospective-application-note";
 import {service} from '@ember/service';
@@ -144,6 +144,11 @@ export default class VcApplicationDetailsComponent extends Component {
   @action
   rejectUberbonk() {
     this._setupToAskMessage(STATUS_REJECT_UBERBONKED);
+  }
+
+  @action
+  rejectDuplicateApplication() {
+    this._setupToAskMessage(STATUS_DUPLICATE);
   }
 
   @action

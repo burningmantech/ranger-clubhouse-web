@@ -67,7 +67,7 @@ export const StatusOptions = [
   ['Rejected - Uberbonked', STATUS_REJECT_UBERBONKED],
   ['Rejected - Lacking Event Experience', STATUS_REJECT_UNQUALIFIED],
   ['Rejected - Returning Ranger', STATUS_REJECT_RETURNING_RANGER],
-  ['Awaiting RRN Verification', STATUS_HOLD_RRN_CHECK],
+  //['Awaiting RRN Verification', STATUS_HOLD_RRN_CHECK],
 ];
 
 export const StatusLabels = optionsToLabels(StatusOptions);
@@ -149,7 +149,7 @@ export const ColumnLabels = {
 export const BadHandleRegexps = [
   [/^\d\s*[.)-]?\s*\b/, 'Priority indicators detected (e.g., 1., 2), 3 -, etc) - remove the indicators.'],
   [/\branger\b/i, 'The word "Ranger" detected - remove the word.'],
-    [/[,."'!()]/, 'Punctuation (commas, periods, quotes, exclamations, parentheses) detected - remove all punctuations. Dashes are okay IF its part of the actual handle'],
+  [/[,."'!()]/, 'Punctuation (commas, periods, quotes, exclamations, parentheses) detected - remove all punctuations. Dashes are okay IF its part of the actual handle'],
 ];
 export default class ProspectiveApplicationModel extends Model {
   @attr('string', {defaultVault: STATUS_PENDING}) status;

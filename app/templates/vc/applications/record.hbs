@@ -74,7 +74,7 @@
       </UiButton>
     </div>
   </div>
-  <div class="d-flex justify-content-between p-2">
+  <div class="d-flex justify-content-between p-2 small">
     <div>
       {{#if this.isAssignedToMe}}
         {{fa-icon "thumbs-up" right=1}} You are assigned to this application.
@@ -96,7 +96,7 @@
     </div>
     <div>
       {{#if this.application.updated_by_person}}
-        Last updated at {{shift-format this.application.updated_by_person_at}}
+        Updated at {{shift-format this.application.updated_by_person_at}}
         by {{this.application.updated_by_person.callsign}}
       {{else}}
         <i>Application has not been updated yet.</i>
