@@ -330,16 +330,7 @@ export default class ProspectiveApplicationModel extends Model {
   }
 
   get isBRCExperienceOkay() {
-    switch (this.experience) {
-      case EXPERIENCE_BRC1R1:
-        return this.qualifiedEvents.length > 0 && this.hasEventYearWithinRange;
-
-      case EXPERIENCE_BRC2:
-        return this.qualifiedEvents.length >= 2 && this.hasEventYearWithinRange;
-
-      default:
-        return false;
-    }
+    return this.qualifiedEvents.length > 0 && this.hasEventYearWithinRange;
   }
 
   get handlesList() {

@@ -35,12 +35,14 @@ export default class VcApplicationsIndexController extends ClubhouseController {
   @tracked nameFilter = 'all';
 
   @tracked statusFilter = 'pending';
+  @tracked ageFilter = 'all';
+
+  @tracked experienceFilter = 'all';
 
   statusFilterOptions = [
     ['Pending', 'pending'],
     ['Handle Processing', 'handles'],
     ['On Hold', 'held'],
-    ['Personal Info Issues', 'pii-issues'],
     ['Personal Info Issues', 'pii-issues'],
     ['Created Accounts', 'created'],
     ['Rejected', 'rejected'],
@@ -48,6 +50,17 @@ export default class VcApplicationsIndexController extends ClubhouseController {
     ['Duplicate', 'duplicate'],
   ];
 
+  ageFilterOptions = [
+    ['All', 'all'],
+    ['Is >= 18', 'over-18'],
+    ['Is < 18 ', 'young']
+  ];
+
+  experienceFilterOptions = [
+    [ 'All', 'all'],
+    ['Has BRC exp.', 'qualified'],
+    ['No BRC exp.', 'unqualified'],
+  ];
 
   get notCurrentYear() {
     return +this.year !== this.house.currentYear();
@@ -146,12 +159,32 @@ export default class VcApplicationsIndexController extends ClubhouseController {
         // no change
         break;
       case 'unassigned':
-        return apps.filter((a) => !a.assigned_person_id);
+        apps = apps.filter((a) => !a.assigned_person_id);
+        break;
       default: {
         const personId = +this.assignedToFilter;
         apps = apps.filter((a) => a.assigned_person_id === personId);
         break;
       }
+    }
+
+    switch (this.ageFilter) {
+      case 'over-18':
+        apps = apps.filter((a) => a.is_over_18);
+        break;
+      case 'young':
+        apps = apps.filter((a) => !a.is_over_18);
+        break;
+    }
+
+    switch (this.experienceFilter) {
+      case 'qualified':
+        apps = apps.filter((a) => a.isBRCExperienceOkay);
+        break;
+
+      case 'unqualified':
+        apps = apps.filter((a) => !a.isBRCExperienceOkay);
+        break;
     }
 
     if (this.nameFilter === 'all') {
