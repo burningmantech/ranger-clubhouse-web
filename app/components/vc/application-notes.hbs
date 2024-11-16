@@ -1,13 +1,11 @@
 {{#each this.notes as |note|}}
   <p>
     {{shift-format note.created_at}}
-    <span class="ms-2">
-      {{#if note.person}}
-        by {{note.person.callsign}}
-      {{else}}
-        <i>imported from Salesforce</i>
-      {{/if}}
-    </span>
+    {{#if note.person}}
+      by {{note.person.callsign}}
+    {{else}}
+      <i>imported from Salesforce</i>
+    {{/if}}
     <a href {{on-click this.deleteNote note}} class="ms-2">delete</a>
     <a href {{on-click this.openDialog note}} class="ms-2">edit</a>
     <br>
@@ -35,7 +33,8 @@
       <Modal.body>
         {{#if (and @application.isStatusCreated (not @isComment))}}
           <UiAlert @type="danger">
-            {{fa-icon "triangle-exclamation" right=1}} Because the account has been created, any notes entered will here NOT
+            {{fa-icon "triangle-exclamation" right=1}} Because the account has been created, any notes entered will here
+            NOT
             be recorded into the Unified Flagging system.
           </UiAlert>
         {{/if}}

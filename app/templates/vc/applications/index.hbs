@@ -12,13 +12,15 @@
 {{/if}}
 
 {{#if this.applications}}
-  <FormRow class="mb-3">
+  <FormRow class="mb-3 small">
     <FormLabel @auto={{true}}>Status</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="statusFilter"
                       @value={{this.statusFilter}}
                       @options={{this.statusFilterOptions}}
-                      @onChange={{set-value this 'statusFilter'}} />
+                      @onChange={{set-value this 'statusFilter'}}
+                      @fieldSize="sm"
+      />
     </div>
 
     <FormLabel @auto={{true}}>Assigned To</FormLabel>
@@ -26,15 +28,39 @@
       <ChForm::Select @name="assignedTo"
                       @value={{this.assignedToFilter}}
                       @options={{this.assignedOptions}}
-                      @onChange={{set-value this 'assignedToFilter'}} />
+                      @onChange={{set-value this 'assignedToFilter'}}
+                      @fieldSize="sm"
+
+      />
     </div>
-    <FormLabel @auto={{true}}>Last Name Filter</FormLabel>
+    <FormLabel @auto={{true}}>Last Name</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="nameFilter"
                       @value={{this.nameFilter}}
                       @options={{this.nameFilterList}}
-                      @onChange={{set-value this 'nameFilter'}} />
+                      @onChange={{set-value this 'nameFilter'}}
+                      @fieldSize="sm"
+      />
     </div>
+    <FormLabel @auto={{true}}>Age</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="ageFilter"
+                      @value={{this.ageFilter}}
+                      @options={{this.ageFilterOptions}}
+                      @onChange={{set-value this 'ageFilter'}}
+                      @fieldSize="sm"
+      />
+    </div>
+    <FormLabel @auto={{true}}>BRC Exp</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="experienceFilter"
+                      @value={{this.experienceFilter}}
+                      @options={{this.experienceFilterOptions}}
+                      @onChange={{set-value this 'experienceFilter'}}
+                      @fieldSize="sm"
+      />
+    </div>
+
   </FormRow>
 
 
