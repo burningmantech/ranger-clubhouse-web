@@ -30,6 +30,9 @@ export default class AssetModel extends Model {
   @attr('number') year;
   @attr('string', {readOnly: true}) created_at;
 
+  @attr('string') expires_on;
+  @attr('boolean', { readOnly: true}) has_expired;
+
   get isRadio() {
     return this.type === TYPE_RADIO;
   }

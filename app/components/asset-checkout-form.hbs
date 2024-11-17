@@ -32,6 +32,17 @@
         Show Asset History
       </UiButton>
     </div>
+  {{else if this.assetExpired}}
+    <ModalDialog @onEscape={{this.closeExpiredDialog}} as |Modal|>
+      <Modal.title>Asset Has Expired</Modal.title>
+      <Modal.body>
+        Asset {{this.assetExpired.barcode}} has expired and should not be handed out. Please place it
+        in the designated pile for return to the vendor.
+      </Modal.body>
+      <Modal.footer>
+        <UiCloseButton @onClick={{this.closeExpiredDialog}} />
+      </Modal.footer>
+    </ModalDialog>
   {{else}}
     <br>
   {{/if}}

@@ -17,6 +17,8 @@ export default class AssetCheckoutFormComponent extends Component {
   @tracked isSubmitting = false;
   @tracked showHistory = false;
 
+  @tracked assetExpired = null;
+
   constructor() {
     super(...arguments);
 
@@ -33,6 +35,7 @@ export default class AssetCheckoutFormComponent extends Component {
   clearErrors() {
     this.barcodeNotFound = false;
     this.barcodeCheckedOut = null;
+    this.assetExpired = null;
   }
 
   /**
@@ -74,6 +77,8 @@ export default class AssetCheckoutFormComponent extends Component {
           this.barcodeCheckedOut = result;
           this.barcodeCheckedOut.barcode = barcode;
           break;
+        case 'expired':
+          this.assetExpired = result;
       }
     } catch (response) {
       this.house.handleErrorResponse(response)
@@ -116,4 +121,12 @@ export default class AssetCheckoutFormComponent extends Component {
     this.modal.info('Asset not checked out', 'A barcode was entered, yet was not checked out. Either complete the check out process, or blank the barcode field before clicking on another tab.');
   }
 
+  /**
+   * Close up the expired asset dialog
+   */
+
+  @action
+  closeExpiredDialog() {
+    this.assetExpired = null;
+  }
 }
