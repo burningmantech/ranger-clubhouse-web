@@ -189,17 +189,23 @@ export default class OpsAssetsController extends ClubhouseController {
         perm_assign: model.perm_assign,
         category: model.category,
         year: model.year,
+        expires_on: model.expires_on,
       });
 
       try {
         await record.save();
-        await this.assets.update();
       } catch (response) {
         this.house.handleErrorResponse(response);
         this.isSubmitting = false;
         this.creatingBarcode = null;
         return;
       }
+    }
+
+    try {
+      await this.assets.update();
+    } catch (response) {
+      this.house.handleErrorResponse(response);
     }
 
     this.isSubmitting = false;

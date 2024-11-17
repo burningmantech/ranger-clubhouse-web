@@ -131,9 +131,9 @@
                     @size={{4}}
                     @maxlength={{4}}
             />
-          </FormRow>
-          <FormRow>
-            <f.datetime @name="expires_on" @dateOnly={{true}} @label="Expires On (optional)"/>
+            <f.datetime @name="expires_on"
+                        @dateOnly={{true}}
+                        @label="Expires On (optional)"/>
           </FormRow>
           <FormRow>
             <f.textarea @name="notes"
@@ -158,11 +158,13 @@
           {{#if this.isSubmitting}}
             <LoadingIndicator/>
           {{/if}}
-          <div class="ms-auto">
-            <UiButton @type="danger" @onClick={{this.deleteAsset}} @disabled={{this.isSubmitting}}>
-              {{fa-icon "trash" right=1}} Delete
-            </UiButton>
-          </div>
+          {{#unless this.entry.isNew}}
+            <div class="ms-auto">
+              <UiButton @type="danger" @onClick={{this.deleteAsset}} @disabled={{this.isSubmitting}}>
+                {{fa-icon "trash" right=1}} Delete
+              </UiButton>
+            </div>
+          {{/unless}}
         </Modal.footer>
       </ChForm>
     </ModalDialog>
