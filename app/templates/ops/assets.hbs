@@ -5,7 +5,7 @@
               @skipPandemic={{true}}
               @onChange={{set-value this 'year'}} />
   <FormRow>
-    <FormLabel @auto={{true}}>Type Filter</FormLabel>
+    <FormLabel @auto={{true}}>Type</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="typeFilter"
                       @value={{this.typeFilter}}
@@ -13,12 +13,19 @@
                       @onChange={{set-value this 'typeFilter'}}
       />
     </div>
-    <FormLabel @auto={{true}}>Description Filter</FormLabel>
+    <FormLabel @auto={{true}}>Description</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="descriptionFilter"
                       @value={{this.descriptionFilter}}
                       @options={{this.descriptionOptions}}
                       @onChange={{set-value this 'descriptionFilter'}} />
+    </div>
+    <FormLabel @auto={{true}}>Expired?</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="expireFilter"
+                      @value={{this.expireFilter}}
+                      @options={{this.expireFilterOptions}}
+                      @onChange={{set-value this 'expireFilter'}} />
     </div>
     <FormLabel @auto={{true}}>Action</FormLabel>
     <div class="col-auto">
@@ -26,46 +33,63 @@
     </div>
   </FormRow>
 
-  Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}
-  <UiTable>
-    <thead>
-    <tr>
-      <th>Barcode</th>
-      <th>Type</th>
-      <th>Description</th>
-      <th>Assigned</th>
-      <th>Actions</th>
-    </tr>
-    </thead>
+  <UiSection>
+    <:title> Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}</:title>
+    <:actions>
+      <UiExportToCSVButton @onClick={{this.exportToCSV}} @size="sm"/>
+    </:actions>
+    <:body>
+      <UiTable>
+        <thead>
+        <tr>
+          <th>Barcode</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Assigned</th>
+          <th>Expires On</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
 
-    <tbody>
-    {{#each this.viewAssets key="id" as |asset|}}
-      <tr>
-        <td>{{asset.barcode}}</td>
-        <td>{{asset.typeLabel}}</td>
-        <td>
-          <PresentOrNot @value={{asset.description}} @empty="-"/>
-        </td>
-        <td class="text-center">{{asset.assignmentLabel}}</td>
-        <td>
-          <UiButton @type="secondary" @size="sm" @onClick={{fn this.assetHistoryAction asset}}>
-            {{fa-icon "rectangle-list" right=1}} History
-          </UiButton>
-           <UiButton @size="sm" @onClick={{fn this.editAsset asset}}>
-            {{fa-icon "edit" right=1}} Edit
-          </UiButton>
-        </td>
-      </tr>
-    {{else if this.assets}}
-      <tr>
-        <td colspan="5" class="text-danger">No assets matched.</td>
-      </tr>
-    {{else}}
-      <td colspan="5" class="text-danger">No assets were found for {{this.year}}?!?</td>
-    {{/each}}
-    </tbody>
-  </UiTable>
-
+        <tbody>
+        {{#each this.viewAssets key="id" as |asset|}}
+          <tr>
+            <td>{{asset.barcode}}</td>
+            <td>{{asset.typeLabel}}</td>
+            <td>
+              <PresentOrNot @value={{asset.description}} @empty="-"/>
+            </td>
+            <td class="text-center">{{asset.assignmentLabel}}</td>
+            <td>
+              {{#if asset.expires_on}}
+                {{ymd-format asset.expires_on}}
+                {{#if asset.has_expired}}
+                  <UiBadge @type="warning" class="ms-1">expired</UiBadge>
+                {{/if}}
+              {{else}}
+                -
+              {{/if}}
+            </td>
+            <td>
+              <UiButton @type="secondary" @size="sm" @onClick={{fn this.assetHistoryAction asset}}>
+                {{fa-icon "rectangle-list" right=1}} History
+              </UiButton>
+              <UiButton @size="sm" @onClick={{fn this.editAsset asset}}>
+                {{fa-icon "edit" right=1}} Edit
+              </UiButton>
+            </td>
+          </tr>
+        {{else if this.assets}}
+          <tr>
+            <td colspan="5" class="text-danger">No assets matched.</td>
+          </tr>
+        {{else}}
+          <td colspan="5" class="text-danger">No assets were found for {{this.year}}?!?</td>
+        {{/each}}
+        </tbody>
+      </UiTable>
+    </:body>
+  </UiSection>
   {{#if this.entry}}
     <ModalDialog @title={{if this.entry.isNew "New Asset" "Edit Asset"}} @onEscape={{this.cancelAsset}} as |Modal|>
       <ChForm @formId="asset"
@@ -107,6 +131,9 @@
                     @size={{4}}
                     @maxlength={{4}}
             />
+            <f.datetime @name="expires_on"
+                        @dateOnly={{true}}
+                        @label="Expires On (optional)"/>
           </FormRow>
           <FormRow>
             <f.textarea @name="notes"
@@ -131,11 +158,13 @@
           {{#if this.isSubmitting}}
             <LoadingIndicator/>
           {{/if}}
-          <div class="ms-auto">
-            <UiButton @type="danger" @onClick={{this.deleteAsset}} @disabled={{this.isSubmitting}}>
-              {{fa-icon "trash" right=1}} Delete
-            </UiButton>
-          </div>
+          {{#unless this.entry.isNew}}
+            <div class="ms-auto">
+              <UiButton @type="danger" @onClick={{this.deleteAsset}} @disabled={{this.isSubmitting}}>
+                {{fa-icon "trash" right=1}} Delete
+              </UiButton>
+            </div>
+          {{/unless}}
         </Modal.footer>
       </ChForm>
     </ModalDialog>

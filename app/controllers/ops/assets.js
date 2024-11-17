@@ -13,11 +13,26 @@ import {
   TYPE_VEHICLE
 } from "clubhouse/models/asset";
 
+const CSV_COLUMNS = [
+  {title: 'Barcode', key: 'barcode'},
+  {title: 'Type', key: 'type'},
+  {title: 'Description', key: 'description'},
+  {title: 'Assignment', key: 'assigned'},
+  {title: 'Category', key: 'category'},
+  {title: 'Notes', key: 'notes'},
+  {title: 'Year', key: 'year'},
+  {title: 'Expires On', key: 'expires_on', format: 'date'},
+  {title: 'Has Expired', key: 'has_expired'},
+  {title: 'Created At', key: 'created_at'},
+];
+
 export default class OpsAssetsController extends ClubhouseController {
   queryParams = ['year'];
 
   @tracked descriptionFilter = 'All';
   @tracked typeFilter = 'All';
+  @tracked expireFilter = 'all';
+
   @tracked assets;
 
   @tracked assetForHistory;
@@ -79,6 +94,20 @@ export default class OpsAssetsController extends ClubhouseController {
       }
     }
 
+    switch (this.expireFilter) {
+      case 'all':
+        break;
+      case 'expired':
+        assets = assets.filter((asset) => asset.has_expired);
+        break;
+      case 'not-expired':
+        assets = assets.filter((asset) => !asset.has_expired);
+        break;
+      default:
+        assets = assets.filter((asset) => asset.expires_on === this.expireFilter);
+        break;
+    }
+
     assets.sort((a, b) => a.barcode.localeCompare(b.barcode));
 
     return assets;
@@ -96,9 +125,19 @@ export default class OpsAssetsController extends ClubhouseController {
   }
 
   get typeOptions() {
-    const options = _.uniqBy(this.assets, 'type').map((a) =>[a.typeLabel, a.type]);
+    const options = _.uniqBy(this.assets, 'type').map((a) => [a.typeLabel, a.type]);
     options.sort((a, b) => a[0].localeCompare(b[0]));
     options.unshift('All');
+    return options;
+  }
+
+  get expireFilterOptions() {
+    const options = _.sortBy(_.uniqBy(this.assets.filter((a) => a.expires_on !== null), 'expires_on'), 'expires_on')
+      .map((a) => [a.expires_on, a.expires_on]);
+
+    options.unshift(['Not Expired', 'not-expired']);
+    options.unshift(['Expired', 'expired']);
+    options.unshift(['All', 'all']);
     return options;
   }
 
@@ -150,17 +189,23 @@ export default class OpsAssetsController extends ClubhouseController {
         perm_assign: model.perm_assign,
         category: model.category,
         year: model.year,
+        expires_on: model.expires_on,
       });
 
       try {
         await record.save();
-        await this.assets.update();
       } catch (response) {
         this.house.handleErrorResponse(response);
         this.isSubmitting = false;
         this.creatingBarcode = null;
         return;
       }
+    }
+
+    try {
+      await this.assets.update();
+    } catch (response) {
+      this.house.handleErrorResponse(response);
     }
 
     this.isSubmitting = false;
@@ -237,5 +282,16 @@ export default class OpsAssetsController extends ClubhouseController {
           this.isSubmitting = false;
         }
       });
+  }
+
+  @action
+  exportToCSV() {
+    const assets = [...this.viewAssets];
+    assets.forEach((asset) => {
+      asset.assigned = asset.perm_assign ? 'Event' : 'Shift';
+      asset.has_expired = asset.has_expired ? 'Y' : '-';
+    });
+
+    this.house.downloadCsv(`${this.year}-assets-csv`, CSV_COLUMNS, assets);
   }
 }
