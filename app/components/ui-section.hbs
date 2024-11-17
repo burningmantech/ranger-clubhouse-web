@@ -1,6 +1,13 @@
 <section class="ui-section" ...attributes>
   {{#if (has-block "title")}}
-    <div class="ui-section-title {{if @isWarning "ui-section-title-warning"}}">{{yield to="title"}}</div>
+    <div class="d-flex justify-content-between ui-section-title">
+      <div class="{{if @isWarning "ui-section-title-warning"}}">{{yield to="title"}}</div>
+      {{#if (has-block "actions")}}
+        <div>
+          {{yield to="actions"}}
+        </div>
+      {{/if}}
+    </div>
   {{/if}}
   {{#if (has-block "body")}}
     {{yield to="body"}}

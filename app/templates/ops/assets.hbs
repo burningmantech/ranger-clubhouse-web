@@ -35,8 +35,10 @@
 
   <UiSection>
     <:title> Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}</:title>
+    <:actions>
+      <UiExportToCSVButton @onClick={{this.exportToCSV}} @size="sm"/>
+    </:actions>
     <:body>
-      <UiExportToCSVButton @onClick={{this.exportToCSV}} />
       <UiTable>
         <thead>
         <tr>
