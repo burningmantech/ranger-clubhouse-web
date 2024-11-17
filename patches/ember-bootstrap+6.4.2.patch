@@ -1,5 +1,5 @@
 diff --git a/node_modules/ember-bootstrap/addon/components/bs-modal.js b/node_modules/ember-bootstrap/addon/components/bs-modal.js
-index a68c092..bec3235 100644
+index a6c299c..a675b1c 100644
 --- a/node_modules/ember-bootstrap/addon/components/bs-modal.js
 +++ b/node_modules/ember-bootstrap/addon/components/bs-modal.js
 @@ -520,7 +520,7 @@ export default class Modal extends Component {

@@ -1,8 +1,8 @@
 diff --git a/node_modules/ember-auto-import/js/webpack.js b/node_modules/ember-auto-import/js/webpack.js
-index 80b5c5f..f3b4bd0 100644
+index 24d4238..281b90a 100644
 --- a/node_modules/ember-auto-import/js/webpack.js
 +++ b/node_modules/ember-auto-import/js/webpack.js
-@@ -198,6 +198,7 @@ class WebpackBundler extends broccoli_plugin_1.default {
+@@ -201,6 +201,7 @@ class WebpackBundler extends broccoli_plugin_1.default {
                      this.babelRule(stagingDir, (filename) => this.fileIsInApp(filename), this.opts.rootPackage.babelOptions),
                      {
                          test: /\.css$/i,
@@ -10,7 +10,7 @@ index 80b5c5f..f3b4bd0 100644
                          use: [
                              styleLoader,
                              {
-@@ -206,6 +207,11 @@ class WebpackBundler extends broccoli_plugin_1.default {
+@@ -209,6 +210,11 @@ class WebpackBundler extends broccoli_plugin_1.default {
                              },
                          ],
                      },
