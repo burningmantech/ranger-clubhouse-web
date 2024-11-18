@@ -20,3 +20,15 @@ index a6c299c..a675b1c 100644
  
        await transitionEnd(backdropElement, this.backdropTransitionDuration);
      }
+diff --git a/node_modules/ember-bootstrap/addon/components/bs-modal/dialog.hbs b/node_modules/ember-bootstrap/addon/components/bs-modal/dialog.hbs
+index b657902..5d8bd19 100644
+--- a/node_modules/ember-bootstrap/addon/components/bs-modal/dialog.hbs
++++ b/node_modules/ember-bootstrap/addon/components/bs-modal/dialog.hbs
+@@ -35,7 +35,6 @@
+     <div
+       class="modal-content"
+       tabindex="-1"
+-      {{focus-trap shouldSelfFocus=true focusTrapOptions=(hash clickOutsideDeactivates=@backdropClose fallbackFocus=".modal" escapeDeactivates=@keyboard)}}
+     >
+       {{yield}}
+     </div>
