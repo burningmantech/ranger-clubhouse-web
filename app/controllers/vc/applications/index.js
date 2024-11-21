@@ -11,11 +11,12 @@ import {action} from '@ember/object';
 import _ from 'lodash';
 
 const statusFilterDescription = {
-  pending: 'awaiting V.C. review',
+  all: 'all applications',
+  pending: 'awaiting review',
   handles: 'in callsign processing',
   held: 'on hold, awaiting applicant response, RRN reply, or further investigation needed',
   'pii-issues': 'Personal Info issues must be resolved first before an account is created.',
-  approved: 'approved, callsign assigned, awaiting account creation',
+  approved: 'awaiting account creation',
   created: 'application approved, Clubhouse account(s) created',
   rejected: 'rejected due to lack of experience, age, pre-bonk, uber-bonk, is returning Ranger, or is duplicate submission.',
   'why-ranger': 'applications with problematic Why Ranger answers'
@@ -34,16 +35,18 @@ export default class VcApplicationsIndexController extends ClubhouseController {
 
   @tracked nameFilter = 'all';
 
-  @tracked statusFilter = 'pending';
+  @tracked statusFilter = 'all';
   @tracked ageFilter = 'all';
 
   @tracked experienceFilter = 'all';
 
   statusFilterOptions = [
+    ['All', 'all'],
     ['Pending', 'pending'],
     ['Handle Processing', 'handles'],
     ['On Hold', 'held'],
     ['Personal Info Issues', 'pii-issues'],
+    ['Approved - Awaiting Creation', 'approved'],
     ['Created Accounts', 'created'],
     ['Rejected', 'rejected'],
     ['Why Ranger Problems', 'why-ranger'],

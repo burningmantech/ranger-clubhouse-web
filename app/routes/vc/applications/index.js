@@ -25,9 +25,21 @@ export default class VcApplicationsIndexRoute extends ClubhouseRoute {
     controller.year = model.year;
     controller.VCs = model.VCs;
     if (model.yearDidChange) {
-      controller.assignedToFilter = 'all';
-      controller.nameFilter = 'all';
-      controller.statusFilter = 'pending';
+      this._resetFilters(controller);
     }
+  }
+
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      this._resetFilters(controller);
+    }
+  }
+
+  _resetFilters(controller) {
+    controller.assignedToFilter = 'all';
+    controller.nameFilter = 'all';
+    controller.statusFilter = 'pending';
+    controller.ageFilter = 'all';
+    controller.experienceFilter = 'all';
   }
 }
