@@ -8,6 +8,8 @@
       <th>Status</th>
       <th>Name / Email</th>
       <th>Assigned To</th>
+      <th>BRC Exp.</th>
+      <th>Age</th>
       <th>Updated At / By</th>
       <th>Clubhouse Account</th>
     </tr>
@@ -32,6 +34,20 @@
             {{row.assigned_person.callsign}}
           {{else}}
             -
+          {{/if}}
+        </td>
+        <td>
+          {{#if row.isBRCExperienceOkay}}
+            <UiBadge @type="success">qualified</UiBadge>
+          {{else}}
+            <UiBadge @type="warning">unqualified</UiBadge>
+          {{/if}}
+        </td>
+        <td>
+          {{#if row.is_over_18}}
+            <UiBadge @type="success">{{fa-icon "greater-than-equal" right=1}} 18</UiBadge>
+          {{else}}
+            <UiBadge @type="warning">{{fa-icon "less-than" righ=1}} 18</UiBadge>
           {{/if}}
         </td>
         <td>
