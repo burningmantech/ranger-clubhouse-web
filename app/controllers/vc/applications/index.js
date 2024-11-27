@@ -60,9 +60,9 @@ export default class VcApplicationsIndexController extends ClubhouseController {
   ];
 
   experienceFilterOptions = [
-    [ 'All', 'all'],
-    ['Has BRC exp.', 'qualified'],
-    ['No BRC exp.', 'unqualified'],
+    ['All', 'all'],
+    ['Qualified', 'qualified'],
+    ['Unqualified', 'unqualified'],
   ];
 
   get notCurrentYear() {
