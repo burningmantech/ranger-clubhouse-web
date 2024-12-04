@@ -9,6 +9,6 @@ module('Integration | Component | sidebar/link-text', function(hooks) {
   test('it renders', async function(assert) {
     await render(hbs`<Sidebar::LinkText @route="me.homepage" @title="heya"/>`);
 
-    assert.dom('span.sidebar-link-text').exists().hasText('heya');
+    assert.dom('span.sidebar-link-text').exists().hasText('heya sidebar menu item');
   });
 });
