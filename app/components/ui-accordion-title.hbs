@@ -1,5 +1,7 @@
 {{!template-lint-disable require-presentational-children}}
-<div class="accordion-title" role="button" {{on-click @onClick}} ...attributes>
-  <div class="accordion-title-icon">{{fa-icon (if @isOpen "minus" "plus")}}</div>
-  <div class="accordion-title-text">{{yield}}{{#if @isWorking~}}<SpinIcon/>{{/if}}</div>
+<div class="accordion-title" ...attributes>
+  <button {{on-click @onClick}}  aria-expanded={{if this.bodyOpened "true" "false"}}  tabindex="0">
+    <div class="accordion-title-icon" aria-hidden="true">{{fa-icon (if @isOpen "minus" "plus")}}</div>
+    <div class="accordion-title-text">{{yield}}{{#if @isWorking~}}<SpinIcon/>{{/if}}</div>
+  </button>
 </div>

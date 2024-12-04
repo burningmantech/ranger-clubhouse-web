@@ -1,5 +1,5 @@
 <BsNavbar @type="light" @backgroundColor="khaki" class="navbar-expand-xl" as |navbar|>
-  <LinkTo @route="me.homepage" class="navbar-brand">
+  <LinkTo @route="me.homepage" class="navbar-brand" aria-label="Clubhouse Home Page" tabindex="0">
     {{#if this.session.isStaging}}
       <span class="text-danger">STAGING SERVER</span>
     {{else if this.session.isTraining}}
@@ -10,7 +10,7 @@
   </LinkTo>
 
   {{#if (and this.session.hasLoginManagement this.session.isSmallScreen)}}
-    <button type="button" class="border rounded p-1 bg-white text-muted mx-auto" {{on "click" this.launchSearchDialog}}>
+    <button type="button" class="border rounded p-1 bg-white text-muted mx-auto" {{on "click" this.launchSearchDialog}} tabindex="-1">
       <span class="mx-1">
         {{fa-icon "search"}}
       </span>
@@ -82,7 +82,7 @@
       <div role="button"
            class="border rounded p-1 bg-white text-muted small d-flex align-items-center justify-content-between"
            style="min-width:0;"
-        {{on "click" this.launchSearchDialog}}>
+        {{on "click" this.launchSearchDialog}} tabindex="0">
         <div class="mx-1 flex-shrink-0">
           {{fa-icon "search"}}
         </div>

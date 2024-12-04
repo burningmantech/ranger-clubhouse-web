@@ -61,7 +61,8 @@
           Check-in at the Hat Rack located at Ranger HQ, 5:45 &amp; the Esplanade, between BMIR and Placement.
         </p>
         <p>
-          <b>Can't make your Alpha shift?</b> Email the Mentor Cadre at <MailTo @to={{setting "MentorEmail"}} />
+          <b>Can't make your Alpha shift?</b> Email the Mentor Cadre at
+          <MailTo @to={{setting "MentorEmail"}} />
           or stop by Ranger HQ on playa to see if another shift can be attended.
         </p>
       {{/if}}
@@ -103,19 +104,25 @@
                 &nbsp;
               {{/if}}
             </div>
-            <div class="schedule-time-description">
+            <div class="schedule-time-description" tabindex="0">
               {{#if slot.has_ended}}
                 <div class="text-danger">Shift has ended.</div>
               {{else if slot.has_started}}
                 <div class="text-danger">Shift has started.</div>
               {{/if}}
+              <span id="slot-times-{{slot.id}}">
               {{shift-format slot.slot_begins slot.slot_ends}}
-              {{#if (or this.isTrainingType slot.isNotPacific)}}
-                ({{slot.slot_tz_abbr}})
-              {{/if}}
-              <div class="schedule-sm-label">{{@position.title}}</div>
+                {{#if (or this.isTrainingType slot.isNotPacific)}}
+                  ({{slot.slot_tz_abbr}})
+                {{/if}}
+              </span>
+              <div class="schedule-sm-label" tabindex="0">{{@position.title}}</div>
               <div>
-                <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
+                <SlotInfoLink @description={{slot.slot_description}}
+                              @info={{slot.slot_url}}
+                              @ariaTextLabel="Click for more information about {{slot.position_title}} at {{shift-format
+                                slot.slot_begins}}"
+                />
               </div>
               {{#if (and slot.trainer_slot_id (eq slot.trainer_count 0))}}
                 <div class="text-danger">No trainers / mentors are signed up yet.<br>Check back later.</div>
@@ -129,17 +136,37 @@
                 </div>
               {{/if}}
             </div>
-            <div class="schedule-duration">
+            <div class="schedule-duration" tabindex="0">
               <span class="schedule-sm-label">Duration:</span>
               {{#unless slot.position_count_hours}}
-                <span class="me-1"><NoAppreciateIcon/></span>
+                <span class="me-1" aria-hidden="true"><NoAppreciateIcon/></span>
               {{/unless}}
+              <span class="sr-only">
+                Duration is
+              </span>
               {{hour-minute-format slot.slot_duration}}
+              {{#unless slot.position_count_hours}}
+                <span class="sr-only">
+                 Shift does not count towards provisions and appreciations.
+                </span>
+              {{/unless}}
             </div>
-            <div class="schedule-credits">
+            <div class="schedule-credits" tabindex="0">
+              <span class="sr-only">Possible credits earned is</span>
               <span class="schedule-sm-label">Credits:</span> {{credits-format slot.credits}}
             </div>
             <div class="schedule-signups">
+              <span class="sr-only" tabindex="0">
+                {{#if (or (and slot.trainer_slot_id (eq slot.slot_max 0)) (not slot.slot_signed_up))}}
+                  No signups yet
+                {{else}}
+                  {{#if (gte slot.slot_signed slot.slot_max)}}
+                    This shift is full.
+                  {{/if}}
+                  {{pluralize slot.slot_signed_up "person"}} {{is-are slot.slot_signed_up}} signed up out of a maximum
+                  of {{slot.slot_max}} sign ups.
+                {{/if}}
+              </span>
               {{#if (and slot.trainer_slot_id (eq slot.slot_max 0))}}
                 -
               {{else}}
@@ -148,19 +175,25 @@
             </div>
             <div class="schedule-actions">
               {{#if slot.signUpInfo}}
-                <button type="button" {{on "click" (fn @hidePeople slot)}} class="btn btn-warning btn-sm"
-                        title="Hide people signed up">
+                <button type="button"
+                  {{on "click" (fn @hidePeople slot)}}
+                        class="btn btn-warning btn-sm"
+                        aria-label="Hide signups for {{slot.position_title}} on {{shift-format slot.slot_begins}}"
+                >
                   {{fa-icon "users" type="fas" fixed=true right=1}}
                   Hide Sign Ups
                 </button>
               {{else}}
-                <button type="button" {{on "click" (fn @showPeople slot)}} class="btn btn-secondary btn-sm"
-                        title="View people signed up"
-                        disabled={{slot.isRetrievingSignUps}}>
+                <button type="button"
+                  {{on "click" (fn @showPeople slot)}}
+                        class="btn btn-secondary btn-sm"
+                        disabled={{slot.isRetrievingSignUps}}
+                        aria-label="Show signups for {{slot.position_title}} on {{shift-format slot.slot_begins}}"
+                >
                   {{#if slot.isRetrievingSignUps}}
                     <SpinIcon/>
                   {{else}}
-                    {{fa-icon "users" type="fas" fixed=true right=1}}
+                    {{fa-icon "users" type="fas" fixed=true right=1 aria-hidden="true"}}
                   {{/if}}
                   Sign Ups
                 </button>
@@ -171,8 +204,9 @@
                   <button type="button"
                     {{on "click" (fn @leaveSlot slot)}}
                           class="btn btn-danger btn-sm"
-                          title="Remove from schedule"
-                          disabled={{slot.isSubmitting}}>
+                          disabled={{slot.isSubmitting}}
+                          aria-label="Remove sign up for {{slot.position_title}} on {{shift-format slot.slot_begins}}"
+                  >
                     {{#if slot.isSubmitting}}
                       <SpinIcon/>
                     {{else}}
@@ -187,7 +221,7 @@
                   {{#if (or this.canForceSignUp (and (not slot.isFull) (not slot.has_started)))}}
                     <button type="button" {{on "click" (fn @joinSlot slot)}}
                             class="btn btn-primary btn-sm"
-                            title="Sign up for the shift"
+                            aria-label="Add {{slot.position_title}} on {{shift-format slot.slot_begins}} to schedule"
                             disabled={{slot.isSubmitting}}>
                       {{#if slot.isSubmitting}}
                         <SpinIcon/>

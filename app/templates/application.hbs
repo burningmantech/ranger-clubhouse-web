@@ -1,7 +1,7 @@
 <ToastRegistry/>
 <ModalRegistry/>
 {{#unless (or this.session.isOffline this.session.showingBookmark)}}
-  <header class="d-print-none">
+  <header class="d-print-none" role="banner">
     <Navbar/>
     {{#if (has-role "admin" "manage" "vc" "mentor")}}
       <SearchItemBar/>
