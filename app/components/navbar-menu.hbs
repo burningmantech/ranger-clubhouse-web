@@ -1,5 +1,5 @@
 <@nav.dropdown class="{{if @isLarge "dropdown-large"}}" as |dd|>
-<dd.toggle>{{@title}} <span class="caret"></span></dd.toggle>
+<dd.toggle>{{@title}} <span class="sr-only">menu</span><span class="caret" aria-hidden="true"></span></dd.toggle>
 <dd.menu as |menu|>
   <div class="dropdown-menu-container">
     {{yield menu}}
