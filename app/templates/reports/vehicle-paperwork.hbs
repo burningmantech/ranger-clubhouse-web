@@ -9,13 +9,14 @@ This report will show anyone who meets one of the following conditions:
     eligible position
   </li>
   <li>has the PVR checkbox checked under Person Manage &gt; Event Info</li>
+  <li>has signed up for a MVR eligible shift such as Intercept</li>
 </ul>
 <p>
   <UiButton @onClick={{this.exportToCsv}}>Export to CSV</UiButton>
 </p>
 Showing {{pluralize this.people.length "person"}}
 <div class="table-responsive">
-  <UiTable>
+  <UiTable @noWidthAuto={{true}}>
     <thead>
     <tr>
       <th>Callsign</th>
@@ -25,6 +26,7 @@ Showing {{pluralize this.people.length "person"}}
       <th>MVR Eligible</th>
       <th>MVR Teams</th>
       <th>MVR Signed-Up Positions</th>
+      <th>MVR Eligible Sign-Ups</th>
       <th>MVR Checkbox</th>
       <th>PVR Eligible</th>
       <th>PVR Teams</th>
@@ -43,42 +45,39 @@ Showing {{pluralize this.people.length "person"}}
         <td class="text-center">{{yesno person.signed_motorpool_agreement}}</td>
         <td class="text-center">{{yesno person.org_vehicle_insurance}}</td>
         <td class="text-center">
-          {{#if (or person.mvr_eligible person.mvr_teams person.mvr_positions)}}
-            Y
-          {{else}}
-            N
-          {{/if}}
+          {{yesno (or person.mvr_eligible person.mvr_teams person.mvr_positions person.mvr_signups)}}
         </td>
-        <td>
+        <td class="text-nowrap">
           {{#each person.mvr_teams as |team|}}
             {{team.title}}<br>
           {{else}}
             -
           {{/each}}
         </td>
-        <td>
+        <td class="text-nowrap">
           {{#each person.mvr_positions as |position|}}
             {{position.title}}<br>
           {{else}}
             -
           {{/each}}
         </td>
+        <td class="text-nowrap">
+          {{#each person.mvr_signups as |signup|}}
+            {{signup.position_title}}  {{shift-format signup.begins}}<br>
+          {{/each}}
+        </td>
         <td class="text-center">{{yesno person.mvr_eligible}}</td>
         <td class="text-center">
-          {{#if (or person.pvr_eligible person.pvr_teams person.pvr_positions)}}
-            Y
-          {{else}}
-            N
-          {{/if}}
+          {{yesno (or person.pvr_eligible person.pvr_teams person.pvr_positions)}}
         </td>
-        <td>
+        <td class="text-nowrap">
           {{#each person.pvr_teams as |team|}}
             {{team.title}}<br>
           {{else}}
             -
           {{/each}}
         </td>
-        <td>
+        <td class="text-nowrap">
           {{#each person.pvr_positions as |position|}}
             {{position.title}}<br>
           {{else}}

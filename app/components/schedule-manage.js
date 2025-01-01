@@ -151,11 +151,32 @@ export default class ScheduleManageComponent extends Component {
       // And reposition the page so things appear not to move when the sign-up is added
       // to the schedule.
       schedule('afterRender',
-        () => {
+        async () => {
           window.scrollTo(window.scrollX, row.getBoundingClientRect().top - currentOffset);
-          if (this.isMe && !isEmpty(slot.slot_url)) {
-            this.modal.info('Additional Shift Information',
-              htmlSafe(`<p class="text-success"><i class="fa-solid fa-check"></i> You are signed up for the shift.</p><p>Here's more information about the shift:</p><p>${hyperlinkText(slot.slot_url)}</p>To view this information again, click on the shift description with the <i class="fa-solid fa-question-circle info-icon"></i> icon.`))
+
+          if (this.isMe) {
+            if (!isEmpty(slot.slot_url)) {
+              this.modal.info('Additional Shift Information',
+                htmlSafe(`<p class="text-success"><i class="fa-solid fa-check"></i> You are signed up for the shift.</p><p>Here's more information about the shift:</p><p>${hyperlinkText(slot.slot_url)}</p>To view this information again, click on the shift description with the <i class="fa-solid fa-question-circle info-icon"></i> icon.`))
+            }
+
+            if (result.is_mvr_eligible) {
+              await this.session.loadUser();
+
+              this.modal.info('Motor Vehicle Record Request (optional)',
+                htmlSafe(`<p>
+                    The shift has been signed up for. While it may involve operating larger Ranger fleet vehicles,
+                     such as pickup trucks, <b>this is not mandatory</b>. However, operating these vehicles requires
+                     an approved Motor Vehicle Record (MVR) request.
+                   </p>
+                   <p>
+                    To obtain MVR approval, visit the Clubhouse homepage and follow the instructions on the dashboard.
+                    A valid driver’s license is required. License and driving record verification can take 2 weeks
+                    or more. Longer for non-US license holders.
+                   </p>
+                   If you choose not to submit a MVR Request or if the request is denied, you will be limited to
+                   operating smaller Ranger vehicles, such as golf carts &amp; gators (UTVs).`));
+            }
           }
         }
       );
@@ -189,7 +210,7 @@ export default class ScheduleManageComponent extends Component {
     this.modal.confirm('Confirm Leaving Shift',
       message,
       async () => {
-      slot.isSubmitting = true;
+        slot.isSubmitting = true;
         try {
           const result = await this.ajax.request(`person/${this.args.person.id}/schedule/${slot.id}`, {method: 'DELETE'});
           const signedUp = this.args.signedUpSlots.find((s) => +s.id === +slot.id);
@@ -238,7 +259,7 @@ export default class ScheduleManageComponent extends Component {
       slot.signUpInfo = await this.ajax.request(`slot/${slot.id}/people`);
       slot.slot_signed_up = slot.signUpInfo.signed_up;
       slot.slot_max = slot.signUpInfo.max;
-     } catch (response) {
+    } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
       slot.isRetrievingSignUps = false

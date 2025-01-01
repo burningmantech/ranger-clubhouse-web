@@ -7,18 +7,40 @@
   {{#if @list}}
     <p>
       {{#if @isPosition}}
-        Note: if the person is not a member of a {{@name}} eligible team, at least one shift of the following position(s)
+        Note: if the person is not a member of a {{@name}} eligible team, at least one shift of the following
+        position(s)
         must be signed up for first before the person may become {{@name}} eligible.
+      {{else if @isSignups}}
+        The person is MVR eligible because the following shift(s) were signed up:
       {{else}}
         The person is automatically {{@name}} eligible because they are a member of the following team(s):
       {{/if}}
     </p>
-    <div class="columns columns-4">
-      {{#each @list as |item|}}
-        <div>
-          {{item.title}}
-        </div>
-      {{/each}}
-    </div>
+    {{#if @isSignups}}
+      <UiTable>
+        <thead>
+        <tr>
+          <th>Position</th>
+          <th>Start Time</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each @list as |signup|}}
+          <tr>
+            <td>{{signup.position_title}}</td>
+            <td>{{shift-format signup.begins}}</td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </UiTable>
+    {{else}}
+      <div class="columns columns-4">
+        {{#each @list as |item|}}
+          <div>
+            {{item.title}}
+          </div>
+        {{/each}}
+      </div>
+    {{/if}}
   {{/if}}
 </div>

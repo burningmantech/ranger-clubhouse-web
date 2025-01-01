@@ -96,10 +96,10 @@ export default class PositionController extends ClubhouseController {
 
     switch (this.vehicleEligibilityFilter) {
       case 'mvr-eligible':
-        positions = positions.filter((p) => p.mvr_eligible);
+        positions = positions.filter((p) => p.mvr_eligible || p.mvr_signup_eligible);
         break;
       case 'mvr-ineligible':
-        positions = positions.filter((p) => !p.mvr_eligible);
+        positions = positions.filter((p) => !p.mvr_eligible && !p.mvr_signup_eligible);
         break;
       case 'pvr-eligible':
         positions = positions.filter((p) => p.pvr_eligible);
