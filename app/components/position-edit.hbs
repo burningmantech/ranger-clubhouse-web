@@ -201,13 +201,24 @@
       <div class="col-12">
         <f.checkbox @name="mvr_eligible"
                     @inline={{true}}
-                    @label="MVR Eligibility: The person will be shown a MVR submission link under the Vehicle Dashboard when granted the position AND signs up for this shift. The homepage dashboard MVR prompt will always appear regardless if the person has signed up for this shift or not."
+                    @label="MVR Position Grant Eligibility: The person will be shown a MVR submission link under the Vehicle Dashboard when granted the position AND signs up for this shift. The homepage dashboard MVR prompt WILL ALWAYS APPEAR regardless if the person has signed up for this shift or not."
         />
       </div>
       <div class="col-12">
         <f.checkbox @name="pvr_eligible"
                     @inline={{true}}
-                    @label="Personal Vehicle Request Eligibility: The person will be allowed to submit a PVR under the Vehicle Dashboard when granted the position AND signs up for this shift. The homepage dashboard PVR prompt will always appear regardless if the person has signed up for this shift or not."
+                    @label="Personal Vehicle Request Eligibility: The person will be allowed to submit a PVR under the Vehicle Dashboard when granted the position AND signs up for this shift. The homepage dashboard PVR prompt WILL ALWAYS APPEAR regardless if the person has signed up for this shift or not."
+        />
+      </div>
+    </FormRow>
+    <p>
+      The following MVR flag is safe to use in conjunction with the All Rangers flag. The dashboard prompt will ONLY appear AFTER the person has signed up for a shift.
+    </p>
+    <FormRow>
+      <div class="col-12">
+        <f.checkbox @name="mvr_signup_eligible"
+                    @inline={{true}}
+                    @label="MVR Signup Eligibility: The person will be shown a MVR submission link under the Vehicle Dashboard when granted the position AND signs up for this shift. The dashboard prompt will ONLY appear after the person signs up for a shift."
         />
       </div>
     </FormRow>

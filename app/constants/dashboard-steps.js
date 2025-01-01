@@ -617,7 +617,7 @@ export const SIGN_MOTOR_POOL_PROTOCOL = {
 
 export const MVR_REQUEST = {
   name: 'Submit a MVR request',
-  period: BEFORE_EVENT,
+  period: [BEFORE_EVENT,DURING_EVENT],
   check({milestones}) {
     const {mvr_eligible} = milestones;
 
