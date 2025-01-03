@@ -1,5 +1,4 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {action} from '@ember/object';
 
 export default class AdminErrorLogRoute extends ClubhouseRoute {
   queryParams = {
@@ -20,10 +19,5 @@ export default class AdminErrorLogRoute extends ClubhouseRoute {
     super.setupController(...arguments);
     controller.setProperties(model.meta);
     controller.set('error_logs', model.error_logs);
-  }
-
-  @action
-  refreshRoute() {
-    this.refresh();
   }
 }

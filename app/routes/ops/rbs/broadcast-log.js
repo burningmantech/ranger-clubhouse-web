@@ -1,6 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
-import { action } from '@ember/object';
 
 export default class OpsRbsBroadcastLog extends ClubhouseRoute {
   queryParams = {
@@ -31,10 +30,5 @@ export default class OpsRbsBroadcastLog extends ClubhouseRoute {
       controller.set('year', null);
       controller.set('failed', null);
     }
-  }
-
-  @action
-  refreshRoute() {
-    this.refresh();
   }
 }
