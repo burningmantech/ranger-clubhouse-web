@@ -39,7 +39,7 @@ Showing {{pluralize this.surveys.length "survey"}}
       <td>
         <UiButtonRow>
           <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteSurveyAction survey}}>
-            {{fa-icon "trash"}} Delete
+            {{fa-icon "trash" right=1}} Delete
           </UiButton>
           <UiButton @type="secondary" @size="sm" @onClick={{fn this.duplicateSurveyAction survey}}>
             Duplicate
