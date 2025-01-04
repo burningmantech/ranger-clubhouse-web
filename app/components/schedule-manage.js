@@ -7,6 +7,7 @@ import {htmlSafe} from '@ember/template';
 import {TRAINING} from 'clubhouse/constants/positions';
 import {isEmpty} from '@ember/utils';
 import hyperlinkText from "clubhouse/utils/hyperlink-text";
+import {shiftFormat} from "clubhouse/helpers/shift-format";
 
 export default class ScheduleManageComponent extends Component {
   @service ajax;
@@ -162,20 +163,50 @@ export default class ScheduleManageComponent extends Component {
 
             if (result.is_mvr_eligible) {
               await this.session.loadUser();
+              let agreementWarning = '';
 
-              this.modal.info('Motor Vehicle Record Request (optional)',
-                htmlSafe(`<p>
-                    The shift has been signed up for. While it may involve operating larger Ranger fleet vehicles,
-                     such as pickup trucks, <b>this is not mandatory</b>. However, operating these vehicles requires
-                     an approved Motor Vehicle Record (MVR) request.
-                   </p>
-                   <p>
-                    To obtain MVR approval, visit the Clubhouse homepage and follow the instructions on the dashboard.
+              if (!result.signed_motorpool_agreement) {
+                agreementWarning = '<p>To operate the smaller fleet vehicles, such as gators and golf carts,' +
+                  ' you must first sign the Motor Pool Agreement. Please complete this step to ensure you are authorized' +
+                  ' to drive these vehicles during your shift. Visit the Clubhouse homepage and follow the dashboard' +
+                  ' instructions to sign the agreement.</p>';
+              } else {
+                agreementWarning = '<p>Because you have signed the Motor Pool Agreement, you are permitted to operate the smaller vehicles,' +
+                  ' such as gators and golf carts, during your shift.</p>';
+              }
+
+              if (result.is_past_mvr_deadline) {
+                this.modal.info('Motor Vehicle Record Request',
+                  htmlSafe(`<p>You have successfully signed up for the shift. This position uses
+                              vehicles from the Ranger rental fleet.</p>
+                              ${agreementWarning}
+                             <p>Unfortunately, the deadline of ${shiftFormat([result.mvr_deadline], {})}
+                               (Pacific) has passed to submit a Motor Vehicle Record (MVR) request. An approved MVR
+                               would have allowed you to operate larger fleet vehicles, such as pickup trucks, for
+                              this event.</p>
+                             <p>For future events, we encourage you to sign up for a shift before the MVR submission
+                            deadline to expand your vehicle options.</p>`));
+              } else {
+                this.modal.info('Motor Vehicle Record Request (optional)',
+                  htmlSafe(`<p>
+                    The shift has been signed up for. The position involes using vehicles from the Ranger rental fleet.
+                    </p>
+                   ${agreementWarning}
+                   <p>This position allows access to the larger rental fleet vehicles if a Motor Vehicle Record (MVR)
+                    Request is submitted and approved. This is not the same as signing the Motor Pool Agreement
+                    that permits access to the smaller vehicles.</p>
+                   <p>If you choose not to submit a MVR Request or if the request is denied, you will be limited to
+                   operating smaller Ranger vehicles.</p>
+                   <p>To obtain MVR approval, visit the Clubhouse homepage and follow the instructions on the dashboard.
                     A valid driver’s license is required. License and driving record verification can take 2 weeks
                     or more. Longer for non-US license holders.
                    </p>
-                   If you choose not to submit a MVR Request or if the request is denied, you will be limited to
-                   operating smaller Ranger vehicles, such as golf carts &amp; gators (UTVs).`));
+                   <p class="text-danger">
+                     The deadline to submit a MVR Request is ${shiftFormat([result.mvr_deadline], {})} (Pacific).
+                     No exceptions will be made once the deadline has passed.
+                   </p>
+                   `));
+              }
             }
           }
         }
