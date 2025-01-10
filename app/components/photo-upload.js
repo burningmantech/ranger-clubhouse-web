@@ -1,8 +1,7 @@
 import Component from '@glimmer/component';
-import { action } from '@ember/object';
-import { service } from '@ember/service';
-import { tracked } from '@glimmer/tracking';
-import logError from 'clubhouse/utils/log-error';
+import {action} from '@ember/object';
+import {service} from '@ember/service';
+import {tracked} from '@glimmer/tracking';
 
 export default class PhotoUploadComponent extends Component {
   @service ajax;
@@ -66,20 +65,6 @@ export default class PhotoUploadComponent extends Component {
       // Skip showing guidelines
       this.step = 'source';
     }
-
-    this._importCode();
-  }
-
-  async _importCode()
-  {
-    this.isLoading = true;
-    try {
-      this.loadImage = (await import('blueimp-load-image')).default;
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isLoading = false;
-    }
   }
 
   @action
@@ -135,20 +120,35 @@ export default class PhotoUploadComponent extends Component {
   }
 
   @action
-  fileChangeEvent(event) {
+  async fileChangeEvent(event) {
     const element = event.target;
-    if (element.value == '') {
+    if (!element.value) {
       return;
     }
 
     const file = element.files[0];
     this.originalFilename = element.value;
 
-    this._scaleImage(file, this.maxWidth, this.maxHeight, (origBlob) => {
-      this.originalImage = origBlob;
-      this.originalImageDataUrl = URL.createObjectURL(origBlob);
+    try {
+      this.isSubmitting = true;
+      const formData = new FormData();
+      formData.append('image', file, this.originalFilename);
+
+      const {image} = await this.ajax.request('person-photo/convert', {
+        method: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+      });
+      this.originalImage = file;
+      this.originalImageDataUrl = URL.createObjectURL(this._base64ToBlob(image, 'image/jpeg'));
       this.step = 'edit-photo';
-    });
+    } catch (response) {
+      element.value = null;
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action
@@ -168,44 +168,32 @@ export default class PhotoUploadComponent extends Component {
     this.step = 'source';
   }
 
-  _scaleImage(image, maxWidth, maxHeight, callback, dataUrl = false) {
-    const options = {
-      //should be set to canvas : true to activate auto fix orientation
-      canvas: true,
-      orientation: true,
-      maxWidth,
-      maxHeight,
-      downsamplingRatio: maxWidth / maxHeight
-    };
+  /**
+   * Pulled from https://stackoverflow.com/questions/16245767/creating-a-blob-from-a-base64-string-in-javascript
+   * @param b64Data
+   * @param contentType
+   * @returns {Blob}
+   * @private
+   */
 
-    // eslint-disable-next-line no-undef
-    this.loadImage(image,  (canvas) => {
-      if (dataUrl) {
-        const data = canvas.toDataURL('image/jpeg', 0.9);
-        canvas.remove();
-        callback(data);
-      } else {
-        if (!canvas.toBlob) {
-          // An issue exists where a canvas element does not have a toBlob function.
-          // Might be a browser extension causing issues. Seen on Chrome v100 up to v112.
-          // Let the user know something is up.
-          this.showNoBlobError = true;
+  _base64ToBlob(b64Data, contentType) {
+    const byteCharacters = atob(b64Data);
+    const byteArrays = [];
+    const sliceSize = 1024;
 
-          logError({}, 'client-load-image-error', {
-            message: 'toBlob function missing',
-            nodeType: canvas?.nodeName,
-            fileSize: image?.size,
-            fileName: image?.filename,
-            fileType: image?.type
-          });
-          return;
-        }
-        canvas.toBlob((blob) => {
-          canvas.remove();
-          callback(blob);
-        }, 'image/jpeg', 0.9);
+    for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
       }
-    }, options);
-  }
 
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
+    }
+
+    const blob = new Blob(byteArrays, {type: contentType});
+    return blob;
+  }
 }

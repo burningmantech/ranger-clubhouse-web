@@ -5,16 +5,21 @@
 }
 
 .accordion-title {
-  display: flex;
-  /*  justify-content: space-between;*/
+  > button {
+    display: flex;
+    width: 100%;
+    /*  justify-content: space-between;*/
 
-  padding: 10px;
-  background-color: #e9ecef;
-  font-size: 1rem;
+    padding: 10px;
+    background-color: #e9ecef;
+    font-size: 1rem;
 
-  &:hover {
+    margin: 0 !important;
+    border: none !important;
+  }
+
+  &:hover, > button:hover {
     background-color: #dee2e6 !important;
-
   }
 }
 

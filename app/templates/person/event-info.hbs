@@ -294,6 +294,12 @@
                                         @isPosition={{true}}
         />
         <hr>
+        <Person::VehicleEligibilityList @list={{this.vehicleInfo.mvr_signups}}
+                                        @title="MVR Signups"
+                                        @name="MVR"
+                                        @isSignups={{true}}
+        />
+        <hr>
         <Person::VehicleEligibilityList @list={{this.vehicleInfo.pvr_teams}}
                                         @title="Personal Vehicle eligible team"
                                         @name="Personal Vehicle"

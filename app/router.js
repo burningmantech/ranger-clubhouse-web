@@ -78,7 +78,7 @@ Router.map(function () {
     this.route('positions');
     this.route('radio-eligibility');
     this.route('ranger-retention');
-
+    this.route('request-log');
     this.route('permissions');
     this.route('person-create');
     this.route('settings');

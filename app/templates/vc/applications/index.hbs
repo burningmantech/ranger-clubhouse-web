@@ -42,21 +42,21 @@
                       @fieldSize="sm"
       />
     </div>
+    <FormLabel @auto={{true}}>BRC Exp.</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="experienceFilter"
+                      @value={{this.experienceFilter}}
+                      @options={{this.experienceFilterOptions}}
+                      @onChange={{set-value this 'experienceFilter'}}
+                      @fieldSize="sm"
+      />
+    </div>
     <FormLabel @auto={{true}}>Age</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="ageFilter"
                       @value={{this.ageFilter}}
                       @options={{this.ageFilterOptions}}
                       @onChange={{set-value this 'ageFilter'}}
-                      @fieldSize="sm"
-      />
-    </div>
-    <FormLabel @auto={{true}}>BRC Exp</FormLabel>
-    <div class="col-auto">
-      <ChForm::Select @name="experienceFilter"
-                      @value={{this.experienceFilter}}
-                      @options={{this.experienceFilterOptions}}
-                      @onChange={{set-value this 'experienceFilter'}}
                       @fieldSize="sm"
       />
     </div>

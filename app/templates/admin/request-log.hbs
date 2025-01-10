@@ -1,0 +1,107 @@
+<main>
+  <h1>Request Log</h1>
+  <p>
+    The request log tracks all API requests to the backend server. 7 days worth of records are retained.
+  </p>
+  {{#if this.error}}
+    <p class="text-danger">
+      {{this.error}}
+    </p>
+  {{/if}}
+
+  <ChForm @formId="query" @formFor={{this.query}} @changeSet={{false}} @onSubmit={{this.searchAction}} as |f|>
+    <FormRow>
+      <f.search @name="person"
+                @label="Person"
+                @size={{30}}
+                @hint="Callsign or person id"
+                @autofocus={{true}}
+                @onSearch={{this.searchCallsignAction}}
+                @noResultsText="No callsigns found"
+      />
+      <f.datetime @name="start_time"
+                  @label="Start time"
+                  @size={{20}} />
+      <f.datetime @name="end_time"
+                  @label="End time"
+                  @size={{20}} />
+      <div class="col-auto">
+        <f.radioGroup @name="sort"
+                      @options={{this.sortOptions}}
+                      @label="Sort"
+                      @inline={{true}}/>
+      </div>
+    </FormRow>
+    <f.submit @label="Search"/>
+    <UiButton @type="gray" class="btn-link"
+              @onClick={{fn this.resetFilters f.model}}>
+      Clear Filters
+    </UiButton>
+    <UiButton @type="secondary" @onClick={{this.expireLog}} @size="sm">Expire Logs</UiButton>
+  </ChForm>
+
+  {{#if this.logs}}
+    <div class="mt-4">
+      Showing {{this.currentPage}} of {{this.total_pages}} pages. {{pluralize this.total "row"}}
+    </div>
+    <UiTable>
+      <thead>
+      <tr>
+        <th>Timestamp (UTC-7)</th>
+        <th>User</th>
+        <th>IP</th>
+        <th>Method</th>
+        <th>Status</th>
+        <th>Request</th>
+        <th>Response Size</th>
+        <th class="text-end">Time</th>
+      </tr>
+      </thead>
+
+      <tbody>
+      {{#each this.logs as |log|}}
+        <tr>
+          <td>
+            {{log.created_at}}
+          </td>
+          <td>
+            {{#if log.person}}
+              <PersonLink @person={{log.person}} />
+            {{else if log.person_id}}
+              #{{log.person_id}}
+            {{else}}
+              -
+            {{/if}}
+          </td>
+          <td>
+            {{log.ip}}
+          </td>
+          <td>
+            {{log.method}}
+          </td>
+          <td class="text-end">
+            {{log.status}}
+          </td>
+          <td>
+            {{log.url}}
+          </td>
+          <td class="text-end">
+            {{log.response_size}}
+          </td>
+          <td class="text-end">
+            {{log.completion_time}} ms
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </UiTable>
+    <UiButton @type="secondary" @onClick={{this.goPrevPage}} @disabled={{eq this.currentPage 1}}>
+      Prev Page
+    </UiButton>
+    <UiButton @type="secondary" @onClick={{this.goNextPage}} @disabled={{eq this.currentPage this.total_pages}}>
+      Next Page
+    </UiButton>
+  {{else}}
+    <p class="text-danger font-weight-bold mt-4">No Request Logs matched the criteria.</p>
+  {{/if}}
+</main>

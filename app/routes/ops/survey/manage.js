@@ -1,6 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
-import {action} from '@ember/object';
 
 export default class OpsSurveyManageRoute extends ClubhouseRoute {
   model({survey_id}) {
@@ -29,11 +28,6 @@ export default class OpsSurveyManageRoute extends ClubhouseRoute {
     controller.positionOptions = this._buildPositionOptions(model.positions);
     controller.mentorPositionOptions = this._buildPositionOptions(model.mentorPositions);
     controller.menteePositionOptions = this._buildPositionOptions(model.menteePositions);
-  }
-
-  @action
-  refreshRoute() {
-    this.refresh();
   }
 
   _buildPositionOptions(positions) {

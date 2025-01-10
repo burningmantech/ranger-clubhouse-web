@@ -97,4 +97,9 @@ export default class ClubhouseRoute extends Route {
       return true;
     }
   }
+
+  @action
+  refreshRoute() {
+    this.refresh();
+  }
 }

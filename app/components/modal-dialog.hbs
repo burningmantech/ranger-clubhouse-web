@@ -9,6 +9,8 @@
   {{on-insert this.adjustClassOnInsert}}
   {{!template-lint-disable no-inline-styles}}
   style={{this.hideDialogStyle}}
+  role="dialog"
+  aria-modal="true"
   as |modal|>
   {{#if @title}}
     <modal.header @closeButton={{false}}>
