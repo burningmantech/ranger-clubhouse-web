@@ -166,13 +166,13 @@ export default class ScheduleManageComponent extends Component {
               let agreementWarning = '';
 
               if (!result.signed_motorpool_agreement) {
-                agreementWarning = '<p>To operate the smaller fleet vehicles, such as gators and golf carts,' +
+                agreementWarning = '<p>To operate the smaller fleet vehicles, such as the UTVs and golf carts,' +
                   ' you must first sign the Motor Pool Agreement. Please complete this step to ensure you are authorized' +
                   ' to drive these vehicles during your shift. Visit the Clubhouse homepage and follow the dashboard' +
                   ' instructions to sign the agreement.</p>';
               } else {
                 agreementWarning = '<p>Because you have signed the Motor Pool Agreement, you are permitted to operate the smaller vehicles,' +
-                  ' such as gators and golf carts, during your shift.</p>';
+                  ' such as UTVs and golf carts, during your shift.</p>';
               }
 
               if (result.is_past_mvr_deadline) {
@@ -181,11 +181,9 @@ export default class ScheduleManageComponent extends Component {
                               vehicles from the Ranger rental fleet.</p>
                               ${agreementWarning}
                              <p>Unfortunately, the deadline of ${shiftFormat([result.mvr_deadline], {})}
-                               (Pacific) has passed to submit a Motor Vehicle Record (MVR) request. An approved MVR
-                               would have allowed you to operate larger fleet vehicles, such as pickup trucks, for
-                              this event.</p>
-                             <p>For future events, we encourage you to sign up for a shift before the MVR submission
-                            deadline to expand your vehicle options.</p>`));
+                               (Pacific) has passed to submit a Motor Vehicle Record (MVR) request. For future events,
+                               we encourage you to sign up for a shift before the MVR submission
+                               deadline to expand your vehicle options.</p>`));
               } else {
                 this.modal.info('Motor Vehicle Record Request (optional)',
                   htmlSafe(`<p>
@@ -193,13 +191,13 @@ export default class ScheduleManageComponent extends Component {
                     </p>
                    ${agreementWarning}
                    <p>This position allows access to the larger rental fleet vehicles if a Motor Vehicle Record (MVR)
-                    Request is submitted and approved. This is not the same as signing the Motor Pool Agreement
-                    that permits access to the smaller vehicles.</p>
+                    Request is submitted and approved. This is not the same as signing the Motor Pool Agreement.</p>
                    <p>If you choose not to submit a MVR Request or if the request is denied, you will be limited to
-                   operating smaller Ranger vehicles.</p>
+                   operating UTVs and golf carts.</p>
                    <p>To obtain MVR approval, visit the Clubhouse homepage and follow the instructions on the dashboard.
                     A valid driver’s license is required. License and driving record verification can take 2 weeks
-                    or more. Longer for non-US license holders.
+                    or more. Longer for non-US license holders. Enter all information carefully, denials most often
+                    occur due to errors when submitting the form.
                    </p>
                    <p class="text-danger">
                      The deadline to submit a MVR Request is ${shiftFormat([result.mvr_deadline], {})} (Pacific).
