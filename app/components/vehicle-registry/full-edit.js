@@ -54,8 +54,8 @@ export default class VehicleRegistryFullEditComponent extends Component {
 
   rangerLogoOptions = [
     {id: 'none', title: 'None'},
-    {id: 'permanent-new', title: 'Permanent New'},
-    {id: 'permanent-existing', title: 'Permanent Reauthorize'},
+    {id: 'permanent-new', title: 'New'},
+    {id: 'permanent-existing', title: 'Reauthorize'},
     {id: 'event', title: 'Event Only'}
   ];
 
