@@ -122,7 +122,7 @@
         {{/if}}
       </w.step>
     </ChForm>
-    <w.step @title="Radios"  @nextAction={{this.checkForRadio}}>
+    <w.step @title="Radios" @nextAction={{this.checkForRadio}}>
       {{#unless this.eventInfo.radio_info_available}}
         <UiNotice @type="danger">
           Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
@@ -143,30 +143,9 @@
           />
           {{#if this.activeAssets}}
             {{pluralize this.activeAssets.length "asset"}} checked out.
-            <UiTable>
-              <thead>
-              <tr>
-                <th>Barcode</th>
-                <th>Type</th>
-                <th>Assigned</th>
-                <th>Attachment</th>
-                <th>Out</th>
-              </tr>
-              </thead>
-              <tbody>
-              {{#each this.activeAssets as |ap|}}
-                <tr>
-                  <td>{{ap.asset.barcode}}</td>
-                  <td>{{ap.asset.description}}</td>
-                  <td>{{if ap.asset.perm_assign "Permanent" "Temporary"}}</td>
-                  <td>
-                    <PresentOrNot @value={{ap.attachment.description}} @empty="-"/>
-                  </td>
-                  <td>{{shift-format ap.checked_out}}</td>
-                </tr>
-              {{/each}}
-              </tbody>
-            </UiTable>
+            <HqAssetTable @assetsCheckedOut={{this.activeAssets}}
+                          @attachments={{this.attachments}}
+            />
           {{/if}}
           {{#if this.assets.isUpdating}}
             <LoadingIndicator @text="Refreshing assets"/>

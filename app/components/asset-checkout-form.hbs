@@ -36,11 +36,18 @@
     <ModalDialog @onEscape={{this.closeExpiredDialog}} as |Modal|>
       <Modal.title>Asset Has Expired</Modal.title>
       <Modal.body>
-        Asset {{this.assetExpired.barcode}} has expired and should not be handed out. Please place it
-        in the designated pile for return to the vendor.
+        <p>
+          Asset #{{this.assetExpired.barcode}} is no longer eligible for checkout and should not be handed out.
+          Place it in the designated pile for return to the vendor.
+        </p>
+        The checkout can be forced if you have authorization from the HQ Lead due to unforeseen circumstances. The
+        action will be logged and subject to review.
       </Modal.body>
       <Modal.footer>
         <UiCloseButton @onClick={{this.closeExpiredDialog}} />
+        <UiButton @onClick={{this.forceCheckout}} @type="warning">
+          Force Checkout
+        </UiButton>
       </Modal.footer>
     </ModalDialog>
   {{else}}

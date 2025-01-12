@@ -9,6 +9,8 @@ export default class AssetPersonModel extends Model {
   @attr('number') check_out_person_id;
   @attr('number') check_in_person_id;
 
+  @attr('number', { readOnly: true }) duration;
+
   @attr('', { readOnly: true }) asset;
   @attr('', { readOnly: true }) attachment;
   @attr('', { readOnly: true }) person;

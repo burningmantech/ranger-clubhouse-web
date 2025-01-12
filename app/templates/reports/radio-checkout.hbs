@@ -57,6 +57,10 @@ Showing {{pluralize this.radios.length "entry"}}
         {{else}}
           -
         {{/if}}
+        {{#if radio.check_out_forced}}
+          <br>
+          <UiBadge @type="warning">check out forced</UiBadge>
+        {{/if}}
       </td>
       {{#if (or this.event_summary this.include_eligible)}}
         <td>

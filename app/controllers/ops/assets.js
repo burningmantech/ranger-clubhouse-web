@@ -3,35 +3,39 @@ import {action} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {validatePresence} from 'ember-changeset-validations/validators';
 import _ from 'lodash';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import {
-  TYPE_AMBER,
+  TYPE_AMBER, TYPE_DESKTOP_RADIO,
   TYPE_GEAR,
-  TYPE_KEY,
-  TYPE_RADIO,
+  TYPE_KEY, TYPE_MOBILE_RADIO,
+  TYPE_RADIO, TYPE_RADIO_CHARGER,
   TYPE_TEMP_ID,
-  TYPE_VEHICLE
+  TYPE_VEHICLE, TypeLabels, TypeSort
 } from "clubhouse/models/asset";
 
 const CSV_COLUMNS = [
   {title: 'Barcode', key: 'barcode'},
   {title: 'Type', key: 'type'},
   {title: 'Description', key: 'description'},
-  {title: 'Assignment', key: 'assigned'},
-  {title: 'Category', key: 'category'},
-  {title: 'Notes', key: 'notes'},
+  {title: 'Duration', key: 'duration_label'},
+  {title: 'Asset Group', key: 'group_name'},
+  {title: 'Entity Assignment', key: 'entity_assignment'},
   {title: 'Year', key: 'year'},
   {title: 'Expires On', key: 'expires_on', format: 'date'},
-  {title: 'Has Expired', key: 'has_expired'},
+  {title: 'Has Expired', key: 'has_expired', yesno: true},
   {title: 'Created At', key: 'created_at'},
+  {title: 'Notes', key: 'notes'},
 ];
 
 export default class OpsAssetsController extends ClubhouseController {
   queryParams = ['year'];
 
-  @tracked descriptionFilter = 'All';
-  @tracked typeFilter = 'All';
+  @tracked descriptionFilter = 'all';
+  @tracked entityAssignmentFilter = 'all';
   @tracked expireFilter = 'all';
+  @tracked groupFilter = 'all';
+  @tracked orderNumberFilter = 'all';
+  @tracked typeFilter = 'all';
 
   @tracked assets;
 
@@ -48,8 +52,11 @@ export default class OpsAssetsController extends ClubhouseController {
       groupName: 'Common Types',
       options: [
         ['Radio', TYPE_RADIO],
+        ['Desktop Radio', TYPE_DESKTOP_RADIO],
+        ['Mobile/Vehicle Radio', TYPE_MOBILE_RADIO],
+        ['Radio Charger', TYPE_RADIO_CHARGER],
         ['Gear', TYPE_GEAR],
-        ['Temporary ID', TYPE_TEMP_ID],
+        ['Temporary BMID', TYPE_TEMP_ID],
       ]
     },
     {
@@ -63,14 +70,8 @@ export default class OpsAssetsController extends ClubhouseController {
   ];
 
   permanentOptions = [
-    ['Permanent (Event)', true],
-    ['Temporary (Shift)', false]
-  ];
-
-  categoryOptions = [
-    'Operations',
-    'SITE',
-    'Gerlach Patrol'
+    ['Shift / Temporary', false],
+    ['Event / Permanent', true],
   ];
 
   assetValidations = {barcode: [validatePresence(true)]};
@@ -79,18 +80,43 @@ export default class OpsAssetsController extends ClubhouseController {
     return this.house.currentYear() === +this.year;
   }
 
+  @cached
   get viewAssets() {
     let assets = [...this.assets];
 
-    if (this.typeFilter !== 'All') {
+    if (this.typeFilter !== 'all') {
       assets = assets.filter((asset) => asset.type === this.typeFilter);
     }
 
-    if (this.descriptionFilter !== 'All') {
+    if (this.descriptionFilter !== 'all') {
       if (this.descriptionFilter === 'Blank') {
         assets = assets.filter((asset) => isEmpty(asset.description));
       } else {
         assets = assets.filter((asset) => asset.description === this.descriptionFilter);
+      }
+    }
+
+    if (this.groupFilter !== 'all') {
+      if (this.groupFilter === 'Blank') {
+        assets = assets.filter((asset) => isEmpty(asset.group_name));
+      } else {
+        assets = assets.filter((asset) => asset.group_name === this.groupFilter);
+      }
+    }
+
+    if (this.entityAssignmentFilter !== 'all') {
+      if (this.entityAssignmentFilter === 'Blank') {
+        assets = assets.filter((asset) => isEmpty(asset.entity_assignment));
+      } else {
+        assets = assets.filter((asset) => asset.entity_assignment === this.entityAssignmentFilter);
+      }
+    }
+
+    if (this.orderNumberFilter !== 'all') {
+      if (this.orderNumberFilter === 'Blank') {
+        assets = assets.filter((asset) => isEmpty(asset.order_number));
+      } else {
+        assets = assets.filter((asset) => asset.order_number === this.orderNumberFilter);
       }
     }
 
@@ -108,29 +134,57 @@ export default class OpsAssetsController extends ClubhouseController {
         break;
     }
 
-    assets.sort((a, b) => a.barcode.localeCompare(b.barcode));
+    assets.sort((a, b) => a.barcode.localeCompare(b.barcode, undefined, {numeric: true, sensitivity: 'base'}));
 
     return assets;
   }
 
+  @cached
+  get viewAssetsByType() {
+    return _.map(_.groupBy(this.viewAssets, 'type'), (assets, type) => ({type, label: TypeLabels[type], assets}))
+      .sort((a, b) => (TypeSort[a.type] - TypeSort[b.type]));
+  }
+
+  @cached
   get descriptionOptions() {
-    let options = _.uniqBy(this.assets, 'description').map((a) => a.description);
+    return this._buildOptions('description');
+  }
+
+  @cached
+  get groupOptions() {
+    return this._buildOptions('group_name');
+  }
+
+  @cached
+  get entityAssignmentOptions() {
+    return this._buildOptions('entity_assignment');
+  }
+
+  @cached
+  get orderNumberOptions() {
+    return this._buildOptions('order_number');
+  }
+
+  _buildOptions(column) {
+    let options = _.uniqBy(this.assets, column).map((a) => a[column]);
 
     options = options.map((opt) => (isEmpty(opt) ? 'Blank' : opt));
 
     options.sort((a, b) => (a || '').localeCompare((b || '')));
 
-    options.unshift('All');
+    options.unshift(['All', 'all']);
     return options;
   }
 
+  @cached
   get typeOptions() {
     const options = _.uniqBy(this.assets, 'type').map((a) => [a.typeLabel, a.type]);
     options.sort((a, b) => a[0].localeCompare(b[0]));
-    options.unshift('All');
+    options.unshift(['All', 'all']);
     return options;
   }
 
+  @cached
   get expireFilterOptions() {
     const options = _.sortBy(_.uniqBy(this.assets.filter((a) => a.expires_on !== null), 'expires_on'), 'expires_on')
       .map((a) => [a.expires_on, a.expires_on]);
@@ -164,7 +218,7 @@ export default class OpsAssetsController extends ClubhouseController {
   newAsset() {
     this.entry = this.store.createRecord('asset', {
       type: TYPE_RADIO,
-      category: 'Operations',
+      group_name: 'Operations',
       perm_assign: false,
       year: this.house.currentYear(),
     });
@@ -183,13 +237,15 @@ export default class OpsAssetsController extends ClubhouseController {
       this.creatingBarcode = barcode;
       const record = this.store.createRecord('asset', {
         barcode,
-        type: model.type,
+        group_name: model.group_name,
         description: model.description,
-        notes: model.notes,
-        perm_assign: model.perm_assign,
-        category: model.category,
-        year: model.year,
+        entity_assignment: model.entity_assignment,
         expires_on: model.expires_on,
+        notes: model.notes,
+        order_number: model.order_number,
+        perm_assign: model.perm_assign,
+        type: model.type,
+        year: model.year,
       });
 
       try {
@@ -285,13 +341,15 @@ export default class OpsAssetsController extends ClubhouseController {
   }
 
   @action
-  exportToCSV() {
-    const assets = [...this.viewAssets];
+  exportToCSV({type, assets}) {
     assets.forEach((asset) => {
-      asset.assigned = asset.perm_assign ? 'Event' : 'Shift';
-      asset.has_expired = asset.has_expired ? 'Y' : '-';
+      if (asset.type === TYPE_RADIO) {
+        asset.duration_label = asset.perm_assign ? 'Event' : 'Shift';
+      } else {
+        asset.duration_label = asset.perm_assign ? 'Permanent' : 'Temporary';
+      }
     });
 
-    this.house.downloadCsv(`${this.year}-assets-csv`, CSV_COLUMNS, assets);
+    this.house.downloadCsv(`${this.year}-${type}-assets-csv`, CSV_COLUMNS, assets);
   }
 }

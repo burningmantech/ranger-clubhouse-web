@@ -4,28 +4,54 @@
               @minYear={{2009}}
               @skipPandemic={{true}}
               @onChange={{set-value this 'year'}} />
-  <FormRow>
-    <FormLabel @auto={{true}}>Type</FormLabel>
-    <div class="col-auto">
-      <ChForm::Select @name="typeFilter"
-                      @value={{this.typeFilter}}
-                      @options={{this.typeOptions}}
-                      @onChange={{set-value this 'typeFilter'}}
-      />
-    </div>
+  <p>
+
+  </p>
+  <FormRow class="small">
     <FormLabel @auto={{true}}>Description</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="descriptionFilter"
                       @value={{this.descriptionFilter}}
                       @options={{this.descriptionOptions}}
-                      @onChange={{set-value this 'descriptionFilter'}} />
+                      @onChange={{set-value this 'descriptionFilter'}}
+                      @fieldSize="sm"
+      />
+    </div>
+    <FormLabel @auto={{true}}>Asset Group</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="groupFilter"
+                      @value={{this.groupFilter}}
+                      @options={{this.groupOptions}}
+                      @onChange={{set-value this 'groupFilter'}}
+                      @fieldSize="sm"
+      />
+    </div>
+    <FormLabel @auto={{true}}>Assignment</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="entityAssignmentFilter"
+                      @value={{this.entityAssignmentFilter}}
+                      @options={{this.entityAssignmentOptions}}
+                      @onChange={{set-value this 'entityAssignmentFilter'}}
+                      @fieldSize="sm"
+      />
+    </div>
+    <FormLabel @auto={{true}}>Order #</FormLabel>
+    <div class="col-auto">
+      <ChForm::Select @name="orderNumberFilter"
+                      @value={{this.orderNumberFilter}}
+                      @options={{this.orderNumberOptions}}
+                      @onChange={{set-value this 'orderNumberFilter'}}
+                      @fieldSize="sm"
+      />
     </div>
     <FormLabel @auto={{true}}>Expired?</FormLabel>
     <div class="col-auto">
       <ChForm::Select @name="expireFilter"
                       @value={{this.expireFilter}}
                       @options={{this.expireFilterOptions}}
-                      @onChange={{set-value this 'expireFilter'}} />
+                      @onChange={{set-value this 'expireFilter'}}
+                      @fieldSize="sm"
+      />
     </div>
     <FormLabel @auto={{true}}>Action</FormLabel>
     <div class="col-auto">
@@ -33,63 +59,77 @@
     </div>
   </FormRow>
 
-  <UiSection>
-    <:title> Showing {{this.viewAssets.length}} of {{pluralize this.assets.length "asset"}}</:title>
-    <:actions>
-      <UiExportToCSVButton @onClick={{this.exportToCSV}} @size="sm"/>
-    </:actions>
-    <:body>
-      <UiTable>
-        <thead>
-        <tr>
-          <th>Barcode</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Assigned</th>
-          <th>Expires On</th>
-          <th>Actions</th>
-        </tr>
-        </thead>
+  {{#each this.viewAssetsByType as |group|}}
+    <UiAccordion as |accordian|>
+      <accordian.title>{{group.label}} [{{pluralize group.assets.length 'record'}}]</accordian.title>
+      <accordian.body>
+        <p>
+          <UiExportToCSVButton @onClick={{fn this.exportToCSV group}} @size="sm"/>
+        </p>
+        <UiTable @stickyHeader={{true}}>
+          <thead>
+          <tr>
+            <th>Barcode</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Duration</th>
+            <th>Entity Assignment</th>
+            <th>Asset Group</th>
+            <th>Order #</th>
+            <th>Expires On</th>
+            <th>Actions</th>
+          </tr>
+          </thead>
 
-        <tbody>
-        {{#each this.viewAssets key="id" as |asset|}}
-          <tr>
-            <td>{{asset.barcode}}</td>
-            <td>{{asset.typeLabel}}</td>
-            <td>
-              <PresentOrNot @value={{asset.description}} @empty="-"/>
-            </td>
-            <td class="text-center">{{asset.assignmentLabel}}</td>
-            <td>
-              {{#if asset.expires_on}}
-                {{ymd-format asset.expires_on}}
-                {{#if asset.has_expired}}
-                  <UiBadge @type="warning" class="ms-1">expired</UiBadge>
+          <tbody>
+          {{#each group.assets key="id" as |asset|}}
+            <tr>
+              <td class="text-end">{{asset.barcode}}</td>
+              <td>{{asset.typeLabel}}</td>
+              <td>
+                <PresentOrNot @value={{asset.description}} @empty="-"/>
+              </td>
+              <td class="text-center">{{asset.assignmentLabel}}</td>
+              <td>
+                <PresentOrNot @value={{asset.entity_assignment}} @empty="-"/>
+              </td>
+              <td>
+                <PresentOrNot @value={{asset.group_name}} @empty="-"/>
+              </td>
+              <td>
+                <PresentOrNot @value={{asset.order_number}} @empty="-"/>
+              </td>
+              <td>
+                {{#if asset.expires_on}}
+                  {{ymd-format asset.expires_on}}
+                  {{#if asset.has_expired}}
+                    <UiBadge @type="warning" class="ms-1">expired</UiBadge>
+                  {{/if}}
+                {{else}}
+                  -
                 {{/if}}
-              {{else}}
-                -
-              {{/if}}
-            </td>
-            <td>
-              <UiButton @type="secondary" @size="sm" @onClick={{fn this.assetHistoryAction asset}}>
-                {{fa-icon "rectangle-list" right=1}} History
-              </UiButton>
-              <UiButton @size="sm" @onClick={{fn this.editAsset asset}}>
-                {{fa-icon "edit" right=1}} Edit
-              </UiButton>
-            </td>
-          </tr>
-        {{else if this.assets}}
-          <tr>
-            <td colspan="5" class="text-danger">No assets matched.</td>
-          </tr>
-        {{else}}
-          <td colspan="5" class="text-danger">No assets were found for {{this.year}}?!?</td>
-        {{/each}}
-        </tbody>
-      </UiTable>
-    </:body>
-  </UiSection>
+              </td>
+              <td>
+                <UiButton @type="secondary" @size="sm" @onClick={{fn this.assetHistoryAction asset}}>
+                  {{fa-icon "rectangle-list" right=1}} History
+                </UiButton>
+                <UiButton @size="sm" @onClick={{fn this.editAsset asset}}>
+                  {{fa-icon "edit" right=1}} Edit
+                </UiButton>
+              </td>
+            </tr>
+          {{else if this.assets}}
+            <tr>
+              <td colspan="8" class="text-danger">No assets matched.</td>
+            </tr>
+          {{else}}
+            <td colspan="8" class="text-danger">No assets were found for {{this.year}}?!?</td>
+          {{/each}}
+          </tbody>
+        </UiTable>
+      </accordian.body>
+    </UiAccordion>
+  {{/each}}
   {{#if this.entry}}
     <ModalDialog @title={{if this.entry.isNew "New Asset" "Edit Asset"}} @onEscape={{this.cancelAsset}} as |Modal|>
       <ChForm @formId="asset"
@@ -115,25 +155,59 @@
                     @showCharCount={{true}}
             />
           </FormRow>
+          <p>
+            If the Entity Assignment field is filled in, the asset cannot be checked out. The field will be
+            used by the Last Caller App to show who's talking. This is intended to handle radios where the
+            person does not have a Clubhouse account, or where the asset is being used by a team, not an individual.
+          </p>
+          <FormRow>
+            <f.text @name="entity_assignment"
+                    @label="Entity Assignment"
+                    @size={{40}}
+                    @showCharCount={{true}}
+                    @maxlength={{40}}
+            />
+          </FormRow>
           <FormRow>
             <div class="col-auto">
               <f.radioGroup @name="perm_assign"
-                            @label="Assignment"
+                            @label="Usage Duration"
                             @options={{this.permanentOptions}}
               />
             </div>
-            <f.select @name="category"
-                      @label="Category"
-                      @options={{this.categoryOptions}}
+          </FormRow>
+          <FormRow>
+            <p class="col-12">
+              The Group Name is used to represent which group / team / collection the radio is a part of or has been
+              given to.
+              E.g., SITE, Shift, Event, NVO/DPW, HRS, BPS, etc.
+            </p>
+            <f.text @name="group_name"
+                    @label="Group Name"
+                    @size={{40}}
+                    @maxlength={{40}}
+                    @showCharCount={{true}}
             />
-            <f.text @name="year"
-                    @label="Event Year"
-                    @size={{4}}
-                    @maxlength={{4}}
-            />
+          </FormRow>
+          <p>
+            The expires on field is used to prevent radios from being checked out after a given date at 23:59.
+            (e.g., 2024-09-01 will prevent radios from being checked out after 2024-09-01 @ 23:59.)
+          </p>
+          <FormRow>
             <f.datetime @name="expires_on"
                         @dateOnly={{true}}
                         @label="Expires On (optional)"/>
+          </FormRow>
+          <p>
+            The Order Number field is used to identity which vendor order number the radio belongs to.
+          </p>
+          <FormRow>
+            <f.text @name="order_number"
+                    @label="Order Number"
+                    @size={{40}}
+                    @maxlength={{40}}
+                    @showCharCount={{true}}
+            />
           </FormRow>
           <FormRow>
             <f.textarea @name="notes"

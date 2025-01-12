@@ -16,7 +16,7 @@ Showing {{pluralize this.assets.length "asset"}} outstanding.
     <th>Type</th>
     <th>Description</th>
     <th>Attachment</th>
-    <th>Assigned</th>
+    <th>Duration</th>
     <th>Checked Out /<br>By Person</th>
   </tr>
   </thead>
@@ -42,8 +42,8 @@ Showing {{pluralize this.assets.length "asset"}} outstanding.
           -
         {{/if}}
       </td>
-      <td>
-        {{if asset.perm_assign "Permanent" "Temporary"}}
+      <td class="text-center">
+        <AssetDurationLabel @asset={{asset}} />
       </td>
        <td>
         {{shift-format asset.checked_out.checked_out}}<br>

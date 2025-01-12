@@ -5,10 +5,11 @@
     <th>Type</th>
     <th>Barcode</th>
     <th>Attachment</th>
-    <th>Assigned</th>
+    <th>Duration</th>
     <th>Description</th>
     <th>Checked Out Time /<br>By Person</th>
     <th>Checked In Time /<br>By Person</th>
+    <th>Time (HH:SS)</th>
     <th>Action</th>
   </tr>
   </thead>
@@ -20,7 +21,9 @@
       <td>
         <PresentOrNot @value={{ap.attachment.description}} @empty="-"/>
       </td>
-      <td>{{if ap.asset.perm_assign "Perm" "Temp"}}</td>
+      <td class="text-center">
+        <AssetDurationLabel @asset={{ap.asset}}/>
+      </td>
       <td>
         <PresentOrNot @value={{ap.asset.description}} @empty="-"/>
       </td>
@@ -48,6 +51,9 @@
             <SpinIcon/>
           {{/if}}
         {{/if}}
+      </td>
+      <td class="text-end">
+        {{hour-minute-format ap.duration}}
       </td>
       <td>
         <UiButton @type="secondary" @size="sm" @onClick={{fn this.showHistoryAction ap.asset}}>

@@ -10,7 +10,7 @@ export default class AssetCheckoutFormComponent extends Component {
   @service modal;
   @service toast;
 
-  @tracked assetForm = EmberObject.create({barcode:''});
+  @tracked assetForm = EmberObject.create({barcode: ''});
 
   @tracked barcodeNotFound = null;
   @tracked barcodeCheckedOut = null;
@@ -46,20 +46,26 @@ export default class AssetCheckoutFormComponent extends Component {
    */
 
   @action
-  async checkoutAsset(model) {
+  checkoutAsset(model) {
     const {barcode} = model;
     this.clearErrors();
 
     if (barcode.trim() === '') {
-      this.modal.info(null, 'No barcode number was enterd.');
+      this.modal.info(null, 'No barcode number was entered.');
       return;
     }
+
+    this._performCheckout(model.barcode, model.attachment_id);
+  }
+
+  async _performCheckout(barcode, attachment_id, force = false) {
     this.isSubmitting = true;
     try {
-      const result = await this.ajax.request('asset/checkout', {
-        method: 'POST',
-        data: {person_id: this.args.person.id, barcode, attachment_id: model.attachment_id}
-      });
+      const data = {person_id: this.args.person.id, barcode, attachment_id};
+      if (force) {
+        data.force = 1;
+      }
+      const result = await this.ajax.post('asset/checkout', {data});
 
       switch (result.status) {
         case 'success':
@@ -79,12 +85,29 @@ export default class AssetCheckoutFormComponent extends Component {
           break;
         case 'expired':
           this.assetExpired = result;
+          this.forceBarcode = barcode;
+          this.forceAttachmentId = attachment_id;
+          break;
+
+        case 'entity-assigned':
+          this.modal.info('Asset Is Assigned', `Asset #${barcode} cannot be checked out because it has been assigned to ${result.entity}. Asset assignments differ from asset checkouts because assignments are for situations where the person does not have a Clubhouse account, such as Burn Perimeter Support or High Rock Security members, or where the asset is used by a team or service rather than an individual.`);
+          break;
+
+        default:
+          this.modal.info('Unknown Status', `A bug was tripped over. The status ${result.status} is not known.`);
+          break;
       }
     } catch (response) {
       this.house.handleErrorResponse(response)
     } finally {
       this.isSubmitting = false;
     }
+  }
+
+  @action
+  forceCheckout() {
+    this.assetExpired = null;
+    this._performCheckout(this.forceBarcode, this.forceAttachmentId, true);
   }
 
   /**

@@ -1,0 +1,13 @@
+{{#if (eq @asset.type "radio")}}
+  {{#if @asset.perm_assign}}
+    <UiBadge @text="event" @type="gray"/>
+  {{else}}
+    <UiBadge @text="shift" @type="warning"/>
+  {{/if}}
+{{else}}
+  {{#if @asset.perm_assign}}
+    <UiBadge @text="permanent" @type="gray"/>
+  {{else}}
+    <UiBadge @text="temporary" @type="warning"/>
+  {{/if}}
+{{/if}}
