@@ -15,7 +15,7 @@
       <th>Count</th>
     {{/if}}
     <th>Description</th>
-    <th>Assigned</th>
+    <th>Duration</th>
   </tr>
   </thead>
   <tbody>
@@ -26,7 +26,9 @@
         <td class="text-end">{{asset.count}}</td>
       {{/if}}
       <td>{{asset.description}}</td>
-      <td>{{if asset.perm_assign "Permanent" "Temporary"}}</td>
+      <td class="text-center">
+        <AssetDurationLabel @asset={{asset}} />
+      </td>
     </tr>
   {{else}}
     <tr>

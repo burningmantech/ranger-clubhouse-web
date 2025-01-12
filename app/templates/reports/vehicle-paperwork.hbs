@@ -15,7 +15,7 @@ This report will show anyone who meets one of the following conditions:
   <UiButton @onClick={{this.exportToCsv}}>Export to CSV</UiButton>
 </p>
 Showing {{pluralize this.people.length "person"}}
-<UiTable @noWidthAuto={{true}} class="table-sticky">
+<UiTable @noWidthAuto={{true}} @stickyHeader={{true}}>
   <thead>
   <tr>
     <th>Callsign</th>

@@ -4,7 +4,7 @@
     <th>Type</th>
     <th>Barcode</th>
     <th>Attachment</th>
-    <th>Description</th>
+    <th>Description / Group</th>
     <th>Checked Out</th>
     <th>Actions</th>
     <th class="w-5">&nbsp;</th>
@@ -13,7 +13,10 @@
   <tbody>
   {{#each @assetsCheckedOut as |ap|}}
     <tr>
-      <td>{{this.typeLabel ap.asset.type}}</td>
+      <td>
+        {{this.typeLabel ap.asset.type}}
+        <AssetDurationLabel @asset={{ap.asset}} />
+      </td>
       <td>{{ap.asset.barcode}}</td>
       <td>
         <PresentOrNot @value={{ap.attachment.description}} @empty="none"/>
@@ -26,19 +29,8 @@
       <td>
         <PresentOrNot @value={{ap.asset.description}} @empty="-"/>
         <br>
-        {{#if (eq ap.asset.type "radio")}}
-          {{#if ap.asset.perm_assign}}
-            <UiBadge @text="Event Radio" @type="gray" />
-          {{else}}
-            <UiBadge @text="Shift Radio" @type="warning" />
-          {{/if}}
-        {{else}}
-          {{#if ap.asset.perm_assign}}
-            <UiBadge @text="Permanent" @type="gray" />
-          {{else}}
-            <UiBadge @text="Temporary" @type="warning" />
-          {{/if}}
-        {{/if}}
+        <PresentOrNot @value={{ap.asset.group_name}} @empty="-"/>
+        <br>
       </td>
       <td>{{shift-format ap.checked_out}}</td>
       <td>

@@ -120,6 +120,7 @@ export default class ReportsRadioAssetsRoute extends ClubhouseRoute {
       barcode,
       count,
       description,
+      type: 'radio',
       perm_assign
     });
   }

@@ -31,7 +31,7 @@
   {{/if}}
   <h3 class="mt-3">
     Asset {{this.asset.barcode}}
-    ({{if this.asset.perm_assign "permanent" "temporary"}})
+    <AssetDurationLabel @asset={{this.asset}} />
     {{this.asset.type}} {{this.asset.description}}
   </h3>
   <UiSection>
@@ -61,6 +61,12 @@
                 <PersonLink @person={{row.check_out_person}} />
               {{else}}
                 -
+              {{/if}}
+              {{#if row.check_out_forced}}
+                <br>
+                <UiBadge @type="warning">
+                  check out forced
+                </UiBadge>
               {{/if}}
             </td>
             <td>
