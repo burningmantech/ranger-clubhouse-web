@@ -19,7 +19,8 @@
       </p>
       <p>
         If the problem persists for more than a day, please contact the Ranger Tech Team at
-        <TechSupportEmail /> for help.
+        <TechSupportEmail/>
+        for help.
       </p>
     </Modal.body>
     <Modal.footer>
@@ -35,7 +36,9 @@
         Sorry, there was an issue trying to launch the online course. You can try again in a few minutes.
       </p>
       <p>
-        If the problem persists, please contact the Ranger Tech Team <TechSupportEmail /> for help.
+        If the problem persists, please contact the Ranger Tech Team
+        <TechSupportEmail/>
+        for help.
       </p>
     </Modal.body>
     <Modal.footer>
@@ -46,52 +49,16 @@
 {{#if this.showExodusDialog}}
   <ModalDialog as |Modal|>
     <Modal.body>
-      <h4>{{fa-icon "hand-point-right"}} You are about to leave the Clubhouse and head to the Online Course
-        website.</h4>
-      {{#if this.alreadyExists}}
-        <p>
-          Your Online Course account was set up previously.
-        </p>
-        <p>
-          <b>Your Online Course username is:</b><br>
-          {{this.username}}
-        </p>
-        {{#if this.password}}
-          <p>
-            <b>The new password is:</b><br>
-            {{this.password}}
-          </p>
-        {{else}}
-          <p>
-            Use the button below to reset your Online Course account password.<br>
-            <UiButton @onClick={{this.resetPasswordAccount}} @disabled={{this.isSubmitting}}>
-              Reset Online Course Password
-            </UiButton>
-          </p>
-        {{/if}}
-      {{else}}
-        <p>
-          A Ranger online course website account has been set up, and you have been enrolled.
-        </p>
-        <p>
-          <b class="text-danger">
-            WRITE DOWN the following online course website account info. The username
-            and password will be needed to log into the online course website:
-          </b>
-        </p>
-        <p>
-          <b>Username:</b> {{this.username}}<br>
-          <b>Password:</b> {{this.password}}<br>
-        </p>
-        <p>
-          <b>
-            Your username is your callsign in all lower case, ONLY has letters (a-z), and numbers (0-9).
-            All spaces, dashes, and other special characters have been removed.</b>
-        </p>
-        <p>
-          <i>The above credentials are ONLY for the online course website and are SEPARATE from the Clubhouse.</i>
-        </p>
-      {{/if}}
+      <h4>
+        {{fa-icon "hand-point-right" right=1}} You are about to leave the Clubhouse and head to the Online Course
+        website.
+      </h4>
+      <p>
+        You have been enrolled in the Online Course. Please remember that you are still required to attend an In-Person
+        Training session after completing the course.
+      </p>
+      On the Online Course login page, click the <i>Login Using The Clubhouse</i> button to log in. <b>Do not use the
+      login form that asks for a username and password.</b>
     </Modal.body>
     <Modal.footer>
       <UiButton @onClick={{this.launchTrainingAction}} @disabled={{this.isSubmitting}} @class="btn-responsive">
