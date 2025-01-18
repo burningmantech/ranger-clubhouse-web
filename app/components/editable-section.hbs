@@ -1,22 +1,18 @@
 <UiSection id={{if @sectionId (concat "section-" @sectionId)}}>
   <:title>
-    <div class="d-flex flex-row {{unless @editButtonNoRightAlign "justify-content-between"}}">
-      <div>
-        {{yield to="title"}}
-      </div>
-      <div class="{{if @editButtonNoRightAlign "ms-4"}}">
-        {{#if this.isEditing}}
-          <UiButton @onClick={{this.cancelEdit}} @type="gray" @size="sm" class="btn-link">
-            Cancel
-          </UiButton>
-        {{else}}
-          <UiButton @onClick={{this.editAction}} @type="secondary" @size="sm">
-            {{fa-icon "edit" right=1}} Edit
-          </UiButton>
-        {{/if}}
-      </div>
-    </div>
+    {{yield to="title"}}
   </:title>
+  <:actions>
+    {{#if this.isEditing}}
+      <UiButton @onClick={{this.cancelEdit}} @type="gray" @size="sm" class="btn-link">
+        Cancel
+      </UiButton>
+    {{else}}
+      <UiButton @onClick={{this.editAction}} @type="secondary" @size="sm">
+        {{fa-icon "edit" right=1}} Edit
+      </UiButton>
+    {{/if}}
+  </:actions>
   <:body>
     {{#if this.isEditing}}
       {{#if @formFor}}
