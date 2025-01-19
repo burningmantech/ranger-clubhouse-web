@@ -39,9 +39,7 @@ Showing {{pluralize @swags.length "item"}}
         {{/if}}
       </td>
       <td>
-        <UiButton @size="sm" @onClick={{fn @editAction swag}}>
-          {{fa-icon "edit"}} Edit
-        </UiButton>
+        <UiEditButton @size="sm" @onClick={{fn @editAction swag}} />
       </td>
     </tr>
   {{else}}

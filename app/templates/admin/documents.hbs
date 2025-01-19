@@ -82,9 +82,7 @@
             <PersonLink @person={{doc.person_update}} />
           </td>
           <td>
-            <UiButton @size="sm" @onClick={{fn this.editAction doc}}>
-              {{fa-icon "edit"}}Edit
-            </UiButton>
+            <UiEditButton @size="sm" @onClick={{fn this.editAction doc}} />
           </td>
         </tr>
       {{else}}

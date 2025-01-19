@@ -28,9 +28,7 @@
           {{nl2br award.description}}
         </td>
         <td>
-          <UiButton @size="sm" @onClick={{fn this.editAward award}}>
-            {{fa-icon "edit"}} Edit
-          </UiButton>
+          <UiEditButton @size="sm" @onClick={{fn this.editAward award}} />
         </td>
       </tr>
     {{else}}

@@ -38,14 +38,12 @@
         </td>
         <td>
           <UiButton @type="secondary" @onClick={{fn this.setName course}} @size="sm">
-            {{fa-icon "rotate"}} Set Name From LMS
+            {{fa-icon "rotate" right=1}} Set Name From LMS
           </UiButton>
           <UiButton @type="secondary" @onClick={{fn this.retrieveEnrollment course}} @size="sm">
-            {{fa-icon "list"}} Moodle Enrollment
+            {{fa-icon "list" right=1}} Moodle Enrollment
           </UiButton>
-          <UiButton @type="primary" @onClick={{fn this.editEntry course}} @size="sm">
-            {{fa-icon "edit"}} Edit
-          </UiButton>
+          <UiEditButton @onClick={{fn this.editEntry course}} @size="sm"/>
         </td>
       </tr>
     {{/each}}

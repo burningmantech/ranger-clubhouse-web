@@ -25,11 +25,9 @@
           <b>{{fa-icon "hourglass-half"}} The request is awaiting review.</b>
         </p>
         <p>
-          <UiButton @onClick={{fn @editAction vehicle}}>
-            {{fa-icon "edit"}} Edit Request
-          </UiButton>
+          <UiEditButton @onClick={{fn @editAction vehicle}} />
           <UiButton @type="gray" @onClick={{fn @deleteAction vehicle}} class="btn-link">
-            {{fa-icon "trash"}} Delete Request
+            {{fa-icon "trash"}} Delete
           </UiButton>
         </p>
       {{else if vehicle.isApproved}}

@@ -113,9 +113,7 @@
                 <UiButton @type="secondary" @size="sm" @onClick={{fn this.assetHistoryAction asset}}>
                   {{fa-icon "rectangle-list" right=1}} History
                 </UiButton>
-                <UiButton @size="sm" @onClick={{fn this.editAsset asset}}>
-                  {{fa-icon "edit" right=1}} Edit
-                </UiButton>
+                <UiEditButton @size="sm" @onClick={{fn this.editAsset asset}} />
               </td>
             </tr>
           {{else if this.assets}}

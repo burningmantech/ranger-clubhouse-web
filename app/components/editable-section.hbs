@@ -4,13 +4,9 @@
   </:title>
   <:actions>
     {{#if this.isEditing}}
-      <UiButton @onClick={{this.cancelEdit}} @type="gray" @size="sm" class="btn-link">
-        Cancel
-      </UiButton>
+      <UiCancelButton @onClick={{this.cancelEdit}} @type="gray" @size="sm"/>
     {{else}}
-      <UiButton @onClick={{this.editAction}} @type="secondary" @size="sm">
-        {{fa-icon "edit" right=1}} Edit
-      </UiButton>
+      <UiEditButton @onClick={{this.editAction}} @type="secondary" @size="sm"/>
     {{/if}}
   </:actions>
   <:body>

@@ -43,33 +43,31 @@
             <td>{{tm.position.title}}</td>
             <td class="text-center">
               {{#if tm.isPending}}
-                <UiBadge @text="Review Needed" @type="danger" />
+                <UiBadge @text="Review Needed" @type="danger"/>
               {{else if tm.isRejected}}
-                <UiBadge @text="Request Rejected" @type="warning" />
+                <UiBadge @text="Request Rejected" @type="warning"/>
               {{else if tm.isApproved}}
-                <UiBadge @text="Approved" @type="success" />
+                <UiBadge @text="Approved" @type="success"/>
               {{else}}
                 [Unknown {{tm.status}}]
               {{/if}}
             </td>
             <td>
               {{#if this.hasTimesheetManagement}}
-                <UiButton @size="sm"
-                          @type={{if tm.isPending "danger" "primary"}}
-                          @onClick={{fn this.editEntryAction tm}}
-                          @disabled={{tm.isReloading}}>
+                <UiEditButton @size="sm"
+                              @type={{if tm.isPending "danger" "primary"}}
+                              @onClick={{fn this.editEntryAction tm}}
+                              @disabled={{tm.isReloading}}>
+                  {{if tm.isPending "Review" "Edit"}}
                   {{#if tm.isReloading}}
                     <SpinIcon/>
-                  {{else}}
-                    {{fa-icon "edit"}}
                   {{/if}}
-                  {{if tm.isPending "Review" "Edit"}}
-                </UiButton>
+                </UiEditButton>
               {{else}}
                 <UiButton @size="sm" @type="primary"
                           @onClick={{fn this.viewEntryAction tm}}
                           @disabled={{tm.isReloading}}>
-                  {{fa-icon "magnifying-glass"}} View
+                  {{fa-icon "magnifying-glass" right=1}} View
                 </UiButton>
               {{/if}}
             </td>

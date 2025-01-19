@@ -23,7 +23,7 @@ Showing {{pluralize @personPogs.length "pog"}}
       <td>{{shift-format pog.issued_at year=true}}</td>
       <td>{{pog.issued_by.callsign}}</td>
       <td>
-        <UiButton @onClick={{fn this.editEntry pog}} @size="sm">{{fa-icon "edit"}} Edit</UiButton>
+        <UiEditButton @onClick={{fn this.editEntry pog}} @size="sm" />
       </td>
     </tr>
   {{else}}

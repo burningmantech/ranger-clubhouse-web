@@ -98,9 +98,7 @@
         {{/if}}
       </td>
       <td>
-        <UiButton @size="sm" @onClick={{fn @editAction position}}>
-          {{fa-icon "edit"}} Edit
-        </UiButton>
+        <UiEditButton @size="sm" @onClick={{fn @editAction position}}/>
       </td>
     </tr>
   {{else}}
