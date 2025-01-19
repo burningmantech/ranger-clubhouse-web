@@ -82,9 +82,7 @@
                       <UiButton @onClick={{fn this.deleteCredit credit}} @type="danger" @size="sm">
                         {{fa-icon "trash-alt" type="s" right=1}} Delete
                       </UiButton>
-                      <UiButton @onClick={{fn this.editCredit credit}} @size="sm">
-                        {{fa-icon "edit" right=1}} Edit
-                      </UiButton>
+                      <UiEditButton @onClick={{fn this.editCredit credit}} @size="sm"/>
                     </UiButtonRow>
                   </td>
                 </tr>

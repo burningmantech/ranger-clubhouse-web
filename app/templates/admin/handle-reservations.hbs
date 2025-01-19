@@ -70,9 +70,7 @@
               <PresentOrNot @value={{hr.reason}} @empty="-"/>
             </td>
             <td>
-              <UiButton @onClick={{fn this.editHandleReservation hr}} @size="sm">
-                {{fa-icon "edit"}} Edit
-              </UiButton>
+              <UiEditButton @onClick={{fn this.editHandleReservation hr}} @size="sm"/>
             </td>
           </tr>
         {{else}}

@@ -158,14 +158,12 @@
           <div class="vehicle-registry-action">
             <UiButtonRow>
               {{#if this.canEditVehicles}}
-                <UiButton @type="secondary" @size="sm"
-                          @onClick={{fn this.editEntryAction vehicle}}>
-                  {{fa-icon "edit"}} Edit
-                </UiButton>
+                <UiEditButton @type="secondary" @size="sm"
+                              @onClick={{fn this.editEntryAction vehicle}}/>
               {{/if}}
               <UiButton @type="secondary" @size="sm"
                         @onClick={{fn this.editStickerAction vehicle}}>
-                {{fa-icon "plus"}} View / Add Sticker
+                {{fa-icon "plus" right=1}} View / Add Sticker
               </UiButton>
             </UiButtonRow>
           </div>

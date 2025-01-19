@@ -33,9 +33,7 @@
         </td>
         <td>{{document.tags}}</td>
         <td>
-          <UiButton @type="secondary" @size="sm" @onClick={{fn this.editHelp document}}>
-            {{fa-icon "edit"}} Edit
-          </UiButton>
+          <UiEditButton @type="secondary" @size="sm" @onClick={{fn this.editHelp document}} />
         </td>
       </tr>
     {{/each}}

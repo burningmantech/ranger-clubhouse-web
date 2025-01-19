@@ -42,9 +42,7 @@
         </td>
         {{#if this.canManageRoles}}
           <td>
-            <UiButton @size="sm" @onClick={{fn this.editRole role}}>
-              {{fa-icon "edit"}} Edit
-            </UiButton>
+            <UiEditButton @size="sm" @onClick={{fn this.editRole role}} />
           </td>
         {{/if}}
       </tr>

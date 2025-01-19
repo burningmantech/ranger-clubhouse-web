@@ -39,9 +39,7 @@
           {{/if}}
         </td>
         <td>
-          <UiButton @type="secondary" @size="sm" @onClick={{fn this.editCertificationAction certification}}>
-            {{fa-icon "edit"}} Edit
-          </UiButton>
+          <UiEditButton @type="secondary" @size="sm" @onClick={{fn this.editCertificationAction certification}} />
         </td>
       </tr>
     {{else}}

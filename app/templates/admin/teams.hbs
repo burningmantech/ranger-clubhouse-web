@@ -82,9 +82,7 @@
           {{/if}}
         </td>
         <td>
-          <UiButton @onClick={{fn this.editTeam team}} @size="sm">
-            {{fa-icon "edit" right=1}} Edit
-          </UiButton>
+          <UiEditButton @onClick={{fn this.editTeam team}} @size="sm"/>
         </td>
       </tr>
     {{else}}

@@ -291,9 +291,7 @@
               </div>
             {{/if}}
             <div class="mt-2">
-              <UiButton @size="sm" @onClick={{fn this.editStudentAction student}} @class="btn-responsive">
-                {{fa-icon "edit"}} Edit
-              </UiButton>
+              <UiEditButton @size="sm" @onClick={{fn this.editStudentAction student}} class="btn-responsive"/>
             </div>
           </div>
         </div>

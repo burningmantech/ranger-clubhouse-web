@@ -127,9 +127,9 @@
                         @onClick={{fn this.editEntryAction ts}}
                         @disabled={{ts.isReloading}}>
                 {{#if this.canManageTimesheets}}
-                  {{fa-icon "edit"}} {{if ts.isPending "Review" "Edit"}}
+                  {{fa-icon "edit" right=1}} {{if ts.isPending "Review" "Edit"}}
                 {{else}}
-                  {{fa-icon "magnifying-glass"}} View
+                  {{fa-icon "magnifying-glass" right=1}} View
                 {{/if}}
               </UiButton>
             {{/if}}

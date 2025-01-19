@@ -47,12 +47,10 @@
           {{/if}}
         </td>
         <td>
-          <UiButton @type="secondary"
-                    @size="sm"
-                    @disabled={{and setting.is_credential (not this.isTechNinja)}}
-                    @onClick={{fn this.edit setting}}>
-            {{fa-icon "edit"}} Edit
-          </UiButton>
+          <UiEditButton @type="secondary"
+                        @size="sm"
+                        @disabled={{and setting.is_credential (not this.isTechNinja)}}
+                        @onClick={{fn this.edit setting}} />
         </td>
       </tr>
     {{/each}}

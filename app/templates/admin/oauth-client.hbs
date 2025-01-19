@@ -25,9 +25,7 @@
         <td>{{client.description}}</td>
         <td>{{client.secret}}</td>
         <td>
-          <UiButton @onClick={{fn this.editEntry client}} @size="sm">
-            {{fa-icon "edit" right=1}} Edit
-          </UiButton>
+          <UiEditButton @onClick={{fn this.editEntry client}} @size="sm"/>
         </td>
       </tr>
     {{/each}}

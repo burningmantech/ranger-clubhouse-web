@@ -41,9 +41,7 @@
         <td>{{shift-format ed.pre_event_slot_end}}</td>
         <td>
           {{#if this.canEditRecords}}
-            <UiButton @size="sm" @onClick={{fn this.edit ed}}>
-              {{fa-icon "edit"}}Edit
-            </UiButton>
+            <UiEditButton @size="sm" @onClick={{fn this.edit ed}} />
           {{else}}
             -
           {{/if}}

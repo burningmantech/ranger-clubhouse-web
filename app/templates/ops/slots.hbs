@@ -145,9 +145,7 @@
                       <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteSlot slot}}>
                         {{fa-icon "trash-alt"type="fas"}} Delete
                       </UiButton>
-                      <UiButton @onClick={{fn this.editSlot slot}} @size="sm">
-                        {{fa-icon "edit"}} Edit
-                      </UiButton>
+                      <UiEditButton @onClick={{fn this.editSlot slot}} @size="sm"/>
                     </UiButtonRow>
                   </td>
                 </tr>

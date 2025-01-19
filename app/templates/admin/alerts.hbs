@@ -28,16 +28,14 @@
         <td>{{alert.title}}<br>{{alert.description}}</td>
         <td class="no-wrap">
           {{#if alert.on_playa}}
-            <UiBadge @text="on playa" @type="secondary" />
+            <UiBadge @text="on playa" @type="secondary"/>
           {{else}}
             -
           {{/if}}
         </td>
         {{#if this.canManageAlerts}}
           <td class="no-wrap">
-            <UiButton @size="sm" @onClick={{fn this.editAlert alert}}>
-              {{fa-icon "edit"}} Edit
-            </UiButton>
+            <UiEditButton @size="sm" @onClick={{fn this.editAlert alert}} />
           </td>
         {{/if}}
       </tr>

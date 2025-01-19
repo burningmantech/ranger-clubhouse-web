@@ -78,9 +78,7 @@
           {{motd.subject}}
         </td>
         <td>
-          <UiButton @size="sm" @onClick={{fn this.editEntry motd}}>
-            {{fa-icon "edit"}}Edit
-          </UiButton>
+          <UiEditButton @size="sm" @onClick={{fn this.editEntry motd}} />
         </td>
       </tr>
     {{else}}

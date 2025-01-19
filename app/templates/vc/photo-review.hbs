@@ -31,11 +31,11 @@
               <tr>
                 <td>
                   {{#if (eq photo.status "approved")}}
-                    <UiBadge @text="approved" @type="success" />
+                    <UiBadge @text="approved" @type="success"/>
                   {{else if (eq photo.status "rejected")}}
-                    <UiBadge @text="rejected" @type="danger" />
+                    <UiBadge @text="rejected" @type="danger"/>
                   {{else if (eq photo.status "submitted")}}
-                    <UiBadge @text="submitted" @type="warning" />
+                    <UiBadge @text="submitted" @type="warning"/>
                   {{else}}
                     {{photo.status}}
                   {{/if}}
@@ -84,28 +84,26 @@
             </UiTable>
           </p>
           <p>
-            <UiButton @type="secondary"
-                      class="me-4"
-                      @disabled={{photo.isSaving}}
-                      @onClick={{fn this.editPhotoAction photo}}>
-              {{fa-icon "edit" right=1}} Edit
-            </UiButton>
-            {{#if (not-eq photo.status "rejected")}}
-              <UiButton @type="danger"
-                        class="me-4"
-                        @onClick={{fn this.showReviewPhoto photo}}
-                        @disabled={{photo.isSaving}}>
-                {{fa-icon "times" right=1}} Reject
-              </UiButton>
-            {{/if}}
-            {{#if (not-eq photo.status "approved")}}
-              <UiButton @type="success" @onClick={{fn this.approveAction photo}} @disabled={{photo.isSaving}}>
-                {{fa-icon "check" right=1}} Approve
-              </UiButton>
-            {{/if}}
-            {{#if photo.isSaving}}
-              <LoadingIndicator/>
-            {{/if}}
+            <UiButtonRow>
+              <UiEditButton @type="secondary"
+                            @disabled={{photo.isSaving}}
+                            @onClick={{fn this.editPhotoAction photo}} />
+              {{#if (not-eq photo.status "rejected")}}
+                <UiButton @type="danger"
+                          @onClick={{fn this.showReviewPhoto photo}}
+                          @disabled={{photo.isSaving}}>
+                  {{fa-icon "times" right=1}} Reject
+                </UiButton>
+              {{/if}}
+              {{#if (not-eq photo.status "approved")}}
+                <UiButton @type="success" @onClick={{fn this.approveAction photo}} @disabled={{photo.isSaving}}>
+                  {{fa-icon "check" right=1}} Approve
+                </UiButton>
+              {{/if}}
+              {{#if photo.isSaving}}
+                <LoadingIndicator/>
+              {{/if}}
+            </UiButtonRow>
           </p>
         <p>
           {{#if photo.rejection_history}}

@@ -97,12 +97,10 @@
               {{fa-icon "trash" right=1}} Delete
             </UiButton>
             {{#if photo.is_active}}
-              <UiButton @type="secondary"
-                        @size="sm"
-                        @disabled={{photo.isSaving}}
-                        @onClick={{fn this.editPhotoAction photo}}>
-                {{fa-icon "edit" right=1}} Edit
-              </UiButton>
+              <UiEditButton @type="secondary"
+                            @size="sm"
+                            @disabled={{photo.isSaving}}
+                            @onClick={{fn this.editPhotoAction photo}} />
               {{#if (not-eq photo.status "rejected")}}
                 <UiButton @type="danger"
                           @size="sm"

@@ -37,9 +37,7 @@
             <PresentOrNot @value={{ps.notes}} @empty="-"/>
           </td>
           <td>
-            <UiButton @onClick={{fn this.editSwag ps}}>
-              {{fa-icon "edit"}} Edit
-            </UiButton>
+            <UiButtonEdit @onClick={{fn this.editSwag ps}} />
           </td>
         </tr>
       {{else}}
@@ -114,7 +112,7 @@
             {{nl2br pa.notes}}
           </td>
           <td>
-            <UiButton @onClick={{fn this.editAward pa}}>{{fa-icon "edit"}} Edit</UiButton>
+            <UiEditButton @onClick={{fn this.editAward pa}} />
           </td>
         </tr>
       {{else}}
