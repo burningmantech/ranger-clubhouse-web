@@ -2,7 +2,7 @@
   <LoadingIndicator @text="Loading dashboard"/>
 {{else}}
   <UiNotice @icon="skull-crossbones" @title="Dashboard Warning" @type="danger">
-    All links and buttons below will affect YOUR account and not operate against {{@person.callsign}}.
+    All links and buttons below will affect YOUR account and will not operate against {{@person.callsign}}.
   </UiNotice>
   {{#if @person.isPastProspective}}
     <DashboardPastProspective/>
