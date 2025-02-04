@@ -6,7 +6,7 @@ import {validatePresence} from 'ember-changeset-validations/validators';
 import {
   STATUS_APPROVED,
   STATUS_PII_ISSUE,
-  STATUS_MORE_HANDLES
+  STATUS_HOLD_MORE_HANDLES
 } from "clubhouse/models/prospective-application";
 import {ReservationTypeLabels} from "clubhouse/models/handle-reservation";
 
@@ -21,6 +21,7 @@ class RejectedHandle {
 export default class VcApplicationHandlesComponent extends Component {
   @service ajax;
   @service house;
+  @service modal;
   @service toast;
 
   @tracked isSubmitting = false;
@@ -72,7 +73,7 @@ export default class VcApplicationHandlesComponent extends Component {
       this.isSubmitting = true;
       await this.ajax.post(`prospective-application/${application.id}/status`, {
         data: {
-          status: STATUS_MORE_HANDLES,
+          status: STATUS_HOLD_MORE_HANDLES,
           message: model.message
         }
       });
@@ -184,7 +185,7 @@ export default class VcApplicationHandlesComponent extends Component {
         }
       });
       await application.reload();
-      if (this.hasPersonalInfoIssues) {
+      if (application.hasPersonalInfoIssues) {
        this.modal.info('Personal Information Issue',
          'The application is on hold because one or more Personal Info fields are blank. While the callsign has been approved, the applicant has not been notified of the assignment. An email has been sent asking for the missing info. Once they respond, the application should be updated and approved.');
       }  else {
