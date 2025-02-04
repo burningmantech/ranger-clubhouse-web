@@ -1,26 +1,9 @@
 import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
-import {
-  STATUS_APPROVED,
-  STATUS_CREATED,
-  STATUS_PENDING,
-  STATUS_PII_ISSUE,
-  WHY_VOLUNTEER_REVIEW_PROBLEM,
-} from "clubhouse/models/prospective-application";
+import {StatusOptions, StatusLabels} from "clubhouse/models/prospective-application";
 import {cached, tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
 import _ from 'lodash';
 
-const statusFilterDescription = {
-  all: 'all applications',
-  pending: 'awaiting review',
-  handles: 'in callsign processing',
-  held: 'on hold, awaiting applicant response, RRN reply, or further investigation needed',
-  'pii-issues': 'Personal Info issues must be resolved first before an account is created.',
-  approved: 'awaiting account creation',
-  created: 'application approved, Clubhouse account(s) created',
-  rejected: 'rejected due to lack of experience, age, pre-bonk, uber-bonk, is returning Ranger, or is duplicate submission.',
-  'why-ranger': 'applications with problematic Why Ranger answers'
-};
 
 export default class VcApplicationsIndexController extends ClubhouseController {
   queryParams = ['year'];
@@ -42,15 +25,7 @@ export default class VcApplicationsIndexController extends ClubhouseController {
 
   statusFilterOptions = [
     ['All', 'all'],
-    ['Pending', 'pending'],
-    ['Handle Processing', 'handles'],
-    ['On Hold', 'held'],
-    ['Personal Info Issues', 'pii-issues'],
-    ['Approved - Awaiting Creation', 'approved'],
-    ['Created Accounts', 'created'],
-    ['Rejected', 'rejected'],
-    ['Why Ranger Problems', 'why-ranger'],
-    ['Duplicate', 'duplicate'],
+    ...StatusOptions
   ];
 
   ageFilterOptions = [
@@ -70,7 +45,10 @@ export default class VcApplicationsIndexController extends ClubhouseController {
   }
 
   get applicationTypeDescription() {
-    return statusFilterDescription[this.statusFilter] ?? `Bug: unknown status ${this.statusFilter}`;
+    if (this.statusFilter === 'all') {
+      return 'any status';
+    }
+    return StatusLabels[this.statusFilter] ?? `Bug: unknown status ${this.statusFilter}`;
   }
 
   @cached
@@ -124,37 +102,44 @@ export default class VcApplicationsIndexController extends ClubhouseController {
   @cached
   get filteredApps() {
     let apps;
+    /*
+        switch (this.statusFilter) {
+          case 'pending':
+            apps = this.applications.filter((a) => a.status === STATUS_PENDING);
+            break;
+          case 'handles':
+            apps = this.applications.filter((a) => a.isProcessingCallsign);
+            break;
+          case 'held':
+            apps = this.applications.filter((a) => a.hasHeldStatus);
+            break;
+          case 'pii-issues':
+            apps = this.applications.filter((a) => a.status === STATUS_PII_ISSUE);
+            break;
+          case 'approved':
+            apps = this.applications.filter((a) => a.status === STATUS_APPROVED);
+            break;
+          case 'created':
+            apps = this.applications.filter((a) => a.status === STATUS_CREATED);
+            break;
+          case 'rejected':
+            apps = this.applications.filter((a) => a.hasStopStatus);
+            break;
+          case 'why-ranger':
+            apps = this.applications.filter((a) => a.why_volunteer_review === WHY_VOLUNTEER_REVIEW_PROBLEM);
+            break;
+          case 'duplicate':
+            apps = this.applications.filter((a) => a.isStatusDuplicate);
+            break;
+          default:
+            apps = this.applications;
+        }
+     */
 
-    switch (this.statusFilter) {
-      case 'pending':
-        apps = this.applications.filter((a) => a.status === STATUS_PENDING);
-        break;
-      case 'handles':
-        apps = this.applications.filter((a) => a.isProcessingCallsign);
-        break;
-      case 'held':
-        apps = this.applications.filter((a) => a.hasHeldStatus);
-        break;
-      case 'pii-issues':
-        apps = this.applications.filter((a) => a.status === STATUS_PII_ISSUE);
-        break;
-      case 'approved':
-        apps = this.applications.filter((a) => a.status === STATUS_APPROVED);
-        break;
-      case 'created':
-        apps = this.applications.filter((a) => a.status === STATUS_CREATED);
-        break;
-      case 'rejected':
-        apps = this.applications.filter((a) => a.hasStopStatus);
-        break;
-      case 'why-ranger':
-        apps = this.applications.filter((a) => a.why_volunteer_review === WHY_VOLUNTEER_REVIEW_PROBLEM);
-        break;
-      case 'duplicate':
-        apps = this.applications.filter((a) => a.isStatusDuplicate);
-        break;
-      default:
-        apps = this.applications;
+    if (this.statusFilter !== 'all') {
+      apps = this.applications.filter((a) => a.status === this.statusFilter)
+    } else {
+      apps = this.applications;
     }
 
     switch (this.assignedToFilter) {

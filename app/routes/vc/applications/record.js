@@ -30,7 +30,7 @@ export default class VcApplicationsRecordRoute extends ClubhouseRoute {
     /*
     if (application.isProcessingCallsign) {
       controller.initialTabId = 'handles';
-    } else if ((application.isStatusApproved && application.hasPersonalInfoIssues) || application.hasPersonalInfoIssue) {
+    } else if ((application.isStatusApproved && application.hasPersonalInfoIssues) || application.isStatusHoldPiiIssues) {
       controller.initialTabId = 'personal-info';
     } else {
       controller.initialTabId = 'details';
@@ -40,7 +40,7 @@ export default class VcApplicationsRecordRoute extends ClubhouseRoute {
     let id;
     if (application.isProcessingCallsign) {
       id = 'handles';
-    } else if ((application.isStatusApproved && application.hasPersonalInfoIssues) || application.hasPersonalInfoIssue) {
+    } else if ((application.isStatusApproved && application.hasPersonalInfoIssues) || application.isStatusHoldPiiIssues) {
       id = 'personal-info';
     } else {
       id = 'details';

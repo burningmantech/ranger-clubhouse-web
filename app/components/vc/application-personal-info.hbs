@@ -9,17 +9,20 @@
 >
   <:title>Name, Address, Phone &amp; Emergency Contact</:title>
   <:view>
-    {{#if @application.hasPersonalInfoIssues}}
-      <UiSectionSubtitle @type="warning" @icon="exclamation">
-        One or more fields is blank. All fields, except the Emergency Contact info, are required before a Clubhouse account can be created.
-      </UiSectionSubtitle>
-    {{else if @application.hasPersonalInfoIssue}}
-      <UiSectionSubtitle @type="secondary" @icon="hand-point-right" class="mb-2">
-        {{fa-icon "hand-point-right" right=1}} Callsign has been approved, and the Personal Info issues appear to be resolved. Approve the application if everything looks good.
-      </UiSectionSubtitle>
-      <UiButton @onClick={{this.confirmApproval}} @type="primary">
-        Approve Application
-      </UiButton>
+    {{#if @application.isStatusHoldPiiIssues}}
+      {{#if @application.hasPersonalInfoIssues}}
+        <UiSectionSubtitle @type="warning" @icon="exclamation">
+          Application is on hold due one or more PII fields being blank. Applicant has been emailed.
+        </UiSectionSubtitle>
+      {{else}}
+        <UiSectionSubtitle @type="secondary" @icon="hand-point-right" class="mb-2">
+          Callsign has been approved, and the Personal Info issues appear to be
+          resolved. Approve the application if everything looks good.
+        </UiSectionSubtitle>
+        <UiButton @onClick={{this.confirmApproval}} @type="primary">
+          Approve Application
+        </UiButton>
+      {{/if}}
     {{/if}}
     <UiGridTable as |t|>
       <t.label>Name</t.label>

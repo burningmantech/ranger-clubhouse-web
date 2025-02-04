@@ -29,13 +29,12 @@ export const STATUS_APPROVED = 'approved';
 export const STATUS_PII_ISSUE = 'pii-issue';
 export const STATUS_CREATED = 'created';
 
-export const STATUS_REASON_ISSUE = 'reason-issue';
-
 export const STATUS_HANDLE_CHECK = 'handle-check';
-export const STATUS_MORE_HANDLES = 'more-handles';
+export const STATUS_HOLD_MORE_HANDLES = 'more-handles';
 
 export const STATUS_HOLD_QUALIFICATION_ISSUE = 'qualification-issue';
 export const STATUS_HOLD_RRN_CHECK = 'rrn-check';
+export const STATUS_HOLD_WHY_RANGER_QUESTION = 'why-ranger-question';
 
 export const STATUS_REJECT_PRE_BONK = 'reject-pre-bonk';
 export const STATUS_REJECT_UBERBONKED = 'reject-uber-bonked';
@@ -52,25 +51,55 @@ export const WHY_VOLUNTEER_REVIEW_PROBLEM = 'problem';
 export const WHY_VOLUNTEER_REVIEW_UNREVIEWED = 'unreviewed';
 
 export const StatusOptions = [
-  ['Approved - Awaiting Account Creation', STATUS_APPROVED],
-  ['Personal Info Issue', STATUS_PII_ISSUE],
-  ['Duplicate Application', STATUS_DUPLICATE],
-  ['In Callsign Processing', STATUS_HANDLE_CHECK],
-  ['Account Created', STATUS_CREATED],
-  ['More Handles Requested', STATUS_MORE_HANDLES],
-  ['Pending - Awaiting Review', STATUS_PENDING],
-  ['Awaiting Qualification Confirmation', STATUS_HOLD_QUALIFICATION_ISSUE],
-  ['Hold - Why Ranger Answer Issue', STATUS_REASON_ISSUE],
-  ['Rejected - Pre-Bonked', STATUS_REJECT_PRE_BONK],
-  ['Rejected - Failed Regional Verification', STATUS_REJECT_REGIONAL],
-  ['Rejected - Too Young', STATUS_REJECT_TOO_YOUNG],
-  ['Rejected - Uberbonked', STATUS_REJECT_UBERBONKED],
-  ['Rejected - Lacking Event Experience', STATUS_REJECT_UNQUALIFIED],
-  ['Rejected - Returning Ranger', STATUS_REJECT_RETURNING_RANGER],
-  //['Awaiting RRN Verification', STATUS_HOLD_RRN_CHECK],
+  {
+    groupName: 'Regular Workflow',
+    options: [
+      ['Awaiting Review', STATUS_PENDING],
+      ['In Callsign Processing', STATUS_HANDLE_CHECK],
+      ['Awaiting Account Creation', STATUS_APPROVED],
+      ['Account Created', STATUS_CREATED],
+    ]
+  },
+  {
+    groupName: 'On Hold',
+    options: [
+      ['More Handles Requested', STATUS_HOLD_MORE_HANDLES],
+      ['Personal Info Issue', STATUS_PII_ISSUE],
+      ['Awaiting Qualification Confirmation', STATUS_HOLD_QUALIFICATION_ISSUE],
+      ['Why Ranger Answer Issue', STATUS_HOLD_WHY_RANGER_QUESTION],
+    ]
+  },
+  {
+    groupName: 'Rejected',
+    options: [
+      ['Duplicate Application', STATUS_DUPLICATE],
+      ['Failed RRN Verification', STATUS_REJECT_REGIONAL],
+      ['Lacking Event Experience', STATUS_REJECT_UNQUALIFIED],
+      ['Pre-Bonked', STATUS_REJECT_PRE_BONK],
+      ['Returning Ranger', STATUS_REJECT_RETURNING_RANGER],
+      ['Too Young', STATUS_REJECT_TOO_YOUNG],
+      ['Uberbonked', STATUS_REJECT_UBERBONKED],
+    ]
+  },
 ];
 
-export const StatusLabels = optionsToLabels(StatusOptions);
+export const StatusLabels = {
+  [STATUS_APPROVED]: 'Awaiting Account Creation',
+  [STATUS_CREATED]: 'Account Created',
+  [STATUS_DUPLICATE]: 'Duplicate Application',
+  [STATUS_HANDLE_CHECK]: 'In Callsign Processing',
+  [STATUS_HOLD_QUALIFICATION_ISSUE]: 'Awaiting Qualification Confirmation',
+  [STATUS_HOLD_WHY_RANGER_QUESTION]: 'Why Ranger Answer Issue',
+  [STATUS_HOLD_MORE_HANDLES]: 'More Handles Requested',
+  [STATUS_PENDING]: 'Awaiting Review',
+  [STATUS_PII_ISSUE]: 'Personal Info Issue',
+  [STATUS_REJECT_PRE_BONK]: 'Pre-Bonked',
+  [STATUS_REJECT_REGIONAL]: 'Failed RRN Verification',
+  [STATUS_REJECT_RETURNING_RANGER]: 'Returning Ranger',
+  [STATUS_REJECT_TOO_YOUNG]: 'Too Young',
+  [STATUS_REJECT_UBERBONKED]: 'Uberbonked',
+  [STATUS_REJECT_UNQUALIFIED]: 'Lacking Event Experience',
+}
 
 export const StatusColors = {
   [STATUS_APPROVED]: 'text-bg-success',
@@ -78,10 +107,10 @@ export const StatusColors = {
   [STATUS_DUPLICATE]: 'text-bg-danger',
   [STATUS_HANDLE_CHECK]: 'text-bg-gray',
   [STATUS_CREATED]: 'text-bg-success',
-  [STATUS_MORE_HANDLES]: 'text-bg-warning',
+  [STATUS_HOLD_MORE_HANDLES]: 'text-bg-warning',
   [STATUS_PENDING]: 'text-bg-info',
   [STATUS_HOLD_QUALIFICATION_ISSUE]: 'text-bg-warning',
-  [STATUS_REASON_ISSUE]: 'text-bg-warning',
+  [STATUS_HOLD_WHY_RANGER_QUESTION]: 'text-bg-warning',
   [STATUS_REJECT_PRE_BONK]: 'text-bg-danger',
   [STATUS_REJECT_REGIONAL]: 'text-bg-danger',
   [STATUS_REJECT_TOO_YOUNG]: 'text-bg-danger',
@@ -101,7 +130,8 @@ export const StatusesThatSendEmail = [
   STATUS_APPROVED,
   STATUS_HOLD_QUALIFICATION_ISSUE,
   STATUS_HOLD_RRN_CHECK,
-  STATUS_MORE_HANDLES,
+  STATUS_HOLD_WHY_RANGER_QUESTION,
+  STATUS_HOLD_MORE_HANDLES,
   STATUS_PII_ISSUE,
   STATUS_REJECT_REGIONAL,
   STATUS_REJECT_RETURNING_RANGER,
@@ -147,7 +177,7 @@ export const ColumnLabels = {
 };
 
 export const BadHandleRegexps = [
- // [/^\d\s*[.)-]?\s*\b/, 'Priority indicators detected (e.g., 1., 2), 3 -, etc) - remove the indicators.'],
+  // [/^\d\s*[.)-]?\s*\b/, 'Priority indicators detected (e.g., 1., 2), 3 -, etc) - remove the indicators.'],
   [/\branger\b/i, 'The word "Ranger" detected - remove the word.'],
   [/[,."'!()]/, 'Punctuation (commas, periods, quotes, exclamations, parentheses) detected - remove all punctuations. Dashes are okay IF its part of the actual handle'],
 ];
@@ -219,8 +249,8 @@ export default class ProspectiveApplicationModel extends Model {
 
   get hasHeldStatus() {
     return this.status === STATUS_HOLD_QUALIFICATION_ISSUE
-      || this.status === STATUS_MORE_HANDLES
-      || this.status === STATUS_REASON_ISSUE
+      || this.status === STATUS_HOLD_MORE_HANDLES
+      || this.status === STATUS_HOLD_WHY_RANGER_QUESTION
       || this.status === STATUS_HOLD_RRN_CHECK;
   }
 
@@ -256,7 +286,7 @@ export default class ProspectiveApplicationModel extends Model {
   }
 
   get isStatusMoreHandles() {
-    return this.status === STATUS_MORE_HANDLES;
+    return this.status === STATUS_HOLD_MORE_HANDLES;
   }
 
   get isStatusDuplicate() {
@@ -272,14 +302,18 @@ export default class ProspectiveApplicationModel extends Model {
   }
 
   get isProcessingCallsign() {
-    return this.status === STATUS_HANDLE_CHECK || this.status === STATUS_MORE_HANDLES;
+    return this.status === STATUS_HANDLE_CHECK || this.status === STATUS_HOLD_MORE_HANDLES;
   }
 
   get isStatusPending() {
     return this.status === STATUS_PENDING;
   }
 
-  get hasPersonalInfoIssue() {
+  get isStatusHoldQualificationIssue() {
+    return this.status === STATUS_HOLD_QUALIFICATION_ISSUE;
+  }
+
+  get isStatusHoldPiiIssues() {
     return this.status === STATUS_PII_ISSUE
   }
 

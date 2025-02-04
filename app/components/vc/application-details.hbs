@@ -40,7 +40,14 @@
             </div>
           {{/if}}
         {{else}}
-          <UiBadge @type="danger">{{fa-icon "hand" right=1}} No events selected</UiBadge>
+          <div class="mb-1">
+            <UiBadge @type="danger">{{fa-icon "hand" right=1}} No event attendance</UiBadge>
+          </div>
+          {{#if @application.isStatusHoldQualificationIssue}}
+            Applicant asked to confirm attendance.
+          {{else}}
+            <UiButton @onClick={{this.qualificationIssue}} @size="sm">Ask for attendance</UiButton>
+          {{/if}}
         {{/if}}
       </t.column>
       <t.label>Age</t.label>

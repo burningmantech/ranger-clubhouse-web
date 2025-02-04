@@ -19,7 +19,7 @@
       <UiSectionSubtitle @type="success" @icon="check">
         Callsign approved - awaiting account creation.
       </UiSectionSubtitle>
-    {{else if @application.hasPersonalInfoIssue}}
+    {{else if @application.isStatusHoldPiiIssues}}
       <UiSectionSubtitle @type="warning" @icon="hand">
         Handle has been approved, however, the Personal Info has issues. Application is on hold until the applicant
         responds.
@@ -39,7 +39,7 @@
         {{/if}}
         <div class="mt-2">
           {{#if @application.approved_handle}}
-            <UiButton @type="secondary" @size="sm" class="ms-2" @onClick={{this.openEditApprovedHandleDialog}}>
+            <UiButton @type="secondary" @size="sm" @onClick={{this.openEditApprovedHandleDialog}}>
               Edit Callsign
             </UiButton>
           {{else}}
