@@ -2,17 +2,29 @@
   <h1>System Permissions</h1>
 
   <p>
-    A Clubhouse permission to use access certain parts of this website.
+    A Clubhouse permission (fka role) grants access to various features.
   </p>
-
+  <p>
+    Note: ART role IDs that appear “unusual” are a combination of the high bits from an ART permission base
+    and the low bits from a training position ID.
+  </p>
+  {{#if this.canManageRoles}}
+    <p>
+      Was a new ART recently created and you want to create the associated ART permissions?
+      <UiButton @type="secondary" @size="sm" @onClick={{this.createARTRoles}}>
+        Create ART Permissions
+      </UiButton>
+    </p>
+  {{/if}}
   <UiTable>
     <thead>
     <tr>
       <th>ID</th>
       <th>Title</th>
-      <th>New User?</th>
-      <th>Associated Teams</th>
-      <th>Associated Positions</th>
+      <th>ART Role</th>
+      <th>ART Position</th>
+      <th>Assoc. Teams</th>
+      <th>Assoc. Positions</th>
       {{#if this.canManageRoles}}
         <th>Action</th>
       {{/if}}
@@ -22,22 +34,35 @@
     {{#each this.roles as |role|}}
       <tr>
         <td class="text-end">{{role.id}}</td>
-        <td>{{role.title}}</td>
-        <td class="text-center">
-          {{yesno role.new_user_eligible}}
+        <td>
+          {{role.title}}
+        </td>
+        <td>
+          {{#if role.art_role_title}}
+            {{role.art_role_title}}
+          {{else}}
+            -
+          {{/if}}
+        </td>
+        <td>
+          {{#if role.art_position_title}}
+            {{role.art_position_title}}
+          {{else}}
+            -
+          {{/if}}
         </td>
         <td>
           {{#each role.teams as |team|}}
             {{team.title}}<br>
           {{else}}
-            <i class="text-muted">None</i>
+            -
           {{/each}}
         </td>
         <td>
           {{#each role.positions as |position|}}
             {{position.title}}<br>
           {{else}}
-            <i class="text-muted">None</i>
+            -
           {{/each}}
         </td>
         {{#if this.canManageRoles}}
@@ -86,4 +111,61 @@
       </ChForm>
     </ModalDialog>
   {{/if}}
+
+  {{#if this.artForm}}
+    <ModalDialog @title="Create ART Permissions" @onEscape={{this.cancelARTRoles}} as |Modal|>
+      <ChForm @formId="art"
+              @formFor={{this.artForm}}
+              @onSubmit={{this.submitARTRoles}} as |f|>
+        <Modal.body>
+          <p>
+            Select the ART position to create the associated ART permissions.
+          </p>
+          <FormRow>
+            <f.select @name="position_id"
+                      @label="ART Position:"
+                      @options={{this.artOptions}}
+            />
+          </FormRow>
+        </Modal.body>
+        <Modal.footer @align="start">
+          <f.submit @label="Create"/>
+          <UiCancelButton @onClick={{this.cancelARTRoles}} />
+        </Modal.footer>
+      </ChForm>
+    </ModalDialog>
+  {{/if}}
+  {{#if this.artResults}}
+    <ModalDialog @title="ART Role Creation Results" @onEscape={{this.closeARTResults}} as |Modal|>
+      <Modal.body>
+      <p>
+        {{#if this.artResults.roles}}
+          The following {{pluralize this.artResults.roles.length "role"}} were created:
+          <ul>
+            {{#each this.artResults.roles as |role|}}
+              <li>{{role.title}}</li>
+            {{/each}}
+          </ul>
+        {{else}}
+          No ART roles were created.
+        {{/if}}
+        </p>
+        {{#if this.artResults.existing}}
+          The following {{pluralize this.artResults.existing.length "role"}} already exist, and were not created:
+          <ul>
+            {{#each this.artResults.existing as |role|}}
+              <li>{{role.title}}</li>
+            {{/each}}
+          </ul>
+        {{/if}}
+      </Modal.body>
+      <Modal.footer @align="start">
+        <UiCloseButton @onClick={{this.closeARTResults}} />
+      </Modal.footer>
+    </ModalDialog>
+  {{/if}}
 </main>
+
+{{#if this.isSubmitting}}
+  <LoadingIndicator/>
+{{/if}}

@@ -38,6 +38,7 @@ export const POSITION_MASK = 0x0fff;
 
 export const ART_TRAINER_BASE = 0x1000000;
 export const SURVEY_MANAGEMENT_BASE = 0x2000000;
+export const ART_GRADUATE_BASE = 0x30000000;
 
 export const Role = {
   ADMIN,

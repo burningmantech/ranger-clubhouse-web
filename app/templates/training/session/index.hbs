@@ -168,30 +168,32 @@
           <LinkTo @route="training.session.trainers-report"
                   @models={{array this.training.id this.slot.id}}
                   class="btn btn-secondary">
-            {{fa-icon "list-alt"}} Trainer's Report
+            {{fa-icon "list-alt" right=1}} Trainer's Report
           </LinkTo>
           <LinkTo @route="training.session.signup-sheet"
                   @models={{array this.training.id this.slot.id}}
                   class="btn btn-secondary">
-            {{fa-icon "clipboard-check"}} Sign up Sheet
+            {{fa-icon "clipboard-check" right=1}} Sign up Sheet
           </LinkTo>
           <UiButton @type="secondary"
                     @onClick={{this.toggleEmailListAction}}
                     @disabled={{is-empty this.students}}>
-            {{fa-icon "envelope"}} {{if this.showEmails "Hide Emails" "List Emails"}}
+            {{fa-icon "envelope" right=1}} {{if this.showEmails "Hide Emails" "List Emails"}}
           </UiButton>
           {{#if this.canAdjustRosters}}
             <UiButton @type="secondary"
                       @onClick={{this.showAddTraineeAction}}>
-              {{fa-icon "plus-square"}} Add Person
+              {{fa-icon "plus-square" right=1}} Add Person
             </UiButton>
           {{/if}}
           {{#if this.offersGraduation}}
-            <UiButton @type="secondary"
-                      @onClick={{this.showGraduateStudentsAction}}
-                      @disabled={{is-empty this.students}}>
-              {{fa-icon "graduation-cap"}} Graduate Trainees
-            </UiButton>
+            {{#if this.canGraduate}}
+              <UiButton @type="secondary"
+                        @onClick={{this.showGraduateStudentsAction}}
+                        @disabled={{is-empty this.students}}>
+                {{fa-icon "graduation-cap" right=1}} Graduate Trainees
+              </UiButton>
+            {{/if}}
           {{/if}}
         </UiButtonRow>
       </div>
@@ -220,7 +222,7 @@
             <div class="dropdown-divider"></div>
             <a href class="dropdown-item" {{on-click this.showAddTraineeAction}}>Add Person</a>
           {{/if}}
-          {{#if this.offersGraduation}}
+          {{#if (and this.offersGraduation this.canGraduate)}}
             <div class="dropdown-divider"></div>
             <a href class="dropdown-item" {{on-click this.showGraduateStudentsAction}}>Graduate Trainees</a>
           {{/if}}
