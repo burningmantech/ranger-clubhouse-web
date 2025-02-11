@@ -180,10 +180,11 @@ export default class HouseService extends Service {
    * @param {*} model
    * @param {string} successMessage A toast message to show on success
    * @param {string|function} routeOrCallback Route to transition to or callback function
+   * @param {function|null} finallyCallback
    * @returns {Promise<*>}
    */
 
-  async saveModel(model, successMessage, routeOrCallback = null) {
+  async saveModel(model, successMessage, routeOrCallback = null, finallyCallback = null) {
     this.toast.clear();
 
     const isCallback = typeof (routeOrCallback) === 'function';
@@ -202,6 +203,8 @@ export default class HouseService extends Service {
       } else {
         this.handleErrorResponse(response);
       }
+    } finally {
+      finallyCallback?.();
     }
   }
 

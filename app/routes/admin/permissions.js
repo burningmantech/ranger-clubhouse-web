@@ -4,12 +4,16 @@ import { ADMIN } from 'clubhouse/constants/roles';
 export default class AdminRolesRoute extends ClubhouseRoute {
   roleRequired = ADMIN;
 
-  model() {
-    return this.store.query('role', { include_associations: 1});
+  async model() {
+    return {
+      roles: await this.store.query('role', {include_associations: 1}),
+      art_positions: await this.store.query('position', {art_training: 1}),
+    }
   }
 
   setupController(controller, model) {
-    controller.set('entry', null);
-    controller.set('roles', model);
+    controller.entry = null;
+    controller.roles =  model.roles;
+    controller.art_positions = model.art_positions;
   }
 }
