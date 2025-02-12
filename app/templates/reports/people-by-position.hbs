@@ -1,5 +1,7 @@
 <h1>People by Position</h1>
-
+<p>
+  Legend: {{fa-icon "check" color="green" right=1}} = indicates the person is on site.
+</p>
 <FormRow>
   <FormLabel @fixed={{true}}>Options</FormLabel>
   <div class="col-auto mt-2">
@@ -95,7 +97,7 @@
                   <PersonLink @person={{person}} />
                 </td>
                 <td>{{person.status}}</td>
-                <td>{{#if person.on_site}}{{fa-icon "check" color="green"}}{{/if}}</td>
+                <td>{{#if person.on_site}}{{fa-icon "check" color="green" right=1}}{{/if}}</td>
                 <td>{{position.title}}</td>
               </tr>
             {{~/each~}}
