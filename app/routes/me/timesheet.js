@@ -29,9 +29,9 @@ export default class MeTimesheetRoute extends ClubhouseRoute {
 
     data.timesheetSummary = (await this.ajax.request(`person/${person_id}/timesheet-summary`, {data: {year}})).summary;
     data.timesheets = await this.store.query('timesheet', queryParams);
-    data.eventInfo = (await this.ajax.request(`person/${person_id}/event-info`, { data: { year } })).event_info;
+    data.eventInfo = (await this.ajax.request(`person/${person_id}/event-info`, {data: {year}})).event_info;
 
-    data.timecardYearRound = this.session.hasRole(TIMECARD_YEAR_ROUND);
+    data.timecardYearRound = this.session.hasRole(TIMECARD_YEAR_ROUND) && (data.eventInfo.event_period !== 'before-event');
 
     // When corrections are enabled or if the person has the Timecard Year Round permission (NVO personnel),
     // pull in timesheet entries, missing requests,and person positions (for missing requests)
