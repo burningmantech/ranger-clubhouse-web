@@ -1,6 +1,6 @@
 {{#unless @noheader}}
   <div class="font-italic mb-1">
-    <b>{{#if @trainer}}{{if (eq @survey.type "alpha") "Mentor" "Trainer"}} {{@trainer.callsign}}: {{/if}}{{@question.description}}</b>
+    <b>{{#if @trainer}}{{@trainerTitle}} {{@trainer.callsign}}: {{/if}}{{@question.description}}</b>
   </div>
 {{/unless}}
 <div class="ms-2">
@@ -35,40 +35,36 @@
       ({{pluralize @question.responses.length "response"}})
       {{#each @question.responses as |response|}}
         <div class="mb-1 ms-2">
-          &mdash; {{response.answer}}
-          {{#if this.isAlphaSurvey}}
-            <span class="text-muted ms-1">(from {{response.person.callsign}})</span>
-          {{/if}}
+          &mdash; {{#if this.showCallsign}}{{response.person.callsign}}:{{/if}} {{response.answer}}
         </div>
       {{/each}}
     {{/if}}
     {{#each @question.slots as |slot|}}
-      <div class="my-2">
-        {{#if @trainingId}}
-          <LinkTo @route="training.session.index"
-                  @models={{array @trainingId slot.slot_id}}
-                  class="d-block mb-2">
-            {{slot.slot_description}} {{shift-format slot.slot_begins}}
-          </LinkTo>
-        {{else}}
-          {{slot.slot_description}} {{shift-format slot.slot_begins}}
-        {{/if}}
-        ({{pluralize slot.responses.length "response"}})
-        <div class="mt-2">
-          {{#if slot.responses}}
-            {{#each slot.responses as |response|}}
-              <div class="mb-1 ms-2">
-                &mdash; {{response.answer}}
-                {{#if this.isAlphaSurvey}}
-                  <span class="text-muted ms-1">(from {{response.person.callsign}}</span>
-                {{/if}}
-              </div>
-            {{/each}}
+      {{#if slot.responses}}
+        <div class="my-2">
+          {{#if (and @trainingId (eq @survey.type "trainer"))}}
+            <LinkTo @route="training.session.index"
+                    @models={{array @trainingId slot.slot_id}}
+                    class="d-block mb-2">
+              {{slot.slot_description}} {{shift-format slot.slot_begins}}
+            </LinkTo>
           {{else}}
-            <i>No feedback was given</i>
+            {{slot.slot_description}} {{shift-format slot.slot_begins}}
           {{/if}}
+          ({{pluralize slot.responses.length "response"}})
+          <div class="mt-2">
+            {{#if slot.responses}}
+              {{#each slot.responses as |response|}}
+                <div class="mb-1 ms-2">
+                  &mdash; {{#if this.showCallsign}}{{response.person.callsign}}:{{/if}} {{response.answer}}
+                </div>
+              {{/each}}
+            {{else}}
+              <i>No feedback was given</i>
+            {{/if}}
+          </div>
         </div>
-      </div>
+      {{/if}}
     {{/each}}
   {{/if}}
 </div>

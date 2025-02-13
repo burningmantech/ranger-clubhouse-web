@@ -31,13 +31,13 @@ export default class TrainingSurveyReportRoute extends ClubhouseRoute {
 
     switch (survey.type) {
       case TYPE_MENTEES_FOR_MENTOR:
-        controller.personTitle = 'Mentor';
+        controller.trainerTitle = 'Mentor';
         break;
       case TYPE_MENTOR_FOR_MENTEES:
-        controller.personTitle = 'Mentee';
+        controller.trainerTitle = 'Mentee';
         break;
       default:
-        controller.personTitle = 'Trainer';
+        controller.trainerTitle = 'Trainer';
         break;
     }
 

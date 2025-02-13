@@ -8,7 +8,7 @@
   {{#each this.people as |person|}}
     <UiAccordion id="trainer-{{person.trainer_id}}" as |Accordion|>
       <Accordion.title>
-        {{this.personTitle}} {{person.callsign}}
+        {{this.trainerTitle}} {{person.callsign}}
       </Accordion.title>
       <Accordion.body>
         {{#each person.report.summarized_ratings as |summary|}}
@@ -51,7 +51,7 @@
     {{#each this.report.trainers key="trainer_id" as |person|}}
       <UiAccordion id="trainer-{{person.trainer_id}}" as |Accordion|>
         <Accordion.title>
-          {{this.personTitle}} {{person.callsign}}
+          {{this.trainerTitle}} {{person.callsign}}
         </Accordion.title>
         <Accordion.body>
           <div class="photo-medium">
@@ -63,6 +63,7 @@
                                   @question={{question}}
                                   @trainingId={{this.training.id}}
                                   @survey={{this.survey}}
+                                  @trainerTitle={{this.trainerTitle}}
             />
           {{/each}}
         </Accordion.body>
@@ -78,6 +79,7 @@
                                 @question={{question}}
                                 @trainingId={{this.training.id}}
                                 @survey={{this.survey}}
+                                @trainerTitle={{this.trainerTitle}}
           />
         </Accordion.body>
 

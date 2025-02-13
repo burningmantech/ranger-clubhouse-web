@@ -1,11 +1,11 @@
 import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
-import {TYPE_ALPHA} from "clubhouse/models/survey";
+import {TYPE_TRAINING, TYPE_TRAINER} from "clubhouse/models/survey";
 
 export default class SurveyQuestionReportComponent extends Component {
   constructor() {
     super(...arguments);
-    this.isAlphaSurvey = this.args.survey.type === TYPE_ALPHA;
+    this.showCallsign = (this.args.survey.type !== TYPE_TRAINER && this.args.survey.type !== TYPE_TRAINING);
   }
 
   @action

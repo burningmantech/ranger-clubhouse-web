@@ -4,8 +4,14 @@ import {tracked} from '@glimmer/tracking';
 
 export default class OpsSurveyIndexController extends ClubhouseController {
   queryParams = ['year'];
+
   @tracked surveyEntry;
   @tracked isDuplicating = false;
+  @tracked surveys;
+  @tracked positionsById;
+  @tracked positionOptions;
+  @tracked mentorPositionOptions;
+  @tracked menteePositionOptions;
 
   @action
   newSurveyAction() {
