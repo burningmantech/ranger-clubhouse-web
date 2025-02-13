@@ -6,6 +6,6 @@ export default class TrainingSurveyReportController extends Controller {
   @tracked training;
   @tracked reportId;
   @tracked people;
-  @tracked personTitle;
+  @tracked trainerTitle;
   @tracked report;
 }
