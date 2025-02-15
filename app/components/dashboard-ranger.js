@@ -272,7 +272,7 @@ const STEPS = [
   DashboardStep.TICKETING_CLOSED,
   {
     name: 'Sign the Sandman Affidavit',
-    skipPeriod: [ POST_EVENT, AFTER_EVENT],
+    skipPeriod: [POST_EVENT, AFTER_EVENT],
     check({milestones}) {
       if (milestones.sandman_affidavit_signed) {
         return {result: COMPLETED};
@@ -385,13 +385,23 @@ export default class DashboardRangerComponent extends Component {
     const {
       immediateSteps,
       steps,
-      completed
+      completed,
+      note
     } = this._processStepGroup(this.args.person.isNonRanger ? NON_RANGER_STEPS : STEPS);
 
+    const pushNote = () => {
+        if (note.length) {
+          groups.push(new StepGroup('Important Note', note, true, true));
+        }
+      };
     if (immediateSteps.length) {
       groups.push(new StepGroup('IMMEDIATE ACTION REQUIRED', immediateSteps, true, true));
-    } else if (!steps.length) {
+      pushNote();
+     } else if (!steps.length) {
+      pushNote();
       steps.push((isPostEvent || isAfterEvent) ? AFTER_EVENT_NO_MORE_THINGS_STEP : BEFORE_EVENT_NO_MORE_THINGS_STEP);
+    } else {
+      pushNote();
     }
 
     if (!isAfterEvent || !isPostEvent || steps.length) {
@@ -433,7 +443,7 @@ export default class DashboardRangerComponent extends Component {
     const period = milestones.period;
     let haveAction = false;
 
-    const steps = [], immediateSteps = [], completed = [];
+    const steps = [], immediateSteps = [], completed = [], note = [];
 
     checks.forEach((step) => {
       if (matchPeriod(step.period, period, true)
@@ -463,6 +473,8 @@ export default class DashboardRangerComponent extends Component {
 
       if (check.immediate || step.immediate) {
         immediateSteps.push(check);
+      } else if (check.result === NOTE) {
+        note.push(check);
       } else if (check.result === COMPLETED) {
         completed.push(check);
       } else {
@@ -474,7 +486,7 @@ export default class DashboardRangerComponent extends Component {
     this._sortSteps(immediateSteps);
     this._sortSteps(completed);
 
-    return {steps, immediateSteps, completed};
+    return {steps, immediateSteps, completed, note};
   }
 
   _sortSteps(steps) {
