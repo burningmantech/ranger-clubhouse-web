@@ -21,7 +21,7 @@ import {
   AFTER_EVENT,
   BEFORE_EVENT,
   COMPLETED, DURING_EVENT,
-  NOT_AVAILABLE,
+  NOT_AVAILABLE, NOTE,
   OPTIONAL, POST_EVENT,
   SKIP,
   URGENT,
@@ -920,7 +920,6 @@ export const SIGN_NDA = {
 };
 
 export const AFTER_EVENT_STATUS_ADVISORY = {
-  immediate: true,
   check({person}) {
     const {status} = person;
 
@@ -932,8 +931,8 @@ export const AFTER_EVENT_STATUS_ADVISORY = {
       return {
         name: 'Retired Status',
         email: 'VCEmail',
-        result: ACTION_NEEDED,
-        message: htmlSafe("<p>Your status has been changed to <i>retired</i> because you have not rangered in 5 or more consecutive events.</p>" +
+        result: NOTE,
+        message: htmlSafe("<p>Your status has been changed to <i>retired</i> because you have not rangered on playa in 5 or more consecutive events.</p>" +
           "<p>If you wish to volunteer with the Rangers next event, you will need to attend a full day's " +
           "In-Person Training, and walk a Cheetah Cub shift with a Mentor.</p><p>The Mentor Cadre will restore your active status at the end of the Cheetah Cub shift if they determine you are fit to resume rangering.</p>Contact the Volunteer Coordinators for more information.")
       };
@@ -941,11 +940,11 @@ export const AFTER_EVENT_STATUS_ADVISORY = {
       return {
         name: `Inactive ${person.status === INACTIVE_EXTENSION ? 'Extension ' : ''}Status`,
         email: 'VCEmail',
-        result: ACTION_NEEDED,
+        result: NOTE,
         message: htmlSafe(
-          `<p>Your status has been changed to <i>${person.status}</i> because you have not rangered in 3 or more consecutive events.<p>` +
-          "<p>If you wish to volunteer with the Rangers next event, you will need to attend a full day's " +
-          "In-Person Training, and work a non-training, non-mentee shift.</p><p>Your active status will be automatically restored upon completing a shift that is neither a training nor a mentee shift.</p> Contact the Volunteer Coordinators for more information.")
+          `<p>Your status has been changed to <i>${person.status}</i> because you have not rangered on playa in 3 or more consecutive events.<p>` +
+          "<p>If you wish to volunteer with the Rangers next event, you will need to:<ul><li>Attend a full day's " +
+          "In-Person Training</li><li>And work a shift that is neither a training nor a mentee shift. Any Dirt shift or similar will qualify towards restoring your active status.</li></ul>Training and mentee shifts, such as a Sandman Training and Green Dot Mentee shifts, do not count toward qualifying for restoring your active status.</p><p>Your active status will be automatically restored upon completing a shift that is neither a training nor a mentee shift.</p> Contact the Volunteer Coordinators for more information.")
       };
     }
   }
