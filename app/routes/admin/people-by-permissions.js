@@ -1,6 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class ReportsPeopleByRoleRoute extends ClubhouseRoute {
+export default class AdminPeopleByPermissionRoute extends ClubhouseRoute {
   model() {
     return this.ajax.request('role/people-by-role');
   }

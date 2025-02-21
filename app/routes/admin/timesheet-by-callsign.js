@@ -1,7 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 
-export default class ReportsTimesheetTotalsRoute extends ClubhouseRoute {
+export default class AdminTimesheetByCallsignRoute extends ClubhouseRoute {
   queryParams = {
     year: { refreshModel: true }
   };
@@ -9,12 +9,17 @@ export default class ReportsTimesheetTotalsRoute extends ClubhouseRoute {
   model(params) {
     const year = requestYear(params);
     this.year = year;
-
-    return this.ajax.request('timesheet/totals', { data: { year }});
+    return this.ajax.request('timesheet/by-callsign', { data: { year }});
   }
 
   setupController(controller, model) {
-    controller.set('people', model.people);
+    const { people, positions } = model;
+
+    people.forEach((person) => {
+      person.timesheet.forEach((t) => t.position = positions[t.position_id])
+    });
+
+    controller.set('people', people);
     controller.set('year', this.year);
   }
 

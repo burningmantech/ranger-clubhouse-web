@@ -15,7 +15,9 @@
       {{#if (has-role "admin" "vc" "mentor")}}
         <s.link @route="person.mentoring" @title="Mentors / Mentees" @icon="users" @iconType="s"/>
       {{/if}}
-      <s.link @route="person.awards-swag" @title="Awards & Swag" @icon="award" @iconType="s"/>
+      {{#if (has-role "admin" "quartermaster")}}
+          <s.link @route="person.awards-swag" @title="Awards & Swag" @icon="award" @iconType="s"/>
+      {{/if}}
       <s.link @route="person.pogs" @title="Pogs" @icon="utensils" @iconType="s"/>
     {{/if}}
   </s.group>

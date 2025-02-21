@@ -1,0 +1,168 @@
+<main>
+  <h1>Position Sanity Checker</h1>
+
+  <p>
+    This tool highlights potential inconsistencies in position, role, and status data.
+  </p>
+
+  {{#unless this.userCanRepair}}
+    <p>
+      <b class="text-danger">You don't have the Clubhouse Admin role.</b>
+      You can see issues but can't fix them. Sorry.
+    </p>
+  {{/unless}}
+
+  <Admin::PositionSanityCheck
+    @title="Shiny Pennies"
+    @caption="{{pluralize this.shiny_pennies.length "person"}} with Shiny Penny issues"
+    @sucessMessage="Congratulations! All shiny pennies have the position and no crusty rangers have it."
+    @columns={{this.shiny_pennies.columns}}
+    @people={{this.shiny_pennies}}
+    @repairAction={{this.repairPeople}}
+    @repairType="shiny_pennies"
+    @canRepair={{this.userCanRepair}}
+    @isSubmitting={{this.isSubmitting}}
+  >
+    All first-year Rangers (minted in {{this.shiny_penny_year}}) should have the
+    "Dirt - Shiny Penny" position and no one else should.
+  </Admin::PositionSanityCheck>
+
+  <Admin::PositionSanityCheck
+    @title="Have Team Positions with no Team Membership"
+    @caption="{{pluralize this.team_membership.length "person"}} with team positions and no team membership"
+    @sucessMessage="Congratulations! Everyone appears have team positions with the appropriate team membership."
+    @columns={{this.team_membership.columns}}
+    @people={{this.team_membership}}
+    @repairAction={{this.repairPeople}}
+    @repairType="team_membership"
+    @canRepair={{this.userCanRepair}}
+    @isSubmitting={{this.isSubmitting}}
+  >
+    People should belong to a team if (non-public) team positions have been granted.
+  </Admin::PositionSanityCheck>
+
+  <Admin::PositionSanityCheck
+    @title="Missing Basic Team Positions"
+    @caption="{{pluralize this.team_positions.length "person"}} with not all the basic team positions"
+    @sucessMessage="Congratulations! Everyone appears have the basic team positions"
+    @columns={{this.team_positions.columns}}
+    @people={{this.team_positions}}
+    @repairAction={{this.repairPeople}}
+    @repairType="team_positions"
+    @canRepair={{this.userCanRepair}}
+    @isSubmitting={{this.isSubmitting}}
+  >
+    People should have all the basic team positions appropriate for the team.
+  </Admin::PositionSanityCheck>
+
+  <UiSection>
+    <:title>Deactivated Position Assignments</:title>
+    <:body>
+      {{#if this.deactivated_positions}}
+        The following deactivated positions are still granted.
+        {{#each this.deactivated_positions as |position|}}
+          <Admin::PositionSanityCheckTable
+            @title={{position.title}}
+            @caption="{{position.title}} - {{pluralize position.people.length "person"}} assigned"
+            @sucessMessage="Congratulations! No Rangers are assigned to this position."
+            @columns={{(array)}}
+            @people={{position.people}}
+            @repairAction={{this.repairPeople}}
+            @repairParams={{hash positionId=position.id}}
+            @repairType="deactivated_positions"
+            @canRepair={{this.userCanRepair}}
+            @isSubmitting={{this.isSubmitting}}
+          />
+        {{/each}}
+      {{else}}
+        <b class="text-success">Congratulations! No one has deactivated positions assigned.</b>
+      {{/if}}
+    </:body>
+  </UiSection>
+
+  <UiSection>
+    <:title>Deactivated Team Membership</:title>
+    <:body>
+      {{#if this.deactivated_teams}}
+        The following deactivated teams still have members.
+        {{#each this.deactivated_teams as |team|}}
+          <Admin::PositionSanityCheckTable
+            @title={{team.title}}
+            @caption="{{team.title}} - {{pluralize team.people.length "person"}} assigned"
+            @sucessMessage="Congratulations! No one belongs the deactivated team '{{team.title}}'."
+            @columns={{team.columns}}
+            @people={{team.people}}
+            @repairAction={{this.repairPeople}}
+            @repairParams={{hash teamId=team.id}}
+            @repairType="deactivated_teams"
+            @canRepair={{this.userCanRepair}}
+            @isSubmitting={{this.isSubmitting}}
+          />
+        {{/each}}
+      {{else}}
+        <b class="text-success">Congratulations! No one has deactivated positions assigned.</b>
+      {{/if}}
+    </:body>
+  </UiSection>
+
+  <Admin::PositionSanityCheck
+    @title="Login Management Year Round Explicit Grant"
+    @caption="{{pluralize this.lmyr.length "person"}} with LMYR granted explicitly with no LMYR team or team position"
+    @sucessMessage="Congratulations! Everyone with LMYR appears to have an appropriate position and/or team membership"
+    @columns={{(array)}}
+    @people={{this.lmyr}}
+    @repairAction={{this.repairPeople}}
+    @repairType="lmyr"
+    @canRepair={{this.userCanRepair}}
+    @isSubmitting={{this.isSubmitting}}
+  >
+    People who have LMYR explicitly granted should have an appropriate position and/or team membership
+  </Admin::PositionSanityCheck>
+
+  <Admin::PositionSanityCheck
+    @title="Deactivated Accounts With Positions"
+    @caption="{{pluralize this.deactivated_accounts.length "person"}} with granted positions"
+    @sucessMessage="Congratulations! All accounts appear to be in order."
+    @columns={{(array)}}
+    @people={{this.deactivated_accounts}}
+    @repairAction={{this.repairPeople}}
+    @repairType="deactivated_accounts"
+    @canRepair={{this.userCanRepair}}
+    @isSubmitting={{this.isSubmitting}}
+  >
+    Deactivated accounts (bonked, deceased, dismissed, past prospective, resigned, uberbonked) should not have any
+    granted
+    positions.
+  </Admin::PositionSanityCheck>
+
+  <Admin::PositionSanityCheck
+    @title="Retired Accounts With More Than New User Positions"
+    @caption="{{pluralize this.retired_accounts.length "person"}} found"
+    @sucessMessage="Congratulations! All accounts appear to be in order."
+    @columns={{(array)}}
+    @people={{this.retired_accounts}}
+    @repairAction={{this.repairPeople}}
+    @repairType="retired_accounts"
+    @canRepair={{this.userCanRepair}}
+    @isSubmitting={{this.isSubmitting}}
+  >
+    Retired accounts should only have positions flagged as new user eligible (similar to a prospective or auditor).
+  </Admin::PositionSanityCheck>
+
+  <Admin::PositionSanityCheck
+    @title="Accounts Missing Basic Positions"
+    @caption="{{pluralize this.missing_positions.length "person"}} found"
+    @sucessMessage="Congratulations! All accounts appear to be in order."
+    @columns={{(array)}}
+    @people={{this.missing_positions}}
+    @repairAction={{this.repairPeople}}
+    @repairType="missing_positions"
+    @canRepair={{this.userCanRepair}}
+    @isSubmitting={{this.isSubmitting}}
+  >
+    All active Rangers accounts should have the positions set with the All Rangers flag, and all active accounts
+    (auditor,
+    non-ranger, Ranger)
+    should have the
+  </Admin::PositionSanityCheck>
+</main>

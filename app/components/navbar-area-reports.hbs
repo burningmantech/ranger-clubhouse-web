@@ -9,30 +9,29 @@
   </NavbarMenuSection>
   <NavbarMenuSection @section="People">
     <NavbarMenuItem @menu={{menu}} @route="reports.people-by-position" @item="People by Position"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.people-by-permissions" @item="People by Permissions"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.people-by-status" @item="People By Status"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.people-by-location" @item="People by Location"/>
+    {{#if (has-role "admin" "mentor" "trainer" "vc")}}
+      <NavbarMenuItem @menu={{menu}} @route="reports.people-by-location" @item="People by Location"/>
+    {{/if}}
     <NavbarMenuItem @menu={{menu}} @route="reports.special-teams" @item="People By Special Teams"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.people-by-clubhouse-teams" @item="People By Clubhouse Teams"/>
   </NavbarMenuSection>
   <NavbarMenuSection @section="Timesheets">
-    <NavbarMenuItem @menu={{menu}} @route="reports.on-duty" @query={{hash has_excessive_duration=null}} @item="People On Duty"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.on-duty" @query={{hash has_excessive_duration=true}} @item="... longer than normal"/>
+    <NavbarMenuItem @menu={{menu}} @route="reports.on-duty" @query={{hash has_excessive_duration=null}}
+                    @item="People On Duty"/>
+    <NavbarMenuItem @menu={{menu}} @route="reports.on-duty" @query={{hash has_excessive_duration=true}}
+                    @item="... longer than normal"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.flakes" @item="Flake Report"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.shift-drop" @item="Shift Drop"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.no-shows" @item="No Shows"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.forced-signins" @item="Forced Sign-Ins"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-totals" @item="Timesheet Totals"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-by-callsign" @item="Timesheet By Callsign"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-by-position" @item="Timesheet By Position"/>
   </NavbarMenuSection>
   {{#if (has-role "admin" "timesheet-management")}}
-  <NavbarMenuSection @section="Timesheet Corrections">
+    <NavbarMenuSection @section="Timesheet Corrections">
       <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-correction-requests" @item="Corrections Requests"/>
       <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-unconfirmed" @item="Timesheet Unconfirmed"/>
       <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-sanity-checker" @item="Timesheet Sanity Checker"/>
       <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-correction-stats" @item="Correction Statistics"/>
-  </NavbarMenuSection>
+    </NavbarMenuSection>
   {{/if}}
   <NavbarMenuSection @section="Assets">
     <NavbarMenuItem @menu={{menu}} @route="reports.assets-outstanding" @item="Assets Outstanding"/>
@@ -40,22 +39,27 @@
     <NavbarMenuItem @menu={{menu}} @route="reports.radio-assets" @item="Radio Assets"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.radio-checkout" @item="Radio Checkout Report"/>
   </NavbarMenuSection>
-  <NavbarMenuSection @section="Quartermaster">
-    <NavbarMenuItem @menu={{menu}} @route="reports.alpha-shirts" @item="Alpha Shirts"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.freaking-years" @item="Freaking Years"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.potential-shirts" @item="Potential Earned Shirts"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.potential-swag" @item="Potential Swag"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.swag-distribution" @item="Swag Distribution"/>
-  </NavbarMenuSection>
+  {{#if (has-role "admin" "quartermaster" "mentor")}}
+    <NavbarMenuSection @section="Quartermaster">
+      <NavbarMenuItem @menu={{menu}} @route="reports.alpha-shirts" @item="Alpha Shirts"/>
+      {{#if (has-role "admin" "quartermaster")}}
+        <NavbarMenuItem @menu={{menu}} @route="reports.freaking-years" @item="Freaking Years"/>
+        <NavbarMenuItem @menu={{menu}} @route="reports.potential-shirts" @item="Potential Earned Shirts"/>
+        <NavbarMenuItem @menu={{menu}} @route="reports.potential-swag" @item="Potential Swag"/>
+        <NavbarMenuItem @menu={{menu}} @route="reports.swag-distribution" @item="Swag Distribution"/>
+      {{/if}}
+    </NavbarMenuSection>
+  {{/if}}
   <NavbarMenuSection @section="Vehicles">
     <NavbarMenuItem @menu={{menu}} @route="reports.vehicle-paperwork" @item="Vehicle Paperwork"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.vehicle-registry" @item="Vehicle Registry"/>
   </NavbarMenuSection>
   <NavbarMenuSection @section="Other">
-    <NavbarMenuItem @menu={{menu}} @route="reports.certifications" @item="Certifications"/>
+    {{#if (has-role "certificate-management")}}
+      <NavbarMenuItem @menu={{menu}} @route="reports.certifications" @item="Certifications"/>
+    {{/if}}
     <NavbarMenuItem @menu={{menu}} @route="reports.event-stats" @item="Event Stats"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.languages" @item="Languages"/>
-    <NavbarMenuItem @menu={{menu}} @route="reports.position-sanity-checker" @item="Position Sanity Check"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.sandman-qualified" @item="Sandman Qualified"/>
   </NavbarMenuSection>
 </NavbarMenu>

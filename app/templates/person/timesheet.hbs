@@ -81,29 +81,33 @@
     <TimesheetPositionSummary @timesheets={{this.timesheets}} @year={{this.year}} />
   </tab.pane>
   <tab.pane @title="Shift Check In/Out" @id="shift-manage">
-    When on playa operations are running, please use the HQ Window Interface to start or end a shift.
-    <UiNotice @title="Need to create a timesheet entry?" @type="secondary" @icon="hand-point-right">
-      Use the Missing Timesheet Request feature under the 'Timesheet / Missing Entry Requests' tab.
-      Click on 'New Request', save, open the newly created request,
-      and then approve it. This provides a better audit trail on why a timesheet entry was created.
-    </UiNotice>
-    <UiSection>
-      <:title>Shift Check In/Out</:title>
-      <:body>
-        {{#if (is-current-year this.year)}}
-          <ShiftCheckInOut @positions={{this.positions}}
-                           @timesheets={{this.timesheets}}
-                           @person={{this.person}}
-                           @eventInfo={{this.eventInfo}}
-                           @onDutyEntry={{this.onDutyEntry}}
-                           @startShiftNotify={{this.startShiftNotify}}
-                           @endShiftNotify={{this.endShiftNotify}}
-                           @year={{this.year}}
-          />
-        {{else}}
-          Select the current year to start or end a shift
-        {{/if}}
-      </:body>
-    </UiSection>
+    {{#if (has-role "admin" "shift-management")}}
+      When on playa operations are running, please use the HQ Window Interface to start or end a shift.
+      <UiNotice @title="Need to create a timesheet entry?" @type="secondary" @icon="hand-point-right">
+        Use the Missing Timesheet Request feature under the 'Timesheet / Missing Entry Requests' tab.
+        Click on 'New Request', save, open the newly created request,
+        and then approve it. This provides a better audit trail on why a timesheet entry was created.
+      </UiNotice>
+      <UiSection>
+        <:title>Shift Check In/Out</:title>
+        <:body>
+          {{#if (is-current-year this.year)}}
+            <ShiftCheckInOut @positions={{this.positions}}
+                             @timesheets={{this.timesheets}}
+                             @person={{this.person}}
+                             @eventInfo={{this.eventInfo}}
+                             @onDutyEntry={{this.onDutyEntry}}
+                             @startShiftNotify={{this.startShiftNotify}}
+                             @endShiftNotify={{this.endShiftNotify}}
+                             @year={{this.year}}
+            />
+          {{else}}
+            Select the current year to start or end a shift
+          {{/if}}
+        </:body>
+      </UiSection>
+    {{else}}
+      You either do not have year round shift management permissions, or the event is not running.
+    {{/if}}
   </tab.pane>
 </UiTab>

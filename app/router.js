@@ -73,21 +73,26 @@ Router.map(function () {
     this.route('hours-credits');
     this.route('mail-log');
     this.route('maintenance');
+    this.route('oauth-client');
     this.route('online-course');
+    this.route('people-by-permissions');
+    this.route('people-by-status');
     this.route('people-by-status-change');
+    this.route('permissions');
+    this.route('person-create');
+    this.route('position-sanity-checker');
     this.route('positions');
     this.route('radio-eligibility');
     this.route('ranger-retention');
     this.route('request-log');
-    this.route('permissions');
-    this.route('person-create');
     this.route('settings');
-
     this.route('teams');
     this.route('thank-you-cards');
+    this.route('timesheet-by-callsign');
+    this.route('timesheet-by-position');
     this.route('timesheet-slot-repair');
+    this.route('timesheet-totals');
     this.route('top-hour-earners');
-    this.route('oauth-client');
   });
 
   this.route('hq', {path: '/hq/:person_id'}, function () {
@@ -215,10 +220,7 @@ Router.map(function () {
     this.route('on-duty');
     this.route('people-by-clubhouse-teams');
     this.route('people-by-location');
-    this.route('people-by-permissions');
     this.route('people-by-position');
-    this.route('people-by-status');
-    this.route('position-sanity-checker');
     this.route('potential-shirts');
     this.route('potential-swag');
     this.route('radio-assets');
@@ -232,12 +234,9 @@ Router.map(function () {
     this.route('shift-signups');
     this.route('special-teams');
     this.route('swag-distribution');
-    this.route('timesheet-by-callsign');
-    this.route('timesheet-by-position');
     this.route('timesheet-correction-requests');
     this.route('timesheet-correction-stats');
     this.route('timesheet-sanity-checker');
-    this.route('timesheet-totals');
     this.route('timesheet-unconfirmed');
     this.route('vehicle-paperwork');
     this.route('vehicle-registry');

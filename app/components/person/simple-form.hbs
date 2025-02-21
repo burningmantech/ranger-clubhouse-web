@@ -90,7 +90,7 @@
       <PersonnelEmail/>
     </div>
   {{/if}}
-  {{#if (has-role "manage")}}
+  {{#if (has-role "shift-management")}}
     <div class="grid-table-label">On Site</div>
     <div>
       <ChForm @formId="person" @formFor={{@person}} @onSubmit={{@savePersonAction}} as |f|>

@@ -12,7 +12,7 @@ const CSV_COLUMNS = [
   {title: 'Thru Positions', key: 'positions'}
 ];
 
-export default class ReportsPeopleByRoleController extends ClubhouseController {
+export default class AdminPeopleByPermissionController extends ClubhouseController {
   @tracked showPerson = null;
   @tracked filter;
   @tracked roles;
