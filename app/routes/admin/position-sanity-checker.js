@@ -2,7 +2,7 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {ADMIN, MANAGE} from 'clubhouse/constants/roles';
 import {yesno} from 'clubhouse/helpers/yesno';
 
-export default class ReportsPositionSanityCheckerRoute extends ClubhouseRoute {
+export default class AdminPositionSanityCheckerRoute extends ClubhouseRoute {
   roleRequired = [ADMIN, MANAGE];
 
   model() {

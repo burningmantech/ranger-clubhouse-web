@@ -1,10 +1,10 @@
 import ClubhouseRoute from "clubhouse/routes/clubhouse-route";
-import {ADMIN, MANAGE} from "clubhouse/constants/roles";
+import {ADMIN, POD_MANAGEMENT} from "clubhouse/constants/roles";
 import requestYear from "clubhouse/utils/request-year";
 import RSVP from 'rsvp';
 
 export default class OpsCruiseDirectionRoute extends ClubhouseRoute {
-  roleRequired = [ADMIN, MANAGE];
+  roleRequired = [ADMIN, POD_MANAGEMENT];
 
   queryParams = {
     year: {refreshModel: 1}
@@ -16,13 +16,13 @@ export default class OpsCruiseDirectionRoute extends ClubhouseRoute {
     return RSVP.hash({
       year,
       shifts: this.ajax.request('slot/dirt-shift-times', {data: {year}}).then(({shifts}) => shifts),
-      positions: this.ajax.request('position', { data: { cruise_direction: 1, active: 1 }}).then(({position}) => position),
-     });
+      positions: this.ajax.request('position', {data: {cruise_direction: 1, active: 1}}).then(({position}) => position),
+    });
   }
 
   setupController(controller, model) {
-    const{positions} = model;
-    positions.sort((a,b) => a.title.localeCompare(b.title));
+    const {positions} = model;
+    positions.sort((a, b) => a.title.localeCompare(b.title));
     controller.year = model.year
     controller.shifts = model.shifts;
     controller.timesheets = model.timesheets;

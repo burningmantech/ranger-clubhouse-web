@@ -19,9 +19,17 @@
     <NavbarMenuItem @menu={{menu}} @route="admin.error-log" @item="Error Log"/>
     <NavbarMenuItem @menu={{menu}} @route="admin.mail-log" @item="Mail Log"/>
     <NavbarMenuItem @menu={{menu}} @route="admin.maintenance" @item="Maintenance"/>
+    <NavbarMenuItem @menu={{menu}} @route="admin.position-sanity-checker" @item="Position Sanity Check"/>
     <NavbarMenuItem @menu={{menu}} @route="admin.request-log" @item="Request Log"/>
     <NavbarMenuItem @menu={{menu}} @route="admin.settings" @item="Settings"/>
     <NavbarMenuItem @menu={{menu}} @route="admin.clubhouse1-log" @item="Clubhouse 1 Log"/>
+  </NavbarMenuSection>
+  <NavbarMenuSection @section="Reports">
+    <NavbarMenuItem @menu={{menu}} @route="admin.people-by-permissions" @item="People by Permissions"/>
+    <NavbarMenuItem @menu={{menu}} @route="admin.people-by-status" @item="People By Status"/>
+    <NavbarMenuItem @menu={{menu}} @route="admin.timesheet-by-callsign" @item="Timesheet By Callsign"/>
+    <NavbarMenuItem @menu={{menu}} @route="admin.timesheet-by-position" @item="Timesheet By Position"/>
+    <NavbarMenuItem @menu={{menu}} @route="admin.timesheet-totals" @item="Timesheet Totals"/>
   </NavbarMenuSection>
   <NavbarMenuSection @section="Pre-Event">
     <NavbarMenuItem @menu={{menu}} @route="admin.radio-eligibility" @item="Radio Eligibility"/>

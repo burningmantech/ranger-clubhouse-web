@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 
-export default class ReportsTimesheetByCallsignController extends ClubhouseController {
+export default class AdminTimesheetByCallsignController extends ClubhouseController {
   queryParams = ['year'];
 
   get callsignScrollItems() {
