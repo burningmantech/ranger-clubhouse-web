@@ -23,6 +23,10 @@
           Approve Application
         </UiButton>
       {{/if}}
+    {{else if @application.hasPersonalInfoIssues}}
+      <UiSectionSubtitle @type="warning" @icon="exclamation">
+        One or more PII fields are blank.
+      </UiSectionSubtitle>
     {{/if}}
     <UiGridTable as |t|>
       <t.label>Name</t.label>
