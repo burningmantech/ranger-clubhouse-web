@@ -12,12 +12,14 @@ import {
 import currentYear from "clubhouse/utils/current-year";
 import _ from 'lodash';
 
+export const EXPERIENCE_BRC1 = 'brc1';
 export const EXPERIENCE_BRC1R1 = 'brc1r1';
 export const EXPERIENCE_BRC2 = 'brc2';
 export const EXPERIENCE_NONE = 'none';
 
 export const ExperienceOptions = [
   ['None', EXPERIENCE_NONE],
+  ['BRC1', EXPERIENCE_BRC1],
   ['BRC1 + R1', EXPERIENCE_BRC1R1],
   ['BRC2', EXPERIENCE_BRC2]
 ];
