@@ -19,7 +19,7 @@ export default class VcApplicationImportController extends ClubhouseController {
   importApplications() {
     this.modal.confirm(
       `Confirm Import`,
-      htmlSafe(`You are about to $<b class="text-danger">IMPORT</b> the current Salesforce applications from View 1.`),
+      htmlSafe(`You are about to <b class="text-danger">IMPORT</b> the current Salesforce applications from View 1.`),
       () => this._submit(true)
     );
   }
