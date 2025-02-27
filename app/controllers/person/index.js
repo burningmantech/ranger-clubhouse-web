@@ -341,16 +341,19 @@ export default class PersonIndexController extends ClubhouseController {
   @action
   removePersonAction() {
     this.modal.confirm('Confirm Person Removal',
-      'Removing a person is permanent and cannot be ' +
-      'undone. All of the information associated with the person will ' +
+      'You are about to <span class="spinner-grow spinner-grow-sm text-danger"></span><b class="text-danger">DELETE THIS ACCOUNT</b><span class="spinner-grow spinner-grow-sm text-danger"></span>. Removing a person' +
+      ' <b class="text-danger">is permanent and cannot be undone.</b> All the information associated with the person will ' +
       'also be removed. This will only happen if you confirm that you ' +
-      'want to remove this person.  If you do not confirm, the ' +
-      'person will not be removed.',
+      'want to remove this person.  If you cancel, the person will not be removed.',
       () => {
-        this.person.destroyRecord().then(() => {
-          this.toast.success('The person was successfully removed from the Clubhouse.');
-          this.router.transitionTo('me.homepage');
-        }).catch((response) => this.house.handleErrorResponse(response));
+        this.modal.confirm('Really Confirm Person Removal',
+          'This is <span class="spinner-grow spinner-grow-sm text-danger"></span><b class="text-danger">NOT RECOMMENDED</b><span class="spinner-grow spinner-grow-sm text-danger"></span>! Are you absolutely sure you want to <b class="text-danger">DELETE THIS ACCOUNT?</b>',
+          () => {
+            this.person.destroyRecord().then(() => {
+              this.toast.success('The person was successfully removed from the Clubhouse.');
+              this.router.transitionTo('me.homepage');
+            }).catch((response) => this.house.handleErrorResponse(response));
+          })
       }
     )
   }
