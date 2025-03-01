@@ -573,4 +573,8 @@ export default class TrainingSessionController extends ClubhouseController {
   cancelGraduateStudents() {
     this.graduateTraining = null;
   }
+
+  filterNotes(notes) {
+    return notes ? notes.filter((n) => !n.is_log) : [];
+  }
 }
