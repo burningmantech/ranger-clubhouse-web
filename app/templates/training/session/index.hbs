@@ -152,16 +152,16 @@
         {{/if}}
       </p>
     {{else}}
-      <p>
-        <b class="text-danger">{{fa-icon "hand-point-right"}} Reminder: Walk-ins are NOT allowed, this includes
-          auditors. All attendees must be signed up prior to the session's start time.</b><br>
+      <p class="fw-bold text-danger">
+        {{fa-icon "hand-point-right" right=1}} Reminder: Walk-ins are NOT allowed, this includes
+        auditors. All attendees must be signed up prior to the session's start time.<br>
         {{#unless this.canAdjustRosters}}
           Only the Training Academy may add trainees through this interface.
         {{/unless}}
       </p>
     {{/if}}
 
-    <div class="my-2">
+    <div class="mt-2 mb-4">
       {{! Desktop Display }}
       <div class="d-none d-lg-block">
         <UiButtonRow>
@@ -231,76 +231,89 @@
     </div>
 
 
-    <div class="trainee-header">
-      <div class="trainee-row">
-        <div class="trainee-callsign">Callsign</div>
-        <div class="trainee-passed">Passed?</div>
-        <div class="trainee-rank">Rank</div>
-        <div class="trainee-notes">Signed-Up At (Pacific) / Notes</div>
-      </div>
-    </div>
 
-    <div class="trainee-body">
-      {{#each this.students key="id" as |student|}}
-        <div class="trainee-row {{if (or student.is_retired student.is_inactive) "bg-highlight"}}">
-          <div class="trainee-callsign">
-            {{#if (or student.is_retired student.is_inactive)}}
-              {{fa-icon "exclamation-triangle"}}
-            {{/if}}
-            <PersonLink @person={{student}} />{{if student.is_art_prospective (fa-icon "asterisk")}}<br>
-            &lt;{{student.status}}&gt;
-            {{#if (not-eq student.status student.current_status)}}
-              <div class="small">(now {{student.current_status}})</div>
+    {{#each this.students key="id" as |student|}}
+      <div class="mb-2 d-flex border-bottom pb-2 {{if (or student.is_retired student.is_inactive) "text-bg-warning"}}">
+        <div class="me-3">
+          {{#if student.photo_url}}
+            <img src={{student.photo_url}} alt="{{student.callsign}} headshot">
+          {{else}}
+            <UiPhotoNone/>
+          {{/if}}
+        </div>
+        <div>
+          <div class="mb-1">
+            <span class="align-middle">
+              <PersonLink @person={{student}} class="fs-3"/> &lt;{{student.status}}&gt;
+              {{#if (not-eq student.status student.current_status)}}
+                <span class="small ms-2">now {{student.current_status}}</span>
+              {{/if}}
+            </span>
+            {{#if student.is_art_prospective}}
+              <div>
+                {{fa-icon "asterisk" right=1}} ART Prospective
+              </div>
             {{/if}}
           </div>
-          <div class="trainee-passed">
+          {{#if (or student.is_retired student.is_inactive)}}
+            <div class="mb-2 fw-bold">
+              {{fa-icon "person-walking-arrow-loop-left" right=1}}
+              {{#if this.training.is_art}}
+                {{#if student.is_retired}}
+                  A retired Ranger.
+                {{else}}
+                  An inactive Ranger.
+                {{/if}}
+              {{else}}
+                {{#if student.is_retired}}
+                  As a retired,
+                {{else}}
+                  As an inactive,
+                {{/if}}
+                a full day's training is required.
+              {{/if}}
+            </div>
+          {{/if}}
+
+          <div class="fs-5 mb-2">
             {{#if student.passed}}
-              {{fa-icon "check" color="success"}}
+              <UiBadge @type="success" class="me-3">passed</UiBadge>
             {{else}}
-              -
+              <UiBadge @type="secondary" class="me-3">pending</UiBadge>
             {{/if}}
-          </div>
-          <div class="trainee-rank">
             {{#if student.rank}}
-              {{student.rank}}
+              Rank {{student.rank}}
             {{else if student.need_ranking}}
-              needs rank
+              <b>Needs Rank</b>
             {{else}}
-              -
+              No ranking
             {{/if}}
           </div>
-          <div class="trainee-notes">
-            {{#if student.personnel_issue}}
+          <div class="mb-2">
+            Signed up at {{shift-format student.signed_up_at}} (Pacific)
+          </div>
+          {{#each (this.filterNotes student.notes) as |note|}}
+            {{#unless note.is_log}}
               <div class="mb-2">
-                <b class="text-danger">Personnel Flag raised. Take no actions until resolved.</b>
+                {{note.note}}
               </div>
-            {{/if}}
-            <div class="mb-2">
-              {{shift-format student.signed_up_at}}
-            </div>
-            {{#each student.notes as |note|}}
-              {{#unless note.is_log}}
-                <div class="mb-2">
-                  {{note.note}}
-                </div>
-              {{/unless}}
-            {{else}}
+            {{/unless}}
+          {{else}}
+            <div class="mb-2 ">
               <i>no notes given yet</i>
-            {{/each}}
-            {{#if student.fkas}}
-              <div class="mt-2">
-                FKA: {{join student.fkas ", "}}
-              </div>
-            {{/if}}
-            <div class="mt-2">
-              <UiEditButton @size="sm" @onClick={{fn this.editStudentAction student}} class="btn-responsive"/>
             </div>
+          {{/each}}
+          {{#if student.fkas}}
+            <div class="mt-2">
+              FKA: {{join student.fkas ", "}}
+            </div>
+          {{/if}}
+          <div class="mt-4">
+            <UiEditButton @size="sm" @onClick={{fn this.editStudentAction student}} class="btn-responsive"/>
           </div>
         </div>
-      {{else}}
-        <b class="text-danger">No trainees have signed up yet.</b>
-      {{/each}}
-    </div>
+      </div>
+    {{/each}}
   </:body>
 </UiSection>
 
