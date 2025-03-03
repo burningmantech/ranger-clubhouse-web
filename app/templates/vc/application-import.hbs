@@ -1,7 +1,12 @@
 <main>
   <h1>Salesforce Application Import</h1>
   <p>
-    Use this interface to create Clubhouse Prospective accounts from approved applications.
+    Use this interface to import Salesforce Ranger applications. This process only creates Clubhouse application
+    records &mdash; it does not create Clubhouse accounts. Only Salesforce applications created in the current
+    year will be imported. The Event Year field is not used.
+  </p>
+  <p>
+    To create Clubhouse prospective accounts from approved Clubhouse applications, use the Create Prospectives interface.
   </p>
   <div class="my-4">
     <UiButton @onClick={{this.previewApplications}} @type="secondary">Preview Applications</UiButton>
@@ -13,7 +18,7 @@
       <UiNotice @type="danger">
         <p>
           A general Salesforce API error occurred while processing the applications. Some records may have been imported
-          -- double check below. Error:
+          -- double check below. The error is:
         </p>
         {{this.apiError}}
       </UiNotice>
@@ -25,7 +30,9 @@
         {{pluralize this.newApplications.length "new application"}} found.<br>
       {{/if}}
       {{#if this.createFailures}}
-        <div class="text-danger">{{pluralize this.createFailures.length "Clubhouse application"}} could not be created.</div>
+        <div class="text-danger">
+          {{pluralize this.createFailures.length "Clubhouse application"}} could not be created.
+        </div>
       {{else if this.commited}}
         <div class="text-success">
           {{fa-icon "check" right=1}} All new applications found without query or validation errors were successfully
@@ -34,7 +41,9 @@
       {{/if}}
       {{pluralize this.existingApplications.length "existing application"}} found.<br>
       {{#if this.queryFailures}}
-        <div class="text-danger">{{pluralize this.queryFailures.length "Salesforce application"}} could not be queried.</div>
+        <div class="text-danger">{{pluralize this.queryFailures.length "Salesforce application"}} could not be
+          queried.
+        </div>
       {{else}}
         <div class="text-success">{{fa-icon "check" right=1}} All Salesforce applications could be queried.</div>
       {{/if}}
