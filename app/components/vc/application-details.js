@@ -7,7 +7,7 @@ import {
   StatusLabels,
   WHY_VOLUNTEER_REVIEW_OKAY,
   WHY_VOLUNTEER_REVIEW_PROBLEM,
-  ExperienceOptions, StatusesThatSendEmail, STATUS_DUPLICATE
+  ExperienceOptions, StatusesThatSendEmail, STATUS_DUPLICATE, STATUS_HOLD_AGE_ISSUE
 } from "clubhouse/models/prospective-application";
 import {TYPE_VC_COMMENT} from "clubhouse/models/prospective-application-note";
 import {service} from '@ember/service';
@@ -181,6 +181,11 @@ export default class VcApplicationDetailsComponent extends Component {
   @action
   qualificationIssue() {
     this._setupToAskMessage(STATUS_HOLD_QUALIFICATION_ISSUE);
+  }
+
+  @action
+  ageIssue() {
+    this._setupToAskMessage(STATUS_HOLD_AGE_ISSUE);
   }
 
   @action
