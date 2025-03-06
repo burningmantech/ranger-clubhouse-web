@@ -6,11 +6,14 @@
   </ExtLink>
   document.
 </p>
+<DropdownScrollList @items={{this.teamScrollItems}}
+                    @thing="cadre or delegation"
+/>
 {{#each this.teams as |team idx|}}
   {{#if idx}}
     <hr>
   {{/if}}
-  <h2>{{team.title}}</h2>
+  <h2 id="team-{{team.id}}">{{team.title}}</h2>
   Contact: <MailTo @to={{team.email}} />
   <div class="d-flex flex-wrap mt-2">
     {{#each team.members as |member|}}
