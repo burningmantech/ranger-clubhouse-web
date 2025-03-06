@@ -6,12 +6,24 @@
   </ExtLink>
   document.
 </p>
-<div class="masonry-container masonry-col-2">
-  {{#each this.teams as |team|}}
-    <div class="mb-2 masonry-item">
-      {{team.title}}<br>
-      <MailTo @to={{team.email}} />
-    </div>
-  {{/each}}
-</div>
-
+{{#each this.teams as |team idx|}}
+  {{#if idx}}<hr>{{/if}}
+  <h2>{{team.title}}</h2>
+  Contact: <MailTo @to={{team.email}} />
+  <div class="d-flex flex-wrap mt-2">
+    {{#each team.members as |member|}}
+      <div class="card me-4 mb-2" style="width: 10rem;">
+        {{#if member.profile_url}}
+          <img src={{member.profile_url}} alt="profile" class="card-img-top" loading="lazy">
+        {{else}}
+          <UiPhotoNone/>
+        {{/if}}
+        <div class="card-body">
+          <div class="card-title h4 text-center">
+            {{member.callsign}}
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{/each}}
