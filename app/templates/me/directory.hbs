@@ -7,11 +7,14 @@
   document.
 </p>
 {{#each this.teams as |team idx|}}
-  {{#if idx}}<hr>{{/if}}
+  {{#if idx}}
+    <hr>
+  {{/if}}
   <h2>{{team.title}}</h2>
   Contact: <MailTo @to={{team.email}} />
   <div class="d-flex flex-wrap mt-2">
     {{#each team.members as |member|}}
+    {{! template-lint-disable no-inline-styles}}
       <div class="card me-4 mb-2" style="width: 10rem;">
         {{#if member.profile_url}}
           <img src={{member.profile_url}} alt="profile" class="card-img-top" loading="lazy">
