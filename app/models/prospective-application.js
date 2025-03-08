@@ -321,6 +321,10 @@ export default class ProspectiveApplicationModel extends Model {
     return this.status === STATUS_HOLD_QUALIFICATION_ISSUE;
   }
 
+  get isStatusHoldAgeIssue() {
+    return this.status === STATUS_HOLD_AGE_ISSUE;
+  }
+
   get isStatusHoldPiiIssues() {
     return this.status === STATUS_PII_ISSUE
   }

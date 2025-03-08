@@ -56,6 +56,13 @@
           <UiBadge @type="success">{{fa-icon "check" right=1}} Is 18 or older</UiBadge>
         {{else}}
           <UiBadge @type="danger">{{fa-icon "times" right=1}} Under 18</UiBadge>
+          <div class="mt-1">
+            {{#if @application.isStatusHoldAgeIssue}}
+              Applicant asked to confirm age.
+            {{else}}
+              <UiButton @onClick={{this.ageIssue}} @size="sm">Ask for age confirmation</UiButton>
+            {{/if}}
+          </div>
         {{/if}}
       </t.column>
 
