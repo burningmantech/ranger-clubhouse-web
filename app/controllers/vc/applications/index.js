@@ -2,7 +2,7 @@ import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
 import {StatusOptions, StatusLabels} from "clubhouse/models/prospective-application";
 import {cached, tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
-import _ from 'lodash';
+import _, {isEmpty} from 'lodash';
 
 
 export default class VcApplicationsIndexController extends ClubhouseController {
@@ -46,7 +46,7 @@ export default class VcApplicationsIndexController extends ClubhouseController {
 
   get applicationTypeDescription() {
     if (this.statusFilter === 'all') {
-      return 'any status';
+      return 'all statuses';
     }
     return StatusLabels[this.statusFilter] ?? `Bug: unknown status ${this.statusFilter}`;
   }
@@ -69,12 +69,12 @@ export default class VcApplicationsIndexController extends ClubhouseController {
     return list;
   }
 
-  @action
-  nameFilterInfo() {
+  @cached
+  get nameFilterInfo() {
     if (this.nameFilter === 'all') {
       return ''
     }
-    return ` with the last name starting with ${this.nameFilter}, `;
+    return `w/last name starting with ${this.nameFilter}`;
   }
 
   @action
@@ -182,16 +182,44 @@ export default class VcApplicationsIndexController extends ClubhouseController {
     return apps.filter((a) => a.last_name.charAt(0).normalize('NFC').toUpperCase() === this.nameFilter);
   }
 
-  @cached
   get assignedToCallsign() {
     switch (this.assignedToFilter) {
       case 'unassigned':
-        return 'unassigned,';
+        return 'Unsigned';
       case 'all':
         return '';
     }
 
     const id = +this.assignedToFilter;
-    return id ? `assigned to ${this.VCs.find((v) => v.id === id)?.callsign ?? 'Unknown'},` : '';
+    return id ? `assigned to ${this.VCs.find((v) => v.id === id)?.callsign ?? 'Unknown'}` : '';
+  }
+
+  get ageFilterInfo() {
+    if (this.ageFilter === 'all') {
+      return '';
+    }
+
+    return this.ageFilter === 'young' ? '< 18 yrs' : '>= 18 yrs';
+  }
+
+  get experienceFilterInfo() {
+    if (this.experienceFilter === 'all') {
+      return '';
+    }
+
+    return this.experienceFilter === 'qualified' ? 'event qualified' : 'event NOT qualified';
+  }
+
+  @cached
+  get filterInfo() {
+    const filtered = [
+      this.applicationTypeDescription,
+      this.assignedToCallsign,
+      this.nameFilterInfo,
+      this.experienceFilterInfo,
+      this.ageFilterInfo,
+    ];
+
+    return filtered.filter((f) => !isEmpty(f)).join(' AND ');
   }
 }

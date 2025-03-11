@@ -1,12 +1,13 @@
 <main>
   <h1>Salesforce Account Import</h1>
 
-  {{#if false}}
-    <UiAlert @type="danger">
-      This interface is deprecated. Use the VC &gt; Application Import page to import Ranger applications into the
-      Clubhouse.
-    </UiAlert>
-  {{/if}}
+  <UiAlert @type="danger">
+    This interface is deprecated. Use the VC &gt; Application Import page to import Ranger applications into the
+    Clubhouse for processing. Only use this interface if applications are still being vetted in Salesforce.
+  </UiAlert>
+  <p>
+    This will create Clubhouse accounts from Ranger applications vetted &amp; approved in Salesforce.
+  </p>
   {{#if (eq this.importStatus "error")}}
     <UiSection>
       <:title><span class="text-danger">Processing Error</span></:title>

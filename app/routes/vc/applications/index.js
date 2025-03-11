@@ -3,20 +3,23 @@ import {VOLUNTEER_COORDINATOR} from "clubhouse/constants/positions";
 
 export default class VcApplicationsIndexRoute extends ClubhouseRoute {
   queryParams = {
-    year: { refreshModel: true }
+    year: {refreshModel: true}
   }
 
   async model({year}) {
-    if (!year) {
+   if (!year) {
       year = this.house.currentYear();
+    } else {
+      year = +year;
     }
 
+    const yearDidChange = (this.oldYear && this.oldYear !== year);
     this.oldYear = year;
     return {
-      applications: await this.store.query('prospective-application',{ year }),
+      applications: await this.store.query('prospective-application', {year}),
       VCs: (await this.ajax.request(`position/${VOLUNTEER_COORDINATOR}/grants`)).people,
       year,
-      yearDidChange: (this.oldYear !== year),
+      yearDidChange
     };
   }
 
@@ -29,11 +32,11 @@ export default class VcApplicationsIndexRoute extends ClubhouseRoute {
     }
   }
 
-  resetController(controller, isExiting) {
+/*  resetController(controller, isExiting) {
     if (isExiting) {
       this._resetFilters(controller);
     }
-  }
+  }*/
 
   _resetFilters(controller) {
     controller.assignedToFilter = 'all';
