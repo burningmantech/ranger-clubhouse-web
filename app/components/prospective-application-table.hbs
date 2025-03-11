@@ -1,6 +1,8 @@
 {{#if @applications.length}}
-  Showing {{pluralize @applications.length "application"}} matching:
-  {{yield}}
+  <div class="my-2 fs-4">
+    Showing {{pluralize @applications.length "application"}} matching:
+    <span class="fw-bold">{{yield}}</span>
+  </div>
   <UiTable>
     <thead>
     <tr>
@@ -76,5 +78,7 @@
     </tbody>
   </UiTable>
 {{else}}
-  <b class="text-danger">No applications found matching: {{yield}}</b>
+  <div class="my-2 fs-4">
+    <b class="text-danger">No applications found matching: {{yield}}</b>
+  </div>
 {{/if}}
