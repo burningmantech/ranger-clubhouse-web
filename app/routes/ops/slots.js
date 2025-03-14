@@ -27,11 +27,11 @@ export default class OpsSlotsRoute extends ClubhouseRoute {
     controller.slot = null;
     controller.dayFilter = 'all';
     controller.activeFilter = 'all';
+    controller.filterByDescription = '';
     controller.positionsOpened = {};
     controller.positionsById = model.positions.reduce((hash, row) => {
       hash[+row.id] = row;
       return hash
     }, {})
-    controller._buildDisplay();
   }
 }

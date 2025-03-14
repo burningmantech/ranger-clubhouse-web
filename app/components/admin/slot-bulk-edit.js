@@ -1,6 +1,6 @@
 import Component from '@glimmer/component';
 import {validateNumber} from 'ember-changeset-validations/validators';
-import {action,set} from '@ember/object';
+import {action, set} from '@ember/object';
 import {service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';
 import {isEmpty} from '@ember/utils';
@@ -21,7 +21,7 @@ export default class AdminSlotBulkEditComponent extends Component {
 
   constructor() {
     super(...arguments);
-    const {positions, position} = this.args;
+    const {positions, slots} = this.args;
 
     this.editForm = {
       positionId: null,
@@ -29,21 +29,23 @@ export default class AdminSlotBulkEditComponent extends Component {
       description: '',
     };
 
-    position.slots.forEach((slot) => {
+    slots.forEach((slot) => {
       this.editForm[`slot_${slot.id}`] = true;
     });
 
-    this.positionOptions = positions.map((position) => ({id: position.id, title: position.title}));
-    this.positionOptions.unshift({id: null, title: 'Select position to update'});
+    if (positions) {
+      this.positionOptions = positions.map((position) => ({id: position.id, title: position.title}));
+      this.positionOptions.unshift({id: null, title: 'Select position to update'});
+    }
   }
 
   @action
   async submitAction() {
     const columns = {};
     const form = this.editForm;
-    const slots = this.args.position.slots;
+    const {slots} = this.args;
 
-    if (form.positionId) {
+    if (this.args.positions && form.positionId) {
       columns.position_id = form.positionId;
     }
 
@@ -92,15 +94,16 @@ export default class AdminSlotBulkEditComponent extends Component {
     }
 
     this.toast.success(`${slotCount} slot(s) were successfully updated.`);
-    if (columns.position_id) {
-      this.args.onPositionUpdate();
+    const {onPositionUpdate} = this.args;
+    if (columns.position_id && onPositionUpdate) {
+      onPositionUpdate();
     }
-    this.args.onClose();
+    this.args.onClose?.();
   }
 
   @action
   toggleAll() {
     this.selectAll = !this.selectAll;
-    this.args.position.slots.forEach((slot) =>  set(this.editForm, `slot_${slot.id}`, this.selectAll));
+    this.args.slots.forEach((slot) => set(this.editForm, `slot_${slot.id}`, this.selectAll));
   }
 }

@@ -1,8 +1,9 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import dayjs from 'dayjs';
-import _ from 'lodash';
-import {tracked} from '@glimmer/tracking';
+import _, {filter, isEmpty} from 'lodash';
+import {cached, tracked} from '@glimmer/tracking';
+import {debounce} from '@ember/runloop';
 
 const allDays = {id: 'all', title: 'All'};
 const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -23,9 +24,9 @@ export default class OpsSlotsController extends ClubhouseController {
 
   @tracked slot = null; // Editing slot
 
+  @tracked filterByDescription;
+
   @tracked positionsOpened = {};
-  @tracked positionSlots = [];
-  @tracked viewSlots = [];
 
   @tracked presentYear;
   @tracked selectedYearLaborDay;
@@ -41,6 +42,8 @@ export default class OpsSlotsController extends ClubhouseController {
   @tracked linkGroup;
   @tracked linkType;
 
+  @tracked bulkEditFiltered = false;
+
   @action
   changeActiveFilter(value) {
     this.activeFilter = value;
@@ -53,15 +56,40 @@ export default class OpsSlotsController extends ClubhouseController {
     this._buildDisplay();
   }
 
-  _buildDisplay() {
-    this._buildViewSlots();
-    this._buildPositionSlots();
+  @action
+  toggleBulkEditFiltered() {
+    this.bulkEditFiltered = !this.bulkEditFiltered;
   }
 
-  _buildViewSlots() {
+  @action
+  changeFilterByDescription(event) {
+    debounce(this, this.setFilterByDescription, event.target.value, 350);
+  }
+
+  @action
+  clearFilterByDescription() {
+    this.filterByDescription = '';
+  }
+
+  @action
+  setFilterByDescription(value) {
+    this.filterByDescription = value;
+  }
+
+  _buildDisplay() {
+    /*
+    this._buildViewSlots();
+    this._buildPositionSlots();
+
+     */
+  }
+
+  @cached
+  get viewSlots() {
     let slots = this.slots;
     const dayFilter = this.dayFilter;
     const activeFilter = this.activeFilter;
+    let filterByDescription = this.filterByDescription
 
     if (activeFilter === 'active') {
       slots = slots.filterBy('active', true);
@@ -77,9 +105,15 @@ export default class OpsSlotsController extends ClubhouseController {
       }
     }
 
-    this.viewSlots = _.sortBy(slots, 'begins');
+    if (!isEmpty(filterByDescription)) {
+      filterByDescription = filterByDescription.toLowerCase();
+      slots = filter(slots, (slot) => slot.description.toLowerCase().indexOf(filterByDescription) !== -1);
+    }
+
+    return _.sortBy(slots, 'begins');
   }
 
+  @cached
   get dayOptions() {
     const unique = _.map(_.uniqBy(this.slots, 'slotDay'), 'slotDay');
     const days = [allDays];
@@ -95,7 +129,8 @@ export default class OpsSlotsController extends ClubhouseController {
     return days;
   }
 
-  _buildPositionSlots() {
+  @cached
+  get positionSlots() {
     const groups = [];
 
     this.viewSlots.forEach((slot) => {
@@ -119,9 +154,27 @@ export default class OpsSlotsController extends ClubhouseController {
       }
     });
 
-    this.positionSlots = _.sortBy(groups, (g) => g.position.title);
+    return _.sortBy(groups, (g) => g.position.title);
   }
 
+  @cached
+  get filteredDescriptionGroup() {
+    const group = {
+      position: null,
+      slots: this.viewSlots,
+      inactive: 0,
+    };
+
+    this.viewSlots.forEach((slot) => {
+      if (!slot.active) {
+        group.inactive++;
+      }
+    });
+
+    return group;
+  }
+
+  @cached
   get positionsScrollList() {
     return this.positionSlots.map((p) => ({id: `position-${p.position.id}`, title: p.position.title}));
   }
@@ -131,6 +184,7 @@ export default class OpsSlotsController extends ClubhouseController {
     this.positionsOpened[position.position_id] = opened;
   }
 
+  @cached
   get trainerSlots() {
     return this.slots.filter((slot) => slot.position_title.match(/(trainer|mentor)/i));
   }
@@ -314,6 +368,7 @@ export default class OpsSlotsController extends ClubhouseController {
 
   @action
   bulkEditOpenAction(position) {
+    console.log("position", position);
     this.bulkEditPosition = position;
     this.showBulkEditDialog = true;
   }
@@ -325,7 +380,7 @@ export default class OpsSlotsController extends ClubhouseController {
 
   @action
   bulkEditPositionUpdatedAction() {
-    this._buildPositionSlots();
+    //this._buildPositionSlots();
     this.showBulkEditDialog = false;
   }
 
