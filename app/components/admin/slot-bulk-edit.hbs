@@ -1,6 +1,8 @@
-<h1>Bulk Edit {{@position.title}}</h1>
+{{#unless @isFiltered}}
+  <h1>Bulk Edit {{@position.title}}</h1>
+{{/unless}}
 
-<a href {{on-click @onClose}} class="my-4">Back to slots listing</a>
+<a href {{on-click @onClose}} class="d-block my-4">Back to slots listing</a>
 
 <ChForm @formId="bulkEdit"
         @formFor={{this.editForm}}
@@ -10,10 +12,12 @@
   <fieldset>
     <legend>Bulk edit columns (leave field blank to not update)</legend>
     <FormRow>
-      <f.select @name="positionId"
-                @label="Position"
-                @options={{this.positionOptions}}
-      />
+      {{#if @positions}}
+        <f.select @name="positionId"
+                  @label="Position"
+                  @options={{this.positionOptions}}
+        />
+      {{/if}}
       <f.text @name="description"
               @label="Description"
               @size={{40}}
@@ -34,7 +38,9 @@
       />
     </FormRow>
     <f.submit @label="Update"/>
-    <UiCancelButton @type="secondary" @onClick={{@onClose}}/>
+    {{#if @onClose}}
+      <UiCancelButton @type="secondary" @onClick={{@onClose}}/>
+    {{/if}}
   </fieldset>
 
   <fieldset class="mt-2">
@@ -46,8 +52,7 @@
           <Input @type="checkbox" @checked={{this.selectAll}} {{on "change" this.toggleAll}} />
         </th>
         <th>ID</th>
-        <th>From</th>
-        <th>To</th>
+        <th>Time</th>
         <th class="text-end">Max</th>
         <th class="text-end">Count</th>
         <th>Description</th>
@@ -55,14 +60,20 @@
       </tr>
       </thead>
       <tbody>
-      {{#each @position.slots key="id" as |slot|}}
+      {{#each @slots key="id" as |slot|}}
         <tr id="slot-{{slot.id}}">
           <td>
             <f.checkbox @name="slot_{{slot.id}}" @inline={{true}} />
           </td>
           <td>{{slot.id}}</td>
-          <td>{{shift-format slot.begins}}</td>
-          <td>{{shift-format slot.ends}}</td>
+          <td>
+            {{shift-format slot.begins slot.ends}}
+            {{#if @isFiltered}}
+              <div class="mt-1">
+                {{slot.position.title}}
+              </div>
+            {{/if}}
+          </td>
           <td class="text-end">{{slot.max}}</td>
           <td class="text-end">{{slot.signed_up}}</td>
           <td>
@@ -70,9 +81,9 @@
           </td>
           <td class="text-center">
             {{#if slot.active}}
-              {{fa-icon "check" color="success"}}
+              <UiBadge @type="success">active</UiBadge>
             {{else}}
-              {{fa-icon "times" color="danger"}}
+              <UiBadge @type="danger">inactive</UiBadge>
             {{/if}}
           </td>
         </tr>

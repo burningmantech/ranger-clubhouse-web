@@ -33,129 +33,115 @@
       </div>
       <FormLabel @auto={{true}}>Actions</FormLabel>
       <div class="col-auto hstack gap-3">
-        <UiButton @onClick={{this.newSlot}}>New Slot</UiButton>
+        <UiButton @onClick={{this.newSlot}} @size="sm">New Slot</UiButton>
         {{#if this.slots.length}}
-          <UiButton @onClick={{fn this.openSlotCopy null}} @type="secondary">Copy Slots</UiButton>
+          <UiButton @onClick={{fn this.openSlotCopy null}} @type="secondary" @size="sm">Copy Slots</UiButton>
         {{/if}}
+      </div>
+    </FormRow>
+    <FormRow>
+      <FormLabel @auto={{true}}>
+        Filter by description:
+      </FormLabel>
+      <div class="col-auto">
+        <Input @type="text" @value={{this.filterByDescription}} {{on "input" this.changeFilterByDescription}} size="20"
+               class="form-control"/>
+      </div>
+      <div class="col-auto">
+        <UiButton @type="secondary" @size="sm" @onClick={{this.clearFilterByDescription}}>Clear</UiButton>
       </div>
     </FormRow>
 
 
-    {{#if this.positionSlots}}
-      <DropdownScrollList @items={{this.positionsScrollList}} @openAccordion={{true}} @thing="position"/>
-    {{/if}}
-
-    {{#if this.slots.length}}
-      Showing {{this.viewSlots.length}} of {{pluralize this.slots.length "slot"}}
-      {{#unless this.viewSlots}}
-        <p class="text-danger">
-          No slots matched the filter criteria.
-        </p>
-      {{/unless}}
-    {{else}}
-      No slots were found for {{this.year}}?
-    {{/if}}
-
-
-    {{#each this.positionSlots as |group|}}
-      <UiAccordion id="position-{{group.position.id}}"
-                   @isInitOpen={{get this.positionsOpened group.position.id}}
-                   @onClick={{fn this.positionClicked group}} as |box|>
-        <box.title>
-          {{group.position.title}} ({{group.slots.length}}
-          {{~#if group.inactive}}
-            / <span class="text-danger">{{group.inactive}} inactive</span>
-          {{~/if}})
-        </box.title>
-        <box.body>
-          {{#if box.isOpen}}
-            <UiButtonRow class="mb-2">
-              <UiButton @size="sm" @onClick={{fn this.activate group}}>Activate All</UiButton>
-              <UiButton @size="sm" @onClick={{fn this.deactivate group}}>Deactivate All</UiButton>
-              <UiButton @type="secondary" @size="sm" @onClick={{fn this.openSlotCopy group.position.id}}>
-                Bulk Copy
+    {{#if this.filterByDescription}}
+      {{#if this.slots.length}}
+        {{#if this.viewSlots}}
+          {{#if this.bulkEditFiltered}}
+            <div class="my-3">
+              <Admin::SlotBulkEdit @slots={{this.viewSlots}}
+                                   @onClose={{this.toggleBulkEditFiltered}}
+                                   @isFiltered={{true}}
+              />
+            </div>
+          {{else}}
+            <div class="my-3">
+              Showing {{this.viewSlots.length}} of {{pluralize this.slots.length "slot"}}
+              <UiButton @type="primary" @onClick={{this.toggleBulkEditFiltered}} class="ms-2">Bulk Edit Filtered
+                Results
               </UiButton>
-              <UiButton @type="secondary" @size="sm" @onClick={{fn this.bulkEditOpenAction group}}>
-                Bulk Edit
-              </UiButton>
-              {{#if group.position.parent_position_id}}
-                <UiButton @type="secondary" @size="sm" @onClick={{fn this.openLinkSlots group "multiplier"}}>
-                  Link To Multiplier Slots
-                </UiButton>
-                <UiButton @type="secondary" @size="sm" @onClick={{fn this.openLinkSlots group "parent"}}>
-                  Link to Parent Slots
-                </UiButton>
-              {{/if}}
-            </UiButtonRow>
-            <UiTable>
-              <thead>
-              <tr>
-                <th class="text-end">ID</th>
-                <th>Time</th>
-                <th class="text-end">Max</th>
-                <th class="text-end">Count</th>
-                <th class="text-end">Credits</th>
-                <th>Description</th>
-                <th>Active</th>
-                <th>Actions</th>
-              </tr>
-              </thead>
-              <tbody>
-              {{#each group.slots key="id" as |slot|}}
-                <tr id="slot-{{slot.id}}">
-                  <td class="text-end">{{slot.id}}</td>
-                  <td>
-                    {{shift-format slot.begins slot.ends timezone=slot.timezone_abbr}}
-                    {{#if slot.trainer_slot}}
-                      <div class="mt-1">
-                        Multiplier
-                        #{{slot.trainer_slot.id}} {{slot.trainer_slot.position.title}} {{slot.trainer_slot.description}}
-                        {{shift-format slot.trainer_slot.begins}}
-                      </div>
-                    {{/if}}
-                    {{#if slot.parent_signup_slot}}
-                      <div class="mt-1">
-                        Parent
-                        #{{slot.parent_signup_slot.id}} {{slot.parent_signup_slot.position.title}} {{slot.parent_signup_slot.description}}
-                        {{shift-format slot.parent_signup_slot.begins}}
-                      </div>
-                    {{/if}}
-                  </td>
-                  <td class="text-end">{{slot.max}}</td>
-                  <td class="text-end">{{slot.signed_up}}</td>
-                  <td class="text-end">{{credits-format slot.credits}}</td>
-                  <td>
-                    <SlotInfoLink @description={{slot.description}} @info={{slot.url}} />
-                  </td>
-                  <td class="text-center">
-                    {{#if slot.active}}
-                      {{fa-icon "check" color="success"}}
-                    {{else}}
-                      {{fa-icon "times" color="danger"}}
-                    {{/if}}
-                  </td>
-                  <td>
-                    <UiButtonRow>
-                      <UiButton @type="secondary" @size="sm" @onClick={{fn this.repeatSlot slot}}>
-                        {{fa-icon "clone"}} Repeat
-                      </UiButton>
-                      <UiButton @type="secondary" @size="sm" @onClick={{fn this.repeatSlotAdd24Hours slot}}>
-                        {{fa-icon "clone"}} Repeat+24
-                      </UiButton>
-                      <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteSlot slot}}>
-                        {{fa-icon "trash-alt"type="fas"}} Delete
-                      </UiButton>
-                      <UiEditButton @onClick={{fn this.editSlot slot}} @size="sm"/>
-                    </UiButtonRow>
-                  </td>
-                </tr>
-              {{/each}}
-              </tbody>
-            </UiTable>
+            </div>
+            <Admin::SlotsTable @group={{this.filteredDescriptionGroup}}
+                               @repeatSlot={{this.repeatSlot}}
+                               @repeatSlotAdd24Hours={{this.repeatSlotAdd24Hours}}
+                               @deleteSlot={{this.deleteSlot}}
+                               @editSlot={{this.editSlot}}
+                               @showPosition={{true}}
+            />
           {{/if}}
-        </box.body>
-      </UiAccordion>
-    {{/each}}
+        {{else}}
+          <p class="text-danger">
+            No slots matched the description "{{this.filterByDescription}}"
+          </p>
+        {{/if}}
+      {{/if}}
+    {{else}}
+      {{#if this.positionSlots}}
+        <DropdownScrollList @items={{this.positionsScrollList}} @openAccordion={{true}} @thing="position"/>
+      {{/if}}
+
+      {{#if this.slots.length}}
+        Showing {{this.viewSlots.length}} of {{pluralize this.slots.length "slot"}}
+        {{#unless this.viewSlots}}
+          <p class="text-danger">
+            No slots matched the filter criteria.
+          </p>
+        {{/unless}}
+      {{else}}
+        No slots were found for {{this.year}}?
+      {{/if}}
+
+
+      {{#each this.positionSlots as |group|}}
+        <UiAccordion id="position-{{group.position.id}}"
+                     @isInitOpen={{get this.positionsOpened group.position.id}}
+                     @onClick={{fn this.positionClicked group}} as |box|>
+          <box.title>
+            {{group.position.title}} ({{group.slots.length}}
+            {{~#if group.inactive}}
+              / <span class="text-danger">{{group.inactive}} inactive</span>
+            {{~/if}})
+          </box.title>
+          <box.body>
+            {{#if box.isOpen}}
+              <UiButtonRow class="mb-2">
+                <UiButton @size="sm" @onClick={{fn this.activate group}}>Activate All</UiButton>
+                <UiButton @size="sm" @onClick={{fn this.deactivate group}}>Deactivate All</UiButton>
+                <UiButton @type="secondary" @size="sm" @onClick={{fn this.openSlotCopy group.position.id}}>
+                  Bulk Copy
+                </UiButton>
+                <UiButton @type="secondary" @size="sm" @onClick={{fn this.bulkEditOpenAction group}}>
+                  Bulk Edit
+                </UiButton>
+                {{#if group.position.parent_position_id}}
+                  <UiButton @type="secondary" @size="sm" @onClick={{fn this.openLinkSlots group "multiplier"}}>
+                    Link To Multiplier Slots
+                  </UiButton>
+                  <UiButton @type="secondary" @size="sm" @onClick={{fn this.openLinkSlots group "parent"}}>
+                    Link to Parent Slots
+                  </UiButton>
+                {{/if}}
+              </UiButtonRow>
+              <Admin::SlotsTable @group={{group}}
+                                 @repeatSlot={{this.repeatSlot}}
+                                 @repeatSlotAdd24Hours={{this.repeatSlotAdd24Hours}}
+                                 @deleteSlot={{this.deleteSlot}}
+                                 @editSlot={{this.editSlot}}
+              />
+            {{/if}}
+          </box.body>
+        </UiAccordion>
+      {{/each}}
+    {{/if}}
   </div>
 
   {{#if this.slot}}
@@ -183,7 +169,8 @@
 
   {{#if this.showBulkEditDialog}}
     <Admin::SlotBulkEdit @positions={{this.positions}}
-                         @position={{this.bulkEditPosition}}
+                         @position={{this.bulkEditPosition.position}}
+                         @slots={{this.bulkEditPosition.slots}}
                          @onPositionUpdate={{this.bulkEditPositionUpdatedAction}}
                          @onClose={{this.bulkEditCloseAction}}
     />
