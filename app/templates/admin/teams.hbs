@@ -109,6 +109,13 @@
           <f.select @name="type" @label="Team Type" @options={{this.typeOptions}} />
           <f.text @name="email" @label="Contact Email" @maxlength={{255}} @size={{35}} />
         </FormRow>
+        <FormRow>
+          <f.textarea @name="description"
+                      @label="Description (will appear on the Me >  Directory page)"
+                      @cols={{80}}
+                      @rows={{4}} />
+        </FormRow>
+
         <fieldset>
           <legend>Team Flags</legend>
           <FormRow>
