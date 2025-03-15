@@ -1,21 +1,23 @@
-<YearSelect @title="Timesheet By Position"
-            @year={{this.year}}
-            @onChange={{set-value this 'year'}}
-            @minYear={{2008}}
-            @skipPandemic={{true}}
-/>
-<DropdownScrollList @items={{this.positionsScrollList}} @openAccordion={{true}} @thing="position"/>
-<p>
-  Showing {{pluralize this.positions.length "position"}} <UiExportToCSVButton @onClick={{this.exportAllToCSV}} @size="sm"/>
-</p>
-{{#each this.positions key="id" as |position|}}
-  <div class="max-width-700">
+<main>
+  <YearSelect @title="Timesheet By Position"
+              @year={{this.year}}
+              @onChange={{set-value this 'year'}}
+              @minYear={{2008}}
+              @skipPandemic={{true}}
+  />
+  <DropdownScrollList @items={{this.positionsScrollList}} @openAccordion={{true}} @thing="position"/>
+  <p>
+    Showing {{pluralize this.positions.length "position"}}
+    <UiExportToCSVButton @onClick={{this.exportAllToCSV}} @size="sm"/>
+  </p>
+  {{#each this.positions key="id" as |position|}}
     <UiAccordion id="position-{{position.id}}" as |accordion|>
-      <accordion.title>{{position-label position}} ({{pluralize position.timesheets.length "entry"}})</accordion.title>
+      <accordion.title>{{position-label position}} ({{pluralize position.timesheets.length "entry"}})
+      </accordion.title>
       <accordion.body>
         {{#if accordion.isOpen}}
           <p>
-            <UiExportToCSVButton @onClick={{fn this.exportToCSV position}} @size="sm" />
+            <UiExportToCSVButton @onClick={{fn this.exportToCSV position}} @size="sm"/>
           </p>
           <UiTable>
             <thead>
@@ -61,10 +63,9 @@
         {{/if}}
       </accordion.body>
     </UiAccordion>
-
-  </div>
-{{else}}
-  <p>
-    <b class="text-danger">No {{this.year}} timesheet entries were found.</b>
-  </p>
-{{/each}}
+  {{else}}
+    <p>
+      <b class="text-danger">No {{this.year}} timesheet entries were found.</b>
+    </p>
+  {{/each}}
+</main>

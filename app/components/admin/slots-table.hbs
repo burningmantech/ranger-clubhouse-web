@@ -16,11 +16,7 @@
     <tr id="slot-{{slot.id}}">
       <td class="text-end">{{slot.id}}</td>
       <td class="text-center">
-        {{#if slot.active}}
-          <UiBadge @type="success">active</UiBadge>
-        {{else}}
-          <UiBadge @type="danger">inactive</UiBadge>
-        {{/if}}
+        <UiBadgeActive @active={{slot.active}} />
       </td>
       <td>
         {{shift-format slot.begins slot.ends timezone=slot.timezone_abbr}}
