@@ -14,12 +14,18 @@
     <hr>
   {{/if}}
   <h2 id="team-{{team.id}}">{{team.title}}</h2>
+  {{#if team.description}}
+    <div class="my-2">
+      {{team.description}}
+    </div>
+  {{/if}}
   {{#if team.email}}
     Contact:
     <MailTo @to={{team.email}} />
   {{else}}
     <i>No contact email on file.</i>
   {{/if}}
+
   <div class="d-flex flex-wrap mt-2">
     {{#each team.members as |member|}}
     {{! template-lint-disable no-inline-styles}}
@@ -37,7 +43,7 @@
           </div>
           <div class="card-subtitle fs-6 text-center">
             {{#each member.overseer_positions as |position|}}
-              {{position.title}}<br>
+              {{this.splitWords position.title}}<br>
             {{/each}}
           </div>
         </div>
