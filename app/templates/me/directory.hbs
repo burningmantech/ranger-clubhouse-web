@@ -14,7 +14,12 @@
     <hr>
   {{/if}}
   <h2 id="team-{{team.id}}">{{team.title}}</h2>
-  Contact: <MailTo @to={{team.email}} />
+  {{#if team.email}}
+    Contact:
+    <MailTo @to={{team.email}} />
+  {{else}}
+    <i>No contact email on file.</i>
+  {{/if}}
   <div class="d-flex flex-wrap mt-2">
     {{#each team.members as |member|}}
     {{! template-lint-disable no-inline-styles}}
@@ -22,11 +27,18 @@
         {{#if member.profile_url}}
           <img src={{member.profile_url}} alt="profile" class="card-img-top" loading="lazy">
         {{else}}
-          <UiPhotoNone/>
+          <div class="text-center mt-1">
+            <UiPhotoNone/>
+          </div>
         {{/if}}
         <div class="card-body">
-          <div class="card-title h4 text-center">
+          <div class="card-title fs-4 text-center">
             {{member.callsign}}
+          </div>
+          <div class="card-subtitle fs-6 text-center">
+            {{#each member.overseer_positions as |position|}}
+              {{position.title}}<br>
+            {{/each}}
           </div>
         </div>
       </div>
