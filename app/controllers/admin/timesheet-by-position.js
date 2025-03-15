@@ -9,7 +9,7 @@ const CSV_COLUMNS = [
   {title: 'Callsign', key: 'callsign'},
 ];
 
-export default class ReportsTimesheetByPositionController extends ClubhouseController {
+export default class AdminTimesheetByPositionController extends ClubhouseController {
   queryParams = ['year'];
 
   @action
