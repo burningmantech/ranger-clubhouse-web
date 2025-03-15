@@ -80,11 +80,7 @@
             <SlotInfoLink @description={{slot.description}} @info={{slot.url}} />
           </td>
           <td class="text-center">
-            {{#if slot.active}}
-              <UiBadge @type="success">active</UiBadge>
-            {{else}}
-              <UiBadge @type="danger">inactive</UiBadge>
-            {{/if}}
+            <UiBadgeActive @active={{slot.active}} />
           </td>
         </tr>
       {{/each}}
