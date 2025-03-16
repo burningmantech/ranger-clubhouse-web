@@ -341,7 +341,7 @@ export default class ProspectiveApplicationModel extends Model {
     if (!this.qualifiedEvents.length) {
       return 'NO QUALIFIED EVENT YEARS LISTED';
     } else if (!this.hasEventYearWithinRange) {
-      return 'NO EVENT YEAR WITHIN THE LAST 10';
+      return 'No qualifying event years within the last 10 years';
     }
 
     return null;

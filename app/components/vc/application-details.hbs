@@ -39,15 +39,18 @@
               {{fa-icon "hand" right=1}} Pandemic year(s) selected.
             </div>
           {{/if}}
+          <div>
+            {{@application.experienceIssue}}
+          </div>
         {{else}}
           <div class="mb-1">
             <UiBadge @type="danger">{{fa-icon "hand" right=1}} No event attendance</UiBadge>
           </div>
-          {{#if @application.isStatusHoldQualificationIssue}}
-            Applicant asked to confirm attendance.
-          {{else}}
-            <UiButton @onClick={{this.qualificationIssue}} @size="sm">Ask for attendance</UiButton>
-          {{/if}}
+         {{/if}}
+        {{#if @application.isStatusHoldQualificationIssue}}
+          Applicant asked to confirm attendance.
+        {{else if (not @application.isBRCExperienceOkay)}}
+          <UiButton @onClick={{this.qualificationIssue}} @size="sm">Ask to confirm attendance</UiButton>
         {{/if}}
       </t.column>
       <t.label>Age</t.label>
