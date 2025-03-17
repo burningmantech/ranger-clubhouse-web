@@ -1,8 +1,12 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
+import {tracked}from '@glimmer/tracking';
 
-export default class AdminTimesheetByCallsignController extends ClubhouseController {
+export default class ReportsTimesheetByCallsignController extends ClubhouseController {
   queryParams = ['year'];
+
+  @tracked people;
+  @tracked status;
 
   get callsignScrollItems() {
     return this.people.map((p) => ({
