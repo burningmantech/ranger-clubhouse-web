@@ -88,8 +88,6 @@ Router.map(function () {
     this.route('settings');
     this.route('teams');
     this.route('thank-you-cards');
-    this.route('timesheet-by-callsign');
-    this.route('timesheet-by-position');
     this.route('timesheet-slot-repair');
     this.route('timesheet-totals');
     this.route('top-hour-earners');
@@ -234,6 +232,8 @@ Router.map(function () {
     this.route('shift-signups');
     this.route('special-teams');
     this.route('swag-distribution');
+    this.route('timesheet-by-callsign');
+    this.route('timesheet-by-position');
     this.route('timesheet-correction-requests');
     this.route('timesheet-correction-stats');
     this.route('timesheet-sanity-checker');

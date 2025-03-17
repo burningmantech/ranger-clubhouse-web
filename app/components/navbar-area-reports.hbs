@@ -24,6 +24,8 @@
     <NavbarMenuItem @menu={{menu}} @route="reports.shift-drop" @item="Shift Drop"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.no-shows" @item="No Shows"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.forced-signins" @item="Forced Sign-Ins"/>
+    <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-by-callsign" @item="Timesheet By Callsign"/>
+    <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-by-position" @item="Timesheet By Position"/>
   </NavbarMenuSection>
   {{#if (has-role "admin" "timesheet-management")}}
     <NavbarMenuSection @section="Timesheet Corrections">

@@ -5,6 +5,19 @@
               @minYear={{2008}}
               @skipPandemic={{true}}
   />
+  <p>
+    {{#if (eq this.status "full-report")}}
+      Because you have the appropriate permissions, all positions with timesheets are shown.
+    {{else if (eq this.status "partial-report")}}
+      <UiAlert @type="warning" @icon="hand">
+        Only the positions managed by the Cadres and Delegations you belong to are shown.
+      </UiAlert>
+    {{else}}
+      <UiAlert @type="warning" @icon="hand">
+        You do not appear to be a member of any Cadre or Delegation that manages positions. No positions are shown.
+      </UiAlert>
+    {{/if}}
+  </p>
   <DropdownScrollList @items={{this.positionsScrollList}} @openAccordion={{true}} @thing="position"/>
   <p>
     Showing {{pluralize this.positions.length "position"}}
