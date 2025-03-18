@@ -92,7 +92,7 @@ export default class WorkHistoryComponent extends Component {
     this.positions = _.sortBy(_.values(positionsById), 'title');
     this.inaccurateYears = Object.keys(priorTo2008).map((y) => +y);
     this.inaccurateYears.sort();
-    this.hasNonRangerWork = !!entries.find((t) => t.is_non_ranger);
+    this.hasEchelonWork = !!entries.find((t) => t.is_echelon);
     this.isMe = (this.session.userId === this.args.person.id);
   }
 

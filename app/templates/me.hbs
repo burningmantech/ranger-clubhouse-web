@@ -4,7 +4,7 @@
     <s.link @route="me.homepage" @title="Home" @icon="home" @iconType="s"/>
     {{#if (not (or this.user.isPastProspective this.user.isProspectiveWaitlist))}}
       <s.link @route="me.schedule" @title="Schedule / Sign Up" @icon="clipboard"/>
-      {{#if (or this.user.isNonRanger this.user.isRanger)}}
+      {{#if (or this.user.isEchelon this.user.isRanger)}}
         <s.link @route="me.timesheet" @title="Timesheets" @icon="clock"/>
       {{/if}}
       {{#unless this.user.isAuditor}}
@@ -13,7 +13,7 @@
     {{/if}}
   </s.group>
 
-  {{#if (or this.user.isRanger this.user.isPNV this.user.isNonRanger)}}
+  {{#if (or this.user.isRanger this.user.isPNV this.user.isEchelon)}}
     <s.group @title="PRE-EVENT">
       {{#if this.user.isPNV}}
         <s.link @route="me.tickets" @title="Setup Access Pass" @icon="ticket-alt" @iconType="s"/>

@@ -1,6 +1,6 @@
 import ClubhouseRoute from "clubhouse/routes/clubhouse-route";
 import {ADMIN} from "clubhouse/constants/roles";
-import {NON_RANGER} from "clubhouse/constants/person_status";
+import {ECHELON} from "clubhouse/constants/person_status";
 import {GENDER_NONE} from "clubhouse/models/person";
 
 export default class AdminPersonCreateRoute extends ClubhouseRoute {
@@ -8,7 +8,7 @@ export default class AdminPersonCreateRoute extends ClubhouseRoute {
 
   setupController(controller) {
     controller.person = this.store.createRecord('person', {
-      status: NON_RANGER,
+      status: ECHELON,
       alt_phone: '',
       street2: '',
       apt: '',

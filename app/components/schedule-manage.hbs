@@ -52,7 +52,7 @@
                                   @person={{@person}}
         />
       </tab.pane>
-      {{#if (or @person.isRanger @person.isNonRanger)}}
+      {{#if (or @person.isRanger @person.isEchelon)}}
         <tab.pane @title="Ticket & Provisions Qualifications" @id="progress">
           {{#if this.isCurrentYear}}
             {{#if (eq tab.activeId "progress")}}

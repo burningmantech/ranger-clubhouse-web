@@ -263,7 +263,7 @@ export default class PersonIndexController extends ClubhouseController {
           case NON_RANGER:
             if (oldStatus !== AUDITOR) {
               this.modal.confirm('Confirm status update',
-                `<p>You are about to convert an account from ${oldStatus} status to Non-Ranger. Normally only auditor accounts are eligible.</p>Are you sure you want to do this?`,
+                `<p>You are about to convert an account from ${oldStatus} status to Echelon. Normally only auditor accounts are eligible.</p>Are you sure you want to do this?`,
                 () => this._savePersonModel(model)
               );
             }
@@ -288,7 +288,7 @@ export default class PersonIndexController extends ClubhouseController {
             if (oldStatus !== AUDITOR && oldStatus !== NON_RANGER && oldStatus !== PAST_PROSPECTIVE) {
               this.modal.confirm('Confirm Prospective Status',
                 htmlSafe(
-                  `<p>Updating an account from ${oldStatus} status to prospective is highly unusual. Normally only Auditor, Non-Ranger, and Past Prospective accounts are eligible.</p>` +
+                  `<p>Updating an account from ${oldStatus} status to prospective is highly unusual. Normally only Auditor, Echelon, and Past Prospective accounts are eligible.</p>` +
                   `Are you sure you want to this do?`,
                 ),
                 () => this._savePersonModel(model));

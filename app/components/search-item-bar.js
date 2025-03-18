@@ -6,7 +6,7 @@ import {
   ACTIVE,
   ALPHA,
   INACTIVE, INACTIVE_EXTENSION,
-  NON_RANGER, PROSPECTIVE,
+  ECHELON, PROSPECTIVE,
 } from 'clubhouse/constants/person_status';
 import {debounce} from '@ember/runloop';
 import {service} from '@ember/service';
@@ -38,7 +38,7 @@ const HqStatuses = [
   ALPHA,
   INACTIVE,
   INACTIVE_EXTENSION,
-  NON_RANGER,
+  ECHELON,
   PROSPECTIVE,
   'cheetahcub'   // pseudo-status, find anyone who is signed up for a Cheetah Cub shift.
 ].join(',');

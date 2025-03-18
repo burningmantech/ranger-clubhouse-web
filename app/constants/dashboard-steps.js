@@ -27,7 +27,7 @@ import {
   URGENT,
   WAITING
 } from "clubhouse/constants/dashboard";
-import {ACTIVE, AUDITOR, INACTIVE, INACTIVE_EXTENSION, NON_RANGER, RETIRED} from 'clubhouse/constants/person_status';
+import {ACTIVE, AUDITOR, INACTIVE, INACTIVE_EXTENSION, ECHELON, RETIRED} from 'clubhouse/constants/person_status';
 import TicketPackage from 'clubhouse/utils/ticket-package';
 
 function indefiniteArticle(noun) {
@@ -222,16 +222,16 @@ export const VERIFY_PERSONAL_INFO = {
     let shirtNag = '', result = ACTION_NEEDED, doTheThing = '', immediate = false;
 
     if (!isPNV) {
-      const isNonRanger = (person.status === NON_RANGER);
+      const isEchelon = (person.status === ECHELON);
       doTheThing = 'Each year, every volunteer is asked to review and verify their personal information in the Clubhouse.';
-      if (!isNonRanger && milestones.online_course_passed) {
+      if (!isEchelon && milestones.online_course_passed) {
         // C'mon, you haven't done this step yet?!? Sheese.
         immediate = true;
         result = URGENT;
         doTheThing = `<b class="text-danger">${doTheThing}</b>`;
       }
       doTheThing = `<p>${doTheThing}</p>`;
-      if (!isNonRanger && person.status !== AUDITOR) {
+      if (!isEchelon && person.status !== AUDITOR) {
         shirtNag = ' <b>Be sure to confirm your Ranger shirt sizes are up to date.</b>';
       }
     }
@@ -285,12 +285,12 @@ export const ONLINE_COURSE = {
     const duration = 'up to 2 hours or more';
 
     let message;
-    const isNonRanger = person.status === NON_RANGER;
+    const isEchelon = person.status === ECHELON;
     const manualLocation = '<p>The Ranger Manual can be found at <a href="' + setting('RangerManualUrl') + '" rel="noopener noreferrer" target="_blank">rangers.burningman.org</a>.</p>';
 
-    if (isNonRanger) {
+    if (isEchelon) {
       message =
-        '<p>As a Non Ranger Volunteer, you have the option to take the Ranger Online Course. If you do decide to attend an In-Person training, the Online Course must be completed first.</p>' +
+        '<p>As an Echelon olunteer, you have the option to take the Ranger Online Course. If you do decide to attend an In-Person training, the Online Course must be completed first.</p>' +
         manualLocation +
         '<p>Please be sure to focus on the radio protocol section of the manual in case you will be carrying a radio.</p>' +
         `<p>Note: it may take up to 20 minutes for the Clubhouse to record your course completion.</p>`;
@@ -300,7 +300,7 @@ export const ONLINE_COURSE = {
         `<p>The Online Course, like the In-Person training, has to be completed every year. The estimate time to complete the course is ${duration}.</p> <p>Note: it may take up to 20 minutes, or more, for the Clubhouse to record your course completion.</p>`;
     }
     return {
-      result: isNonRanger ? OPTIONAL : ACTION_NEEDED,
+      result: isEchelon ? OPTIONAL : ACTION_NEEDED,
       message: htmlSafe(message),
       isOnlineTraining: true,
       name
@@ -501,7 +501,7 @@ export const SIGN_UP_FOR_SHIFTS = {
   skipPeriod: [POST_EVENT, AFTER_EVENT],
 
   check({milestones, isPNV, isAuditor, person}) {
-    const isNonRanger = (person.status === NON_RANGER);
+    const isEchelon = (person.status === ECHELON);
     if (!milestones.online_course_passed && (isAuditor || isPNV)) {
       return {
         result: NOT_AVAILABLE,
@@ -509,7 +509,7 @@ export const SIGN_UP_FOR_SHIFTS = {
       };
     }
 
-    if (!milestones.dirt_shifts_available && !isNonRanger) {
+    if (!milestones.dirt_shifts_available && !isEchelon) {
       return {
         result: NOT_AVAILABLE,
         message: 'The full Ranger schedule will be posted in mid-to-late June. Check the Announce mailing list for updates on when the schedule will be available.',
@@ -697,7 +697,7 @@ export const SIGN_RADIO_CHECKOUT_AGREEMENT = {
 
 
     let adj, alpha = '';
-    if (person.isNonRanger) {
+    if (person.isEchelon) {
       adj = 'Ranger volunteers';
     } else if (isPNV) {
       adj = 'Prospective Rangers'

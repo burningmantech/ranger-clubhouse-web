@@ -11,7 +11,7 @@ import {
   DPW_RANGER,
 } from 'clubhouse/constants/positions';
 import {cached, tracked} from '@glimmer/tracking';
-import {INACTIVE, INACTIVE_EXTENSION, NON_RANGER} from 'clubhouse/constants/person_status';
+import {INACTIVE, INACTIVE_EXTENSION, ECHELON} from 'clubhouse/constants/person_status';
 import {ADMIN, CAN_FORCE_SHIFT, SHIFT_MANAGEMENT_SELF} from 'clubhouse/constants/roles';
 import {TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
 import {TYPE_TRAINING} from "clubhouse/models/position";
@@ -117,7 +117,7 @@ export default class ShiftCheckInOutComponent extends Component {
     this.signinPositionId = this.signinPositions.length ? this.signinPositions[0].id : null;
 
     // Has the person gone through dirt training?
-    if (this.args.person.status === NON_RANGER) {
+    if (this.args.person.status === ECHELON) {
       this.inPersonTrainingPassed = true;
     } else {
       const {eventInfo} = this.args;

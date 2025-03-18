@@ -1,8 +1,8 @@
 <UiSection>
   <:title>Training Information</:title>
   <:body>
-    {{#if this.person.isNonRanger}}
-      <p>Non Rangers are not required to pass training.</p>
+    {{#if this.person.isEchelon}}
+      <p>Echelon volunteers are not required to pass training.</p>
     {{/if}}
 
     <TrainingInfo @trainings={{this.eventInfo.trainings}} />

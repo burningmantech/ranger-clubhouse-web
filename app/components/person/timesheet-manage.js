@@ -3,7 +3,7 @@ import {action} from '@ember/object';
 import {Role} from 'clubhouse/constants/roles';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
-import {NON_RANGER} from "clubhouse/constants/person_status";
+import {ECHELON} from "clubhouse/constants/person_status";
 import {STATUS_PENDING, STATUS_REJECTED} from "clubhouse/models/timesheet";
 import {APPROVED} from "clubhouse/models/timesheet-missing";
 
@@ -117,9 +117,9 @@ export default class PersonTimesheetManageComponent extends Component {
     }
 
     const {person} = this.args;
-    if (model._changes['is_non_ranger'] && model.is_non_ranger && person.status !== NON_RANGER) {
+    if (model._changes['is_echelon'] && model.is_echelon && person.status !== ECHELON) {
       this.modal.confirm('Department Volunteer Flag Checked',
-        `Warning: The department volunteer (aka non ranger) flag is checked on this timesheet entry, however, ${person.callsign} is status ${person.status}. Normally, the flag is used to indicate the entry is for a non ranger status person and the entry WILL NOT count towards any service years. Are you sure you want to do this?`,
+        `Warning: The Echelon volunteer flag is checked on this timesheet entry, however, ${person.callsign} is status ${person.status}. Normally, the flag is used to indicate the entry is for an Echelon volunteer and the entry WILL NOT count towards any service years. Are you sure you want to do this?`,
         () => this._saveCheckTimes(model));
 
     } else {

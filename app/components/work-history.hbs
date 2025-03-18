@@ -20,10 +20,10 @@
     </p>
   {{/if}}
   {{#if this.years}}
-    {{#if this.hasNonRangerWork}}
+    {{#if this.hasEchelonWork}}
       <p>
         <b class="text-danger">
-          {{if this.isMe "You have " (concat @person.callsign " has")}} Non Ranger volunteer timesheet entries.
+          {{if this.isMe "You have " (concat @person.callsign " has")}} Echelon volunteer timesheet entries.
         </b>
       </p>
     {{/if}}
@@ -108,8 +108,8 @@
           <tr>
             <td>
               {{shift-format entry.on_duty entry.off_duty}}
-              {{#if entry.is_non_ranger}}
-                <br>(as non ranger)
+              {{#if entry.is_echelon}}
+                <br>(as Echelon volunteer)
               {{/if}}
             </td>
             <td class="text-end">
@@ -147,8 +147,8 @@
             <tr>
               <td>
                 {{shift-format entry.on_duty entry.off_duty}}
-                {{#if entry.is_non_ranger}}
-                  <br>(as non ranger)
+                {{#if entry.is_echelon}}
+                  <br>(as Echelon volunteer)
                 {{/if}}
               </td>
               <td class="text-end">
@@ -186,8 +186,8 @@
           <tr>
             <td>
               {{entry.position.title}}
-              {{#if entry.is_non_ranger}}
-                <br>(as non ranger)
+              {{#if entry.is_echelon}}
+                <br>(as Echelon volunteer)
               {{/if}}
             </td>
             <td>

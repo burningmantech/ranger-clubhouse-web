@@ -5,7 +5,7 @@
   {{#if (or this.person.isActive this.person.isAlpha)}}
     This page contains information about your training and various bits (meals, showers, radios, vehicles, etc.)
     related to rangering on the playa.
-  {{else if this.person.isNonRanger}}
+  {{else if this.person.isEchelon}}
     This page contains information regarding granted positions, meals, radios, showers, and vehicle authorizations.
   {{else}}
     This page contains information about your training. If you were to become a
@@ -18,8 +18,8 @@
     <UiSection>
       <:title>{{fa-icon "graduation-cap"}} Training</:title>
       <:body>
-        {{#if this.person.isNonRanger}}
-          <p>Non Rangers are not required to pass training.</p>
+        {{#if this.person.isEchelon}}
+          <p>Echelon volunteers are not required to pass training.</p>
         {{/if}}
         {{#if this.eventInfo.online_course_only}}
           <p>
@@ -121,7 +121,7 @@
     </UiSection>
   </tab.pane>
 
-  {{#if (or this.person.isRanger this.person.isNonRanger)}}
+  {{#if (or this.person.isRanger this.person.isEchelon)}}
     <tab.pane @title="Provisions" @id="provisions">
       <UiSection>
         <:title>Provisions</:title>
@@ -129,7 +129,7 @@
           <dl>
             <MealInfo @eventInfo={{this.eventInfo}} />
             <ShowerInfo @eventInfo={{this.eventInfo}} />
-            {{#if (or this.person.isRanger this.person.isAlpha this.person.isNonRanger)}}
+            {{#if (or this.person.isRanger this.person.isAlpha this.person.isEchelon)}}
               <dt>
                 {{fa-icon "broadcast-tower" right=1}}
                 {{#if this.eventInfo.radio_info_available}}
@@ -164,7 +164,7 @@
       </UiSection>
     </tab.pane>
   {{/if}}
-  {{#if (or this.person.isRanger this.person.isAlpha this.person.isNonRanger)}}
+  {{#if (or this.person.isRanger this.person.isAlpha this.person.isEchelon)}}
     <tab.pane @title="Driving" @id="driving">
       {{#if this.person.vehicle_blacklisted}}
         <UiSection>
@@ -189,7 +189,7 @@
             {{/if}}
           </:body>
         </UiSection>
-        {{#if (or this.person.isRanger this.person.isNonRanger)}}
+        {{#if (or this.person.isRanger this.person.isEchelon)}}
           <UiSection>
             <:title>{{fa-icon "truck-pickup"}} Motor Vehicle Record (MVR)</:title>
             <:body>
@@ -211,7 +211,7 @@
       {{/if}}
     </tab.pane>
   {{/if}}
-  {{#if (or this.person.isRanger  this.person.isNonRanger)}}
+  {{#if (or this.person.isRanger  this.person.isEchelon)}}
     <tab.pane @title="Certifications" @id="certifications">
       <UiSection>
         <:title>Certifications</:title>

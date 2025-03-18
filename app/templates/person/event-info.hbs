@@ -5,9 +5,9 @@
             @onChange={{set-value this 'year'}} />
 <UiTab class="mt-4" as |tab|>
   <tab.pane @title="Training & ARTs" @id="trainings">
-    {{#if this.person.isNonRanger}}
+    {{#if this.person.isEchelon}}
       <UiAlert @type="secondary" @icon="hand-point-right">
-        {{this.person.callsign}} is a non-Ranger. Completing the Online Course or passing an
+        {{this.person.callsign}} is an Echelon Volunteer. Completing the Online Course or passing an
         In-Person Training is not required.
       </UiAlert>
     {{/if}}
