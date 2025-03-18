@@ -1,6 +1,6 @@
 import {isEmpty} from '@ember/utils';
 import {
-  ACTIVE, ALPHA, AUDITOR, BONKED, DECEASED, DISMISSED, INACTIVE_EXTENSION, INACTIVE, NON_RANGER,
+  ACTIVE, ALPHA, AUDITOR, BONKED, DECEASED, DISMISSED, INACTIVE_EXTENSION, INACTIVE, ECHELON,
   PAST_PROSPECTIVE, PROSPECTIVE, PROSPECTIVE_WAITLIST, RESIGNED, RETIRED, SUSPENDED, UBERBONKED,
   ALLOWED_TO_WORK
 } from 'clubhouse/constants/person_status';
@@ -37,8 +37,8 @@ const PersonMixin = (superclass) => class extends superclass {
     return this.status === SUSPENDED;
   }
 
-  get isNonRanger() {
-    return this.status === NON_RANGER;
+  get isEchelon() {
+    return this.status === ECHELON;
   }
 
   get isProspective() {
@@ -86,7 +86,7 @@ const PersonMixin = (superclass) => class extends superclass {
   }
 
   get needsBpguid() {
-    return (!this.isAuditor && !this.isNonRanger && isEmpty(this.bpguid));
+    return (!this.isAuditor && !this.isEchelon && isEmpty(this.bpguid));
   }
 
   get isCheetahCub() {

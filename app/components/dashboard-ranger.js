@@ -302,7 +302,7 @@ const STEPS = [
   DashboardStep.AFTER_EVENT_STATUS_ADVISORY,
 ];
 
-const NON_RANGER_STEPS = [
+const ECHELON_STEPS = [
   DashboardStep.SIGN_NDA,
   DashboardStep.UPLOAD_PHOTO,
   DashboardStep.PHOTO_APPROVAL,
@@ -360,9 +360,9 @@ export default class DashboardRangerComponent extends Component {
 
   get serviceInfo() {
     const {years_as_ranger, years_as_contributor} = this.args.person;
-    const rangerYears = years_as_ranger.length, nonRangerYears = years_as_contributor.length;
+    const rangerYears = years_as_ranger.length, echelonYears = years_as_contributor.length;
 
-    if (!rangerYears && !nonRangerYears) {
+    if (!rangerYears && !echelonYears) {
       return 'stopping by';
     }
 
@@ -371,8 +371,8 @@ export default class DashboardRangerComponent extends Component {
       info.push(`rangering ${rangerYears} burn${rangerYears !== 1 ? 's' : ''}`);
     }
 
-    if (nonRangerYears) {
-      info.push(`volunteering ${nonRangerYears} year${nonRangerYears !== 1 ? 's' : ''}`);
+    if (echelonYears) {
+      info.push(`volunteering ${echelonYears} year${echelonYears !== 1 ? 's' : ''}`);
     }
 
     return info.join(' and for ');
@@ -387,7 +387,7 @@ export default class DashboardRangerComponent extends Component {
       steps,
       completed,
       note
-    } = this._processStepGroup(this.args.person.isNonRanger ? NON_RANGER_STEPS : STEPS);
+    } = this._processStepGroup(this.args.person.isEchelon ? ECHELON_STEPS : STEPS);
 
     const pushNote = () => {
         if (note.length) {

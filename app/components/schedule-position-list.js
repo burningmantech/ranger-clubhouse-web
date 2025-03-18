@@ -7,7 +7,7 @@ import {
   AUDITOR,
   BONKED,
   DECEASED,
-  NON_RANGER,
+  ECHELON,
   PROSPECTIVE,
   SUSPENDED,
   UBERBONKED,
@@ -51,8 +51,8 @@ export default class SchedulePositionListComponent extends Component {
           this.personStatus = 'a Prospective Ranger';
           break;
 
-        case NON_RANGER:
-          this.personStatus = 'a Non-Ranger Volunteer'
+        case ECHELON:
+          this.personStatus = 'an Echelon Volunteer'
           break;
 
         case AUDITOR:

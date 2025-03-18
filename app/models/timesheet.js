@@ -57,7 +57,7 @@ export default class TimesheetModel extends Model {
   @attr('', {readOnly: true}) slot;
 
   // Volunteer doing work on behalf of the Rangers, yet is not a Ranger. May earn (some) perks.
-  @attr('boolean') is_non_ranger;
+  @attr('boolean') is_echelon;
 
   // Suppress any too short / too long duration warnings
   @attr('boolean', {defaultValue: false}) suppress_duration_warning;

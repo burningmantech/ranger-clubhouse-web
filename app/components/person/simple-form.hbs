@@ -43,27 +43,14 @@
   {{/if}}
   <div class="grid-table-label">Years</div>
   <div>
-    {{#if @person.years_as_contributor}}
-      Non Ranger volunteer work:
-      {{pluralize @person.years_as_contributor.length 'year'}} [{{year-range @person.years_as_contributor}}]<br>
-      Ranger work:
-      {{#if @person.years_as_ranger}}
-        {{pluralize @person.years_as_ranger.length 'year'}} [{{year-range @person.years_as_ranger}}]
-      {{else}}
-        <i>none</i>
-      {{/if}}
-    {{else if @person.years_as_ranger}}
-      {{pluralize @person.years_as_ranger.length 'year'}} worked [{{year-range @person.years_as_ranger}}]
-    {{else}}
-      Has not worked yet
-    {{/if}}
+    <Person::YearsBreakdown @person={{@person}} />
   </div>
   <div class="grid-table-label">Callsign</div>
   <div>
     {{#if @person.callsign_approved}}
-      <UiBadge @text="approved" @type="success" />
+      <UiBadge @text="approved" @type="success"/>
     {{else}}
-      <UiBadge @text="not approved" @type="danger" />
+      <UiBadge @text="not approved" @type="danger"/>
     {{/if}}
     {{#if @person.used_vanity_change}}
       <i>

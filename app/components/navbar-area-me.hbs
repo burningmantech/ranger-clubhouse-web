@@ -11,7 +11,7 @@
     </NavbarMenuSection>
   {{/if}}
 
-  {{#if (or @user.isRanger @user.isPNV @user.isNonRanger)}}
+  {{#if (or @user.isRanger @user.isPNV @user.isEchelon)}}
     <NavbarMenuSection @section="Pre-Event">
       {{#if (or @user.isPNV)}}
         <NavbarMenuItem @menu={{menu}} @route="me.tickets" @item="Setup Access Pass"/>
