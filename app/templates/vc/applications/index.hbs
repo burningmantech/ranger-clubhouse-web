@@ -60,8 +60,12 @@
                       @fieldSize="sm"
       />
     </div>
-
   </FormRow>
+  <div class="mb-1">
+    <UiButton @type="secondary" @onClick={{this.resetFilters}}>
+      Reset Filters
+    </UiButton>
+  </div>
 
 
   <ProspectiveApplicationTable @applications={{this.filteredApps}} >
