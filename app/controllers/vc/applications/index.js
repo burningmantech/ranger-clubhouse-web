@@ -51,6 +51,16 @@ export default class VcApplicationsIndexController extends ClubhouseController {
     return StatusLabels[this.statusFilter] ?? `Bug: unknown status ${this.statusFilter}`;
   }
 
+  @action
+  resetFilters() {
+    this.ageFilter = 'all';
+    this.assignedToFilter = 'all';
+    this.experienceFilter = 'all';
+    this.nameFilter = 'all';
+    this.statusFilter = 'pending';
+    this.toast.success('Filters have been reset.');
+  }
+
   @cached
   get nameFilterList() {
     const list = [];
