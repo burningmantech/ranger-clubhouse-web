@@ -1,33 +1,39 @@
 <main>
-  <h1>Cruise Direction Pod Management</h1>
-
+  <YearSelect @title="Cruise Direction Pod Management"
+              @year={{this.year}}
+              @minYear={{2023}}
+              @onChange={{set-value this 'year'}}  />
   <p>
     This page manages the Ranger pairs (aka pods) who are deployed in the field.
   </p>
-  <p>
+<p>
   <a href {{action this.togglePositions}}>{{if this.showingPositions "Hide" "Show"}} Selectable Positions</a>
-    {{#if this.showingPositions}}
-      <div class="mt-1">
-        The following positions are selectable under this interface.
-      </div>
-      {{#each this.positions as |position|}}
-        {{position.title}}<br>
-      {{/each}}
-    {{/if}}
+  {{#if this.showingPositions}}
+    <div class="mt-1">
+      The following positions are selectable under this interface.
+    </div>
+    {{#each this.positions as |position|}}
+      {{position.title}}<br>
+    {{/each}}
+  {{/if}}
   </p>
   <p>
-    <LargeSelect
-      @label="Select a {{this.year}} shift period"
-      @title="Select a shift period to report on"
-      @formatSelected={{this.formatSelected}}
-      @groups={{this.periodOptions}}
-      @onSelect={{this.changeShift}}
-      class="btn-responsive mb-2"
-    />
-    {{#if this.suggestedSlot}}
-      <UiButton @onClick={{this.useSuggestedSlot}}  @class="btn-responsive mb-2">
-        Select {{shift-format this.suggestedSlot.shift_start}}
-      </UiButton>
+    {{#if this.periodOptions}}
+      <LargeSelect
+        @label="Select a {{this.year}} shift period"
+        @title="Select a shift period to report on"
+        @formatSelected={{this.formatSelected}}
+        @groups={{this.periodOptions}}
+        @onSelect={{this.changeShift}}
+        class="btn-responsive mb-2"
+      />
+      {{#if this.suggestedSlot}}
+        <UiButton @onClick={{this.useSuggestedSlot}}  @class="btn-responsive mb-2">
+          Select {{shift-format this.suggestedSlot.shift_start}}
+        </UiButton>
+      {{/if}}
+    {{else}}
+      <b class="text-danger">No shifts were found.</b>
     {{/if}}
   </p>
   {{#if this.selectedShift}}
@@ -91,7 +97,8 @@
                 {{/if}}
               </div>
             {{/if}}
-            <a href {{on-click this.setupToAdd pod}} class="d-block d-print-none text-center mb-1 p-2 bg-light-gray fs-4">
+            <a href {{on-click this.setupToAdd pod}}
+               class="d-block d-print-none text-center mb-1 p-2 bg-light-gray fs-4">
               {{fa-icon "plus" right=1}} Add Person
             </a>
             {{#if pod.people}}

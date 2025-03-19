@@ -9,6 +9,8 @@ import {movePod} from 'clubhouse/utils/pod';
 import {htmlSafe} from '@ember/template';
 
 export default class OpsCruiseDirectionController extends ClubhouseController {
+  queryParams = ['year'];
+
   @tracked shifts;
   @tracked selectedShift;
 
