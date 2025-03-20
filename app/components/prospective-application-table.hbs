@@ -17,7 +17,7 @@
     </tr>
     </thead>
     <tbody>
-    {{#each @applications as |row|}}
+    {{#each @applications key="id" as |row|}}
       <tr>
         <td class="text-right">
           <LinkTo @route="vc.applications.record" @model={{row.applicationId}}>
@@ -67,10 +67,9 @@
         </td>
         <td>
           {{#if row.person}}
-            <PersonLink @person={{row.person}} />
-            &lt;{{row.person.status}}&gt;
-          {{else}}
-            -
+            <PersonLink @person={{row.person}} @showStatus={{true}} />
+          {{else if row.bpguid_person}}
+            <PersonLink @person={{row.bpguid_person}} @showStatus={{true}} />
           {{/if}}
         </td>
       </tr>
