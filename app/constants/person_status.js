@@ -15,6 +15,9 @@ export const RETIRED = 'retired';
 export const SUSPENDED = 'suspended';
 export const UBERBONKED = 'uberbonked';
 
+// Pseudo status used for finding cheetahs via the search bar
+export const CHEETAH_CUB = 'cheetahcub';
+
 // Statuses allowed to work / check in
 
 export const ALLOWED_TO_WORK = [

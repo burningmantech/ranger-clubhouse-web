@@ -1,13 +1,16 @@
 import ClubhouseRoute from "clubhouse/routes/clubhouse-route";
 import {VOLUNTEER_COORDINATOR} from "clubhouse/constants/positions";
 
+import {FILTERS_KEY, FILTERS_VALUES} from "clubhouse/controllers/vc/applications/index";
+import {forEach} from 'lodash';
+
 export default class VcApplicationsIndexRoute extends ClubhouseRoute {
   queryParams = {
     year: {refreshModel: true}
   }
 
   async model({year}) {
-   if (!year) {
+    if (!year) {
       year = this.house.currentYear();
     } else {
       year = +year;
@@ -27,22 +30,20 @@ export default class VcApplicationsIndexRoute extends ClubhouseRoute {
     controller.applications = model.applications;
     controller.year = model.year;
     controller.VCs = model.VCs;
-    if (model.yearDidChange) {
-      this._resetFilters(controller);
-    }
-  }
+    const existingValues = this.house.getKey(FILTERS_KEY) || {};
+    const newValues = {};
+    console.log("* FILTER VALUES", FILTERS_VALUES);
+    forEach(FILTERS_VALUES, (value, key) => {
+      if (model.yearDidChange) {
+        newValues[key] = value;
+      } else {
+        newValues[key] = existingValues[key] || value;
+      }
 
-/*  resetController(controller, isExiting) {
-    if (isExiting) {
-      this._resetFilters(controller);
-    }
-  }*/
+      controller[key] = newValues[key];
+      console.log(`* KEY [${key}] -> [${newValues[key]}]`);
+    });
 
-  _resetFilters(controller) {
-    controller.assignedToFilter = 'all';
-    controller.nameFilter = 'all';
-    controller.statusFilter = 'pending';
-    controller.ageFilter = 'all';
-    controller.experienceFilter = 'all';
+    this.house.setKey(FILTERS_KEY, newValues);
   }
 }

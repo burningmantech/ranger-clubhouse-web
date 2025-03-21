@@ -6,7 +6,7 @@ import {
   ACTIVE,
   ALPHA,
   INACTIVE, INACTIVE_EXTENSION,
-  ECHELON, PROSPECTIVE,
+  ECHELON, PROSPECTIVE, CHEETAH_CUB,
 } from 'clubhouse/constants/person_status';
 import {debounce} from '@ember/runloop';
 import {service} from '@ember/service';
@@ -36,11 +36,11 @@ const SearchGroupTitles = {
 const HqStatuses = [
   ACTIVE,
   ALPHA,
+  CHEETAH_CUB,   // pseudo-status, find anyone who is signed up for a Cheetah Cub shift.
+  ECHELON,
   INACTIVE,
   INACTIVE_EXTENSION,
-  ECHELON,
   PROSPECTIVE,
-  'cheetahcub'   // pseudo-status, find anyone who is signed up for a Cheetah Cub shift.
 ].join(',');
 
 // What page to route to based on the search mode selected
