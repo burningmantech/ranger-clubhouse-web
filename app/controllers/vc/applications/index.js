@@ -1,9 +1,17 @@
 import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
-import {StatusOptions, StatusLabels} from "clubhouse/models/prospective-application";
+import {StatusOptions, StatusLabels, STATUS_PENDING} from "clubhouse/models/prospective-application";
 import {cached, tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
 import _, {isEmpty} from 'lodash';
 
+export const FILTERS_KEY = 'prospective-application-filters';
+export const FILTERS_VALUES = {
+  ageFilter: 'all',
+  assignedToFilter: 'all',
+  experienceFilter: 'all',
+  nameFilter: 'all',
+  statusFilter: STATUS_PENDING,
+};
 
 export default class VcApplicationsIndexController extends ClubhouseController {
   queryParams = ['year'];
@@ -11,17 +19,15 @@ export default class VcApplicationsIndexController extends ClubhouseController {
   @tracked applications;
   @tracked editApp;
 
-  @tracked assignedToFilter = 'all';
-  @tracked VCs;
+  @tracked ageFilter;
+  @tracked assignedToFilter;
+  @tracked experienceFilter;
+  @tracked nameFilter;
+  @tracked statusFilter;
 
+  @tracked VCs;
   @tracked year;
 
-  @tracked nameFilter = 'all';
-
-  @tracked statusFilter = 'all';
-  @tracked ageFilter = 'all';
-
-  @tracked experienceFilter = 'all';
 
   statusFilterOptions = [
     ['All', 'all'],
@@ -49,6 +55,14 @@ export default class VcApplicationsIndexController extends ClubhouseController {
       return 'all statuses';
     }
     return StatusLabels[this.statusFilter] ?? `Bug: unknown status ${this.statusFilter}`;
+  }
+
+  @action
+  setFilter(filter, value) {
+    const values = this.house.getKey(FILTERS_KEY) || {};
+    values[filter] = value;
+    this.house.setKey(FILTERS_KEY, values);
+    this[filter] = value;
   }
 
   @action
