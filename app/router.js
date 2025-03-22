@@ -246,6 +246,7 @@ Router.map(function () {
     this.route('access-documents', function () {
       this.route('index', {path: '/'});
       this.route('claimed-with-no-signups');
+      this.route('early-arrival');
       this.route('expiring');
       this.route('maintenance');
       this.route('provisions');
@@ -256,6 +257,12 @@ Router.map(function () {
       this.route('unsubmit-provisions');
       this.route('waps');
     });
+    this.route('applications', function() {
+      this.route('index', {path: '/'});
+      this.route('record', { path: '/:application_id'});
+      this.route('create');
+    });
+
     this.route('bmid');
     this.route('bmid-print');
     this.route('bmid-sanity-check');
@@ -267,11 +274,6 @@ Router.map(function () {
     this.route('shiny-penny-report');
     this.route('spigot');
     this.route('unified-flagging');
-    this.route('applications', function() {
-      this.route('index', {path: '/'});
-      this.route('record', { path: '/:application_id'});
-      this.route('create');
-    });
     this.route('application-import');
     this.route('create-prospectives');
   });
