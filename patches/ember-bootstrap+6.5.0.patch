@@ -1,8 +1,8 @@
-diff --git a/node_modules/ember-bootstrap/addon/components/bs-modal.js b/node_modules/ember-bootstrap/addon/components/bs-modal.js
-index a6c299c..a675b1c 100644
---- a/node_modules/ember-bootstrap/addon/components/bs-modal.js
-+++ b/node_modules/ember-bootstrap/addon/components/bs-modal.js
-@@ -520,7 +520,7 @@ export default class Modal extends Component {
+diff --git a/node_modules/ember-bootstrap/addon/components/bs-modal.ts b/node_modules/ember-bootstrap/addon/components/bs-modal.ts
+index d99766f..793ff28 100644
+--- a/node_modules/ember-bootstrap/addon/components/bs-modal.ts
++++ b/node_modules/ember-bootstrap/addon/components/bs-modal.ts
+@@ -578,7 +578,7 @@ export default class Modal extends Component<Signature> {
      await nextRunloop();
  
      const { backdropElement } = this;
@@ -11,24 +11,12 @@ index a6c299c..a675b1c 100644
  
      await transitionEnd(backdropElement, this.backdropTransitionDuration);
    }
-@@ -539,7 +539,7 @@ export default class Modal extends Component {
+@@ -597,7 +597,7 @@ export default class Modal extends Component<Signature> {
  
      if (this.usesTransition) {
        const { backdropElement } = this;
 -      assert('Backdrop element should be in DOM', backdropElement);
-+  //    assert('Backdrop element should be in DOM', backdropElement);
++      //assert('Backdrop element should be in DOM', backdropElement);
  
        await transitionEnd(backdropElement, this.backdropTransitionDuration);
      }
-diff --git a/node_modules/ember-bootstrap/addon/components/bs-modal/dialog.hbs b/node_modules/ember-bootstrap/addon/components/bs-modal/dialog.hbs
-index b657902..5d8bd19 100644
---- a/node_modules/ember-bootstrap/addon/components/bs-modal/dialog.hbs
-+++ b/node_modules/ember-bootstrap/addon/components/bs-modal/dialog.hbs
-@@ -35,7 +35,6 @@
-     <div
-       class="modal-content"
-       tabindex="-1"
--      {{focus-trap shouldSelfFocus=true focusTrapOptions=(hash clickOutsideDeactivates=@backdropClose fallbackFocus=".modal" escapeDeactivates=@keyboard)}}
-     >
-       {{yield}}
-     </div>
