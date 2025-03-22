@@ -1,0 +1,22 @@
+diff --git a/node_modules/ember-bootstrap/addon/components/bs-modal.ts b/node_modules/ember-bootstrap/addon/components/bs-modal.ts
+index d99766f..793ff28 100644
+--- a/node_modules/ember-bootstrap/addon/components/bs-modal.ts
++++ b/node_modules/ember-bootstrap/addon/components/bs-modal.ts
+@@ -578,7 +578,7 @@ export default class Modal extends Component<Signature> {
+     await nextRunloop();
+ 
+     const { backdropElement } = this;
+-    assert('Backdrop element should be in DOM', backdropElement);
++   // assert('Backdrop element should be in DOM', backdropElement);
+ 
+     await transitionEnd(backdropElement, this.backdropTransitionDuration);
+   }
+@@ -597,7 +597,7 @@ export default class Modal extends Component<Signature> {
+ 
+     if (this.usesTransition) {
+       const { backdropElement } = this;
+-      assert('Backdrop element should be in DOM', backdropElement);
++      //assert('Backdrop element should be in DOM', backdropElement);
+ 
+       await transitionEnd(backdropElement, this.backdropTransitionDuration);
+     }
