@@ -412,7 +412,7 @@ export default class SearchItemBarComponent extends Component {
         }
 
         if (!isEmpty(v.rental_number)) {
-          numbers.push(`Rental #${v.rental_number}`);
+          numbers.push(`DPW PO #${v.rental_number}`);
         }
 
         if (!isEmpty(v.sticker_number)) {

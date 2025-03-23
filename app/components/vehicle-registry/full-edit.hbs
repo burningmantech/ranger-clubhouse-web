@@ -65,7 +65,7 @@
         </FormRow>
         <FormRow>
           <f.text @name="rental_number"
-                  @label="Rental #"
+                  @label="DPW PO"
                   @fieldSize="sm"
                   @disabled={{eq f.model.type "personal"}}
           />
@@ -84,6 +84,74 @@
                   @size={{10}}
                   @fieldSize="sm"/>
         </FormRow>
+      </fieldset>
+      <fieldset class="mb-2">
+        <legend>Person MVR / PVR Details</legend>
+        {{#if (eq f.model.type "personal")}}
+          {{#if this.requestInfo}}
+            <UiGridTable as |t|>
+              <t.label>MVR Positions</t.label>
+              <t.column>
+                <div class="columns-container columns-4">
+                  {{#each this.requestInfo.mvr_positions as |position|}}
+                    <div>{{position.title}}</div>
+                  {{else}}
+                    <i>No MVR positions found.</i>
+                  {{/each}}
+                </div>
+              </t.column>
+              <t.label>MVR Signups</t.label>
+              <t.column>
+                <div class="columns-container columns-4">
+                  {{#each this.requestInfo.mvr_signups as |slot|}}
+                    <div class="mb-1">
+                      {{slot.position_title}}<br>
+                      {{shift-format slot.begins}}
+                    </div>
+                  {{else}}
+                    <i>No MVR signups found.</i>
+                  {{/each}}
+                </div>
+              </t.column>
+              <t.label>PVR Positions</t.label>
+              <t.column>
+                <div class="columns-container columns-4">
+                  {{#each this.requestInfo.pvr_positions as |position|}}
+                    <div>{{position.title}}</div>
+                  {{else}}
+                    <i>No PVR positions found.</i>
+                  {{/each}}
+                </div>
+              </t.column>
+              <t.label>
+                MVR Teams
+              </t.label>
+              <t.column>
+                <div class="columns-container columns-4">
+                  {{#each this.requestInfo.mvr_teams as |team|}}
+                    <div>{{team.title}}</div>
+                  {{else}}
+                    <i>No MVR teams found.</i>
+                  {{/each}}
+                </div>
+              </t.column>
+              <t.label>PVR Teams</t.label>
+              <t.column>
+                <div class="columns-container columns-4">
+                  {{#each this.requestInfo.pvr_teams as |team|}}
+                    <div>{{team.title}}</div>
+                  {{else}}
+                    <i>No PVR teams found.</i>
+                  {{/each}}
+                </div>
+              </t.column>
+            </UiGridTable>
+          {{else}}
+            No MVR positions / signups details available.
+          {{/if}}
+        {{else}}
+          The vehicle is not a personal one, so no MVR / PVR details are shown.
+        {{/if}}
       </fieldset>
       <fieldset>
         <legend>Personal Vehicle Use Items (Stickers &amp; Other Items)</legend>
@@ -161,3 +229,9 @@
     </Modal.footer>
   </ChForm>
 </ModalDialog>
+
+{{#if this.isLoading}}
+  <LoadingDialog>
+    Retrieving the person's MVR details
+  </LoadingDialog>
+{{/if}}
