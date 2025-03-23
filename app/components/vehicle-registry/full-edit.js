@@ -5,10 +5,16 @@ import {States, CanadianProvinces} from 'clubhouse/constants/countries';
 import { action } from '@ember/object';
 import {debounce} from '@ember/runloop';
 import { service } from '@ember/service';
+import { tracked } from '@glimmer/tracking';
 import RSVP from 'rsvp';
+import {TYPE_PERSONAL} from "clubhouse/models/vehicle";
 
 export default class VehicleRegistryFullEditComponent extends Component {
   @service ajax;
+  @service house;
+
+  @tracked isLoading = false;
+  @tracked requestInfo = null;
 
   stateOptions = [
     {
@@ -73,20 +79,49 @@ export default class VehicleRegistryFullEditComponent extends Component {
   };
 
 
-  _performSearch(callsign, resolve, reject) {
+  constructor() {
+    super(...arguments);
+
+    const {entry} = this.args;
+    if (!entry.isNew && entry.type === TYPE_PERSONAL) {
+      this._loadPersonInfo(entry.person_id);
+    }
+  }
+
+  async _loadPersonInfo(personId) {
+    this.isLoading = true;
+    try {
+      const {info} = await this.ajax.request(`vehicle/info/${personId}`, { data: { include_eligible_teams: 1}});
+      this.requestInfo = {
+        mvr_positions: info.mvr_positions,
+        mvr_signups: info.mvr_signups,
+        pvr_positions: info.pvr_positions,
+        mvr_teams: info.mvr_teams,
+        pvr_teams: info.pvr_teams,
+      };
+    } catch (e) {
+      this.house.handleErrorResponse(e);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  async _performSearch(callsign, resolve, reject) {
     callsign = callsign.trim();
 
     if (callsign.length < 2) {
       return reject();
     }
 
-    return this.ajax.request('callsigns', {data: {query: callsign, type: 'all', limit: 20}})
-      .then(({callsigns}) => {
-        if (callsigns.length > 0) {
-          return resolve(callsigns.map(({callsign}) => callsign));
-        }
-        return reject();
-      }, reject);
+    try {
+      const {callsigns} = await this.ajax.request('callsigns', {data: {query: callsign, type: 'all', limit: 20}});
+      if (callsigns.length > 0) {
+        return resolve(callsigns.map(({callsign}) => callsign));
+      }
+      return reject();
+    } catch (e) {
+      this.house.handleErrorResponse(e);
+    }
   }
 
   @action
