@@ -1,0 +1,79 @@
+<main>
+  <h1>Early Arrival Report</h1>
+  <p>
+    This report lists individuals with a SAP date before the Thursday leading up to Gate Opening Weekend. It’s intended
+    to assist with assembling SITE Setup arrival packets.
+  </p>
+
+  {{#if this.date}}
+    <p>
+      Reporting on individuals who have SAPs prior to {{dayjs-format this.date "ddd MM/DD/YY"}}.
+    </p>
+  {{/if}}
+  {{#if (eq this.status 'no-arrivals')}}
+    <b class="text-danger">No arrivals could be found. Usually this means no SAPs with a date prior to {{ymd-format this.date}} have been created yet.</b>
+  {{else if (eq this.status 'no-event-dates')}}
+    <b class="text-danger">The event dates have not been set. Contact the Tech Cadre for help.</b>
+  {{else}}
+    <UiSection>
+      <:title>{{pluralize this.arrivals.length "person"}}</:title>
+      <:body>
+        <p>
+          <UiExportToCSVButton @onClick={{this.exportToCSV}} @size="sm"/>
+        </p>
+        <UiTable>
+          <thead>
+          <tr>
+            <th>Callsign</th>
+            <th>SAP</th>
+            <th class="text-center">BMID Status</th>
+            <th class="text-center">On Site</th>
+            <th>Radio Count</th>
+            <th>Radio Barcode</th>
+            <th>Radio Type</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each this.arrivals as |arrival|}}
+            <tr>
+              <td><PersonLink @person={{arrival}} /></td>
+              <td>{{ymd-format arrival.sap_date}}</td>
+              <td class="text-center">
+                {{#if (eq arrival.bmid_status "no-bmid")}}
+                  No BMID Found
+                {{else}}
+                  {{this.bmidStatusLabel arrival.bmid_status}}
+                {{/if}}
+              </td>
+              <td class="text-center">
+                {{#if arrival.on_site}}
+                  <UiBadge @type="success">on site</UiBadge>
+                {{else}}
+                  <UiBadge @type="secondary">off site</UiBadge>
+                {{/if}}
+              </td>
+              <td class="text-end">
+                {{arrival.radios_allowed}}
+              </td>
+              <td class="text-end">
+                {{#each arrival.radios as |radio|}}
+                  {{radio.barcode}}<br>
+                {{else}}
+                  <i>none issued</i>
+                {{/each}}
+              </td>
+              <td class="text-center">
+                {{#each arrival.radios as |radio|}}
+                  {{if radio.is_event_radio "event" "shift"}}<br>
+                {{else}}
+                  -
+                {{/each}}
+              </td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </UiTable>
+      </:body>
+    </UiSection>
+  {{/if}}
+</main>
