@@ -2,7 +2,7 @@ import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
 import {validatePresence} from 'ember-changeset-validations/validators';
 import validateDateTime from "clubhouse/validators/datetime";
 import {action} from '@ember/object';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import {hourMinuteFormat} from "clubhouse/helpers/hour-minute-format";
 import dayjs from 'dayjs';
 
@@ -62,6 +62,8 @@ export default class OpsPayrollController extends ClubhouseController {
   @tracked payrollWeekStart;
   @tracked payrollWeekEnd;
 
+  @tracked filterPerson = 'all';
+
   datesValidation = {
     start_time: [
       validatePresence({presence: true, message: 'Enter a starting date and time.'}),
@@ -96,7 +98,16 @@ export default class OpsPayrollController extends ClubhouseController {
    */
 
   get entryCount() {
-    return this.people.reduce((total, person) => total + person.shifts.length, 0);
+    return this.viewPeople.reduce((total, person) => total + person.shifts.length, 0);
+  }
+
+  @cached
+  get viewPeople() {
+    if (this.filterPerson === 'all') {
+      return this.people;
+    }
+
+    return this.people.filter((p) => p.id === +this.filterPerson);
   }
 
   /**
@@ -142,6 +153,13 @@ export default class OpsPayrollController extends ClubhouseController {
     }
   }
 
+  @cached
+  get filterPersonOptions() {
+    const options = this.people.map((person) => [person.callsign, person.id]);
+    options.unshift(['All', 'all']);
+    return options;
+  }
+
   /**
    * Export the raw table
    */
@@ -149,7 +167,7 @@ export default class OpsPayrollController extends ClubhouseController {
   @action
   exportTable() {
     const rows = [];
-    this.people.forEach((person) => {
+    this.viewPeople.forEach((person) => {
       person.shifts.forEach((entry) => {
         const row = {
           'callsign': person.callsign,
@@ -193,7 +211,6 @@ export default class OpsPayrollController extends ClubhouseController {
   /**
    * Export the payroll spreadsheet with the adjusted times, or unadjusted.
    *
-   * @param adjustEntries
    */
 
   @action
