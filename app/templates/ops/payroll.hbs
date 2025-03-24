@@ -62,27 +62,45 @@
           {{/each}}
         </div>
         <UiButton @onClick={{fn this.exportPayroll true this.peopleWithoutIds}} @size="sm" @type="secondary">
-          Export Payroll Without Ids
+          Export the above without ids
         </UiButton>
       </UiAlert>
     {{/if}}
     {{#if this.people}}
-      Showing {{pluralize this.entryCount "timesheet entry"}} for {{pluralize this.people.length "person"}}.
-      <UiButton @onClick={{fn this.exportPayroll true this.people}} @size="sm">
-        Export Payroll w/Meal Breaks
-      </UiButton>
-      <UiButton @onClick={{fn this.exportPayroll false this.people}} @size="sm" class="ms-3">
-        Export Unadjusted Payroll
-      </UiButton>
-      <UiButton @onClick={{this.exportTable}} @size="sm" class="ms-3">
-        Export On Screen Table
-      </UiButton>
+      <FormRow>
+        <FormLabel @auto={{true}}>Filter by person:</FormLabel>
+        <div class="col-auto mb-2">
+          <ChForm::Select @name="filterPerson"
+                          @value={{this.filterPerson}}
+                          @options={{this.filterPersonOptions}}
+                          @onChange={{set-value this 'filterPerson'}}/>
+        </div>
+      </FormRow>
+      <div class="d-flex justify-content-between">
+        <div>
+          Showing {{pluralize this.entryCount "timesheet entry"}} for
+          {{this.viewPeople.length}} of {{pluralize this.people.length "person"}}.
+          <UiButton @onClick={{fn this.exportPayroll true this.viewPeople}} @size="sm" class="ms-2">
+            Export Payroll w/Meal Breaks
+          </UiButton>
+        </div>
+        <div>
+          <UiButtonRow>
+            <UiButton @onClick={{fn this.exportPayroll false this.viewPeople}} @size="sm" @type="secondary">
+              Export Unadjusted Payroll
+            </UiButton>
+            <UiButton @onClick={{this.exportTable}} @size="sm" @type="secondary">
+              Export On Screen Table
+            </UiButton>
+          </UiButtonRow>
+        </div>
+      </div>
       <UiTable class="mt-2">
         <thead>
         <tr>
-          <th>Callsign / Employee ID</th>
-          <th>Position / Sub-Dept ID</th>
-          <th>Entry Status</th>
+          <th>Callsign /<br>Employee ID</th>
+          <th class="text-center">Entry Status</th>
+          <th>Position /<br>Sub-Dept ID</th>
           <th>Original Time</th>
           <th>Duration</th>
           <th>Adjusted</th>
@@ -90,7 +108,7 @@
         </tr>
         </thead>
         <tbody>
-        {{#each this.people as |person|}}
+        {{#each this.viewPeople as |person|}}
           {{#each person.shifts as |row|}}
             <tr class={{if row.still_on_duty "table-warning"}}>
               <td>
@@ -98,20 +116,20 @@
                 <br>
                 {{person.employee_id}}
               </td>
+              <td class="text-center">
+                {{#if row.still_on_duty}}
+                  <UiBadge @text="still on duty" @type="warning"/>
+                {{else if row.verified}}
+                  <UiBadge @text="verified" @type="success"/>
+                {{else}}
+                  <UiBadge @text="unverified" @type="danger"/>
+                {{/if}}
+              </td>
               <td>
                 {{row.position_title}}<br>
                 {{row.paycode}}
               </td>
-              <td class="text-center">
-                {{#if row.still_on_duty}}
-                  <UiBadge @text="still on duty" @type="warning" />
-                {{else if row.verified}}
-                  <UiBadge @text="verified" @type="success" />
-                {{else}}
-                  <UiBadge @text="unverified" @type="danger" />
-                {{/if}}
-              </td>
-              <td>
+               <td>
                 {{shift-format row.orig_on_duty row.orig_off_duty}}
               </td>
               <td class="text-end">
