@@ -24,6 +24,8 @@
 @import "training";
 @import "vehicle-registry";
 
+@import "air-datepicker";
+
 main {
   flex: 1 1 0;
   min-width: 0;
@@ -782,4 +784,9 @@ summary:hover {
       width: 100%;
     }
   }
+}
+
+.air-datepicker-global-container {
+  z-index: 10000;
+  --adp-z-index: 10000;
 }

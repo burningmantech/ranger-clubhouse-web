@@ -68,8 +68,8 @@ export default class extends SessionService {
     super(...arguments);
 
     const md = new MobileDetect(navigator.userAgent);
-    this.isMobileDevice = md.mobile();
-    this.isTabletDevice = md.tablet();
+    this.isMobileDevice = !!md.mobile();
+    this.isTabletDevice = !!md.tablet();
 
     /*
      * Notify when the screen resizes so the layout can adjust accordingly.
