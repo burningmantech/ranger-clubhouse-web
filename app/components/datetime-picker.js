@@ -1,101 +1,73 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import focusElement from "clubhouse/utils/focus-element";
-import tempusdominus from '@eonasdan/tempus-dominus';
-import {later} from '@ember/runloop';
 import { service } from '@ember/service';
 import {setting} from "clubhouse/utils/setting";
+import AirDatepicker from 'air-datepicker';
+import localeEn from 'air-datepicker/locale/en';
 
 export default class DatetimePickerComponent extends Component {
   @service session;
 
   constructor() {
     super(...arguments);
-    let {dateOnly, minDate, maxDate, viewDate, defaultDate} = this.args;
+    let {dateOnly, minDate, maxDate, defaultDate} = this.args;
 
-    this.config = {
-      allowInputToggle: true,
-      useCurrent: false,
-      localization: {
-        locale: 'en',
-        hourCycle: 'h23',
-        format: dateOnly ? 'yyyy-MM-dd' : 'yyyy-MM-dd HH:mm',
-        dayViewHeaderFormat: {month: 'long', year: 'numeric'},
-      },
-      keepInvalid: true,
-      display: {
-        theme: 'light',
-        sideBySide: true,
-        keepOpen: true,
-        buttons: {
-          close: true
-        },
-        icons: {
-          close: 'fa-solid fa-xmark calendar-close-text'
-        }
-      },
-      restrictions: {
-        minDate, maxDate
-      }
+    this.options = {
+      isMobile: this.session.isMobileDevice,
+      dateFormat: 'yyyy-MM-dd',
+      today: 'Today',
+      clear: 'Clear',
+      locale: localeEn,
     }
 
-    if (dateOnly) {
-      this.config.display.sideBySide = false;
-      this.config.display.components = {
-        hours: false,
-        minutes: false,
-        seconds: false
-      }
+    if (!dateOnly) {
+      this.options.timepicker = true;
+      this.options.timeFormat ='HH:mm';
     }
 
-    if (viewDate) {
-      this.config.viewDate = new Date(viewDate);
-    } else if (this.session.isGroundhogDayServer) {
-      this.config.viewDate = new Date(setting('GroundhogDayTime'));
+    if (maxDate) {
+      this.options.maxDate = maxDate;
+    }
+
+    if (minDate) {
+      this.options.minDate = minDate;
     }
 
     if (defaultDate) {
-      this.config.defaultDate = new Date(defaultDate);
+      this.options.startDate = new Date(defaultDate);
+    } else {
+      const ghd = setting('GroundhogDayTime');
+      if (ghd) {
+        this.options.startDate = new Date(ghd);
+      }
     }
   }
 
   willDestroy() {
     super.willDestroy(...arguments);
-    this.picker?.dispose();
+    this.picker?.destroy();
   }
 
   @action
   changeEvent(event) {
+    console.log("Change event", event);
     this.args.onChange(event.target.value);
   }
 
   @action
   blurEvent() {
-    later(() => {
+ /*   later(() => {
       if (document.activeElement !== this.element && document.activeElement.tagName === 'INPUT') {
         this.picker?.hide();
       }
-    }, 100);
+    }, 100);*/
   }
 
   @action
   elementInserted(element) {
     this.element = element;
-    this.picker = new tempusdominus.TempusDominus(element, this.config);
-    this.picker.dates.oldParseInput = this.picker.dates.parseInput;
-    this.picker.dates.parseInput = (input) => {
-      try {
-        return this.picker.dates.oldParseInput(input);
-      } catch (err) {
-        if (err.code === 5 || err.code === 9) {
-          // Invalid date/time format.
-          this.args.onInvalidInput?.(input);
-          this.picker.hide();
-        } else {
-          throw err;
-        }
-      }
-    };
+    this.picker = new AirDatepicker(`#${element.id}`, this.options);
 
     if (this.args.autofocus) {
       focusElement(element);
