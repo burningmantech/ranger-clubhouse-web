@@ -19,6 +19,7 @@ export default class DatetimePickerComponent extends Component {
       today: 'Today',
       clear: 'Clear',
       locale: localeEn,
+      onSelect:  ({formattedDate})  => this.args.onChange(formattedDate),
     }
 
     if (!dateOnly) {
@@ -47,21 +48,6 @@ export default class DatetimePickerComponent extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     this.picker?.destroy();
-  }
-
-  @action
-  changeEvent(event) {
-    console.log("Change event", event);
-    this.args.onChange(event.target.value);
-  }
-
-  @action
-  blurEvent() {
- /*   later(() => {
-      if (document.activeElement !== this.element && document.activeElement.tagName === 'INPUT') {
-        this.picker?.hide();
-      }
-    }, 100);*/
   }
 
   @action
