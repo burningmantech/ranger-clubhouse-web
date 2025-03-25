@@ -29,9 +29,9 @@ export default class PersonTimesheetManageComponent extends Component {
     const session = this.session;
 
     // Can the user manage this person's timesheet entries?
-    this.canManageTimesheets = session.hasRole(Role.TIMESHEET_MANAGEMENT) || (session.hasRole(Role.ADMIN) && session.hasRole(Role.MANAGE));
+    this.canManageTimesheets = session.hasRole(Role.TIMESHEET_MANAGEMENT) || (session.hasRole(Role.ADMIN) && session.hasRole(Role.EVENT_MANAGEMENT));
     // Can the user mark an entry as verified?
-    this.canVerifyTimesheets = session.hasRole(Role.MANAGE);
+    this.canVerifyTimesheets = session.hasRole(Role.EVENT_MANAGEMENT);
 
     this._markOverlapping();
   }

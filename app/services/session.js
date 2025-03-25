@@ -9,7 +9,7 @@ import ENV from 'clubhouse/config/environment';
 import {setting} from 'clubhouse/utils/setting';
 import {
   ADMIN,
-  MANAGE,
+  EVENT_MANAGEMENT,
   TRAINER,
   VC,
   VIEW_PII,
@@ -120,12 +120,12 @@ export default class extends SessionService {
    */
 
   get isLMOPEnabled() {
-    return (this.hasRole(MANAGE) && !!setting('LoginManageOnPlayaEnabled'));
+    return (this.hasRole(EVENT_MANAGEMENT) && !!setting('LoginManageOnPlayaEnabled'));
   }
 
 
-  get hasLoginManagement() {
-    return this.hasRole(MANAGE);
+  get hasEventManagement() {
+    return this.hasRole(EVENT_MANAGEMENT);
   }
 
   /**

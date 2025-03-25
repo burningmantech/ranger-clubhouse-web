@@ -1,9 +1,9 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {MANAGE} from 'clubhouse/constants/roles';
+import {EVENT_MANAGEMENT} from 'clubhouse/constants/roles';
 import shirtGroupsSort from 'clubhouse/utils/shirt-groups-sort';
 
 export default class ReportsAlphaShirtsRoute extends ClubhouseRoute {
-  roleRequired = [MANAGE];
+  roleRequired = [EVENT_MANAGEMENT];
 
   model() {
     return this.ajax.request(`person/alpha-shirts`).then((result) => result.alphas);

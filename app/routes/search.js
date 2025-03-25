@@ -1,8 +1,8 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {ADMIN, MANAGE} from 'clubhouse/constants/roles';
+import {ADMIN, EVENT_MANAGEMENT} from 'clubhouse/constants/roles';
 
 export default class SearchRoute extends ClubhouseRoute {
-  roleRequired = [ADMIN, MANAGE];
+  roleRequired = [ADMIN, EVENT_MANAGEMENT];
 
   beforeModel(transition) {
     if (transition.targetName === 'search.index') {

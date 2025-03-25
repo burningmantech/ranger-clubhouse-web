@@ -1,9 +1,9 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {MANAGE} from 'clubhouse/constants/roles';
+import {EVENT_MANAGEMENT} from 'clubhouse/constants/roles';
 import _ from 'lodash';
 
 export default class OpsBulkTeamsRoute extends ClubhouseRoute {
-  roleRequired = MANAGE;
+  roleRequired = EVENT_MANAGEMENT;
 
   model() {
     return this.ajax.request('team', { data: { can_manage: 1 }});

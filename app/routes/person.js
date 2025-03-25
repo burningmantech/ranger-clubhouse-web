@@ -1,11 +1,11 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {action} from '@ember/object';
 import {humanize} from 'ember-cli-string-helpers/helpers/humanize';
-import {ADMIN, MANAGE, VC, MENTOR, TRAINER} from 'clubhouse/constants/roles';
+import {ADMIN, EVENT_MANAGEMENT, VC, MENTOR, TRAINER} from 'clubhouse/constants/roles';
 import {NotFoundError} from '@ember-data/adapter/error';
 
 export default class PersonRoute extends ClubhouseRoute {
-  roleRequired = [ADMIN, MANAGE, VC, MENTOR, TRAINER];
+  roleRequired = [ADMIN, EVENT_MANAGEMENT, VC, MENTOR, TRAINER];
 
   async model({person_id}) {
     return await this.store.findRecord('person', person_id, {reload: true});

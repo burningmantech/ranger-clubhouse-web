@@ -1,8 +1,8 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {ADMIN, MANAGE} from 'clubhouse/constants/roles';
+import {ADMIN, EVENT_MANAGEMENT} from 'clubhouse/constants/roles';
 
 export default class PersonEmergencyContactRoute extends ClubhouseRoute {
-  roleRequired = [ADMIN, MANAGE];
+  roleRequired = [ADMIN, EVENT_MANAGEMENT];
 
   setupController(controller) {
     const person = this.modelFor('person');

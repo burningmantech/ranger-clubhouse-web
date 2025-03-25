@@ -16,7 +16,7 @@ export default class ClubhouseMessagesComponent extends Component {
   constructor() {
     super(...arguments);
 
-    this.canSendMessages = this.session.hasRole([Role.ADMIN, Role.MANAGE]);
+    this.canSendMessages = this.session.hasRole([Role.ADMIN, Role.EVENT_MANAGEMENT]);
   }
 
   get unreadCount() {

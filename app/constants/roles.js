@@ -5,7 +5,7 @@ export const GRANT_POSITION = 4; // Grand/Revoke Positions
 export const EDIT_ACCESS_DOCS = 5; // Edit Access Documents
 export const EDIT_BMIDS = 6; // Edit BMIDs
 export const EDIT_SLOTS = 7; // Edit Slots
-export const MANAGE = 12; // Ranger HQ: access other schedule, asset checkin/out, send messages
+export const EVENT_MANAGEMENT = 12; // Ranger HQ: access other schedule, asset checkin/out, send messages
 export const INTAKE = 13; // Intake Management
 export const MENTOR = 101; // Mentor - access mentor section
 export const TRAINER = 102; // Trainer
@@ -58,7 +58,7 @@ export const Role = {
   EDIT_SWAG,
   GRANT_POSITION,
   INTAKE,
-  MANAGE,
+  EVENT_MANAGEMENT,
   MANAGE_ON_PLAYA,
   MEGAPHONE,
   MEGAPHONE_EMERGENCY_ONPLAYA,
@@ -97,7 +97,7 @@ export const RoleToString = {
   [EDIT_SWAG]: 'edit-swag',
   [GRANT_POSITION]: 'grant-position',
   [INTAKE]: 'intake',
-  [MANAGE]: 'manage',
+  [EVENT_MANAGEMENT]: 'manage',
   [MANAGE_ON_PLAYA]: 'manage-on-playa',
   [MEGAPHONE]: 'megaphone',
   [MEGAPHONE_EMERGENCY_ONPLAYA]: 'megaphone-emergency-onplaya',

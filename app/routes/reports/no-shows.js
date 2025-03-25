@@ -1,5 +1,5 @@
 import ClubhouseRoute from "clubhouse/routes/clubhouse-route";
-import {MANAGE} from "clubhouse/constants/roles";
+import {EVENT_MANAGEMENT} from "clubhouse/constants/roles";
 import RSVP from 'rsvp';
 import _ from 'lodash';
 import { cached,tracked } from '@glimmer/tracking';
@@ -30,7 +30,7 @@ class Team {
 }
 
 export default class ReportsNoShowsRoute extends ClubhouseRoute {
-  roleRequired = MANAGE;
+  roleRequired = EVENT_MANAGEMENT;
 
   model() {
     return RSVP.hash({

@@ -1,9 +1,9 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {ADMIN, MANAGE} from 'clubhouse/constants/roles';
+import {ADMIN, EVENT_MANAGEMENT} from 'clubhouse/constants/roles';
 import {yesno} from 'clubhouse/helpers/yesno';
 
 export default class AdminPositionSanityCheckerRoute extends ClubhouseRoute {
-  roleRequired = [ADMIN, MANAGE];
+  roleRequired = [ADMIN, EVENT_MANAGEMENT];
 
   model() {
     return this.ajax.request('position/sanity-checker');
