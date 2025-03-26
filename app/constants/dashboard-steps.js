@@ -266,9 +266,10 @@ export const ONLINE_COURSE = {
 
     if (!milestones.online_course_enabled) {
       // Don't tell them to read the ranger manual until online training is available.
+      let message = 'The Online Course is still being prepared. Usually the course is available by early April. Check back before then. ';
       return {
         result: WAITING,
-        message: 'The Online Course is still being prepared and is usually available in late March or early April. Watch the Ranger Announce mailing list for a message on when the course will be opened.',
+        message: message + (isPNV ? 'Email the Ranger Volunteer Coordinators for questions.' : 'Watch the Ranger Announce mailing list for an announcement.'),
         name: 'Complete The Online Course'
       }
     }
