@@ -1,0 +1,50 @@
+{{#if @records}}
+  <UiSection @isWarning={{true}}>
+    <:title>{{yield to="title"}}</:title>
+    <:body>
+      <p>
+        {{yield to="header"}}
+      </p>
+      <p>
+        <UiButton @type="primary" @onClick={{this.exportTable}}>Export Errors</UiButton>
+      </p>
+      <UiTable>
+        <thead>
+        <tr>
+          <th>Salesforce ID</th>
+          <th>Name</th>
+          <th>Application Object ID</th>
+          <th>Contact Object ID</th>
+          <th>Error</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each @records as |row|}}
+          <tr>
+            <td>
+              {{row.salesforce_name}}
+            </td>
+            <td>
+              {{row.first_name}} {{row.last_name}}
+            </td>
+            <td>
+              {{row.salesforce_id}}
+            </td>
+            <td>
+              {{or row.contact_id "-"}}
+            </td>
+            <td>
+              {{this.apiErrorToMessage row.api_error}}
+              {{#if row.api_error_message}}
+                <div class="mt-2">
+                  {{nl2br row.api_error_message}}
+                </div>
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </UiTable>
+    </:body>
+  </UiSection>
+{{/if}}

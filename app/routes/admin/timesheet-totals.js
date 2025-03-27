@@ -1,7 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 
-export default class ReportsTimesheetTotalsRoute extends ClubhouseRoute {
+export default class AdminTimesheetTotalsRoute extends ClubhouseRoute {
   queryParams = {
     year: { refreshModel: true }
   };

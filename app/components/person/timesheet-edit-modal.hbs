@@ -242,8 +242,8 @@
               <tr>
                 <td>
                   {{@entry.position.title}}
-                  {{#if @entry.is_non_ranger}}
-                    (as non ranger volunteer)
+                  {{#if @entry.is_echelon}}
+                    (as Echelon volunteer)
                   {{/if}}
                 </td>
                 <td>
@@ -268,8 +268,8 @@
             <:body>
               <FormRow class="mt-3">
                 <div class="col-auto">
-                  <f.checkbox @name="is_non_ranger"
-                              @label="Entry is for a dept volunteer (non-ranger status) - time will not count towards service years"/>
+                  <f.checkbox @name="is_echelon"
+                              @label="Entry is for an Echelon volunteer - time will not count towards service years"/>
                 </div>
               </FormRow>
               <FormRow>

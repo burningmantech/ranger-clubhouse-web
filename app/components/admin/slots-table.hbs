@@ -1,0 +1,66 @@
+<UiTable>
+  <thead>
+  <tr>
+    <th class="text-end">ID</th>
+    <th>Active</th>
+    <th>Time</th>
+    <th class="text-end">Max</th>
+    <th class="text-end">Count</th>
+    <th class="text-end">Credits</th>
+    <th>Description</th>
+    <th>Actions</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each @group.slots key="id" as |slot|}}
+    <tr id="slot-{{slot.id}}">
+      <td class="text-end">{{slot.id}}</td>
+      <td class="text-center">
+        <UiBadgeActive @active={{slot.active}} />
+      </td>
+      <td>
+        {{shift-format slot.begins slot.ends timezone=slot.timezone_abbr}}
+        {{#if @showPosition}}
+          <div class="mt-1">
+            {{slot.position.title}}
+          </div>
+        {{/if}}
+        {{#if slot.trainer_slot}}
+          <div class="mt-1">
+            Multiplier
+            #{{slot.trainer_slot.id}} {{slot.trainer_slot.position.title}} {{slot.trainer_slot.description}}
+            {{shift-format slot.trainer_slot.begins}}
+          </div>
+        {{/if}}
+        {{#if slot.parent_signup_slot}}
+          <div class="mt-1">
+            Parent
+            #{{slot.parent_signup_slot.id}} {{slot.parent_signup_slot.position.title}} {{slot.parent_signup_slot.description}}
+            {{shift-format slot.parent_signup_slot.begins}}
+          </div>
+        {{/if}}
+      </td>
+      <td class="text-end">{{slot.max}}</td>
+      <td class="text-end">{{slot.signed_up}}</td>
+      <td class="text-end">{{credits-format slot.credits}}</td>
+      <td>
+        <SlotInfoLink @description={{slot.description}} @info={{slot.url}} />
+      </td>
+      <td>
+        <UiButtonRow>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn @repeatSlot slot}}>
+            {{fa-icon "clone"}} Repeat
+          </UiButton>
+          <UiButton @type="secondary" @size="sm" @onClick={{fn @repeatSlotAdd24Hours slot}}>
+            {{fa-icon "clone"}} Repeat+24
+          </UiButton>
+          <UiButton @type="danger" @size="sm" @onClick={{fn @deleteSlot slot}}>
+            {{fa-icon "trash-alt"type="fas"}} Delete
+          </UiButton>
+          <UiEditButton @onClick={{fn @editSlot slot}} @size="sm"/>
+        </UiButtonRow>
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</UiTable>

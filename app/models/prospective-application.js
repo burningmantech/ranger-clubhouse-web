@@ -12,12 +12,14 @@ import {
 import currentYear from "clubhouse/utils/current-year";
 import _ from 'lodash';
 
+export const EXPERIENCE_BRC1 = 'brc1';
 export const EXPERIENCE_BRC1R1 = 'brc1r1';
 export const EXPERIENCE_BRC2 = 'brc2';
 export const EXPERIENCE_NONE = 'none';
 
 export const ExperienceOptions = [
   ['None', EXPERIENCE_NONE],
+  ['BRC1', EXPERIENCE_BRC1],
   ['BRC1 + R1', EXPERIENCE_BRC1R1],
   ['BRC2', EXPERIENCE_BRC2]
 ];
@@ -32,6 +34,7 @@ export const STATUS_CREATED = 'created';
 export const STATUS_HANDLE_CHECK = 'handle-check';
 export const STATUS_HOLD_MORE_HANDLES = 'more-handles';
 
+export const STATUS_HOLD_AGE_ISSUE = 'age-issue';
 export const STATUS_HOLD_QUALIFICATION_ISSUE = 'qualification-issue';
 export const STATUS_HOLD_RRN_CHECK = 'rrn-check';
 export const STATUS_HOLD_WHY_RANGER_QUESTION = 'why-ranger-question';
@@ -65,7 +68,8 @@ export const StatusOptions = [
     options: [
       ['More Handles Requested', STATUS_HOLD_MORE_HANDLES],
       ['Personal Info Issue', STATUS_PII_ISSUE],
-      ['Awaiting Qualification Confirmation', STATUS_HOLD_QUALIFICATION_ISSUE],
+      ['Awaiting Event Confirmation', STATUS_HOLD_QUALIFICATION_ISSUE],
+      ['Awaiting Age Confirmation', STATUS_HOLD_AGE_ISSUE],
       ['Why Ranger Answer Issue', STATUS_HOLD_WHY_RANGER_QUESTION],
     ]
   },
@@ -88,9 +92,10 @@ export const StatusLabels = {
   [STATUS_CREATED]: 'Account Created',
   [STATUS_DUPLICATE]: 'Duplicate Application',
   [STATUS_HANDLE_CHECK]: 'In Callsign Processing',
-  [STATUS_HOLD_QUALIFICATION_ISSUE]: 'Awaiting Qualification Confirmation',
-  [STATUS_HOLD_WHY_RANGER_QUESTION]: 'Why Ranger Answer Issue',
+  [STATUS_HOLD_AGE_ISSUE]: 'Awaiting Age Confirmation',
   [STATUS_HOLD_MORE_HANDLES]: 'More Handles Requested',
+  [STATUS_HOLD_QUALIFICATION_ISSUE]: 'Awaiting Event Confirmation',
+  [STATUS_HOLD_WHY_RANGER_QUESTION]: 'Why Ranger Answer Issue',
   [STATUS_PENDING]: 'Awaiting Review',
   [STATUS_PII_ISSUE]: 'Personal Info Issue',
   [STATUS_REJECT_PRE_BONK]: 'Pre-Bonked',
@@ -103,21 +108,22 @@ export const StatusLabels = {
 
 export const StatusColors = {
   [STATUS_APPROVED]: 'text-bg-success',
-  [STATUS_PII_ISSUE]: 'text-bg-warning',
+  [STATUS_CREATED]: 'text-bg-success',
   [STATUS_DUPLICATE]: 'text-bg-danger',
   [STATUS_HANDLE_CHECK]: 'text-bg-gray',
-  [STATUS_CREATED]: 'text-bg-success',
+  [STATUS_HOLD_AGE_ISSUE]: 'text-bg-warning',
   [STATUS_HOLD_MORE_HANDLES]: 'text-bg-warning',
-  [STATUS_PENDING]: 'text-bg-info',
   [STATUS_HOLD_QUALIFICATION_ISSUE]: 'text-bg-warning',
+  [STATUS_HOLD_RRN_CHECK]: 'text-bg-warning',
   [STATUS_HOLD_WHY_RANGER_QUESTION]: 'text-bg-warning',
+  [STATUS_PENDING]: 'text-bg-info',
+  [STATUS_PII_ISSUE]: 'text-bg-warning',
   [STATUS_REJECT_PRE_BONK]: 'text-bg-danger',
   [STATUS_REJECT_REGIONAL]: 'text-bg-danger',
+  [STATUS_REJECT_RETURNING_RANGER]: 'text-bg-danger',
   [STATUS_REJECT_TOO_YOUNG]: 'text-bg-danger',
   [STATUS_REJECT_UBERBONKED]: 'text-bg-danger',
   [STATUS_REJECT_UNQUALIFIED]: 'text-bg-danger',
-  [STATUS_REJECT_RETURNING_RANGER]: 'text-bg-danger',
-  [STATUS_HOLD_RRN_CHECK]: 'text-bg-warning',
 };
 
 export const WhyVolunteerReviewLabels = {
@@ -128,6 +134,7 @@ export const WhyVolunteerReviewLabels = {
 
 export const StatusesThatSendEmail = [
   STATUS_APPROVED,
+  STATUS_HOLD_AGE_ISSUE,
   STATUS_HOLD_QUALIFICATION_ISSUE,
   STATUS_HOLD_RRN_CHECK,
   STATUS_HOLD_WHY_RANGER_QUESTION,
@@ -179,7 +186,7 @@ export const ColumnLabels = {
 export const BadHandleRegexps = [
   // [/^\d\s*[.)-]?\s*\b/, 'Priority indicators detected (e.g., 1., 2), 3 -, etc) - remove the indicators.'],
   [/\branger\b/i, 'The word "Ranger" detected - remove the word.'],
-  [/[,."'!()]/, 'Punctuation (commas, periods, quotes, exclamations, parentheses) detected - remove all punctuations. Dashes are okay IF its part of the actual handle'],
+  [/[,"!()]/, 'Punctuation (commas, periods, double quote, exclamations, parentheses) detected - remove all punctuations. Dashes are okay IF its part of the actual handle'],
 ];
 export default class ProspectiveApplicationModel extends Model {
   @attr('string', {defaultVault: STATUS_PENDING}) status;
@@ -251,7 +258,8 @@ export default class ProspectiveApplicationModel extends Model {
     return this.status === STATUS_HOLD_QUALIFICATION_ISSUE
       || this.status === STATUS_HOLD_MORE_HANDLES
       || this.status === STATUS_HOLD_WHY_RANGER_QUESTION
-      || this.status === STATUS_HOLD_RRN_CHECK;
+      || this.status === STATUS_HOLD_RRN_CHECK
+      || this.status === STATUS_HOLD_AGE_ISSUE;
   }
 
   get eventsList() {
@@ -313,6 +321,10 @@ export default class ProspectiveApplicationModel extends Model {
     return this.status === STATUS_HOLD_QUALIFICATION_ISSUE;
   }
 
+  get isStatusHoldAgeIssue() {
+    return this.status === STATUS_HOLD_AGE_ISSUE;
+  }
+
   get isStatusHoldPiiIssues() {
     return this.status === STATUS_PII_ISSUE
   }
@@ -329,7 +341,7 @@ export default class ProspectiveApplicationModel extends Model {
     if (!this.qualifiedEvents.length) {
       return 'NO QUALIFIED EVENT YEARS LISTED';
     } else if (!this.hasEventYearWithinRange) {
-      return 'NO EVENT YEAR WITHIN THE LAST 10';
+      return 'No qualifying event years within the last 10 years';
     }
 
     return null;

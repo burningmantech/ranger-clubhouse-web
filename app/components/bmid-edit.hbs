@@ -2,12 +2,12 @@
   {{#if @entry.notQualifiedToPrint}}
     <p>
       <UiNotice @type={{if @entry.isNew "danger" "secondary"}}
-                @title={{if this.isNonRanger "No Sign Ups Found" "No Claimed Ticket nor In-Person Training Sign-Up Found"}}
+                @title={{if this.isEchelon "No Sign Ups Found" "No Claimed Ticket nor In-Person Training Sign-Up Found"}}
                 @icon="hand"
       >
         <p>
-          {{#if this.isNonRanger}}
-            Because the Non-Ranger has not signed up for any shifts, the recommendation is to not print their BMID.
+          {{#if this.isEchelon}}
+            Because the Echelon volunteer has not signed up for any shifts, the recommendation is to not print their BMID.
           {{else}}
             Because the person has not signed up for an In-Person Training nor claimed a ticket, the recommendation is to not
             print their BMID.

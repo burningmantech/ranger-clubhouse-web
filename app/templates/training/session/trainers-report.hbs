@@ -59,7 +59,7 @@
         </tr>
       {{/if}}
       {{#each group.students as |student|}}
-        <tr class="{{if student.fkas "trainers-report-no-bottom"}}">
+        <tr>
           <td>{{student.callsign}}</td>
           <td class="text-center">
             {{student.status}}
@@ -87,11 +87,6 @@
             {{student.email}}
           </td>
         </tr>
-        {{#if student.fkas}}
-          <tr>
-            <td colspan="7">FKA: {{join student.fkas ", "}}</td>
-          </tr>
-        {{/if}}
       {{else}}
         <tr>
           <td colspan="7" class="text-center">

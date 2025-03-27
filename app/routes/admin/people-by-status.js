@@ -1,6 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
-export default class ReportsPeopleByStatusRoute extends ClubhouseRoute {
+export default class AdminPeopleByStatusRoute extends ClubhouseRoute {
     model() {
       return this.ajax.request('person/by-status');
     }

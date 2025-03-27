@@ -137,7 +137,7 @@ export default class MeTimesheetController extends ClubhouseController {
     try {
       this.timesheetSummary = (await this.ajax.request(`person/${this.person.id}/timesheet-summary`, {data: {year: this.year}})).summary;
       this.timesheetInfo = (await this.ajax.request('timesheet/info', {data: {person_id: this.person.id}})).info;
-      if (this.timecardYearRound) {
+      if (this.canSelfManageShifts) {
         this.timesheetInfo.correction_enabled = true;
       }
     } catch (response) {

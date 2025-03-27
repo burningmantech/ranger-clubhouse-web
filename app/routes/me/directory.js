@@ -16,5 +16,9 @@ export default class MeDirectoryRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     controller.teams = model.teams;
+    controller.teamScrollItems = model.teams.map((t)=> ({
+      id: `team-${t.id}`,
+      title: t.title,
+    }));
   }
 }

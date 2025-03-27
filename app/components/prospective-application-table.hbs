@@ -1,6 +1,8 @@
 {{#if @applications.length}}
-  Showing {{pluralize @applications.length "application"}} matching:
-  {{yield}}
+  <div class="my-2 fs-4">
+    Showing {{pluralize @applications.length "application"}} matching:
+    <span class="fw-bold">{{yield}}</span>
+  </div>
   <UiTable>
     <thead>
     <tr>
@@ -15,7 +17,7 @@
     </tr>
     </thead>
     <tbody>
-    {{#each @applications as |row|}}
+    {{#each @applications key="id" as |row|}}
       <tr>
         <td class="text-right">
           <LinkTo @route="vc.applications.record" @model={{row.applicationId}}>
@@ -65,10 +67,9 @@
         </td>
         <td>
           {{#if row.person}}
-            <PersonLink @person={{row.person}} />
-            &lt;{{row.person.status}}&gt;
-          {{else}}
-            -
+            <PersonLink @person={{row.person}} @showStatus={{true}} />
+          {{else if row.bpguid_person}}
+            <PersonLink @person={{row.bpguid_person}} @showStatus={{true}} />
           {{/if}}
         </td>
       </tr>
@@ -76,5 +77,7 @@
     </tbody>
   </UiTable>
 {{else}}
-  <b class="text-danger">No applications found matching: {{yield}}</b>
+  <div class="my-2 fs-4">
+    <b class="text-danger">No applications found matching: {{yield}}</b>
+  </div>
 {{/if}}

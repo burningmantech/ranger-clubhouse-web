@@ -1,17 +1,18 @@
-<YearSelect @title="Timesheet Totals"
-            @year={{this.year}}
-            @onChange={{set-value this 'year'}}
-            @minYear={{2008}}
-            @skipPandemic={{true}}
-/>
+<main>
+  <YearSelect @title="Timesheet Totals"
+              @year={{this.year}}
+              @onChange={{set-value this 'year'}}
+              @minYear={{2008}}
+              @skipPandemic={{true}}
+  />
 
-<p>
-  <UiButton @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
-</p>
+  <p>
+    <UiButton @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
+  </p>
 
-Showing {{pluralize this.people.length "person"}}
-<UiTable>
-  <thead>
+  Showing {{pluralize this.people.length "person"}}
+  <UiTable>
+    <thead>
     <tr>
       <th>Callsign</th>
       <th>Status</th>
@@ -19,19 +20,19 @@ Showing {{pluralize this.people.length "person"}}
       <th class="text-end">Hours</th>
       <th class="text-end">Credits</th>
     </tr>
-  </thead>
-  <tbody>
+    </thead>
+    <tbody>
     {{#each this.people key="id" as |person|}}
       {{#each person.positions key="id" as |pos idx|}}
         <tr>
           {{#unless idx}}
             <td rowspan="{{add person.positions.length 1}}">
-              <PersonLink @person={{person}} @page="timesheet" />
+              <PersonLink @person={{person}} @page="timesheet"/>
             </td>
             <td rowspan="{{add person.positions.length 1}}">
               {{person.status}}
             </td>
-        {{/unless}}
+          {{/unless}}
           <td>{{pos.title}}</td>
           <td class="text-end">{{hour-format pos.duration}}</td>
           <td class="text-end">{{credits-format pos.credits}}</td>
@@ -43,9 +44,10 @@ Showing {{pluralize this.people.length "person"}}
         <td class="text-end">{{credits-format person.total_credits}}</td>
       </tr>
     {{else}}
-    <tr>
-      <td colspan="5"><b class="text-danger">No {{this.year}} timesheet entries were found.</b></td>
-    </tr>
+      <tr>
+        <td colspan="5"><b class="text-danger">No {{this.year}} timesheet entries were found.</b></td>
+      </tr>
     {{/each}}
-  </tbody>
-</UiTable>
+    </tbody>
+  </UiTable>
+</main>

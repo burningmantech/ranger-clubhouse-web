@@ -1,5 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
+import {tracked} from '@glimmer/tracking';
 
 const CSV_COLUMNS = [
   {title: 'From', key: 'on_duty'},
@@ -11,6 +12,10 @@ const CSV_COLUMNS = [
 
 export default class ReportsTimesheetByPositionController extends ClubhouseController {
   queryParams = ['year'];
+
+  @tracked positions;
+  @tracked positionsScrollList;
+  @tracked status;
 
   @action
   exportToCSV(position) {

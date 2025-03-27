@@ -6,7 +6,7 @@ export const DECEASED = 'deceased';
 export const DISMISSED = 'dismissed';
 export const INACTIVE_EXTENSION = 'inactive extension';
 export const INACTIVE = 'inactive';
-export const NON_RANGER = 'non ranger';
+export const ECHELON = 'echelon';
 export const PAST_PROSPECTIVE = 'past prospective';
 export const PROSPECTIVE = 'prospective';
 export const PROSPECTIVE_WAITLIST = 'prospective waitlist';
@@ -15,6 +15,9 @@ export const RETIRED = 'retired';
 export const SUSPENDED = 'suspended';
 export const UBERBONKED = 'uberbonked';
 
+// Pseudo status used for finding cheetahs via the search bar
+export const CHEETAH_CUB = 'cheetahcub';
+
 // Statuses allowed to work / check in
 
 export const ALLOWED_TO_WORK = [
@@ -22,7 +25,7 @@ export const ALLOWED_TO_WORK = [
   ALPHA,
   INACTIVE,
   INACTIVE_EXTENSION,
-  NON_RANGER,
+  ECHELON,
   PROSPECTIVE,    // Mentor will need to convert Alpha
   RETIRED,
 ];
@@ -45,7 +48,7 @@ export const STATUS_OPTIONS = [
   DISMISSED,
   INACTIVE_EXTENSION,
   INACTIVE,
-  NON_RANGER,
+  ECHELON,
   PAST_PROSPECTIVE,
   PROSPECTIVE,
   RESIGNED,
@@ -53,3 +56,4 @@ export const STATUS_OPTIONS = [
   SUSPENDED,
   UBERBONKED,
 ];
+

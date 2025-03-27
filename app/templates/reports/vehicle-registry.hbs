@@ -46,7 +46,7 @@
         <div class="vehicle-registry-person">Person/Team</div>
         <div class="vehicle-registry-status">Status</div>
         <div class="vehicle-registry-vehicle">Vehicle/Class/Lic.</div>
-        <div class="vehicle-registry-rental">Rental #</div>
+        <div class="vehicle-registry-rental">DPW PO</div>
         <div class="vehicle-registry-sticker">Driving Sticker / #</div>
         <div class="vehicle-registry-logo">Ranger Logo</div>
         <div class="vehicle-registry-fuel-chit">Fuel Chit</div>
@@ -75,11 +75,11 @@
             {{/if}}
             {{#if vehicle.isPersonal}}
               {{#if vehicle.isApproved}}
-                <span class="text-success">{{fa-icon "check"}} Approved</span>
+                <UiBadge @type="success">approved</UiBadge>
               {{else if vehicle.isRejected}}
-                <span class="text-danger">{{fa-icon "times"}} Denied</span>
+                <UiBadge @type="danger">denied</UiBadge>
               {{else if vehicle.isPending}}
-                <span class="text-secondary">{{fa-icon "circle" type="far"}} Pending</span>
+                <UiBadge @type="secondary">pending</UiBadge>
               {{else}}
                 {{vehicle.status}}
               {{/if}}
@@ -97,7 +97,7 @@
           </div>
           <div class="vehicle-registry-rental">
             {{#if this.session.isSmallScreen}}
-              <b>Rental #</b><br>
+              <b>DPW PO</b><br>
             {{/if}}
             <PresentOrNot @value={{vehicle.rental_number}} @empty="-"/>
           </div>

@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {NON_RANGER} from 'clubhouse/constants/person_status';
+import {ECHELON} from 'clubhouse/constants/person_status';
 import {TRAINING} from 'clubhouse/constants/positions';
 
 export default class HqSiteCheckinController extends ClubhouseController {
@@ -17,7 +17,7 @@ export default class HqSiteCheckinController extends ClubhouseController {
   }
 
   get inPersonTrainingPassed() {
-    if (this.person.status === NON_RANGER) {
+    if (this.person.status === ECHELON) {
       return true;
     }
 

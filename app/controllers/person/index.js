@@ -263,7 +263,7 @@ export default class PersonIndexController extends ClubhouseController {
           case NON_RANGER:
             if (oldStatus !== AUDITOR) {
               this.modal.confirm('Confirm status update',
-                `<p>You are about to convert an account from ${oldStatus} status to Non-Ranger. Normally only auditor accounts are eligible.</p>Are you sure you want to do this?`,
+                `<p>You are about to convert an account from ${oldStatus} status to Echelon. Normally only auditor accounts are eligible.</p>Are you sure you want to do this?`,
                 () => this._savePersonModel(model)
               );
             }
@@ -288,7 +288,7 @@ export default class PersonIndexController extends ClubhouseController {
             if (oldStatus !== AUDITOR && oldStatus !== NON_RANGER && oldStatus !== PAST_PROSPECTIVE) {
               this.modal.confirm('Confirm Prospective Status',
                 htmlSafe(
-                  `<p>Updating an account from ${oldStatus} status to prospective is highly unusual. Normally only Auditor, Non-Ranger, and Past Prospective accounts are eligible.</p>` +
+                  `<p>Updating an account from ${oldStatus} status to prospective is highly unusual. Normally only Auditor, Echelon, and Past Prospective accounts are eligible.</p>` +
                   `Are you sure you want to this do?`,
                 ),
                 () => this._savePersonModel(model));
@@ -341,16 +341,19 @@ export default class PersonIndexController extends ClubhouseController {
   @action
   removePersonAction() {
     this.modal.confirm('Confirm Person Removal',
-      'Removing a person is permanent and cannot be ' +
-      'undone. All of the information associated with the person will ' +
+      'You are about to <span class="spinner-grow spinner-grow-sm text-danger"></span><b class="text-danger">DELETE THIS ACCOUNT</b><span class="spinner-grow spinner-grow-sm text-danger"></span>. Removing a person' +
+      ' <b class="text-danger">is permanent and cannot be undone.</b> All the information associated with the person will ' +
       'also be removed. This will only happen if you confirm that you ' +
-      'want to remove this person.  If you do not confirm, the ' +
-      'person will not be removed.',
+      'want to remove this person.  If you cancel, the person will not be removed.',
       () => {
-        this.person.destroyRecord().then(() => {
-          this.toast.success('The person was successfully removed from the Clubhouse.');
-          this.router.transitionTo('me.homepage');
-        }).catch((response) => this.house.handleErrorResponse(response));
+        this.modal.confirm('Really Confirm Person Removal',
+          'This is <span class="spinner-grow spinner-grow-sm text-danger"></span><b class="text-danger">NOT RECOMMENDED</b><span class="spinner-grow spinner-grow-sm text-danger"></span>! Are you absolutely sure you want to <b class="text-danger">DELETE THIS ACCOUNT?</b>',
+          () => {
+            this.person.destroyRecord().then(() => {
+              this.toast.success('The person was successfully removed from the Clubhouse.');
+              this.router.transitionTo('me.homepage');
+            }).catch((response) => this.house.handleErrorResponse(response));
+          })
       }
     )
   }

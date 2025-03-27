@@ -1,17 +1,21 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {action} from '@ember/object';
 import {NotFoundError} from '@ember-data/adapter/error'
-import {ADMIN, MANAGE} from 'clubhouse/constants/roles';
+import {ADMIN, SHIFT_MANAGEMENT} from 'clubhouse/constants/roles';
 import RSVP from 'rsvp';
 import {setting} from 'clubhouse/utils/setting';
 import {isEmpty} from '@ember/utils';
 
 export default class HqRoute extends ClubhouseRoute {
-  roleRequired = [ADMIN, MANAGE];
-
   beforeModel() {
     if (!setting('HQWindowInterfaceEnabled')) {
-      this.toast.error('The HQ Window Interface is only enabled while the event is going.');
+      this.modal.info('HQ Interface not available.', 'The HQ Window Interface is only enabled while the event operations are running.');
+      this.router.transitionTo('me.homepage');
+      return false;
+    }
+
+    if (!this.session.hasRole([ADMIN, SHIFT_MANAGEMENT])) {
+      this.modal.info('Not Authorized.', 'You do not have either the Admin or Shift Management permissions.');
       this.router.transitionTo('me.homepage');
       return false;
     }
@@ -25,7 +29,6 @@ export default class HqRoute extends ClubhouseRoute {
 
     this.store.unloadAll('timesheet');
     this.store.unloadAll('asset-person');
-
 
     const requests = {
       person: this.store.findRecord('person', person_id, {reload: true}),
@@ -84,7 +87,7 @@ export default class HqRoute extends ClubhouseRoute {
     if (meals === 'all') {
       Object.keys(eventPeriods).forEach((key) => eventPeriods[key].hasPass = true);
     } else if (!isEmpty(meals)) {
-        meals.split('+').forEach((p) => eventPeriods[p].hasPass = true);
+      meals.split('+').forEach((p) => eventPeriods[p].hasPass = true);
     }
   }
 

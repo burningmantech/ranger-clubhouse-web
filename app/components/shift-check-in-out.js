@@ -11,8 +11,8 @@ import {
   DPW_RANGER,
 } from 'clubhouse/constants/positions';
 import {cached, tracked} from '@glimmer/tracking';
-import {INACTIVE, INACTIVE_EXTENSION, NON_RANGER} from 'clubhouse/constants/person_status';
-import {ADMIN, CAN_FORCE_SHIFT, TIMECARD_YEAR_ROUND} from 'clubhouse/constants/roles';
+import {INACTIVE, INACTIVE_EXTENSION, ECHELON} from 'clubhouse/constants/person_status';
+import {ADMIN, CAN_FORCE_SHIFT, SHIFT_MANAGEMENT_SELF} from 'clubhouse/constants/roles';
 import {TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
 import {TYPE_TRAINING} from "clubhouse/models/position";
 import _ from 'lodash';
@@ -105,7 +105,7 @@ export default class ShiftCheckInOutComponent extends Component {
     this._putOnTop(signins, DIRT_SHINY_PENNY);
 
 
-    if (+this.args.person.id === this.session.userId && this.session.hasRole(TIMECARD_YEAR_ROUND)) {
+    if (+this.args.person.id === this.session.userId && this.session.hasRole(SHIFT_MANAGEMENT_SELF)) {
       // Hacks for NVO / DPW Rangers who can sign themselves in and out.
       this._putOnTop(signins, DPW_RANGER);
       this._putOnTop(signins, NVO_RANGER);
@@ -117,7 +117,7 @@ export default class ShiftCheckInOutComponent extends Component {
     this.signinPositionId = this.signinPositions.length ? this.signinPositions[0].id : null;
 
     // Has the person gone through dirt training?
-    if (this.args.person.status === NON_RANGER) {
+    if (this.args.person.status === ECHELON) {
       this.inPersonTrainingPassed = true;
     } else {
       const {eventInfo} = this.args;

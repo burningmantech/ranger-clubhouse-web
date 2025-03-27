@@ -6,12 +6,48 @@
   </ExtLink>
   document.
 </p>
-<div class="masonry-container masonry-col-2">
-  {{#each this.teams as |team|}}
-    <div class="mb-2 masonry-item">
-      {{team.title}}<br>
-      <MailTo @to={{team.email}} />
+<DropdownScrollList @items={{this.teamScrollItems}}
+                    @thing="cadre or delegation"
+/>
+{{#each this.teams as |team idx|}}
+  {{#if idx}}
+    <hr>
+  {{/if}}
+  <h2 id="team-{{team.id}}">{{team.title}}</h2>
+  {{#if team.description}}
+    <div class="my-2">
+      {{team.description}}
     </div>
-  {{/each}}
-</div>
+  {{/if}}
+  {{#if team.email}}
+    Contact:
+    <MailTo @to={{team.email}} />
+  {{else}}
+    <i>No contact email on file.</i>
+  {{/if}}
 
+  <div class="d-flex flex-wrap mt-2">
+    {{#each team.members as |member|}}
+    {{! template-lint-disable no-inline-styles}}
+      <div class="card me-4 mb-2" style="width: 10rem;">
+        {{#if member.profile_url}}
+          <img src={{member.profile_url}} alt="profile" class="card-img-top" loading="lazy">
+        {{else}}
+          <div class="text-center mt-1">
+            <UiPhotoNone/>
+          </div>
+        {{/if}}
+        <div class="card-body">
+          <div class="card-title fs-4 text-center">
+            {{member.callsign}}
+          </div>
+          <div class="card-subtitle fs-6 text-center">
+            {{#each member.overseer_positions as |position|}}
+              {{this.splitWords position.title}}<br>
+            {{/each}}
+          </div>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{/each}}

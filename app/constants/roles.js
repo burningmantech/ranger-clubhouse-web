@@ -25,13 +25,17 @@ export const CAN_FORCE_SHIFT = 113; // Person can force a shift check in
 export const REGIONAL_MANAGEMENT = 114;    // Person can access Regional Ranger liaison features.
 export const PAYROLL = 115;                // Can access payroll features
 export const VEHICLE_MANAGEMENT = 116;     // Can access vehicle fleet management features
-export const TIMECARD_YEAR_ROUND = 117;    // Paid folks who can self check in/out, and submit timesheet corrections year round.
+export const SHIFT_MANAGEMENT_SELF = 117;    // Paid folks who can self check in/out, and submit timesheet corrections year round.
 export const SALESFORCE_IMPORT = 118;      // Allowed to import new accounts from Salesforce
 export const MESSAGE_MANAGEMENT = 119;    // Allow access to Clubhouse Messages year round regardless of LMYR/LMOP setting.
 export const EDIT_CLOTHING = 120;   // Can edit a clothing fields.
 export const MEGAPHONE_TEAM_ONPLAYA = 121;  // On-Playa Megaphone permission
 export const MEGAPHONE_EMERGENCY_ONPLAYA = 122;    // Allows access to the broadcast all emergency
 export const ANNOUNCEMENT_MANAGEMENT = 123;    // Allow announcements to be created and deleted.
+export const SHIFT_MANAGEMENT = 125;
+export const POD_MANAGEMENT = 126;
+
+export const QUARTERMASTER = 124;
 
 export const ROLE_BASE_MASK = 0x7f000000;
 export const POSITION_MASK = 0x0fff;
@@ -61,12 +65,15 @@ export const Role = {
   MEGAPHONE_TEAM_ONPLAYA,
   MENTOR,
   MESSAGE_MANAGEMENT,
+  POD_MANAGEMENT,
   REGIONAL_MANAGEMENT,
   PAYROLL,
+  QUARTERMASTER,
   SALESFORCE_IMPORT,
+  SHIFT_MANAGEMENT,
   SURVEY_MANAGEMENT,
   TECH_NINJA,
-  TIMECARD_YEAR_ROUND,
+  SHIFT_MANAGEMENT_SELF,
   TIMESHEET_MANAGEMENT,
   TRAINER,
   TRAINER_SEASONAL,
@@ -81,6 +88,7 @@ export const RoleToString = {
   [ANNOUNCEMENT_MANAGEMENT]: 'announcement-management',
   [ART_TRAINER]: 'art-trainer',
   [CAN_FORCE_SHIFT]: 'force-shift',
+  [CERTIFICATION_MGMT]: 'certificate-management',
   [EDIT_ACCESS_DOCS]: 'edit-access-docs',
   [EDIT_ASSETS]: 'edit-assets',
   [EDIT_BMIDS]: 'edit-bmids',
@@ -97,9 +105,12 @@ export const RoleToString = {
   [MENTOR]: 'mentor',
   [MESSAGE_MANAGEMENT]: 'message-management',
   [PAYROLL]: 'payroll',
+  [POD_MANAGEMENT]: 'pod-management',
+  [QUARTERMASTER]: 'quartermaster',
   [REGIONAL_MANAGEMENT]: 'regional',
+  [SHIFT_MANAGEMENT]: 'shift-management',
   [TECH_NINJA]: 'tech-ninja',
-  [TIMECARD_YEAR_ROUND]: 'timecard-year-round',
+  [SHIFT_MANAGEMENT_SELF]: 'timecard-year-round',
   [TIMESHEET_MANAGEMENT]: 'timesheet-management',
   [TRAINER]: 'trainer',
   [TRAINER_SEASONAL]: 'trainer-seasonal',

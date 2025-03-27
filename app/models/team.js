@@ -16,6 +16,7 @@ export default class TeamModel extends Model {
   @attr('boolean', { defaultValue: true }) active;
   @attr('boolean', {defaultValue: false}) mvr_eligible;
   @attr('boolean', {defaultValue: false}) pvr_eligible;
+  @attr('string') description;
   @attr('string') email;
 
   @attr('') role_ids;

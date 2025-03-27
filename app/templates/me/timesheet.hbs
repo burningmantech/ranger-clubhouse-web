@@ -118,7 +118,7 @@
       <WorkHistory @person={{this.person}} />
     {{/if}}
   </tab.pane>
-  {{#if this.timecardYearRound}}
+  {{#if this.canSelfManageShifts}}
     <tab.pane @title="Shift Check In/Out" @id="shift">
       {{#if (is-current-year this.year)}}
         <ShiftCheckInOut @positions={{this.positions}}

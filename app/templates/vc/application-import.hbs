@@ -1,20 +1,72 @@
 <main>
   <h1>Salesforce Application Import</h1>
   <p>
-    Use this interface to create Clubhouse Prospective accounts from approved applications.
+    Use this interface to import Salesforce Ranger applications. This process only creates Clubhouse application
+    records &mdash; it does not create Clubhouse accounts. Only Salesforce applications created in the current
+    year will be imported. The Event Year field is not used.
+  </p>
+  <p>
+    To create Clubhouse prospective accounts from approved Clubhouse applications, use the Create Prospectives interface.
   </p>
   <div class="my-4">
     <UiButton @onClick={{this.previewApplications}} @type="secondary">Preview Applications</UiButton>
-    <UiButton @onClick={{this.confirmImport}}>Import Applications</UiButton>
+    <UiButton @onClick={{this.importApplications}}>Import Applications</UiButton>
   </div>
 
   {{#if this.hasResults}}
+    {{#if this.apiError}}
+      <UiNotice @type="danger">
+        <p>
+          A general Salesforce API error occurred while processing the applications. Some records may have been imported
+          -- double check below. The error is:
+        </p>
+        {{this.apiError}}
+      </UiNotice>
+    {{/if}}
     <div class="mb-4">
-      {{pluralize this.newApplications.length "new application"}} found.<br>
-      {{pluralize this.existingApplications.length "existing application"}} found.
+      {{#if this.commited}}
+        {{pluralize this.newApplications.length "application"}} successfully imported into the Clubhouse.<br>
+      {{else}}
+        {{pluralize this.newApplications.length "new application"}} found.<br>
+      {{/if}}
+      {{#if this.createFailures}}
+        <div class="text-danger">
+          {{pluralize this.createFailures.length "Clubhouse application"}} could not be created.
+        </div>
+      {{else if this.commited}}
+        <div class="text-success">
+          {{fa-icon "check" right=1}} All new applications found without query or validation errors were successfully
+          imported.
+        </div>
+      {{/if}}
+      {{pluralize this.existingApplications.length "existing application"}} found.<br>
+      {{#if this.queryFailures}}
+        <div class="text-danger">{{pluralize this.queryFailures.length "Salesforce application"}} could not be
+          queried.
+        </div>
+      {{else}}
+        <div class="text-success">{{fa-icon "check" right=1}} All Salesforce applications could be queried.</div>
+      {{/if}}
     </div>
+
+    <Vc::ApplicationFailedTable @records={{this.queryFailures}}>
+      <:title>Salesforce Query Failures</:title>
+      <:header>
+        The following Salesforce application records could not be queried. Contact BMIT to
+        resolve the permission issues with the ranger-tech-cadre account, or the permission issues on
+        the individual Salesforce application records.
+      </:header>
+    </Vc::ApplicationFailedTable>
+
+    <Vc::ApplicationFailedTable @records={{this.createFailures}}>
+      <:title>Clubhouse Application Creation Failure</:title>
+      <:header>
+        The following Clubhouse application records could not be created. Contact the Ranger Tech Cadre for help.
+      </:header>
+    </Vc::ApplicationFailedTable>
+
     <UiSection>
-      <:title>New Applications</:title>
+      <:title>{{if this.commited "Imported" "Found"}} Applications</:title>
       <:body>
         {{#if this.newApplications}}
           <Vc::ApplicationImportTable @applications={{this.newApplications}} @committed={{this.commit}} />
@@ -38,7 +90,6 @@
       </:body>
     </UiSection>
   {{/if}}
-
 </main>
 
 {{#if this.isSubmitting}}

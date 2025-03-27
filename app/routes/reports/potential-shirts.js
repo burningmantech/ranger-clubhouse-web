@@ -11,7 +11,7 @@ export default class ReportsPotentialShirtsRoute extends ClubhouseRoute {
     const year = requestYear(params);
 
     this.year = year;
-    return this.ajax.request(`timesheet/potential-shirts-earned`, {
+    return this.ajax.request(`swag/potential-shirts-earned`, {
       data: { year }
     });
   }
