@@ -13,7 +13,7 @@ export default class AdminPositionSanityCheckerRoute extends ClubhouseRoute {
     controller.set('deactivated_accounts', this.deactivatedAccounts(model.deactivated_accounts));
     controller.set('deactivated_positions', this.deactivated_positions(model.deactivated_positions));
     controller.set('deactivated_teams', this.deactivated_teams(model.deactivated_teams));
-    controller.set('lmyr', this.lmyrRole(model.lmyr));
+    controller.set('lmyr', this.lmyrRole(model.emop));
     controller.set('missing_positions', this.missingPositions(model.missing_positions))
     controller.set('retired_accounts', this.retiredAccounts(model.retired_accounts));
     controller.set('shiny_pennies', this.shinyPennies(model.shiny_pennies))
