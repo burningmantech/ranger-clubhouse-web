@@ -115,11 +115,11 @@ export default class extends SessionService {
   }
 
   /**
-   * Checks to see if the user has the Login Management role OR
+   * Checks to see if the user has the Event Management role OR
    * @returns {boolean}
    */
 
-  get isLMOPEnabled() {
+  get isEMOPEnabled() {
     return (this.hasRole(MANAGE) && !!setting('LoginManageOnPlayaEnabled'));
   }
 

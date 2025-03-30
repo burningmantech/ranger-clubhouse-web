@@ -7,7 +7,7 @@ export default class PersonMessagesRoute extends ClubhouseRoute {
 
     if (this.session.hasRole([ADMIN, VC, MESSAGE_MANAGEMENT])
       || person_id === this.session.userId
-      || this.session.isLMOPEnabled) {
+      || this.session.isEMOPEnabled) {
       this.canAccessMessages = true;
       this.store.unloadAll('person-message');
       return this.store.query('person-message', {person_id})

@@ -106,17 +106,17 @@
   </UiSection>
 
   <Admin::PositionSanityCheck
-    @title="Login Management Year Round Explicit Grant"
-    @caption="{{pluralize this.lmyr.length "person"}} with LMYR granted explicitly with no LMYR team or team position"
-    @sucessMessage="Congratulations! Everyone with LMYR appears to have an appropriate position and/or team membership"
+    @title="Event Management Year Round Explicit Grant"
+    @caption="{{pluralize this.emyr.length "person"}} with EMYR granted explicitly with no EMYR team or team position"
+    @sucessMessage="Congratulations! Everyone with EMYR appears to have an appropriate position and/or team membership"
     @columns={{(array)}}
-    @people={{this.lmyr}}
+    @people={{this.emyr}}
     @repairAction={{this.repairPeople}}
-    @repairType="lmyr"
+    @repairType="emyr"
     @canRepair={{this.userCanRepair}}
     @isSubmitting={{this.isSubmitting}}
   >
-    People who have LMYR explicitly granted should have an appropriate position and/or team membership
+    People who have EMYR explicitly granted should have an appropriate position and/or team membership
   </Admin::PositionSanityCheck>
 
   <Admin::PositionSanityCheck

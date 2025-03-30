@@ -14,6 +14,6 @@ export default class PersonEmergencyContactRoute extends ClubhouseRoute {
      - the person has LM and LoginManageOnPlayaEnabled is on.
      */
     controller.set('canAccessEmergencyContact',
-      (+person.id === this.session.userId) || this.session.isAdmin || this.session.isLMOPEnabled);
+      (+person.id === this.session.userId) || this.session.isAdmin || this.session.isEMOPEnabled);
   }
 }
