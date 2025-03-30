@@ -124,7 +124,7 @@ export default class extends SessionService {
   }
 
 
-  get hasLoginManagement() {
+  get hasEventManagement() {
     return this.hasRole(MANAGE);
   }
 
