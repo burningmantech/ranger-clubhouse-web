@@ -99,7 +99,7 @@
       <w.step @title="Verify Emergency Contact Information"
               @nextLabel="Save & Next"
               @nextAction={{fn this.saveContactForm f.model}}>
-        {{#if this.session.isLMOPEnabled}}
+        {{#if this.session.isEMOPEnabled}}
           <p class="ms-2">
             <b>Off-Playa:</b>
             Real world name, relationship (partner, friend, sibling, parent), phone number, &amp; email.<br>

@@ -5,7 +5,7 @@ export default class HqMessagesRoute extends ClubhouseRoute {
     const person_id = this.modelFor('hq').person.id;
 
     this.store.unloadAll('person-message');
-    if (this.session.isLMOPEnabled) {
+    if (this.session.isEMOPEnabled) {
       return this.store.query('person-message', {person_id})
     } else {
       return [];

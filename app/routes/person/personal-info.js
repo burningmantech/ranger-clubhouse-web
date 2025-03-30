@@ -3,7 +3,7 @@ import {ADMIN, MANAGE, VIEW_PII} from 'clubhouse/constants/roles';
 import shirtOptions from 'clubhouse/utils/shirt-options';
 
 export default class PersonPersonalInfoRoute extends ClubhouseRoute {
-  // User has to be an Admin or have Login Manage AND View Personal Info
+  // User has to be an Admin or have Event Manage AND View Personal Info
   roleRequired = [ADMIN, [MANAGE, VIEW_PII]];
 
   async model() {

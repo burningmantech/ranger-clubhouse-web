@@ -24,7 +24,7 @@ export default class ApplicationController extends ClubhouseController {
 
     document.querySelector('body').addEventListener('keydown', (event) => {
       if (!this.session.user || !this.session.hasLoginManagement) {
-        // Not logged in or does not have LMOP
+        // Not logged in or does not have EMOP
         return true;
       }
 

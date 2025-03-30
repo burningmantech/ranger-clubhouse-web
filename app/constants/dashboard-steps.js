@@ -912,7 +912,7 @@ export const SIGN_NDA = {
       route: 'me.agreements',
       linkedMessage: {
         route: 'me.agreements',
-        prefix: htmlSafe('Starting late 2022, all Clubhouse users who have been granted either the Login Management Year Round or On Playa roles are required EACH CALENDAR YEAR to review and agree to the Sensitive Data Access and Use Policy document. <b class="text-danger">Your privileges are suspended until the document is agreed to.</b><br><br> Visit'),
+        prefix: htmlSafe('Starting late 2022, all Clubhouse users who have been granted either the Event Management Year Round or On Playa roles are required EACH CALENDAR YEAR to review and agree to the Sensitive Data Access and Use Policy document. <b class="text-danger">Your privileges are suspended until the document is agreed to.</b><br><br> Visit'),
         text: 'Me > Agreements',
         suffix: 'to review and agree to the document.'
       },
