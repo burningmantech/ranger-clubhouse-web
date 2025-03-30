@@ -23,7 +23,7 @@ export default class ApplicationController extends ClubhouseController {
     const isMac = navigator.userAgent.indexOf("Mac") !== -1;
 
     document.querySelector('body').addEventListener('keydown', (event) => {
-      if (!this.session.user || !this.session.hasLoginManagement) {
+      if (!this.session.user || !this.session.hasEventManagement) {
         // Not logged in or does not have EMOP
         return true;
       }
