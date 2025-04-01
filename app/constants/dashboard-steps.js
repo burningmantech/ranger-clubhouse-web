@@ -298,7 +298,7 @@ export const ONLINE_COURSE = {
 
     } else {
       message = manualLocation +
-        `<p>The Online Course, like the In-Person training, has to be completed every year. The estimate time to complete the course is ${duration}.</p> <p>Note: it may take up to 20 minutes, or more, for the Clubhouse to record your course completion.</p>`;
+        `<p>The Online Course, like the In-Person training, has to be completed every year. The estimated time to complete the course is ${duration}.</p> <p>Note: it may take up to 20 minutes, or more, for the Clubhouse to record your course completion.</p>`;
     }
     return {
       result: isEchelon ? OPTIONAL : ACTION_NEEDED,
