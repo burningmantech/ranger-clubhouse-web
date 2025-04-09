@@ -1,10 +1,12 @@
 import Component from '@glimmer/component';
-import {validatePresence} from 'ember-changeset-validations/validators';
+import {validatePresence, validateFormat} from 'ember-changeset-validations/validators';
 import {CountryOptions, StateLabels, StateOptions} from 'clubhouse/constants/countries';
 import {action} from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
 import {STATUS_APPROVED} from "clubhouse/models/prospective-application";
-import { service} from '@ember/service';
+import {service} from '@ember/service';
+import validateState from "clubhouse/validators/state";
+
 export default class VcApplicationPersonalInfoComponent extends Component {
   @service ajax;
   @service house;
@@ -15,14 +17,17 @@ export default class VcApplicationPersonalInfoComponent extends Component {
 
   countryOptions = CountryOptions;
 
-  personalInfoValidation= {
+  personalInfoValidation = {
     first_name: [validatePresence({presence: true})],
     last_name: [validatePresence({presence: true})],
     street: [validatePresence({presence: true})],
     city: [validatePresence({presence: true})],
-    state: [validatePresence({presence: true})],
+    state: [validateState()],
     postal_code: [validatePresence({presence: true})],
     country: [validatePresence({presence: true})],
+
+    phone: [validatePresence(true), validateFormat({min: 9})],
+    email: [validatePresence(true), validateFormat({type: 'email'})],
   };
 
   @action
