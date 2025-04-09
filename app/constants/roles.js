@@ -34,6 +34,7 @@ export const MEGAPHONE_EMERGENCY_ONPLAYA = 122;    // Allows access to the broad
 export const ANNOUNCEMENT_MANAGEMENT = 123;    // Allow announcements to be created and deleted.
 export const SHIFT_MANAGEMENT = 125;
 export const POD_MANAGEMENT = 126;
+export const AWARD_MANAGEMENT = 127; // Allows a person to grant or revoke service awards.
 
 export const QUARTERMASTER = 124;
 
@@ -48,6 +49,7 @@ export const Role = {
   ADMIN,
   ANNOUNCEMENT_MANAGEMENT,
   ART_TRAINER,
+  AWARD_MANAGEMENT,
   CAN_FORCE_SHIFT,
   CERTIFICATION_MGMT,
   EDIT_ACCESS_DOCS,
@@ -87,6 +89,7 @@ export const RoleToString = {
   [ADMIN]: 'admin',
   [ANNOUNCEMENT_MANAGEMENT]: 'announcement-management',
   [ART_TRAINER]: 'art-trainer',
+  [AWARD_MANAGEMENT]: 'award-management',
   [CAN_FORCE_SHIFT]: 'force-shift',
   [CERTIFICATION_MGMT]: 'certificate-management',
   [EDIT_ACCESS_DOCS]: 'edit-access-docs',

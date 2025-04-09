@@ -1,0 +1,112 @@
+<main>
+  <h1>Bulk Service Recognition Awards Grants</h1>
+  <p>
+    <UiButton @onClick={{this.rebuildAwards}} @type="secondary" @size="sm">Rebuild All Awards</UiButton>
+  </p>
+  The format is:
+  <p>
+    <code>callsign,type,title,year1,....</code><br>
+    type = award, team, or position.<br>
+    title = the title of the award, team, or position.<br>
+    year = the year being recognised. A year range can be entered. e.g., 2019-2023. Multiple years can also be entered
+    separated by commas.
+  </p>
+
+  {{#if this.records}}
+    <UiSection>
+      <:body>
+        {{#if this.resultFailures}}
+          <h4 class="text-danger">{{pluralize this.resultFailures.length "error"}} encountered</h4>
+          <UiTable class="mt-4">
+            <thead>
+            <tr>
+              <th>Callsign</th>
+              <th>Error</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each this.resultFailures as |result|}}
+              <tr>
+                <td>
+                  {{result.callsign}}
+                </td>
+                <td>
+                  {{result.error}}
+                </td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </UiTable>
+        {{else if this.didCommit}}
+          <h4 class="text-success">Bulk Upload SUCCESS!</h4>
+        {{else}}
+          <h4>Verify Upload - Nothing submitted yet</h4>
+        {{/if}}
+
+        {{#if this.resultSuccesses}}
+          <h4>
+            {{pluralize this.resultSuccesses.length "callsign"}}
+            {{if this.didCommit "successfully granted" "with no errors"}}
+          </h4>
+          <UiTable>
+            <thead>
+            <tr>
+              <th>Callsign</th>
+              <th class="text-center">Service Type</th>
+              <th>Service Title</th>
+              <th>Year(s)</th>
+            </tr>
+            </thead>
+            <tbody>
+            {{#each this.resultSuccesses as |record|}}
+              <tr>
+                <td>
+                  <PersonLink @person={{record}} />
+                </td>
+                <td>
+                  {{record.type}}
+                </td>
+                <td>
+                  {{record.title}}
+                </td>
+                <td>
+                  {{year-range record.years}}
+                </td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </UiTable>
+        {{/if}}
+        {{#if
+          (and this.resultSuccesses (not this.resultFailures) (not this.didCommit))}}
+          <UiButton @type="success" @onClick={{this.commitAction}}>
+            Commit Grants
+          </UiButton>
+        {{/if}}
+      </:body>
+    </UiSection>
+  {{/if}}
+
+  <FormRow>
+    <FormLabel>Enter callsigns (one per line) below:</FormLabel>
+    <div class="col-auto">
+      <Textarea class="form-control"
+                @value={{this.callsignList}}
+                rows={{10}}
+                cols={{80}} />
+    </div>
+  </FormRow>
+
+  <p>
+    After the actions have been verified, you'll be able to commit the upload.
+  </p>
+  <p>
+    <UiButton @disabled={{this.isSubmitting}} @onClick={{this.verifyAction}}>
+      Verify Grants
+    </UiButton>
+  </p>
+</main>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog />
+{{/if}}

@@ -1,0 +1,15 @@
+<div class="d-flex" style="column-gap: 1vw;row-gap: 1vh;">
+  {{#each @trophies as |trophy|}}
+    <div class="card" style="width: 12rem;">
+      <div class="text-center mt-3">
+        {{fa-icon "award" type="s" size="3x"}}
+      </div>
+      <div class="card-body">
+        <h5 class="card-title text-center mt-2">{{trophy.title}}</h5>
+        <div class="card-text text-center">
+          {{year-range trophy.years}}
+        </div>
+      </div>
+    </div>
+  {{/each}}
+</div>

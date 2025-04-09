@@ -9,7 +9,7 @@ export default class AdminAwardsRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    controller.set('awards', model);
-    controller.set('entry', null);
+    controller.awards = model;
+    controller.entry = null;
   }
 }

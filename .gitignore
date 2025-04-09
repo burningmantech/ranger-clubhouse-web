@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 .DS_Store
-=======
->>>>>>> adead07a (v4.11.0...v5.4.1)
 # compiled output
 /dist/
 /declarations/
@@ -13,13 +10,10 @@
 
 # misc
 /.env*
-<<<<<<< HEAD
 /.sass-cache
 /connect.lock
-=======
 /.pnp*
 /.eslintcache
->>>>>>> adead07a (v4.11.0...v5.4.1)
 /coverage/
 /npm-debug.log*
 /testem.log
@@ -33,7 +27,7 @@
 
 # IDE
 /.idea
-=======
+
 /package-lock.json.ember-try
 /yarn.lock.ember-try
 
