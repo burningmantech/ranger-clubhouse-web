@@ -8,6 +8,11 @@
       {{#unless @user.isAuditor}}
         <NavbarMenuItem @menu={{menu}} @route="me.event-info" @item="Event Info"/>
       {{/unless}}
+      {{!--
+        {{#if @user.isRanger}}
+          <NavbarMenuItem @menu={{menu}} @route="me.awards" @icon="award" @iconType="s"/>
+        {{/if}}
+        --}}
     </NavbarMenuSection>
   {{/if}}
 

@@ -65,6 +65,9 @@
           {{#if team.pvr_eligible}}
             PVR Eligible<br>
           {{/if}}
+          {{#if team.awards_eligible}}
+            Awards Eligible<br>
+          {{/if}}
         </td>
         <td>
           {{#each team.managers as |person|}}
@@ -127,6 +130,16 @@
             </div>
             <div class="col-12">
               <f.checkbox @name="pvr_eligible" @label="Team membership grants Personal Vehicle eligibility"/>
+            </div>
+            <div class="col-12">
+              <f.checkbox @name="awards_eligible"
+                          @label="Team is eligible for service recognition awards."
+                          @disabled={{not-eq f.model.type "team"}}/>
+              {{#if (not-eq f.model.type "team")}}
+                <div class="ms-3">
+                  Team is a {{f.model.type}} and automatically eligible for service recognition awards.
+                </div>
+              {{/if}}
             </div>
           </FormRow>
         </fieldset>

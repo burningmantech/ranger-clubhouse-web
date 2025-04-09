@@ -1,22 +1,33 @@
-{{#each this.awardTypes as |awardType|}}
-  <h4 class="border-bottom">{{awardType.label}}</h4>
-  <div class="mb-4">
-    {{#each awardType.awards as |award|}}
-      <div class="card award-card">
-        <div class="card-body">
-          <div class="text-center mb-3">
-            {{fa-icon award.award.icon type="fas" size="6x"}}
-          </div>
-          <h4 class="card-title text-center">{{award.award.title}}</h4>
-          <div class="card-text text-center small">
-            {{award.award.description}}
-          </div>
-        </div>
-      </div>
-    {{/each}}
-  </div>
+{{#if this.isLoading}}
+  <LoadingDialog/>
 {{else}}
-  <p class="text-danger">
-    No awards were found.
-  </p>
-{{/each}}
+  <AwardsInfo />
+  {{#if (or this.teams this.special this.positions)}}
+    <h3>Cadre / Delegation and Selected Teams Recognition</h3>
+    {{#if this.teams}}
+      <AwardTrophies @trophies={{this.teams}} />
+    {{else}}
+      It does not appear
+      <YouOrCallsign @person={{@person}} @youLabel="you have" @callsignVerb="has"/>
+      served on a cadre or delegation since 2020.
+    {{/if}}
+
+    <h3 class="mt-4">Special Position Recognition</h3>
+    {{#if this.positions}}
+      <AwardTrophies @trophies={{this.positions}} />
+    {{else}}
+      <YouOrCallsign @person={{@person}} @youLabel="You have" @callsignVerb="has"/>
+      not been awarded any special positions recognition.
+    {{/if}}
+
+    <h3 class="mt-4">Special Service Recognition</h3>
+    {{#if this.special}}
+      <AwardTrophies @trophies={{this.special}} />
+    {{else}}
+      <YouOrCallsign @person={{@person}} @youLabel="You have" @callsignVerb="has"/>
+      not been awarded any special service recognition.
+    {{/if}}
+  {{else}}
+    No recognition awards have been granted.
+  {{/if}}
+{{/if}}

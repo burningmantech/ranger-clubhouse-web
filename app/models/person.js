@@ -66,6 +66,7 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('', { readOnly: true}) years_seen;
   @attr('', { readOnly: true}) years_as_ranger;
   @attr('', { readOnly: true}) years_as_contributor;
+  @attr('', { readOnly: true}) years_of_service;
   @attr('', { readOnly: true}) years_combined;
 
   @attr('boolean') used_vanity_change;

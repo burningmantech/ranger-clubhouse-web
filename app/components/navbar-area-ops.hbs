@@ -81,6 +81,11 @@
         {{/if}}
       </NavbarMenuSection>
     {{/if}}
+    {{#if (has-role "admin" "award-management")}}
+      <NavbarMenuSection @section="Misc">
+        <NavbarMenuItem @menu={{menu}} @route="ops.bulk-awards" @item="Bulk Award Grants"/>
+      </NavbarMenuSection>
+    {{/if}}
     {{#if (has-role "payroll")}}
       <NavbarMenuSection @section="Payroll">
         <NavbarMenuItem @menu={{menu}} @route="ops.payroll" @item="Payroll Export"/>

@@ -1,6 +1,5 @@
 <NavbarMenu @nav={{@nav}} @title="Admin" @isLarge={{true}} as |menu|>
   <NavbarMenuSection @section="System Records">
-    <NavbarMenuItem @menu={{menu}} @route="admin.awards" @item="Awards"/>
     <NavbarMenuItem @menu={{menu}} @route="admin.certifications" @item="Certifications"/>
     <NavbarMenuItem @menu={{menu}} @route="admin.documents" @item="Documents"/>
     <NavbarMenuItem @menu={{menu}} @route="admin.handle-reservations" @item="Handle Reservations"/>
@@ -8,6 +7,7 @@
     <NavbarMenuItem @menu={{menu}} @route="admin.permissions" @item="Permissions"/>
     <NavbarMenuItem @menu={{menu}} @route="admin.positions" @item="Positions"/>
     <NavbarMenuItem @menu={{menu}} @route="admin.alerts" @item="RBS Alerts"/>
+    <NavbarMenuItem @menu={{menu}} @route="admin.awards" @item="Service Service Awards"/>
     <NavbarMenuItem @menu={{menu}} @route="admin.teams" @item="Teams"/>
     <NavbarMenuItem @menu={{menu}} @route="admin.person-create" @item="Create Account"/>
     {{#if (has-role "tech-ninja")}}

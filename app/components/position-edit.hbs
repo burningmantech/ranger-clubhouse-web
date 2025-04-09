@@ -128,6 +128,9 @@
         <f.checkbox @name="not_timesheet_eligible"
                     @label="Used only for scheduling. Timesheet entries may not be created."
         />
+        <f.checkbox @name="awards_eligible"
+                    @label="An award may be granted. For training positions, the person must be marked as attended / passed. For all others, a backing timesheet must be present. When the flag is initially set, no awards will be automatically granted for past work."
+        />
 
       </div>
     </FormRow>
@@ -212,7 +215,8 @@
       </div>
     </FormRow>
     <p>
-      The following MVR flag is safe to use in conjunction with the All Rangers flag. The dashboard prompt will ONLY appear AFTER the person has signed up for a shift.
+      The following MVR flag is safe to use in conjunction with the All Rangers flag. The dashboard prompt will ONLY
+      appear AFTER the person has signed up for a shift.
     </p>
     <FormRow>
       <div class="col-12">

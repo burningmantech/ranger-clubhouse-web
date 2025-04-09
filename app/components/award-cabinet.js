@@ -1,20 +1,34 @@
 import Component from '@glimmer/component';
-import {cached} from '@glimmer/tracking'
-import _ from 'lodash';
-import {TypeSortOrder, TypeLabels} from 'clubhouse/models/award';
+import {service}from '@ember/service';
+import {tracked} from '@glimmer/tracking';
 
 export default class AwardCabinetComponent extends Component {
-  @cached
-  get awardTypes() {
-    const types = _.map(_.groupBy(this.args.personAwards, (a) => a.award.type), (awards, type) => ({
-        type,
-        label: TypeLabels[type] ?? `Other ${type}`,
-        awards
-      })
-    );
+  @service ajax;
+  @service house;
 
-    types.sort((a, b) => ((TypeSortOrder[a.type] ?? 99) - (TypeSortOrder[b.type] ?? 99)));
+  @tracked isLoading = false;
+  @tracked special;
+  @tracked positions;
+  @tracked teams;
 
-    return types;
+  constructor() {
+    super(...arguments);
+
+    this._loadAwards();
+  }
+
+  async _loadAwards() {
+    this.isLoading = true;
+    try {
+      const {teams,special,positions} = await this.ajax.request(`person-award/person/${this.args.person.id}/awards`);
+
+      this.teams = teams;
+      this.special = special;
+      this.positions = positions;
+    } catch (e) {
+      this.house.handleErrorResponse(e);
+    } finally {
+      this.isLoading = false;
+    }
   }
 }
