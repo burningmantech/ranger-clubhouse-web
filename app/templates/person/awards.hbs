@@ -1,9 +1,14 @@
 <h3>Service Recognition Awards for {{this.person.callsign}}</h3>
 <p>
   {{#if this.person.years_of_service}}
-    Service years: {{year-range this.person.years_of_service}}
+    {{pluralize this.person.years_of_service.length "total Service Year"}} [{{year-range this.person.years_of_service}}]<br>
   {{else}}
     No service years yet.
+  {{/if}}
+  {{#if this.person.years_of_awards}}
+    {{pluralize this.person.years_of_awards.length "award year"}} included as service years [{{year-range this.person.years_of_awards}}]<br>
+  {{else}}
+    No issued awards count towards service years.
   {{/if}}
 </p>
 {{#if this.canEdit}}
@@ -69,10 +74,15 @@
         </FormRow>
         <FormRow>
           <f.radioGroup @name="year"
-                        @label="Contribution Year"
+                        @label="Year To Recognize"
                         @options={{this.yearOptions}}
                         @groupWrapClass="columns-container columns-6"
           />
+        </FormRow>
+        <FormRow>
+          <div class="col-12">
+            <f.checkbox @name="awards_grants_service_year" @label="Award grants service year"/>
+          </div>
         </FormRow>
         <FormRow>
           <f.textarea @name="notes"
