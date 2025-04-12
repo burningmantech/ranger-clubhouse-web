@@ -21,6 +21,7 @@ export default class PersonAwardModel extends Model {
   @attr('number') team_id;
   @attr('number') year;
   @attr('string') notes;
+  @attr('boolean', { defaultValue: false }) awards_grants_service_year;
 
   @attr('date', {readOnly: true}) created_at;
   @attr('date', {readOnly: true}) updated_at;

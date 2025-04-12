@@ -133,14 +133,19 @@
             </div>
             <div class="col-12">
               <f.checkbox @name="awards_eligible"
-                          @label="Team is eligible for service recognition awards."
+                          @label="Team is eligible to issue awards for."
                           @disabled={{not-eq f.model.type "team"}}/>
-              {{#if (not-eq f.model.type "team")}}
-                <div class="ms-3">
-                  Team is a {{f.model.type}} and automatically eligible for service recognition awards.
-                </div>
-              {{/if}}
-            </div>
+             </div>
+            {{!--
+            <f.checkbox @name="awards_auto_grant"
+                        @label="An award will be automatically granted for each year the person has been a team member as recorded in the Clubhouse."
+                        @disabled={{not f.model.awards_eligible}}
+            />
+            <f.checkbox @name="awards_grants_service_year"
+                        @label="When an award is granted, the award year will count as a service year."
+                        @disabled={{not f.model.awards_eligible}}
+            />
+            --}}
           </FormRow>
         </fieldset>
         <fieldset>
