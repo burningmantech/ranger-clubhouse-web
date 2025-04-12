@@ -1,10 +1,11 @@
 import Component from '@glimmer/component';
 
 const topicDescriptions = {
-    ticketing: 'Ticketing',
-    vp: 'Vehicle Passes',
-    wap: 'Setup Access Passes',
-    alpha: 'Setup Access Passes for Prospectives and Alphas'
+  alpha: 'Setup Access Passes for Prospectives and Alphas',
+  provisions: 'Provisions (meals, showers, etc)',
+  ticketing: 'Ticketing',
+  vp: 'Vehicle Passes',
+  wap: 'Setup Access Passes',
 };
 
 export default class TicketFaqComponent extends Component {
