@@ -413,7 +413,7 @@ export const ATTEND_TRAINING = {
           message += 'work on playa. You will be turned away at HQ Window.';
         }
 
-        message += ' You are prevented from signing up for another session at this point. To sign up for another session, email the Training Academy and explain your absence:';
+        message += ' You are prevented from signing up for another session at this point. To sign up for another session, email the Training Academy and explain your absence.';
         return {
           result: URGENT,
           message,
@@ -450,7 +450,7 @@ export const ATTEND_TRAINING = {
           }
           dt = 'ddd MMM DD';
         }
-        prefix += `:<div class="my-2">${dayjs(training.date).format(dt)}  - ${training.location}.</div>Visit`;
+        prefix += `.<div class="my-2">${dayjs(training.date).format(dt)}  - ${training.location}</div>Visit`;
         return {
           result: ACTION_NEEDED,
           linkedMessage: {
