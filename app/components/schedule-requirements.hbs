@@ -2,16 +2,19 @@
   <p>
     Before
     <YouOrCallsign @person={{@person}} @youLabel="you are" @callsignVerb="is"/>
-    allowed to sign up for any In-Person Trainings, the Online Course must first be completed.
+    allowed to sign up for any In-Person Trainings, the Online Course must first be completed. This requirement does not
+    apply to Advanced Ranger Trainings (ART).
   </p>
   <p>
-    <YouOrCallsign @person={{@person}} @youLabel="You may" @callsignVerb="is allowed to" /> sign up for shifts however
-    an In-Person Training has to be attended &amp; passed before being allowed to work.
+    <YouOrCallsign @person={{@person}} @youLabel="You may" @callsignVerb="is allowed to"/>
+    sign up for shifts however an In-Person Training has to be attended &amp; passed before being allowed to work. Some
+    positions may require passing an Advanced Ranger Training (ART) in addition to passing an In-Person Training.
   </p>
 {{else}}
   <p>
-    Before <YouOrCallsign @person={{@person}} @youLabel="you are" @callsignVerb="is"/>
-    allowed to sign up for any shifts, including trainings, the following issue(s) must be fixed first:
+    Before
+    <YouOrCallsign @person={{@person}} @youLabel="you are" @callsignVerb="is"/>
+    allowed to sign up for this shift, the following issue(s) must be fixed first:
   </p>
   <ul>
     {{#each this.requirementsList as |req|}}
