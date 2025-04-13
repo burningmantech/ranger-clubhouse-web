@@ -52,7 +52,6 @@ export default class DatetimePickerComponent extends Component {
 
   @action
   onChangeEvent(event) {
-    console.log(`EVENT value [${event.target.value}]`);
     this.args.onChange?.(event.target.value);
   }
 
