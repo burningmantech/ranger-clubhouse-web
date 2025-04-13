@@ -80,7 +80,7 @@
     "ember-source": "~5.8.0",
     "ember-template-lint": "^7.0.6",
     "ember-truth-helpers": "^4.0.3",
-    "eslint": "^8.57.0",
+    "eslint": "^9.24.0",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-ember": "^12.5.0",
     "eslint-plugin-n": "^17.17.0",
