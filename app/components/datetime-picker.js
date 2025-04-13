@@ -51,6 +51,12 @@ export default class DatetimePickerComponent extends Component {
   }
 
   @action
+  onChangeEvent(event) {
+    console.log(`EVENT value [${event.target.value}]`);
+    this.args.onChange?.(event.target.value);
+  }
+
+  @action
   elementInserted(element) {
     this.element = element;
     this.picker = new AirDatepicker(`#${element.id}`, this.options);
