@@ -1,20 +1,12 @@
-{{#if @subheader}}
-  <div class="h2 mb-4">
-    <ChForm::Select @name="year"
-                    @value={{@year}}
-                    @options={{this.yearOptions}}
-                    @onChange={{@onChange}}
-                    @controlClass=""/>
-    {{@title}}
-  </div>
-{{else}}
-  <h1 class="mb-4">
-    <ChForm::Select @name="year"
-                    @value={{@year}}
-                    @options={{this.yearOptions}}
-                    @onChange={{@onChange}}
-                    @controlClass=""/>
-    {{@title}}
-  </h1>
-{{/if}}
+<div class="mb-2 {{if @subheader "h2" "h1"}}">
+  {{@year}} {{@title}}
+</div>
 
+<div class="mb-4">
+  <span class="me-2">Select year to view:</span>
+  <ChForm::Select @name="year"
+                  @value={{@year}}
+                  @options={{this.yearOptions}}
+                  @onChange={{@onChange}}
+                  @controlClass=""/>
+</div>
