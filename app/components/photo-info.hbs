@@ -1,10 +1,10 @@
 <ModalDialog @title="Photo Information" @onEscape={{@closeAction}} as |modal|>
   <modal.body>
-    <div class="row">
-      <div class="col-6">
-        <img src={{@photo.image_url}} alt="{{@photo.person.callsign}}" />
+    <div class="d-flex">
+      <div class="me-4">
+        <img src={{@photo.image_url}} alt="{{@photo.person.callsign}}" class="photo-large" />
       </div>
-      <div class="col-6">
+      <div>
         <h3>ID #{{@photo.id}} - {{@photo.person.callsign}}</h3>
         <dl>
           <dt>Status</dt>

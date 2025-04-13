@@ -63,13 +63,15 @@ export default class PersonModel extends PersonMixin(Model) {
 
   @attr('number', {readOnly: true}) person_photo_id;
 
-  @attr('', { readOnly: true}) years_seen;
-  @attr('', { readOnly: true}) years_as_ranger;
-  @attr('', { readOnly: true}) years_as_contributor;
-  @attr('', { readOnly: true}) years_combined;
+  @attr('', {readOnly: true}) years_as_contributor;
+  @attr('', {readOnly: true}) years_as_ranger;
+  @attr('', {readOnly: true}) years_combined;
+  @attr('', {readOnly: true}) years_of_awards;
+  @attr('', {readOnly: true}) years_of_service;
+  @attr('', {readOnly: true}) years_seen;
 
   @attr('boolean') used_vanity_change;
-  @attr('string', { readOnly: true }) vanity_changed_at;
+  @attr('string', {readOnly: true}) vanity_changed_at;
 
   @attr('string') employee_id;
 

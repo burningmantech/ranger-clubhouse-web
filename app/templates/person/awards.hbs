@@ -1,0 +1,111 @@
+<h3>Service Recognition Awards for {{this.person.callsign}}</h3>
+<p>
+  {{#if this.person.years_of_service}}
+    {{pluralize this.person.years_of_service.length "total Service Year"}} [{{year-range this.person.years_of_service}}]<br>
+  {{else}}
+    No service years yet.
+  {{/if}}
+  {{#if this.person.years_of_awards}}
+    {{pluralize this.person.years_of_awards.length "award year"}} included as service years [{{year-range this.person.years_of_awards}}]<br>
+  {{else}}
+    No issued awards count towards service years.
+  {{/if}}
+</p>
+{{#if this.canEdit}}
+  <AwardsInfo/>
+  <p>
+    <UiButton @onClick={{this.rebuildAwards}} @size="sm" @type="secondary">Rebuild Awards</UiButton>
+  </p>
+  <AwardsTable @title="Cadre/Delegation and Selected Teams Recognition"
+               @awards={{this.teamAwards}}
+               @newAward={{this.newTeamAward}}
+               @newLabel="Grant Team Award"
+               @editAward={{this.editAward}}
+  />
+  <AwardsTable @title="Special Positions Recognition"
+               @awards={{this.positionAwards}}
+               @newAward={{this.newPositionAward}}
+               @newLabel="Grant Position Award"
+               @editAward={{this.editAward}}
+  />
+  <AwardsTable @title="Special Service Awards"
+               @awards={{this.specialAwards}}
+               @newAward={{this.newSpecialAward}}
+               @newLabel="Grant Special Award"
+               @editAward={{this.editAward}}
+  />
+{{else}}
+  <p>
+    You only have permission to view the awards, not grant them.
+  </p>
+  <AwardCabinet @person={{this.person}}/>
+{{/if}}
+
+
+{{#if this.entry}}
+  <ModalDialog @title="{{if this.entry.isNew "Grant" "Edit"}} Recognition"
+               @onEscape={{this.closeAward}} as |Modal|>
+    <ChForm @formId="award"
+            @formFor={{this.entry}}
+            @onSubmit={{this.saveAward}} as |f|>
+      <Modal.body>
+        <FormRow>
+          {{#if (eq this.entryType "team")}}
+            <f.select @name="team_id"
+                      @label="Team To Recognize"
+                      @options={{this.teamOptions}}
+                      @includeBlank={{true}}
+            />
+          {{else if (eq this.entryType "position")}}
+            <f.select @name="position_id"
+                      @label="Position To Recognize"
+                      @options={{this.positionOptions}}
+                      @includeBlank={{true}}
+            />
+          {{else if (eq this.entryType "award")}}
+            <f.select @name="award_id"
+                      @label="Special Service Award"
+                      @options={{this.awardOptions}}
+                      @includeBlank={{true}}
+            />
+          {{else}}
+            BUG: Unknown type [{{this.entryType}}]
+          {{/if}}
+        </FormRow>
+        <FormRow>
+          <f.radioGroup @name="year"
+                        @label="Year To Recognize"
+                        @options={{this.yearOptions}}
+                        @groupWrapClass="columns-container columns-6"
+          />
+        </FormRow>
+        <FormRow>
+          <div class="col-12">
+            <f.checkbox @name="awards_grants_service_year" @label="Award grants service year"/>
+          </div>
+        </FormRow>
+        <FormRow>
+          <f.textarea @name="notes"
+                      @label="Optional notes about this award (not shown to person)"
+                      @rows={{4}}
+                      @cols={{80}} />
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @align="start">
+        <f.submit @label={{if this.entry.isNew "Grant" "Update"}}  />
+        <UiCancelButton @onClick={{this.closeAward}} />
+        {{#unless this.entry.isNew}}
+          <div class="ms-auto">
+            <UiButton @type="danger" @size="sm" @onClick={{this.deleteAward}}>
+              {{fa-icon "trash" right=1}} Delete
+            </UiButton>
+          </div>
+        {{/unless}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog/>
+{{/if}}

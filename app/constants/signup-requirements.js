@@ -49,7 +49,7 @@ export function requirementInfo(status, requirements) {
 
       return message;
     } else {
-      return REQUIREMENT_LABELS[status] || `Bug: unknown status ${status}`;
+      return REQUIREMENT_LABELS[r] || `Bug: unknown status ${r}`;
     }
   })
 }

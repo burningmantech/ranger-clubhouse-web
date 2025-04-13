@@ -112,6 +112,26 @@
     </FormRow>
   </fieldset>
   <fieldset>
+    <legend>Service Award Flags</legend>
+    <FormRow>
+      <div class="col-12">
+        <f.checkbox @name="awards_eligible"
+                    @label="Position is eligible to issue awards with."
+        />
+      </div>
+      {{!--
+      <f.checkbox @name="awards_auto_grant"
+                  @label="An award will be automatically granted. For training positions, the person must be marked as attended / passed. For all others, a backing timesheet must be present. When the flag is initially set, no awards will be automatically granted for past work."
+                  @disabled={{not f.model.awards_eligible}}
+      />
+      <f.checkbox @name="awards_grants_service_year"
+                  @label="When an award is granted, the award year will count as a service year."
+                  @disabled={{not f.model.awards_eligible}}
+      />
+      --}}
+    </FormRow>
+  </fieldset>
+  <fieldset>
     <legend>Other Flags</legend>
     <FormRow>
       <div class="col-12">
@@ -128,7 +148,6 @@
         <f.checkbox @name="not_timesheet_eligible"
                     @label="Used only for scheduling. Timesheet entries may not be created."
         />
-
       </div>
     </FormRow>
   </fieldset>
@@ -212,7 +231,8 @@
       </div>
     </FormRow>
     <p>
-      The following MVR flag is safe to use in conjunction with the All Rangers flag. The dashboard prompt will ONLY appear AFTER the person has signed up for a shift.
+      The following MVR flag is safe to use in conjunction with the All Rangers flag. The dashboard prompt will ONLY
+      appear AFTER the person has signed up for a shift.
     </p>
     <FormRow>
       <div class="col-12">

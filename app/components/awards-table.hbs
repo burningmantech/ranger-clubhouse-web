@@ -1,0 +1,49 @@
+<h3>{{@title}}</h3>
+<p>
+  <UiButton @onClick={{@newAward}} @size="sm">{{@newLabel}}</UiButton>
+</p>
+{{#if @awards}}
+  <UiTable>
+    <thead>
+    <tr>
+      <th>Award</th>
+      <th>Year</th>
+      <th>Grants Service Year</th>
+      <th>Granted On</th>
+      <th>Notes</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each @awards as |award|}}
+      <tr>
+        <td>{{award.title}}</td>
+        <td>
+          {{award.year}}
+        </td>
+        <td>
+          {{#if award.awards_grants_service_year}}
+            <UiBadge @type="success">service year</UiBadge>
+          {{else}}
+            -
+          {{/if}}
+        </td>
+        <td>
+          {{ymd-format award.created_at}}
+        </td>
+        <td>
+          {{or award.notes "-"}}
+        </td>
+        <td>
+          <UiEditButton @onClick={{fn @editAward award}} @type="secondary" @size="sm"/>
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </UiTable>
+{{else}}
+  <p>
+    No awards have been granted yet.
+  </p>
+{{/if}}
+

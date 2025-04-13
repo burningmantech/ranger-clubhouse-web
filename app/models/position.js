@@ -52,6 +52,9 @@ export default class PositionModel extends Model {
   @attr('boolean', {defaultValue: false}) mvr_eligible;
   @attr('boolean', {defaultValue: false}) mvr_signup_eligible;
   @attr('boolean', {defaultValue: false}) pvr_eligible;
+  @attr('boolean', {defaultValue: false}) awards_eligible;
+  @attr('boolean', {defaultValue: false}) awards_auto_grant;
+  @attr('boolean', {defaultValue: false}) awards_grants_service_year;
 
   @attr('string') resource_tag;
 

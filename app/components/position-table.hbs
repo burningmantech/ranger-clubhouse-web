@@ -85,6 +85,15 @@
         {{#if position.cruise_direction}}
           {{fa-icon "people-group" fixed=true right=1}} Selectable on the Cruise Direction interface<br>
         {{/if}}
+        {{#if position.awards_eligible}}
+          {{fa-icon "award" fixed=true right=1}} Awards eligible<br>
+        {{/if}}
+        {{#if position.awards_auto_grant}}
+          {{fa-icon "award" fixed=true right=1}} Awards will be automatically granted<br>
+        {{/if}}
+        {{#if position.awards_grants_service_year}}
+          {{fa-icon "award" fixed=true right=1}} Awards year counts as a service year.<br>
+        {{/if}}
         {{#if position.contact_email}}
           Contact email:
           <MailTo @to={{position.contact_email}} />

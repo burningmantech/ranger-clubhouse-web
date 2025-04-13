@@ -65,6 +65,9 @@
           {{#if team.pvr_eligible}}
             PVR Eligible<br>
           {{/if}}
+          {{#if team.awards_eligible}}
+            Awards Eligible<br>
+          {{/if}}
         </td>
         <td>
           {{#each team.managers as |person|}}
@@ -128,6 +131,21 @@
             <div class="col-12">
               <f.checkbox @name="pvr_eligible" @label="Team membership grants Personal Vehicle eligibility"/>
             </div>
+            <div class="col-12">
+              <f.checkbox @name="awards_eligible"
+                          @label="Team is eligible to issue awards for."
+                          @disabled={{not-eq f.model.type "team"}}/>
+             </div>
+            {{!--
+            <f.checkbox @name="awards_auto_grant"
+                        @label="An award will be automatically granted for each year the person has been a team member as recorded in the Clubhouse."
+                        @disabled={{not f.model.awards_eligible}}
+            />
+            <f.checkbox @name="awards_grants_service_year"
+                        @label="When an award is granted, the award year will count as a service year."
+                        @disabled={{not f.model.awards_eligible}}
+            />
+            --}}
           </FormRow>
         </fieldset>
         <fieldset>

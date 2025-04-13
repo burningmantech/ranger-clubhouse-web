@@ -1,4 +1,4 @@
-import Model, { attr } from '@ember-data/model';
+import Model, {attr} from '@ember-data/model';
 
 export const TYPE_TEAM = 'team';
 export const TYPE_CADRE = 'cadre';
@@ -12,14 +12,17 @@ export const TypeLabels = {
 
 export default class TeamModel extends Model {
   @attr('string') title;
-  @attr('string', { defaultValue: TYPE_TEAM }) type;
-  @attr('boolean', { defaultValue: true }) active;
+  @attr('string', {defaultValue: TYPE_TEAM}) type;
+  @attr('boolean', {defaultValue: true}) active;
   @attr('boolean', {defaultValue: false}) mvr_eligible;
   @attr('boolean', {defaultValue: false}) pvr_eligible;
+  @attr('boolean', {defaultValue: false}) awards_eligible;
+  @attr('boolean', {defaultValue: false}) awards_auto_grant;
+  @attr('boolean', {defaultValue: false}) awards_grants_service_year;
   @attr('string') description;
   @attr('string') email;
 
   @attr('') role_ids;
 
-  @attr('', { readOnly: true}) managers;
+  @attr('', {readOnly: true}) managers;
 }

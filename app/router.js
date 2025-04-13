@@ -125,14 +125,15 @@ Router.map(function () {
   });
 
   this.route('person', {path: '/person/:person_id'}, function () {
-    this.route('index', {path: '/'});
     this.route('alerts');
+    this.route('applications');
     this.route('assets');
-    this.route('awards-swag');
+    this.route('awards');
     this.route('bmid');
     this.route('broadcast-log');
     this.route('emergency-contact');
     this.route('event-info');
+    this.route('index', {path: '/'});
     this.route('mail-log');
     this.route('membership');
     this.route('mentoring');
@@ -143,10 +144,10 @@ Router.map(function () {
     this.route('pogs');
     this.route('schedule');
     this.route('status-history');
+    this.route('swag');
     this.route('tickets-provisions');
     this.route('timesheet');
     this.route('unified-flagging');
-    this.route('applications');
   });
 
   this.route('logout');
@@ -181,6 +182,7 @@ Router.map(function () {
       this.route('index', { path: '/'});
       this.route('manage', { path: '/:team_id'});
     });
+    this.route('bulk-awards');
   });
 
   this.route('training', {path: '/training/:position_id'}, function () {

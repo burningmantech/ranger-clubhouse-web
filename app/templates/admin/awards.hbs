@@ -1,18 +1,17 @@
 <main>
-  <h1>Ranger Awards</h1>
+  <h1>Special Service Awards</h1>
   <p>
-    Awards are digital recognitions shown on the Me > Awards page.
+    Special Service Awards are granted to individuals to recognize their participation in special events that
+    fall outside cadre/delegation contributions.
   </p>
   <p>
-    <UiButton @onClick={{this.newAward}}>{{fa-icon "plus"}} New Award</UiButton>
+    <UiButton @onClick={{this.newAward}}>New Award</UiButton>
   </p>
   <UiTable>
     <thead>
     <tr>
       <th>ID</th>
-      <th>&nbsp;</th>
       <th>Title</th>
-      <th>Type</th>
       <th>Description</th>
       <th>Action</th>
     </tr>
@@ -21,9 +20,7 @@
     {{#each this.awards as |award|}}
       <tr>
         <td class="text-end">{{award.id}}</td>
-        <td>{{fa-icon award.icon type="fas"}}</td>
         <td>{{award.title}}</td>
-        <td>{{award.typeLabel}}</td>
         <td>
           {{nl2br award.description}}
         </td>
@@ -33,7 +30,7 @@
       </tr>
     {{else}}
       <tr>
-        <td colspan="6">No awards have been created yet.</td>
+        <td colspan="4">No awards have been created yet.</td>
       </tr>
     {{/each}}
     </tbody>
@@ -48,27 +45,17 @@
       <Modal.body>
         <FormRow>
           <f.text @name="title"
-                  @label="Award Title:"
+                  @label="Award Title (shown to user):"
                   @maxlength={{80}}
                   @size={{80}}/>
         </FormRow>
         <FormRow>
-          <f.select @name="type"
-                    @options={{this.typeOptions}}
-                    @label="Award Type (used to group awards on end-user page)"
-          />
-        </FormRow>
-        <FormRow>
-          <div class="col-auto">
-            <f.radioGroup @name="icon" @label="Icon" @options={{this.iconOptions}} @inline={{true}}/>
-          </div>
-        </FormRow>
-        <FormRow>
           <f.textarea @name="description"
-                      @label="Award Description (shown to end-user):"
+                      @label="Award Description (not shown to user):"
                       @rows={{4}}
                       @cols={{80}}
-                      @size={{80}}/>
+                      @size={{80}}
+          />
         </FormRow>
       </Modal.body>
       <Modal.footer @align="start">
@@ -79,7 +66,7 @@
         {{/if}}
         <div class="ms-auto">
           <UiButton @onClick={{this.removeAward}} @type="danger" @size="sm">
-            {{fa-icon "trash-alt" type="fas"}} Delete
+            {{fa-icon "trash-alt" type="fas" right=1}} Delete
           </UiButton>
         </div>
       </Modal.footer>
