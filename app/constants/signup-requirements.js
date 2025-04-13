@@ -1,5 +1,6 @@
 // Personal Information has not been reviewed
 import {ALPHA, ECHELON, PROSPECTIVE} from "clubhouse/constants/person_status";
+import {htmlSafe} from '@ember/template';
 
 export const PI_UNREVIEWED = 'pi-unreviewed';
 // BPGUID has not been linked.
@@ -15,6 +16,8 @@ export const PHOTO_UNAPPROVED = 'photo-unapproved';
 // Person is a past prospective.
 export const PAST_PROSPECTIVE = 'past-prospective';
 
+export const UNSIGNED_SANDMAN_AFFIDAVIT = 'unsigned-sandman-affidavit';
+
 export const REQUIREMENT_LABELS = {
   [PI_UNREVIEWED]: 'The Personal Information needs to be reviewed first',
   [BPGUID_MISSING]: 'The Burner Profile and Clubhouse accounts are not linked',
@@ -23,6 +26,7 @@ export const REQUIREMENT_LABELS = {
   [CALLSIGN_UNAPPROVED]: 'Callsign has not been approved',
   [PHOTO_UNAPPROVED]: 'The BMID photo is missing or has been rejected',
   [PAST_PROSPECTIVE]: 'The person is a Past Prospective is not eligible to sign up for any trainings or on playa shifts.',
+  [UNSIGNED_SANDMAN_AFFIDAVIT]: 'The Sandman Affidavit has to be agreed to first before the shift can be signed up for.<br> Visit Me > Agreements to sign the affidavit.'
 };
 
 export const OC_DISABLED_PREFIX = 'The Online Course has to be completed. However, the course is not quite ready yet and usually available by early April. Check back around then. ';
@@ -49,7 +53,8 @@ export function requirementInfo(status, requirements) {
 
       return message;
     } else {
-      return REQUIREMENT_LABELS[r] || `Bug: unknown status ${r}`;
+      const label = REQUIREMENT_LABELS[r];
+      return label ? htmlSafe(label) : `Bug: unknown status ${r}`;
     }
   })
 }
