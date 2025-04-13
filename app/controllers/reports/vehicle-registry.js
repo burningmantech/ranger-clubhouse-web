@@ -179,7 +179,7 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
       {key: 'vehicle_make', title: 'Vehicle Make'},
       {key: 'vehicle_model', title: 'Vehicle Model'},
       {key: 'vehicle_color', title: 'Vehicle Color'},
-      {key: 'rental_number', title: 'DPW PO'},
+      {key: 'rental_number', title: 'DPW Request ID'},
       {key: 'driving_sticker', title: 'Driving Sticker'},
       {key: 'sticker_number', title: 'Sticker #'},
       {key: 'license_state', title: 'License State'},
