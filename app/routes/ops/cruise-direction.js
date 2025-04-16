@@ -20,7 +20,7 @@ export default class OpsCruiseDirectionRoute extends ClubhouseRoute {
     });
   }
 
-  setupController(controller, model) {
+  async setupController(controller, model) {
     const {positions} = model;
     positions.sort((a, b) => a.title.localeCompare(b.title));
     controller.year = model.year
@@ -30,5 +30,10 @@ export default class OpsCruiseDirectionRoute extends ClubhouseRoute {
     controller.suggestedSlot = controller.shifts.filter((s) => s.has_started && !s.has_ended).slice(-1)[0];
     controller.positions = positions;
     controller.positionIds = positions.map((p) => +p.id);
+
+    if (controller.suggestedSlot) {
+      controller.selectedShift = controller.suggestedSlot;
+      await controller._loadSelectedShift();
+    }
   }
 }
