@@ -1,151 +1,79 @@
 <main>
-  <YearSelect @title="Cruise Direction Pod Management"
-              @year={{this.year}}
+  <YearSelect @year={{this.year}}
               @minYear={{2023}}
-              @onChange={{set-value this 'year'}}  />
-  <p>
-    This page manages the Ranger pairs (aka pods) who are deployed in the field.
-  </p>
-<p>
-  <a href {{action this.togglePositions}}>{{if this.showingPositions "Hide" "Show"}} Selectable Positions</a>
-  {{#if this.showingPositions}}
-    <div class="mt-1">
-      The following positions are selectable under this interface.
-    </div>
-    {{#each this.positions as |position|}}
-      {{position.title}}<br>
-    {{/each}}
-  {{/if}}
-  </p>
-  <p>
-    {{#if this.periodOptions}}
-      <LargeSelect
-        @label="Select a {{this.year}} shift period"
-        @title="Select a shift period to report on"
-        @formatSelected={{this.formatSelected}}
-        @groups={{this.periodOptions}}
-        @onSelect={{this.changeShift}}
-        class="btn-responsive mb-2"
-      />
-      {{#if this.suggestedSlot}}
-        <UiButton @onClick={{this.useSuggestedSlot}}  @class="btn-responsive mb-2">
-          Select {{shift-format this.suggestedSlot.shift_start}}
-        </UiButton>
-      {{/if}}
-    {{else}}
-      <b class="text-danger">No shifts were found.</b>
+              @onChange={{set-value this 'year'}}>
+    Cruise Direction Management
+    {{#if this.selectedShift}}
+      - {{shift-format this.selectedShift.begins}}
     {{/if}}
-  </p>
-  {{#if this.selectedShift}}
-    <h3>Shift {{shift-format this.selectedShift.begins}}</h3>
-    <p>
-      <UiButton @onClick={{this.createPod}} @class="btn-responsive mb-2">
-        {{fa-icon "user-group" right=1}} Create Pod
-      </UiButton>
-      {{#if (gt this.pods.length 1)}}
-        <UiButton @onClick={{this.toggleShowSortControls}} @type="secondary" @class="btn-responsive mb-2">
-          {{fa-icon "sort" right=1}} {{if this.showSortControls "Hide" "Show"}} Sorting Controls
-        </UiButton>
+  </YearSelect>
+  This page manages the Ranger pairs (aka pods) who are deployed in the field.
+  <div class="d-flex justify-content-between mb-2">
+    <div>
+      <UiButtonRow>
+        {{#if this.periodOptions}}
+          <LargeSelect
+            @label="Select a {{this.year}} shift"
+            @title="Select a shift period to report on"
+            @formatSelected={{this.formatSelected}}
+            @groups={{this.periodOptions}}
+            @onSelect={{this.changeShift}}
+            class="btn-responsive"
+          />
+        {{else}}
+          <b class="text-danger">No shifts were found.</b>
+        {{/if}}
+        {{#if this.selectedShift}}
+          <UiButton @onClick={{this.createPod}} @class="btn-responsive">
+            {{fa-icon "user-group" right=1}} Create Pod
+          </UiButton>
+        {{/if}}
+      </UiButtonRow>
+    </div>
+
+    <div>
+      {{#if this.selectedShift}}
+        {{#if (gt this.pods.length 1)}}
+          <UiButton @onClick={{this.toggleShowSortControls}} @type="secondary" @class="btn-responsive" @size="sm">
+            {{fa-icon "sort" right=1}} {{if this.showSortControls "Hide" "Show"}} Sorting Controls
+          </UiButton>
+        {{/if}}
       {{/if}}
-      <UiButton @onClick={{this.refreshPage}} @type="secondary" @class="btn-responsive mb-2">
-        {{fa-icon "arrows-rotate"}} Refresh Page
+      <UiButton @onClick={{this.togglePositions}} @type="secondary" @class="btn-responsive" @size="sm">
+        Show Selectable Positions
       </UiButton>
-    </p>
+      <UiButton @onClick={{this.refreshPage}} @type="secondary" @class="btn-responsive" @size="sm">
+        {{fa-icon "arrows-rotate" right=1}} Refresh Page
+      </UiButton>
+    </div>
+  </div>
+  {{#if this.selectedShift}}
     {{#if this.pods}}
-      <p>Click on the person to remove them from the pod.</p>
-      <div class="d-flex flex-wrap">
-        {{#each this.pods key="id" as |pod idx|}}
-          <div class="me-3 min-width-300 mb-2">
-            <div class="p-2 d-flex justify-content-between align-items-center text-bg-gray">
-              <div class="fs-5 fw-medium">
-                Pod #{{pod.sort_index}}
-              </div>
-              <div>
-                <a href {{on-click this.editExistingPod pod}} class="d-print-none">{{fa-icon "edit" right=1}} Edit</a>
-              </div>
-              <a href {{on-click this.removePod pod}} class="d-print-none small">{{fa-icon "trash" right=1}} Delete</a>
-            </div>
-            <div class="p-2 d-flex justify-content-between">
-              <div>
-                {{#if pod.location}}
-                  {{pod.location}}
-                {{else}}
-                  <i class="text-muted">unknown</i>
-                {{/if}}
-              </div>
-              <div>
-                {{fa-icon pod.transportIcon right=1}} {{pod.transportLabel}}
-              </div>
-            </div>
-            {{#if this.showSortControls}}
-              <div class="d-flex justify-content-between my-2">
-                {{#if idx}}
-                  <UiButton @onClick={{fn this.movePod pod -1}}
-                            @size="sm"
-                            @type="secondary"
-                            class="d-block">
-                    {{fa-icon "arrow-left"}}
-                  </UiButton>
-                {{/if}}
-                {{#if (this.isNotLastPod idx)}}
-                  <UiButton @onClick={{fn this.movePod pod 1}}
-                            @size="sm"
-                            @type="secondary"
-                            class="d-block">
-                    {{fa-icon "arrow-right"}}
-                  </UiButton>
-                {{/if}}
-              </div>
-            {{/if}}
-            <a href {{on-click this.setupToAdd pod}}
-               class="d-block d-print-none text-center mb-1 p-2 bg-light-gray fs-4">
-              {{fa-icon "plus" right=1}} Add Person
-            </a>
-            {{#if pod.people}}
-              <div class="rollcall-grid">
-                {{#each pod.people key="id" as |person|}}
-                  <a href {{on-click this.removePerson pod person}} class="rollcall-person">
-                    <div class="rollcall-photo">
-                      {{#if person.photo_url}}
-                        <img src={{person.photo_url}} alt={{person.callsign}} loading="lazy"/>
-                      {{else}}
-                        {{fa-icon "user"}}
-                      {{/if}}
-                    </div>
-                    <div class="rollcall-name">
-                      {{person.callsign}}
-                    </div>
-                    <div class="rollcall-info">
-                      {{shift-format person.on_duty}}<br>
-                      {{person.position_title}}
-                    </div>
-                  </a>
-                {{/each}}
-              </div>
-            {{else}}
-              <span class="text-muted">No people assigned.</span>
-            {{/if}}
-          </div>
+      <p>
+        Click on the person's photo to edit or remove them from the pod. Click and drag a person's photo to move
+        between pods. Click and drag the pod title to move the pod.
+      </p>
+      <div style="grid-template-columns: repeat(auto-fit, 270px)" class="d-grid gap-2">
+        {{#each this.pods key="id" as |pod|}}
+          <CruiseDirectionPod @pod={{pod}}
+                              @thingDroppedOnPod={{this.thingDroppedOnPod}}
+                              @setupToAdd={{this.setupToAdd}}
+                              @editExistingPod={{this.editExistingPod}}
+                              @showSortControls={{this.showSortControls}}
+                              @movePod={{this.movePod}}
+                              @editPersonInPod={{this.editPersonInPod}}
+                              @isNotLastPod={{this.isNotLastPod}}
+          />
         {{/each}}
       </div>
     {{/if}}
-
-    {{#if this.pods}}
-      <div class="mt-4">
-        <UiButton @onClick={{this.createPod}} @class="btn-responsive mb-4">
-          {{fa-icon "user-group" right=1}} Create Pod
-        </UiButton>
-      </div>
-    {{/if}}
-  {{else}}
-    <h3>No shift selected.</h3>
   {{/if}}
 </main>
 
 {{#if this.editPod}}
-  <ModalDialog @onEscape={{this.cancelPod}} as |Modal|>
+  <ModalDialog @onEscape={{this.cancelPod}} @position="top" as |Modal|>
     <ChForm @formId="pod" @formFor={{this.editPod}} @onSubmit={{this.savePod}} as |f|>
-      <Modal.title>{{if this.editPod.isNew "Create" "Update"}} Pod</Modal.title>
+      <Modal.title>{{if this.editPod.isNew "Create" "Edit"}} Pod</Modal.title>
       <Modal.body>
         <FormRow>
           <FormLabel @auto={{true}}>Transportation</FormLabel>
@@ -156,12 +84,23 @@
           </div>
         </FormRow>
         <FormRow>
-          <f.text @name="location" @label="Deployment Location" @size={{30}} @maxlength={{80}} />
+          <f.text @name="location"
+                  @label="Deployment Location"
+                  @size={{34}}
+                  @maxlength={{34}}
+                  @autofocus={{true}}
+                  @showCharCount={{true}}
+          />
         </FormRow>
       </Modal.body>
       <Modal.footer @align="start">
         <f.submit @label="Save"/>
         <UiCancelButton @onClick={{this.cancelPod}} />
+        {{#unless this.editPod.isNew}}
+          <UiButton @type="danger" @size="sm" @onClick={{this.deletePod}} class="ms-auto">
+            Delete Pod
+          </UiButton>
+        {{/unless}}
       </Modal.footer>
     </ChForm>
   </ModalDialog>
@@ -174,14 +113,15 @@
       {{#if this.addPod.location}}
         Location {{this.addPod.location}}.
       {{else}}
-        No location set.
+        No location entered.
       {{/if}}
     </Modal.title>
 
     <ChForm @formId="people" @formFor={{this.peopleForm}} @onSubmit={{this.addPerson}} as |f|>
       <Modal.body>
         <p>
-          Select all the callsigns to add to Pod #{{this.addPod.sort_index}}. The check-in time is appended.
+          Select all the callsigns to add to Pod #{{this.addPod.sort_index}}. The check-in time is appended. Only people
+          who are not assigned to a pod are shown.
         </p>
         <fieldset>
           <legend>People most likely checked-in for this shift</legend>
@@ -224,6 +164,58 @@
       <Modal.footer @align="start">
         <f.submit @label="Add" @disabled={{and (not f.model.currentPeopleIds) (not f.model.priorPeopleIds)}} />
         <UiCancelButton @onClick={{this.closeAddDialog}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.showingPositions}}
+  <ModalDialog @onEscape={{this.closePositions}} as |Modal|>
+    <Modal.body>
+      <p>
+        The following positions are selectable under this interface:
+      </p>
+      {{#each this.positions as |position|}}
+        {{position.title}}<br>
+      {{else}}
+        No selectable positions found?
+      {{/each}}
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closePositions}} />
+    </Modal.footer>
+  </ModalDialog>
+
+{{/if}}
+
+{{#if this.editPerson}}
+  <ModalDialog @onEscape={{this.cancelPerson}} as |Modal|>
+    <ChForm @formId="people"
+            @formFor={{this.editPersonForm}}
+            @onSubmit={{this.savePerson}}
+            as |f|>
+      <Modal.body>
+        <div class="d-flex">
+          <div class="me-3">
+            <img src={{this.editPerson.photo_url}}
+                 class="photo-mini"
+                 alt={{this.editPerson.callsign}}
+                 loading="lazy"
+                 draggable="false"/>
+          </div>
+          <FormRow>
+            <f.select @name="podId" @label="Relocate {{this.editPerson.callsign}} to pod" @options={{this.podOptions}} />
+          </FormRow>
+        </div>
+      </Modal.body>
+      <Modal.footer @align="start">
+        <f.submit/>
+        <UiCancelButton @onClick={{this.cancelPerson}} />
+        <div class="ms-auto">
+          <UiButton @type="danger" @size="sm" @onClick={{this.deletePerson}}>
+            Remove Person From Pod
+          </UiButton>
+        </div>
       </Modal.footer>
     </ChForm>
   </ModalDialog>

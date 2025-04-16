@@ -1,11 +1,11 @@
 import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
 import EmberObject, {action} from '@ember/object';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import _ from "lodash";
 import Selectable from "clubhouse/utils/selectable";
 import dayjs from 'dayjs';
-import {TYPE_SHIFT, TransportOptions} from "clubhouse/models/pod";
-import {movePod} from 'clubhouse/utils/pod';
+import PodModel, {TYPE_SHIFT, TransportOptions} from "clubhouse/models/pod";
+import {movePod,movePodTo} from 'clubhouse/utils/pod';
 import {htmlSafe} from '@ember/template';
 
 export default class OpsCruiseDirectionController extends ClubhouseController {
@@ -29,11 +29,17 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
 
   @tracked editPod;
 
+  @tracked editPerson;
+  @tracked editPersonPod;
+  @tracked editPersonForm;
+
   @tracked isNewPod = false;
 
   @tracked positions;
 
   @tracked showingPositions = false;
+
+  @tracked isSubmitting = false;
 
   transportOptions = TransportOptions;
 
@@ -41,6 +47,7 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
     super(...arguments);
 
     this.movePod = movePod.bind(this);
+    this.movePodTo = movePodTo.bind(this);
   }
 
   /**
@@ -82,18 +89,23 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
   @action
   useSuggestedSlot() {
     this.selectedShift = this.suggestedSlot;
-    this._loadSelectedPod();
+    this._loadSelectedShift();
   }
 
   @action
   changeShift(selected) {
     this.selectedShift = selected.period.slot;
-    this._loadSelectedPod();
+    this._loadSelectedShift();
   }
 
   @action
   togglePositions() {
     this.showingPositions = !this.showingPositions;
+  }
+
+  @cached
+  get podOptions() {
+    return this.pods.map((pod) => [htmlSafe(`Pod #${pod.sort_index} - ${pod.location} - ${pod.transportLabel}`), pod.id]);
   }
 
   /**
@@ -103,7 +115,7 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
    * @private
    */
 
-  async _loadSelectedPod(successCallback = null) {
+  async _loadSelectedShift(successCallback = null) {
     this.isSubmitting = true;
     try {
       this.pods = await this.store.query('pod', {
@@ -122,7 +134,7 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
 
   @action
   refreshPage() {
-    this._loadSelectedPod(() => this.toast.success('Page was successfully refreshed.'));
+    this._loadSelectedShift(() => this.toast.success('Page was successfully refreshed.'));
   }
 
   /**
@@ -182,13 +194,16 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
    */
 
   @action
-  removePod(pod) {
-    this.modal.confirm('Confirm Pod Removal',
-      `Are you sure you want to remove this pod?`,
+  deletePod() {
+    this.modal.confirm('Confirm Pod Deletion',
+      `Are you sure you want to delete this pod?`,
       async () => {
+        const pod = this.editPod;
         this.isSubmitting = true;
         try {
           await pod.destroyRecord();
+          this.editPod = null;
+
           this.pods = this.pods.filter((p) => p !== pod);
           for (let i = 0; i < this.pods.length; i++) {
             const reorg = this.pods[i];
@@ -205,8 +220,8 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
   }
 
   @action
-  isNotLastPod(podIdx) {
-    return podIdx < (this.pods.length - 1);
+  isNotLastPod(pod) {
+    return this.pods[this.pods.length - 1] !== pod;
   }
 
 
@@ -244,14 +259,15 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
       this.isSubmitting = false;
     }
 
-
     this.timesheets.forEach((t) => {
-      const inPod = this._inPod(t.person_id);
+      if (this._inPod(t.person_id) !== false) {
+        return;
+      }
+
       const onDuty = dayjs(t.on_duty)
       const person = {
-        label: htmlSafe(`${t.person.callsign} (${onDuty.format('HH:mm')}${inPod !== false ? ` Pod #${inPod}` : ''})<div class="small">${t.position.title}</div>`),
+        label: htmlSafe(`${t.person.callsign} (${onDuty.format('HH:mm')})<div class="small">${t.position.title}</div>`),
         value: t.person_id,
-        disabled: inPod !== false,
       };
 
       if (shiftStart.diff(onDuty, 'hour') >= 1) {
@@ -304,8 +320,7 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
     try {
       let pod;
       for (let i = 0; i < personIds.length; i++) {
-        pod = (await this.ajax.request(`pod/${this.addPod.id}/person`, {
-          method: 'POST',
+        pod = (await this.ajax.post(`pod/${this.addPod.id}/person`, {
           data: {person_id: +personIds[i]}
         })).pod;
       }
@@ -326,6 +341,32 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
    * @param person
    * @returns {Promise<void>}
    */
+
+  @action
+  editPersonInPod(pod, person) {
+    this.editPerson = person;
+    this.editPersonPod = pod;
+    this.editPersonForm = EmberObject.create({podId: pod.id});
+  }
+
+  @action
+  async savePerson(model, isValid) {
+    if (!isValid) {
+      return;
+    }
+
+    const person = this.editPerson;
+    this.editPerson = null;
+    if (+model.podId !== this.editPersonPod.id) {
+      await this._movePersonToPod(person.id, this.editPersonPod.id, model.podId);
+    }
+  }
+
+  @action
+  cancelPerson() {
+    this.editPerson = null;
+  }
+
 
   @action
   removePerson(pod, person) {
@@ -350,5 +391,45 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
   @action
   closeAddDialog() {
     this.showAddDialog = false;
+  }
+
+  @action
+  async thingDroppedOnPod(newPod, data) {
+    if (data instanceof PodModel) {
+      const oldPod = data;
+
+      if (newPod.id === oldPod.id) {
+        return;
+      }
+
+      await this.movePodTo(oldPod, newPod.sort_index)
+      return;
+    }
+
+    const [person, oldPod] = data;
+
+    if (newPod.id === oldPod.id) {
+      return;
+    }
+
+    await this._movePersonToPod(person.id, oldPod.id, newPod.id);
+  }
+
+  async _movePersonToPod(personId, oldPodId, newPodId) {
+    try {
+      this.isSubmitting = true;
+      await this.ajax.patch(`pod/${oldPodId}/move/${personId}/${newPodId}`);
+      await this._loadSelectedShift();
+      this.toast.success('Person successfully moved.');
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
+  }
+
+  @action
+  closePositions() {
+    this.showingPositions = false;
   }
 }

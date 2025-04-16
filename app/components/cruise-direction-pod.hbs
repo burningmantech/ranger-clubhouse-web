@@ -1,0 +1,89 @@
+<DraggableObjectTarget @action={{fn @thingDroppedOnPod @pod}}
+                       @overrideClass=""
+>
+  <div id="pod-{{@pod.sort_index}}" class="me-3 mb-2 w-100 h-100 border border-2" style="background-color: #f3f3f3">
+    <DraggableObject @content={{@pod}}>
+      <div id="pod-header-{{@pod.sort_index}}" class="p-2 d-flex justify-content-between align-items-center text-bg-gray move-cursor">
+        <div>
+          #{{@pod.sort_index}}
+        </div>
+        <a href {{on-click @setupToAdd @pod}} class="d-block d-print-none small">
+          {{fa-icon "plus" right=1}} Add Person
+        </a>
+        <a href {{on-click @editExistingPod @pod}} class="d-block small">
+          {{fa-icon "edit" right=1}} Edit
+        </a>
+      </div>
+    </DraggableObject>
+    <div class="p-2 text-truncate">
+      {{#if @pod.location}}
+        {{@pod.location}}
+      {{else}}
+        <i class="text-muted">location not entered yet</i>
+      {{/if}}<br>
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          {{fa-icon @pod.transportIcon right=1}} {{@pod.transportLabel}}
+        </div>
+      </div>
+    </div>
+    {{#if @showSortControls}}
+      <div class="d-flex justify-content-between my-2">
+        {{#if (gt @pod.sort_index 1)}}
+          <UiButton @onClick={{fn @movePod @pod -1}}
+                    @size="sm"
+                    @type="secondary"
+                    class="d-block">
+            {{fa-icon "arrow-left"}}
+          </UiButton>
+        {{/if}}
+        {{#if (@isNotLastPod @pod.sort_index)}}
+          <UiButton @onClick={{fn @movePod @pod 1}}
+                    @size="sm"
+                    @type="secondary"
+                    class="d-block">
+            {{fa-icon "arrow-right"}}
+          </UiButton>
+        {{/if}}
+      </div>
+    {{/if}}
+    {{#if @pod.people}}
+      {{#each @pod.people key="id" as |person|}}
+        <DraggableObject @content={{array person @pod}}>
+          <div class="d-flex w-100 p-1">
+            <a href class="d-block" {{on-click @editPersonInPod @pod person}}>
+              {{#if person.photo_url}}
+                <img src={{person.photo_url}}
+                     class="photo-mini move-cursor"
+                     alt={{person.callsign}}
+                     loading="lazy"
+                     draggable="false"/>
+              {{else}}
+                <UiPhotoNone/>
+              {{/if}}
+            </a>
+            <div class="ms-2">
+              <div class="fs-5 fw-bold">{{person.callsign}}</div>
+              <div class="mb-2 text-truncate">
+                {{#if person.position_title}}
+                  {{person.position_title}}
+                {{else}}
+                  <i class="text-muted">not checked in</i>
+                {{/if}}
+              </div>
+              {{#if person.on_duty}}
+                <div class="small mb-2">
+                  On duty @ {{dayjs-format person.on_duty "HH:mm"}}
+                </div>
+              {{/if}}
+            </div>
+          </div>
+        </DraggableObject>
+      {{/each}}
+    {{else}}
+      <div class="mt-4 fs-3 text-muted text-center">
+        Pod is empty
+      </div>
+    {{/if}}
+  </div>
+</DraggableObjectTarget>

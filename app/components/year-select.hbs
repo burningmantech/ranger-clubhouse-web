@@ -1,8 +1,9 @@
 <div class="mb-2 {{if @subheader "h2" "h1"}}">
-  {{@year}} {{@title}}
+  {{@year}}
+  {{#if @title}}{{@title}}{{else}}{{yield}}{{/if}}
 </div>
 
-<div class="mb-4">
+<div class="mb-2">
   <span class="me-2">Select year to view:</span>
   <ChForm::Select @name="year"
                   @value={{@year}}
