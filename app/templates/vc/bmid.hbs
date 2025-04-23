@@ -208,26 +208,29 @@
                 editBmid is the changeset object which the data is manipulated in.
               }}
             <td>
-              <input value={{bmid.title1}} {{on "blur" (fn this.updateColumn bmid "title1")}} size="30" class="bmid-input">
+              <input value={{bmid.title1}} {{on "blur" (fn this.updateColumn bmid "title1")}} size="30"
+                     class="bmid-input">
             </td>
             <td>
-              <input value={{bmid.title2}} {{on "blur" (fn this.updateColumn bmid "title2")}} size="33" maxlength="33" class="bmid-input">
+              <input value={{bmid.title2}} {{on "blur" (fn this.updateColumn bmid "title2")}} size="33" maxlength="33"
+                     class="bmid-input">
             </td>
             <td>
-              <input value={{bmid.title3}} {{on "blur" (fn this.updateColumn bmid "title3")}} size="5" maxlength="5" class="bmid-input">
+              <input value={{bmid.title3}} {{on "blur" (fn this.updateColumn bmid "title3")}} size="5" maxlength="5"
+                     class="bmid-input">
             </td>
             <td>{{if bmid.org_vehicle_insurance "M" "-"}}</td>
             <ProvisionManagement @person={{bmid.person}} @onUpdate={{fn this.onProvisionUpdate bmid}} as |actions|>
               <td>
                 {{#if bmid.showers_granted}}
-                  No
-                  <a href {{on-click actions.newShower}} class="d-block">
-                    add {{fa-icon "shower"}}
-                  </a>
-                {{else}}
                   Yes
                   <a href {{on-click actions.manageShowers}} class="d-block">
                     edit {{fa-icon "shower"}}
+                  </a>
+                {{else}}
+                  No
+                  <a href {{on-click actions.newShower}} class="d-block">
+                    add {{fa-icon "shower"}}
                   </a>
                 {{/if}}
               </td>
@@ -246,7 +249,7 @@
               </td>
             </ProvisionManagement>
             <td class="text-center">
-              <ChForm::Select @name={{concat "admission_date" bmid.person.id}}
+              <ChForm::Select @name="admission_date{{bmid.person.id}}"
                               @value={{bmid.admission_date}}
                               @options={{this.admissionDateOptions}}
                               @onChange={{set-value bmid 'admission_date'}}
@@ -260,7 +263,8 @@
                 {{/if}}
               {{/if}}
             </td>
-            <td><input value={{bmid.team}} {{on "blur" (fn this.updateColumn bmid "team")}} size="10" class="bmid-input"></td>
+            <td><input value={{bmid.team}} {{on "blur" (fn this.updateColumn bmid "team")}} size="10"
+                       class="bmid-input"></td>
             <td><textarea cols="40" rows="1" {{on "focus" this.focusNote}}
               {{on "blur" (fn this.blurNote bmid)}}>{{bmid.notes}}</textarea>
             </td>

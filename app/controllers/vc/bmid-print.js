@@ -135,24 +135,30 @@ export default class VcBmidPrintController extends ClubhouseController {
 
     this.modal.confirm('Confirm Export',
       `<p>${batchText}</p>${person_ids.length} BMID(s) have been selected to download and marked as SUBMITTED. Are you sure you want to do this?`,
-      () => {
-        this.isExporting = true;
-        this.ajax.request('bmid/export', {
-          method: 'POST',
-          data: {year: this.year, person_ids, batch_info: model.batchInfo}
-        }).then(({export_url, bmids}) => {
-          this.isExporting = false;
+      async () => {
+        try {
+          this.isExporting = true;
+          const {export_url, bmids} = await this.ajax.post('bmid/export', {
+            data: {
+              year: this.year,
+              person_ids,
+              batch_info: model.batchInfo
+            }
+          });
           bmids.forEach((bmid) => {
             const update = this.viewBmids.find((b) => b.person_id === bmid.person_id);
             if (update) {
               Object.assign(update, bmid);
             }
           });
-          this.ajax.request('bmid/exports', {data: {year: this.year}})
-            .then((result) => this.exportList = result.exports);
+          const {exports} = await this.ajax.request('bmid/exports', {data: {year: this.year}});
+          this.exportList = exports;
           this.house.downloadUrl(export_url);
-        }).catch((response) => this.house.handleErrorResponse(response))
-          .finally(() => this.isExporting = false);
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        } finally {
+          this.isExporting = false;
+        }
       }
     );
   }
