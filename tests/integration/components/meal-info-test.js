@@ -7,7 +7,7 @@ module('Integration | Component | meal-info', function(hooks) {
   setupRenderingTest(hooks);
 
   test('it renders meal info', async function(assert) {
-    this.set('eventInfo', { meals: 'pre+event', meals_status: 'claimed' });
+    this.set('eventInfo', { meals: {pre: true, event: true, post: false}, meals_status: 'claimed' });
 
     await render(hbs`<MealInfo @eventInfo={{this.eventInfo}} />`);
 

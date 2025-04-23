@@ -469,7 +469,7 @@ export default class HouseService extends Service {
   }
 
   /*
-   * Avoids common pitfalls and the weird undocumented special-sauce format that must be used with the built in pushPayload
+   * Avoids common pitfalls and the weird undocumented special-sauce format that must be used with the built-in pushPayload
    *
    */
 

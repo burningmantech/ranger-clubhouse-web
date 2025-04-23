@@ -1,17 +1,17 @@
 import Component from '@glimmer/component';
-import {
-  MealOptions,
-  BmidStatusOptions,
-  ShowerOptions
-} from 'clubhouse/models/bmid';
 import {ECHELON} from "clubhouse/constants/person_status";
+import {BmidStatusOptions} from "clubhouse/models/bmid";
+import { action } from '@ember/object';
 
 export default class BmidEditComponent extends Component {
   bmidStatusOptions = BmidStatusOptions;
-  mealOptions = MealOptions;
-  showerOptions = ShowerOptions;
 
   get isEchelon() {
-    return this.args.entry.person.status === ECHELON;
+    return this.args.bmid.person.status === ECHELON;
+  }
+
+  @action
+  updateBmidProvisions(pkg) {
+    this.args.bmid.loadProvisions(pkg);
   }
 }

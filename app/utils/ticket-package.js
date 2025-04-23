@@ -1,6 +1,6 @@
 import {tracked, cached} from '@glimmer/tracking';
-import {MealMatrixLabel} from 'clubhouse/models/provision';
 import dayjs from 'dayjs';
+import {buildMealsLabel, MEALS_FULL_LABELS} from "clubhouse/models/bmid";
 
 export default class TicketPackage {
   @tracked wapso; // WAP-SOs will change in length based on how the user's ticketing decisions.
@@ -34,10 +34,11 @@ export default class TicketPackage {
     this.provisionItems = [];
     if (pkg.provisions) {
       const stuff = pkg.provisions;
-      if (stuff.meals) {
+      const {meals} = stuff;
+      if (meals && (meals.pre || meals.event || meals.post)) {
         this.provisionItems.push({
           icon: 'utensils',
-          name: `${MealMatrixLabel[stuff.meals]} Meal Pass`,
+          name: buildMealsLabel(stuff.meals, MEALS_FULL_LABELS, 'Meal Pass'),
           expires: stuff.meals_expire ? dayjs(stuff.meals_expire).format('YYYY') : '',
         });
       }

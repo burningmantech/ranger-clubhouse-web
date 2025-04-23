@@ -3,29 +3,25 @@ import {isEmpty} from '@ember/utils';
 import {ticketTypeLabel} from 'clubhouse/constants/ticket-types';
 import dayjs from 'dayjs';
 import {ECHELON} from "clubhouse/constants/person_status";
-
-export const MEALS_ALL = 'all';
-export const MEALS_EVENT = 'event';
-export const MEALS_EVENT_PLUS_POST = 'event+post';
-export const MEALS_POST = 'post';
-export const MEALS_PRE = 'pre';
-export const MEALS_PRE_PLUS_EVENT = 'pre+event';
-export const MEALS_PRE_PLUS_POST = 'pre+post';
+import {isArray} from "lodash";
+import {cached, tracked} from '@glimmer/tracking';
 
 // BMID is being prepped (may or may not exist in the database)
 export const IN_PREP = 'in_prep';
 // Ready to be sent off to be printed
 export const READY_TO_PRINT = 'ready_to_print';
-// BMID was changed (name, photos, titles, etc.) and needs to be reprinted
-export const READY_TO_REPRINT_CHANGE = 'ready_to_reprint_changed';
-// BMID was lost and a new one issued
-export const READY_TO_REPRINT_LOST = 'ready_to_reprint_lost';
 // BMID has issues, do not print.
 export const ISSUES = 'issues';
 // Person is not rangering this year (common) or another reason.
 export const DO_NOT_PRINT = 'do_not_print';
 // BMID was submitted
 export const SUBMITTED = 'submitted';
+
+// Deprecated statuses.
+// BMID was changed (name, photos, titles, etc.) and needs to be reprinted
+export const READY_TO_REPRINT_CHANGE = 'ready_to_reprint_changed';
+// BMID was lost and a new one issued
+export const READY_TO_REPRINT_LOST = 'ready_to_reprint_lost';
 
 export const BmidStatusLabels = {
   [IN_PREP]: 'Prep',
@@ -43,42 +39,91 @@ export const BmidStatusOptions = [
   ['Ready To Print', READY_TO_PRINT],
   ['Issues', ISSUES],
   ['Submitted', SUBMITTED],
+  /*
   {
     groupName: 'Deprecated',
     options: [
       ['Ready To Reprint (Lost)', READY_TO_REPRINT_LOST],
       ['Ready To Reprint (Changed)', READY_TO_REPRINT_CHANGE],
     ]
-  }
+  }*/
 ];
 
-export const MealLabels = {
-  [MEALS_PRE]: 'Pre-Event',
-  [MEALS_POST]: 'Post-Event',
-  [MEALS_EVENT]: 'Event Week',
-  [MEALS_ALL]: 'All Eats',
-  [MEALS_PRE_PLUS_POST]: 'Pre-Event / Post-Event',
-  [MEALS_PRE_PLUS_EVENT]: 'Pre-Event / Event Week',
-  [MEALS_EVENT_PLUS_POST]: 'Event Week / Post-Event',
+export const MEALS_FULL_LABELS = {
+  all: 'All Eats',
+  pre: 'Pre-Event',
+  event: 'Event Week',
+  post: 'Post Event',
 };
 
-export const MealOptions = [
-  ['None', ''],
-  ['Pre', MEALS_PRE],
-  ['Post', MEALS_POST],
-  ['Event', MEALS_EVENT],
-  ['All', MEALS_ALL],
-  ['Pre+Post', MEALS_PRE_PLUS_POST],
-  ['Pre+Event', MEALS_PRE_PLUS_EVENT],
-  ['Event+Post', MEALS_EVENT_PLUS_POST]
-];
+export const MEALS_SHORT_LABELS = {
+  all: 'All Eats',
+  pre: 'Pre',
+  event: 'Event',
+  post: 'Post',
+}
 
-export const ShowerOptions = [
-  ['No', false],
-  ['Yes', true],
-];
+export function buildMealsLabel(meals, labels, suffix = null) {
+  if (meals.pre && meals.event && meals.post) {
+    let label = labels.all;
+    if (suffix) {
+      label += ` ${suffix}`;
+    }
+
+    return label;
+  }
+
+  const periods = [];
+
+  if (meals.pre) {
+    periods.push(labels.pre);
+  }
+
+  if (meals.event) {
+    periods.push(labels.event);
+  }
+
+  if (meals.post) {
+    periods.push(labels.post);
+  }
+
+  if (!periods.length) {
+    return 'none';
+  }
+
+  let label = periods.join(' & ');
+  if (suffix) {
+    label += ` ${suffix}`;
+  }
+  return label;
+}
+
 
 export default class BmidModel extends Model {
+  /*
+   * Hack to deal with how BMIDs are managed. Some BMIDs may not
+   * exist, however, said BMIDs may have associated data (provisions, ticket / SAP)
+   * that does exist. The problem arises when Model.createRecord() is called for a
+   * new BMID that doesn't exist yet and the provisions need to be pushed into the store.
+   * createRecord() will not call a serializer to handle this. Sigh.
+   */
+  static pushToStore(context, data) {
+    if (isArray(data)) {
+      return data.map((row) => BmidModel.createFromPayload(context, row));
+    } else {
+      return BmidModel.createFromPayload(context, data);
+    }
+  }
+
+  static createFromPayload(context, payload) {
+    if (payload.id) {
+      return context.house.pushPayload('bmid', payload);
+    } else {
+      return context.store.createRecord('bmid', payload);
+    }
+  }
+
+
   @attr('number') person_id;
   @attr('string') status;
   @attr('number') year;
@@ -109,17 +154,16 @@ export default class BmidModel extends Model {
   // True if the person has an approved photo
   @attr('boolean', {readOnly: true}) has_approved_photo;
 
-  // Pulled from claimed or submitted provisions
-  @attr('string', {readOnly: true}) earned_meals;
-  @attr('boolean', {readOnly: true}) earned_showers;
-
-  // Allocated provisions are always used if present
-  @attr('string', {readOnly: true}) allocated_meals;
-  @attr('boolean', {readOnly: true}) allocated_showers;
+  @attr('', {readOnly: true}) meals_granted;
+  @attr('boolean', {readOnly: true}) showers_granted;
+  @attr('boolean', {readOnly: true}) has_allocated_provisions;
 
   // BMID qualifiers
   @attr('boolean', {readOnly: true}) has_ticket;
   @attr('boolean', {readOnly: true}) training_signed_up;
+
+
+  @tracked showProvisionDialog;  // For the BMID management interface.
 
   get admission_date() {
     if (this.access_any_time) {
@@ -187,66 +231,31 @@ export default class BmidModel extends Model {
     return this.wap_status === 'banked';
   }
 
-  get wapTypeHuman() {
+  get wapTypeLabel() {
     return ticketTypeLabel[this.wap_type] || this.wap_type;
   }
 
-  get mealsHuman() {
-    return (isEmpty(this.meals) ? 'None' : (MealLabels[this.meals] || this.meals));
-  }
-
-  get effectiveMealsHuman() {
-    const meals = this.effectiveMeals;
-    return (isEmpty(meals) ? 'None' : (MealLabels[meals] || meals));
-  }
-
-  get statusHuman() {
+  get statusLabel() {
     return (BmidStatusLabels[this.status] || `Unknown status ${this.status}`);
   }
 
-  get effectiveMeals() {
-    if (this.meals === MEALS_ALL
-      || this.earned_meals === MEALS_ALL
-      || this.allocated_meals === MEALS_ALL) {
-      return MEALS_ALL;
-    }
-
-    const matrix = [];
-
-    if (this.meals) {
-      this.meals.split('+').forEach((meal) => matrix[meal] = true);
-    }
-
-    if (this.earned_meals) {
-      this.earned_meals.split('+').forEach((meal) => matrix[meal] = true);
-    }
-
-    if (this.allocated_meals) {
-      this.allocated_meals.split('+').forEach((meal) => matrix[meal] = true);
-    }
-
-    if (Object.keys(matrix).length === 3) {
-      return MEALS_ALL;
-    }
-
-    const sorted = [];
-    if (matrix[MEALS_PRE]) {
-      sorted.push(MEALS_PRE);
-    }
-
-    if (matrix[MEALS_EVENT]) {
-      sorted.push(MEALS_EVENT);
-    }
-
-    if (matrix[MEALS_POST]) {
-      sorted.push(MEALS_POST);
-    }
-
-    return sorted.join('+');
+  get mealsShortLabel() {
+    return buildMealsLabel(this.meals_granted, MEALS_SHORT_LABELS);
   }
 
-  get effectiveShowers() {
-    return !!(this.showers || this.earned_showers || this.allocated_showers);
+  get mealsLabel() {
+    return buildMealsLabel(this.meals_granted, MEALS_FULL_LABELS, 'Pass');
+  }
+
+  get noMeals() {
+    const meals = this.meals_granted;
+    return !meals.pre && !meals.event && !meals.post;
+  }
+
+  loadProvisions(pkg) {
+    this.showers_granted = pkg.showers;
+    this.meals_granted = pkg.meals;
+    this.has_allocated_provisions = pkg.have_allocated;
   }
 
   get qualifiedToPrint() {
@@ -267,5 +276,10 @@ export default class BmidModel extends Model {
     } else {
       return !this.has_ticket && !this.training_signed_up;
     }
+  }
+
+  @cached
+  get sortCallsign() {
+    return this.person.callsign.toLowerCase();
   }
 }

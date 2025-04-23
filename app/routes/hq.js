@@ -4,7 +4,6 @@ import {NotFoundError} from '@ember-data/adapter/error'
 import {ADMIN, SHIFT_MANAGEMENT} from 'clubhouse/constants/roles';
 import RSVP from 'rsvp';
 import {setting} from 'clubhouse/utils/setting';
-import {isEmpty} from '@ember/utils';
 
 export default class HqRoute extends ClubhouseRoute {
   beforeModel() {
@@ -84,10 +83,12 @@ export default class HqRoute extends ClubhouseRoute {
     model.eventPeriods = eventPeriods;
     eventPeriods[model.eventInfo.event_period].current = true;
     const {meals} = model.eventInfo;
-    if (meals === 'all') {
-      Object.keys(eventPeriods).forEach((key) => eventPeriods[key].hasPass = true);
-    } else if (!isEmpty(meals)) {
-      meals.split('+').forEach((p) => eventPeriods[p].hasPass = true);
+    if (meals) {
+      for (const period of ['pre', 'event', 'post']) {
+        if (meals[period]) {
+          eventPeriods[period].hasPass = true;
+        }
+      }
     }
   }
 

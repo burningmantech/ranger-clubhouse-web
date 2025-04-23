@@ -47,6 +47,7 @@ export default class HqProvisionInfoComponent extends Component {
    */
 
   get onlyPogs() {
-    return isEmpty(this.args.meals);
+    const {meals} = this.args;
+    return isEmpty(meals) || (!meals.pre && !meals.event && !meals.post);
   }
 }

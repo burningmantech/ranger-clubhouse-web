@@ -33,9 +33,12 @@
     </s.group>
   {{/if}}
 
-  {{#if (has-role "intake" "regional")}}
+  {{#if (has-role "intake" "regional" "vc")}}
     <s.group @title="Vol Coords">
       <s.link @route="person.unified-flagging" @title="Unified Flagging" @icon="flag"/>
+      {{#if (has-role "vc")}}
+        <s.link @route="person.applications" @title="Ranger Applications" @icon="handshake-angle"/>
+      {{/if}}
     </s.group>
   {{/if}}
 

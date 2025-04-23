@@ -1,5 +1,6 @@
 import Component from '@glimmer/component';
 import {isEmpty} from '@ember/utils';
+import {htmlSafe} from '@ember/template';
 
 const MEALS = {
   'all': {
@@ -20,19 +21,19 @@ const MEALS = {
   },
   'pre+event': {
     title: "Pre-Event and During Event Pass",
-    description: "You qualify for three meals/day using your BMID during Pre-Event period and the event week itself.<br>If you work a shift during Post-Event, we'll give you a meal pog"
+    description: "You qualify for three meals/day using your BMID during both the Pre-Event period and the event week itself.<br>If you work a shift during Post-Event, we'll give you a meal pog"
   },
   'event+post': {
     title: "Event Week & Post Event Meal Pass",
-    description: "You qualify for three meals/day using your BMID during the Event and Post-Event.<br>If you work a shift during Pre-Event, we'll give you a meal pog."
+    description: "You’re eligible for three meals/day during both the event week and Post-Event periods with your BMID.<br>If you work a shift during Pre-Event, we'll give you a meal pog."
   },
   'pre+post': {
     title: "Pre & Post Event Pass",
-    description: "You qualify for three meals/day using your BMID Pre-Event and Post-Event.<br>If you work a shift during the Event week, we'll give you a meal pog."
+    description: "You’re eligible for three meals/day during both the Pre-Event and Post-Event periods with your BMID..<br>If you work a shift during the Event week, we'll give you a meal pog."
   },
   'pogs': {
     title: "Pogs",
-    description: "Every time you work a shift, we'll give you a meal pog good for one of the next three meals (breakfast, lunch, or dinner)."
+    description: "Every time you work a 6+ hour shift, we'll give you a meal pog good for one of the next three meals (breakfast, lunch, or dinner)."
   },
 
   'no-info': {
@@ -47,20 +48,39 @@ export default class MealInfoComponent extends Component {
     const {eventInfo} = this.args;
 
     let {meals} = eventInfo;
+    let type;
     if (isEmpty(meals)) {
-      meals = 'pogs';
+      type = 'pogs';
+    } else {
+      const periods = [];
+      if (meals.pre) {
+        periods.push('pre');
+      }
+      if (meals.event) {
+        periods.push('event');
+      }
+
+      if (meals.post) {
+        periods.push('post');
+      }
+
+      if (periods.length === 3) {
+        type = 'all';
+      } else {
+        type = periods.join('+');
+      }
     }
 
-    const mealInfo = MEALS[meals];
+    const mealInfo = MEALS[type];
 
     if (mealInfo) {
       this.title = mealInfo.title;
-      this.description = mealInfo.description;
+      this.description = htmlSafe(mealInfo.description);
       this.isBanked = eventInfo.meals_status === 'banked';
-      this.isMealPass = (meals === 'all' || meals === 'event');
+      this.isMealPass = (type === 'all' || type === 'event');
     } else {
       this.title = 'Unknown';
-      this.description = `Unknown meal type ${this.args.meals}. This is a bug.`;
+      this.description = `Unknown meal type ${type}. This is a bug.`;
     }
   }
 }

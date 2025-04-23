@@ -3,10 +3,19 @@ import {action} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {tracked} from '@glimmer/tracking';
 
-import {ALL_EAT_PASS, EVENT_EAT_PASS, WET_SPOT, EVENT_RADIO} from 'clubhouse/models/provision';
+import {WET_SPOT} from 'clubhouse/models/provision';
+
+// Pseudo types - the API will mark the correct meals columns.
+export const ALL_EAT_PASS = 'all_eat_pass';
+export const EVENT_EAT_PASS = 'event_eat_pass';
+export const PRE_EVENT_EAT_PASS = 'pre_event_eat_pass';
+export const POST_EVENT_EAT_PASS = 'post_event_eat_pass';
+export const PRE_EVENT_EVENT_EAT_PASS = 'pre_event_event_eat_pass';
+export const EVENT_POST_EAT_PASS = 'event_post_event_eat_pass';
+export const PRE_POST_EAT_PASS = 'pre_post_eat_pass';
 
 const HAS_YEARS = [
-  ALL_EAT_PASS, EVENT_EAT_PASS, WET_SPOT, EVENT_RADIO
+  ALL_EAT_PASS, EVENT_EAT_PASS, WET_SPOT
 ];
 
 export default class AdminBulkUploadController extends ClubhouseController {

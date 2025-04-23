@@ -16,10 +16,11 @@
 <UiTab as |tab|>
   <tab.pane @title="Training" @id="training">
     <UiSection>
-      <:title>{{fa-icon "graduation-cap"}} Training</:title>
+      <:title>{{fa-icon "graduation-cap" right=1}} Training</:title>
       <:body>
         {{#if this.person.isEchelon}}
-          <p>Echelon volunteers are not required to pass training.</p>
+          <p>Echelon volunteers are not required to complete In-Person Training, but you are welcome to sign up and
+            attend if you’d like.</p>
         {{/if}}
         {{#if this.eventInfo.online_course_only}}
           <p>
@@ -31,7 +32,8 @@
             </p>
           {{else}}
             <p class="text-danger">
-              You have not completed the online course yet.
+              You have not yet completed the Online Course. To volunteer as a Ranger for each event, you must
+              complete both the Online Course and In-Person Training.
             </p>
           {{/if}}
         {{else if (and this.dirtTraining (not-eq this.dirtTraining.status "no-shift"))}}
@@ -41,9 +43,10 @@
             Passed training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
             {{#if this.person.isAlpha}}
               <br>
-              <b class="text-danger">{{fa-icon "hand-point-right"}} You still need to attend your Alpha shift on playa
-                in
-                order to become a Ranger.</b>
+              <b class="text-danger">
+                {{fa-icon "hand-point-right" right=1}} You are still required to pass your Alpha shift
+                on playa to become a Ranger.
+              </b>
             {{/if}}
           {{else if (eq this.dirtTraining.status "no-show")}}
             Did not attend training on {{mdy-format this.dirtTraining.date}} at {{this.dirtTraining.location}}
@@ -54,14 +57,15 @@
           {{/if}}
         {{else}}
           <p>
-            <b class="text-danger">No training sign ups were found for {{this.year}}.</b>
+            <b class="text-danger">No In-Person Training sign-ups were found for {{this.year}}.</b>
           </p>
           {{#if (is-current-year this.year)}}
             {{#if this.person.isActive}}
-              You do not have to be trained to sign up for shifts, but you must be trained before actually
-              working shifts on playa.
+              You are not required to complete In-Person Training to sign up for shifts; <span class="text-danger">
+              however, you must be fully trained before working on-playa shifts.</span>
             {{else if this.person.isProspective}}
-              You will need to sign up for and pass a training session before becoming an Alpha.
+              To become an Alpha, you must sign up for and successfully complete an In-Person Training session.
+              Additionally, you are required to attend and pass your Alpha shift on playa to become a Ranger.
             {{/if}}
           {{/if}}
         {{/if}}
@@ -80,7 +84,7 @@
 
   <tab.pane @title="Teams &amp; Positions" @id="teams-positions">
     <UiSection>
-      <:title>{{fa-icon "sitemap"}} Teams &amp; Positions</:title>
+      <:title>{{fa-icon "sitemap" right=1}} Teams &amp; Positions</:title>
       <:body>
         Positions indicate which shifts you are allowed to sign up for and what ARTs you may attend. The following shows
         what teams you belong to (if any) and/or what positions have been granted.
@@ -151,11 +155,11 @@
                     </p>
                     <EventRadioDisclaimer/>
                   {{else}}
-                    You will need to check out a radio each time you show up to Ranger HQ
-                    for shift and return it at the end of your shift!
+                    You will need to check out a radio each time you show up to Ranger HQ for shift and return it at the
+                    end of your shift!
                   {{/if}}
                 {{else}}
-                  Radio eligibility for this year is not yet available.
+                  Radio eligibility for this year has not yet been published.
                 {{/if}}
               </dd>
             {{/if}}
@@ -170,19 +174,21 @@
         <UiSection>
           <:title>Driving Prohibited</:title>
           <:body>
-            <UiBadge @text="Blacklisted" @type="danger" /> We're sorry, but you cannot drive gators, cars, or trucks on playa for
-            Ranger business.
+            <UiBadge @text="Blacklisted" @type="danger"/>
+            You are not permitted to operate gators, cars, or trucks on playa for Ranger-related activities.
           </:body>
         </UiSection>
       {{else}}
         <UiSection>
-          <:title>{{fa-icon "car"}} Motor Pool Protocol</:title>
+          <:title>{{fa-icon "car" right=1}} Motor Pool Protocol</:title>
           <:body>
             {{#if this.eventInfo.signed_motorpool_agreement}}
-              <UiBadge @text="Authorized" @type="success" /> You are authorized to drive golf carts &amp; gators (UTVs) on playa for
+              <UiBadge @text="Authorized" @type="success"/>
+              You are authorized to drive golf carts &amp; gators (UTVs) on playa for
               Ranger business. Vehicle must have a valid Burning Man driving sticker.
             {{else}}
-              <UiBadge @text="Not Authorized" @type="warning" /> You are NOT authorized to drive golf carts &amp; gators (UTVs) on
+              <UiBadge @text="Not Authorized" @type="warning"/>
+              You are NOT authorized to drive golf carts &amp; gators (UTVs) on
               the playa for Ranger business. You can fix this by agreeing to the
               <LinkTo @route="me.agreements">Motor Pool Protocol</LinkTo>
               .
@@ -191,19 +197,22 @@
         </UiSection>
         {{#if (or this.person.isRanger this.person.isEchelon)}}
           <UiSection>
-            <:title>{{fa-icon "truck-pickup"}} Motor Vehicle Record (MVR)</:title>
+            <:title>{{fa-icon "truck-pickup" right=1}} Motor Vehicle Record (MVR)</:title>
             <:body>
               {{#if this.personEvent.org_vehicle_insurance}}
-                <UiBadge @text="Authorized" @type="success" /> You are authorized to operate cars and trucks (including your own
+                <UiBadge @text="Authorized" @type="success"/>
+                You are authorized to operate cars and trucks (including your own
                 personal vehicle, provided you have an approved Personal Vehicle Request) on the playa for Ranger
                 business. The vehicle must be equipped with a valid Burning Man driving sticker issued for the
                 current event. Please note that stickers are not transferable from year to year.
               {{else if this.eventInfo.mvr_eligible}}
-                <UiBadge @text="MVR Eligible" @type="success" /> You are eligible to submit a MVR request.
+                <UiBadge @text="MVR Eligible" @type="success"/>
+                You are eligible to submit a MVR request.
               {{else}}
-                <UiBadge @text="Not Authorized" @type="warning" /> You are NOT authorized to operate cars and trucks (including
-                your own personal vehicle) on the playa for Ranger business. If you believe this capability is
-                necessary for your Ranger duties on the playa, please contact your team lead.
+                <UiBadge @text="Not Authorized" @type="warning"/>
+                You are not authorized to operate larger Ranger vehicles—such as cars or trucks—on playa for Ranger
+                business. Use of your personal vehicle for Ranger purposes is also prohibited. If you believe vehicle
+                access is essential to your Ranger duties, you must obtain prior approval from your manager.
               {{/if}}
             </:body>
           </UiSection>
