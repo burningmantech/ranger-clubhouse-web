@@ -44,7 +44,7 @@ Showing {{pluralize this.people.length "person"}}
       <td class="text-center">{{yesno person.signed_motorpool_agreement}}</td>
       <td class="text-center">{{yesno person.org_vehicle_insurance}}</td>
       <td class="text-center">
-        {{yesno (or person.mvr_eligible person.mvr_teams person.mvr_positions person.mvr_signups)}}
+        {{yesno (if (or person.mvr_eligible person.mvr_teams person.mvr_positions person.mvr_signups) true false)}}
       </td>
       <td class="text-nowrap">
         {{#each person.mvr_teams as |team|}}
@@ -67,7 +67,7 @@ Showing {{pluralize this.people.length "person"}}
       </td>
       <td class="text-center">{{yesno person.mvr_eligible}}</td>
       <td class="text-center">
-        {{yesno (or person.pvr_eligible person.pvr_teams person.pvr_positions)}}
+        {{yesno (if (or person.pvr_eligible person.pvr_teams person.pvr_positions) true false)}}
       </td>
       <td class="text-nowrap">
         {{#each person.pvr_teams as |team|}}
