@@ -291,7 +291,7 @@ export const ONLINE_COURSE = {
 
     if (isEchelon) {
       message =
-        '<p>As an Echelon olunteer, you have the option to take the Ranger Online Course. If you do decide to attend an In-Person training, the Online Course must be completed first.</p>' +
+        '<p>As an Echelon volunteer, you have the option to take the Ranger Online Course. If you do decide to attend an In-Person training, the Online Course must be completed first.</p>' +
         manualLocation +
         '<p>Please be sure to focus on the radio protocol section of the manual in case you will be carrying a radio.</p>' +
         `<p>Note: it may take up to 20 minutes for the Clubhouse to record your course completion.</p>`;
