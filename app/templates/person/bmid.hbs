@@ -5,7 +5,8 @@
   <LinkTo @route="vc.bmid" class="nav-link">Manage BMIDs</LinkTo>
 </nav>
 
-<BmidEdit @entry={{this.bmid}}
+<BmidEdit @person={{this.person}}
+          @bmid={{this.bmid}}
           @year={{this.year}}
           @admissionDateOptions={{this.admissionDateOptions}}
           @onSave={{this.save}}

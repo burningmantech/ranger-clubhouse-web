@@ -161,12 +161,6 @@
         <h3>Shift Radios Only</h3>
         {{this.person.callsign}} is only authorized for a shift radio.
         A radio will need to be checked out for each shift, and then returned at the end of the shift.
-        {{#if this.eventInfo.radio_banked}}
-          <div class="mt-1">
-            {{this.person.callsign}} did qualify for an event radio however they chose to bank the radio(s) to use in a
-            future event.
-          </div>
-        {{/if}}
       {{/if}}
     </w.step>
     <w.step @title="Mark Person As On Site" @isLast={{true}} @includeCancel={{true}}>

@@ -3,7 +3,7 @@ import {action} from '@ember/object';
 import {isEmpty} from '@ember/utils';
 import {schedule, later} from '@ember/runloop';
 import {cached, tracked} from '@glimmer/tracking';
-import {MealOptions, BmidStatusOptions, ShowerOptions, IN_PREP, READY_TO_PRINT, SUBMITTED} from 'clubhouse/models/bmid';
+import {BmidStatusOptions, IN_PREP, READY_TO_PRINT, SUBMITTED} from 'clubhouse/models/bmid';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 import Changeset from 'ember-changeset';
 
@@ -20,9 +20,7 @@ const CSV_COLUMNS = [
   'title2',
   'title3',
   'meals',
-  {title: 'req. meals', key: 'earned_meals'},
   'showers',
-  {title: 'req. showers', key: 'earned_showers'},
   'mvr',
   'team',
   'notes',
@@ -43,8 +41,6 @@ export default class VcBmidController extends ClubhouseController {
   queryParams = ['year', 'filter'];
 
   bmidStatusOptions = BmidStatusOptions;
-  mealOptions = MealOptions;
-  showerOptions = ShowerOptions;
 
   filterOptions = [
     ['Specials (titles, meals, showers, or early arrival)', 'special'],
@@ -55,12 +51,14 @@ export default class VcBmidController extends ClubhouseController {
     ['In Prep', IN_PREP],
     ['Ready To Print', READY_TO_PRINT],
     ['Submitted BMIDs', SUBMITTED],
+    /*
     {
       groupName: 'Deprecated',
       options: [
         ['Vets w/shift after 8/10 OR PASSED training', 'signedup'],
       ]
     },
+    */
   ];
 
   @tracked sortColumn = 'callsign';
@@ -134,16 +132,18 @@ export default class VcBmidController extends ClubhouseController {
 
     switch (wantFilter) {
       case 'all_eat':
-        bmids = bmids.filter((bmid) => bmid.earned_meals === 'all');
+        bmids = bmids.filter((bmid) => (bmid.meals_granted.pre && bmid.meals_granted.event && bmid.meals_granted.post));
         break;
       case 'event_week':
-        bmids = bmids.filter((bmid) => bmid.earned_meals === 'event');
+        bmids = bmids.filter((bmid) => (!bmid.meals_granted.pre && bmid.meals_granted.event && !bmid.meals_granted.post));
         break;
       case 'any_eat':
-        bmids = bmids.filter((bmid) => (bmid.earned_meals === 'all' || bmid.earned_meals === 'event'));
+        bmids = bmids.filter((bmid) => (bmid.meals_granted.pre && bmid.meals_granted.event && bmid.meals_granted.post)
+          || (!bmid.meals_granted.pre && bmid.meals_granted.event && !bmid.meals_granted.post)
+        );
         break;
       case 'showers':
-        bmids = bmids.filter((bmid) => (bmid.earned_showers || bmid.allocated_showers || bmid.showers));
+        bmids = bmids.filter((bmid) => bmid.showers_granted);
         break;
     }
 
@@ -162,7 +162,7 @@ export default class VcBmidController extends ClubhouseController {
       bmids = bmids.filter((bmid) => {
         let haveMatch = false;
         TEXT_FILTER_FIELDS.forEach((field) => {
-          const value = bmid.get(field);
+          const value = bmid[field];
 
           if (!isEmpty(value) && regexp.test(value)) {
             haveMatch = true;
@@ -183,10 +183,13 @@ export default class VcBmidController extends ClubhouseController {
       case 'title1':
       case 'title2':
       case 'title3':
-      case 'meals':
       case 'team':
       case 'notes':
+      case 'meals':
         key = this.sortColumn;
+        if (key === 'meals') {
+          key = 'mealsShortLabel';
+        }
         bmids.sort((a, b) => {
           const aCol = a[key], bCol = b[key];
 
@@ -218,17 +221,11 @@ export default class VcBmidController extends ClubhouseController {
         });
         break;
 
-      case 'showers':
+      case 'showers_granted':
         // With showers first
         bmids.sort((a, b) => {
-          const aShowers = (a.showers || a.earned_showers || a.allocated_showers) ? 1 : 0;
-          const bShowers = (b.showers || b.earned_showers || b.allocated_showers) ? 1 : 0;
-          const result = bShowers - aShowers;
-          if (result) {
-            return result;
-          }
-
-          return a.sortCallsign.localeCompare(b.sortCallsign);
+          const result = b.showers_granted - a.showers_granted
+          return result ? result : a.sortCallsign.localeCompare(b.sortCallsign);
         });
         break;
 
@@ -411,6 +408,22 @@ export default class VcBmidController extends ClubhouseController {
       .catch((response) => this.house.handleErrorResponse(response));
   }
 
+
+  @action
+  openProvisionDialog(bmid) {
+    bmid.showProvisionDialog = true;
+  }
+
+  @action
+  closeProvisionDialog(bmid) {
+    bmid.showProvisionDialog = false;
+  }
+
+  @action
+  onProvisionUpdate(bmid, pkg) {
+    bmid.loadProvisions(pkg);
+  }
+
   /*
    * Provide a string filter. Verify any regular expressions entered are valid.
    */
@@ -464,7 +477,7 @@ export default class VcBmidController extends ClubhouseController {
 
   @action
   blurNote(bmid, event) {
-    bmid.set('notes', event.target.value);
+    bmid.notes = event.target.value;
     event.target.rows = 1;
   }
 
@@ -478,17 +491,17 @@ export default class VcBmidController extends ClubhouseController {
 
     /*
      * When a blank field is entered and then exited without entering
-     * any characters. the target.value will be "". The record column  might be
+     * any characters. the target.value will be "". The record column might be
      * null, so check to see if both are empty, and do nothing.
-     * Otherwise setting the column to "" will cause isDirty to be set and
+     * Otherwise, setting the column to "" will cause isDirty to be set and
      * we don't want that.
      */
 
-    if (isEmpty(value) && isEmpty(bmid.get(column))) {
+    if (isEmpty(value) && isEmpty(bmid[column])) {
       return;
     }
 
-    bmid.set(column, isEmpty(value) ? null : value);
+    bmid[column] = isEmpty(value) ? null : value;
   }
 
   /*
@@ -503,10 +516,8 @@ export default class VcBmidController extends ClubhouseController {
         title1: bmid.title1,
         title2: bmid.title2,
         title3: bmid.title3,
-        meals: bmid.meals,
-        earned_meals: bmid.earned_meals,
-        showers: bmid.showers ? 'Y' : 'N',
-        earned_showers: bmid.earned_showers ? 'Y' : 'N',
+        meals: bmid.mealsShortLabel,
+        showers: bmid.showers_granted ? 'Y' : 'N',
         mvr: bmid.org_vehicle_insurance ? 'Y' : 'N',
         team: bmid.team,
         notes: bmid.notes,
@@ -527,18 +538,5 @@ export default class VcBmidController extends ClubhouseController {
     this.sortColumn = column;
     this._buildViewBmids();
     this.startRenderBmids();
-  }
-
-  @action
-  rowColor(bmid) {
-    if (!bmid.has_approved_photo) {
-      return 'table-danger';
-    }
-
-    if (bmid.notQualifiedToPrint && bmid.status === IN_PREP) {
-      return 'table-warning';
-    }
-
-    return '';
   }
 }

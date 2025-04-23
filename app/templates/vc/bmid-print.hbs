@@ -123,7 +123,8 @@
       {{/if}}
       {{#if this.notQualifiedToPrint}}
         <div class="border p-2 my-2">
-          <b class="text-danger">No claimed Ticket / SAP or In-Person Training signup (these have been deselected in the export list):</b>
+          <b class="text-danger">No claimed Ticket / SAP or In-Person Training signup (these have been deselected in the
+            export list):</b>
           <div class="callsign-list">
             {{#each this.notQualifiedToPrint as |bmid|~}}
               <div>
@@ -161,10 +162,11 @@
           <tr class="{{if (eq bmid.status "failed") "bg-danger"}}">
             <td><Input @type="checkbox" @checked={{bmid.selected}} {{on "change" (fn this.toggleBmid bmid)}}/></td>
             <td>
-              {{bmid.statusHuman}}
+              {{bmid.statusLabel}}
             </td>
             <td class="no-wrap">
-              <PersonLink @person={{bmid.person}} /><br>
+              <PersonLink @person={{bmid.person}} />
+              <br>
               {{bmid.person.first_name}} {{bmid.person.last_name}}
               {{#unless bmid.has_approved_photo}}
                 <div class="text-danger">No approved photo</div>
@@ -190,20 +192,14 @@
               {{#if bmid.earned_showers}}
                 <EarnedProvisionIcon/>
               {{/if}}
-              {{if bmid.effectiveShowers "S" "-"}}
+              {{if bmid.showers_granted "S" "-"}}
             </td>
             <td>
-              {{#if bmid.allocated_meals}}
-                <AllocatedProvisionIcon/>
-              {{/if}}
-              {{#if bmid.earned_meals}}
-                <EarnedProvisionIcon/>
-              {{/if}}
-              {{bmid.effectiveMealsHuman}}
+              {{bmid.mealsLabel}}
             </td>
             <td class="w-10">
               {{#if bmid.wapMissing}}
-                <UiBadge @text="SAP missing" @type="danger" />
+                <UiBadge @text="No SAP" @type="danger"/>
               {{else}}
                 {{bmid.admissionDateShort}}
               {{/if}}

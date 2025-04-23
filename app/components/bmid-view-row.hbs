@@ -1,0 +1,44 @@
+<tr class={{this.rowColor}}>
+  <td>
+    {{#unless @bmid.has_approved_photo}}
+      {{fa-icon "eye" color="danger" right=1 fixed=true}}
+    {{/unless}}
+    {{#if @bmid.notQualifiedToPrint}}
+      {{fa-icon "exclamation-circle" color="danger" right=1 fixed=true}}
+    {{/if}}
+  </td>
+  <td>
+    <PersonLink @person={{@bmid.person}} />
+  </td>
+  <td><a href {{on-click @editBmid @bmid}}>Edit</a></td>
+  <td>{{@bmid.statusLabel}}</td>
+  <td class="w-10">
+    <PresentOrNot @value={{@bmid.title1}} @empty="-"/>
+  </td>
+  <td class="w-10">
+    <PresentOrNot @value={{@bmid.title2}} @empty="-"/>
+  </td>
+  <td class="w-5">
+    <PresentOrNot @value={{@bmid.title3}} @empty="-"/>
+  </td>
+  <td>{{if @bmid.org_vehicle_insurance "M" "-"}}</td>
+  <td class="text-center">
+    {{#if @bmid.showers_granted}}
+      S
+    {{else}}
+      -
+    {{/if}}
+  </td>
+  <td>
+    {{@bmid.mealsShortLabel}}
+  </td>
+  <td class="w-10 text-center">
+    {{#if @bmid.wapMissing}}
+      <UiBadge @text="No SAP" @type="warning"/>
+    {{else}}
+      {{@bmid.admissionDateShort}}
+    {{/if}}
+  </td>
+  <td>{{@bmid.team}}</td>
+  <td class="w-30">{{nl2br @bmid.notes}}</td>
+</tr>

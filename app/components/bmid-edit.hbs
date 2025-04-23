@@ -1,106 +1,108 @@
-<ChForm @formId="bmid" @formFor={{@entry}} @onSubmit={{@onSave}} as |f|>
-  {{#if @entry.notQualifiedToPrint}}
+<ChForm @formId="bmid" @formFor={{@bmid}} @onSubmit={{@onSave}} as |f|>
+  {{#if @bmid.notQualifiedToPrint}}
     <p>
-      <UiNotice @type={{if @entry.isNew "danger" "secondary"}}
-                @title={{if this.isEchelon "No Sign Ups Found" "No Claimed Ticket nor In-Person Training Sign-Up Found"}}
+      <UiNotice @type={{if @bmid.isNew "danger" "secondary"}}
+                @title={{if this.isEchelon "No Sign Ups Found"
+                            "No Claimed Ticket nor In-Person Training Sign-Up Found"}}
                 @icon="hand"
       >
         <p>
           {{#if this.isEchelon}}
-            Because the Echelon volunteer has not signed up for any shifts, the recommendation is to not print their BMID.
+            Because the Echelon volunteer has not signed up for any shifts, the recommendation is to not print their
+            BMID.
           {{else}}
-            Because the person has not signed up for an In-Person Training nor claimed a ticket, the recommendation is to not
-            print their BMID.
+            Because the person has not signed up for an In-Person Training nor claimed a ticket, the recommendation is
+            to not print their BMID.
           {{/if}}
         </p>
-        {{#if @entry.isNew}}
+        {{#if @bmid.isNew}}
           To ensure the BMID is printed, set the status to "Prep" or "Ready To Print" (don't forget to fill out the
           appropriate fields) and hit the "Create" button.
-        {{else if @entry.qualifiedToPrint}}
+        {{else if @bmid.qualifiedToPrint}}
           However, the BMID record has a status that will cause the BMID to be printed. Set the status to
           "Do Not Print" or "Issues" to prevent the BMID from being printed.
-        {{else if @entry.isSubmitted}}
+        {{else if @bmid.isSubmitted}}
           The BMID was submitted for printing.
-        {{else if @entry.willNotPrint}}
+        {{else if @bmid.willNotPrint}}
           The BMID record has a status which will explicitly prevent the BMID from being printed.
         {{else}}
-          Bug: Uh, the record has a status [{{@entry.status}}] which I cannot determine if the BMID will actually
+          Bug: Uh, the record has a status [{{@bmid.status}}] which I cannot determine if the BMID will actually
           be printed or not.
         {{/if}}
       </UiNotice>
     </p>
   {{/if}}
   <p>
-    {{#if @entry.wap_id}}
-      The SAP is through RAD-{{@entry.wap_id}} a {{@entry.wapTypeHuman}} status {{@entry.wap_status}}.
-      {{#if @entry.wapSubmitted}}
+    {{#if @bmid.wap_id}}
+      The SAP is through RAD-{{@bmid.wap_id}} a {{@bmid.wapTypeLabel}} status {{@bmid.wap_status}}.
+      {{#if @bmid.wapSubmitted}}
         <br>
         <b class="text-danger">SAP has been submitted for processing - SAP Date cannot be changed.</b>
-      {{else if @entry.wapBanked}}
+      {{else if @bmid.wapBanked}}
         <br>
-        <span class="text-danger">The selected {{@entry.wapTypeHuman}} is banked. An additional SAP document may need to be issued.</span>
+        <span class="text-danger">The selected {{@bmid.wapTypeLabel}} is banked. An additional SAP document may need to be issued.</span>
       {{/if}}
     {{else}}
       <b class="text-danger">A SAP or Staff Credential could not be located - SAP Date cannot be changed.</b>
     {{/if}}
   </p>
-  <p>
-    Meals and showers are a union of what is explicitly set on the BMID, allocated provisions, and non-banked earned
-    provisions.
-  </p>
-  <p>
-    <EarnedProvisionIcon/>
-    = will use earned provision.
-    <AllocatedProvisionIcon/>
-    = will use allocated provision.
-  </p>
-  {{#unless @entry.has_approved_photo}}
+  {{#unless @bmid.has_approved_photo}}
     <p>
       <b class="text-danger">Person does not have an approved photo on file.</b>
     </p>
   {{/unless}}
-  <FormRow>
+  <FormRow class="g-1">
     <f.select @name="status"
-              @label="BMID Status"
+              @label="Status"
               @options={{this.bmidStatusOptions}}
-              @fieldSize="sm"/>
-    <f.select @name="meals"
-              @label="Meals"
-              @options={{this.mealOptions}}
-              @fieldSize="sm">
-      {{#if @entry.allocated_meals}}
-        <div>
-          <AllocatedProvisionIcon/> {{@entry.allocated_meals}}
-        </div>
-      {{/if}}
-      {{#if @entry.earned_meals}}
-        <div>
-          <EarnedProvisionIcon/> {{@entry.earned_meals}}
-        </div>
-      {{/if}}
-    </f.select>
-    <f.select @name="showers"
-              @label="Showers"
-              @options={{this.showerOptions}}
-              @fieldSize="sm">
-      {{#if @entry.allocated_showers}}
-        <div>
-          <AllocatedProvisionIcon/>
-          Showers
-        </div>
-      {{/if}}
-      {{#if @entry.earned_showers}}
-        <div>
-          <EarnedProvisionIcon/>
-          Showers
-        </div>
-      {{/if}}
-    </f.select>
+              @fieldSize="sm"
+              @fixedLabel={{true}}
+              @inline={{true}}
+    />
+  </FormRow>
+  <ProvisionManagement @person={{@person}} @onUpdate={{this.updateBmidProvisions}} as |actions|>
+    <FormRow class="g-1">
+      <FormLabel @fixed={{true}} @size="sm">Meals</FormLabel>
+      <div class="col-auto small">
+        <span class="me-2">{{@bmid.mealsLabel}}</span>
+        {{#if @bmid.noMeals}}
+          <a href {{on-click actions.newMeal}} class="ms-2">
+            Add Meal Pass
+          </a>
+        {{else}}
+          {{log actions}}
+          <a href {{on-click actions.manageMeals}}>
+            Manage Meal Passes
+          </a>
+        {{/if}}
+      </div>
+    </FormRow>
+    <FormRow class="g-1">
+      <FormLabel @fixed={{true}} @size="sm">Showers</FormLabel>
+      <div class="col-auto mt-1 small">
+        <span class="me-2">{{if @bmid.showers_granted "Yes" "No"}}</span>
+        {{#if @bmid.showers_granted}}
+          <a href {{on-click actions.manageShowers}}>
+            Manage Shower Passes
+          </a>
+        {{else}}
+          <a href {{on-click actions.newShower}}>
+            Add Shower Pass
+          </a>
+        {{/if}}
+      </div>
+    </FormRow>
+  </ProvisionManagement>
+
+  <FormRow class="g-1">
     <f.select @name="admission_date"
               @label="SAP Date"
-              @disabled={{@entry.wapDisabled}}
+              @disabled={{@bmid.wapDisabled}}
               @options={{@admissionDateOptions}}
-              @fieldSize="sm"/>
+              @fieldSize="sm"
+              @fixedLabel={{true}}
+              @inline={{true}}
+    />
   </FormRow>
 
   <FormRow @margin="mt-4 mb-2">
@@ -110,52 +112,52 @@
             @maxlength={{64}}
             @fieldSize="sm"/>
   </FormRow>
-  <FormRow>
+  <FormRow class="g-1">
     <FormLabel @fixed={{true}}>Title 2</FormLabel>
     <f.text @name="title2"
             @size={{30}}
             @maxlength={{64}}
             @fieldSize="sm"/>
   </FormRow>
-  <FormRow>
+  <FormRow class="g-1">
     <FormLabel @fixed={{true}}>Title 3</FormLabel>
     <f.text @name="title3"
-            @size={{30}}
-            @maxlength={{64}}
+            @size={{3}}
+            @maxlength={{3}}
             @fieldSize="sm"/>
   </FormRow>
 
-  <FormRow>
+  <FormRow class="g-1">
     <FormLabel @fixed={{true}}>Team</FormLabel>
     <f.text @name="team"
             @size={{30}}
             @maxlength={{64}}
             @fieldSize="sm"/>
   </FormRow>
-  <FormRow>
+  <FormRow class="g-1">
     <FormLabel @fixed={{true}}>Notes</FormLabel>
     <f.textarea @name="notes"
                 @rows={{4}}
                 @cols={{80}}
                 @fieldSize="sm"/>
   </FormRow>
-  {{#if @entry.isNew}}
+  {{#if @bmid.isNew}}
     <div class="mb-4">
       This is a new BMID record.
     </div>
   {{else}}
     <div class="row mb-4">
-      <div class="col-auto">Created</div>
-      <div class="col-auto">{{@entry.created_at}}</div>
       <div class="col-auto">Last Modified</div>
-      <div class="col-auto">{{@entry.updated_at}}</div>
+      <div class="col-auto">{{shift-format @bmid.updated_at year=true}}</div>
+      <div class="col-auto">Created</div>
+      <div class="col-auto">{{shift-format @bmid.created_at year=true}}</div>
     </div>
   {{/if}}
-  <f.submit @label={{if @entry.isNew "Create" "Update"}} @disabled={{@entry.isSaving}} />
+  <f.submit @label={{if @bmid.isNew "Create" "Update"}} @size="sm"/>
   {{#if @onCancel}}
-    <UiCancelButton @onClick={{@onCancel}} @disabled={{@entry.isSaving}} />
+    <UiCancelButton @onClick={{@onCancel}} @size="sm"/>
   {{/if}}
-  {{#if @entry.isSaving}}
-    <LoadingIndicator/>
+  {{#if @bmid.isSaving}}
+    <LoadingDialog/>
   {{/if}}
 </ChForm>

@@ -1,5 +1,5 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import { action } from '@ember/object';
+import {action} from '@ember/object';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
 
 export default class PersonBmidController extends ClubhouseController {
@@ -8,13 +8,16 @@ export default class PersonBmidController extends ClubhouseController {
   }
 
   @action
-  save(model, isValid) {
-    if (!isValid)
+  async save(model, isValid) {
+    if (!isValid) {
       return;
+    }
 
-    model.save().then(() => {
+    try {
+      await model.save();
       this.toast.success('BMID successfully updated.');
-    })
-    .catch((response) => this.house.handleErrorResponse(response));
+    } catch (response) {
+      this.handleErrorResponse(response);
+    }
   }
 }

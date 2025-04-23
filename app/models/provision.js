@@ -1,16 +1,10 @@
 import Model, {attr} from '@ember-data/model';
 import dayjs from 'dayjs';
+import {buildMealsLabel, MEALS_FULL_LABELS} from "clubhouse/models/bmid";
 
-export const ALL_EAT_PASS = 'all_eat_pass';
-export const EVENT_EAT_PASS = 'event_eat_pass';
-export const PRE_EVENT_EAT_PASS = 'pre_event_eat_pass';
-export const POST_EVENT_EAT_PASS = 'post_event_eat_pass';
-export const PRE_EVENT_EVENT_EAT_PASS = 'pre_event_event_eat_pass';
-export const EVENT_POST_EAT_PASS = 'event_post_event_eat_pass';
-export const PRE_POST_EAT_PASS = 'pre_post_eat_pass';
 
 export const EVENT_RADIO = 'event_radio';
-
+export const MEALS = 'meals';
 export const WET_SPOT = 'wet_spot';
 
 export const AVAILABLE = 'available';
@@ -22,79 +16,16 @@ export const EXPIRED = 'expired';
 export const SUBMITTED = 'submitted';
 
 export const TypeLabels = {
-  [ALL_EAT_PASS]: 'All Eat Meal Pass',
-  [EVENT_EAT_PASS]: 'Event Week Meal Pass',
-  [PRE_EVENT_EAT_PASS]: 'Pre-Event Eat Pass',
-  [POST_EVENT_EAT_PASS]: 'Post-Event Eat Pass',
-  [PRE_EVENT_EVENT_EAT_PASS]: 'Pre-Event + Event Eat Pass',
-  [PRE_POST_EAT_PASS]: 'Pre+Post Eat Pass',
-  [EVENT_POST_EAT_PASS]: 'Event+Post Eat Pass',
-
+  [MEALS]: 'Meals',
   [EVENT_RADIO]: 'Event Radio',
   [WET_SPOT]: 'Wet Spot (Org Showers)'
 };
 
 export const TypeOptions = [
-  {
-    groupName: 'Meal Provisions',
-    options: [
-      ['All Eat Pass', ALL_EAT_PASS],
-      ['Event Week Meal Pass', EVENT_EAT_PASS],
-      ['Pre-Event Meal Pass', PRE_EVENT_EAT_PASS],
-      ['Pre-Event + Event Meal Pass', PRE_EVENT_EVENT_EAT_PASS],
-      ['Pre+Post Meal Pass', PRE_POST_EAT_PASS],
-      ['Event + Post-Event Meal Pass', EVENT_POST_EAT_PASS],
-      ['Post-Event Meal Pass', POST_EVENT_EAT_PASS],
-    ]
-  },
-  {
-    groupName: 'Other Provisions',
-    options: [
-      ['Event Radio', EVENT_RADIO],
-      ['Wet Spot Access', WET_SPOT],
-    ]
-  },
+  ['Event Radio', EVENT_RADIO],
+  ['Meals', MEALS],
+  ['Wet Spot Access', WET_SPOT],
 ];
-
-
-export const TypeShortLabels = {
-  [ALL_EAT_PASS]: 'ALL-EAT',
-  [EVENT_EAT_PASS]: 'EVENT-EAT',
-  [PRE_EVENT_EAT_PASS]: 'PRE-EAT',
-  [POST_EVENT_EAT_PASS]: 'POST-EAT',
-  [PRE_EVENT_EVENT_EAT_PASS]: 'PRE+EVENT-EAT',
-  [EVENT_POST_EAT_PASS]: 'EVENT+POST-EAT',
-};
-
-export const MealMatrix = {
-  [ALL_EAT_PASS]: 'pre+event+post',
-  [EVENT_EAT_PASS]: 'event',
-  [PRE_EVENT_EAT_PASS]: 'pre',
-  [POST_EVENT_EAT_PASS]: 'post',
-  [PRE_EVENT_EVENT_EAT_PASS]: 'pre+event',
-  [EVENT_POST_EAT_PASS]: 'event+post',
-  [PRE_POST_EAT_PASS]: 'pre+post'
-};
-
-export const MealMatrixLabel = {
-  'all': 'All Eats',
-  'event': 'Event Week',
-  'pre': 'Pre-Event Week',
-  'post': 'Post-Event Week',
-  'pre+event': 'Pre-Event Week & Event Week',
-  'event+post': 'Event Week & Post-Event Week',
-  'pre+post': 'Pre-Event Week & Post-Event Week',
-};
-
-const MealPasses = {
-  [ALL_EAT_PASS]: true,
-  [EVENT_EAT_PASS]: true,
-  [PRE_EVENT_EAT_PASS]: true,
-  [POST_EVENT_EAT_PASS]: true,
-  [PRE_EVENT_EVENT_EAT_PASS]: true,
-  [EVENT_POST_EAT_PASS]: true,
-  [PRE_POST_EAT_PASS]: true
-};
 
 export default class ProvisionModel extends Model {
   @attr('number') person_id;
@@ -109,6 +40,10 @@ export default class ProvisionModel extends Model {
   @attr('string', {readOnly: true}) created_at;
   @attr('string', {readOnly: true}) updated_at;
 
+  @attr('boolean') pre_event_meals;
+  @attr('boolean') event_week_meals;
+  @attr('boolean') post_event_meals;
+
   @attr('boolean', {defaultValue: false}) is_allocated;
 
   get isEventRadio() {
@@ -116,7 +51,7 @@ export default class ProvisionModel extends Model {
   }
 
   get isMealPass() {
-    return MealPasses[this.type] ?? false;
+    return this.type === MEALS;
   }
 
   get isWetSpot() {
@@ -156,11 +91,11 @@ export default class ProvisionModel extends Model {
   }
 
   get typeLabel() {
-    return TypeLabels[this.type] ?? this.type;
-  }
+    if (this.type === MEALS) {
+      return buildMealsLabel({ pre: this.pre_event_meals, event: this.event_week_meals, post: this.post_event_meals}, MEALS_FULL_LABELS) + ' Eat Pass';
+    }
 
-  get mealPeriods() {
-    return MealMatrix[this.type];
+    return TypeLabels[this.type] ?? this.type;
   }
 
   get typeLabelWithCounts() {

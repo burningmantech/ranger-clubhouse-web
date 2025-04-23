@@ -107,12 +107,17 @@ export default class ChFormFieldBaseComponent extends Component {
    */
 
   get labelClass() {
-    const {labelClass, inline, fixedLabel} = this.args;
+    const {labelClass, inline, fixedLabel, fieldSize} = this.args;
 
-    const hasError = this.errorMessages?.length ? ' text-danger' : '';
+    const classes = [];
+    const hasError = this.errorMessages?.length > 0;
 
     if (typeof (labelClass) === 'string') {
-      return `${labelClass}${hasError}`;
+      classes.push(labelClass);
+      if (hasError) {
+        classes.push('text-danger')
+      }
+      return classes.join(' ');
     }
 
     let label;
@@ -121,7 +126,19 @@ export default class ChFormFieldBaseComponent extends Component {
     } else {
       label = inline ? this.labelInlineClassDefault : this.labelClassDefault;
     }
-    return `${label}${hasError}`;
+
+    if (label) {
+      classes.push(label);
+    }
+
+    if (this.args.label && fieldSize) {
+      classes.push(`col-form-label-${fieldSize}`);
+    }
+
+    if (hasError) {
+      classes.push('text-danger')
+    }
+    return classes.join(' ');
   }
 
   /**

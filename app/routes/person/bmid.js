@@ -1,5 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
+import BmidModel from "clubhouse/models/bmid";
 
 export default class PersonBmidRoute extends ClubhouseRoute {
   model() {
@@ -10,19 +11,12 @@ export default class PersonBmidRoute extends ClubhouseRoute {
     });
   }
 
-  setupController(controller, model) {
-    let bmid;
+  setupController(controller, {bmid, ticketingInfo}) {
     this.store.unloadAll('bmid');
 
-    if (model.bmid.id) {
-      bmid = this.house.pushPayload('bmid', model.bmid);
-    } else {
-      bmid = this.store.createRecord('bmid', model.bmid);
-    }
-
-    controller.set('bmid', bmid);
-    controller.set('person', this.modelFor('person'));
-    controller.set('year', this.house.currentYear());
-    controller.set('ticketingInfo', model.ticketingInfo);
+    controller.bmid = BmidModel.pushToStore(this, bmid);
+    controller.person = this.modelFor('person');
+    controller.year = this.house.currentYear();
+    controller.ticketingInfo = ticketingInfo;
   }
 }

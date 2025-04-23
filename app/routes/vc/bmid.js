@@ -2,6 +2,7 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {ADMIN, EDIT_BMIDS} from 'clubhouse/constants/roles';
 import requestYear from 'clubhouse/utils/request-year';
 import RSVP from 'rsvp';
+import BmidModel from "clubhouse/models/bmid";
 
 export default class VcBmidRoute extends ClubhouseRoute {
   roleRequired = [ADMIN, EDIT_BMIDS];
@@ -27,18 +28,7 @@ export default class VcBmidRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     // Loop through the list
-    const bmids = model.bmids.map((bmid) => {
-      let rec;
-      if (bmid.id) {
-        rec = this.house.pushPayload('bmid', bmid);
-      } else {
-        // Potential new BMID
-        rec = this.store.createRecord('bmid', bmid);
-      }
-
-      rec.sortCallsign = (bmid.person ? bmid.person.callsign.toLowerCase() : `Deleted #${bmid.person_id}`);
-      return rec;
-    });
+    const bmids = BmidModel.pushToStore(this, model.bmids);
 
     controller.set('bmids', bmids);
     controller.set('year', model.year);

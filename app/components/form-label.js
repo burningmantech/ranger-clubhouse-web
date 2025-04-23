@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 
 export default class FormLabelComponent extends Component {
   get labelClasses() {
-    const { fixed, auto, class: className } = this.args;
+    const { fixed, auto, class: className, size } = this.args;
 
     const classes=[];
 
@@ -14,6 +14,10 @@ export default class FormLabelComponent extends Component {
       if (auto) {
         classes.push('col-sm-12 col-lg-auto');
       }
+    }
+
+    if (size) {
+      classes.push(`col-form-label-${size}`);
     }
 
     if (className) {

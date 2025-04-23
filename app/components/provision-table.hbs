@@ -1,0 +1,76 @@
+<span class="me-2"><b>Meals:</b> {{this.mealsLabel}}</span>
+<span class="me-2"><b>Showers:</b> {{if @package.showers "Yes" "No"}}</span>
+<b>Event Radios:</b> {{@package.radios}}
+<div class="text-muted mb-2">The above is calculated from available, claimed, and/or submitted provisions</div>
+
+{{#if @package.have_allocated}}
+  <p class="fw-bold">
+    {{fa-icon "hand-point-right" right=1}} One or more provisions have been allocated. All provisions, including
+    those that were earned and then banked, will be used.
+  </p>
+{{/if}}
+<p>
+  Type:
+  <RadioGroup @options={{this.typeFilterOptions}}
+              @onChange={{set-value this 'typeFilter'}}
+              @value={{this.typeFilter}} />
+</p>
+Showing {{this.viewProvisions.length}} of
+{{pluralize @provisions.length
+            (concat (if @isShowingAll "all current & past" "current") " provision")}}
+<UiTable>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Type</th>
+    <th class="text-center">Earned/Alloc.</th>
+    <th class="text-center">Status</th>
+    <th>Source Year</th>
+    <th>Expires</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.viewProvisions key="id" as |provision|}}
+    <tr>
+      <td><a href {{on-click @editProvision provision}}>RP-{{provision.id}}</a></td>
+      <td>
+        {{provision.typeLabelWithCounts}}
+      </td>
+      <td class="text-center">
+        {{#if provision.is_allocated}}
+          allocated
+        {{else}}
+          earned
+        {{/if}}
+      </td>
+      <td class="text-center">{{provision.status}}</td>
+      <td class="text-end">{{provision.source_year}}</td>
+      <td class="text-end">{{provision.expiryYear}}</td>
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="7" class="text-danger">No current/non-expired provisions were found.</td>
+    </tr>
+  {{/each}}
+  </tbody>
+</UiTable>
+
+<div class="d-flex justify-content-between mt-4">
+  <UiButtonRow>
+    <UiButton @onClick={{@newMeal}} @size="sm">
+      Add Meal Pass
+    </UiButton>
+    <UiButton @onClick={{@newShower}} @size="sm">
+      Add Shower Pass
+    </UiButton>
+    <UiButton @onClick={{@newRadio}} @size="sm">
+      Add Event Radio
+    </UiButton>
+    <UiButton @type="secondary" @onClick={{@showAllAction}} @size="sm">
+      Show {{if @isShowingAll "Current" "All Current & Past"}} Provisions
+    </UiButton>
+  </UiButtonRow>
+  {{#if @closeAction}}
+    <UiCloseButton @onClick={{@closeAction}} @size="sm"/>
+  {{/if}}
+</div>

@@ -1,0 +1,145 @@
+{{yield (hash
+          newMeal=this.newMeal
+          newShower=this.newShower
+          newRadio=this.newRadio
+          manageProvisions=this.manageProvisions
+          manageMeals=this.manageMeals
+          manageShowers=this.manageShowers
+          manageRadios=this.manageRadios
+        )}}
+
+{{#if this.showTable}}
+  {{#if @inline}}
+    <ProvisionTable @person={{@person}}
+                    @provisions={{this.provisions}}
+                    @package={{this.package}}
+                    @showAllAction={{this.showAllAction}}
+                    @isShowingAll={{this.isShowingAll}}
+                    @editProvision={{this.editProvision}}
+                    @newMeal={{this.newMeal}}
+                    @newShower={{this.newShower}}
+                    @newRadio={{this.newRadio}}
+                    @initialType={{this.initialType}}
+    />
+  {{else}}
+    <ModalDialog @onEscape={{this.closeTable}} as |Modal|>
+      <Modal.title>Manage Provisions For {{@person.callsign}}</Modal.title>
+      <Modal.body>
+        <ProvisionTable @person={{@person}}
+                        @provisions={{this.provisions}}
+                        @package={{this.package}}
+                        @showAllAction={{this.showAllAction}}
+                        @isShowingAll={{this.isShowingAll}}
+                        @editProvision={{this.editProvision}}
+                        @newMeal={{this.newMeal}}
+                        @newShower={{this.newShower}}
+                        @newRadio={{this.newRadio}}
+                        @closeAction={{this.closeTable}}
+                        @initialType={{this.initialType}}
+        />
+      </Modal.body>
+    </ModalDialog>
+  {{/if}}
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog/>
+{{/if}}
+
+{{#if this.entry}}
+  <ModalDialog @title="{{if this.entry.isNew "Create A New" "Edit"}} Provision For {{@person.callsign}}"
+               @onEscape={{this.cancelProvision}}
+               as |Modal|>
+    <ChForm @formId="entry"
+            @formFor={{this.entry}}
+            @onSubmit={{this.saveProvision}}
+            as |f|>
+      <Modal.body>
+        <FormRow>
+          <f.select @name="type"
+                    @label="Type"
+                    @options={{this.typeOptions}}
+          />
+          <f.select @name="status"
+                    @label="Status"
+                    @options={{this.statusOptions}}/>
+          <f.select @name="source_year"
+                    @options={{this.yearOptions}}
+                    @label="Source Year"/>
+          <f.select @name="expiry_year"
+                    @options={{this.yearOptions}}
+                    @label="Good Through"/>
+        </FormRow>
+        {{#if (eq f.model.type "event_radio")}}
+          <FormRow>
+            <f.number @name="item_count"
+                      @label="Radio Count"
+                      @size={{5}}
+                      @maxlength={{5}}
+            />
+          </FormRow>
+        {{else if (eq f.model.type "meals")}}
+          <FormRow>
+            <FormLabel @auto={{true}}>Meal Periods</FormLabel>
+            <div class="col-auto mt-2">
+              <f.checkbox @name="pre_event_meals" @label="Pre-Event" @inline={{true}}/>
+              <f.checkbox @name="event_week_meals" @label="Event Week" @inline={{true}}/>
+              <f.checkbox @name="post_event_meals" @label="Post-Event" @inline={{true}}/>
+            </div>
+          </FormRow>
+        {{/if}}
+
+        <p>
+          An allocated provision is one which has been issued, not earned, for a position. (E.g., meals & showers for
+          SITE Setup.) It cannot be banked by the person, and will expire at the end of the event.
+        </p>
+        <FormRow>
+          <div class="col-12">
+            <f.checkbox @name="is_allocated" @label="Is allocated provision"/>
+          </div>
+          {{#if f.model.is_allocated}}
+            <div class="col-12">
+              Because the allocated flag is set, all provisions, including those that were earned and then banked, will
+              be used.
+            </div>
+          {{/if}}
+        </FormRow>
+
+        {{#unless this.entry.isNew}}
+          Comments:
+          <div class="my-2">
+            {{#if this.entry.comments}}
+              {{nl2br this.entry.comments}}
+            {{else}}
+              <i>no comments yet.</i>
+            {{/if}}
+          </div>
+        {{/unless}}
+        <FormRow>
+          <f.textarea @name="additional_comments"
+                      @label="Additional Comments"
+                      @rows={{4}}
+                      @cols={{80}}
+                      @hint="(Your callsign and today's date will be automatically added to any additional comments provided.)"/>
+        </FormRow>
+        {{#unless this.entry.isNew}}
+          Last Modified: {{shift-format this.entry.updated_at year=true}}
+          Created: {{shift-format this.entry.created_at year=true}}
+        {{/unless}}
+      </Modal.body>
+      <Modal.footer @align="start">
+        <f.submit @label={{if this.entry.isNew "Create" "Update"}} />
+        <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelProvision}} />
+        {{#if this.entry.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
+        {{#unless this.entry.isNew}}
+          <UiButton @type="gray" @class="ms-auto"
+                    @onClick={{fn this.deleteProvision this.entry}}>
+            {{fa-icon "trash" right=1}} Delete
+          </UiButton>
+        {{/unless}}
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
