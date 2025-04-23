@@ -32,7 +32,7 @@ export default class VcApplicationsIndexRoute extends ClubhouseRoute {
     controller.VCs = model.VCs;
     const existingValues = this.house.getKey(FILTERS_KEY) || {};
     const newValues = {};
-    console.log("* FILTER VALUES", FILTERS_VALUES);
+
     forEach(FILTERS_VALUES, (value, key) => {
       if (model.yearDidChange) {
         newValues[key] = value;
@@ -41,7 +41,6 @@ export default class VcApplicationsIndexRoute extends ClubhouseRoute {
       }
 
       controller[key] = newValues[key];
-      console.log(`* KEY [${key}] -> [${newValues[key]}]`);
     });
 
     this.house.setKey(FILTERS_KEY, newValues);
