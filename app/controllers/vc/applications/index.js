@@ -246,4 +246,8 @@ export default class VcApplicationsIndexController extends ClubhouseController {
 
     return filtered.filter((f) => !isEmpty(f)).join(' AND ');
   }
+
+  get callsignLetter() {
+    return this.session.user.callsign.charAt(0);
+  }
 }
