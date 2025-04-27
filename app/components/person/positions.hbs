@@ -8,59 +8,88 @@
     </LinkTo>
   {{/if}}
 </UiButtonRow>
-{{#if this.hasNoPositions}}
+{{#if this.hasNoTeamOrPositions}}
   <div class="mt-2">
     No teams or positions.
   </div>
 {{else if @showMembership}}
+  <div class="mt-2">Teams Membership</div>
   <UiTable class="mt-2">
     <thead>
     <tr>
       <th>Team</th>
       <th class="text-center">Member?</th>
       <th class="text-center">Manager?</th>
-      <th>Positions Granted</th>
     </tr>
     </thead>
     <tbody>
-    <tr>
-      <td><i class="text-muted">General Positions</i></td>
-      <td class="text-center">-</td>
-      <td class="text-center">-</td>
-      <td>
-        {{#each this.membership.unassignedPositions key="id" as |pos|}}
-          {{position-label pos}}<br>
-        {{else}}
-          <i>none</i>
-        {{/each}}
-      </td>
-    </tr>
-    {{#each this.membership.teams key="id" as |team|}}
+    {{#each this.teamMembership as |team|}}
       <tr>
-        <td>{{team-title team}}</td>
+        <td>
+          {{team.title}}
+          {{#unless team.active}}
+            <UiBadge @type="warning">inactive</UiBadge>
+          {{/unless}}
+        </td>
         <td class="text-center">
           {{#if team.is_member}}
-            <UiBadge @text="member" @type="secondary" />
+            <UiBadge @type="secondary">member</UiBadge>
           {{else}}
             -
           {{/if}}
         </td>
         <td class="text-center">
           {{#if team.is_manager}}
-            <UiBadge @text="manager" @type="success" />
+            <UiBadge @type="success">manger</UiBadge>
           {{else}}
             -
           {{/if}}
         </td>
-        <td>
-          {{#each team.positions as |p|}}
-            {{position-label p}}<br>
-          {{else}}
-            <i class="text-muted">No team positions granted.</i>
-          {{/each}}
+      </tr>
+    {{else}}
+      <tr>
+        <td colspan="4">
+          No team membership.
         </td>
       </tr>
     {{/each}}
     </tbody>
   </UiTable>
+  <b>Positions</b>
+  <div class="masonry-container masonry-small mt-2">
+    <div class="masonry-item p-2">
+      <div class="masonry-item-header">General Positions</div>
+      <div class="ms-2 mb-3">
+        {{#each this.positions.generalPositions as |position|}}
+          {{position.title}}
+          {{#unless position.active}}
+            <UiBadge @type="warning">inactive</UiBadge>
+          {{/unless}}<br>
+        {{else}}
+          <span class="text-danger">No general positions granted.</span>
+        {{/each}}
+      </div>
+    </div>
+    {{#each this.positions.teams as |team|}}
+      <div class="masonry-item p-2">
+        <div class="masonry-item-header">{{team.title}}</div>
+        <div class="ms-2 mb-3">
+          {{#each team.positions as |position|}}
+            {{position.title}}
+            {{#unless position.active}}
+              <UiBadge @type="warning">inactive</UiBadge>
+            {{/unless}}<br>
+          {{/each}}
+        </div>
+      </div>
+    {{else}}
+      <div class="masonry-item p-2">
+        <div class="masonry-item-header">Team Positions</div>
+        <div class="ms-2 mb-3">
+          <span class="text-danger">No team positions granted.</span>
+        </div>
+      </div>
+    {{/each}}
+  </div>
+
 {{/if}}

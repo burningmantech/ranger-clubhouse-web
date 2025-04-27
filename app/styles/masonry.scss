@@ -22,6 +22,10 @@
   border-bottom: 1px solid #dddddd;
 }
 
+.masonry-small, .masonry-small .masonry-item-header {
+  font-size: 0.875rem;
+}
+
 .masonry-border .masonry-item {
   border: 1px solid #c0c0c0;
   padding: 7px;
