@@ -2,50 +2,60 @@ import Component from '@glimmer/component';
 import {cached} from '@glimmer/tracking';
 
 export default class PersonPositionsComponent extends Component {
-   get hasNoPositions() {
+  get hasNoTeamOrPositions() {
     const membership = this.args.personMembership;
 
     return (!membership.positions.length && !membership.teams.length);
   }
 
   @cached
-  get membership() {
+  get teamMembership() {
     const membership = this.args.personMembership;
+    const {teams} = membership;
 
-    const teams = [...membership.teams, ...membership.not_member_teams];
-    const unassignedPositions = [];
-
-    membership.not_member_teams.forEach((t) => t.is_member = false);
-    membership.teams.forEach((t) => t.is_member = true);
-
-    const teamsById = teams.reduce((hash, team) => {
-      hash[team.id] = team;
-      return hash;
-    }, {});
-
-    membership.positions.forEach((p) => {
-      if (!p.team_id) {
-        unassignedPositions.push(p);
-        return;
-      }
-
-      const team = teamsById[p.team_id];
-      if (team) {
-        (team.positions ??= []).push(p);
-      } else {
-        unassignedPositions.push(p);
-      }
-    });
+    teams.forEach((t) => t.is_member = true);
 
     membership.management.forEach((m) => {
-      if (teamsById[m.id]) {
-        teamsById[m.id].is_manager = true;
+      const team = teams.find((t) => t.id === m.id)
+      if (team) {
+        team.is_manager = true;
+      }
+    })
+
+    return teams;
+  }
+
+  @cached
+  get positions() {
+    const {personMembership} = this.args;
+    const {positions} =personMembership;
+    const teamsById = personMembership.teams.reduce((hash, team) => {
+      hash[team.id] = team;
+      return hash
+    }, {});
+    const teamPositions = {};
+    const generalPositions = [];
+
+    personMembership.not_member_teams.forEach((t) => {teamsById[t.id] = t;})
+
+    positions.forEach((p) => {
+      if (p.team_id) {
+        if (!teamPositions[p.team_id]) {
+          teamPositions[p.team_id] = {title: teamsById[p.team_id].title, positions: []};
+        }
+        teamPositions[p.team_id].positions.push(p);
+      } else {
+        generalPositions.push(p);
       }
     });
 
-
+    const teams = Object.keys(teamPositions).map(id => teamPositions[id]);
     teams.sort((a, b) => a.title.localeCompare(b.title));
-
-    return {teams, unassignedPositions};
+    console.log(teams);
+    return {
+      generalPositions,
+      teams
+    }
   }
+
 }
