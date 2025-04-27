@@ -4,7 +4,9 @@
             @skipPandemic={{true}}
             @minYear={{2015}}
 />
-
+<p>
+  For application emails, your assignment id is {{this.session.userId}} with the first letter of your callsign "{{this.callsignLetter}}".
+</p>
 {{#if this.notCurrentYear}}
   <UiAlert @type="warning">
     {{fa-icon "exclamation" right=1}} Warning: you are viewing a prior year.
