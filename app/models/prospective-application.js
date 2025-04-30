@@ -53,6 +53,8 @@ export const WHY_VOLUNTEER_REVIEW_OKAY = 'okay';
 export const WHY_VOLUNTEER_REVIEW_PROBLEM = 'problem';
 export const WHY_VOLUNTEER_REVIEW_UNREVIEWED = 'unreviewed';
 
+export const QUALIFIED_ATTENDANCE_WINDOW = 10;
+
 export const StatusOptions = [
   {
     groupName: 'Regular Workflow',
@@ -275,11 +277,18 @@ export default class ProspectiveApplicationModel extends Model {
     return this.eventsList.find((e) => (e === 2020 || e === 2021));
   }
 
-  get hasEventYearWithinRange() {
-    const recent = currentYear() - 10;
+  get hasQualifiedEventYear() {
+    const thisYear = currentYear();
+    let cutoff = thisYear - QUALIFIED_ATTENDANCE_WINDOW;
 
-    return this.qualifiedEvents.find((e) => e >= recent);
+    if (thisYear < 2032) {
+      // The gap between 2019 and 2022 is treated as contiguous. Damn timey wimey temporal math.
+      cutoff -= 2;
+    }
+
+    return this.qualifiedEvents.find((e) => e >= cutoff);
   }
+
 
   get experienceLabel() {
     return ExperienceLabels[this.experience] ?? `Bug: Unknown Experience [${this.experience}]`;
@@ -340,7 +349,7 @@ export default class ProspectiveApplicationModel extends Model {
   get experienceIssue() {
     if (!this.qualifiedEvents.length) {
       return 'NO QUALIFIED EVENT YEARS LISTED';
-    } else if (!this.hasEventYearWithinRange) {
+    } else if (!this.hasQualifiedEventYear) {
       return 'No qualifying event years within the last 10 years';
     }
 
@@ -353,7 +362,7 @@ export default class ProspectiveApplicationModel extends Model {
           case EXPERIENCE_BRC2:
             if (this.qualifiedEvents.length < 2) {
               return 'LESS THAN TWO BRC QUALIFIED EVENTS';
-            } else if (!this.hasEventYearWithinRange) {
+            } else if (!this.hasQualifiedEventYear) {
               return 'NO EVENT YEAR WITHIN THE LAST 10';
             } else {
               return null;
@@ -361,7 +370,7 @@ export default class ProspectiveApplicationModel extends Model {
           case EXPERIENCE_BRC1R1:
             if (!this.qualifiedEvents.length) {
               return 'NO BRC EVENTS';
-            } else if (!this.hasEventYearWithinRange) {
+            } else if (!this.hasQualifiedEventYear) {
               return 'NO EVENT YEAR WITHIN THE LAST 10';
             } else if (isEmpty(this.regional_experience)) {
               return 'NO REGIONAL EXP. LISTED';
@@ -376,7 +385,7 @@ export default class ProspectiveApplicationModel extends Model {
   }
 
   get isBRCExperienceOkay() {
-    return this.qualifiedEvents.length > 0 && this.hasEventYearWithinRange;
+    return this.qualifiedEvents.length > 0 && this.hasQualifiedEventYear;
   }
 
   get handlesList() {
