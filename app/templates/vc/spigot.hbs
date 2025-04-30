@@ -29,6 +29,7 @@
     <tr>
       <th>Date</th>
       <th>Imported</th>
+      <th>Created</th>
       <th>First Login</th>
       <th>Photo Approved</th>
       <th>Online Course</th>
@@ -43,6 +44,9 @@
       <td><b>Totals</b></td>
       <td class="text-end">
         {{this.totals.imported}}
+      </td>
+      <td class="text-end">
+        {{this.totals.created}}
       </td>
       <td class="text-end">
         {{this.totals.first_login}}
@@ -76,7 +80,10 @@
           {{/if}}
         </td>
         <td class="text-end">
-          <SpigotCallsigns @callsigns={{day.imported}} @title="Imported" @day={{day.day}} />
+          <span class="d-inline-block">{{day.imported.length}}</span>
+        </td>
+        <td class="text-end">
+          <SpigotCallsigns @callsigns={{day.created}} @title="Created" @day={{day.day}} />
         </td>
         <td class="text-end">
           <SpigotCallsigns @callsigns={{day.first_login}} @title="First Login" @day={{day.day}} />

@@ -5,6 +5,7 @@ import {cached, tracked} from '@glimmer/tracking';
 const CSV_COLUMNS = [
   {title: 'Date', key: 'day'},
   {title: 'Imported', key: 'imported'},
+  {title: 'Created', key: 'created'},
   {title: 'First Login', key: 'first_login'},
   {title: 'BMID Photo Approved', key: 'photo_approved'},
   {title: 'Online Trained', key: 'online_trained'},
@@ -58,11 +59,12 @@ export default class VcSpigotController extends ClubhouseController {
 
   @cached
   get totals() {
-    let imported = 0, photo_approved = 0, online_trained = 0, training_signups = 0,
+    let imported = 0, created = 0, photo_approved = 0, online_trained = 0, training_signups = 0,
       training_passed = 0, dropped = 0, alpha_signups = 0, first_login = 0;
 
     this.days.forEach((day) => {
       imported += day.imported?.length ?? 0;
+      created += day.created?.length ?? 0;
       first_login += day.first_login?.length ?? 0;
       photo_approved += day.photo_approved?.length ?? 0;
       online_trained += day.online_trained?.length ?? 0;
@@ -73,7 +75,7 @@ export default class VcSpigotController extends ClubhouseController {
     });
 
     return {
-      imported, photo_approved, online_trained, training_signups, training_passed, dropped, alpha_signups, first_login
+      imported, created, photo_approved, online_trained, training_signups, training_passed, dropped, alpha_signups, first_login
     };
   }
 }
