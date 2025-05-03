@@ -200,6 +200,7 @@ Router.map(function () {
     this.route('survey', function () {
       this.route('report', {path: '/:survey_id'});
     });
+    this.route('trained-no-work');
     this.route('trainer-attendance');
     this.route('unified-flagging');
     this.route('untrained-people');

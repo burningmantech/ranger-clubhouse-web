@@ -23,6 +23,11 @@
             @routeArg={{this.training.id}}
             @title="Trainer Resources"
             @icon="circle-question"/>
+    <s.link @route="training.trained-no-work"
+            @routeArg={{this.training.id}}
+            @title="Trained / No Work"
+            @icon="circle-question"
+    />
     {{#if this.training.is_art}}
       <s.link @route="training.untrained-people"
               @routeArg={{this.training.id}}
