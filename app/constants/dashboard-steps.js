@@ -293,13 +293,17 @@ export const ONLINE_COURSE = {
       message =
         '<p>As an Echelon volunteer, you have the option to take the Ranger Online Course. If you do decide to attend an In-Person training, the Online Course must be completed first.</p>' +
         manualLocation +
-        '<p>Please be sure to focus on the radio protocol section of the manual in case you will be carrying a radio.</p>' +
-        `<p>Note: it may take up to 20 minutes for the Clubhouse to record your course completion.</p>`;
-
+        '<p>Please be sure to focus on the radio protocol section of the manual in case you will be carrying a radio.</p>';
     } else {
       message = manualLocation +
-        `<p>The Online Course, like the In-Person training, has to be completed every year. The estimate time to complete the course is ${duration}.</p> <p>Note: it may take up to 20 minutes, or more, for the Clubhouse to record your course completion.</p>`;
+        `<p>The Online Course, like the In-Person training, has to be completed every year. The estimate time to complete the course is ${duration}.</p>`;
     }
+
+    const ta = setting('TrainingAcademyEmail');
+    message += 'Note: The Clubhouse may take up to 30 minutes to reflect completion of the Online Course. ' +
+      'If it’s been more than 2 hours since you finished the course, and it still isn’t showing as complete, ' +
+      'contact the Training Academy.<br>' +
+      `<a href="mailto:${ta}" class="d-block mb-3">${ta}</a>`;
     return {
       result: isEchelon ? OPTIONAL : ACTION_NEEDED,
       message: htmlSafe(message),
@@ -618,7 +622,7 @@ export const SIGN_MOTOR_POOL_PROTOCOL = {
 
 export const MVR_REQUEST = {
   name: 'Submit a MVR request',
-  period: [BEFORE_EVENT,DURING_EVENT],
+  period: [BEFORE_EVENT, DURING_EVENT],
   check({milestones}) {
     const {mvr_eligible} = milestones;
 
@@ -912,7 +916,7 @@ export const SIGN_NDA = {
       route: 'me.agreements',
       linkedMessage: {
         route: 'me.agreements',
-        prefix: htmlSafe('Starting late 2022, all Clubhouse users who have been granted either the Event Management Year Round or On Playa roles are required EACH CALENDAR YEAR to review and agree to the Sensitive Data Access and Use Policy document. <b class="text-danger">Your privileges are suspended until the document is agreed to.</b><br><br> Visit'),
+        prefix: htmlSafe('All Clubhouse users who have been granted either the Event Management Year Round or On Playa roles are required EACH CALENDAR YEAR to review and agree to the Sensitive Data Access and Use Policy document. <b class="text-danger">Your privileges are suspended until the document is agreed to.</b><br><br> Visit'),
         text: 'Me > Agreements',
         suffix: 'to review and agree to the document.'
       },
