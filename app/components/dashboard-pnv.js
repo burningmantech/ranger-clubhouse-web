@@ -96,7 +96,7 @@ const ALPHA_STEPS = [
               + `<p>Show up prepared with snacks and a meal, layered clothing, a hat, sunglasses, comfortable walking shoes,
             sunscreen, a water container (water and electrolytes are offered), a pen or pencil, a notebook, and, if
             attending a swing shift (2pm til midnight), a flashlight or headlamp. </p>`
-              + `<p>Check-in at HQ Window at Ranger HQ, then proceed to the Hat Rack just to the right of HQ Window. Ranger HQ is located on the Esplanade and 6:30 (NEW LOCATION FOR 2025)</p>`
+              + `<p>Check-in at HQ Window at Ranger HQ, then proceed to the Hat Rack just to the right of HQ Window. Ranger HQ is located on the Esplanade and 6:31 (NEW LOCATION FOR 2025)</p>`
               + `If you are unable to make your Alpha shift, promptly notify the Mentor Cadre by email or visit Ranger HQ on playa.`),
             email: 'MentorEmail'
           };
