@@ -80,7 +80,11 @@
           {{/if}}
         </td>
         <td class="text-end">
-          {{day.imported.length}}
+          {{#if day.imported.length}}
+            {{day.imported.length}}
+          {{else}}
+            -
+          {{/if}}
         </td>
         <td class="text-end">
           <SpigotCallsigns @callsigns={{day.created}} @title="Created" @day={{day.day}} />
