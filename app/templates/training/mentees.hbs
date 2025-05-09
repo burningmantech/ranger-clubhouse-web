@@ -1,0 +1,75 @@
+<h1>{{this.training.title}} - Current Mentees</h1>
+<p>
+  This page will show any current ART mentees.
+</p>
+<p>
+  The position title column shows when the person was granted the position. The <i>Last Worked</i> column show
+  what year the person last worked the position. Tracking of position grants &amp; revocations did not begin
+  until 2023. Any positions granted prior to 2023 will appear as 2023.
+</p>
+{{#unless this.canRevokePositions}}
+  <p>
+    You do not have the privileges to revoke the mentee positions from an account. Contact your cadre for help.
+  </p>
+{{/unless}}
+Showing {{pluralize this.people.length "person"}}
+<UiExportToCSVButton @onClick={{this.exportToCSV}} @size="sm"/>
+<UiTable>
+  <thead>
+  <tr>
+    <th>Callsign</th>
+    <th>Status</th>
+    {{#each this.positions as |position|}}
+      <th>{{position.title}}</th>
+      <th>Last Worked</th>
+    {{/each}}
+    {{#if this.canRevokePositions}}
+      <th>Action</th>
+    {{/if}}
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.people as |person|}}
+    <tr>
+      <td>
+        <PersonLink @person={{person}} />
+      </td>
+      <td>{{person.status}}</td>
+      {{#each person.positions as |position|}}
+        <td>
+          {{#if position.granted}}
+            {{position.granted}}
+          {{else}}
+            <i>not granted</i>
+          {{/if}}
+        </td>
+        <td>
+          {{#if position.last_worked}}
+            {{position.last_worked}}
+          {{else}}
+            <i>never</i>
+          {{/if}}
+        </td>
+      {{/each}}
+      {{#if this.canRevokePositions}}
+        <th>
+          {{#if person.positionsRevoked}}
+            position(s) revoked
+          {{else}}
+            <UiButton @onClick={{fn this.revokePositions person}} @size="sm">Revoke Positions(s)</UiButton>
+          {{/if}}
+        </th>
+      {{/if}}
+    </tr>
+  {{else}}
+    <tr>
+      <td colspan="5">
+        No one currently has any mentee positions granted.
+      </td>
+    </tr>
+  {{/each}}
+  </tbody>
+</UiTable>
+{{#if this.isSubmitting}}
+  <LoadingDialog/>
+{{/if}}

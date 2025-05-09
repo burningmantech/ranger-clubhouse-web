@@ -34,6 +34,13 @@
               @title="Untrained People"
               @icon="exclamation-circle" @iconType="s"
       />
+      {{#if this.training.has_mentees}}
+        <s.link @route="training.mentees"
+                @routeArg={{this.training.id}}
+                @title="Current Mentees"
+                @icon="exclamation-circle" @iconType="s"
+        />
+      {{/if}}
       {{#if this.canManageSurveys}}
         <s.link @route="training.survey.index"
                 @routeArg={{this.training.id}}
