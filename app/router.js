@@ -188,6 +188,7 @@ Router.map(function () {
   this.route('training', {path: '/training/:position_id'}, function () {
     this.route('index', {path: '/'});
     this.route('capacity');
+    this.route('mentees');
     this.route('multiple-enrollments');
     this.route('online-course-progress');
     this.route('people-training-completed');
