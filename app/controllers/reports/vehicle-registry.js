@@ -62,7 +62,7 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
       )
     }
 
-    vehicles = vehicles.toArray();
+    vehicles = [...vehicles]; // convert from Ember records array to regular array
     vehicles.sort((a, b) => {
       const aName = a.isFleet ? (isEmpty(a.team_assignment) ? '1A' : a.team_assignment) : a.person.callsign;
       const bName = b.isFleet ? (isEmpty(b.team_assignment) ? '1A' : b.team_assignment) : b.person.callsign;

@@ -20,7 +20,7 @@ class ViewPosition {
 
   get visiblePeople() {
     const statuses = this.statuses;
-    const visibleStatuses = new Set(statuses.filterBy('selected').mapBy('name'));
+    const visibleStatuses = new Set(statuses.filter((s) => s.selected).map((s) => s.name));
     if (statuses.length === visibleStatuses.length) {
       return this.people;
     }
@@ -46,7 +46,7 @@ export default class PeopleByPositionController extends ClubhouseController {
   onPlaya = false;
 
   get visiblePositions() {
-    const selected = new Set(this.positionTypes.filterBy('selected').mapBy('name'));
+    const selected = new Set(this.positionTypes.filter((p) => p.selected).map((p) => p.name));
     const positions = this.viewPositions;
     return positions.filter((p) => selected.has(p.type));
   }

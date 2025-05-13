@@ -1,14 +1,10 @@
-<YearSelect @title="Schedule / Sign Up" @year={{this.year}} @years={{this.person.years_seen}}
-            @subheader={{true}}
-            @onChange={{set-value this 'year'}} />
-
 <ScheduleManage @person={{this.person}}
-                @slots={{this.slots}}
-                @signedUpSlots={{this.signedUpSlots}}
-                @scheduleSummary={{this.scheduleSummary}}
-                @creditsEarned={{this.creditsEarned}}
                 @year={{this.year}}
-                @permission={{this.permission}}
-                @includeLog={{true}}
-                @milestones={{this.milestones}}
-/>
+                @includeLog={{true}} as |onYearChange|
+>
+  <YearSelect @title="Schedule / Sign Up"
+              @year={{this.year}}
+              @years={{this.person.years_seen}}
+              @subheader={{true}}
+              @onChange={{fn this.onYearChange onYearChange}} />
+</ScheduleManage>

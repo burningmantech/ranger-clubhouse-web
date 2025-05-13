@@ -13,7 +13,7 @@ import {
   PhoneticAlphabetRule,
   SubstringRule
 } from 'clubhouse/utils/handle-rules';
-import { ReservationTypeLabels } from 'clubhouse/models/handle-reservation';
+import {ReservationTypeLabels} from 'clubhouse/models/handle-reservation';
 import _ from 'lodash';
 
 let nextCheckId = 1;
@@ -24,8 +24,8 @@ class CheckedHandle {
   }
 
   get conflicts() {
-    const enabledRules = new Set(this.controller.handleRules.filterBy('enabled').mapBy('id'));
-    const enabledEntities = new Set(this.controller.entityTypes.filterBy('enabled').mapBy('name'));
+    const enabledRules = new Set(this.controller.handleRules.filter((r) => r.enabled).map((r) => r.id));
+    const enabledEntities = new Set(this.controller.entityTypes.filter((r) => r.enabled).map((r) => r.name));
     const vintage = this.controller.includeVintage;
     return this.allConflicts.filter((c) => {
       if (!enabledRules.has(c.ruleId)) {
@@ -68,7 +68,7 @@ export default class VcHandlerCheckerController extends ClubhouseController {
 
   /** Maps rule ID to {name string, rule object, enabled boolean} */
   buildHandleRules() {
-    const handles = this.allHandles.toArray();
+    const handles = [...this.allHandles]; // Convert from ember array to regular array
     const rules = [];
     const addRule = (rule, name, enabled = true) => rules.push(new Rule({
       id: rule.id,
@@ -109,16 +109,16 @@ export default class VcHandlerCheckerController extends ClubhouseController {
     this.entityTypes = _.uniq(_.map(this.allHandles, 'entityType'))
       .sort(comparator)
       .map((type) => new EntityType({
-      id: dasherize(type),
-      name: type,
-      label: ReservationTypeLabels[type] ?? type,
-      enabled: true,
-    }));
+        id: dasherize(type),
+        name: type,
+        label: ReservationTypeLabels[type] ?? type,
+        enabled: true,
+      }));
   }
 
   @cached
   get allEnabledHandles() {
-    const enabled = new Set(this.entityTypes.filterBy('enabled').mapBy('name'));
+    const enabled = new Set(this.entityTypes.filter((e) => e.enabled).map((e) => e.name));
     const vintage = this.includeVintage;
     return this.allHandles
       .filter((handle) => (vintage && handle.personVintage) || enabled.has(handle.entityType));

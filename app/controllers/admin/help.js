@@ -55,6 +55,6 @@ export default class AdminHelpController extends ClubhouseController {
   }
 
   _sortDocuments() {
-    this.viewDocuments = _.sortBy(this.documents.toArray(),'slug');
+    this.viewDocuments = _.sortBy(this.documents,'slug');
   }
 }

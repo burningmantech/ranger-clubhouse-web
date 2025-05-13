@@ -206,7 +206,7 @@ export default class OpsSurveyManageController extends ClubhouseController {
   @action
   async moveQuestionAction(group, question, direction) {
     const idx = group.surveyQuestions.findIndex((q) => q.id == question.id);
-    let questions = group.surveyQuestions.toArray().filter((q) => q.id != question.id);
+    let questions = group.surveyQuestions.filter((q) => q.id != question.id);
 
     if (direction < 0) {
       if (idx === 1) {
