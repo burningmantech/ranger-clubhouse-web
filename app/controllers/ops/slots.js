@@ -92,16 +92,16 @@ export default class OpsSlotsController extends ClubhouseController {
     let filterByDescription = this.filterByDescription
 
     if (activeFilter === 'active') {
-      slots = slots.filterBy('active', true);
+      slots = slots.filter((s) => s.active);
     } else if (activeFilter === 'inactive') {
-      slots = slots.filterBy('active', false);
+      slots = slots.filter((s) => !s.active);
     }
 
     if (dayFilter) {
       if (dayFilter === 'upcoming') {
-        slots = slots.filterBy('has_started', false);
+        slots = slots.filter((s) => s.has_started);
       } else if (dayFilter !== 'all') {
-        slots = slots.filterBy('slotDay', dayFilter);
+        slots = slots.filter((s) => s.slotDay === dayFilter);
       }
     }
 

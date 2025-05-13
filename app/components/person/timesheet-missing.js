@@ -114,7 +114,7 @@ export default class PersonTimesheetMissingComponent extends Component {
     if (idx >= 0) {
       idx++;
       while (idx < timesheetMissing.length) {
-        const entry = timesheetMissing.objectAt(idx);
+        const entry = timesheetMissing[idx];
         if (entry.isPending) {
           nextEntry = entry;
           break;

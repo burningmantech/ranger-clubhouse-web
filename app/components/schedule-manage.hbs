@@ -1,81 +1,91 @@
+{{#if (has-block)}}
+  {{yield this.onYearChange}}
+{{/if}}
 <p>
   All shift / training session times are in the Pacific timezone unless otherwise noted.
 </p>
-<div class="max-width-1000">
-  {{#unless this.isCurrentYear}}
-    <UiNotice @icon="hand-point-right" @title="Viewing Prior Year">
-      Warning: You are viewing the {{@year}} schedule.
-    </UiNotice>
-  {{/unless}}
 
-  {{#if this.showScheduleBlocker}}
-    <ScheduleBlocked @requirements={{this.permission.requirements}}
-                     @person={{@person}}
-                     @overrideAction={{this.overrideAction}}
-                     @canOverride={{this.canOverride}}
-                     @isMe={{this.isMe}}
-                     @isAdmin={{this.isAdmin}}
-                     @hasTrainingBlocker={{this.hasTrainingBlocker}}
-    />
-  {{else}}
-    {{#if (and this.isAdmin this.requirementsOverride)}}
-      <UiNotice @type="danger" @icon="exclamation"
-                @title="All forced scheduling actions are logged and subject to review.">
-        As a Clubhouse Admin, you are allowed to override any scheduling blockers. Note: such actions are monitored.
+{{#if this.isLoading}}
+  <LoadingDialog/>
+{{else}}
+  <div class="max-width-1000">
+    {{#unless this.isCurrentYear}}
+      <UiNotice @icon="hand-point-right" @title="Viewing Prior Year">
+        Warning: You are viewing the {{this.year}} schedule.
       </UiNotice>
-    {{/if}}
-    <UiTab as |tab|>
-      <tab.pane @title="Schedule" @id="schedule">
-        <ScheduleBurnWeekendRecommendation @person={{@person}} @permission={{this.permission}} />
-        <ScheduleTable @slots={{@signedUpSlots}}
+    {{/unless}}
+
+    {{#if this.showScheduleBlocker}}
+      <ScheduleBlocked @requirements={{this.permission.requirements}}
                        @person={{@person}}
+                       @overrideAction={{this.overrideAction}}
+                       @canOverride={{this.canOverride}}
                        @isMe={{this.isMe}}
                        @isAdmin={{this.isAdmin}}
-                       @year={{@year}}
-                       @creditsEarned={{@creditsEarned}}
-                       @scheduleSummary={{this.scheduleSummary}}
-                       @leaveSlot={{this.leaveSlot}}
-                       @showPeople={{this.showPeople}}
-                       @hidePeople={{this.hidePeople}}
-        />
-      </tab.pane>
-      <tab.pane @title="Available Sign-Ups" @id="sign-ups">
-        <ScheduleBurnWeekendRecommendation @person={{@person}} @permission={{this.permission}} />
-        <ScheduleAvailableSignUps @availableSlots={{this.availableSlots}}
-                                  @year={{@year}}
-                                  @showPeople={{this.showPeople}}
-                                  @hidePeople={{this.hidePeople}}
-                                  @joinSlot={{this.joinSlot}}
-                                  @leaveSlot={{this.leaveSlot}}
-                                  @isAdmin={{this.isAdmin}}
-                                  @needsFullTraining={{this.permission.needs_full_training}}
-                                  @person={{@person}}
-        />
-      </tab.pane>
-      {{#if (or @person.isRanger @person.isEchelon)}}
-        <tab.pane @title="Ticket & Provisions Qualifications" @id="progress">
-          {{#if this.isCurrentYear}}
-            {{#if (eq tab.activeId "progress")}}
-              <PersonTicketProvisionsProgress @person={{@person}} />
+                       @hasTrainingBlocker={{this.hasTrainingBlocker}}
+      />
+    {{else}}
+      {{#if (and this.isAdmin this.requirementsOverride)}}
+        <UiNotice @type="danger" @icon="exclamation"
+                  @title="All forced scheduling actions are logged and subject to review.">
+          As a Clubhouse Admin, you are allowed to override any scheduling blockers. Note: such actions are monitored.
+        </UiNotice>
+      {{/if}}
+      <UiTab as |tab|>
+        <tab.pane @title="Schedule" @id="schedule">
+          <ScheduleBurnWeekendRecommendation @person={{@person}} @permission={{this.permission}} />
+          <ScheduleTable @slots={{this.signedUpSlots}}
+                         @person={{@person}}
+                         @isMe={{this.isMe}}
+                         @isAdmin={{this.isAdmin}}
+                         @year={{this.year}}
+                         @creditsEarned={{this.creditsEarned}}
+                         @scheduleSummary={{this.scheduleSummary}}
+                         @leaveSlot={{this.leaveSlot}}
+                         @showPeople={{this.showPeople}}
+                         @hidePeople={{this.hidePeople}}
+          />
+        </tab.pane>
+        <tab.pane @title="Available Sign-Ups" @id="sign-ups">
+          <ScheduleBurnWeekendRecommendation @person={{@person}}
+                                             @permission={{this.permission}} />
+          <ScheduleAvailableSignUps @availableSlots={{this.availableSlots}}
+                                    @year={{this.year}}
+                                    @showPeople={{this.showPeople}}
+                                    @hidePeople={{this.hidePeople}}
+                                    @joinSlot={{this.joinSlot}}
+                                    @leaveSlot={{this.leaveSlot}}
+                                    @isAdmin={{this.isAdmin}}
+                                    @needsFullTraining={{this.permission.needs_full_training}}
+                                    @person={{@person}}
+          />
+        </tab.pane>
+        {{#if (or @person.isRanger @person.isEchelon)}}
+          <tab.pane @title="Ticket & Provisions Qualifications" @id="progress">
+            {{#if this.isCurrentYear}}
+              {{#if (eq tab.activeId "progress")}}
+                <PersonTicketProvisionsProgress @person={{@person}} />
+              {{/if}}
+            {{else}}
+              Ticket qualification information is only available for the current event.
             {{/if}}
-          {{else}}
-            Ticket qualification information is only available for the current event.
-          {{/if}}
-        </tab.pane>
-      {{/if}}
-      <tab.pane @title="Hours & Credits" @id="hours-credits">
-        {{#if (eq tab.activeId "hours-credits")}}
-          <ScheduledHoursCredits @person={{@person}}
-                                 @year={{@year}} />
+          </tab.pane>
         {{/if}}
-      </tab.pane>
-      {{#if @includeLog}}
-        <tab.pane @title="Audit Log" @id="audit-log">
-          {{#if (eq tab.activeId "audit-log")}}
-            <Person::ScheduleLog @year={{@year}} @person={{@person}} />
+        <tab.pane @title="Hours & Credits" @id="hours-credits">
+          {{#if (eq tab.activeId "hours-credits")}}
+            <ScheduledHoursCredits @person={{@person}}
+                                   @year={{this.year}} />
           {{/if}}
         </tab.pane>
-      {{/if}}
-    </UiTab>
-  {{/if}}
-</div>
+        {{#if @includeLog}}
+          <tab.pane @title="Audit Log" @id="audit-log">
+            {{#if (eq tab.activeId "audit-log")}}
+              <Person::ScheduleLog @person={{@person}}
+                                   @year={{this.year}} />
+            {{/if}}
+          </tab.pane>
+        {{/if}}
+      </UiTab>
+    {{/if}}
+  </div>
+{{/if}}

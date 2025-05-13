@@ -60,7 +60,7 @@ export default class PositionController extends ClubhouseController {
 
   @cached
   get viewByTeams() {
-    const groups = _.groupBy(this.viewPositions.toArray(), 'team_id');
+    const groups = _.groupBy([...this.viewPositions], 'team_id');
 
     const teams = this.teams.map((team) => ({
       id: team.id,

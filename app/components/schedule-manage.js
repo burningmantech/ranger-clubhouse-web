@@ -1,13 +1,14 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {schedule} from '@ember/runloop';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {htmlSafe} from '@ember/template';
 import {TRAINING} from 'clubhouse/constants/positions';
 import {isEmpty} from '@ember/utils';
 import hyperlinkText from "clubhouse/utils/hyperlink-text";
 import {shiftFormat} from "clubhouse/helpers/shift-format";
+import ScheduleSlotModel from "clubhouse/records/schedule-slot";
 
 export default class ScheduleManageComponent extends Component {
   @service ajax;
@@ -19,16 +20,23 @@ export default class ScheduleManageComponent extends Component {
 
   @tracked scheduleSummary;
   @tracked requirementsOverride = false;
-  @tracked showScheduleBlocker = false;
   @tracked permission;
+  @tracked creditsEarned;
 
+  @tracked slots;
   @tracked availableSlots;
+
   @tracked isCurrentYear;
+  @tracked year;
 
   @tracked isShinyPenny;
 
+  @tracked isLoading = false;
+
   @tracked signUpInfo;
   @tracked signUpSlot;
+
+  @tracked showScheduleBlocker = false;
 
   activeOptions = [
     ['Active', 'active'],
@@ -39,35 +47,51 @@ export default class ScheduleManageComponent extends Component {
   constructor() {
     super(...arguments);
 
-    const {person, permission, year, slots, signedUpSlots} = this.args;
-
-    this.scheduleSummary = this.args.scheduleSummary;
-    this._sortAndMarkSignups();
-
-    signedUpSlots.forEach((signedUp) => {
-      const slot = slots.find((slot) => signedUp.id === slot.id);
-      if (slot) {
-        slot.person_assigned = true;
-      }
-    });
-
-    this.availableSlots = slots.filter((slot) => slot.slot_active);
-    this.isCurrentYear = (+year === this.house.currentYear());
-
-    this.isMe = (this.session.userId === +person.id);
+    this.isMe = (this.session.userId === +this.args.person.id);
     this.isAdmin = this.session.isAdmin;
-
-    if (this.isCurrentYear) {
-      if (!permission.all_signups_allowed) {
-        this.showScheduleBlocker = true;
-      } else {
-        this.showScheduleBlocker = this.hasTrainingBlocker = !permission.training_signups_allowed;
-      }
-    }
-
-    this.permission = permission;
+    this._loadSchedule(this.args.year);
   }
 
+  async _loadSchedule(year) {
+    const person_id = this.args.person.id;
+    try {
+      this.isLoading = true;
+      this.isCurrentYear = (+year === this.house.currentYear());
+
+      const data = {
+        person_id,
+        year,
+      }
+      if (this.isCurrentYear) {
+        data.signup_permission = 1;
+      }
+      const schedule = await this.ajax.request(`person/${person_id}/schedule`, {data});
+
+      this.year = year;
+      this.permission = schedule.signup_permission;
+      this.slots = ScheduleSlotModel.hydrate(schedule.slots, schedule.positions);
+      this.creditsEarned = schedule.credits_earned;
+      this.scheduleSummary = schedule.schedule_summary;
+      this.availableSlots = this.slots.filter((slot) => slot.slot_active);
+      if (this.isCurrentYear) {
+        if (!this.permission.all_signups_allowed) {
+          this.showScheduleBlocker = true;
+        } else {
+          this.showScheduleBlocker = this.hasTrainingBlocker = !this.permission.training_signups_allowed;
+        }
+      }
+      this._sortAndMarkSignups();
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  @action
+  onYearChange(year) {
+    this._loadSchedule(year);
+  }
 
   /**
    * Sort the signed up slots by start time, and mark any slots which overlap with one another.
@@ -76,11 +100,8 @@ export default class ScheduleManageComponent extends Component {
    */
 
   _sortAndMarkSignups() {
-    const slots = this.args.signedUpSlots;
-
-    slots.sort((a, b) => a.slot_begins_time - b.slot_begins_time);
     // Clear out overlapping flags
-    this.args.slots.forEach((slot) => {
+    this.slots.forEach((slot) => {
       slot.isOverlapping = false;
       slot.overlappingSlots = [];
       slot.hasTrainingOverlap = false;
@@ -88,7 +109,7 @@ export default class ScheduleManageComponent extends Component {
 
     let prevEndTime = 0, prevSlot = null;
 
-    slots.forEach(function (slot) {
+    this.signedUpSlots.forEach(function (slot) {
       if (slot.slot_begins_time < prevEndTime) {
         if (slot.isTraining && prevSlot.isTraining
           && (
@@ -116,6 +137,14 @@ export default class ScheduleManageComponent extends Component {
     });
   }
 
+  @cached
+  get signedUpSlots() {
+    const slots = this.slots.filter((slot) => slot.person_assigned);
+    slots.sort((a, b) => a.slot_begins_time - b.slot_begins_time);
+
+    return slots;
+  }
+
   /**
    * Override the scheduling sign up blockers
    *
@@ -133,18 +162,12 @@ export default class ScheduleManageComponent extends Component {
    * Sign up for a shift. Prevent the page from moving because a new row appeared in the signed up table.
    *
    * @param slot
-   * @param {Event} event
    */
 
   @action
-  joinSlot(slot, event) {
-    const row = event.target.closest('.schedule-row');
-    const currentOffset = row.getBoundingClientRect().top - window.scrollY;
-
+  joinSlot(slot) {
     this.shiftManage.slotSignup(slot, this.args.person, (result) => {
       // Record the original row position on the page
-
-      this.args.signedUpSlots.pushObject(slot);
       slot.person_assigned = true;
       this.permission = {...this.permission, recommend_burn_weekend_shift: result.recommend_burn_weekend_shift};
       this._sortAndMarkSignups();
@@ -153,8 +176,6 @@ export default class ScheduleManageComponent extends Component {
       // to the schedule.
       schedule('afterRender',
         async () => {
-          window.scrollTo(window.scrollX, row.getBoundingClientRect().top - currentOffset);
-
           if (this.isMe) {
             if (!isEmpty(slot.slot_url)) {
               this.modal.info('Additional Shift Information',
@@ -220,13 +241,8 @@ export default class ScheduleManageComponent extends Component {
    */
 
   @action
-  leaveSlot(slot, event) {
-    let message, row = null, currentOffset = 0;
-
-    if (event) {
-      row = event.target.closest('.schedule-row');
-      currentOffset = row.getBoundingClientRect().top - window.scrollY;
-    }
+  leaveSlot(slot) {
+    let message;
 
     if (slot.has_started && this.isAdmin) {
       message = 'The shift has already started. Because you are an admin, you are allowed to removed the shift. '
@@ -242,29 +258,10 @@ export default class ScheduleManageComponent extends Component {
         slot.isSubmitting = true;
         try {
           const result = await this.ajax.request(`person/${this.args.person.id}/schedule/${slot.id}`, {method: 'DELETE'});
-          const signedUp = this.args.signedUpSlots.find((s) => +s.id === +slot.id);
-
-          if (row) {
-            // Try to keep the page position static. The sign up will be removed
-            // from the schedule, the row deleted, and the browser may want
-            // to reposition the page.
-            setTimeout(() =>
-              schedule('afterRender', () => {
-                // The sign-up may have been removed via the scheduled table and the row no longer exists.
-                if (document.body.contains(row)) {
-                  window.scrollTo(window.scrollX, row.getBoundingClientRect().top - currentOffset);
-                }
-              }), 100);
-          }
-
-          if (signedUp) {
-            this.args.signedUpSlots.removeObject(signedUp);
-            this._sortAndMarkSignups();
-          }
-
           slot.person_assigned = false;
           slot.slot_signed_up = result.signed_up;
           this.permission = {...this.permission, recommend_burn_weekend_shift: result.recommend_burn_weekend_shift};
+          this._sortAndMarkSignups();
           this.toast.success('The shift has been removed from the schedule.');
         } catch (response) {
           this.house.handleErrorResponse(response);
