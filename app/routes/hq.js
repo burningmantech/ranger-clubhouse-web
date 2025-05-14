@@ -2,7 +2,6 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {action} from '@ember/object';
 import {NotFoundError} from '@ember-data/adapter/error'
 import {ADMIN, SHIFT_MANAGEMENT} from 'clubhouse/constants/roles';
-import RSVP from 'rsvp';
 import {setting} from 'clubhouse/utils/setting';
 
 export default class HqRoute extends ClubhouseRoute {
@@ -23,39 +22,40 @@ export default class HqRoute extends ClubhouseRoute {
   }
 
 
-  model({person_id}) {
+  async model({person_id}) {
     const year = this.house.currentYear();
 
     this.store.unloadAll('timesheet');
     this.store.unloadAll('asset-person');
 
     const requests = {
-      person: this.store.findRecord('person', person_id, {reload: true}),
-      personEvent: this.store.findRecord('person-event', `${person_id}-${year}`, {reload: true}),
-      eventInfo: this.ajax.request(`person/${person_id}/event-info`, {data: {year}})
+      person: await this.store.findRecord('person', person_id, {reload: true}),
+      personEvent: await this.store.findRecord('person-event', `${person_id}-${year}`, {reload: true}),
+      personBanners: await this.store.query('person-banner', {person_id, active: 1}),
+      eventInfo: await this.ajax.request(`person/${person_id}/event-info`, {data: {year}})
         .then(({event_info}) => event_info),
 
-      positions: this.ajax.request(`person/${person_id}/positions`, {
+      positions: await this.ajax.request(`person/${person_id}/positions`, {
         data: {include_training: 1, year}
       }).then(({positions}) => positions),
 
-      unread_message_count: this.ajax.request(`person/${person_id}/unread-message-count`)
+      unread_message_count: await this.ajax.request(`person/${person_id}/unread-message-count`)
         .then((result) => result.unread_message_count),
 
-      assets: this.store.query('asset-person', {person_id, year}),
+      assets: await this.store.query('asset-person', {person_id, year}),
 
-      attachments: this.store.findAll('asset-attachment', {reload: true}),
-      timesheetSummary: this.ajax.request(`person/${person_id}/timesheet-summary`, {data: {year}})
+      attachments: await this.store.findAll('asset-attachment', {reload: true}),
+      timesheetSummary: await this.ajax.request(`person/${person_id}/timesheet-summary`, {data: {year}})
         .then((result) => result.summary),
-      photo: this.ajax.request(`person/${person_id}/photo`).then(({photo}) => photo),
+      photo: await this.ajax.request(`person/${person_id}/photo`).then(({photo}) => photo),
     }
 
     if (!this.session.user.onduty_position) {
       // Double check to see if the person is really off duty (another HQ worker might have signed them in)
-      requests.onduty = this.session.updateOnDuty();
+      requests.onduty = await this.session.updateOnDuty();
     }
 
-    return RSVP.hash(requests);
+    return requests;
   }
 
   setupController(controller, model) {

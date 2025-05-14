@@ -78,6 +78,7 @@ Router.map(function () {
     this.route('people-by-permissions');
     this.route('people-by-status');
     this.route('people-by-status-change');
+    this.route('person-banners')
     this.route('permissions');
     this.route('person-create');
     this.route('position-sanity-checker');

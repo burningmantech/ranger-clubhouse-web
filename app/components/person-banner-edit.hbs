@@ -1,0 +1,41 @@
+<ModalDialog @title="{{if @entry.isNew "Create" "Edit"}} Banner Message"
+             @onEscape={{@onFinished}} as |Modal|>
+  <ChForm @formId="banner"
+          @formFor={{@entry}}
+          @onSubmit={{this.save}} as |f|>
+    <Modal.body>
+      <p>
+        Important: Account banner messages are visible to anyone with Event Management On Playa or Year-Round
+        permissions.
+        This includes HQ Window volunteers who check the person in and out, Mentors, Volunteer Coordinators, and others
+        groups with authorization to look up accounts.
+        <b class="text-danger">Note: the person will not see this message.</b>
+      </p>
+      <FormRow>
+        <f.radioGroup @name="is_permanent"
+                      @label="Event Only Or Permanent"
+                      @options={{this.permanentOptions}}
+        />
+      </FormRow>
+      <FormRow>
+        <f.textarea @name="message"
+                    @label="Banner message to show"
+                    @rows={{10}}
+                    @cols={{80}}/>
+      </FormRow>
+    </Modal.body>
+    <Modal.footer @align="start">
+      <f.submit @label="Submit"/>
+      <UiCancelButton @onClick={{@onFinished}} />
+      <div class="ms-auto">
+        <UiButton @type="danger" @onClick={{this.deleteBanner}} @size="sm">
+          {{fa-icon "trash" right=1}} Delete
+        </UiButton>
+      </div>
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog/>
+{{/if}}

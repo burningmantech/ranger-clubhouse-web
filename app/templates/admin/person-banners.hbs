@@ -1,0 +1,70 @@
+<main>
+  <h1>Person Banner Messages</h1>
+  <p>
+    This page will show what banner messages have been created to show on the Person Manage and HQ Window Interfaces.
+  </p>
+  Showing {{pluralize this.banners.length "banner message"}}
+  <UiTable>
+    <thead>
+    <tr>
+      <th>#</th>
+      <th>Callsign</th>
+      <th>Year</th>
+      <th>Permanent?</th>
+      <th>Created At/By</th>
+      <th>Updated At/By</th>
+      <th>Message</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    {{#each this.banners as |row|}}
+      <tr>
+        <td>{{row.id}}</td>
+        <td class="no-wrap">
+          <PersonLink @person={{row.person}} />
+        </td>
+        <td>{{year-format row.created_at}}</td>
+        <td class="no-wrap text-center">
+          {{#if row.is_permanent}}
+            <UiBadge @type="warning">permanent</UiBadge>
+          {{else}}
+            <UiBadge @type="secondary">event only</UiBadge>
+          {{/if}}
+        </td>
+        <td class="no-wrap">
+          {{shift-format row.created_at year=true}}<br>
+          {{#if row.creator_person}}
+            {{row.creator_person.callsign}}
+          {{else}}
+            <i>- unknown -</i>
+          {{/if}}
+        </td>
+        <td class="no-wrap">
+          {{#if row.updated_at}}
+            {{shift-format row.updated_at year=true}}<br>
+            {{#if row.updater_person}}
+              {{row.updater_person.callsign}}
+            {{else}}
+              <i>- unknown -</i>
+            {{/if}}
+          {{else}}
+            -
+          {{/if}}
+        </td>
+        <td>
+          {{nl2br row.message}}
+        </td>
+        <td>
+          <UiEditButton @type="secondary" @size="sm" @onClick={{fn this.edit row}} />
+        </td>
+      </tr>
+    {{/each}}
+    </tbody>
+  </UiTable>
+</main>
+
+{{#if this.entry}}
+  <PersonBannerEdit @entry={{this.entry}} @onFinished={{this.closeDialog}} />
+{{/if}}

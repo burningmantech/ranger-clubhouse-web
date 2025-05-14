@@ -7,12 +7,12 @@ import {NotFoundError} from '@ember-data/adapter/error';
 export default class PersonRoute extends ClubhouseRoute {
   roleRequired = [ADMIN, MANAGE, VC, MENTOR, TRAINER];
 
-  async model({person_id}) {
-    return await this.store.findRecord('person', person_id, {reload: true});
+  model({person_id}) {
+    return this.store.findRecord('person', person_id, {reload: true});
   }
 
   setupController(controller, model) {
-    controller.set('person', model);
+    controller.person = model;
   }
 
   @action

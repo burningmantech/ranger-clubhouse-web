@@ -98,9 +98,6 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('number') tshirt_swag_id;
   @attr('number') tshirt_secondary_swag_id;
 
-  @attr('string') message;
-  @attr('string') message_updated_at;
-
   // Emergency contact
 
   @attr('string') emergency_contact;

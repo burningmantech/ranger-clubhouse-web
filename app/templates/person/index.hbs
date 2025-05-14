@@ -1,3 +1,4 @@
+<PersonBannerManage @person={{this.person}} @personBanners={{this.personBanners}} />
 {{#if
   (or this.person.isSuspended this.person.isResigned this.person.isDeceased this.person.isUberBonked this.person.isDismissed)}}
   <UiNotice @icon="ban"
@@ -74,6 +75,8 @@
                                 @showPasswordDialogAction={{this.showPasswordDialogAction}}
 
                                 @personFkas={{this.personFkas}}
+
+                                @personBanners={{this.personBanners}}
               />
             {{else}}
               <Person::SimpleForm @person={{this.person}}
@@ -199,56 +202,6 @@
 
 {{#if this.showPasswordDialog}}
   <PersonPassword @onClose={{this.closePasswordDialogAction}} @person={{this.person}} />
-{{/if}}
-
-{{#if this.showConfirmNoteOrMessage}}
-  <ModalDialog @title="Add Account Note" @onEscape={{this.closeConfirmNoteOrMessage}} as |Modal|>
-    <Modal.body>
-      <h4 class="text-danger">A NOTE WILL NOT BE SHOWN TO {{this.person.callsign}}</h4>
-      <p>
-        Notes are only meant to be seen by Admins, HQ Window workers, and Volunteer Coordinators.
-      </p>
-      Would you rather send a Clubhouse Message?
-    </Modal.body>
-    <Modal.footer @align="start">
-      <UiButton @onClick={{this.sendClubhouseMessage}}>Send Clubhouse Message</UiButton>
-      <UiButton @class="mx-3" @onClick={{this.editNote}}>Add Note</UiButton>
-      <UiCancelButton @onClick={{this.closeConfirmNoteOrMessage}} />
-    </Modal.footer>
-  </ModalDialog>
-{{else if this.showEditNote}}
-  <ModalDialog @title="{{if this.person.messsage "Add" "Update"}} Account Note"
-               @onEscape={{this.closeNote}} as |Modal|>
-    <ChForm @formId="person-note"
-            @formFor={{this.personNote}}
-            @changeSet={{false}}
-            @onSubmit={{this.saveNote}} as |f|>
-      <Modal.body>
-        <p>
-          The note will be shown to all Volunteer Coordinators, HQ Window Workers, and other Event Management role
-          holders when this account is viewed
-          <span class="text-danger">A NOTE WILL NOT BE SEEN BY {{this.person.callsign}}.</span>
-        </p>
-        <p>
-          Examples: "Person is ok to sign-in for pre-event shifts.",
-          "Do not let this person work a shift until this person talks with Hubcap"
-        </p>
-        <p>
-          The note will automatically timestamped when saved or updated.
-        </p>
-        <FormRow>
-          <f.textarea @name="message"
-                      @label="Enter the note to be shown:"
-                      @cols={{80}}
-                      @rows={{6}}/>
-        </FormRow>
-      </Modal.body>
-      <Modal.footer @align="start">
-        <f.submit @label="Save Note"/>
-        <UiCancelButton @onClick={{this.closeNote}} />
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
 {{/if}}
 
 {{#if this.isSaving}}

@@ -26,13 +26,7 @@
       </div>
     </div>
   </div>
-
-  {{#if this.person.message}}
-    <UiNotice @title="Important Account Note" @icon="hand-point-right">
-      {{nl2br this.person.message}}
-      <div class="mt-2 text-muted">Added {{shift-format this.person.message_updated_at}}</div>
-    </UiNotice>
-  {{/if}}
+  <PersonBannerManage @person={{this.person}} @personBanners={{this.personBanners}} />
   <div class="d-flex flex-column flex-lg-row">
     <div class="flex-lg-grow-1 order-1 order-lg-0">
       {{#if (not this.person.canStartShift)}}
