@@ -16,18 +16,12 @@ export default class TrainingSessionController extends ClubhouseController {
   @service shiftManage;
   @tracked graduateTraining;
 
-  dirtRankOptions = [
+  rankOptions = [
     ["No Rank", ''],
     ["1 - Above Average (Note Required)", 1],
     ["2 - Average", 2],
     ["3 - Below Average (Note Required)", 3],
     ["4 - FLAG (Note Required)", 4]
-  ];
-
-  artRankOptions = [
-    ["No Rank", ''],
-    1, 2, 3,
-    ["FLAG", 4]
   ];
 
   passedOptions = [
@@ -53,7 +47,7 @@ export default class TrainingSessionController extends ClubhouseController {
   @tracked isSubmitting = false;
 
 
-  @tracked addingTrainer=false;
+  @tracked addingTrainer = false;
   @tracked addTrainerOptions = null;
   @tracked addTrainerSlotId = null;
 
@@ -245,7 +239,7 @@ export default class TrainingSessionController extends ClubhouseController {
    */
 
   @action
-  saveStudentAction(model) {
+  async saveStudentAction(model) {
     const student = this.editStudent;
     const {note, passed} = model;
 
@@ -258,31 +252,32 @@ export default class TrainingSessionController extends ClubhouseController {
       rank,
     };
 
-    if (!this.training.is_art) {
-      if (!rank && passed && student.need_ranking) {
-        model.pushErrors('rank', ['Trainee needs a rank.']);
-        return;
-      }
-
-      const existingNotes = student.notes.filter((n) => !n.is_log);
-      // Only require a note if the rank set was not 2 (aka normal, average, etc.)
-      if ((rank > 0 && rank !== 2) && (isEmpty(note) && !existingNotes.length)) {
-        model.addError('note', ['A note needs to be entered if a rank is given.']);
-        return;
-      }
-
-      score.feedback_delivered = model.feedback_delivered ? 1 : 0;
+    if (!rank && passed && student.need_ranking) {
+      model.pushErrors('rank', ['Trainee needs a rank.']);
+      return;
     }
+
+    const existingNotes = student.notes.filter((n) => !n.is_log);
+    // Only require a note if the rank set was not 2 (aka normal, average, etc.)
+    if ((rank > 0 && rank !== 2) && (isEmpty(note) && !existingNotes.length)) {
+      model.addError('note', ['A note needs to be entered if a rank other than 2 is given.']);
+      return;
+    }
+
+    score.feedback_delivered = model.feedback_delivered ? 1 : 0;
 
     this.isSubmitting = true;
 
-    this.ajax.post(`training-session/${this.slot.id}/score-student`, {data: score})
-      .then((results) => {
-        this.editStudent = null;
-        this.students = results.students;
-        this.toast.success(`${student.callsign} was successfully saved.`);
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    try {
+      const {students} = await this.ajax.post(`training-session/${this.slot.id}/score-student`, {data: score});
+      this.editStudent = null;
+      this.students = students;
+      this.toast.success(`${student.callsign} was successfully saved.`);
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   /**
@@ -331,7 +326,7 @@ export default class TrainingSessionController extends ClubhouseController {
       return;
     }
     if (this.trainers.length > 1) {
-      this.addTrainerOptions = this.trainers.map((t) => [ t.position_title, t.slot.id ]);
+      this.addTrainerOptions = this.trainers.map((t) => [t.position_title, t.slot.id]);
     } else {
       this.addTrainerOptions = null;
     }
@@ -411,11 +406,11 @@ export default class TrainingSessionController extends ClubhouseController {
     event.preventDefault();
     let slot;
     if (this.addingTrainer) {
-       slot = this.trainers.find((t) => t.slot.id === +this.addTrainerSlotId)?.slot;
+      slot = this.trainers.find((t) => t.slot.id === +this.addTrainerSlotId)?.slot;
     } else {
       slot = this.slot;
     }
-    this.shiftManage.slotSignup(slot, person, async() => {
+    this.shiftManage.slotSignup(slot, person, async () => {
       this.addPersonForm = null;
       // Refresh the list
       try {
@@ -444,22 +439,22 @@ export default class TrainingSessionController extends ClubhouseController {
     const student = this.editStudent;
     this.modal.confirm('Confirm Student Removal', `Are you really sure you want to remove ${student.callsign} from this session?`,
       async () => {
-      this.isSubmitting = true;
-      try {
-        const {status} = await this.ajax.delete(`person/${student.id}/schedule/${this.slot.id}`);
-        if (status === 'success') {
-          this.students = this.students.filter((s) => s.id !== student.id);
-          this.toast.success(`${student.callsign} was successfully removed from this training session.`);
-          this.editStudent = null;
-        } else {
-          this.toast.error(`The server responded with an unknown status code [${status}]`);
+        this.isSubmitting = true;
+        try {
+          const {status} = await this.ajax.delete(`person/${student.id}/schedule/${this.slot.id}`);
+          if (status === 'success') {
+            this.students = this.students.filter((s) => s.id !== student.id);
+            this.toast.success(`${student.callsign} was successfully removed from this training session.`);
+            this.editStudent = null;
+          } else {
+            this.toast.error(`The server responded with an unknown status code [${status}]`);
+          }
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        } finally {
+          this.isSubmitting = false;
         }
-      } catch (response){
-        this.house.handleErrorResponse(response);
-      } finally {
-        this.isSubmitting = false;
-      }
-    });
+      });
   }
 
   @action
@@ -475,7 +470,7 @@ export default class TrainingSessionController extends ClubhouseController {
           } else {
             this.toast.error(`The server responded with an unknown status code [${status}]`);
           }
-        } catch (response){
+        } catch (response) {
           this.house.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
