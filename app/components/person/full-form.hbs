@@ -201,15 +201,9 @@ Everyone else will see person/simple-form
         <f.submit @label="Update"
                   @disabled={{or @person.isSaving (not f.model.isDirty)}}/>
         {{#if (has-role "admin" "vc")}}
-          {{#if @person.message}}
-            <UiButton @type="secondary" @onClick={{@editNote}}>
-              Update Note
-            </UiButton>
-          {{else}}
-            <UiButton @type="secondary" @onClick={{@confirmNoteOrMessage}}>
-              Add Banner Note
-            </UiButton>
-          {{/if}}
+          <UiButton @type="secondary" @onClick={{this.newBannerMessage}}>
+            Add Banner Message
+          </UiButton>
         {{/if}}
         {{#if (and (has-role "admin" "vc") @person.isProspective)}}
           <UiButton @type="secondary" @onClick={{@sendWelcomeMailAction}}>
@@ -233,3 +227,7 @@ Everyone else will see person/simple-form
     </div>
   </FormRow>
 </ChForm>
+
+{{#if this.bannerEntry}}
+  <PersonBannerEdit @entry={{this.bannerEntry}} @onFinished={{this.closeBannerModal}} />
+{{/if}}

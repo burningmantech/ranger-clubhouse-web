@@ -1,11 +1,20 @@
-<div class="notice notice-{{this.color}}">
-  <div class="notice-icon">
-    {{fa-icon this.icon fixed=true color=this.iconColor type=@iconType}}
+<div class="border rounded border-{{this.color}} p-2 mb-2">
+  <div class="d-flex fs-4">
+    <div>
+      {{fa-icon this.icon fixed=true color=this.iconColor type=@iconType}}
+    </div>
+    {{#if @title}}
+      <div class="ms-2 text-{{this.color}}">{{@title}}</div>
+    {{else}}
+    {{!-- Have the text appear next to the icon --}}
+      <div>
+        {{yield}}
+      </div>
+    {{/if}}
   </div>
   {{#if @title}}
-    <div class="notice-title">{{@title}}</div>
+    <div class="mt-1">
+      {{yield}}
+    </div>
   {{/if}}
-  <div class="notice-body">
-    {{yield}}
-  </div>
 </div>

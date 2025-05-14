@@ -1,14 +1,18 @@
 import Component from '@glimmer/component';
 import buildAddressForClipboard from "clubhouse/utils/build-address-for-clipboard";
-import { action } from '@ember/object';
-import { service } from '@ember/service';
+import {action} from '@ember/object';
+import {service} from '@ember/service';
+import {tracked} from '@glimmer/tracking';
 
 export default class PersonFullFormComponent extends Component {
   @service ajax;
   @service house;
   @service modal;
   @service router;
+  @service store;
   @service toast;
+
+  @tracked bannerEntry;
 
   get homeAddressText() {
     return buildAddressForClipboard(this.args.person);
@@ -34,5 +38,27 @@ export default class PersonFullFormComponent extends Component {
           this.house.handleErrorResponse(response);
         }
       })
+  }
+
+
+  @action
+  newBannerMessage() {
+    this.bannerEntry = this.store.createRecord('person-banner', {
+      person_id: this.args.person.id,
+      is_permanent: false,
+    });
+  }
+
+  @action
+  async closeBannerModal(modified) {
+    this.bannerEntry = null;
+    if (!modified) {
+      return;
+    }
+    try {
+      await this.args.personBanners.update();
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    }
   }
 }

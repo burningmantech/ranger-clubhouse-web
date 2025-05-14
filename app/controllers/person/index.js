@@ -30,6 +30,7 @@ export default class PersonIndexController extends ClubhouseController {
 
 
   @tracked person = null;
+  @tracked personBanners;
   @tracked teams;
 
   @tracked personMembership;
@@ -44,10 +45,6 @@ export default class PersonIndexController extends ClubhouseController {
   @tracked personTeams = null;
 
   @tracked personFkas = null;
-
-  @tracked showConfirmNoteOrMessage = false;
-  @tracked showEditNote = false;
-  @tracked personNote = null;
 
   @tracked isSaving = false;
 
@@ -129,34 +126,6 @@ export default class PersonIndexController extends ClubhouseController {
   @action
   sendClubhouseMessage() {
     this.router.transitionTo('person.messages', this.person.id);
-  }
-
-  @action
-  editNote() {
-    this.showConfirmNoteOrMessage = false;
-    this.showEditNote = true;
-    this.personNote = {message: this.person.message};
-  }
-
-  @action
-  closeNote() {
-    this.showEditNote = false;
-  }
-
-  @action
-  closeConfirmNoteOrMessage() {
-    this.showConfirmNoteOrMessage = false;
-  }
-
-  @action
-  saveNote() {
-    this.toast.clear();
-    this.person.message = this.personNote.message;
-    this.person.save().then(() => {
-      this.toast.success('Note update');
-      this.showEditNote = false;
-      this.showConfirmNoteOrMessage = false;
-    }).catch((response) => this.house.handleErrorResponse(response));
   }
 
   @action

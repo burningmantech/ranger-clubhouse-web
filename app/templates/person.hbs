@@ -80,12 +80,5 @@
       </div>
     </div>
   </div>
-
-  {{#if this.person.message}}
-    <UiNotice @title="Important Account Note" @icon="hand-point-right">
-      {{nl2br this.person.message}}
-      <div class="mt-2 text-muted">Posted {{shift-format this.person.message_updated_at}}</div>
-    </UiNotice>
-  {{/if}}
   {{outlet}}
 </main>

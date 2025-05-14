@@ -1,0 +1,46 @@
+{{#if this.eventBanners}}
+  <UiNotice @title="Important {{(this.house.currentYear)}} Event Account Note(s)"
+            @type="black"
+            @icon="hand-point-right">
+    The following account notes are only valid for the {{this.house.currentYear}} event.
+    {{#each this.eventBanners as |row idx|}}
+      {{#if idx}}
+        <hr class="mt-2"/>
+      {{/if}}
+      <div class="my-2">
+        Posted {{shift-format (or row.updated_at row.created_at) year=true}}
+        {{#if this.canAdministerBanners}}
+          <a href {{on-click (fn this.edit row)}} class="ms-2">
+            Edit
+          </a>
+        {{/if}}
+      </div>
+      {{nl2br row.message}}
+    {{/each}}
+  </UiNotice>
+{{/if}}
+
+{{#if this.permanentBanners}}
+  <UiNotice @title="Important Permanent Account Note(s)"
+            @type="danger"
+            @icon="hand-point-right">
+    {{#each this.permanentBanners as |row idx|}}
+      {{#if idx}}
+        <hr class="mt-2"/>
+      {{/if}}
+      <div class="my-2">
+        Posted {{shift-format (or row.updated_at row.created_at) year=true}}
+        {{#if this.canAdministerBanners}}
+          <a href {{on-click (fn this.edit row)}} class="ms-2">
+            Edit
+          </a>
+        {{/if}}
+      </div>
+      {{nl2br row.message}}
+    {{/each}}
+  </UiNotice>
+{{/if}}
+
+{{#if this.entry}}
+  <PersonBannerEdit @entry={{this.entry}} @onFinished={{this.closeDialog}} />
+{{/if}}
