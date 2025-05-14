@@ -1,5 +1,11 @@
 @import "cropper";
 
+.photo-mini, .photo-medium, .photo-large {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .photo-mini {
   background: #fcfcfc;
   border: 1px solid #999;
@@ -7,9 +13,10 @@
   text-align: center;
 
   width: 60px;
+
   img {
     display: block;
-    margin: 0 auto;
+    // margin: 0 auto;
     max-width: 55px;
   }
 }
@@ -21,15 +28,14 @@
   text-align: center;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
-  width: 100px;
+  width: 120px;
+  height: 154px;
+
   img {
-    padding: 2px;
     display: block;
-    margin: 0 auto;
-    max-width: 95px;
+    max-width: 118px;
   }
 }
-
 
 .photo-large {
   background: #fcfcfc;
@@ -39,10 +45,10 @@
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
   width: 250px;
+
   img {
     padding: 4px;
     display: block;
-    margin: 0 auto;
     max-width: 240px;
   }
 }

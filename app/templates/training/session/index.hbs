@@ -8,9 +8,11 @@
 
 {{#if (is-empty this.trainers)}}
   <UiNotice @icon="hand" @type="danger" @title="No trainer slots were found">
-    In order to correctly record how many trainers are signed up to teach this session, a trainer's slot needs to exist
-    where the slot's description matches this session's description exactly and where the start time within one hour of
-    this session.
+    To accurately track how many trainers are signed up for this session, each trainer must have a slot where:
+    <ul>
+      <li>The slot’s description exactly matches this session’s description, and</li>
+      <li>The slot’s start time is within one hour of this session’s start time.</li>
+    </ul>
   </UiNotice>
 {{else if (not this.havePrimaryTrainers)}}
   <UiNotice @icon="hand" @type="danger" @title="No trainer sign ups">
@@ -143,14 +145,13 @@
   <:title>{{pluralize this.students.length "Trainee"}} ({{this.passedCount}} Passed)</:title>
   <:body>
     {{#if this.training.is_art}}
-      <p>
-        A {{fa-icon "asterisk"}} by a person's status indicates an ART Prospective.
-        {{#if this.offersGraduation}}
+      {{#if this.offersGraduation}}
+        <p>
           Use the "Graduate Trainees" button to grant
           {{pluralize this.training.graduation_info.positions.length "position"}}
           <i>"{{this.graduatePositionTitles}}"</i> to eligible individuals.
-        {{/if}}
-      </p>
+        </p>
+      {{/if}}
     {{else}}
       <p class="fw-bold text-danger">
         {{fa-icon "hand-point-right" right=1}} Reminder: Walk-ins are NOT allowed, this includes
@@ -234,7 +235,7 @@
 
     {{#each this.students key="id" as |student|}}
       <div class="mb-2 d-flex border-bottom pb-2 {{if (or student.is_retired student.is_inactive) "text-bg-warning"}}">
-        <div class="me-3">
+        <div class="me-3 photo-medium">
           {{#if student.photo_url}}
             <img src={{student.photo_url}} alt="{{student.callsign}} headshot">
           {{else}}
@@ -265,12 +266,7 @@
                   An inactive Ranger.
                 {{/if}}
               {{else}}
-                {{#if student.is_retired}}
-                  As a retired,
-                {{else}}
-                  As an inactive,
-                {{/if}}
-                a full day's training is required.
+                As {{if student.is_retired "a retired" "an inactive"}} a full day's training is required.
               {{/if}}
             </div>
           {{/if}}
@@ -282,9 +278,19 @@
               <UiBadge @type="secondary" class="me-3">pending</UiBadge>
             {{/if}}
             {{#if student.rank}}
-              Rank {{student.rank}}
+              {{#if (eq student.rank 1)}}
+                Rank 1/Above Average
+              {{else if (eq student.rank 2)}}
+                Rank 2/Normal
+              {{else if (eq student.rank 3)}}
+                Rank 3/Below Average
+              {{else if (eq student.rank 4)}}
+                Rank 4/FLAG
+              {{else}}
+                {{student.rank}}/Unknown
+              {{/if}}
             {{else if student.need_ranking}}
-              <b>Needs Rank</b>
+              <span class="text-bg-warning">Needs Rank</span>
             {{else}}
               No ranking
             {{/if}}
@@ -334,13 +340,12 @@
           </h3>
         {{/if}}
         <p>
-          A note may only be edited or deleted by the trainer who wrote it.<br>
-          Timestamps are in the Pacific Timezone (UTC-7).
+          Only the trainer who wrote the note can edit or delete it. Timestamps are shown in Pacific Time (UTC-7).
         </p>
         <UiTable>
           <thead>
           <tr>
-            <th class="w-20">Timestamp</th>
+            <th class="w-20">Time</th>
             <th class="w-15">Trainer</th>
             <th class="w-65">Note</th>
           </tr>
@@ -392,7 +397,7 @@
           <FormRow>
             <f.select @name="rank"
                       @label="Ranking for {{studentName}}"
-                      @options={{if this.training.is_art this.artRankOptions this.dirtRankOptions}}/>
+                      @options={{this.rankOptions}}/>
           </FormRow>
           <FormRow>
             <f.textarea @name="note"
