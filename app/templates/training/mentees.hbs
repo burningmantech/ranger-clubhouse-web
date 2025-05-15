@@ -37,8 +37,8 @@ Showing {{pluralize this.people.length "person"}}
       <td>{{person.status}}</td>
       {{#each person.positions as |position|}}
         <td>
-          {{#if position.granted}}
-            {{position.granted}}
+          {{#if position.is_granted}}
+            {{or position.granted "unknown"}}
           {{else}}
             <i>not granted</i>
           {{/if}}
