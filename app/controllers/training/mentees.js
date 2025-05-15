@@ -39,8 +39,8 @@ export default class TrainingMenteesController extends ClubhouseController {
     ];
 
     this.positions.forEach(p => {
-      columns.push({key: `granted${p.id}`, title: 'Granted'});
-      columns.push({key: `last_worked${p.id}`, title: 'Last Worked'});
+      columns.push({key: `granted${p.id}`, title: `${p.title} Granted`});
+      columns.push({key: `last_worked${p.id}`, title: `${p.title} Last Worked`});
     });
 
     const data = this.people.map((person) => {
@@ -51,7 +51,7 @@ export default class TrainingMenteesController extends ClubhouseController {
 
       person.positions.forEach(position => {
         if (position) {
-          row[`granted${position.id}`] = position.granted;
+          row[`granted${position.id}`] = position.is_granted ? (position.granted ?? 'unknown') : 'not granted';
           row[`last_worked${position.id}`] = position.last_worked;
         }
       });
