@@ -52,7 +52,6 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('string') status;
   @attr('boolean') vintage;
   @attr('string', {readOnly: true}) status_date;
-  @attr('string', {readOnly: true}) date_verified;
   @attr('string', {readOnly: true}) created_at;
   @attr('boolean') on_site;
   @attr('boolean') has_reviewed_pi;   // pseudo field, write only
@@ -105,6 +104,7 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('boolean') vehicle_blacklisted;
 
   @attr('string') bpguid;
+  @attr('boolean') has_bpguid;   // helps to avoid sending back bpguid.
 
   @attr('string') lms_id;
   @attr('string') lms_username;

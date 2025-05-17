@@ -6,6 +6,7 @@ import {service} from '@ember/service';
 
 export default class PersonBannerManage extends Component {
   @service house;
+  @service session;
   @tracked entry;
 
   get permanentBanners() {
@@ -16,8 +17,7 @@ export default class PersonBannerManage extends Component {
     return this.args.personBanners.filter((n) => !n.is_permanent);
   }
 
-  @action
-  canAdministerBanners() {
+  get canAdministerBanners() {
     return this.session.hasRole([ADMIN, VC]);
   }
 

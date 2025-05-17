@@ -86,7 +86,7 @@ const PersonMixin = (superclass) => class extends superclass {
   }
 
   get needsBpguid() {
-    return (!this.isAuditor && !this.isEchelon && isEmpty(this.bpguid));
+    return (!this.isAuditor && !this.isEchelon && !this.has_bpguid);
   }
 
   get isCheetahCub() {
