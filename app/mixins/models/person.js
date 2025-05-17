@@ -1,4 +1,3 @@
-import {isEmpty} from '@ember/utils';
 import {
   ACTIVE, ALPHA, AUDITOR, BONKED, DECEASED, DISMISSED, INACTIVE_EXTENSION, INACTIVE, ECHELON,
   PAST_PROSPECTIVE, PROSPECTIVE, PROSPECTIVE_WAITLIST, RESIGNED, RETIRED, SUSPENDED, UBERBONKED,
@@ -86,7 +85,7 @@ const PersonMixin = (superclass) => class extends superclass {
   }
 
   get needsBpguid() {
-    return (!this.isAuditor && !this.isEchelon && isEmpty(this.bpguid));
+    return (!this.isAuditor && !this.isEchelon && !this.has_bpguid);
   }
 
   get isCheetahCub() {
