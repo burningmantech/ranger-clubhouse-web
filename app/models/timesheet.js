@@ -63,6 +63,7 @@ export default class TimesheetModel extends Model {
   @attr('boolean', {defaultValue: false}) suppress_duration_warning;
 
   @attr('boolean', {readOnly: true}) was_signin_forced;
+  @attr('string') signin_force_reason;
 
   @attr('', {readOnly: true}) time_warnings;
   @attr('', {readOnly: true}) desired_warnings;

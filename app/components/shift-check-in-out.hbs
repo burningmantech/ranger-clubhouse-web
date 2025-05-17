@@ -100,8 +100,8 @@
                       <li>
                         Suggest the person come back in
                         <b>{{pluralize slot.can_start_in "minute"}}</b> to
-                        check-in. If the time is pretty close to the recommended check in time, go ahead and signed them
-                        in. Use your judgement. The intent is to prevent Rangers from checking in too early only to sit
+                        check-in. If the time is very close to the recommended check in time, go ahead and signed them
+                        in. Use your judgment. The intent is to prevent Rangers from checking in too early only to sit
                         around for a long time while waiting to be deployed.
                       </li>
                       <li>
@@ -110,8 +110,7 @@
                         check in the person now. Rangers have to adapt to the ever-changing situation on playa.
                       </li>
                     </ul>
-                    <span class="fw-semibold">
-                      The recommendations are guidelines, not a hard set of
+                    <span class="fw-semibold">The recommendations are guidelines, not a hard set of
                       rules.</span>
                     Being flexible is okay. Consult with the HQ Short or HQ Lead if needed.
                   </UiNotice>
@@ -232,7 +231,8 @@
         <ChForm::Select @name="signin_position_id"
                         @value={{this.signinPositionId}}
                         @options={{this.signinPositions}}
-                        @onChange={{this.updateShiftPosition}}/>
+                        @onChange={{this.updateShiftPosition}}
+        />
       </div>
       <div class="col-auto">
         {{#if this.selectedPosition.disqualified}}
@@ -322,43 +322,54 @@
 {{/if}}
 
 {{#if this.showForceStartConfirm}}
-  <ModalDialog @title="Confirm Forced Shift Check In" @onEscape={{this.closeForceStartConfirm}} as |Modal|>
-    <Modal.body>
-      <p>
-        <b class="text-danger">
-          WARNING: {{@person.callsign}} has not meet all the qualifications to start
-          a {{this.forcePosition.title}} shift
-        </b>
-      </p>
-      <ul>
-        {{#if
-          (and (not this.inPersonTrainingPassed) (not this.forcePosition.is_untrained) (not this.forcePosition.is_unqualified))}}
-          <li>In-Person Training has not been completed.</li>
-        {{/if}}
-        {{#if this.forcePosition.is_untrained}}
-          <li>{{this.forcePosition.training_title}} has not been completed</li>
-        {{/if}}
-        {{#if this.forcePosition.is_unqualified}}
-          <li>{{this.forcePosition.unqualified_message}}</li>
-        {{/if}}
-      </ul>
-      <p>
-        Since you either have the Admin, or Force Shift Start permission, you can force a shift check in.
-      </p>
-      <p>
-        <b class="text-danger">A forced shift start will be logged and subject to review.</b>
-      </p>
-      <p>
-        Are you absolutely sure you want to sign in this person at this time? Check with the HQ Lead or Short if
-        in doubt.
-      </p>
-    </Modal.body>
-    <Modal.footer>
-      <UiCancelButton @onClick={{this.closeForceStartConfirm}} />
-      <UiButton @type="warning" @onClick={{this.confirmForceStart}}>
-        Confirm Force Shift Start
-      </UiButton>
-    </Modal.footer>
+  <ModalDialog @title="Confirm Forced Shift Check In"
+               @onEscape={{this.closeForceStartConfirm}} as |Modal|>
+    <ChForm @formFor={{this.forceStartForm}}
+            @onSubmit={{this.confirmForceStart}}
+            @validator={{this.forceShiftValidations}} as |f|>
+      <Modal.body>
+        <p>
+          <b class="text-danger">
+            WARNING: {{@person.callsign}} has not meet all the qualifications to start a {{this.forcePosition.title}}
+            shift
+          </b>
+        </p>
+        <ul>
+          {{#if
+            (and (not this.inPersonTrainingPassed) (not this.forcePosition.is_untrained) (not this.forcePosition.is_unqualified))}}
+            <li>In-Person Training has not been completed.</li>
+          {{/if}}
+          {{#if this.forcePosition.is_untrained}}
+            <li>{{this.forcePosition.training_title}} has not been completed</li>
+          {{/if}}
+          {{#if this.forcePosition.is_unqualified}}
+            <li>{{this.forcePosition.unqualified_message}}</li>
+          {{/if}}
+        </ul>
+        <p>
+          Since you either have the Admin, or Force Shift Start permission, you can force a shift check in.
+        </p>
+        <p>
+          <b class="text-danger">All forced shift starts are logged and reviewed.</b>
+        </p>
+        <p>
+          Are you sure you want to sign in this person at this time? A reason
+          must be given below if you wish to proceed.
+        </p>
+        <FormRow>
+          <f.textarea @name="reason"
+                      @label="Enter a reason why this shift is being forced:"
+                      @autofocus={{true}}
+                      @rows={{4}}
+                      @cols={{80}}
+          />
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @align="start">
+        <f.submit @label="Confirm Force Shift Start" @type="warning"/>
+        <UiCancelButton @onClick={{this.closeForceStartConfirm}} />
+      </Modal.footer>
+    </ChForm>
   </ModalDialog>
 {{/if}}
 

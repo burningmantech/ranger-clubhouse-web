@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import {set} from '@ember/object';
+import EmberObject, {set} from '@ember/object';
 import {action} from '@ember/object';
 import {service} from '@ember/service';
 import {
@@ -18,6 +18,7 @@ import {TYPE_TRAINING} from "clubhouse/models/position";
 import _ from 'lodash';
 import {htmlSafe} from '@ember/template';
 import hyperlinkText from "clubhouse/utils/hyperlink-text";
+import {validatePresence} from 'ember-changeset-validations/validators';
 
 export default class ShiftCheckInOutComponent extends Component {
   @service ajax;
@@ -46,10 +47,15 @@ export default class ShiftCheckInOutComponent extends Component {
   @tracked showForceStartConfirm = false;
   @tracked forcePosition = null;
   @tracked showMayNotForceCheckIn = false;
+  @tracked forceStartForm = null;
 
   @tracked noTrainingRequiredPositions;
 
   tooShortDuration = TOO_SHORT_DURATION;
+
+  forceShiftValidations = {
+    reason: [validatePresence({presence: true, message: 'A reason must be entered.'})]
+  }
 
   constructor() {
     super(...arguments);
@@ -178,6 +184,7 @@ export default class ShiftCheckInOutComponent extends Component {
     this.forceSlotId = slotId;
     if (this.userCanForceCheckIn) {
       this.showForceStartConfirm = true;
+      this.forceStartForm = EmberObject.create({reason: ''});
     } else {
       this.showMayNotForceCheckIn = true;
     }
@@ -188,9 +195,13 @@ export default class ShiftCheckInOutComponent extends Component {
    */
 
   @action
-  confirmForceStart() {
+  confirmForceStart(model, isValid) {
+    if (!isValid) {
+      return;
+    }
+
     this.showForceStartConfirm = false;
-    this._signInPerson(this.forcePosition, this.forceSlotId);
+    this._signInPerson(this.forcePosition, this.forceSlotId, model.reason);
   }
 
   /**
@@ -216,10 +227,11 @@ export default class ShiftCheckInOutComponent extends Component {
    *
    * @param {object} position
    * @param {int} slotId
+   * @param {string|null} reason
    * @private
    */
 
-  async _signInPerson(position, slotId) {
+  async _signInPerson(position, slotId, reason = null) {
     const person = this.args.person;
 
     const data = {
@@ -230,10 +242,15 @@ export default class ShiftCheckInOutComponent extends Component {
     if (slotId) {
       data.slot_id = slotId;
     }
+
+    if (reason) {
+      data.signin_force_reason = reason;
+    }
+
     this.toast.clear();
     this.isSubmitting = true;
     try {
-      const result = await this.ajax.request('timesheet/signin', {method: 'POST', data});
+      const result = await this.ajax.post('timesheet/signin', {data});
       const callsign = person.callsign;
       switch (result.status) {
         case 'success':
@@ -277,6 +294,9 @@ export default class ShiftCheckInOutComponent extends Component {
           this.modal.info('Is Retired Ranger', `${callsign} is a retired Ranger. Before they are allowed to check into a non-training shift, they first must walk a Cheetah Cub shift, and be converted back to active status by the Mentors.`);
           break;
 
+        case 'missing-force-reason':
+          this.modal.info('Missing Shift Force Reason', 'Since this check-in is being forced, a reason must be supplied');
+          break;
 
         default:
           this.modal.info('Unknown Server Status', `An unknown status [${result.status}] from the server. This is a bug. Please report this to the Tech Ninjas.`);
