@@ -19,6 +19,7 @@
       <th>Position</th>
       <th>Shift Start</th>
       <th>Forced By</th>
+      <th>Blockers</th>
       <th>Reason</th>
     </tr>
     </thead>
@@ -38,7 +39,14 @@
           <PersonLink @callsign={{entry.forced_by_callsign}} @personId={{entry.forced_by_id}} />
         </td>
         <td>
-          {{entry.reason}}
+          {{entry.blockers}}
+        </td>
+        <td>
+          {{#if entry.signin_force_reason}}
+            {{nl2br  entry.signin_force_reason}}
+          {{else}}
+            <i>- no reason given</i>
+          {{/if}}
         </td>
       </tr>
     {{/each}}

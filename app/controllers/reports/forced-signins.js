@@ -7,7 +7,8 @@ const CSV_COLUMNS = [
   {title: 'Position', key: 'position_title'},
   {title: 'Shift Start', key: 'on_duty'},
   {title: 'Forced By', key: 'forced_by_callsign'},
-  {title: 'Reason', key: 'reason'},
+  {title: 'Blockers', key: 'blockers'},
+  {title: 'Reason', key: 'signin_force_reason'},
 ];
 
 export default class ReportsForcedSigninsController extends ClubhouseController {
