@@ -20,7 +20,7 @@
 
 <div id="todo-list" class="hq-todo-block">
   {{#if (or this.isShinyPenny this.scheduleRecommendations.burn_weekend_shift)}}
-    <div class="mb-2 px-3 py-2 mx-n3 mt-n3 border border-primary-subtle text-primary-emphasis bg-primary-subtle">
+    <div class="mb-2 px-3 py-2 mx-n3 mt-n3 text-primary-emphasis bg-primary-subtle">
       {{#if this.isShinyPenny}}
         <div class={{if this.scheduleRecommendations.burn_weekend_shift "mb-1"}}>
           {{fa-icon "smile-beam" type="r" right=1}} {{this.person.callsign}} is a Shiny Penny.
@@ -246,5 +246,4 @@
       </UiButton>
     </Modal.footer>
   </ModalDialog>
-
 {{/if}}

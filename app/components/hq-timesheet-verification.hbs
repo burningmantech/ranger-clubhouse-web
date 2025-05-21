@@ -56,6 +56,16 @@
       </tr>
       <tr>
         <td colspan="4">
+          {{#if entry.timesOutsideRange}}
+            <div class="text-bg-warning p-2">
+              Entry times is outside the scheduled times.
+            </div>
+          {{/if}}
+          {{#if entry.isTooLong}}
+            <div class="text-bg-warning p-2">
+              Entry might be too long at {{hour-format entry.duration}} hours.
+            </div>
+          {{/if}}
           {{#if entry.isVerified}}
             <div class="text-success">
               {{fa-icon "check" fixed=1 right=1}} Entry has been marked as correct.
@@ -116,16 +126,14 @@
   <Me::TimesheetReviewEdit @entry={{this.entry}}
                            @isMe={{false}}
                            @onCancel={{this.cancelEntryCorrection}}
-                           @positions={{@positions}}
                            @onUpdate={{this.savedEntryCorrection}}
   />
-
 {{/if}}
 
 {{#if this.timesheetMissingEntry}}
-  <Me::TimesheetMissingEdit @entry={{this.timesheetMissingEntry}}
+  <Me::TimesheetMissingEdit @person={{@person}}
+                            @entry={{this.timesheetMissingEntry}}
                             @onSave={{this.closeTimesheetMissing}}
                             @onCancel={{this.closeTimesheetMissing}}
-                            @positionOptions={{this.positionOptions}}
   />
 {{/if}}

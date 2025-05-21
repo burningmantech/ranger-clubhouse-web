@@ -25,7 +25,7 @@ export default class PersonTimesheetRoute extends ClubhouseRoute {
       timesheetInfo: await this.ajax.request('timesheet/info', { data: { person_id } })
         .then((result) => result.info),
       timesheetMissing: await this.store.query('timesheet-missing', { person_id, year, check_times: 1}),
-      positions: await this.ajax.request(`person/${person_id}/positions`,{ data: { include_mentee: 1, include_training: 1, year } })
+      positions: await this.ajax.request(`person/${person_id}/positions`,{ data: { include_past_grants: 1, include_eligibility: 1, year } })
         .then((results) => results.positions.filter((p) => !p.not_timesheet_eligible)),
       timesheetSummary: await this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }})
         .then((result) => result.summary),

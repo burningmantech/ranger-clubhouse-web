@@ -41,7 +41,7 @@ export default class HqShiftRoute extends ClubhouseRoute {
     return RSVP.hash({
       upcomingSlots: this.ajax.request(`person/${person_id}/schedule/upcoming`),
       scheduleRecommendations: this.ajax.request(`person/${person_id}/schedule/recommendations`),
-      timesheets: this.store.query('timesheet', {person_id, year}),
+      timesheets: this.store.query('timesheet', {person_id, year, check_times: 1}),
     });
   }
 

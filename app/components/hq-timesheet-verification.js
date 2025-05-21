@@ -1,9 +1,8 @@
 import Component from '@glimmer/component';
-import {HQ_TODO_VERIFY_TIMESHEET} from "clubhouse/constants/hq-todo";
 import {action} from '@ember/object';
 import {service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';
-import positionsForTimesheetMissing from "clubhouse/utils/positions-for-timesheet-missing";
+import {HQ_TODO_VERIFY_TIMESHEET} from "clubhouse/constants/hq-todo";
 import {STATUS_UNVERIFIED, STATUS_VERIFIED} from "clubhouse/models/timesheet";
 
 export default class HqTimesheetVerificationComponent extends Component {
@@ -15,7 +14,6 @@ export default class HqTimesheetVerificationComponent extends Component {
   @tracked showCorrectionForm = false;
   @tracked entry = null;
 
-  @tracked positionOptions;
   @tracked timesheetMissingEntry;
 
   constructor() {
@@ -128,11 +126,7 @@ export default class HqTimesheetVerificationComponent extends Component {
 
   @action
   newTimesheetMissingRequest() {
-    this.positionOptions = positionsForTimesheetMissing(this.args.positions);
-    this.timesheetMissingEntry = this.store.createRecord('timesheet-missing', {
-      person_id: this.args.person.id,
-      position_id: this.positionOptions[0][1],
-    });
+    this.timesheetMissingEntry = this.store.createRecord('timesheet-missing', {});
   }
 
   @action

@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import EmberObject, {set} from '@ember/object';
+import EmberObject from '@ember/object';
 import {action} from '@ember/object';
 import {service} from '@ember/service';
 import {
@@ -13,9 +13,9 @@ import {
 import {cached, tracked} from '@glimmer/tracking';
 import {INACTIVE, INACTIVE_EXTENSION, ECHELON} from 'clubhouse/constants/person_status';
 import {ADMIN, CAN_FORCE_SHIFT, SHIFT_MANAGEMENT_SELF} from 'clubhouse/constants/roles';
-import {TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
+import {buildBlockerLabels, TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
 import {TYPE_TRAINING} from "clubhouse/models/position";
-import _ from 'lodash';
+import _, {isEmpty} from 'lodash';
 import {htmlSafe} from '@ember/template';
 import hyperlinkText from "clubhouse/utils/hyperlink-text";
 import {validatePresence} from 'ember-changeset-validations/validators';
@@ -32,24 +32,24 @@ export default class ShiftCheckInOutComponent extends Component {
   @tracked isSubmitting = false;
   @tracked isReloadingTimesheets = false;
 
-  @tracked otOnly = false;
-
   @tracked showPositionDialog = false;
   @tracked changePositionError = null;
-
-  @tracked showEarlyShiftConfirm = false;
-  @tracked earlySlot = null;
 
   @tracked showTooShortDialog = false;
 
   @tracked showConfirmDeletion = false;
 
-  @tracked showForceStartConfirm = false;
+  @tracked showBlockers = false;
   @tracked forcePosition = null;
   @tracked showMayNotForceCheckIn = false;
   @tracked forceStartForm = null;
 
-  @tracked noTrainingRequiredPositions;
+  @tracked inPersonTrainingPassed;
+  @tracked userCanForceCheckIn;
+
+  @tracked blockers;
+  @tracked isPositionUpdate = false;
+
 
   tooShortDuration = TOO_SHORT_DURATION;
 
@@ -62,8 +62,8 @@ export default class ShiftCheckInOutComponent extends Component {
 
     let {positions} = this.args;
 
-    positions = positions.filter((p) => p.id !== TRAINING);
-    this.noTrainingRequiredPositions = positions.filter((p) => (p.no_training_required || p.type === TYPE_TRAINING));
+    positions = positions.filter((p) => p.type !== TYPE_TRAINING);
+    this.noTrainingRequiredPositions = positions.filter((p) => isEmpty(p.blockers));
     if (this.noTrainingRequiredPositions.length && this.args.isSelfServe) {
       this.activePositions = this.noTrainingRequiredPositions;
     } else {
@@ -71,37 +71,8 @@ export default class ShiftCheckInOutComponent extends Component {
     }
 
 
-    // Mark imminent slots as trained or not.
-    const {upcomingSlots} = this.args;
-    if (upcomingSlots) {
-      upcomingSlots.imminent.forEach((slot) => {
-        const slotPid = +slot.position_id;
-        const position = this.activePositions.find((p) => slotPid === +p.id);
-        if (position) {
-          if (position.is_untrained) {
-            set(slot, 'is_untrained', true);
-          }
-
-          if (position.is_unqualified) {
-            set(slot, 'is_unqualified', true);
-            set(slot, 'unqualified_reason', position.unqualified_reason);
-            set(slot, 'unqualified_message', position.unqualified_message);
-          }
-        }
-      });
-    }
-
     const signins = this.activePositions.map((pos) => {
-      let title = pos.title;
-      let disqualified = null;
-
-      if (pos.is_untrained) {
-        disqualified = `${pos.training_title} has not been passed.`;
-      } else if (pos.is_unqualified) {
-        disqualified = pos.unqualified_message;
-      }
-
-      return {id: pos.id, title, disqualified};
+      return {id: pos.id, title: pos.title};
     });
 
     // hack for operator convenience - Dirt is the most common
@@ -127,12 +98,7 @@ export default class ShiftCheckInOutComponent extends Component {
       this.inPersonTrainingPassed = true;
     } else {
       const {eventInfo} = this.args;
-      if (eventInfo.online_course_only) {
-        this.otOnly = true;
-        this.inPersonTrainingPassed = eventInfo.online_course_passed;
-      } else {
-        this.inPersonTrainingPassed = !!eventInfo.trainings.find((training) => (training.position_id === TRAINING && training.status === 'pass'));
-      }
+      this.inPersonTrainingPassed = !!eventInfo.trainings.find((training) => (training.position_id === TRAINING && training.status === 'pass'));
     }
 
     this.userCanForceCheckIn = this.session.hasRole([ADMIN, CAN_FORCE_SHIFT]);
@@ -171,23 +137,7 @@ export default class ShiftCheckInOutComponent extends Component {
    */
 
   _startShift(positionId, slotId = null) {
-    const position = this.activePositions.find((p) => +p.id === +positionId);
-
-    if (position.type === TYPE_TRAINING
-      || (this.inPersonTrainingPassed && !position.is_unqualified && !position.is_untrained)
-      || position.no_training_required) {
-      this._signInPerson(position, slotId);
-      return;
-    }
-
-    this.forcePosition = position;
-    this.forceSlotId = slotId;
-    if (this.userCanForceCheckIn) {
-      this.showForceStartConfirm = true;
-      this.forceStartForm = EmberObject.create({reason: ''});
-    } else {
-      this.showMayNotForceCheckIn = true;
-    }
+    this._signInPerson(this.activePositions.find((p) => +p.id === +positionId), slotId);
   }
 
   /**
@@ -200,8 +150,8 @@ export default class ShiftCheckInOutComponent extends Component {
       return;
     }
 
-    this.showForceStartConfirm = false;
-    this._signInPerson(this.forcePosition, this.forceSlotId, model.reason);
+    this.showBlockers = false;
+    this._signInPerson(this.forcePosition, this.forceSlotId, model.reason, true);
   }
 
   /**
@@ -209,8 +159,8 @@ export default class ShiftCheckInOutComponent extends Component {
    */
 
   @action
-  closeForceStartConfirm() {
-    this.showForceStartConfirm = false;
+  closeForceConfirm() {
+    this.showBlockers = false;
     this.forcePosition = null;
     this.forceSlotId = null;
   }
@@ -231,7 +181,7 @@ export default class ShiftCheckInOutComponent extends Component {
    * @private
    */
 
-  async _signInPerson(position, slotId, reason = null) {
+  async _signInPerson(position, slotId, reason = null, force = false) {
     const person = this.args.person;
 
     const data = {
@@ -243,11 +193,11 @@ export default class ShiftCheckInOutComponent extends Component {
       data.slot_id = slotId;
     }
 
-    if (reason) {
+    if (force) {
+      data.force_sign_in = true;
       data.signin_force_reason = reason;
     }
 
-    this.toast.clear();
     this.isSubmitting = true;
     try {
       const result = await this.ajax.post('timesheet/signin', {data});
@@ -266,32 +216,17 @@ export default class ShiftCheckInOutComponent extends Component {
           }
           break;
 
+        case 'blocked':
+          this.isPositionUpdate = false;
+          this.showBlockers = true;
+          this.forcePosition = position;
+          this.forceSlotId = slotId;
+          this.blockers = buildBlockerLabels(result.blockers);
+          this.forceStartForm = EmberObject.create({reason: ''});
+          break;
+
         case 'position-not-held':
           this.modal.info('Position Not Held', `${callsign} does hold the '${position.title}' in order to start the shift.`);
-          break;
-
-        case 'position-not-eligible':
-          this.modal.info('Position Eligible To Work', `The '${position.title}' is ineligible to be signed into.`);
-          break;
-
-        case 'already-on-duty':
-          this.modal.info('Already On Shift', `${callsign} is already on duty.`);
-          break;
-
-        case 'not-trained':
-          this.modal.info('Training Not Passed', `${callsign} has has not completed "${result.position_title}" and cannot be signed into the shift.`);
-          break;
-
-        case 'not-qualified':
-          this.modal.info('Not Qualified', `${callsign} has not met one or more required qualifiers needed to sign in to the shift.<br>Reason: ${result.unqualified_message}`);
-          break;
-
-        case 'no-employee-id':
-          this.modal.info('Paid Position', `${position.title} is a paid position, and ${callsign} does not have a Paycom ID on file. Until the ID is entered into the Clubhouse, they may not work this position. Please have ${callsign} contact their team's manager to resolve this issue.`);
-          break;
-
-        case 'is-retired':
-          this.modal.info('Is Retired Ranger', `${callsign} is a retired Ranger. Before they are allowed to check into a non-training shift, they first must walk a Cheetah Cub shift, and be converted back to active status by the Mentors.`);
           break;
 
         case 'missing-force-reason':
@@ -330,13 +265,8 @@ export default class ShiftCheckInOutComponent extends Component {
    */
 
   @action
-  signinShiftAction(slot) {
-    if (slot.is_within_start_time) {
-      this._startShift(slot.position_id, slot.slot_id);
-    } else {
-      this.showEarlyShiftConfirm = true;
-      this.earlySlot = slot;
-    }
+  signInShiftAction(slot) {
+    this._startShift(slot.position_id, slot.slot_id);
   }
 
   /**
@@ -442,7 +372,8 @@ export default class ShiftCheckInOutComponent extends Component {
   @action
   deleteEntry() {
     this.showTooShortDialog = false;
-    this.modal.confirm('Confirm Timesheet Entry Deletion', `Are you absolutely sure you want to delete the entry?`,
+    this.modal.confirm('Confirm Timesheet Entry Deletion',
+      `Are you absolutely sure you want to delete the entry?`,
       async () => {
         try {
           await this.ajax.request(`timesheet/${this.args.onDutyEntry.id}`, {method: 'DELETE'});
@@ -484,34 +415,30 @@ export default class ShiftCheckInOutComponent extends Component {
    */
 
   @action
-  async updatePositionAction() {
+  updatePositionAction() {
+    this._updatePosition(this.newPositionId);
+  }
+
+  async _updatePosition(position_id, reason = null, force = false) {
     const {onDutyEntry, person} = this.args;
     this.isSubmitting = true;
     this.changePositionError = null;
 
     try {
-      const result = await this.ajax.request(`timesheet/${onDutyEntry.id}/update-position`, {
-        method: 'PATCH',
-        data: {
-          position_id: this.newPositionId
-        }
-      });
+      const data = {
+        position_id: this.newPositionId
+      };
+      if (force) {
+        data.force_sign_in = true;
+        data.signin_force_reason = reason;
+      }
+
+      const result = await this.ajax.patch(`timesheet/${onDutyEntry.id}/update-position`, {data});
       switch (result.status) {
         case 'success':
           await onDutyEntry.reload();
           this.showPositionDialog = false;
-          if (result.forced) {
-            // Shift start was forced, let the user know what was overridden.
-            let reason;
-            if (result.unqualified_reason === 'untrained') {
-              reason = `has not completed '${result.required_training}'`;
-            } else {
-              reason = `is unqualified ('${result.unqualified_message}')`;
-            }
-            this.modal.info('Shift Position Update Forced', `WARNING: The person ${reason}. Because you have the Admin or the Timesheet Management permission,the position has been updated anyways.`);
-          } else {
-            this.toast.success('Position has been successfully updated.');
-          }
+          this.toast.success('Position has been successfully updated.');
           if (+person.id === this.session.userId) {
             // Ensure the navigation bar is updated with the signed in to position
             await this.session.updateOnDuty();
@@ -530,12 +457,12 @@ export default class ShiftCheckInOutComponent extends Component {
           this.changePositionError = 'The position is ineligible to be signed into.';
           break;
 
-        case 'not-trained':
-          this.changePositionError = 'Person has not been trained for the position.';
-          break;
-
-        case 'not-qualified':
-          this.changePositionError = `Person has not meet all the requirements in order to work the position. Reason: ${result.unqualified_message}`;
+        case 'blocked':
+          this.isPositionUpdate = true;
+          this.showBlockers = true;
+          this.forcePosition = this.activePositions.find((p) => +p.id === +this.newPositionId);
+          this.blockers = buildBlockerLabels(result.blockers);
+          this.forceStartForm = EmberObject.create({reason: ''});
           break;
 
         default:
@@ -549,6 +476,16 @@ export default class ShiftCheckInOutComponent extends Component {
     }
   }
 
+  @action
+  confirmForcePosition(model, isValid) {
+    if (!isValid) {
+      return;
+    }
+
+    this.showBlockers = false;
+    this._updatePosition(this.forcePosition.id, model.reason, true);
+  }
+
   /**
    * Close out the correct position dialog
    */
@@ -556,27 +493,6 @@ export default class ShiftCheckInOutComponent extends Component {
   @action
   cancelUpdatePosition() {
     this.showPositionDialog = false;
-    this.earlySlot = null;
-  }
-
-  /**
-   * Close out the confirm start early shift check in dialog.
-   */
-
-  @action
-  closeEarlyShiftAction() {
-    this.showEarlyShiftConfirm = false;
-  }
-
-  /**
-   * Start an early shift check in.
-   */
-
-  @action
-  confirmEarlyShiftAction() {
-    this.showEarlyShiftConfirm = false;
-    this._startShift(this.earlySlot.position_id, this.earlySlot.slot_id);
-    this.earlySlot = null;
   }
 
   @cached

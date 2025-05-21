@@ -16,10 +16,7 @@ export default class MeTimesheetRoute extends ClubhouseRoute {
     this.store.unloadAll('timesheet');
 
     // Figure out if timesheet corrections are enabled, and for what year.
-    const timesheetInfo = (await this.ajax.request('timesheet/info', {
-      method: 'GET',
-      data: {person_id}
-    })).info;
+    const timesheetInfo = (await this.ajax.request('timesheet/info', {data: {person_id}})).info;
 
     const data = {
       timesheetInfo,
@@ -40,7 +37,7 @@ export default class MeTimesheetRoute extends ClubhouseRoute {
       this.store.unloadAll('timesheet-missing');
 
       data.timesheetsMissing = await this.store.query('timesheet-missing', queryParams);
-      data.positions = (await this.ajax.request(`person/${person_id}/positions`, {data: {include_mentee: 1}})).positions;
+      data.positions = (await this.ajax.request(`person/${person_id}/positions`)).positions;
 
       if (data.canSelfManageShifts) {
         timesheetInfo.correction_enabled = true;

@@ -1,74 +1,77 @@
-<ModalDialog @title="Missing Timesheet Request" @onEscape={{@onCancel}} as |Modal|>
-  <ChForm @formId="tm"
-          @formFor={{@entry}}
-          @validator={{this.timesheetValidations}}
-          @onSubmit={{this.saveAction}} as |f|>
-    <Modal.body>
-      <p>
-        Use this form for <b>MISSING TIMESHEET ENTRIES ONLY</b>. If you have an existing entry that needs correction,
-        go back to the Timesheet tab and submit a correction by clicking on the "Request Correction" button.
-      </p>
-      <p>
-        We will not approve a request for work performed outside the event period.
-      </p>
-      <FormRow>
-        <f.select @name="position_id"
-                  @label="Which position was the shift for?"
-                  @options={{@positionOptions}} />
-      </FormRow>
-      <FormRow>
-        <f.datetime @name="on_duty"
-                    @label="What was the START date & time of the shift?"
-                    @size={{15}}
-        />
-        <f.datetime @name="off_duty"
-                    @label="What was the END date & time of the shift?"
-                    @size={{15}}
-        />
-      </FormRow>
-      <FormRow>
-        <f.text @name="partner"
-                @label="What are the callsigns of your shift partner(s) or the shift lead / manager who can corroborate your story?"
-                @size={{20}}
-                @maxlength={{100}}
-                @showCharCount={{true}}
-        />
-      </FormRow>
-      {{#if @entry.isRejected}}
-        <b class="text-danger">Sorry, the correction request has been rejected.</b>
-      {{/if}}
-      {{#if @entry.notes}}
-        <UiInfoBox>
-          <:title>Notes from you &amp; the Timesheet Wranglers</:title>
-          <:body>
-            <TimesheetNotes @notes={{@entry.notes}} @isMe={{true}} />
-          </:body>
-        </UiInfoBox>
-       {{/if}}
-      <FormRow>
-        <f.textarea @name="additional_notes"
-                    @label={{if @entry.isRejected "Supply additional information for an appeal:"
-                                "Provide a BRIEF & CONCISE explanation in 1 to 3 sentences why you should be credited for a missing shift?"}}
-                    @cols={{80}}
-                    @rows={{4}}
-                    @maxlength={{1500}}
-                    @showCharCount={{true}}
-        />
-      </FormRow>
-      <h6 class="text-danger fw-bold">The request will be denied if:</h6>
-      {{fa-icon "ban" right=1}} Not enough information was provided.<br>
-      {{fa-icon "ban" right=1}} Your story cannot be verified with your shift partner or shift lead / manager. Yes, we
-      do check!
-    </Modal.body>
-    <Modal.footer @align="start">
-      <f.submit @label={{if f.model.isNew "Submit New Request" "Update Request"}} />
-      <UiCancelButton  @onClick={{@onCancel}} />
-     </Modal.footer>
-  </ChForm>
-</ModalDialog>
+{{#if this.isLoadingPositions}}
+  <LoadingDialog/>
+{{else}}
+  <ModalDialog @title="Missing Timesheet Request" @onEscape={{@onCancel}} as |Modal|>
+    <ChForm @formId="tm"
+            @formFor={{@entry}}
+            @validator={{this.timesheetValidations}}
+            @onSubmit={{this.saveAction}} as |f|>
+      <Modal.body>
+        <p>
+          Use this form for <b>MISSING TIMESHEET ENTRIES ONLY</b>. If you have an existing entry that needs correction,
+          go back to the Timesheet tab and submit a correction by clicking on the "Request Correction" button.
+        </p>
+        <p>
+          We will not approve a request for work performed outside the event period.
+        </p>
+        <FormRow>
+          <f.select @name="position_id"
+                    @label="Which position was the shift for?"
+                    @options={{this.positionOptions}}
+          />
+        </FormRow>
+        <FormRow>
+          <f.datetime @name="on_duty"
+                      @label="What was the START date & time of the shift?"
+                      @size={{15}}
+          />
+          <f.datetime @name="off_duty"
+                      @label="What was the END date & time of the shift?"
+                      @size={{15}}
+          />
+        </FormRow>
+        <FormRow>
+          <f.text @name="partner"
+                  @label="What are the callsigns of your shift partner(s) or the shift lead / manager who can corroborate your story?"
+                  @size={{20}}
+                  @maxlength={{100}}
+                  @showCharCount={{true}}
+          />
+        </FormRow>
+        {{#if @entry.isRejected}}
+          <b class="text-danger">Sorry, the correction request has been rejected.</b>
+        {{/if}}
+        {{#if @entry.notes}}
+          <UiInfoBox>
+            <:title>Notes from you &amp; the Timesheet Wranglers</:title>
+            <:body>
+              <TimesheetNotes @notes={{@entry.notes}} @isMe={{true}} />
+            </:body>
+          </UiInfoBox>
+        {{/if}}
+        <FormRow>
+          <f.textarea @name="additional_notes"
+                      @label={{if @entry.isRejected "Supply additional information for an appeal:"
+                                  "Provide a BRIEF & CONCISE explanation in 1 to 3 sentences why you should be credited for a missing shift?"}}
+                      @cols={{80}}
+                      @rows={{4}}
+                      @maxlength={{1500}}
+                      @showCharCount={{true}}
+          />
+        </FormRow>
+        <h6 class="text-danger fw-bold">The request will be denied if:</h6>
+        {{fa-icon "ban" right=1}} Not enough information was provided.<br>
+        {{fa-icon "ban" right=1}} Your story cannot be verified with your shift partner or shift lead / manager. Yes, we
+        do check!
+      </Modal.body>
+      <Modal.footer @align="start">
+        <f.submit @label={{if f.model.isNew "Submit New Request" "Update Request"}} />
+        <UiCancelButton @onClick={{@onCancel}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
+{{/if}}
 
 {{#if this.isSubmitting}}
-  <LoadingDialog>
-    Saving the Missing Timesheet request.
-  </LoadingDialog>
+  <LoadingDialog/>
 {{/if}}

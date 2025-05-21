@@ -137,15 +137,8 @@ export default class PersonMembershipController extends ClubhouseController {
     try {
       const personId = this.person.id;
 
-      await this.ajax.request(`person/${personId}/positions`, {
-        method: 'POST',
-        data: {position_ids}
-      });
-
-      await this.ajax.request(`person/${personId}/teams`, {
-        method: 'POST',
-        data: {team_ids, manager_ids}
-      });
+      await this.ajax.post(`person/${personId}/positions`, {data: {position_ids}});
+      await this.ajax.post(`person/${personId}/teams`, {data: {team_ids, manager_ids}});
 
       this.toast.success('Teams and/or positions successfully updated.');
     } catch (response) {

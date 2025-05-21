@@ -36,7 +36,7 @@ export default class HqRoute extends ClubhouseRoute {
         .then(({event_info}) => event_info),
 
       positions: await this.ajax.request(`person/${person_id}/positions`, {
-        data: {include_training: 1, year}
+        data: {include_eligibility: 1}
       }).then(({positions}) => positions),
 
       unread_message_count: await this.ajax.request(`person/${person_id}/unread-message-count`)

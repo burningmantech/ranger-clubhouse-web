@@ -59,17 +59,14 @@
                   {{#if data.message}}
                     {{data.message}}<br>
                   {{/if}}
-                  {{#if data.forced}}
-                    <span class="text-danger">Forced - Unqualified "{{data.forced.message}}"</span><br>
-                  {{/if}}
-                  {{#if (eq log.action "update")}}
+                   {{#if (eq log.action "update")}}
                     {{#if data.review_status}}
                       <span class="me-2">Status update:</span>
                       {{get data.review_status 0}} &rarr; {{get data.review_status 1}}<br>
                     {{/if}}
                     {{#if data.position_id}}
                       <span class="me-2">Position update:</span>
-                      {{get (get data.position_id 0) 'title'}} &rarr; {{get (get data.position_id 1) 'title'}}<br>
+                      {{this.positionTitle (get data.position_id 0)}} &rarr; {{this.positionTitle (get data.position_id 1)}}<br>
                     {{/if}}
                     {{#if data.on_duty}}
                       <span class="me-2">On Duty update:</span>
@@ -92,6 +89,9 @@
                       <span class="me-2">Off Duty:</span>
                       {{shift-format data.off_duty}}<br>
                     {{/if}}
+                  {{/if}}
+                  {{#if data.forced}}
+                    {{this.forceReasons data}}
                   {{/if}}
                   {{#if data.notes}}
                     <div>
