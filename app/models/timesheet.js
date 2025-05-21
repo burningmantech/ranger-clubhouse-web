@@ -1,6 +1,7 @@
 import Model, {attr} from '@ember-data/model';
 import {tracked} from '@glimmer/tracking';
 import dayjs from 'dayjs';
+import {TRAINING} from "clubhouse/constants/positions";
 
 export const STATUS_PENDING = 'pending';
 export const STATUS_APPROVED = 'approved';
@@ -21,6 +22,92 @@ export const NoteTypeLabels = {
   [NOTE_TYPE_WRANGLER]: 'Timesheet Wrangler',
   [NOTE_TYPE_ADMIN]: 'Admin',
 };
+
+export const BLOCKED_IS_RETIRED = 'is-retired'; // Person is retired, and trying to work a non-cheetah cub shift.
+export const BLOCKED_NOT_TRAINED = 'not-trained'; // Person is not trained. Either In-Person or ART.
+export const BLOCKED_NO_BURN_PERIMETER_EXP = 'no-burn-perimeter-exp'; // Person has no burn perimeter experience
+export const BLOCKED_NO_EMPLOYEE_ID = 'no-employee-id'; // Position is paid -- person does not have employee id on file.
+export const BLOCKED_TOO_EARLY = 'too-early'; // Person is trying to sign in to a shift too early.
+export const BLOCKED_TOO_LATE = 'too-late'; // Person is trying to sign in to a shift too late.
+export const BLOCKED_UNSIGNED_SANDMAN_AFFIDAVIT = 'unsigned-sandman-affidavit'; // The Sandman Affidavit has not been signed.
+
+function humanDistanceOfTime(rawMinutes) {
+  const minutes = Math.floor(rawMinutes % 60);
+  const hours = Math.floor(((rawMinutes / 60) % 24));
+  const days = Math.floor(rawMinutes / (24 * 60));
+
+  const parts = [];
+
+  if (days > 0) parts.push(`${days} day${days > 1 ? 's' : ''}`);
+  if (hours > 0) parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
+  if (minutes > 0) parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
+
+  return parts.join(', ');
+}
+
+export function buildBlockerLabels(blockers) {
+  return blockers.map(b => {
+    switch (b.blocker) {
+      case BLOCKED_IS_RETIRED:
+        return 'Person is retired  and may only sign in to a Cheetah Cub shift. Once they complete the shift, the Mentors will update their status to active.';
+
+      case BLOCKED_NOT_TRAINED:
+        if (b.position.id === TRAINING) {
+          return `${b.position.title} has not been passed. If the person attended a session today, the trainers may be delayed in recording the results. Contact the trainers to confirm if this person has passed.`;
+        } else {
+          return `${b.position.title} has not been passed. Radio the ART trainers to confirm this person has passed an ART session.`;
+        }
+
+      case BLOCKED_NO_BURN_PERIMETER_EXP:
+        return `All Sandmen must have Burn Perimeter experience (Sandman, Burn Perimeter or similar) within the last ${b.within_years} years.`;
+
+      case BLOCKED_NO_EMPLOYEE_ID:
+        return 'Position is paid, and the person does not have an employee id on file.';
+
+      case BLOCKED_TOO_EARLY:
+        return `It's too early to check in for this shift, which starts at ${dayjs(b.slot.begins).format('HH:mm')} (${b.slot.description}). Check-in opens ${b.cutoff} minutes before. Recommend they return in ${humanDistanceOfTime(b.allowed_in)} or referred them to the HQ Lead if they insist on going on shift early.`;
+
+      case BLOCKED_TOO_LATE:
+        return `It's too late to check in. The shift started at ${dayjs(b.slot.begins).format('HH:mm')}, and check-in closes ${b.cutoff} minutes after the start. It's now ${humanDistanceOfTime(b.distance)} past the start. If they insist on going on shift, refer them to the HQ Lead.`;
+
+      case BLOCKED_UNSIGNED_SANDMAN_AFFIDAVIT:
+        return 'Person has not signed the Sandman Affidavit. Direct the person to the Kiosk Shack so they can log in and sign the affidavit.';
+
+      default:
+        return `Bug? Unknown blocker status [${b.blocker}]`;
+    }
+  });
+}
+
+export function buildBlockerAuditLabels(blockers) {
+  return blockers.map(b => {
+    switch (b.blocker) {
+      case BLOCKED_IS_RETIRED:
+        return 'Person is retired';
+
+      case BLOCKED_NOT_TRAINED:
+        return `${b.position.title} not passed`;
+
+      case BLOCKED_NO_BURN_PERIMETER_EXP:
+        return `No Burn Perimeter exp. within  ${b.within_years} years.`;
+
+      case BLOCKED_NO_EMPLOYEE_ID:
+        return 'Position is paid, no employee id on file.';
+
+      case BLOCKED_TOO_EARLY:
+        return `Too early check-in. Shift start ${dayjs(b.slot.begins).format('HH:mm')}. ${b.cutoff} minutes before. Recommend return was ${humanDistanceOfTime(b.allowed_in)}.`
+
+      case BLOCKED_TOO_LATE:
+        return `Late check-in. Shift started at ${dayjs(b.slot.begins).format('HH:mm')}. ${humanDistanceOfTime(b.distance)} past the start. Cutoff ${b.cutoff} minutes.`;
+
+      case BLOCKED_UNSIGNED_SANDMAN_AFFIDAVIT:
+        return 'No signed Sandman Affidavit.';
+
+      default:
+        return `Bug? Unknown blocker status [${b.blocker}]`;
+    }
+  });
+}
 
 export default class TimesheetModel extends Model {
   @attr('number') person_id;

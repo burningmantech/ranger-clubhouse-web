@@ -5,11 +5,21 @@ export default class UiNoticeComponent extends Component {
     return this.args.icon ?? 'exclamation';
   }
 
-   get color() {
+  get color() {
     return (this.args.type ?? 'secondary');
   }
 
   get iconColor() {
-    return this.args.iconColor ?? (this.color === 'warning') ? 'black' : this.color;
+    if (this.args.iconColor) {
+      return this.args.iconColor;
+    }
+
+    if (this.color === 'warning') {
+      return 'black';
+    } else if (this.color === 'danger' || this.color === 'secondary') {
+      return 'white;'
+    } else {
+      return this.color;
+    }
   }
 }

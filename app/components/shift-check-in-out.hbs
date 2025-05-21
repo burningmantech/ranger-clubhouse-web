@@ -71,7 +71,7 @@
     {{#if this.inPersonTrainingPassed}}
       {{#if @upcomingSlots.imminent}}
         <div class="mb-2 fw-semibold">
-          {{@person.callsign}} can be signed into a scheduled shift OR a different shift (aka position).
+          {{@person.callsign}} can be signed in to a scheduled shift OR a different shift (aka position).
         </div>
         <UiTable @normalSize={{true}} @noStriped={{true}}>
           <thead>
@@ -83,66 +83,17 @@
           </thead>
           <tbody>
           {{#each @upcomingSlots.imminent as |slot|}}
-            {{#unless slot.is_within_start_time}}
-              <tr>
-                <td colspan="5">
-                  <UiNotice @type="warning"
-                            @title="Early Shift Check-In"
-                            @icon="hand-point-right"
-                            @iconColor="secondary">
-                    <p>
-                      The "{{slot.position_title}}" shift listed below starts at
-                      {{dayjs-format slot.slot_begins "HH:mm"}}.
-                      The earliest recommended check-in is {{pluralize slot.can_start_in "minute"}} from now.
-                    </p>
-                    Your options are:
-                    <ul>
-                      <li>
-                        Suggest the person come back in
-                        <b>{{pluralize slot.can_start_in "minute"}}</b> to
-                        check-in. If the time is very close to the recommended check in time, go ahead and signed them
-                        in. Use your judgment. The intent is to prevent Rangers from checking in too early only to sit
-                        around for a long time while waiting to be deployed.
-                      </li>
-                      <li>
-                        If this is a specialized shift (e.g., Mentors, Leads, Longs, Supervisors, OODs, On Call, Shift
-                        Command, etc.), or if the person's cadre/team/manager has requested an earlier start time,
-                        check in the person now. Rangers have to adapt to the ever-changing situation on playa.
-                      </li>
-                    </ul>
-                    <span class="fw-semibold">The recommendations are guidelines, not a hard set of
-                      rules.</span>
-                    Being flexible is okay. Consult with the HQ Short or HQ Lead if needed.
-                  </UiNotice>
-                </td>
-              </tr>
-            {{/unless}}
             <tr class="{{if slot.slot_description "tr-no-border"}}">
               <td class="align-middle">
                 {{slot.position_title}}
               </td>
               <td class="align-middle">{{shift-format slot.slot_begins slot.slot_ends}}</td>
               <td class="align-middle">
-                {{#if (and (not slot.is_untrained) (not slot.is_unqualified))}}
-                  <UiButton @type={{if slot.is_within_start_time "primary" "warning"}}
-                            @onClick={{fn this.signinShiftAction slot}}
-                            @disabled={{this.isSubmitting}}>
-                    {{fa-icon "person-walking" right=2}}
-                    {{if slot.is_within_start_time "Start Scheduled Shift" "Start Shift Early"}}
-                  </UiButton>
-                {{else}}
-                  <div class="text-danger">
-                    {{if slot.is_untrained "Not Trained"}}
-                    {{if slot.is_unqualified slot.unqualified_message}}
-                  </div>
-                  {{#if this.userCanForceCheckIn}}
-                    <UiButton @type="warning"
-                              @onClick={{fn this.signinShiftAction slot}}
-                              @disabled={{this.isSubmitting}}>
-                      Force Start Shift
-                    </UiButton>
-                  {{/if}}
-                {{/if}}
+                <UiButton @type="primary"
+                          @onClick={{fn this.signInShiftAction slot}}
+                          @disabled={{this.isSubmitting}}>
+                  {{fa-icon "person-walking" right=2}} Start Shift
+                </UiButton>
                 {{#if this.isSubmitting}}
                   <LoadingIndicator/>
                 {{/if}}
@@ -183,41 +134,29 @@
           below.
         </UiNotice>
       {{else}}
-        <UiNotice
-          @title="Work Eligibility Issue {{if this.noTrainingRequiredPositions " - Only Limited Positions Available"}}"
-          @icon="hand" @type="danger">
+        <UiNotice @title="Check In Eligibility Issue" @icon="hand" @type="danger">
           <p>
-            {{@person.callsign}} should not start a shift because
-            {{if this.otOnly "the Online Course" "an In-Person Training"}}
-            has not been completed.
+            {{@person.callsign}} should not start a shift because In-Person Training has not been completed.
             {{#if this.noTrainingRequiredPositions}}
-              While most positions are not available to check into, a small set is available to work. See below.
+              While most positions are not available to check in to at this time, a small set is available to sign in
+              to.
             {{/if}}
           </p>
           <p>
-            In case the person attended an In-Person Training earlier in the day, the trainers may be
-            delayed recording who passed the training. Have the HQ Short or Lead contact the trainers to
-            verify the person attended and passed the training.
+            If the person attended an in-person training earlier today, the trainers may not have recorded their
+            completion yet. Ask the HQ Lead to contact the trainers to confirm whether the person attended and
+            passed. The HQ Lead will be able to sign in the person after training has been verified.
           </p>
-          <p>
-            {{#if this.userCanForceCheckIn}}
-              {{fa-icon "hand-point-right" right=1}} You have the privileges to force a shift start.
-            {{else}}
+          {{#if this.userCanForceCheckIn}}
+            <b>
+              You have the privileges to force a shift start. Only force the check in after confirming the person
+              has actually passed training.
+            </b>
+          {{else}}
+            <b class="text-danger">
               You do not have the privileges to force a shift start for the position requiring an In-Person training.
-              A HQ Short or Lead may be able to start the shift.
-            {{/if}}
-          </p>
-          {{#if this.noTrainingRequiredPositions}}
-            <p>
-              The following positions are available to work that do not require passing an In-Person Training. Select
-              the position, and the Start Shift button will
-              appear.
-            </p>
-            <div class="columns-container columns-4">
-              {{#each this.noTrainingRequiredPositions as |position|}}
-                <div>{{position.title}}</div>
-              {{/each}}
-            </div>
+              Consult with the HQ Lead
+            </b>
           {{/if}}
         </UiNotice>
       {{/if}}
@@ -281,8 +220,8 @@
       </p>
       <p>
         <b>
-          When switching from an on-call shift (such as 007 Standby, Tech On Call, etc.) to a working shift
-          (007, Tech Team, etc) and visa-versa, END THE CURRENT SHIFT and start a new one.
+          When switching between an on-call shift (e.g., 007 Standby, Tech On Call) and an on-duty shift (e.g., 007,
+          Tech Team), or vice versa, you must end the current shift before starting the new one.
         </b>
       </p>
       Select the new position the shift should be corrected to:
@@ -307,102 +246,52 @@
   </ModalDialog>
 {{/if}}
 
-{{#if this.showEarlyShiftConfirm}}
-  <ModalDialog @title="Confirm Early Shift Sign In" @onEscape={{this.closeEarlyShiftAction}} as |Modal|>
-    <Modal.body>
-      You are about to check in the person early for a shift. Are you sure you wish to do this?
-    </Modal.body>
-    <Modal.footer @align="start">
-      <UiButton @type="warning" @onClick={{this.confirmEarlyShiftAction}}>
-        Confirm Early Shift Start
-      </UiButton>
-      <UiCancelButton @onClick={{this.closeEarlyShiftAction}} />
-    </Modal.footer>
-  </ModalDialog>
-{{/if}}
-
-{{#if this.showForceStartConfirm}}
-  <ModalDialog @title="Confirm Forced Shift Check In"
-               @onEscape={{this.closeForceStartConfirm}} as |Modal|>
+{{#if this.showBlockers}}
+  <ModalDialog @title="{{if this.isPositionUpdate "Position Update" "Check In"}} Is Blocked"
+               @onEscape={{this.closeForceConfirm}} as |Modal|>
     <ChForm @formFor={{this.forceStartForm}}
-            @onSubmit={{this.confirmForceStart}}
+            @onSubmit={{if this.isPositionUpdate this.confirmForcePosition this.confirmForceStart}}
             @validator={{this.forceShiftValidations}} as |f|>
       <Modal.body>
-        <p>
-          <b class="text-danger">
-            WARNING: {{@person.callsign}} has not meet all the qualifications to start a {{this.forcePosition.title}}
-            shift
-          </b>
-        </p>
-        <ul>
-          {{#if
-            (and (not this.inPersonTrainingPassed) (not this.forcePosition.is_untrained) (not this.forcePosition.is_unqualified))}}
-            <li>In-Person Training has not been completed.</li>
-          {{/if}}
-          {{#if this.forcePosition.is_untrained}}
-            <li>{{this.forcePosition.training_title}} has not been completed</li>
-          {{/if}}
-          {{#if this.forcePosition.is_unqualified}}
-            <li>{{this.forcePosition.unqualified_message}}</li>
-          {{/if}}
+        <b class="text-danger">
+          {{fa-icon "hand" right=1}} The {{if this.isPositionUpdate "position update" "shift check in"}}  is blocked for the following reason(s):
+        </b>
+        <ul class="mt-2">
+          {{#each this.blockers as |blocker|}}
+            <li>{{blocker}}</li>
+          {{/each}}
         </ul>
-        <p>
-          Since you either have the Admin, or Force Shift Start permission, you can force a shift check in.
-        </p>
-        <p>
-          <b class="text-danger">All forced shift starts are logged and reviewed.</b>
-        </p>
-        <p>
-          Are you sure you want to sign in this person at this time? A reason
-          must be given below if you wish to proceed.
-        </p>
-        <FormRow>
-          <f.textarea @name="reason"
-                      @label="Enter a reason why this shift is being forced:"
-                      @autofocus={{true}}
-                      @rows={{4}}
-                      @cols={{80}}
-          />
-        </FormRow>
+        {{#if this.userCanForceCheckIn}}
+          <p>
+            Since you either have the Admin or Force Shift Start permissions, you can force the {{if this.isPositionUpdate "the position update" "check in"}}.
+          </p>
+          <p>
+            <b class="text-danger">All forced actions are logged and reviewed.</b>
+          </p>
+          <p>
+            Are you sure you want to force this through? A reason must be given below if you wish to proceed.
+          </p>
+          <FormRow>
+            <f.textarea @name="reason"
+                        @label="Enter a reason why this is being forced:"
+                        @autofocus={{true}}
+                        @rows={{4}}
+                        @cols={{80}}
+            />
+          </FormRow>
+        {{else}}
+          Refer the person to the HQ Lead as they can force the {{if this.isPositionUpdate "position update" "shift check-in"}}.
+        {{/if}}
       </Modal.body>
       <Modal.footer @align="start">
-        <f.submit @label="Confirm Force Shift Start" @type="warning"/>
-        <UiCancelButton @onClick={{this.closeForceStartConfirm}} />
+        {{#if this.userCanForceCheckIn}}
+          <f.submit @label="Confirm Force " @type="warning"/>
+        {{/if}}
+        <UiCancelButton @onClick={{this.closeForceConfirm}} />
       </Modal.footer>
     </ChForm>
   </ModalDialog>
 {{/if}}
-
-{{#if this.showMayNotForceCheckIn}}
-  <ModalDialog @title="Shift Check-In Requirements Not Met" @onEscape={{this.closeMayNotForceCheckIn}} as |Modal|>
-    <Modal.body>
-      <p>
-        <b class="text-danger">
-          {{@person.callsign}} has not meet all the qualifications to start a {{this.forcePosition.title}} shift
-        </b>
-      </p>
-      <ul>
-        {{#if
-          (and (not this.inPersonTrainingPassed) (not this.forcePosition.is_untrained) (not this.forcePosition.is_unqualified))}}
-          <li>In-Person Training has not been completed.</li>
-        {{/if}}
-        {{#if this.forcePosition.is_untrained}}
-          <li>{{this.forcePosition.training_title}} has not been completed</li>
-        {{/if}}
-        {{#if this.forcePosition.is_unqualified}}
-          <li>{{this.forcePosition.unqualified_message}}</li>
-        {{/if}}
-      </ul>
-      <p>
-        Consult with the HQ Short or Lead if this is an error. They may be able to force the check-in.
-      </p>
-    </Modal.body>
-    <Modal.footer>
-      <UiCloseButton @onClick={{this.closeMayNotForceCheckIn}} />
-    </Modal.footer>
-  </ModalDialog>
-{{/if}}
-
 
 {{#if this.showTooShortDialog}}
   <ModalDialog as |Modal|>

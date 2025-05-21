@@ -1,19 +1,19 @@
-<div class="border rounded border-{{this.color}} p-2 mb-2">
-  <div class="d-flex fs-4">
+<div class="border rounded border-{{this.color}} mb-2">
+  <div class="d-flex fs-4 text-bg-{{this.color}} p-2">
     <div>
       {{fa-icon this.icon fixed=true color=this.iconColor type=@iconType}}
     </div>
     {{#if @title}}
-      <div class="ms-2 text-{{this.color}}">{{@title}}</div>
+      <div class="ms-2">{{@title}}</div>
     {{else}}
     {{!-- Have the text appear next to the icon --}}
-      <div>
+      <div class="p-2">
         {{yield}}
       </div>
     {{/if}}
   </div>
   {{#if @title}}
-    <div class="mt-1">
+    <div class="mt-1 p-2">
       {{yield}}
     </div>
   {{/if}}

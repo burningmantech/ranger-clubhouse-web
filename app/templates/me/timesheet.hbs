@@ -93,7 +93,6 @@
       <Me::TimesheetMissingCommon @person={{this.person}}
                                   @timesheetsMissing={{this.timesheetsMissing}}
                                   @timesheetInfo={{this.timesheetInfo}}
-                                  @positions={{this.positions}}
       />
     </tab.pane>
   {{/if}}
@@ -172,13 +171,16 @@
     </Modal.title>
     <Modal.body>
       <p>
-        Congratulations! You have marked the last timesheet entry as correct, and there are no pending
-        correction or missing timesheet entry requests. Please confirm no further confirmations will be
-        submitted, and your entire timesheet is correct by the "Confirm Final Confirmation" button.
+        Only click “Confirm Final Confirmation” if you’ve completed all your shifts for the year and do not plan to
+        submit any further corrections or missing entry requests. Otherwise click "Cancel".
       </p>
       <p>
-        In case you have additional corrections to submit, use the "Cancel" button to clear this dialog,
-        and submit the requests.
+        Congratulations! You’ve marked your last timesheet entry as correct, and there are no pending updates. If
+        everything looks good and no further changes are needed, go ahead and click the “Confirm Final Confirmation”
+        button to lock in your timesheet.
+      </p>
+      <p>
+        If you still need to make corrections, click “Cancel” to close this dialog and submit your requests first.
       </p>
     </Modal.body>
     <Modal.footer>

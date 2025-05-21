@@ -1,10 +1,11 @@
 import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
 import {service} from '@ember/service';
-import {cached,tracked} from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
 import positionsForTimesheetMissing from "clubhouse/utils/positions-for-timesheet-missing";
 
 export default class MeTimesheetMissingCommonComponent extends Component {
+  @service ajax;
   @service house;
   @service modal;
   @service session;
@@ -13,10 +14,28 @@ export default class MeTimesheetMissingCommonComponent extends Component {
   @service toast;
 
   @tracked entry = null;
+  @tracked positionOptions;
+  @tracked isLoading = false;
 
-  @cached
-  get positionOptions() {
-    return positionsForTimesheetMissing(this.args.positions);
+  constructor() {
+    super(...arguments);
+    this._loadPositions();
+  }
+
+  async _loadPositions() {
+    try {
+      this.isLoading = true;
+      const {positions} = await this.ajax.request(`person/${this.args.person.id}/positions`, {
+        data:
+          {include_past_grants: 1, exclude_trainee: 1}
+      });
+      this.positionOptions = positionsForTimesheetMissing(positions);
+
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   get isMe() {
@@ -29,10 +48,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
 
   @action
   newRequestAction() {
-    this.entry = this.store.createRecord('timesheet-missing', {
-      person_id: this.args.person.id,
-      position_id: this.positionOptions[0][1],
-    });
+    this.entry = this.store.createRecord('timesheet-missing', {});
   }
 
   /**
@@ -72,9 +88,13 @@ export default class MeTimesheetMissingCommonComponent extends Component {
   }
 
   @action
-  saveAction(isNew) {
+  async saveAction(isNew) {
     if (isNew) {
-      this.args.timesheetsMissing.update();
+      try {
+        await this.args.timesheetsMissing.update();
+      } catch (response) {
+        this.house.handleErrorResponse(response);
+      }
     }
     this.entry = null;
     set(this.args.timesheetInfo, 'timesheet_confirmed', false);
@@ -90,7 +110,14 @@ export default class MeTimesheetMissingCommonComponent extends Component {
     this.modal.confirm(
       'Are you sure wish to delete this?',
       'You are about to delete the timesheet missing request. Please confirm you want to do this.',
-      () => timesheetMissing.destroyRecord().then(() => this.toast.success('The request has been deleted.'))
+      async () => {
+        try {
+          await timesheetMissing.destroyRecord();
+          this.toast.success('The request has been deleted.');
+        } catch (response) {
+          this.house.handleErrorResponse(response);
+        }
+      }
     );
   }
 

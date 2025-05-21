@@ -3,14 +3,21 @@ import { service } from '@ember/service';
 import validateDateTime from "clubhouse/validators/datetime";
 import {validatePresence} from 'ember-changeset-validations/validators';
 import { action } from '@ember/object';
+import positionsForTimesheetMissing from "clubhouse/utils/positions-for-timesheet-missing";
+import {tracked} from '@glimmer/tracking';
 
 export default class MeTimesheetMissingEditComponent extends Component {
+  @service ajax;
   @service house;
   @service modal;
   @service session;
   @service shiftManage;
   @service store;
   @service toast;
+
+  @tracked isSubmitting = false;
+  @tracked isLoadingPositions = false;
+  @tracked positionOptions;
 
   timesheetValidations = {
     on_duty: [validateDateTime({before: 'off_duty', beforeName: 'Ending Date/Time'}), validatePresence(true)],
@@ -19,6 +26,28 @@ export default class MeTimesheetMissingEditComponent extends Component {
     partner: [validatePresence({ presence: true, message: 'Enter a partner - use "none" if you had no shift partner.'})]
   };
 
+  constructor() {
+    super(...arguments);
+
+     this._loadPositions();
+  }
+
+  async _loadPositions() {
+    try {
+      this.isLoadingPositions = true;
+      const {positions} = await this.ajax.request(`person/${this.args.person.id}/positions`, {data: {include_past_grants: 1, exclude_trainee: 1}});
+      this.positionOptions = positionsForTimesheetMissing(positions);
+      const { entry} = this.args;
+      if (entry.isNew) {
+        entry.person_id = this.args.person.id;
+        entry.position_id = this.positionOptions[0][1];
+      }
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isLoadingPositions = false;
+    }
+  }
    /**
    * Save a timesheet missing request
    * @param {TimesheetMissingModel} model

@@ -5,6 +5,7 @@ import {service} from '@ember/service';
 import _ from 'lodash';
 import dayjs from 'dayjs';
 import {ART_CAR_WRANGLER, BURN_PERIMETER, SANDMAN} from 'clubhouse/constants/positions';
+import {buildBlockerLabels} from "clubhouse/models/timesheet";
 
 class PersonSignIn {
   @tracked signedIn = false; // is the person signed in?
@@ -184,7 +185,7 @@ export default class RollcallSignInComponent extends Component {
     }
 
     if (!person.signedIn && !person.on_duty) {
-      this._signonPerson(person);
+      this._signInPerson(person);
     } else {
       // Person is on duty - confirm sign out.
       this.modal.confirm(`Sign Out ${person.callsign}`,
@@ -227,7 +228,7 @@ export default class RollcallSignInComponent extends Component {
    * @private
    */
 
-  async _signonPerson(person) {
+  async _signInPerson(person) {
     person.isSubmitting = true;
     try {
       const result = await this.ajax.request('timesheet/signin', {
@@ -242,13 +243,7 @@ export default class RollcallSignInComponent extends Component {
       switch (result.status) {
         case 'success':
           if (result.forced) {
-            let reason;
-            if (result.unqualified_reason === 'untrained') {
-              reason = `has not completed '${result.required_training}'`;
-            } else {
-              reason = `is unqualified ('${result.unqualified_message}')`;
-            }
-            this.modal.info('Sign In Forced', `<p><b class="text-danger">WARNING: The person ${reason}.</b></p> Because you are an admin or have the timesheet management role, we have signed them in anyways. Hope you know what you're doing! ${callsign} is now on duty.`);
+            this.modal.info('Sign In Forced', `Because you are an admin or have the Force Shift Start permission, we have signed them in anyway. Hope you know what you're doing! ${callsign} is now on duty.`);
           }
           person.signedIn = true;
           person.timesheet_id = result.timesheet_id;
@@ -266,14 +261,11 @@ export default class RollcallSignInComponent extends Component {
           person.timesheet_id = result.timesheet.id;
           break;
 
-        case 'not-trained':
-          this.modal.info('Not Trained', `${callsign} has has not completed "${result.position_title}" and cannot be signed into the shift.`);
+        case 'blocked': {
+          const blockers = buildBlockerLabels(result.blockers).map(b => `<li>${b}</li>`).join('');
+          this.modal.info('Sign In Blocked', `${callsign} is blocked from signing in to the shift for the following reason(s):<ul>${blockers}</ul>Direct ${callsign} to an HQ window to resolve this issue.`);
           break;
-
-        case 'not-qualified':
-          this.modal.info('Not Qualified', `${callsign} has not meet one or more of the qualifiers needed to sign into the shift.<br>Reason: ${result.unqualified_message}`);
-          break;
-
+        }
         default:
           this.modal.info('Unknown Server Status', `An unknown status [${result.status}] from the server. This is a bug. Please report this to the Tech Ninjas.`);
           break;
