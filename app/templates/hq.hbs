@@ -37,7 +37,6 @@
           </p>
           Contact the HQ Lead, HQ Supervisor or the Personnel Manager
           <PersonnelEmail/>
-          .
         </UiNotice>
       {{else if this.person.needsBpguid}}
         <UiNotice @type="danger" @icon="exclamation-triangle">
@@ -46,8 +45,7 @@
       {{else if (and this.person.isPNV (not this.userIsMentor))}}
         <UiNotice @title="Direct to the Hat Rack." @type="danger" @icon="exclamation">
           {{this.person.callsign}} is {{if this.person.isAlpha "an Alpha" "a Prospective"}}.
-          Do not check in this person unless you are acting on the Mentors'
-          behalf.
+          This person may only be SITE CHECKED-IN. Do not START THEIR ALPHA SHIFT!
         </UiNotice>
       {{/if}}
       {{outlet}}
@@ -113,7 +111,7 @@
   <ModalDialog @title="Sign Into A Shift" @onEscape={{this.closeSignInWarning}} as |Modal|>
     <Modal.body>
       <b class="text-danger">WARNING:</b>
-      You are not signed in to any shift. You can use the HQ Interface however we ask you sign in to a shift first.
+      You are not signed in to any shift. You may use the HQ Interface, however, we ask you sign in to a shift first.
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeSignInWarning}} />
@@ -121,26 +119,18 @@
   </ModalDialog>
 {{else if this.showHatRackInstruction}}
   <ModalDialog @onEscape={{this.closeHatRackInstructions}} as |Modal|>
+    <Modal.title>Site Check-In ONLY</Modal.title>
     <Modal.body>
-      <div class="d-flex">
-        <div class="mt-2 mx-3">
-          {{fa-icon "exclamation-triangle" color="danger" size="3x"}}
-        </div>
-        <div>
-          <h3>
-            DO NOT CHECK IN &mdash; DIRECT PERSON TO THE HAT RACK.
-          </h3>
-          <h3>
-            {{this.person.callsign}} is
-            {{#if this.person.isRetired}}
-              a retired Ranger
-            {{else}}
-              {{if this.person.isAlpha "an Alpha" "a Prospective"}}
-            {{/if}} and will be handled by
-            the Mentors.
-          </h3>
-        </div>
-      </div>
+      <p>
+        {{this.person.callsign}} is
+        {{#if this.person.isRetired}}
+          a retired Ranger
+        {{else}}
+          {{if this.person.isAlpha "an Alpha" "a Prospective"}}
+        {{/if}}.
+      </p>
+      You may site check-in this individual <b>ONLY</b>. Do not start their shift. After completing the site
+      check-in, direct the person to the Mentor Shack. The Mentors will be the ones to start their shift.
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeHatRackInstructions}}/>
@@ -154,7 +144,7 @@
       <p>
         <b class="text-danger">
           {{this.person.callsign}} has the status "{{this.person.status}}" may not be given a BMID,
-          radios, and is NOT ALLOWED TO WORK.
+          radios, and is NOT ALLOWED TO PERFORM RANGER SHIFTS.
         </b>
       </p>
       The HQ Window Interface cannot be for this person. Contact the HQ Lead, HQ Supervisor or the Personnel Manager.

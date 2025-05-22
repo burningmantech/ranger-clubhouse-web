@@ -41,7 +41,6 @@ export default class AssetCheckoutFormComponent extends Component {
   /**
    * Check out an asset
    * @param model
-   * @param isValid
    * @returns {Promise<void>}
    */
 

@@ -234,16 +234,34 @@
 {{#if this.showUnsubmittedBarcodeDialog}}
   <ModalDialog @onEscape={{this.closeUnsubmittedBarcodeDialog}} as |Modal|>
     <Modal.title>
-      Un-submitted Barcode
+      Barcode Enter But Not Checked Out
     </Modal.title>
     <Modal.body>
-      You entered a barcode number, yet it was not checked out. Either check out the asset, or clear the field
-      before attempting to navigate to another Clubhouse page.
+      <p>
+        Did you forget to hit the asset <i>Checkout</i> button?
+      </p>
+      You entered a barcode number, yet it was not checked out. Either check out the asset or clear the field
+      before attempting to look up another callsign or navigate to another Clubhouse page.
     </Modal.body>
     <Modal.footer>
-      <UiButton @onClick={{this.closeUnsubmittedBarcodeDialog}}>
-        Close
-      </UiButton>
+      <UiCloseButton @onClick={{this.closeUnsubmittedBarcodeDialog}} />
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.showIsAlpha}}
+  <ModalDialog @onEscape={{this.closeIsAlphaDialog}} as |Modal|>
+    <Modal.title>
+      Do Not Start a Shift
+    </Modal.title>
+    <Modal.body>
+      <div class="text-danger">
+        {{this.person.callsign}} is an Alpha. Do not check them into their Alpha shift. Instead, direct them to the Hat
+        Rack, where the Mentors will take over.
+      </div>
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closeIsAlphaDialog}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}

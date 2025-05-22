@@ -32,6 +32,8 @@ export default class HqShiftController extends ClubhouseController {
   @tracked showUnsubmittedBarcodeDialog = false;
   @tracked unsubmittedBarcode = '';
 
+  @tracked showIsAlpha = false;
+
   correctionValidations = {
     additional_notes: [validatePresence(true)]
   };
@@ -463,5 +465,10 @@ export default class HqShiftController extends ClubhouseController {
   get highlightMealShowers() {
     const {eventPeriods, eventInfo: {event_period}} = this;
     return (this.endedShiftEntry && !eventPeriods[event_period].hasPass);
+  }
+
+  @action
+  closeIsAlphaDialog() {
+    this.showIsAlpha = false;
   }
 }
