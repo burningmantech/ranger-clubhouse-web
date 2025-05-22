@@ -55,10 +55,12 @@
           notebook, and, if attending a swing shift (2pm to midnight), a flashlight or headlamp.
         </p>
         <p class="text-danger">
-          PLEASE ARRIVE 30 MINUTES EARLY for your Alpha shift. You will be turned away if you arrive after the start time.
+          PLEASE ARRIVE 30 MINUTES EARLY for your Alpha shift. You will be turned away if you arrive after the start
+          time.
         </p>
         <p>
-          Check-in at HQ Window at Ranger HQ, then proceed to the Hat Rack just to the right of HQ Window. Ranger HQ is located on the Esplanade and 6:31 (NEW LOCATION FOR 2025)
+          Check-in at HQ Window at Ranger HQ, then proceed to the Hat Rack just to the right of HQ Window. Ranger HQ is
+          located on the Esplanade and 6:31 (NEW LOCATION FOR 2025)
         </p>
         <p>
           <b>Can't make your Alpha shift?</b> Email the Mentor Cadre at
@@ -110,12 +112,7 @@
               {{else if slot.has_started}}
                 <div class="text-danger">Shift has started.</div>
               {{/if}}
-              <span id="slot-times-{{slot.id}}">
-              {{shift-format slot.slot_begins slot.slot_ends}}
-                {{#if (or this.isTrainingType slot.isNotPacific)}}
-                  ({{slot.slot_tz_abbr}})
-                {{/if}}
-              </span>
+              {{shift-format slot.slot_begins slot.slot_ends tz=slot.slot_tz tzabbr=slot.slot_tz_abbr}}
               <div class="schedule-sm-label" tabindex="0">{{@position.title}}</div>
               <div>
                 <SlotInfoLink @description={{slot.slot_description}}

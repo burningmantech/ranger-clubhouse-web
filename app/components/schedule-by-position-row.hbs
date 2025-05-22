@@ -7,7 +7,7 @@
     {{/if}}
   </td>
   <td class="w-25">
-    {{shift-format @slot.begins @slot.ends timezone=@slot.tz}}<br>
+    {{shift-format @slot.begins @slot.ends tz=@slot.tz tzabbr=@slot.tz_abbr}}<br>
     <PresentOrNot @value={{@slot.description}} @empty="-"/>
   </td>
   <td class="w-5 text-end">
