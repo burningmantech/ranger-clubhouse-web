@@ -109,5 +109,7 @@ export default class HqShiftRoute extends ClubhouseRoute {
     if (radioTask) {
       controller.setupTodo(radioTask);
     }
+
+    controller.showIsAlpha = (!this.controllerFor('hq').userIsMentor && hqModel.person.isPNV);
   }
 }
