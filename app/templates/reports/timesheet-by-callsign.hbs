@@ -21,7 +21,7 @@
 
 <DropdownScrollList @items={{this.callsignScrollItems}} @openAccordion={{true}} @thing="callsign"/>
 <p>
-  <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+  <UiExportToCSVButton @onClick={{this.exportToCSV}} />
 </p>
 {{#each this.people key="id" as |person|}}
   <UiAccordion id="person-{{person.id}}" as |accordion|>
@@ -47,8 +47,7 @@
         <UiTable>
           <thead>
           <tr>
-            <th>From</th>
-            <th>To</th>
+            <th>Time</th>
             <th>Position</th>
             <th class="text-end">Duration</th>
             <th class="text-end">Credits</th>
@@ -57,8 +56,13 @@
           <tbody>
           {{#each person.timesheet as |entry|}}
             <tr>
-              <td>{{shift-format entry.on_duty}}</td>
-              <td>{{#if entry.off_duty}}{{shift-format entry.off_duty}}{{else}}<i>still on duty</i>{{/if}}</td>
+              <td>
+                {{#if entry.off_duty}}
+                  {{shift-format entry.on_duty entry.off_duty}}
+                {{else}}
+                  {{shift-format entry.on_duty}} (<i>still on duty</i>)
+                {{/if}}
+              </td>
               <td>{{position-label entry.position}}</td>
               <td class="text-end">
                 {{#unless entry.position.count_hours}}
@@ -70,14 +74,14 @@
             </tr>
           {{/each}}
           <tr>
-            <td colspan="3" class="text-end"><b>Totals:</b></td>
+            <td colspan="2" class="text-end"><b>Totals:</b></td>
             <td class="text-end">
               {{hour-minute-format person.total_duration}}
             </td>
             <td class="text-end">{{credits-format person.total_credits}}</td>
           </tr>
           <tr>
-            <td colspan="3" class="text-end"><b>Total Appreciated Hours:</b></td>
+            <td colspan="2" class="text-end"><b>Hours counting towards appreciations &amp; provisions:</b></td>
             <td class="text-end">
               {{hour-minute-format person.total_appreciation_duration}}
             </td>

@@ -37,7 +37,7 @@
             <tbody>
             {{#each person.slots key="id" as |slot|}}
               <tr>
-                <td>{{shift-format slot.begins slot.ends timezone=slot.tz}}</td>
+                <td>{{shift-format slot.begins slot.ends tz=slot.timezone tzabbr=slot.timezone_abbr}}</td>
                 <td class="text-end">
                   {{hour-minute-format slot.duration}}
                 </td>

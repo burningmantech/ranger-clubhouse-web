@@ -2,8 +2,8 @@
   <UiTable>
     <thead>
     <tr>
-      <th>&nbsp;</th>
       <th class="text-nowrap">Time / Location</th>
+      <th>Active?</th>
       <th class="text-nowrap">Sign Ups</th>
       <th colspan="{{this.trainingColumns}}">Trainers</th>
     </tr>
@@ -11,17 +11,10 @@
     <tbody>
     {{#each @sessions as |session|}}
       <tr>
-        <td>
-          {{#if session.slot.active}}
-            {{fa-icon "check" color="success"}}
-          {{else}}
-            {{fa-icon "times" color="danger"}}
-          {{/if}}
-        </td>
         <td class="text-nowrap">
           <LinkTo @route="training.session.index"
                   @models={{array @training.id session.slot.id}}>
-            {{shift-format session.slot.begins}} ({{session.slot.timezone_abbr}})
+            {{shift-format session.slot.begins tz=session.slot.timezone tzabbr=session.slot.timezone_abbr}}
           </LinkTo>
           {{#if (gte session.slot.signed_up session.slot.max)}}
             <b class="text-danger ms-1">(FULL)</b>
@@ -31,6 +24,13 @@
           {{#unless session.slot.active}}
             <div class="text-danger">(not activated, sign-ups disabled)</div>
           {{/unless}}
+        </td>
+        <td class="text-center">
+          {{#if session.slot.active}}
+            <UiBadge @type="success">active</UiBadge>
+          {{else}}
+            <UiBadge @type="warning">inactive</UiBadge>
+          {{/if}}
         </td>
         <td class="text-end text-nowrap">
           {{session.slot.signed_up}} of {{session.slot.max}}

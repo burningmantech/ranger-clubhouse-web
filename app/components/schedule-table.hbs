@@ -73,10 +73,7 @@
               {{else if slot.has_started}}
                 <div class="text-danger">Shift has started.</div>
               {{/if}}
-              {{shift-format slot.slot_begins slot.slot_ends}}
-              {{#if slot.isNotPacific}}
-                ({{slot.slot_tz_abbr}})
-              {{/if}}<br>
+              {{shift-format slot.slot_begins slot.slot_ends tz=slot.slot_tz tzabbr=slot.slot_tz_abbr}}<br>
               {{slot.position_title}}<br>
               <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
             </div>
