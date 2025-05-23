@@ -9,59 +9,63 @@ export const HOUR_MIN_DAY = 'ddd [@] HH:mm'
 
 const guessedTz = dayjs.tz.guess();
 
-export function shiftFormat([shiftDate, endDate], hash) {
-  let datetime;
-  let {tz, tzabbr} = hash;
+function formatDate(date, format, abbr='') {
+  const localTime = date.tz(guessedTz).format(MONTH_DAY_TIME_YEAR + ' (z)');
+  return `<span title="${localTime}">${date.format(format)}${abbr}</span>`;
+}
 
-  if (!shiftDate) {
+export function shiftFormat([start, end], hash) {
+  const {tz, tzabbr} = hash;
+  let timezone, displayAbbr;
+
+  if (!start) {
     return '';
   }
 
   if (!tz) {
-    tz = 'America/Los_Angeles';
-    tzabbr = '';
-  } else if (tzabbr === 'PDT' || tzabbr === 'PST') {
-    tzabbr = '';
+    timezone = 'America/Los_Angeles';
+    displayAbbr = '';
   } else {
-    tzabbr = ` (${tzabbr})`;
+    timezone = tz;
+    displayAbbr = ` (${tzabbr})`;
   }
 
-  datetime = dayjs(shiftDate);
-  if (!datetime.isValid()) {
-    return shiftDate;
+  let startParsed = dayjs(start);
+  if (!startParsed.isValid()) {
+    return start;
   }
 
-  const startLocal = dayjs.tz(shiftDate, tz).tz(guessedTz).format(MONTH_DAY_TIME_YEAR + ' (z)');
-  if (!endDate) {
-    return htmlSafe(`<span title="${startLocal}">${datetime.format(hash.year ? MONTH_DAY_TIME_YEAR : MONTH_DAY_TIME)}${tzabbr}</span>`);
+  startParsed = startParsed.tz(timezone, true);
+  if (!end) {
+    return htmlSafe(formatDate(startParsed, hash.year ? MONTH_DAY_TIME_YEAR : MONTH_DAY_TIME, displayAbbr));
   }
 
-  const endDatetime = dayjs(endDate);
-  if (!endDatetime.isValid()) {
-    return htmlSafe(`<span title="${startLocal}">${datetime.format(MONTH_DAY_TIME)}${tzabbr}</span> to ${endDate}`);
-
+  let endParsed = dayjs(end);
+  if (!endParsed.isValid()) {
+    return htmlSafe(`${formatDate(hash.year ? MONTH_DAY_TIME_YEAR : MONTH_DAY_TIME, displayAbbr)} to ${end}`);
   }
 
-  const endLocal = dayjs.tz(endDate, tz).tz(guessedTz).format(MONTH_DAY_TIME_YEAR + ' (z)');
+  endParsed = endParsed.tz(timezone, true);
   if (hash.year) {
-    return htmlSafe(`<span title="${startLocal}">${datetime.format(MONTH_DAY_TIME_YEAR)}${tzabbr}</span> to <span title="${endLocal}">${endDatetime.format(MONTH_DAY_TIME_YEAR)}</span>`);
+    return htmlSafe(`${formatDate(startParsed, MONTH_DAY_TIME_YEAR, displayAbbr)} to ${formatDate(endParsed, MONTH_DAY_TIME_YEAR, displayAbbr)}`);
   }
 
-  const startDay = datetime.date(), endDay = endDatetime.date();
+  const startDay = startParsed.date(), endDay = endParsed.date();
 
-  let endFormat = null;
+  if (startParsed.year() !== endParsed.year()) {
+    return htmlSafe(`${formatDate(startParsed, MONTH_DAY_TIME_YEAR, displayAbbr)} to ${formatDate(endParsed, MONTH_DAY_TIME_YEAR, displayAbbr)}`);
+  }
 
-  if (datetime.year() !== endDatetime.year()) {
-    return htmlSafe(`<span title="${startLocal}>${datetime.format(MONTH_DAY_TIME_YEAR)}${tzabbr}</span> to <span class="d-inline-block" title="${endLocal}">${endDatetime.format(MONTH_DAY_TIME_YEAR)}</span>`);
-  } else if (startDay === endDay) {
+  let endFormat;
+  if (startDay === endDay) {
     // Don't bother with added the day on the end time if its only to midnight
-    endFormat = endDatetime.format(HOUR_MINS);
-  } else if ((endDatetime.dayOfYear() - datetime.dayOfYear()) > 1) {
-    endFormat = endDatetime.format(MONTH_DAY_TIME);
+    endFormat = HOUR_MINS;
+  } else if ((endParsed.dayOfYear() - startParsed.dayOfYear()) > 1) {
+    endFormat = MONTH_DAY_TIME;
   } else {
-    endFormat = endDatetime.format(HOUR_MIN_DAY);
+    endFormat = HOUR_MIN_DAY;
   }
-  return htmlSafe(`<span title="${startLocal}">${datetime.format(MONTH_DAY_TIME)}${tzabbr}</span> to <span class="d-inline-block" title="${endLocal}">${endFormat}</span>`);
+  return htmlSafe(`${formatDate(startParsed, MONTH_DAY_TIME, displayAbbr)} to ${formatDate(endParsed, endFormat)}`);
 }
 
 export default helper(shiftFormat);
