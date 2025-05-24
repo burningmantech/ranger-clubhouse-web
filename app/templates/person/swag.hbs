@@ -4,6 +4,15 @@
   Do not add, adjust, or remove service items from a person account unless instructed to do so by the Quartermaster.
 </p>
 <p>
+Service years:
+{{#if this.person.years_of_service}}
+  {{pluralize this.person.years_of_service.length "year"}}
+  [{{year-range this.person.years_of_service}}]
+{{else}}
+  <i>none</i>
+{{/if}}<br>
+</p>
+<p>
   <UiButtonRow>
     <UiButton @onClick={{fn this.newSwag "t-shirt"}}>{{fa-icon "shirt" right=1}} T-Shirt</UiButton>
     <UiButton @onClick={{fn this.newSwag "long-sleeve"}}>{{fa-icon "shirt" right=1}} Long Sleeve Shirt</UiButton>
