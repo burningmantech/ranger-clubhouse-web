@@ -35,7 +35,7 @@
       ({{pluralize @question.responses.length "response"}})
       {{#each @question.responses as |response|}}
         <div class="mb-1 ms-2">
-          &mdash; {{#if this.showCallsign}}{{response.person.callsign}}:{{/if}} {{response.answer}}
+          &mdash; {{#if response.person.id}}<PersonLink @person={{response.person}}/>:{{/if}} {{response.answer}}
         </div>
       {{/each}}
     {{/if}}
@@ -56,7 +56,7 @@
             {{#if slot.responses}}
               {{#each slot.responses as |response|}}
                 <div class="mb-1 ms-2">
-                  &mdash; {{#if this.showCallsign}}{{response.person.callsign}}:{{/if}} {{response.answer}}
+                  &mdash; {{#if response.person.id}}<PersonLink @person={{response.person}}/>:{{/if}} {{response.answer}}
                 </div>
               {{/each}}
             {{else}}
