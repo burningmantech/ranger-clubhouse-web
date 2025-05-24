@@ -1,0 +1,44 @@
+<h1>Service Years Report</h1>
+
+<p>
+  Report on people's service based on years rangered.
+</p>
+
+<p>
+  <UiButton @onClick={{this.exportToCsv}}>Export To CSV</UiButton>
+</p>
+
+Showing {{this.totalPeople}} people over {{this.serviceYears.length}} years.
+{{#each this.serviceYears as |serviceYear|}}
+  <div class="max-width-700">
+    <UiAccordion as |accordion|>
+      <accordion.title>{{pluralize serviceYear.years "year"}} - {{pluralize serviceYear.people.length "person"}}</accordion.title>
+      <accordion.body>
+        <UiTable>
+          <thead>
+          <tr>
+            <th class="w-20">Callsign</th>
+            <th class="w-25">Name</th>
+            <th class="w-10">Status</th>
+            <th>First Year</th>
+            <th>Last Year</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each serviceYear.people key="id" as |person| }}
+            <tr>
+              <td class="w-20">
+                <PersonLink @person={{person}} />
+              </td>
+              <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
+              <td class="w-10">{{person.status}}</td>
+              <td>{{person.first_year}}</td>
+              <td>{{person.last_year}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </UiTable>
+      </accordion.body>
+    </UiAccordion>
+  </div>
+{{/each}}

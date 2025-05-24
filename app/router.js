@@ -231,6 +231,7 @@ Router.map(function () {
     this.route('sandman-qualified');
     this.route('schedule-by-callsign');
     this.route('schedule-by-position');
+    this.route('service-years');
     this.route('shift-coverage');
     this.route('shift-drop');
     this.route('shift-lead');
