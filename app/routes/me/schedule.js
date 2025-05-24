@@ -5,15 +5,18 @@ export default class MeScheduleRoute extends ClubhouseRoute {
     year: {refreshModel: true}
   };
 
-  beforeModel({year}) {
+  beforeModel() {
     const user = this.session.user;
-    this.year = year;
     if (user.isPastProspective || user.isBonked) {
       this.toast.error('You are not permitted to sign up for trainings or shifts at this time.');
       this.router.transitionTo('me.homepage');
     } else {
       super.beforeModel(...arguments);
     }
+  }
+
+  model({year}) {
+    this.year = year;
   }
 
   setupController(controller) {

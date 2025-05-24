@@ -154,8 +154,15 @@
       <p>
         Please note: this is a <b>one-time, static export of your Ranger schedule</b>.
       </p>
-      Changes or updates to your schedule will not be reflected in your calendar. You will need to export
-      your schedule again after making any changes.
+      <p>
+        Changes or updates to your schedule will not be reflected in your calendar. You will need to export
+        your schedule again after making any changes.
+      </p>
+      <b>Important Notice for Those Outside the Pacific Time Zone:</b> The exported calendar includes time zone
+      information. Depending on your calendar application’s settings and your computer's local time zone, shift times may be
+      automatically adjusted. For example, if you’re in the Eastern Time Zone and have a Ranger shift scheduled for
+      06:00 Pacific Time, your calendar may display it as 03:00. Please verify that your app is interpreting time zones
+      correctly to avoid confusion.
     </Modal.body>
     <Modal.footer @align="start">
       <UiButton @onClick={{this.calendarExportConfirmed}}>Download calendar file (.ics)</UiButton>
