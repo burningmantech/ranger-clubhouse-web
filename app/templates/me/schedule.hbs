@@ -1,5 +1,10 @@
-<h1 class="d-print-none">{{this.year}} Schedule &amp; Shift Sign Ups</h1>
-<BackToHome/>
 <ScheduleManage @person={{this.session.user}}
-                @year={{this.year}}
-/>
+                @year={{this.year}} as |onYearChange|>
+  <YearSelect @title="Schedule & Shift Sign Ups"
+              @year={{this.year}}
+              @years={{this.person.years_seen}}
+              @subheader={{true}}
+              @onChange={{fn this.onYearChange onYearChange}} />
+  <BackToHome/>
+</ScheduleManage>
+
