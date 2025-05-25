@@ -1,7 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
 export default class ReportsServiceYearsRoute extends ClubhouseRoute {
-  model(params) {
+  model() {
     return this.ajax.request(`award/service-years`);
   }
 
