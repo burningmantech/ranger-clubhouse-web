@@ -21,11 +21,12 @@
   <DropdownScrollList @items={{this.positionsScrollList}} @openAccordion={{true}} @thing="position"/>
   <p>
     Showing {{pluralize this.positions.length "position"}}
-    <UiExportToCSVButton @onClick={{this.exportAllToCSV}} @size="sm"/>
+    <UiExportToCSVButton @thing="All" @onClick={{this.exportAllToCSV}} @size="sm" class="ms-4"/>
   </p>
   {{#each this.positions key="id" as |position|}}
     <UiAccordion id="position-{{position.id}}" as |accordion|>
-      <accordion.title>{{position-label position}} ({{pluralize position.timesheets.length "entry"}})
+      <accordion.title>
+        {{position-label position}} ({{pluralize position.timesheets.length "entry"}})
       </accordion.title>
       <accordion.body>
         {{#if accordion.isOpen}}
@@ -39,6 +40,10 @@
               <th class="text-end">Hours</th>
               <th class="text-end">Credits</th>
               <th>Callsign</th>
+              <th>Status</th>
+              <th>Shift Begins</th>
+              <th>Shift Duration</th>
+              <th>Shift Description</th>
               {{#if this.session.canViewEmail}}
                 <th>Email</th>
               {{/if}}
@@ -60,6 +65,15 @@
                 <td>
                   <PersonLink @person={{entry.person}} />
                 </td>
+                {{#if entry.slot}}
+                  <td>{{shift-format entry.slot.begins tz=entry.slot.timezone tzabbr=entry.slot.timezone_abbr}}</td>
+                  <td class="text-end">{{hour-format entry.slot.duration}}</td>
+                  <td>{{entry.slot.description}}</td>
+                {{else}}
+                  <td class="text-center">-</td>
+                  <td class="text-center">-</td>
+                  <td class="text-center">-</td>
+                {{/if}}
                 {{#if this.session.canViewEmail}}
                   <td>
                     {{#if entry.person.email}}

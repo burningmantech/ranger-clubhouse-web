@@ -21,11 +21,12 @@
 
 <DropdownScrollList @items={{this.callsignScrollItems}} @openAccordion={{true}} @thing="callsign"/>
 <p>
-  <UiExportToCSVButton @onClick={{this.exportToCSV}} />
+  Showing {{pluralize this.people.length "person"}}
+  <UiExportToCSVButton @thing="All" @onClick={{this.exportAllToCSV}} @size="sm" class="ms-4"/>
 </p>
 {{#each this.people key="id" as |person|}}
   <UiAccordion id="person-{{person.id}}" as |accordion|>
-    <accordion.title>{{person.callsign}}</accordion.title>
+    <accordion.title>{{person.callsign}} &lt;{{person.status}}&gt;</accordion.title>
     <accordion.body>
       {{#if accordion.isOpen}}
         <p>
@@ -44,6 +45,7 @@
         </p>
         <NoAppreciateIcon/>
         = Time does not count towards provisions and appreciations.
+        <UiExportToCSVButton onClick={{fn this.exportPersonToCSV person}} class="ms-4"/>
         <UiTable>
           <thead>
           <tr>
@@ -51,10 +53,13 @@
             <th>Position</th>
             <th class="text-end">Duration</th>
             <th class="text-end">Credits</th>
+            <th>Shift Begins</th>
+            <th>Shift Duration</th>
+            <th>Shift Description</th>
           </tr>
           </thead>
           <tbody>
-          {{#each person.timesheet as |entry|}}
+          {{#each person.timesheet key="id" as |entry|}}
             <tr>
               <td>
                 {{#if entry.off_duty}}
@@ -71,6 +76,15 @@
                 {{hour-minute-format entry.duration}}
               </td>
               <td class="text-end">{{credits-format entry.credits}}</td>
+              {{#if entry.slot}}
+                <td>{{shift-format entry.slot.begins}}</td>
+                <td class="text-end">{{hour-format entry.slot.duration}}</td>
+                <td>{{entry.slot.description}}</td>
+              {{else}}
+                <td class="text-center">-</td>
+                <td class="text-center">-</td>
+                <td class="text-center">-</td>
+              {{/if}}
             </tr>
           {{/each}}
           <tr>
@@ -79,13 +93,14 @@
               {{hour-minute-format person.total_duration}}
             </td>
             <td class="text-end">{{credits-format person.total_credits}}</td>
+            <td colspan="4">-</td>
           </tr>
           <tr>
             <td colspan="2" class="text-end"><b>Hours counting towards appreciations &amp; provisions:</b></td>
             <td class="text-end">
               {{hour-minute-format person.total_appreciation_duration}}
             </td>
-            <td>&nbsp;</td>
+            <td colspan="4">-</td>
           </tr>
           </tbody>
         </UiTable>

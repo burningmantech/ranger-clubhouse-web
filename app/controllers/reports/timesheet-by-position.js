@@ -8,6 +8,10 @@ const CSV_COLUMNS = [
   {title: 'Hours', key: 'hours'},
   {title: 'Credits', key: 'credits'},
   {title: 'Callsign', key: 'callsign'},
+  {title: 'Status', key: 'status'},
+  {title: 'Shift Begins', key: 'shift_begins'},
+  {title: 'Shift Duration', key: 'shift_duration'},
+  {title: 'Shift Description', key: 'shift_description'},
 ];
 
 export default class ReportsTimesheetByPositionController extends ClubhouseController {
@@ -49,6 +53,9 @@ export default class ReportsTimesheetByPositionController extends ClubhouseContr
         off_duty: entry.off_duty,
         hours: (entry.duration / 3600.0).toFixed(2),
         credits: entry.credits.toFixed(2),
+        shift_begins: entry.slot?.begins,
+        shift_duration: entry.slot ? (entry.slot.duration / 3600.0).toFixed(2) : '',
+        shift_description: entry.slot?.description,
       };
 
       if (this.session.canViewEmail) {
