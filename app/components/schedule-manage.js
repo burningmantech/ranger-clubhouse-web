@@ -65,9 +65,10 @@ export default class ScheduleManageComponent extends Component {
       if (this.isCurrentYear) {
         data.signup_permission = 1;
       }
+      this.year = year;
+
       const schedule = await this.ajax.request(`person/${person_id}/schedule`, {data});
 
-      this.year = year;
       this.permission = schedule.signup_permission;
       this.slots = ScheduleSlotModel.hydrate(schedule.slots, schedule.positions);
       this.creditsEarned = schedule.credits_earned;
@@ -82,6 +83,13 @@ export default class ScheduleManageComponent extends Component {
       }
       this._sortAndMarkSignups();
     } catch (response) {
+      // Likely to see the request aborted to due to a spotty internet connection.
+      this.year = year;
+      this.permission = {};
+      this.slots = [];
+      this.creditsEarned = 0.0;
+      this.scheduleSummary = {};
+      this.availableSlots = [];
       this.house.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
