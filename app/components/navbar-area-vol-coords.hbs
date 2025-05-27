@@ -19,9 +19,6 @@
         <NavbarMenuItem @menu={{menu}} @route="vc.application-import" @item="Application Import"/>
         <NavbarMenuItem @menu={{menu}} @route="vc.create-prospectives" @item="Create Prospectives"/>
       {{/if}}
-      {{#if (has-role "admin" "salesforce-import")}}
-        <NavbarMenuItem @menu={{menu}} @route="vc.salesforce" @item="Salesforce Import"/>
-      {{/if}}
     </NavbarMenuSection>
   {{/if}}
   {{#if (has-role "edit-access-docs")}}
