@@ -276,7 +276,6 @@ Router.map(function () {
     this.route('maintenance');
     this.route('photo-review');
     this.route('photos');
-    this.route('salesforce');
     this.route('shiny-penny-report');
     this.route('spigot');
     this.route('unified-flagging');
