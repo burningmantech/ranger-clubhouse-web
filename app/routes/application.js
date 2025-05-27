@@ -1,6 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {action} from '@ember/object';
-import {humanize} from 'ember-cli-string-helpers/helpers/humanize';
+import humanize from "clubhouse/utils/humanize";
 import {setting} from 'clubhouse/utils/setting';
 import {UnauthorizedError} from '@ember-data/adapter/error';
 import ENV from 'clubhouse/config/environment';
@@ -178,7 +178,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
   // see routes/person.js for an example.
   title(tokens) {
     if (tokens.length === 0 && this.router.currentRouteName) {
-      tokens = this.router.currentRouteName.split('.').map((x) => humanize([x]));
+      tokens = this.router.currentRouteName.split('.').map((x) => humanize(x));
       if (tokens[tokens.length - 1] === 'Index') {
         tokens.pop();
       }
