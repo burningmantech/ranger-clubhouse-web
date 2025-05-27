@@ -56,7 +56,8 @@ module.exports = function (defaults) {
         'node_modules/cropperjs/src/css',
         'node_modules/ember-bootstrap/',
         'node_modules/air-datepicker'
-      ]
+      ],
+      silenceDeprecations: ['mixed-decls', 'color-functions', 'global-builtin', 'import'],
     },
 
     'ember-bootstrap': {

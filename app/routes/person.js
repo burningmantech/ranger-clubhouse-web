@@ -1,6 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {action} from '@ember/object';
-import {humanize} from 'ember-cli-string-helpers/helpers/humanize';
+import humanize from "clubhouse/utils/humanize";
 import {ADMIN, MANAGE, VC, MENTOR, TRAINER} from 'clubhouse/constants/roles';
 import {NotFoundError} from '@ember-data/adapter/error';
 
@@ -32,7 +32,7 @@ export default class PersonRoute extends ClubhouseRoute {
     return this.router.currentRouteName
       .split('.')
       .filter((x) => (x !== 'index' && x !== 'loading'))
-      .map((x) => x === 'person' ? model.callsign : humanize([x]))
+      .map((x) => x === 'person' ? model.callsign : humanize(x))
       .reverse()
       .join(' | ');
   }

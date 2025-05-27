@@ -27,10 +27,6 @@ module.exports = function (environment) {
       })
     },
 
-    'ember-cli-page-progress': {
-      includeCss: false
-    },
-
     exportApplicationGlobal: true,  // Setup 'window.Clubhouse' so error logging can grab the current user's id.
 
     showAjaxErrors: true,
