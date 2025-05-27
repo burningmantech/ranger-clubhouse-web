@@ -54,7 +54,7 @@
 {{#if this.session.showOfflineDialog}}
   <ModalDialog @title="Internet connection issues" as |Modal|>
     <Modal.body>
-      Sorry, it appears the Internet connection is offline or flaky. Try your request again in a few minutes.
+      Uh oh, it appears the Internet connection is offline or flaky. Try your request again in a few minutes.
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeOfflineDialog}} />

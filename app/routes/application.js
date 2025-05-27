@@ -6,6 +6,7 @@ import {UnauthorizedError} from '@ember-data/adapter/error';
 import ENV from 'clubhouse/config/environment';
 import dayjs from 'dayjs';
 import RSVP from 'rsvp';
+import isOffline from "clubhouse/utils/is-offline";
 
 export default class ApplicationRoute extends ClubhouseRoute {
   authSetup = false;
@@ -20,6 +21,13 @@ export default class ApplicationRoute extends ClubhouseRoute {
     }
 
     this.router.on('routeDidChange', (transition) => this.routeChanged(transition));
+    window.addEventListener('online', () => {
+      this.session.showOfflineDialog = false;
+      this.toast.success("Internet connection is back")
+    });
+    window.addEventListener('offline', () => {
+      this.session.showOfflineDialog = true;
+    });
   }
 
   /**
@@ -170,6 +178,12 @@ export default class ApplicationRoute extends ClubhouseRoute {
       this.session.sessionExpiredNotification();
       return false;
     }
+
+    if (isOffline(error)) {
+      this.session.showOfflineDialog = true;
+      return false;
+    }
+
     // allow the error to transition to ErrorRoute
     return true;
   }

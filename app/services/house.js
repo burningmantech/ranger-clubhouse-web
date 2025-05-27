@@ -10,6 +10,7 @@ import {AbortError, InvalidError, NotFoundError, ServerError, TimeoutError} from
 import dayjs from "dayjs";
 import {htmlSafe} from '@ember/template';
 import logError from "clubhouse/utils/log-error";
+import isOffline from "clubhouse/utils/is-offline";
 
 const JavascriptExceptions = [
   // AggregateError, -- not defined for Safari 12.
@@ -47,26 +48,30 @@ export default class HouseService extends Service {
       console.error(response);
     }
 
-    if (response instanceof TimeoutError
-      || response instanceof AbortError
-      || isAbortError(response)
-      || response.name === 'NetworkError'
-      || response.message?.match(/NetworkError/)
-      || response.message?.match(/Network request failed/i)
-    ) {
+    if (isOffline(response)) {
       this.session.showOfflineDialog = true;
       return;
     }
 
     if (response.status === 401 && this.session.isAuthenticated) {
+      // The session has expired.
       this.session.sessionExpiredNotification();
       return;
     }
 
     const haveChangeset = (changeSet && 'pushErrors' in changeSet);
 
-    // Ember Data request error
-    if (response instanceof InvalidError) {
+    // Did the request timeout?
+    if (response.name === 'AbortError'
+      || response.message?.match(/Timeout error/i)
+      || response instanceof TimeoutError
+      || response instanceof AbortError
+      || isAbortError(response)
+    ) {
+      responseErrors = 'The operation timed out.';
+      errorType = 'serve';
+    } else if (response instanceof InvalidError) {
+      // Ember Data request error
       responseErrors = response.errors.map(({title, detail}) => (detail ?? title));
       errorType = 'validation';
       if (haveChangeset && response.errors) {
