@@ -35,17 +35,17 @@
         <td>
           {{shift-format entry.on_duty}}
         </td>
-         <td>
+        <td>
           <PersonLink @callsign={{entry.forced_by_callsign}} @personId={{entry.forced_by_id}} />
         </td>
         <td>
-          {{entry.blockers}}
+          {{this.forceReasons entry.blockers}}
         </td>
         <td>
           {{#if entry.signin_force_reason}}
-            {{nl2br  entry.signin_force_reason}}
+            {{nl2br entry.signin_force_reason}}
           {{else}}
-            <i>- no reason given</i>
+            <i>- no reason given -</i>
           {{/if}}
         </td>
       </tr>
