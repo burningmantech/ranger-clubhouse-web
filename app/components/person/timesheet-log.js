@@ -61,7 +61,7 @@ export default class PersonTimesheetLogComponent extends Component {
       // New 2025 format.
       return htmlSafe(buildBlockerAuditLabels(data.blockers).map(blocker => `<div class="text-danger">${blocker}</div><div>Force Reason:<br>${escape(data.signin_force_reason)}</div>`).join(''));
     } else {
-      return htmlSafe(`<div class="text-danger">Forced - Unqualified "{{data.forced.message}}"</div>`);
+      return htmlSafe(`<div class="text-danger">Forced - Unqualified "${forced.reason}"</div>`);
     }
   }
 
