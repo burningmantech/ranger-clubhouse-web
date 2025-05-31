@@ -1,7 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {ADMIN, MENTOR} from 'clubhouse/constants/roles';
 import {action} from '@ember/object';
-import { tracked } from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
 
 export default class PersonMentoringController extends ClubhouseController {
   @tracked isSubmitting = false;
@@ -30,13 +30,12 @@ export default class PersonMentoringController extends ClubhouseController {
       person_id: this.person.id,
       status: event.newStatus,
       mentor_ids: event.mentors.map((m) => m.id)
-
     }];
     this.isSubmitting = true;
     try {
-      await this.ajax.request('mentor/mentor-assignment', {method: 'POST', data: {assignments}});
+      await this.ajax.post('mentor/mentor-assignment', {data: {year: event.year, assignments}});
       event.status = event.newStatus;
-      this.toast.success('Mentor result was successfully updated.');
+      this.toast.success('Mentor results was successfully updated.');
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
