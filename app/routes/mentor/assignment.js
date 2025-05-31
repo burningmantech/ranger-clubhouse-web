@@ -30,11 +30,11 @@ class Alpha {
 }
 
 export default class MentorAssignmentRoute extends ClubhouseRoute {
-  model() {
-    return RSVP.hash({
-      alphas: this.ajax.request('mentor/alphas').then((result) => result.alphas),
-      mentors: this.ajax.request('mentor/mentors').then((result) => result.mentors)
-    });
+  async model() {
+    return {
+      alphas: await this.ajax.request('mentor/alphas').then((result) => result.alphas),
+      mentors: await this.ajax.request('mentor/mentors').then((result) => result.mentors)
+    };
   }
 
   setupController(controller, model) {
@@ -88,7 +88,7 @@ export default class MentorAssignmentRoute extends ClubhouseRoute {
     if (walkingOptions.length) {
       walkingOptions.unshift({label: 'All Checked-In', value: 'onduty-all'});
     } else {
-      walkingOptions.unshift({ label: 'No Check-Ins Found', value: 'no-checkins', disabled: true});
+      walkingOptions.unshift({label: 'No Check-Ins Found', value: 'no-checkins', disabled: true});
     }
 
     let shiftOptions = Object.keys(shifts).sort().map((shift) => [dayjs(shift).format(SHIFT_FORMAT), shift]);
