@@ -147,9 +147,16 @@
     {{#if this.training.is_art}}
       {{#if this.offersGraduation}}
         <p>
-          Use the "Graduate Trainees" button to grant
-          {{pluralize this.training.graduation_info.positions.length "position"}}
-          <i>"{{this.graduatePositionTitles}}"</i> to eligible individuals.
+          {{#if this.canGraduate}}
+            Use the "Graduate Trainees" button to grant
+            {{pluralize this.training.graduation_info.positions.length "position"}}
+            <i>{{this.graduatePositionTitles}}</i> to eligible individuals.
+          {{else}}
+            Don't forget to contact your cadre to grant
+            {{pluralize this.training.graduation_info.positions.length "position"}}
+            <i>{{this.graduatePositionTitles}}</i> position(s) to
+            eligible trainees who have passed training.
+          {{/if}}
         </p>
       {{/if}}
     {{else}}

@@ -8,7 +8,7 @@ import {isEmpty} from '@ember/utils';
 import _ from 'lodash';
 import conjunctionFormat from 'clubhouse/utils/conjunction-format';
 import {AUDITOR, PROSPECTIVE} from "clubhouse/constants/person_status";
-import {ART_GRADUATE_BASE} from "clubhouse/constants/roles";
+import {ADMIN, ART_GRADUATE_BASE} from "clubhouse/constants/roles";
 
 const SEARCH_RATE_MS = 300;
 
@@ -193,7 +193,7 @@ export default class TrainingSessionController extends ClubhouseController {
   }
 
   get canGraduate() {
-    return this.training.graduation_info && this.session.hasRole(ART_GRADUATE_BASE | this.training.id);
+    return this.training.graduation_info && this.session.hasRole([ADMIN, ART_GRADUATE_BASE | this.training.id]);
   }
 
   /**
