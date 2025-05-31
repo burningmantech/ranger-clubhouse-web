@@ -1,5 +1,4 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import RSVP from 'rsvp';
 import {tracked} from '@glimmer/tracking';
 import dayjs from 'dayjs';
 import _ from 'lodash';
