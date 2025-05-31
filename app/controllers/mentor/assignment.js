@@ -178,9 +178,8 @@ export default class MentorAssignmentController extends ClubhouseController {
   async _runAssignment(assignments) {
     this.isSubmitting = true;
     try {
-      const result = await this.ajax.request('mentor/mentor-assignment', {
-        method: 'POST',
-        data: {assignments}
+      const result = await this.ajax.post('mentor/mentor-assignment', {
+        data: {assignments, year: this.house.currentYear()}
       });
 
       result.assignments.forEach((assignment) => {
