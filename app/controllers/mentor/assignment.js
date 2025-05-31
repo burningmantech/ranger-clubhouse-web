@@ -42,10 +42,24 @@ export default class MentorAssignmentController extends ClubhouseController {
 
   @cached
   get mentorOptions() {
-    const options = this.mentors.map((mentor) => [mentor.callsign, mentor.id]);
-    options.unshift(['-', '']);
+    const working = this.mentors.filter(mentor => mentor.working).map(mentor => [mentor.callsign, mentor.id]);
+    const offDuty = this.mentors.filter(mentor => !mentor.working).map((mentor) => [mentor.callsign, mentor.id]);
 
-    return options;
+    return [
+      ['-', ''],
+
+      {
+        groupName: 'On Duty Mentors',
+        options: working
+      }
+      ,
+
+      {
+        groupName: 'Off Duty Mentors',
+        options: offDuty
+      }
+
+    ];
   }
 
   @action
@@ -178,9 +192,8 @@ export default class MentorAssignmentController extends ClubhouseController {
   async _runAssignment(assignments) {
     this.isSubmitting = true;
     try {
-      const result = await this.ajax.request('mentor/mentor-assignment', {
-        method: 'POST',
-        data: {assignments}
+      const result = await this.ajax.post('mentor/mentor-assignment', {
+        data: {assignments, year: this.house.currentYear()}
       });
 
       result.assignments.forEach((assignment) => {
