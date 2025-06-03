@@ -7,7 +7,7 @@ import {
 export default {
   identification: [
     validatePresence({ presence: true, message: 'Enter your email address.'}),
-    validateFormat({ type: 'email', message: 'Enter a validate email address.' })
+    validateFormat({ type: 'email', message: 'Enter a valid email address.' })
   ],
   password: [
     validatePresence(true),
