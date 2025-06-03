@@ -1,0 +1,118 @@
+{{#if this.isLoading}}
+  <LoadingDialog/>
+{{else}}
+  {{yield this.survey}}
+  {{#if this.report.summarized_ratings}}
+    <p>
+      This survey report has one or more summarized ratings, each with its own export button located within the
+      corresponding summary section.
+    </p>
+  {{/if}}
+  {{#if (eq this.survey.type "trainer")}}
+    <UiButtonRow class="mb-2">
+      <UiExportToCSVButton @thing="{{this.trainerTitle}} Feedback"
+                           @onClick={{this.exportTrainersFeedback}}
+                           @size="sm"/>
+      {{#if this.haveOverallRatings}}
+        <UiExportToCSVButton @thing="{{this.trainerTitle}} Ratings"
+                             @onClick={{this.exportTrainerRatings}}
+                             @size="sm"/>
+      {{/if}}
+    </UiButtonRow>
+    {{#if this.people}}
+      {{#each this.people as |person|}}
+        <UiAccordion id="trainer-{{person.trainer_id}}" as |Accordion|>
+          <Accordion.title>
+            {{this.trainerTitle}} {{person.callsign}}
+          </Accordion.title>
+          <Accordion.body>
+            {{#each person.report.summarized_ratings as |summary|}}
+              <SurveyRatingSummaryReport @report={{person.report}}
+                                         @summary={{summary}}
+                                         @survey={{this.survey}}
+              />
+            {{/each}}
+            {{#each person.report.questions as |question|}}
+              <SurveyQuestionReport @report={{person.report}}
+                                    @question={{question}}
+                                    @survey={{this.survey}}
+              />
+            {{/each}}
+          </Accordion.body>
+        </UiAccordion>
+      {{/each}}
+    {{else}}
+      <b class="text-danger">No Trainer-on-Trainer feedback has been given yet.</b>
+    {{/if}}
+  {{else}}
+    <UiButtonRow class="mb-2">
+      {{#if (eq this.report.type "trainer")}}
+        <UiExportToCSVButton @thing="All {{this.trainerTitle}} Feedback"
+                             @onClick={{this.exportTraineeFeedback}}
+        />
+      {{else}}
+        <UiExportToCSVButton @thing="Feedback"
+                             @onClick={{this.exportGeneralFeedback}}
+        />
+      {{/if}}
+    </UiButtonRow>
+    {{#if (and (not this.report.summarized_ratings) (not this.report.trainers) (not this.report.questions))}}
+      <p class="text-danger">
+        No responses or questions found for this survey report?
+      </p>
+    {{/if}}
+    {{#each this.report.summarized_ratings as |summary|}}
+      <UiAccordion as |Accordion|>
+        <Accordion.title>{{summary.description}}</Accordion.title>
+        <Accordion.body>
+          <SurveyRatingSummaryReport @noHeader={{true}}
+                                     @report={{this.report}}
+                                     @summary={{summary}}
+                                     @survey={{this.survey}}
+          />
+        </Accordion.body>
+      </UiAccordion>
+    {{/each}}
+
+    {{#if (eq this.report.type "trainer")}}
+      {{#each this.report.trainers key="trainer_id" as |person|}}
+        <UiAccordion id="trainer-{{person.trainer_id}}" as |Accordion|>
+          <Accordion.title>
+            {{this.trainerTitle}} {{person.callsign}}
+          </Accordion.title>
+          <Accordion.body>
+            {{#each person.questions as |question|}}
+              <SurveyQuestionReport @report={{this.report}}
+                                    @trainer={{person}}
+                                    @question={{question}}
+                                    @trainingId={{this.training.id}}
+                                    @survey={{this.survey}}
+                                    @trainerTitle={{this.trainerTitle}}
+              />
+            {{else}}
+              <div class="mt-2">
+                {{person.callsign}} has no feedback yet.
+              </div>
+            {{/each}}
+          </Accordion.body>
+        </UiAccordion>
+      {{/each}}
+    {{else}}
+      {{#each this.report.questions as |question|}}
+        <UiAccordion as |Accordion|>
+          <Accordion.title>{{question.description}}</Accordion.title>
+          <Accordion.body>
+            <SurveyQuestionReport @noHeader={{true}}
+                                  @report={{this.report}}
+                                  @question={{question}}
+                                  @trainingId={{this.training.id}}
+                                  @survey={{this.survey}}
+                                  @trainerTitle={{this.trainerTitle}}
+            />
+          </Accordion.body>
+
+        </UiAccordion>
+      {{/each}}
+    {{/if}}
+  {{/if}}
+{{/if}}

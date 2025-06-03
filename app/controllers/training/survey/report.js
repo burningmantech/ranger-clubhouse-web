@@ -1,11 +1,7 @@
-import Controller from '@ember/controller';
+import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
 import {tracked} from '@glimmer/tracking';
 
-export default class TrainingSurveyReportController extends Controller {
-  @tracked survey;
-  @tracked training;
+export default class TrainingSurveyReportController extends ClubhouseController {
+  @tracked surveyId;
   @tracked reportId;
-  @tracked people;
-  @tracked trainerTitle;
-  @tracked report;
 }
