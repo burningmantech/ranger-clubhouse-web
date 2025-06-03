@@ -52,8 +52,8 @@ window.onerror = (event, source, lineno, colno, error) => {
     return;
   }
 
-  console.error('Exception', event);
-  alert("Uncaught exception " + event.message);
+  console.error('Exception', error);
+  alert(`Uncaught exception ${error ? error.message : event.message}`);
   // eslint-disable-next-line no-debugger
   debugger;
 }

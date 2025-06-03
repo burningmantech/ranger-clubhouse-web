@@ -1,4 +1,8 @@
-import Model, { attr } from '@ember-data/model';
+import Model, {attr} from '@ember-data/model';
+
+export const TYPE_RATING = 'rating';
+export const TYPE_OPTIONS = 'options';
+export const TYPE_TEXT = 'text';
 
 export default class SurveyQuestionModel extends Model {
   @attr('number') sort_index;
