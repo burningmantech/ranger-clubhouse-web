@@ -2,7 +2,6 @@ import Component from '@glimmer/component';
 import {cached} from '@glimmer/tracking';
 import {htmlSafe} from '@ember/template';
 import dayjs from 'dayjs';
-import {DELIVERY_POSTAL, DELIVERY_PRIORITY, DELIVERY_WILL_CALL} from 'clubhouse/models/access-document';
 
 export default class TicketSummaryComponent extends Component {
   /**
