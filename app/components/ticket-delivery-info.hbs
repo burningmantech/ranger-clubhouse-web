@@ -11,8 +11,9 @@
   </p>
 {{else if (or @ticket.isClaimed this.vehiclePass.isClaimed)}}
   <UiNotice @icon="hand-point-right" @title="New Shipping Costs" @type="warning">
-    Due to the ongoing budget crisis, items to be mailed will cost an additional ${{@ticketingInfo.mail_standard_price}}
-    for USPS Standard Mail, or ${{@ticketingInfo.mail_priority_price}} for USPS Priority Mail. Will Call is always free.
+    As of 2025, BMP will be passing on shipping costs to those that prefer delivery over Will Call. Items to be mailed
+    will cost an additional ${{@ticketingInfo.mail_standard_price}} for USPS Standard Mail,
+    or ${{@ticketingInfo.mail_priority_price}} for USPS Priority Mail. Will Call is always free.
   </UiNotice>
   <p>
     The following {{if (eq this.itemsToDeliver.length 1) "item" (pluralize this.itemsToDeliver.length "item")}}
