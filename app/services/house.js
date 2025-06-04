@@ -226,11 +226,13 @@ export default class HouseService extends Service {
 
   downloadCsv(filename, columns, data) {
     const headers = columns.map((column) => {
-      if (typeof column === 'string') {
-        return column;
-      } else {
-        return column.title;
+      let header = typeof column === 'string' ? column : column.title;
+      header = header.replace(/"/g, '""');
+      if (header.search(/("|,|\n)/g) >= 0) {
+        header = `"${header}"`;
       }
+
+      return header;
     });
 
     let contents = headers.join(',') + "\n";

@@ -18,7 +18,8 @@
             You did not indicate if you want the ticket mailed or if you will pick it up at Will Call.
           </b>
         {{else}}
-          The ticket will be mailed to you.
+          The ticket will be delivered to you via USPS {{if this.ticket.isDeliveryStandardPost "Standard" "Priority"}}
+          Mail.
         {{/if}}
         {{#if this.usingStaffCredential}}
           <p>
@@ -51,9 +52,19 @@
           {{/if}}
         {{else}}
           <div class="mt-2">
-            The ticket must be paid for. An invoice will be sent for ${{@ticketingInfo.spt_cost}} (USD). Failing to pay
-            in
-            a timely manner may result in your inability to attend the event.
+            The ticket must be paid for. An invoice will be sent for ${{@ticketingInfo.spt_cost}} (USD)
+            {{#unless this.ticket.isDeliveryWillCall}}
+
+              plus additional $
+              {{~#if this.ticket.isDeliveryStandardPost}}
+                {{@ticketingInfo.mail_standard_price}} (USD) for USPS Standard Mail.
+              {{else}}
+                {{@ticketingInfo.mail_priority_price}} (USD) for USPS Priority Mail.
+              {{/if}}
+            {{/unless}}
+            <div class="mt-2">
+              Failing to pay in a timely manner may result in your inability to attend the event.
+            </div>
           </div>
         {{/if}}
       </TicketOverviewItem>
@@ -110,8 +121,6 @@
         </ExtLink>
         (The link will open in a new page.)
       </p>
-
-
     </TicketOverviewItem>
   {{/if}}
 

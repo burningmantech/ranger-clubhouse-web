@@ -124,7 +124,7 @@ export default class TicketPackage {
 
     const item = ticket ?? vehiclePass;
     if (item && item.isClaimed) {
-      return item.isDeliveryWillCall || (item.isDeliveryPostal && item.haveAddress);
+      return item.isDeliveryWillCall || ((item.isDeliveryStandardPost || item.isDeliveryPriorityPost) && item.haveAddress);
     }
 
     // Nothing claimed yet, or not needing address
