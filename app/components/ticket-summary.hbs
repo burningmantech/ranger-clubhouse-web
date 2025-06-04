@@ -7,7 +7,7 @@
   </ul>
 {{else}}
   {{#if (and @ticketPackage.tickets (not @ticket.isUsing))}}
-    <h4 class="text-danger">{{fa-icon "ban"}} No Ticket Claimed</h4>
+    <h4 class="text-danger">{{fa-icon "ban" right=1}} No Ticket Claimed</h4>
     <p>
       You have {{pluralize @ticketPackage.tickets.length "ticket"}} available yet you have not
       claimed one. Go back to the ticket step, and claim a ticket if this is a mistake.
@@ -48,7 +48,7 @@
       <TicketSummaryCard @type="danger" @icon="triangle-exclamation">
         <:title>{{pluralize this.unclaimedItems.length "Unclaimed Item"}}</:title>
         <:body>
-          The following items have not been claimed and may or may not affect your ability to serve as a Ranger on the
+          The following items have not been claimed and may or may not affect your ability to volunteer as a Ranger on the
           playa:
           <div class="ms-2">
             {{#each this.unclaimedItems as |item|}}
@@ -63,7 +63,7 @@
         <:title>{{pluralize this.bankedItems.length "Banked Item"}}</:title>
         <:body>
           <p>
-            The following item(s) will be banked:
+            The following {{pluralize this.bankedItems.length "item"}} will be banked:
           </p>
           <ul class="no-indent">
             {{#each this.bankedItems as |item|}}

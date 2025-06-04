@@ -10,14 +10,20 @@
     The Ticketing Summary section will display the available pickup locations once you've completed all ticketing steps.
   </p>
 {{else if (or @ticket.isClaimed this.vehiclePass.isClaimed)}}
+  <UiNotice @icon="hand-point-right" @title="New Shipping Costs" @type="warning">
+    Due to the ongoing budget crisis, items to be mailed will cost an additional ${{@ticketingInfo.mail_standard_price}}
+    for USPS Standard Mail, or ${{@ticketingInfo.mail_priority_price}} for USPS Priority Mail. Will Call is always free.
+  </UiNotice>
   <p>
     The following {{if (eq this.itemsToDeliver.length 1) "item" (pluralize this.itemsToDeliver.length "item")}}
     {{#if this.isDeliveryNone}}
       can be mailed to you or held at Will Call for you to pick up:
-    {{else if this.isDeliveryPostal}}
-      will be mailed to you:
+    {{else if this.isDeliveryStandardPost}}
+      will be mailed to you via <b>USPS Standard Mail</b>:
+    {{else if this.isDeliveryPriorityPost}}
+      will be mailed to you via <b>USPS Priority Mail</b>:
     {{else}}
-      will be at Will Call for you to pickup:
+      will be at <b>Will Call</b> for you to pickup:
     {{/if}}
   </p>
 
@@ -31,51 +37,43 @@
     <p>
       <b>How do you want your {{pluralize this.itemsToDeliver.length "item"}} delivered?</b>
     </p>
-    <UiButton class="btn-responsive" @onClick={{fn this.setDeliveryMethod "postal"}} @disabled={{this.isSaving}}>
-      {{fa-icon "envelope"}} Deliver By US Mail
-      {{#if this.isSaving}}
-        <SpinIcon/>{{/if}}
-    </UiButton>
-    <span class="h5 mx-auto mx-xl-4 my-sm-2 my-xl-none d-sm-block d-xl-inline-block">- OR -</span>
-    <UiButton class="btn-responsive"
-              @onClick={{fn this.setDeliveryMethod "will_call"}}
-              @disabled={{this.isSaving}}>
-      {{fa-icon "user" type="far"}} Pickup At Will Call
-      {{#if this.isSaving}}
-        <SpinIcon/>
-      {{/if}}
-    </UiButton>
-  {{else if this.isDeliveryPostal}}
+  {{else if (or this.isDeliveryStandardPost this.isDeliveryPriorityPost)}}
     <p>
       You will be asked for your mailing address when you visit the Burning Man Ticketing website. Information will be
       sent after the Ranger ticketing deadline passes on how to access the website.
     </p>
     <p>
-      <b>Would you rather use Will Call?</b>
+      <b>Worried about whether your items will arrive on time?</b> Use WILL CALL. Have the piece of mind your
+      item(s) will be waiting for you at the Box Office.
     </p>
-    <UiButton class="btn-responsive" @onClick={{fn  this.setDeliveryMethod "will_call"}} @disabled={{this.isSaving}}>
-      {{fa-icon "user" type="far"}} Pickup at Will Call
-      {{#if this.isSaving}}
-        <SpinIcon/>
-      {{/if}}
-    </UiButton>
+    <p>
+      <span class="text-danger">Items may only be mailed to a United States address &mdash; NO EXCEPTIONS!</span>
+      Please use WILL CALL if you have an address outside the USA.
+    </p>
   {{else if this.isDeliveryWillCall}}
     <p>
       <b>Do you want delivery by mail instead?</b>
     </p>
-    <UiButton @class="responsive" @onClick={{fn  this.setDeliveryMethod "postal"}} @disabled={{this.isSaving}}>
-      {{fa-icon "envelope"}} Deliver By US Mail
-      {{#if this.isSaving}}
-        <SpinIcon/>
-      {{/if}}
-    </UiButton>
   {{else}}
     Uh oh, I don't understand what the method [{{this.itemToDeliver.delivery_method}}] is. This is a bug!
   {{/if}}
-
-  {{#if this.isSaving}}
-    <LoadingIndicator/>
-  {{/if}}
+  <UiButtonRow>
+    {{#unless this.isDeliveryWillCall}}
+      <UiButton @onClick={{fn this.setDeliveryMethod "will_call"}} @type="secondary">
+        Pickup At Will Call (FREE!)
+      </UiButton>
+    {{/unless}}
+    {{#unless this.isDeliveryStandardPost}}
+      <UiButton @onClick={{fn this.setDeliveryMethod "postal"}} @type="secondary">
+        Deliver By USPS Standard Mail (+${{@ticketingInfo.mail_standard_price}})
+      </UiButton>
+    {{/unless}}
+    {{#unless this.isDeliveryPriorityPost}}
+      <UiButton @onClick={{fn this.setDeliveryMethod "priority"}} @type="secondary">
+        Deliver By USPS Priority Mail (+${{@ticketingInfo.mail_priority_price}})
+      </UiButton>
+    {{/unless}}
+  </UiButtonRow>
 {{else}}
   {{#if @ticket.isBanked}}
     <p>
@@ -90,4 +88,8 @@
   <p>
     You have no items which can be mailed or held at Will Call.
   </p>
+{{/if}}
+
+{{#if this.isSaving}}
+  <LoadingDialog>Submitting the request</LoadingDialog>
 {{/if}}

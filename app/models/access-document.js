@@ -22,6 +22,7 @@ export const TURNED_DOWN = 'turned_down';
 export const USED = 'used';
 
 export const DELIVERY_POSTAL = 'postal';
+export const DELIVERY_PRIORITY = 'priority';
 export const DELIVERY_WILL_CALL = 'will_call';
 export const DELIVERY_NONE = 'none';
 export const DELIVERY_EMAIL = 'email';
@@ -54,7 +55,8 @@ export const TypeShortLabels = {
 
 export const DeliveryMethodLabels = {
   [DELIVERY_EMAIL]: 'Email',
-  [DELIVERY_POSTAL]: 'US Mail',
+  [DELIVERY_POSTAL]: 'USPS Standard Mail',
+  [DELIVERY_PRIORITY]: 'USPS Priority Mail',
   [DELIVERY_WILL_CALL]: 'Will Call',
   [DELIVERY_NONE]: 'None',
   [DELIVERY_SC]: 'Staff Credentialing',  // Only used for export advisory, not a real delivery type.
@@ -204,8 +206,12 @@ export default class AccessDocumentModel extends Model {
     return this.delivery_method === DELIVERY_EMAIL;
   }
 
-  get isDeliveryPostal() {
+  get isDeliveryStandardPost() {
     return this.delivery_method === DELIVERY_POSTAL;
+  }
+
+  get isDeliveryPriorityPost() {
+    return this.delivery_method === DELIVERY_PRIORITY;
   }
 
   get isDeliveryWillCall() {

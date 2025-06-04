@@ -4,7 +4,7 @@ import TicketDeliveryValidations from 'clubhouse/validations/ticket-delivery';
 //import {StateOptions} from 'clubhouse/constants/countries';
 import {tracked, cached} from '@glimmer/tracking';
 import {service} from '@ember/service';
-import {DELIVERY_POSTAL, DELIVERY_WILL_CALL} from 'clubhouse/models/access-document';
+import {DELIVERY_POSTAL, DELIVERY_PRIORITY, DELIVERY_WILL_CALL} from 'clubhouse/models/access-document';
 
 export default class TicketDeliverInfoComponent extends Component {
   @tracked isSaved = false;
@@ -121,8 +121,12 @@ export default class TicketDeliverInfoComponent extends Component {
    * @returns {boolean}
    */
 
-  get isDeliveryPostal() {
-    return this.itemToDeliver && this.itemToDeliver.isDeliveryPostal;
+  get isDeliveryStandardPost() {
+    return this.itemToDeliver && this.itemToDeliver.isDeliveryStandardPost;
+  }
+
+  get isDeliveryPriorityPost() {
+    return this.itemToDeliver && this.itemToDeliver.isDeliveryPriorityPost;
   }
 
   /**
@@ -196,6 +200,7 @@ export default class TicketDeliverInfoComponent extends Component {
 
     switch (item.delivery_method) {
       case DELIVERY_POSTAL:
+      case DELIVERY_PRIORITY:
       case DELIVERY_WILL_CALL:
         return false;
       default:
@@ -226,25 +231,17 @@ export default class TicketDeliverInfoComponent extends Component {
     this._saveDeliveryCommon({delivery_method: method}, 'Delivery choice successfully saved.');
   }
 
-  @action
-  saveDeliveryAddress(model, isValid) {
-    if (!isValid)
-      return;
-
-    model.save();
-
-    this._saveDeliveryCommon({...model, delivery_method: DELIVERY_POSTAL}, 'Delivery info successfully saved.');
-  }
-
-  _saveDeliveryCommon(data, message) {
+  async _saveDeliveryCommon(data, message) {
     this.isSaving = true;
 
-    this.ajax.request(`ticketing/${this.args.person.id}/delivery`, {method: 'POST', data})
-      .then(({access_document}) => {
-        this.house.pushPayload('access-document', access_document);
-        this.toast.success(message);
-      })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSaving = false);
+    try {
+      const {access_document} = await this.ajax.post(`ticketing/${this.args.person.id}/delivery`, {data})
+      this.house.pushPayload('access-document', access_document);
+      this.toast.success(message);
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSaving = false;
+    }
   }
 }

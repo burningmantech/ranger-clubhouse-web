@@ -1,9 +1,14 @@
-{{#if @ticketPackage.ticket.isUsing}}
-  <UiAlert @type="warning" @icon="hand-point-right">
-    Gift Ticket delivery choices are separate from Staff Credentials (Will Call only)
-    and Special Price Tickets (Will Call or mail) delivery choices / options.
-  </UiAlert>
-{{/if}}
+<UiNotice @type="warning" @icon="hand-point-right" @title="Gift Ticket Delivery Info">
+  <p>
+    Gift Ticket delivery choices are separate from Staff Credentials and Special Price Tickets.
+  </p>
+  <p>
+    Due to the ongoing budget crisis, Gift Tickets will cost ${{@ticketingInfo.mail_standard_price}} to
+    ship via USPS Standard Mail, or ${{@ticketingInfo.mail_priority_price}} via USPS Priority Mail. Don't worry,
+    the ticket itself is still free.
+  </p>
+  <span class="text-success fw-bold">Pickup at Will Call is always free.</span>
+</UiNotice>
 {{#if this.haveMultiple}}
   <p>
     Hey, you have multiple gift tickets! Please indicate your choices below.
@@ -14,77 +19,51 @@
     {{#if idx}}
       <hr>
     {{/if}}
-    <h3> Gift Ticket #{{add idx 1}} of {{@ticketPackage.giftTickets.length}}</h3>
+    <h3>Gift Ticket #{{add idx 1}} of {{@ticketPackage.giftTickets.length}}</h3>
   {{/if}}
   {{#if ticket.isClaimed}}
     <h4>
-      You have claimed your {{ticket.typeLabel}} for
-      {{if ticket.isDeliveryPostal "delivery by mail" "pick up at Will-Call"}}
+      You have claimed your {{ticket.typeLabel}} {{this.ticketDelivery ticket}}.
     </h4>
     <p>
       If your plans have changed, please release the ticket. Gift tickets cannot be banked and are only good for the
       upcoming event.
     </p>
     <TicketGiftConditions/>
-    <p>
-      <UiButton @class="btn-responsive"
-                @onClick={{fn @setDocumentStatus ticket "qualified"}}
-                @disabled={{@isSavingDocumentStatus}}>
-        Release Gift Ticket
-        {{#if @isSavingDocumentStatus}}
-          <SpinIcon/>
-        {{/if}}
-      </UiButton>
-    </p>
-    <p>
-      Do you wish to change the delivery method?
-    </p>
-    {{#if ticket.isDeliveryPostal}}
-      <UiButton @class="btn-responsive"
-                @onClick={{fn this.setDeliveryMethod ticket "will_call"}}
-                @disabled={{@isSavingDocumentStatus}}>
-        Pick Up At Will Call Instead
-        {{#if @isSavingDocumentStatus}}
-          <SpinIcon/>
-        {{/if}}
-      </UiButton>
-    {{else}}
-      <UiButton @class="btn-responsive"
-                @onClick={{fn this.setDeliveryMethod ticket "postal"}}
-                @disabled={{@isSavingDocumentStatus}}>
-        Deliver By Mail Instead
-        {{#if @isSavingDocumentStatus}}
-          <SpinIcon/>
-        {{/if}}
-      </UiButton>
-    {{/if}}
   {{else if ticket.isQualified}}
     <h4>A {{ticket.typeLabel}} is available</h4>
     <TicketGiftConditions/>
-    <div
-      class="d-flex align-items-center flex-column justify-content-sm-between flex-lg-row justify-content-lg-start mb-4">
-      <UiButton @class="btn-responsive"
-                @onClick={{fn this.claimAndSetDeliveryMethod ticket "postal"}}
-                @disabled={{@isSavingDocumentStatus}}>
-        Claim Ticket &amp; Deliver By Mail
-        {{#if @isSavingDocumentStatus}}
-          <SpinIcon/>
-        {{/if}}
+  {{/if}}
+  <UiButtonRow>
+    {{#if ticket.isClaimed}}
+      <UiButton @onClick={{fn @setDocumentStatus ticket "qualified"}} @type="secondary">
+        Release Gift Ticket
       </UiButton>
-      <span class="my-2 mx-3">- OR -</span>
-      <UiButton @class="btn-responsive"
-                @onClick={{fn this.claimAndSetDeliveryMethod ticket "will_call"}}
-                @disabled={{@isSavingDocumentStatus}}>
-        Claim Ticket &amp; Pick Up At Will Call
-        {{#if @isSavingDocumentStatus}}
-          <SpinIcon/>
-        {{/if}}
+    {{/if}}
+    {{#unless ticket.isDeliveryWillCall}}
+      <UiButton @onClick={{fn this.claimAndSetDeliveryMethod ticket "will_call"}} @type="secondary">
+        Claim &amp; Pickup At Will Call
       </UiButton>
+    {{/unless}}
+    {{#unless ticket.isDeliveryStandardPost}}
+      <UiButton @onClick={{fn this.claimAndSetDeliveryMethod ticket "postal"}} @type="secondary">
+        Claim &amp; Deliver via Standard Mail
+      </UiButton>
+    {{/unless}}
+    {{#unless ticket.isDeliveryPriorityPost}}
+      <UiButton @onClick={{fn this.claimAndSetDeliveryMethod ticket "priority"}} @type="secondary">
+        Claim &amp; Deliver via Priority Mail
+      </UiButton>
+    {{/unless}}
+  </UiButtonRow>
+  {{#if ticket.isQualified}}
+    <div class="mt-1">
+      <b>Don't want the ticket?</b> Hit the NEXT button below. The Gift Ticket will remain available to claim
+      until the Ranger ticketing window closes.
     </div>
-    If you wish to pass on claiming a Gift Ticket, use the Next button below.
-  {{else}}
-    <p>
-      Uh oh, I don't know the state of the ticket [{{ticket.status}}], id #{{ticket.id}}.
-    </p>
   {{/if}}
 {{/each}}
+
+{{#if @isSavingDocumentStatus}}
+  <LoadingDialog>Submitting your choices</LoadingDialog>
+{{/if}}
