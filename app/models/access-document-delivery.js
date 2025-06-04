@@ -18,7 +18,7 @@ export default class AccessDocumentDelivery extends Model {
   @attr('string') postal_code;
 
 
-  get isDeliveryPostal() {
+  get isDeliveryStandardPost() {
     return this.method === DELIVERY_MAIL;
   }
 

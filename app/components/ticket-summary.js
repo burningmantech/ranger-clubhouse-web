@@ -2,7 +2,6 @@ import Component from '@glimmer/component';
 import {cached} from '@glimmer/tracking';
 import {htmlSafe} from '@ember/template';
 import dayjs from 'dayjs';
-import {DELIVERY_POSTAL, DELIVERY_WILL_CALL} from 'clubhouse/models/access-document';
 
 export default class TicketSummaryComponent extends Component {
   /**
@@ -28,10 +27,7 @@ export default class TicketSummaryComponent extends Component {
     const {vehiclePass} = this.args.ticketPackage;
 
     const item = ticket ?? vehiclePass;
-    if (item
-      && item.isUsing
-      && item.delivery_method !== DELIVERY_POSTAL
-      && item.delivery_method !== DELIVERY_WILL_CALL) {
+    if (item && item.isUsing && item.isDeliveryNone) {
       items.push('A delivery method still needs to be chosen.');
     }
 
@@ -134,7 +130,6 @@ export default class TicketSummaryComponent extends Component {
   /**
    * Build up a list of submitted items. (rare condition)
    *
-   * @returns {*[]}
    */
 
   @cached

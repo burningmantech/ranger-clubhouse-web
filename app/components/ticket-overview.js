@@ -42,7 +42,7 @@ export default class TicketOverviewComponent extends Component {
     }
 
     if (item) {
-      this.usingMail = item.isDeliveryPostal;
+      this.usingMail = item.isDeliveryStandardPost;
       this.usingWillCall = item.isDeliveryWillCall;
       this.address = item;
       this.deliveryMethod = item.delivery_method;

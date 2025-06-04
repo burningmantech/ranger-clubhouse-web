@@ -25,7 +25,7 @@ import {
   USED,
   DELIVERY_NONE,
   DELIVERY_POSTAL,
-  DELIVERY_WILL_CALL
+  DELIVERY_WILL_CALL, DELIVERY_PRIORITY
 } from 'clubhouse/models/access-document';
 
 export default class PersonAccessDocumentsComponent extends Component {
@@ -82,7 +82,8 @@ export default class PersonAccessDocumentsComponent extends Component {
 
   deliveryMethodOptions = [
     ['None', DELIVERY_NONE],
-    ['US Mail', DELIVERY_POSTAL],
+    ['USPS Standard Mail', DELIVERY_POSTAL],
+    ['USPS Priority Mail', DELIVERY_PRIORITY],
     ['Will Call', DELIVERY_WILL_CALL],
   ];
 
