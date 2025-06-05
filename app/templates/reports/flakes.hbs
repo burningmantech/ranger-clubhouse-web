@@ -41,78 +41,69 @@
       <accordion.body>
         {{#if accordion.isOpen}}
           {{#each position.slots key="id" as |slot idx|}}
-            <UiTable>
-              <thead>
-              <tr>
-                <th>From</th>
-                <th>To</th>
-                <th>Description</th>
-                <th class="text-end">Signed Up</th>
-                <th class="text-end">Max</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td>{{shift-format slot.begins}}</td>
-                <td>{{shift-format slot.ends}}</td>
-                <td>{{slot.description}}</td>
-                <td class="text-end">{{slot.signed_up}}</td>
-                <td class="text-end">{{slot.max}}</td>
-              </tr>
-              </tbody>
-            </UiTable>
-            <div class="ms-1 {{unless idx "mb-2"}}">
-              {{#if slot.checked_in}}
-                <h6>Signed up &amp; in ({{slot.checked_in.length}})</h6>
-                <div class="callsign-list">
-                  {{#each slot.checked_in key="id" as |person|}}
-                    <div>
-                      <PersonLink @person={{person}} />
-                      <br>
-                      ({{time-format person.timesheet.on_duty}})
+            <div class="p-2 border {{if idx "mt-4"}}">
+              <h3>{{shift-format slot.begins slot.ends}} - {{slot.description}}</h3>
+              Sign ups {{slot.signed_up}} of {{slot.max}}
+              <div style="grid-template-columns: repeat(auto-fit,170px)" class="d-grid gap-2 mt-2">
+                <div>
+                  <b>Flakes ({{slot.not_present.length}}):</b>
+                  {{#if slot.not_present}}
+                    <div class="callsign-list">
+                      {{#each slot.not_present key="id" as |person|}}
+                        <PersonLink @person={{person}} />
+                      {{/each}}
                     </div>
-                  {{/each}}
+                  {{else}}
+                    <div class="text-success">No flakes.</div>
+                  {{/if}}
                 </div>
-              {{else if slot.signed_up}}
-                <div class="text-danger mb-1">No scheduled sign ups on shift.</div>
-              {{else}}
-                <div class="text-danger mb-1">No shift sign ups.</div>
-              {{/if}}
-              {{#if slot.different_shift}}
-                <h6>Went on different shift ({{slot.different_shift.length}}):</h6>
-                <div class="row mb-1">
-                  {{#each slot.different_shift key="id" as |person|~}}
-                    <div class="col-auto">
-                      <PersonLink @person={{person}} />
-                      <br>
-                      ({{person.timesheet.position_title}} @ {{time-format person.timesheet.on_duty}})
+                {{#if slot.different_shift}}
+                  <div>
+                    <b>Went on different shift ({{slot.different_shift.length}}):</b>
+                    <div class="callsign-list">
+                      {{#each slot.different_shift key="id" as |person|~}}
+                        <div>
+                          <PersonLink @person={{person}} />
+                          <br>
+                          {{person.timesheet.position_title}} @ {{time-format person.timesheet.on_duty}}
+                        </div>
+                      {{~/each}}
                     </div>
-                  {{~/each}}
-                </div>
-              {{/if}}
-              {{#if slot.rogues}}
-                <h6>Rogues / Overlaps ({{slot.rogues.length}}):</h6>
-                <div class="row mb-1">
-                  {{#each slot.rogues key="id" as |person|}}
-                    <div class="col-auto">
-                      <PersonLink @person={{person}} />
-                      <br>
-                      ({{dayjs-format person.on_duty "ddd DD @ HH:MM"}} -
-                      {{if person.off_duty (dayjs-format person.off_duty "ddd DD @ HH:MM") "now"}})
+                  </div>
+                {{/if}}
+                {{#if slot.rogues}}
+                  <div>
+                    <b>Rogues / Overlaps ({{slot.rogues.length}}):</b>
+                    <div class="callsign-list">
+                      {{#each slot.rogues key="id" as |person|}}
+                        <div>
+                          <PersonLink @person={{person}} />
+                          <br>
+                          {{dayjs-format person.on_duty "ddd DD @ HH:MM"}}
+                        </div>
+                      {{~/each}}
                     </div>
-                  {{~/each}}
+                  </div>
+                {{/if}}
+                <div>
+                  <b>Signed up &amp; in ({{slot.checked_in.length}})</b>
+                  {{#if slot.checked_in}}
+                    <div class="callsign-list">
+                      {{#each slot.checked_in key="id" as |person|}}
+                        <div>
+                          <PersonLink @person={{person}} />
+                          <br>
+                          {{time-format person.timesheet.on_duty}}
+                        </div>
+                      {{/each}}
+                    </div>
+                  {{else if slot.signed_up}}
+                    <div class="text-danger mb-1">No scheduled sign-ups on shift.</div>
+                  {{else}}
+                    <div class="text-danger mb-1">No shift sign-ups.</div>
+                  {{/if}}
                 </div>
-              {{/if}}
-              {{#if slot.not_present}}
-                <h6>Flakes ({{slot.not_present.length}}):</h6>
-                <div class="callsign-list">
-                  {{#each slot.not_present key="id" as |person|}}
-                    <PersonLink @person={{person}} />
-                  {{/each}}
-                </div>
-              {{else if slot.signed_up}}
-                <b class="text-success">No flakes.</b>
-              {{/if}}
+              </div>
             </div>
           {{/each}}
         {{/if}}
