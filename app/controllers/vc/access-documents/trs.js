@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import {cached, tracked} from '@glimmer/tracking';
 import {
   DELIVERY_POSTAL,
+  DELIVERY_PRIORITY,
   DELIVERY_SC,
   GIFT_TICKET,
   LSD_TICKET,
@@ -15,7 +16,7 @@ import {
   VEHICLE_PASS_LSD,
   WAP,
   WAPSO,
-  TypeShortLabels, DeliveryMethodLabels,
+  TypeShortLabels, DeliveryMethodLabels
 } from 'clubhouse/models/access-document';
 import {ALPHA, PROSPECTIVE} from 'clubhouse/constants/person_status';
 
@@ -146,11 +147,14 @@ const LSD_EXPORT_FORMAT = [
   ['Shipping Address:: State', 'not_used_state'],
   ['Shipping Address:: Zip', 'not_used_zip'],
   ['Shipping Address:: Phone', 'not_used_phone'],
-  ['Request: $575 Ticket - Directed', 'lsd'],
   ['Request: $150 Vehicle Pass - Directed', 'lsd_vp'],
+  ['Request: $550 Ticket - Directed', 'lsd'],
   // Not used.
-  ['Request: $2750 Ticket - Directed', 'fomo_1'],
-  ['Request: $1500 Ticket - Directed', 'fomo_2'],
+  ['Request: $650 Ticket - Directed', 'ignore'],
+  ['Request: $750 Ticket - Directed', 'ignore'],
+  ['Request: $950 Ticket - Directed', 'ignore'],
+  ['Request: $1500 Ticket - Directed', 'ignore'],
+  ['Request: $3000 Ticket - Directed', 'ignore'],
 ];
 
 
@@ -163,6 +167,13 @@ const STAFF_CREDENTIAL_VP = 'staff_credential_vp';
 const WAP_ALL = 'work_access_pass_all';
 const WAP_PNV = 'work_access_pass_pnv';
 const WAP_RANGER = 'work_access_pass_ranger';
+
+const CREDENTIAL_PICKUP = 'Credential Pick Up'; // Pick up in Gerlach before Box Office is running
+const WILL_CALL = 'Will Call';  // Box office
+//const USPS_GIFT = 'USPS'; // For Gift items
+const USPS_GROUND = 'USPS Ground'; // For paid items
+const USPS_PRIORITY = 'USPS Priority'; // For paid items
+const PRINT_AT_HOME = 'Print At Home';
 
 export default class VcAccessDocumentsTrsController extends ClubhouseController {
   @tracked filter = 'all';
@@ -487,9 +498,16 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         let delivery_type;
 
         if (this.filter === STAFF_CREDENTIAL_VP) {
-          delivery_type = 'Credential Pick Up';
+          delivery_type = CREDENTIAL_PICKUP;
         } else {
-          delivery_type = (documents[0].delivery_method === DELIVERY_POSTAL ? 'USPS' : 'Credential Pick Up' /*'Will Call'*/);
+          const method = documents[0].delivery_method;
+          if (method === DELIVERY_POSTAL) {
+            delivery_type = USPS_GROUND;
+          } else if (method === DELIVERY_PRIORITY) {
+            delivery_type = USPS_PRIORITY;
+          } else {
+            delivery_type = WILL_CALL;
+          }
         }
 
         const row = {
@@ -530,36 +548,40 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
         this._fillName(person, row, (doc.type === WAPSO), doc.name);
 
-        const isPostal = (doc.delivery_method === DELIVERY_POSTAL);
+        const isPostal = (doc.delivery_method === DELIVERY_POSTAL || doc.delivery_method === DELIVERY_PRIORITY);
+        let postalCode = '';
+        if (isPostal) {
+          postalCode = doc.delivery_method === DELIVERY_PRIORITY ? USPS_PRIORITY : USPS_GROUND;
+        }
 
         switch (doc.type) {
           case SPT:
           case GIFT_TICKET:
           case LSD_TICKET:
           case VEHICLE_PASS_LSD:
-            row.delivery_type = isPostal ? 'USPS' : 'Will Call';
+            row.delivery_type = postalCode;
             break;
 
           case VEHICLE_PASS_GIFT:
             if (doc.has_staff_credential) {
-              row.delivery_type = 'Credential Pick Up';
+              row.delivery_type = CREDENTIAL_PICKUP;
             } else {
               // a Gift VP should always be paired with a SC but ya never know.
-              row.delivery_type = isPostal ? 'USPS' : 'Credential Pick Up';
+              row.delivery_type = postalCode;
             }
             break;
 
           case VEHICLE_PASS_SP:
-            row.delivery_type = isPostal ? 'USPS' : 'Credential Pick Up';
+            row.delivery_type = postalCode;
             break;
 
           case STAFF_CREDENTIAL:
-            row.delivery_type = 'Credential Pick Up';
+            row.delivery_type = CREDENTIAL_PICKUP;
             break;
 
           case WAP:
           case WAPSO:
-            row.delivery_type = 'Print At Home';
+            row.delivery_type = PRINT_AT_HOME;
             break;
         }
 
@@ -640,7 +662,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
       async () => {
         this.isSubmitting = true;
         try {
-          await this.ajax.request('access-document/mark-submitted', {method: 'POST', data: {ids}});
+          await this.ajax.post('access-document/mark-submitted', {data: {ids}});
           this.toast.success('Access documents have been successfully marked as submitted.');
           this.isSubmitting = false;
           this.viewRecords.forEach((rec) => {
