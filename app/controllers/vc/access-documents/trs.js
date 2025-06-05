@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import {cached, tracked} from '@glimmer/tracking';
 import {
   DELIVERY_POSTAL,
+  DELIVERY_PRIORITY,
   DELIVERY_SC,
   GIFT_TICKET,
   LSD_TICKET,
@@ -15,7 +16,7 @@ import {
   VEHICLE_PASS_LSD,
   WAP,
   WAPSO,
-  TypeShortLabels, DeliveryMethodLabels, DELIVERY_PRIORITY, DELIVERY_WILL_CALL,
+  TypeShortLabels, DeliveryMethodLabels
 } from 'clubhouse/models/access-document';
 import {ALPHA, PROSPECTIVE} from 'clubhouse/constants/person_status';
 
@@ -169,9 +170,10 @@ const WAP_RANGER = 'work_access_pass_ranger';
 
 const CREDENTIAL_PICKUP = 'Credential Pick Up'; // Pick up in Gerlach before Box Office is running
 const WILL_CALL = 'Will Call';  // Box office
-const USPS_GIFT = 'USPS'; // For Gift items
+//const USPS_GIFT = 'USPS'; // For Gift items
 const USPS_GROUND = 'USPS Ground'; // For paid items
 const USPS_PRIORITY = 'USPS Priority'; // For paid items
+const PRINT_AT_HOME = 'Print At Home';
 
 export default class VcAccessDocumentsTrsController extends ClubhouseController {
   @tracked filter = 'all';
@@ -579,7 +581,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
           case WAP:
           case WAPSO:
-            row.delivery_type = 'Print At Home';
+            row.delivery_type = PRINT_AT_HOME;
             break;
         }
 
