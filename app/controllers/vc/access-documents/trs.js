@@ -62,6 +62,7 @@ const PAID_AND_GIFT_TICKET_EXPORT_FORMAT = [
   ['Request: $75 Vehicle Pass', 'sp_vp'],
 ];
 
+// Yes, the dates are out of order and have been since 2022. Zero clues on why org ticketing does it this way.
 const UNPAID_EXPORT_FORMAT = [
   ['First Name', 'first_name'],
   ['Last Name', 'last_name'],
@@ -69,8 +70,8 @@ const UNPAID_EXPORT_FORMAT = [
   ['Question: Method of Delivery:', 'delivery_type'],
   ['Question: Nickname/Project:', 'project_name'],   // callsign
   ['Question: Notes:', 'note'],
-  // Shipping addresses are not used in 2022, however the headers are still present. sigh.
-  // removed 'not_used_' prefix if later events requires address
+  // Shipping addresses are not used in 2022; however, the headers are still present. Sigh.
+  // Remove the 'not_used_' prefix if later events require addresses
   ['Shipping Address (Required if Mail Delivery type selected):: Country', 'not_used_country'],
   ['Shipping Address (Required if Mail Delivery type selected):: Full Name', 'not_used_full_name'],
   ['Shipping Address (Required if Mail Delivery type selected):: Address', 'not_used_address1'],
@@ -101,10 +102,9 @@ const UNPAID_EXPORT_FORMAT = [
   ['Request: Setup Access Pass (SAP) 8/21 &amp; Later', 'sap_0821'],
   ['Request: Setup Access Pass (SAP) 8/22 &amp; Later', 'sap_0822'],
   ['Request: Setup Access Pass (SAP) 8/23 &amp; Later', 'sap_0823'],
-  ['Request: Setup Access Pass (SAP) 8/24 &amp; Later', 'sap_0824'],
+  ['Request: Setup Access Pass (SAP) 8/2 &amp; Later', 'sap_0802'],
   ['Request: Setup Access Pass (SAP) 8/3 &amp; Later', 'sap_0803'],
   ['Request: Setup Access Pass (SAP) - Anytime', 'sap_anytime'],
-  // Yes, the dates are  out of order and have been since 2022. Zero clues on why org ticketing does it this way.
   ['Request: Staff Credential Pickup 8/14 &amp; After', 'sc_0814'],
   ['Request: Staff Credential Pickup 8/13 &amp; After', 'sc_0813'],
   ['Request: Staff Credential Pickup 8/4 &amp; After', 'sc_0804'],
@@ -125,7 +125,7 @@ const UNPAID_EXPORT_FORMAT = [
   ['Request: Staff Credential Pickup 8/21 &amp; After', 'sc_0821'],
   ['Request: Staff Credential Pickup 8/22 &amp; After', 'sc_0822'],
   ['Request: Staff Credential Pickup 8/23 &amp; After', 'sc_0823'],
-  ['Request: Staff Credential Pickup 8/24 &amp; After', 'sc_0824'],
+  ['Request: Staff Credential Pickup 8/2 &amp; After', 'sc_0802'],
   ['Request: Staff Credential Pickup Anytime', 'sc_anytime'],
   ['Request: Staff Credential Pickup 8/3 &amp; After', 'sc_0803'],
 ];
@@ -171,7 +171,7 @@ const WAP_RANGER = 'work_access_pass_ranger';
 const CREDENTIAL_PICKUP = 'Credential Pick Up'; // Pick up in Gerlach before Box Office is running
 const WILL_CALL = 'Will Call';  // Box office
 //const USPS_GIFT = 'USPS'; // For Gift items
-const USPS_GROUND = 'USPS Ground'; // For paid items
+const USPS_STANDARD = 'USPS'; // For paid items
 const USPS_PRIORITY = 'USPS Priority'; // For paid items
 const PRINT_AT_HOME = 'Print At Home';
 
@@ -502,7 +502,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         } else {
           const method = documents[0].delivery_method;
           if (method === DELIVERY_POSTAL) {
-            delivery_type = USPS_GROUND;
+            delivery_type = USPS_STANDARD;
           } else if (method === DELIVERY_PRIORITY) {
             delivery_type = USPS_PRIORITY;
           } else {
@@ -551,7 +551,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         const isPostal = (doc.delivery_method === DELIVERY_POSTAL || doc.delivery_method === DELIVERY_PRIORITY);
         let postalCode = '';
         if (isPostal) {
-          postalCode = doc.delivery_method === DELIVERY_PRIORITY ? USPS_PRIORITY : USPS_GROUND;
+          postalCode = doc.delivery_method === DELIVERY_PRIORITY ? USPS_PRIORITY : USPS_STANDARD;
         }
 
         switch (doc.type) {
