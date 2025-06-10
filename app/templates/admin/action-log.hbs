@@ -41,15 +41,16 @@
       </div>
     </FormRow>
     <f.submit @label="Search"/>
-    <UiButton @type="gray" class="btn-link"
-              @onClick={{fn this.resetFilters f.model}}>Clear Filters</UiButton>
+    <UiButton @type="gray" class="btn-link" @onClick={{fn this.resetFilters f.model}}>
+      Clear Filters
+    </UiButton>
   </ChForm>
 
   {{#if this.logs}}
     <div class="mt-4">
       Showing {{this.currentPage}} of {{this.total_pages}} pages. {{pluralize this.total "row"}}
     </div>
-    <UiTable>
+    <UiTable @noWidthAuto={{true}}>
       <thead>
       <tr>
         <th class="w-20">Timestamp (Pacific)</th>
@@ -95,7 +96,7 @@
           </td>
           <td class="w-25 text-break">
             {{#if log.message}}
-              {{log.message}}
+              <ReadMore @text={{log.message}} @limit={{50}}/>
             {{else}}
               -
             {{/if}}
@@ -163,12 +164,14 @@
       {{/each}}
       </tbody>
     </UiTable>
-    <UiButton @type="secondary" @onClick={{this.goPrevPage}} @disabled={{eq this.currentPage 1}}>
-      Prev Page
-    </UiButton>
-    <UiButton @type="secondary" @onClick={{this.goNextPage}} @disabled={{eq this.currentPage this.total_pages}}>
-      Next Page
-    </UiButton>
+    <UiButtonRow>
+      <UiButton @type="secondary" @onClick={{this.goPrevPage}} @disabled={{eq this.currentPage 1}}>
+        Prev Page
+      </UiButton>
+      <UiButton @type="secondary" @onClick={{this.goNextPage}} @disabled={{eq this.currentPage this.total_pages}}>
+        Next Page
+      </UiButton>
+    </UiButtonRow>
   {{else}}
     <p class="text-danger font-weight-bold mt-4">No Action Logs matched the criteria.</p>
   {{/if}}
