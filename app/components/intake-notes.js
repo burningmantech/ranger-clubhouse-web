@@ -36,7 +36,7 @@ export default class IntakeNotesComponent extends Component {
         role = VC;
         break;
       case 'personnel':
-        role = ADMIN;
+        role = ADMIN; // yah, it's a double check below.
         break;
       case 'rrn':
         role = REGIONAL_MANAGEMENT;
@@ -46,7 +46,7 @@ export default class IntakeNotesComponent extends Component {
         break;
     }
 
-    return this.session.hasRole(role);
+    return this.session.hasRole([ADMIN, role]);
   }
 
   @action
