@@ -103,8 +103,8 @@
 
       {{#each this.positionSlots as |group|}}
         <UiAccordion id="position-{{group.position.id}}"
-                     @isInitOpen={{get this.positionsOpened group.position.id}}
-                     @onClick={{fn this.positionClicked group}} as |box|>
+                     @isInitOpen={{this.keepAccordionOpen group.position}}
+                     @onClick={{fn this.positionClicked group.position}} as |box|>
           <box.title>
             {{group.position.title}} ({{group.slots.length}}
             {{~#if group.inactive}}

@@ -47,13 +47,11 @@ export default class OpsSlotsController extends ClubhouseController {
   @action
   changeActiveFilter(value) {
     this.activeFilter = value;
-    this._buildDisplay();
   }
 
   @action
   changeDayFilter(value) {
     this.dayFilter = value;
-    this._buildDisplay();
   }
 
   @action
@@ -74,14 +72,6 @@ export default class OpsSlotsController extends ClubhouseController {
   @action
   setFilterByDescription(value) {
     this.filterByDescription = value;
-  }
-
-  _buildDisplay() {
-    /*
-    this._buildViewSlots();
-    this._buildPositionSlots();
-
-     */
   }
 
   @cached
@@ -181,7 +171,12 @@ export default class OpsSlotsController extends ClubhouseController {
 
   @action
   positionClicked(position, opened) {
-    this.positionsOpened[position.position_id] = opened;
+    this.positionsOpened[position.id] = opened;
+  }
+
+  @action
+  keepAccordionOpen(position) {
+    return this.positionsOpened[position.id];
   }
 
   @cached
@@ -251,7 +246,6 @@ export default class OpsSlotsController extends ClubhouseController {
   async _updateSlots() {
     try {
       await this.slots.update();
-      this._buildDisplay();
     } catch (response) {
       this.house.handleErrorResponse(response);
     }
@@ -305,7 +299,6 @@ export default class OpsSlotsController extends ClubhouseController {
       async () => {
         try {
           await slot.destroyRecord();
-          this._buildDisplay();
           this.toast.success('Slot has been deleted.');
         } catch (response) {
           this.house.handleErrorResponse(response)
