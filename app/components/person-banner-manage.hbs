@@ -1,6 +1,6 @@
 {{#if this.eventBanners}}
   <UiNotice @title="Important {{(this.house.currentYear)}} Event Account Note(s)"
-            @type="black"
+            @type="warning"
             @icon="hand-point-right">
     The following account notes are only valid for the {{this.house.currentYear}} event.
     {{#each this.eventBanners as |row idx|}}
@@ -22,13 +22,13 @@
 
 {{#if this.permanentBanners}}
   <UiNotice @title="Important Permanent Account Note(s)"
-            @type="danger"
+            @type="warning"
             @icon="hand-point-right">
     {{#each this.permanentBanners as |row idx|}}
       {{#if idx}}
-        <hr class="mt-2"/>
+        <hr class="my-2"/>
       {{/if}}
-      <div class="my-2">
+      <div class="mb-2">
         Posted {{shift-format (or row.updated_at row.created_at) year=true}}
         {{#if this.canAdministerBanners}}
           <a href {{on-click (fn this.edit row)}} class="ms-2">
