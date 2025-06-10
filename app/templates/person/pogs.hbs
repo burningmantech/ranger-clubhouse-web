@@ -1,3 +1,7 @@
-<h1>Pogs for {{this.person.callsign}}</h1>
+<YearSelect @title="Meal & Shower Pogs"
+            @year={{this.year}}
+            @onChange={{set-value this 'year'}}
+            @minYear={{2023}}
+/>
 
 <Person::Pogs @person={{this.person}} @personPogs={{this.personPogs}} />
