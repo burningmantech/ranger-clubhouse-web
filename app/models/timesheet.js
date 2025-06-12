@@ -32,6 +32,20 @@ export const BLOCKED_TOO_EARLY = 'too-early'; // Person is trying to sign in to 
 export const BLOCKED_TOO_LATE = 'too-late'; // Person is trying to sign in to a shift too late.
 export const BLOCKED_UNSIGNED_SANDMAN_AFFIDAVIT = 'unsigned-sandman-affidavit'; // The Sandman Affidavit has not been signed.
 
+// The following is from the timesheet_log table.
+const VIA_BULK_UPLOAD = 'bulk-upload';  // Entry created via Bulk Uploader
+const VIA_MISSING_ENTRY = 'missing-entry';  // Entry created via Missing Timesheet Request
+
+const VIA_LABELS = {
+  [VIA_MISSING_ENTRY]: 'missing request',
+  [VIA_BULK_UPLOAD]: 'bulk upload',
+}
+
+export function createdVia(via) {
+  return via ? (VIA_LABELS[via] ?? via) : 'check in';
+}
+
+
 export function buildBlockerLabels(blockers) {
   return blockers.map(b => {
     switch (b.blocker) {
