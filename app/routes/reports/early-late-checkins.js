@@ -19,7 +19,7 @@ export default class ReportsEarlyLateCheckinsRoute extends ClubhouseRoute {
     controller.early_check_in = model.early_check_in;
     controller.late_check_in = model.late_check_in;
     controller.entries = model.entries;
-    controller.entries.forEach((e) => e.distance = durationOfTime(e.distance));
+    controller.entries.forEach((e) => e.distanceHuman = durationOfTime(e.distance));
     controller.people = model.people;
     const positions = model.positions;
     const options = positions.map((p) => [`${p.title} (${p.total})`, p.id]);

@@ -5,6 +5,11 @@
             @minYear={{2010}}
 />
 
+<div class="mb-2">
+  Early check-in limit (HH:MM): {{hour-minute-format this.early_check_in}}
+  <span class="ms-2">Late check-in limit (HH:MM): {{hour-minute-format this.late_check_in}}</span>
+</div>
+
 <UiTab as |tab|>
   <tab.pane @title="Entries" @id="entries">
     <FormRow>
@@ -13,11 +18,19 @@
         <ChForm::Select @name="positionFilter"
                         @value={{this.positionFilter}}
                         @options={{this.positionOptions}}
-                        @onChange={{set-value this "positionFilter"}}/>
+                        @onChange={{set-value this "positionFilter"}}
+        />
       </div>
     </FormRow>
 
-    Showing {{pluralize this.entriesView.length "timesheet"}} of {{this.entries.length}}
+    <div class="hstack gap-3">
+      <div>
+        Showing {{pluralize this.entriesView.length "timesheet"}} of {{this.entries.length}}
+      </div>
+      <div>
+        <UiExportToCSVButton @thing="{{pluralize this.entriesView.length "entry"}}" @onClick={{this.exportToCSV}} />
+      </div>
+    </div>
     <UiTable>
       <thead>
       <tr>
@@ -41,7 +54,7 @@
           <td>{{row.position.title}}</td>
           <td>{{shift-format row.timesheet.on_duty}}</td>
           <td>{{row.type}}</td>
-          <td>{{row.distance}}</td>
+          <td>{{row.distanceHuman}}</td>
           <td>{{shift-format row.slot.begins}}</td>
           <td>{{row.slot.description}}</td>
         </tr>
