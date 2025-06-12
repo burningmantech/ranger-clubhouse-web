@@ -1,7 +1,6 @@
 import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
 import {cached, tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
-import durationOfTime from "clubhouse/utils/duration-of-time";
 
 const CSV_COLUMNS = [
   {title: 'Callsign', key: 'callsign'},
