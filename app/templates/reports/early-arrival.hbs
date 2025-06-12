@@ -37,7 +37,7 @@
           {{#each this.arrivals as |arrival|}}
             <tr>
               <td><PersonLink @person={{arrival}} /></td>
-              <td>{{ymd-format arrival.sap_date}}</td>
+              <td>{{dayjs-format arrival.sap_date "ddd, MMM D" }}</td>
               <td class="text-center">
                 {{#if (eq arrival.bmid_status "no-bmid")}}
                   No BMID Found

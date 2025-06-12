@@ -213,6 +213,8 @@ Router.map(function () {
     this.route('asset-history');
     this.route('assets-outstanding');
     this.route('certifications');
+    this.route('early-arrival');
+    this.route('early-late-checkins');
     this.route('event-stats');
     this.route('flakes');
     this.route('forced-signins');
@@ -246,14 +248,12 @@ Router.map(function () {
     this.route('timesheet-unconfirmed');
     this.route('vehicle-paperwork');
     this.route('vehicle-registry');
-    this.route('early-late-checkins');
   });
 
   this.route('vc', function () {
     this.route('access-documents', function () {
       this.route('index', {path: '/'});
       this.route('claimed-with-no-signups');
-      this.route('early-arrival');
       this.route('expiring');
       this.route('maintenance');
       this.route('provisions');
