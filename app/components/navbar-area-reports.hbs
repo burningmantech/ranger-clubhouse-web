@@ -65,5 +65,8 @@
     <NavbarMenuItem @menu={{menu}} @route="reports.event-stats" @item="Event Stats"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.languages" @item="Languages"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.sandman-qualified" @item="Sandman Qualified"/>
+    {{#if (has-role "admin" "timesheet-management")}}
+      <NavbarMenuItem @menu={{menu}} @route="reports.early-arrival" @item="Early Arrivals"/>
+    {{/if}}
   </NavbarMenuSection>
 </NavbarMenu>
