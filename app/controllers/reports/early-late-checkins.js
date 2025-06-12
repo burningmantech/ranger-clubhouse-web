@@ -6,6 +6,7 @@ const CSV_COLUMNS = [
   {title: 'Callsign', key: 'callsign'},
   {title: 'Position', key: 'position_title'},
   {title: 'On Duty', key: 'on_duty'},
+  {title: 'Via', key: 'via'},
   {title: 'Type', key: 'type'},
   {title: 'By (minutes)', key: 'by'},
   {title: 'Shift Start', key: 'slot_begins'},
@@ -44,6 +45,7 @@ export default class ReportsEarlyLateCheckinsController extends ClubhouseControl
       by: e.distance,
       slot_begins: e.slot.begins,
       slot_description: e.slot.description,
+      via: e.createdVia
     }));
 
     this.house.downloadCsv(`${this.year}-early-late-checkins`, CSV_COLUMNS, rows);

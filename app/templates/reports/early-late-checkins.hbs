@@ -38,6 +38,7 @@
         <th>Callsign</th>
         <th>Position</th>
         <th>On Duty</th>
+        <th>Via</th>
         <th>Type</th>
         <th>By</th>
         <th>Shift Start</th>
@@ -53,6 +54,7 @@
           </td>
           <td>{{row.position.title}}</td>
           <td>{{shift-format row.timesheet.on_duty}}</td>
+          <td>{{row.createdVia}}</td>
           <td>{{row.type}}</td>
           <td>{{row.distanceHuman}}</td>
           <td>{{shift-format row.slot.begins}}</td>
