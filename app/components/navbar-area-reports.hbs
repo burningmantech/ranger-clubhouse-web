@@ -26,6 +26,7 @@
     <NavbarMenuItem @menu={{menu}} @route="reports.forced-signins" @item="Forced Sign-Ins"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-by-callsign" @item="Timesheet By Callsign"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-by-position" @item="Timesheet By Position"/>
+    <NavbarMenuItem @menu={{menu}} @route="reports.early-late-checkins" @item="Early / Late Checkins"/>
   </NavbarMenuSection>
   {{#if (has-role "admin" "timesheet-management")}}
     <NavbarMenuSection @section="Timesheet Corrections">

@@ -246,6 +246,7 @@ Router.map(function () {
     this.route('timesheet-unconfirmed');
     this.route('vehicle-paperwork');
     this.route('vehicle-registry');
+    this.route('early-late-checkins');
   });
 
   this.route('vc', function () {
