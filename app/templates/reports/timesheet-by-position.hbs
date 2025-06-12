@@ -36,11 +36,10 @@
           <UiTable>
             <thead>
             <tr>
-              <th>Time</th>
+              <th>Callsign</th>
+              <th>On Duty At</th>
               <th class="text-end">Hours</th>
               <th class="text-end">Credits</th>
-              <th>Callsign</th>
-              <th>Status</th>
               <th>Shift Begins</th>
               <th>Shift Duration</th>
               <th>Shift Description</th>
@@ -53,6 +52,9 @@
             {{#each position.timesheets key="id" as |entry|}}
               <tr>
                 <td>
+                  <PersonLink @person={{entry.person}} />
+                </td>
+                <td>
                   {{#if entry.off_duty}}
                     {{shift-format entry.on_duty entry.off_duty}}
                   {{else}}
@@ -62,10 +64,7 @@
                 </td>
                 <td class="text-end">{{hour-format entry.duration}}</td>
                 <td class="text-end">{{credits-format entry.credits}}</td>
-                <td>
-                  <PersonLink @person={{entry.person}} />
-                </td>
-                {{#if entry.slot}}
+                 {{#if entry.slot}}
                   <td>{{shift-format entry.slot.begins tz=entry.slot.timezone tzabbr=entry.slot.timezone_abbr}}</td>
                   <td class="text-end">{{hour-format entry.slot.duration}}</td>
                   <td>{{entry.slot.description}}</td>
