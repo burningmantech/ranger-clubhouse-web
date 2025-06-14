@@ -1,0 +1,113 @@
+<YearSelect @title="Early / Late Check-Ins Report"
+            @year={{this.year}}
+            @onChange={{set-value this 'year'}}
+            @skipPandemic={{true}}
+            @minYear={{2010}}
+/>
+
+<div class="mb-2">
+  Early check-in limit (HH:MM): {{hour-minute-format this.early_check_in}}
+  <span class="ms-2">Late check-in limit (HH:MM): {{hour-minute-format this.late_check_in}}</span>
+</div>
+
+<UiTab as |tab|>
+  <tab.pane @title="Entries" @id="entries">
+    <FormRow>
+      <FormLabel @auto={{true}}>Position Filter</FormLabel>
+      <div class="col-auto">
+        <ChForm::Select @name="positionFilter"
+                        @value={{this.positionFilter}}
+                        @options={{this.positionOptions}}
+                        @onChange={{set-value this "positionFilter"}}
+        />
+      </div>
+    </FormRow>
+
+    <div class="hstack gap-3">
+      <div>
+        Showing {{pluralize this.entriesView.length "timesheet"}} of {{this.entries.length}}
+      </div>
+      <div>
+        <UiExportToCSVButton @thing="{{pluralize this.entriesView.length "entry"}}" @onClick={{this.exportToCSV}} />
+      </div>
+    </div>
+    <UiTable>
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Callsign</th>
+        <th>Position</th>
+        <th>On Duty</th>
+        <th>Via</th>
+        <th>Type</th>
+        <th>By</th>
+        <th>Shift Start</th>
+        <th>Shift Description</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.entriesView key="timesheet.id" as |row|}}
+        <tr>
+          <td>{{row.timesheet.id}}</td>
+          <td>
+            <PersonLink @person={{row.person}}/>
+          </td>
+          <td>{{row.position.title}}</td>
+          <td>{{shift-format row.timesheet.on_duty}}</td>
+          <td>{{row.createdVia}}</td>
+          <td>{{row.type}}</td>
+          <td>{{row.distanceHuman}}</td>
+          <td>{{shift-format row.slot.begins}}</td>
+          <td>{{row.slot.description}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </UiTable>
+  </tab.pane>
+  <tab.pane @title="People Stats" @id="people">
+    Showing {{pluralize this.people.length "person"}}
+    <UiTable>
+      <thead>
+      <tr>
+        <th>Callsign</th>
+        <th>Total</th>
+        <th>Positions</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.people as |person|}}
+        <tr>
+          <td>
+            <PersonLink @person={{person}} />
+          </td>
+          <td class="text-end">{{person.total}}</td>
+          <td>
+            {{#each person.positions as |position|}}
+              {{position.title}} ({{position.total}})<br>
+            {{/each}}
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </UiTable>
+  </tab.pane>
+  <tab.pane @title="Position Stats" @id="positions">
+    Showing {{pluralize this.positions.length "position"}}
+    <UiTable>
+      <thead>
+      <tr>
+        <th>Position</th>
+        <th>Total</th>
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.positions as |position|}}
+        <tr>
+          <td>{{position.title}}</td>
+          <td class="text-end">{{position.total}}</td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </UiTable>
+  </tab.pane>
+</UiTab>

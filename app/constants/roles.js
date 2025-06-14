@@ -35,6 +35,7 @@ export const ANNOUNCEMENT_MANAGEMENT = 123;    // Allow announcements to be crea
 export const SHIFT_MANAGEMENT = 125;
 export const POD_MANAGEMENT = 126;
 export const AWARD_MANAGEMENT = 127; // Allows a person to grant or revoke service awards.
+export const FULL_REPORT_ACCESS = 128; // Allows a person to see an unrestrict report view for reports like Timesheets By Callsign
 
 export const QUARTERMASTER = 124;
 
@@ -58,6 +59,7 @@ export const Role = {
   EDIT_CLOTHING,
   EDIT_SLOTS,
   EDIT_SWAG,
+  FULL_REPORT_ACCESS,
   GRANT_POSITION,
   INTAKE,
   MANAGE,
@@ -67,15 +69,15 @@ export const Role = {
   MEGAPHONE_TEAM_ONPLAYA,
   MENTOR,
   MESSAGE_MANAGEMENT,
-  POD_MANAGEMENT,
-  REGIONAL_MANAGEMENT,
   PAYROLL,
+  POD_MANAGEMENT,
   QUARTERMASTER,
+  REGIONAL_MANAGEMENT,
   SALESFORCE_IMPORT,
   SHIFT_MANAGEMENT,
+  SHIFT_MANAGEMENT_SELF,
   SURVEY_MANAGEMENT,
   TECH_NINJA,
-  SHIFT_MANAGEMENT_SELF,
   TIMESHEET_MANAGEMENT,
   TRAINER,
   TRAINER_SEASONAL,
@@ -98,6 +100,7 @@ export const RoleToString = {
   [EDIT_CLOTHING]: 'edit-clothing',
   [EDIT_SLOTS]: 'edit-slots',
   [EDIT_SWAG]: 'edit-swag',
+  [FULL_REPORT_ACCESS]: 'full-report-access',
   [GRANT_POSITION]: 'grant-position',
   [INTAKE]: 'intake',
   [MANAGE]: 'manage',
@@ -111,14 +114,14 @@ export const RoleToString = {
   [POD_MANAGEMENT]: 'pod-management',
   [QUARTERMASTER]: 'quartermaster',
   [REGIONAL_MANAGEMENT]: 'regional',
+  [SALESFORCE_IMPORT]: 'salesforce-import',
   [SHIFT_MANAGEMENT]: 'shift-management',
-  [TECH_NINJA]: 'tech-ninja',
   [SHIFT_MANAGEMENT_SELF]: 'timecard-year-round',
+  [SURVEY_MANAGEMENT]: 'survey-management',
+  [TECH_NINJA]: 'tech-ninja',
   [TIMESHEET_MANAGEMENT]: 'timesheet-management',
   [TRAINER]: 'trainer',
   [TRAINER_SEASONAL]: 'trainer-seasonal',
-  [SALESFORCE_IMPORT]: 'salesforce-import',
-  [SURVEY_MANAGEMENT]: 'survey-management',
   [VC]: 'vc',
   [VEHICLE_MANAGEMENT]: 'vehicle',
   [VIEW_EMAIL]: 'view-email',

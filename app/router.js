@@ -191,6 +191,7 @@ Router.map(function () {
     this.route('capacity');
     this.route('mentees');
     this.route('multiple-enrollments');
+    this.route('notes');
     this.route('online-course-progress');
     this.route('people-training-completed');
     this.route('resources');
@@ -213,6 +214,8 @@ Router.map(function () {
     this.route('asset-history');
     this.route('assets-outstanding');
     this.route('certifications');
+    this.route('early-arrival');
+    this.route('early-late-checkins');
     this.route('event-stats');
     this.route('flakes');
     this.route('forced-signins');
@@ -252,7 +255,6 @@ Router.map(function () {
     this.route('access-documents', function () {
       this.route('index', {path: '/'});
       this.route('claimed-with-no-signups');
-      this.route('early-arrival');
       this.route('expiring');
       this.route('maintenance');
       this.route('provisions');

@@ -118,7 +118,7 @@ export default class ReportsSpecialTeamsController extends ClubhouseController {
       {title: 'Callsign', key: 'callsign'},
       {title: 'Name', key: 'name'},
       {title: 'Status', key: 'status'},
-      {Title: 'Email', key: 'email'}
+      {title: 'Email', key: 'email'}
     ];
 
     this.yearList.forEach((year) => {

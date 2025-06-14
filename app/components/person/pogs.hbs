@@ -1,4 +1,4 @@
-<    <p>
+<p>
   Pog tracking is only available for the 2023 and later events.
 </p>
 <p>
@@ -23,7 +23,7 @@ Showing {{pluralize @personPogs.length "pog"}}
       <td>{{shift-format pog.issued_at year=true}}</td>
       <td>{{pog.issued_by.callsign}}</td>
       <td>
-        <UiEditButton @onClick={{fn this.editEntry pog}} @size="sm" />
+        <UiEditButton @onClick={{fn this.editEntry pog}} @size="sm"/>
       </td>
     </tr>
   {{else}}

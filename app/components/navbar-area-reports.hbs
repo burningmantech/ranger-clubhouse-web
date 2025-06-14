@@ -26,6 +26,7 @@
     <NavbarMenuItem @menu={{menu}} @route="reports.forced-signins" @item="Forced Sign-Ins"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-by-callsign" @item="Timesheet By Callsign"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.timesheet-by-position" @item="Timesheet By Position"/>
+    <NavbarMenuItem @menu={{menu}} @route="reports.early-late-checkins" @item="Early / Late Checkins"/>
   </NavbarMenuSection>
   {{#if (has-role "admin" "timesheet-management")}}
     <NavbarMenuSection @section="Timesheet Corrections">
@@ -64,5 +65,8 @@
     <NavbarMenuItem @menu={{menu}} @route="reports.event-stats" @item="Event Stats"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.languages" @item="Languages"/>
     <NavbarMenuItem @menu={{menu}} @route="reports.sandman-qualified" @item="Sandman Qualified"/>
+    {{#if (has-role "admin" "timesheet-management")}}
+      <NavbarMenuItem @menu={{menu}} @route="reports.early-arrival" @item="Early Arrivals"/>
+    {{/if}}
   </NavbarMenuSection>
 </NavbarMenu>

@@ -2,6 +2,7 @@ import Model, {attr} from '@ember-data/model';
 import {tracked} from '@glimmer/tracking';
 import dayjs from 'dayjs';
 import {TRAINING} from "clubhouse/constants/positions";
+import durationOfTime from "clubhouse/utils/duration-of-time";
 
 export const STATUS_PENDING = 'pending';
 export const STATUS_APPROVED = 'approved';
@@ -31,19 +32,19 @@ export const BLOCKED_TOO_EARLY = 'too-early'; // Person is trying to sign in to 
 export const BLOCKED_TOO_LATE = 'too-late'; // Person is trying to sign in to a shift too late.
 export const BLOCKED_UNSIGNED_SANDMAN_AFFIDAVIT = 'unsigned-sandman-affidavit'; // The Sandman Affidavit has not been signed.
 
-function humanDistanceOfTime(rawMinutes) {
-  const minutes = Math.floor(rawMinutes % 60);
-  const hours = Math.floor(((rawMinutes / 60) % 24));
-  const days = Math.floor(rawMinutes / (24 * 60));
+// The following is from the timesheet_log table.
+const VIA_BULK_UPLOAD = 'bulk-upload';  // Entry created via Bulk Uploader
+const VIA_MISSING_ENTRY = 'missing-entry';  // Entry created via Missing Timesheet Request
 
-  const parts = [];
-
-  if (days > 0) parts.push(`${days} day${days > 1 ? 's' : ''}`);
-  if (hours > 0) parts.push(`${hours} hour${hours > 1 ? 's' : ''}`);
-  if (minutes > 0) parts.push(`${minutes} minute${minutes > 1 ? 's' : ''}`);
-
-  return parts.join(', ');
+const VIA_LABELS = {
+  [VIA_MISSING_ENTRY]: 'missing request',
+  [VIA_BULK_UPLOAD]: 'bulk upload',
 }
+
+export function createdVia(via) {
+  return via ? (VIA_LABELS[via] ?? via) : 'check in';
+}
+
 
 export function buildBlockerLabels(blockers) {
   return blockers.map(b => {
@@ -65,10 +66,10 @@ export function buildBlockerLabels(blockers) {
         return 'Position is paid, and the person does not have an employee id on file.';
 
       case BLOCKED_TOO_EARLY:
-        return `It's too early to check in for this shift, which starts at ${dayjs(b.slot.begins).format('HH:mm')} (${b.slot.description}). Check-in opens ${b.cutoff} minutes before. Recommend they return in ${humanDistanceOfTime(b.allowed_in)} or referred them to the HQ Lead if they insist on going on shift early.`;
+        return `It's too early to check in for this shift, which starts at ${dayjs(b.slot.begins).format('HH:mm')} (${b.slot.description}). Check-in opens ${b.cutoff} minutes before. Recommend they return in ${durationOfTime(b.allowed_in)} or referred them to the HQ Lead if they insist on going on shift early.`;
 
       case BLOCKED_TOO_LATE:
-        return `It's too late to check in. The shift started at ${dayjs(b.slot.begins).format('HH:mm')}, and check-in closes ${b.cutoff} minutes after the start. It's now ${humanDistanceOfTime(b.distance)} past the start. If they insist on going on shift, refer them to the HQ Lead.`;
+        return `It's too late to check in. The shift started at ${dayjs(b.slot.begins).format('HH:mm')}, and check-in closes ${b.cutoff} minutes after the start. It's now ${durationOfTime(b.distance)} past the start. If they insist on going on shift, refer them to the HQ Lead.`;
 
       case BLOCKED_UNSIGNED_SANDMAN_AFFIDAVIT:
         return 'Person has not signed the Sandman Affidavit. Direct the person to the Kiosk Shack so they can log in and sign the affidavit.';
@@ -95,10 +96,10 @@ export function buildBlockerAuditLabels(blockers) {
         return 'Position is paid, no employee id on file.';
 
       case BLOCKED_TOO_EARLY:
-        return `Too early check-in. Shift start ${dayjs(b.slot.begins).format('HH:mm')}. ${b.cutoff} minutes before. Recommend return was ${humanDistanceOfTime(b.allowed_in)}.`
+        return `Too early check-in. Shift start ${dayjs(b.slot.begins).format('HH:mm')}. ${b.cutoff} minutes before. Recommend return was ${durationOfTime(b.allowed_in)}.`
 
       case BLOCKED_TOO_LATE:
-        return `Late check-in. Shift started at ${dayjs(b.slot.begins).format('HH:mm')}. ${humanDistanceOfTime(b.distance)} past the start. Cutoff ${b.cutoff} minutes.`;
+        return `Late check-in. Shift started at ${dayjs(b.slot.begins).format('HH:mm')}. ${durationOfTime(b.distance)} past the start. Cutoff ${b.cutoff} minutes.`;
 
       case BLOCKED_UNSIGNED_SANDMAN_AFFIDAVIT:
         return 'No signed Sandman Affidavit.';

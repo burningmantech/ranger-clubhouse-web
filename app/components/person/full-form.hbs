@@ -34,11 +34,11 @@ Everyone else will see person/simple-form
     {{#if (has-role "admin" "vc" "view-pii")}}
       <div class="col-sm-12 col-lg-auto mt-2">
         {{@person.first_name}} {{@person.last_name}},
-        {{@person.street1}}{{#if @person.apt}} {{@person.apt}}{{/if}},
+        <span class="ms-1">{{@person.street1}}{{#if @person.apt}} {{@person.apt}}{{/if}},</span>
         {{#if @person.street2}}
-          {{@person.street2}},
+          <span class="ms-1">{{@person.street2}},</span>
         {{/if}}
-        {{@person.city}} {{@person.state}} {{@person.zip}}, {{@person.country}}
+        <span class="ms-1">{{@person.city}} {{@person.state}} {{@person.zip}}, {{@person.country}}</span>
         <CopyToClipboard @text={{this.homeAddressText}}/>
       </div>
     {{/if}}

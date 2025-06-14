@@ -1,0 +1,70 @@
+<YearSelect @title="All ART Trainee Notes"
+            @year={{this.year}}
+            @skipPandemic={{true}}
+            @minYear={{2018}}
+            @onChange={{set-value this 'year'}}
+/>
+<p>
+  Standing legend: veteran = passed the mentee shift. mentee = has one or more mentee positions. prospective = no mentee positions.
+</p>
+<p>
+  Only people have been marked as passed will appear on this list.
+</p>
+
+<div class="hstack gap-3 mb-2">
+  <div>
+    Showing {{pluralize this.people.length "person"}}
+  </div>
+  <div>
+    <UiExportToCSVButton @onClick={{this.exportToCSV}} @size="sm"/>
+  </div>
+</div>
+<UiTable>
+  <thead>
+  <tr>
+    <th>Callsign</th>
+    <th>Status</th>
+    <th>Standing</th>
+    <th>Session</th>
+    <th>Rank</th>
+    <th>Notes</th>
+  </tr>
+  </thead>
+  <tbody>
+  {{#each this.people as |person|}}
+    {{#each person.slots as |slot idx|}}
+      <tr>
+        {{#unless idx}}
+          <td class="no-wrap" rowspan={{person.slots.length}}>
+            <PersonLink @person={{person}}/>
+          </td>
+          <td class="no-wrap" rowspan={{person.slots.length}}>{{person.status}}</td>
+          <td class="no-wrap" rowspan={{person.slots.length}}>{{person.standing}}</td>
+        {{/unless}}
+        <td class="no-wrap">
+          <LinkTo @route="training.session.index" @models={{array this.training.id slot.id}} class="d-block">
+            {{shift-format slot.begins}} ({{slot.timezone_abbr}})
+          </LinkTo>
+          {{slot.description}}
+        </td>
+        <td class="no-wrap text-end">
+          {{or slot.rank "no rank"}}
+        </td>
+        <td>
+          {{#each slot.notes as |note idx|}}
+            {{#if idx}}
+              <hr class="my-1"/>
+            {{/if}}
+            {{#if (gt slot.notes.length 1)}}
+              <i>Note #{{add idx 1}}:<br></i>
+            {{/if}}
+            {{nl2br note}}
+          {{else}}
+            <i>no notes</i>
+          {{/each}}
+        </td>
+      </tr>
+    {{/each}}
+  {{/each}}
+  </tbody>
+</UiTable>

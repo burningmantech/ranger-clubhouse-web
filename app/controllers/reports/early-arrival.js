@@ -1,6 +1,6 @@
 import { action } from '@ember/object';
-import {BmidStatusLabels} from "../../../models/bmid";
-import ClubhouseController from "../../clubhouse-controller";
+import {BmidStatusLabels} from "clubhouse/models/bmid";
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 
 const CSV_COLUMNS = [
   { title: 'Callsign', key: 'callsign'},
@@ -12,7 +12,7 @@ const CSV_COLUMNS = [
   { title: 'Radio Type', key: 'radio_types' },
 ];
 
-export default class VcAccessDocumentsEarlyArrivalController extends ClubhouseController {
+export default class ReportsEarlyArrivalController extends ClubhouseController {
   @action
   bmidStatusLabel(status) {
     return BmidStatusLabels[status] || `Unknown ${status}`;
