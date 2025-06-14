@@ -3,8 +3,14 @@
             @minYear={{2008}}
             @skipPandemic={{true}}
             @onChange={{set-value this 'year'}} />
-
-Showing {{pluralize this.slots.length "session"}}
+<div class="hstack gap-3">
+  <div>
+    Showing {{pluralize this.slots.length "session"}}
+  </div>
+  <div>
+    <UiExportToCSVButton @onClick={{this.exportToCSV}} @size="sm"/>
+  </div>
+</div>
 <UiTable>
   <thead>
   <tr>
