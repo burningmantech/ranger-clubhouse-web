@@ -74,7 +74,7 @@ export default class AdminPositionSanityCheckerRoute extends ClubhouseRoute {
   }
 
   deactivated_positions(positions) {
-    positions.forEach((p) => this._setChecked(p.people));
+    positions?.forEach((p) => this._setChecked(p.people));
     return positions;
   }
 
@@ -98,10 +98,10 @@ export default class AdminPositionSanityCheckerRoute extends ClubhouseRoute {
   }
 
   _setChecked(rows) {
-    rows.forEach((row) => row.checked = 1);
+    rows?.forEach((row) => row.checked = 1);
   }
 
   _setYesNo(rows, ...properties) {
-    rows.forEach((r) => properties.forEach((prop) => r[prop] = yesno([r[prop]])));
+    rows?.forEach((r) => properties.forEach((prop) => r[prop] = yesno([r[prop]])));
   }
 }
