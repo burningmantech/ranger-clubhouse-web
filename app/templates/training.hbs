@@ -65,6 +65,13 @@
           />
         {{/if}}
       {{/if}}
+      <s.link @route="training.notes"
+              @routeArg={{this.training.id}}
+              @query={{hash position_id=this.training.mentee_position_id}}
+              @title="All Trainee Notes"
+              @icon="comment"
+              @iconType="s"
+      />
     {{else}}
       {{#if this.showOnlineCourseProgress}}
         <s.link @route="training.online-course-progress"
