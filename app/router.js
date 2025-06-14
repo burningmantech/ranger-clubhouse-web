@@ -191,6 +191,7 @@ Router.map(function () {
     this.route('capacity');
     this.route('mentees');
     this.route('multiple-enrollments');
+    this.route('notes');
     this.route('online-course-progress');
     this.route('people-training-completed');
     this.route('resources');
