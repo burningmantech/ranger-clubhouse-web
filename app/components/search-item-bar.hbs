@@ -49,7 +49,7 @@
         {{else}}
           <b>{{item.callsign}}</b>
           <span class="d-inline-block">
-            &lt;{{or item.preferred_name item.first_name}} {{item.last_name}}, {{item.status}}&gt;
+            &lt;{{item.status}}&gt; {{or item.preferred_name item.first_name}} {{item.last_name}}
           </span>
           {{#if (eq group.field "name")}}
             {{#if item.preferred_name}}
