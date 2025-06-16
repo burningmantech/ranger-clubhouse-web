@@ -51,7 +51,7 @@ export default class PersonPositionsComponent extends Component {
 
     const teams = Object.keys(teamPositions).map(id => teamPositions[id]);
     teams.sort((a, b) => a.title.localeCompare(b.title));
-    console.log(teams);
+
     return {
       generalPositions,
       teams
