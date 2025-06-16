@@ -138,9 +138,10 @@ export default class ChFormComponent extends Component {
    * action from happening
    * @param event
    */
+
   @action
   submitEvent(event) {
-    event.preventDefault();
+    event?.preventDefault();
     this.submitForm();
   }
 
