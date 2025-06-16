@@ -32,9 +32,11 @@
   </dd>
 </dl>
 <UiButtonRow class="my-4">
-  <UiButton @onClick={{this.newGroupAction}}>{{fa-icon "plus" right=1}} Add Group</UiButton>
+  <UiButton @onClick={{this.newGroupAction}} @size="sm">
+    {{fa-icon "plus" type="r" right=1}} Add Group
+  </UiButton>
   <UiEditButton @type="secondary" @onClick={{this.editSurveyAction}}>
-    {{fa-icon "edit" right=1}} Edit Survey
+    Edit Survey
   </UiEditButton>
 </UiButtonRow>
 
@@ -58,14 +60,11 @@
   </div>
   <UiButtonRow class="my-2">
     <UiButton @size="sm" @onClick={{fn this.newQuestionAction group}} @disabled={{group.isSaving}}>
-      {{fa-icon "plus" right=1}} Add Question
+      {{fa-icon "plus" type="r" right=1}} Add Question
     </UiButton>
-    <UiButton @type="secondary"
-              @size="sm"
-              @onClick={{fn this.editGroupAction group}}
-              @disabled={{group.isSaving}}>
-      {{fa-icon "edit" right=1}} Edit Group
-    </UiButton>
+    <UiEditButton @onClick={{fn this.editGroupAction group}}>
+      Edit Group
+    </UiEditButton>
     {{#if (not-eq idx 0)}}
       <UiButton @type="secondary"
                 @size="sm"
@@ -83,7 +82,7 @@
       </UiButton>
     {{/if}}
   </UiButtonRow>
-  <UiTable>
+  <UiTable @noWidthAuto={{true}}>
     <thead>
     <tr>
       <th class="w-5">ID</th>
@@ -91,7 +90,7 @@
       <th class="w-5">Type</th>
       <th class="w-5 text-center">Req?</th>
       <th class="w-10">Action</th>
-      <th class="w-25">Move Position</th>
+      <th class="w-20">Move Position</th>
     </tr>
     </thead>
     <tbody>
@@ -104,7 +103,7 @@
         <td class="w-10">
           <UiEditButton @type="secondary" @size="sm" @onClick={{fn this.editQuestionAction question}} />
         </td>
-        <td class="w-25">
+        <td class="w-20">
           <UiButtonRow>
             {{#if (not-eq idx 0)}}
               <UiButton @type="secondary" @size="sm" @onClick={{fn this.moveQuestionAction group question -1}}
@@ -173,10 +172,7 @@
           <LoadingIndicator/>
         {{/if}}
         <div class="ms-auto">
-          <UiButton @type="danger" @onClick={{this.deleteGroupAction}} @disabled={{this.groupEntry.isDeleting}}
-                    @size="sm">
-            {{fa-icon "trash" right=1}} Delete Group
-          </UiButton>
+          <UiDeleteButton @onClick={{this.deleteGroupAction}}>Delete Group</UiDeleteButton>
         </div>
       </Modal.footer>
     </ChForm>
@@ -228,9 +224,7 @@
           <LoadingIndicator/>
         {{/if}}
         <div class="ms-auto">
-          <UiButton @type="danger" class="ms-auto" @onClick={{this.deleteQuestionAction}}>
-            {{fa-icon "trash" right=1}} Delete
-          </UiButton>
+          <UiDeleteButton @onClick={{this.deleteQuestionAction}} />
         </div>
       </Modal.footer>
     </ChForm>

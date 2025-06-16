@@ -299,24 +299,22 @@
       {{/unless}}
     </Modal.body>
     <Modal.footer @align="start">
-      {{#if @canManageTimesheets}}
-        <f.submit @label="Update" @disabled={{@entry.isSaving}} />
-        <UiCancelButton @disabled={{@entry.isSaving}} @onClick={{@cancelEntryAction}} />
-        {{#if @entry.isSaving}}
-          <LoadingIndicator/>
+      <UiButtonRow>
+        {{#if @canManageTimesheets}}
+          <f.submit @label="Update" @disabled={{@entry.isSaving}} />
+          <UiCancelButton @disabled={{@entry.isSaving}} @onClick={{@cancelEntryAction}} />
+          {{#if @entry.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
+          {{#unless @entry.stillOnDuty}}
+            <div class="ms-auto">
+              <UiDeleteButton @onClick={{fn @showDeleteDialogAction f.model}} />
+            </div>
+          {{/unless}}
+        {{else}}
+          <UiCancelButton @disabled={{@entry.isSaving}} @onClick={{@cancelEntryAction}} />
         {{/if}}
-        {{#unless @entry.stillOnDuty}}
-          <div class="ms-auto">
-            <UiButton @type="danger"
-                      @onClick={{fn @showDeleteDialogAction f.model}}
-                      @disabled={{@entry.isSaving}}>
-              {{fa-icon "trash"}} Delete
-            </UiButton>
-          </div>
-        {{/unless}}
-      {{else}}
-        <UiCancelButton @disabled={{@entry.isSaving}} @onClick={{@cancelEntryAction}} />
-      {{/if}}
+      </UiButtonRow>
     </Modal.footer>
   </ChForm>
 </ModalDialog>

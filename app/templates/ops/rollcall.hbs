@@ -5,12 +5,14 @@
     is intended for Burn Perimeter Rangers who do not require gear to be issued before or collected afterwards.
   </p>
 
-  <UiButton @class="btn-responsive mb-4" @onClick={{this.chooseSignIn}}>
-    Sign IN People {{fa-icon "walking"}}
-  </UiButton>
-  <UiButton @class="btn-responsive mb-4" @onClick={{this.chooseSignOut}}>
-    Sign OUT People {{fa-icon "bed"}}
-  </UiButton>
+  <UiButtonRow class="mb-4">
+    <UiButton @responsive={{true}} @onClick={{this.chooseSignIn}}>
+      Sign IN People {{fa-icon "walking"}}
+    </UiButton>
+    <UiButton @responsive={{true}} @onClick={{this.chooseSignOut}}>
+      Sign OUT People {{fa-icon "bed"}}
+    </UiButton>
+  </UiButtonRow>
 
   {{#if this.isSignOut}}
     <RollcallSignOut/>

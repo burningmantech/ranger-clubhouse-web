@@ -1,7 +1,3 @@
-<button type="button"
-        class="btn btn-{{or @type "primary"}} {{if @size (concat "btn-" @size)}}"
-        ...attributes
-  {{on-click @onClick}}
->
-  {{fa-icon "edit" right=1}} {{#if (has-block)}}{{yield}}{{else}}Edit{{/if}}
-</button>
+<UiButton @onClick={{@onClick}} @type={{@type}} @size={{@size}} @responsive={{@responsive}} ...attributes>
+  {{fa-icon "edit" type="r" right=1}} {{#if (has-block)}}{{yield}}{{else}}Edit{{/if}}
+</UiButton>

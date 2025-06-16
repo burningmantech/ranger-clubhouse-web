@@ -306,13 +306,10 @@
   <UiButtonRow class="mt-4">
     <f.submit @disabled={{@position.isSaving}} />
     <UiCancelButton @onClick={{@cancelAction}} />
-    {{#unless @position.isNew}}
-      <UiButton @type="danger" @onClick={{@deleteAction}} class="ms-auto">
-        {{fa-icon "trash"}} Delete Position
-      </UiButton>
-    {{/unless}}
+    <div class="ms-auto">
+      <UiDeleteButton @onClick={{@deleteAction}} />
+    </div>
   </UiButtonRow>
-
 </ChForm>
 
 {{#if @position.isSaving}}

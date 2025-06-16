@@ -3,7 +3,7 @@
             @minYear={{2008}}
             @skipPandemic={{true}}
             @onChange={{set-value this 'year'}}  />
-<FormRow @class="my-2">
+<FormRow class="my-2">
   <FormLabel @auto={{true}}>Filter</FormLabel>
   <div class="col-auto">
     <ChForm::Select @name="filter"
@@ -19,11 +19,11 @@
            class="form-control"
     />
   </div>
-  <div class="col-auto">
-    <UiButton @onClick={{this.clearFiltersAction}} @type="secondary">Clear Filters</UiButton>
-  </div>
-  <div class="col-auto">
-    <UiButton @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
+  <div class="col-auto mt-1">
+    <UiButtonRow>
+      <UiButton @onClick={{this.clearFiltersAction}} @type="secondary">Clear Filters</UiButton>
+      <UiExportToCSVButton @onClick={{this.exportToCSV}} />
+    </UiButtonRow>
   </div>
 </FormRow>
 

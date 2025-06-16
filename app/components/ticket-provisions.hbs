@@ -25,7 +25,7 @@
     <p>
       You have chosen to bank your provisions.
     </p>
-    <UiButton @class="btn-responsive" @onClick={{fn this.updateItems "claim"}} @disabled={{this.isSubmitting}}>
+    <UiButton @responsive={{true}} @onClick={{fn this.updateItems "claim"}} @disabled={{this.isSubmitting}}>
       Use The Provision(s)
       {{#if this.isSubmitting}}
         <SpinIcon/>
@@ -42,7 +42,7 @@
         <EventRadioDisclaimer/>
       </p>
     {{/if}}
-    <UiButton @class="btn-responsive" @onClick={{fn this.updateItems "bank"}} @disabled={{this.isSubmitting}}>
+    <UiButton @responsive={{true}} @onClick={{fn this.updateItems "bank"}} @disabled={{this.isSubmitting}}>
       Bank the provision(s)
       {{#if this.isSubmitting}}
         <SpinIcon/>

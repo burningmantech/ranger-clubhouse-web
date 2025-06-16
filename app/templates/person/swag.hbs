@@ -4,13 +4,13 @@
   Do not add, adjust, or remove service items from a person account unless instructed to do so by the Quartermaster.
 </p>
 <p>
-Service years:
-{{#if this.person.years_of_service}}
-  {{pluralize this.person.years_of_service.length "year"}}
-  [{{year-range this.person.years_of_service}}]
-{{else}}
-  <i>none</i>
-{{/if}}<br>
+  Service years:
+  {{#if this.person.years_of_service}}
+    {{pluralize this.person.years_of_service.length "year"}}
+    [{{year-range this.person.years_of_service}}]
+  {{else}}
+    <i>none</i>
+  {{/if}}<br>
 </p>
 <p>
   <UiButtonRow>
@@ -80,14 +80,20 @@ Showing {{pluralize this.personSwag.length "item"}}
         </FormRow>
       </Modal.body>
       <Modal.footer @align="start">
-        <f.submit @label={{if this.swagEntry.isNew "Create" "Update"}} @disabled={{this.swagEntry.isSaving}} />
-        <UiCancelButton @onClick={{this.cancelSwag}} @disabled={{this.swagEntry.isSaving}}/>
-        {{#unless this.swagEntry.isNew}}
-          <div class="ms-auto">
-            <UiButton @type="danger" @size="sm" @onClick={{this.deleteSwag}}>{{fa-icon "trash"}} Delete</UiButton>
-          </div>
-        {{/unless}}
+        <UiButtonRow>
+          <f.submit @label={{if this.swagEntry.isNew "Create" "Update"}} @disabled={{this.swagEntry.isSaving}} />
+          <UiCancelButton @onClick={{this.cancelSwag}} @disabled={{this.swagEntry.isSaving}}/>
+          {{#unless this.swagEntry.isNew}}
+            <div class="ms-auto">
+              <UiDeleteButton @onClick={{this.deleteSwag}} />
+            </div>
+          {{/unless}}
+        </UiButtonRow>
       </Modal.footer>
     </ChForm>
   </ModalDialog>
+{{/if}}
+
+{{#if this.swagEntry.isSaving}}
+  <LoadingDialog>Saving the entry</LoadingDialog>
 {{/if}}

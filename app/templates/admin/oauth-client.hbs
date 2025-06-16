@@ -57,16 +57,15 @@
           </FormRow>
         </Modal.body>
         <Modal.footer @align="start">
-          <f.submit/>
-          <UiCancelButton @onClick={{this.cancelEntry}} />
-          {{#unless this.entry.isNew}}
-            <UiButton @type="danger" @class="ms-auto"
-                      @onClick={{fn this.deleteEntry this.entry}}
-                      @disabled={{this.entry.isSaving}}>
-              {{fa-icon "trash"}} Delete
-            </UiButton>
-          {{/unless}}
-
+          <UiButtonRow>
+            <f.submit/>
+            <UiCancelButton @onClick={{this.cancelEntry}} />
+            {{#unless this.entry.isNew}}
+              <div class="ms-auto">
+                <UiDeleteButton @onClick={{fn this.deleteEntry this.entry}} />
+              </div>
+            {{/unless}}
+          </UiButtonRow>
         </Modal.footer>
       </ChForm>
     </ModalDialog>

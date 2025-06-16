@@ -20,7 +20,7 @@
     "Signed Up" indicates if the person has signed up for a shift beginning August 15, {{this.year}} or later.
   </p>
   <p>
-    <UiButton @onClick={{this.exportToCsv}}>Export To CSV</UiButton>
+    <UiExportToCSVButton @onClick={{this.exportToCsv}} />
   </p>
   {{#if this.pandemicSkipped}}
     <p class="text-danger">

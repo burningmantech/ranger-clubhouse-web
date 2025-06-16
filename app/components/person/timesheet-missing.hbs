@@ -11,7 +11,7 @@
       </UiButton>
     </div>
     {{#if @timesheetMissing}}
-      <UiTable>
+      <UiTable class="align-middle">
         <thead>
         <tr>
           <th>&nbsp;</th>
@@ -43,11 +43,11 @@
             <td>{{tm.position.title}}</td>
             <td class="text-center">
               {{#if tm.isPending}}
-                <UiBadge @text="Review Needed" @type="danger"/>
+                <UiBadge @text="review neded" @type="warning"/>
               {{else if tm.isRejected}}
-                <UiBadge @text="Request Rejected" @type="warning"/>
+                <UiBadge @text="request rejected" @type="danger"/>
               {{else if tm.isApproved}}
-                <UiBadge @text="Approved" @type="success"/>
+                <UiBadge @text="approved" @type="success"/>
               {{else}}
                 [Unknown {{tm.status}}]
               {{/if}}
@@ -55,7 +55,7 @@
             <td>
               {{#if this.hasTimesheetManagement}}
                 <UiEditButton @size="sm"
-                              @type={{if tm.isPending "danger" "primary"}}
+                              @type={{if tm.isPending "warning" "primary"}}
                               @onClick={{fn this.editEntryAction tm}}
                               @disabled={{tm.isReloading}}>
                   {{if tm.isPending "Review" "Edit"}}
@@ -64,7 +64,7 @@
                   {{/if}}
                 </UiEditButton>
               {{else}}
-                <UiButton @size="sm" @type="primary"
+                <UiButton @type="primary"
                           @onClick={{fn this.viewEntryAction tm}}
                           @disabled={{tm.isReloading}}>
                   {{fa-icon "magnifying-glass" right=1}} View
@@ -150,11 +150,13 @@
         {{/if}}
       </Modal.body>
       <Modal.footer @align="start">
-        <f.submit @label="Create" @disabled={{this.newEntry.isSaving}} />
-        <UiCancelButton @disabled={{this.newEntry.isSaving}} @onClick={{this.cancelNewEntryAction}} />
-        {{#if this.newEntry.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
+        <UiButtonRow>
+          <f.submit @label="Create" @disabled={{this.newEntry.isSaving}} />
+          <UiCancelButton @disabled={{this.newEntry.isSaving}} @onClick={{this.cancelNewEntryAction}} />
+          {{#if this.newEntry.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
+        </UiButtonRow>
       </Modal.footer>
     </ChForm>
   </ModalDialog>
@@ -232,7 +234,7 @@
                 {{/if}}
                 {{#if pi.person_id}}
                   <td>
-                    <UiButton @type="secondary" @size="sm" @onClick={{fn this.viewPartnerTimesheetAction pi}}>
+                    <UiButton @type="secondary" @onClick={{fn this.viewPartnerTimesheetAction pi}}>
                       View Timesheet
                     </UiButton>
                   </td>
@@ -341,21 +343,21 @@
         {{/if}}
       </Modal.body>
       <Modal.footer @align="start">
-        {{#if this.nextEntry}}
-          <f.submit @label="Update & Review Next"
-                    @onSubmit={{this.saveAndManageNextEntryAction}}
-                    @disabled={{this.editEntry.isSaving}}/>
-        {{/if}}
-        <f.submit @label="Update" @disabled={{this.editEntry.isSaving}} />
-        <UiCancelButton @disabled={{this.editEntry.isSaving}} @onClick={{this.cancelEntryAction}} />
-        {{#if this.editEntry.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
-        <div class="ms-auto">
-          <UiButton @type="danger" @onClick={{this.deleteEntryAction}} @disabled={{this.editEntry.isSaving}}>
-            {{fa-icon "trash"}} Delete
-          </UiButton>
-        </div>
+        <UiButtonRow>
+          {{#if this.nextEntry}}
+            <f.submit @label="Update & Review Next"
+                      @onSubmit={{this.saveAndManageNextEntryAction}}
+                      @disabled={{this.editEntry.isSaving}}/>
+          {{/if}}
+          <f.submit @label="Update" @disabled={{this.editEntry.isSaving}} />
+          <UiCancelButton @disabled={{this.editEntry.isSaving}} @onClick={{this.cancelEntryAction}} />
+          {{#if this.editEntry.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
+          <div class="ms-auto">
+            <UiDeleteButton @onClick={{this.deleteEntryAction}} />
+          </div>
+        </UiButtonRow>
       </Modal.footer>
     </ChForm>
   </ModalDialog>

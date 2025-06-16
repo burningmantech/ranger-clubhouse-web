@@ -27,10 +27,10 @@
         <p>
           Why are you here today?
         </p>
-        <UiButton @class="btn-responsive" @onClick={{fn this.stepAction "ranger"}}>
+        <UiButton @responsive={{true}} @onClick={{fn this.stepAction "ranger"}}>
           To Volunteer With The Rangers
         </UiButton>
-        <UiButton type="button" @class="btn-responsive" @onClick={{fn this.stepAction "audit"}}>
+        <UiButton type="button" @responsive={{true}} @onClick={{fn this.stepAction "audit"}}>
           To Audit Ranger Training
         </UiButton>
       </:body>
@@ -69,7 +69,7 @@
           </a>
           to find out how to submit a volunteer application.
         </p>
-        <UiButton @class="btn-responsive" @onClick={{fn this.stepAction "register"}}>
+        <UiButton @responsive={{true}} @onClick={{fn this.stepAction "register"}}>
           I understand auditing is not a path to becoming a Ranger
         </UiButton>
       </:body>

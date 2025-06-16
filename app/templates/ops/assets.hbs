@@ -225,18 +225,15 @@
           {{/if}}
         </Modal.body>
         <Modal.footer @align="start">
-          <f.submit @label={{if f.model.isNew "Create" "Update"}} @disabled={{this.isSubmitting}} />
-          <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelAsset}} />
-          {{#if this.isSubmitting}}
-            <LoadingIndicator/>
-          {{/if}}
-          {{#unless this.entry.isNew}}
-            <div class="ms-auto">
-              <UiButton @type="danger" @onClick={{this.deleteAsset}} @disabled={{this.isSubmitting}}>
-                {{fa-icon "trash" right=1}} Delete
-              </UiButton>
-            </div>
-          {{/unless}}
+          <UiButtonRow>
+            <f.submit @label={{if f.model.isNew "Create" "Update"}}/>
+            <UiCancelButton  @onClick={{this.cancelAsset}} />
+            {{#unless this.entry.isNew}}
+              <div class="ms-auto">
+                <UiDeleteButton @onClick={{this.deleteAsset}} />
+              </div>
+            {{/unless}}
+          </UiButtonRow>
         </Modal.footer>
       </ChForm>
     </ModalDialog>
@@ -245,6 +242,8 @@
     <LoadingDialog>
       Creating barcode #{{this.creatingBarcode}}
     </LoadingDialog>
+  {{else if this.isSubmitting}}
+    <LoadingDialog>Saving asset</LoadingDialog>
   {{/if}}
   {{#if this.assetForHistory}}
     <ModalAssetHistory @assetId={{this.assetForHistory.id}} @onClose={{this.closeAssetHistory}} />

@@ -7,7 +7,7 @@
     This report shows who was a Shiny Penny in a given year.
   </p>
   <p>
-    <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+    <UiExportToCSVButton @onClick={{this.exportToCSV}} />
   </p>
   Showing {{pluralize this.people.length "Shiny Penny"}}
   <UiTable>

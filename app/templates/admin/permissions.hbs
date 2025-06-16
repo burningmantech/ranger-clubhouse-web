@@ -97,16 +97,16 @@
           </FormRow>
         </Modal.body>
         <Modal.footer @align="start">
-          <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
-          <UiCancelButton @onClick={{this.cancelRole}} @disabled={{this.entry.isSaving}} />
-          {{#if this.entry.isSaving}}
-            <LoadingIndicator/>
-          {{/if}}
-          <div class="ms-auto">
-            <UiButton @onClick={{this.removeRole}} @type="danger" @size="sm">
-              {{fa-icon "trash-alt" type="fas"}} Delete
-            </UiButton>
-          </div>
+          <UiButtonRow>
+            <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
+            <UiCancelButton @onClick={{this.cancelRole}} @disabled={{this.entry.isSaving}} />
+            {{#if this.entry.isSaving}}
+              <LoadingIndicator/>
+            {{/if}}
+            <div class="ms-auto">
+              <UiDeleteButton @onClick={{this.removeRole}} />
+            </div>
+          </UiButtonRow>
         </Modal.footer>
       </ChForm>
     </ModalDialog>
@@ -129,8 +129,10 @@
           </FormRow>
         </Modal.body>
         <Modal.footer @align="start">
-          <f.submit @label="Create"/>
-          <UiCancelButton @onClick={{this.cancelARTRoles}} />
+          <UiButtonRow>
+            <f.submit @label="Create"/>
+            <UiCancelButton @onClick={{this.cancelARTRoles}} />
+          </UiButtonRow>
         </Modal.footer>
       </ChForm>
     </ModalDialog>

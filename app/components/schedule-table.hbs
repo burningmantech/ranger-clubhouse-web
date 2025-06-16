@@ -28,14 +28,16 @@
         Showing {{this.viewSlots.length}} of {{pluralize @slots.length "sign-up"}}.
       </div>
       <div class="ms-xl-auto d-print-none">
-        {{#if (and this.isCurrentYear (not this.showAllShifts) this.previousSlotCount)}}
-          <UiButton @onClick={{this.toggleAll}}  @size="sm" @type="secondary">
-            {{fa-icon "clock" type="far"}} Show {{if this.showAllShifts "Upcoming Shifts" "All Shifts"}}
+        <UiButtonRow>
+          {{#if (and this.isCurrentYear (not this.showAllShifts) this.previousSlotCount)}}
+            <UiButton @onClick={{this.toggleAll}}  @size="sm" @type="secondary">
+              {{fa-icon "clock" type="r" right=1}} Show {{if this.showAllShifts "Upcoming Shifts" "All Shifts"}}
+            </UiButton>
+          {{/if}}
+          <UiButton @onClick={{this.exportCalendarAction}} @type="secondary" @size="sm">
+            {{fa-icon "calendar-days" type="far" right=1}} Export To Calendar
           </UiButton>
-        {{/if}}
-        <UiButton @onClick={{this.exportCalendarAction}} @type="secondary" @size="sm">
-          {{fa-icon "calendar-days" type="far" right=1}} Export To Calendar
-        </UiButton>
+        </UiButtonRow>
       </div>
     </div>
     <div class="schedule-table schedule-itinerary mt-2">
@@ -89,38 +91,34 @@
             </div>
             <div class="schedule-actions">
               {{#if (or (not slot.has_started) @isAdmin)}}
-              {{! Note: magic here -  by not using onclick, no event argument will be passed to leaveSlot. That tells the method to allow the page to scroll.}}
-                <button type="button" {{on "click" (fn @leaveSlot slot)}}
-                        class="btn btn-danger btn-sm"
-                        disabled={{slot.isSubmitting}}>
+                <UiDeleteButton @onClick={{fn @leaveSlot slot}}
+                                @size="sm"
+                                disable={{slot.isSubmitting}}>
+                  Remove
                   {{#if slot.isSubmitting}}
                     <SpinIcon/>
-                  {{else}}
-                    {{fa-icon "trash-alt" type="fas" fixed=true right=1}}
                   {{/if}}
-                  Remove
-                </button>
+                </UiDeleteButton>
               {{~/if~}}
               {{#if slot.signUpInfo}}
-                <button {{on "click" (fn @hidePeople slot)}}
-                  type="button"
-                  class="btn btn-warning btn-sm"
-                  disabled={{slot.isRetrievingSignUps}}>
-                  {{fa-icon "users" type="fas" fixed=true right=1}}
-                  &nbsp;Hide Sign Ups
-                </button>
+                <UiButton @onClick={{fn @hidePeople slot}}
+                          @size="sm"
+                          @type="warning"
+                          disabled={{slot.isRetrievingSignUps}}>
+                  {{fa-icon "users" type="fas" fixed=true right=1}}&nbsp;Hide Sign Ups
+                </UiButton>
               {{else}}
-                <button {{on "click" (fn @showPeople slot)}}
-                  type="button"
-                  class="btn btn-secondary btn-sm"
-                  disabled={{slot.isRetrievingSignUps}}>
+                <UiButton @onClick={{fn @showPeople slot}}
+                          @size="sm"
+                          @type="secondary"
+                          disabled={{slot.isRetrievingSignUps}}>
                   {{#if slot.isRetrievingSignUps}}
                     <SpinIcon/>
                   {{else}}
                     {{fa-icon "users" type="fas" fixed=true right=1}}
                   {{/if}}
                   Sign Ups
-                </button>
+                </UiButton>
               {{/if}}
             </div>
           </div>
@@ -158,15 +156,17 @@
         Changes or updates to your schedule will not be reflected in your calendar. You will need to export
         your schedule again after making any changes.
       </p>
-      <b>Important Notice for Those Outside the Pacific Time Zone:</b> The exported calendar includes time zone
-      information. Depending on your calendar application’s settings and your computer's local time zone, shift times may be
-      automatically adjusted. For example, if you’re in the Eastern Time Zone and have a Ranger shift scheduled for
-      06:00 Pacific Time, your calendar may display it as 03:00. Please verify that your app is interpreting time zones
-      correctly to avoid confusion.
+      <span class="text-danger">Important Notice for Those Outside the Pacific Time Zone:</span> The exported calendar
+      includes time zone information. Depending on your calendar application’s settings and your computer's local time
+      zone, shift times may be automatically adjusted. For example, if you’re in the Eastern Time Zone and have a Ranger
+      shift scheduled for 06:00 Pacific Time, your calendar may display it as 03:00. Please verify that your app is
+      interpreting time zones correctly to avoid confusion.
     </Modal.body>
     <Modal.footer @align="start">
-      <UiButton @onClick={{this.calendarExportConfirmed}}>Download calendar file (.ics)</UiButton>
-      <UiCancelButton @onClick={{this.cancelCalendarExport}} />
+      <UiButtonRow>
+        <UiButton @onClick={{this.calendarExportConfirmed}}>Download calendar file (.ics)</UiButton>
+        <UiCancelButton @onClick={{this.cancelCalendarExport}} />
+      </UiButtonRow>
     </Modal.footer>
   </ModalDialog>
 {{/if}}

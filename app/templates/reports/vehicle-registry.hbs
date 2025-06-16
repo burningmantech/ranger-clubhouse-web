@@ -31,8 +31,8 @@
 
 {{#if this.canEditVehicles}}
   <UiButtonRow class="my-3">
-    <UiButton @onClick={{this.newEditAction}}>New Vehicle</UiButton>
-    <UiButton @type="secondary" @onClick={{this.exportToCSV}}>Export to CSV</UiButton>
+    <UiButton @onClick={{this.newEditAction}} @size="sm">New Vehicle</UiButton>
+    <UiExportToCSVButton @onClick={{this.exportToCSV}} />
   </UiButtonRow>
 {{/if}}
 

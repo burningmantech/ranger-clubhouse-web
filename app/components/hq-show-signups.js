@@ -3,6 +3,8 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {HQ_LEAD, HQ_RUNNER, HQ_SHORT, HQ_WINDOW} from "clubhouse/constants/positions";
+import {htmlSafe} from '@ember/template';
+import {shiftFormat} from "clubhouse/helpers/shift-format";
 
 const POSITIONS = {
   short: {position: HQ_SHORT, label: 'S', desc: 'HQ Shorts'},
@@ -25,6 +27,9 @@ export default class HqShowSignupsComponent extends Component {
     this.desc = position.desc;
   }
 
+  get periodTitle() {
+    return htmlSafe(`Period ${shiftFormat([this.args.period], {})} - ${this.desc}`);
+  }
 
   @action
   onClose() {

@@ -48,7 +48,8 @@
   </UiTable>
 
   {{#if this.entry}}
-    <ModalDialog @title="{{if this.entry.isNew "New" "Edit"}} Alert" @onEscape={{this.cancelAlert}} as |Modal|>
+    <ModalDialog @title="{{if this.entry.isNew "New" "Edit"}} Alert"
+                 @onEscape={{this.cancelAlert}} as |Modal|>
       <ChForm @formId="alert" @formFor={{this.entry}} @onSubmit={{this.saveAlert}} as |f|>
         <Modal.body>
           <FormRow>
@@ -78,9 +79,7 @@
               <LoadingIndicator/>
             {{/if}}
             <div class="ms-auto">
-              <UiButton @type="danger" @size="sm" @onClick={{this.deleteAlert}}>
-                {{fa-icon "trash"}} Delete
-              </UiButton>
+              <UiDeleteButton @onClick={{this.deleteAlert}} />
             </div>
           </UiButtonRow>
         </Modal.footer>

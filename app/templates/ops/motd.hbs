@@ -28,7 +28,7 @@
     </FormRow>
   </ChForm>
   <div class="my-4">
-    <UiButton @onClick={{this.newEntry}}>New Message</UiButton>
+    <UiButton @onClick={{this.newEntry}} @size="sm">New Message</UiButton>
   </div>
 
   Showing {{this.total}} of {{pluralize this.table_count "message"}}. Page {{this.currentPage}} of {{this.total_pages}}
@@ -36,6 +36,7 @@
     <thead>
     <tr>
       <th>Audience</th>
+      <th>Status</th>
       <th>Expires</th>
       <th>Created By</th>
       <th>Created At</th>
@@ -47,37 +48,45 @@
     <tbody>
     {{#each this.motds key="id" as |motd|}}
       <tr>
-        <td>
+        <td class="no-wrap">
           {{#if motd.for_rangers}}
             Rangers<br>
           {{/if}}
           {{#if motd.for_pnvs}}
-            Prospectives/Alphas<br>
+            Applicants
           {{/if}}
           {{#if motd.for_auditors}}
             Auditors
           {{/if}}
         </td>
-        <td>
+        <td class="no-wrap">
           {{#if motd.expires_at}}
-            {{motd.expires_at}}
             {{#if motd.has_expired}}
-              (expired)
+              <UiBadge @type="warning">expired</UiBadge>
             {{else}}
-              <b class="text-success">(active)</b>
+              <UiBadge @type="success">active</UiBadge>
             {{/if}}
+          {{else}}
+            <UiBadge @type="success">active permanent</UiBadge>
+          {{/if}}
+        </td>
+        <td class="no-wrap">
+          {{#if motd.expires_at}}
+            {{shift-format motd.expires_at year=true}} (Pacific)
           {{else}}
             <i>never</i>
           {{/if}}
         </td>
-        <td>
+        <td class="no-wrap">
           <PersonLink @person={{motd.person}} />
         </td>
-        <td>{{motd.created_at}}</td>
-        <td class="w-50">
-          {{motd.subject}}
+        <td class="no-wrap">
+          {{shift-format motd.created_at year=true}} (Pacific)
         </td>
         <td>
+          {{motd.subject}}
+        </td>
+        <td class="no-wrap">
           <UiEditButton @size="sm" @onClick={{fn this.editEntry motd}} />
         </td>
       </tr>
@@ -89,15 +98,19 @@
     </tbody>
   </UiTable>
 
-  <UiButton @type="secondary" @onClick={{this.goPrevPage}} @disabled={{eq this.currentPage 1}}>
-    Prev Page
-  </UiButton>
-  <UiButton @type="secondary" @onClick={{this.goNextPage}} @disabled={{eq this.currentPage this.total_pages}}>
-    Next Page
-  </UiButton>
+  <UiButtonRow>
+    <UiButton @type="secondary" @onClick={{this.goPrevPage}} @disabled={{eq this.currentPage 1}} @size="sm">
+      Prev Page
+    </UiButton>
+    <UiButton @type="secondary" @onClick={{this.goNextPage}} @disabled={{eq this.currentPage this.total_pages}}
+              @size="sm">
+      Next Page
+    </UiButton>
+  </UiButtonRow>
 
   {{#if this.entry}}
-    <ModalDialog @title={{if this.entry.isNew "New Message" "Edit Message"}} @onEscape={{this.cancelEntry}} @size="xl" as |Modal|>
+    <ModalDialog @title={{if this.entry.isNew "New Message" "Edit Message"}} @onEscape={{this.cancelEntry}} @size="xl"
+                 as |Modal|>
       <ChForm @formId="entry" @formFor={{this.entry}}
               @validator={{this.motdValidations}}
               @onSubmit={{this.saveEntry}} as |f|>
@@ -137,18 +150,18 @@
           </FormRow>
         </Modal.body>
         <Modal.footer @align="start">
-          <f.submit @disabled={{this.entry.isSaving }}/>
-          <UiCancelButton @onClick={{this.cancelEntry}} @disabled={{this.entry.isSaving }}/>
-          {{#if this.entry.isSaving}}
-            <LoadingIndicator/>
-          {{/if}}
-          {{#unless this.entry.isNew}}
-            <div class="ms-auto">
-              <UiButton @type="danger" @onClick={{fn this.deleteEntry this.entry}}>
-                {{fa-icon "trash"}} Delete
-              </UiButton>
-            </div>
-          {{/unless}}
+          <UiButtonRow>
+            <f.submit @disabled={{this.entry.isSaving }}/>
+            <UiCancelButton @onClick={{this.cancelEntry}} @disabled={{this.entry.isSaving }}/>
+            {{#if this.entry.isSaving}}
+              <LoadingIndicator/>
+            {{/if}}
+            {{#unless this.entry.isNew}}
+              <div class="ms-auto">
+                <UiDeleteButton @onClick={{fn this.deleteEntry this.entry}} />
+              </div>
+            {{/unless}}
+          </UiButtonRow>
         </Modal.footer>
       </ChForm>
     </ModalDialog>

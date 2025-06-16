@@ -48,15 +48,15 @@ Showing {{pluralize @personPogs.length "pog"}}
         </FormRow>
       </Modal.body>
       <Modal.footer @align="start">
-        <f.submit @disabled={{this.entry.isSaving}} />
-        <UiButton @onClick={{this.closeEntry}} @disabled={{this.entry.isSaving}} @type="secondary">
-          Cancel
-        </UiButton>
-        <div class="ms-auto">
-          <UiButton @type="danger" @size="sm" @onClick={{this.deleteEntry}} @disabled={{this.entry.isSaving}}>
-            Delete
-          </UiButton>
-        </div>
+        <UiButtonRow>
+          <f.submit @disabled={{this.entry.isSaving}} />
+          <UiCancelButton @onClick={{this.closeEntry}} />
+          {{#unless this.entry.isNew}}
+            <div class="ms-auto">
+              <UiDeleteButton @onClick={{this.deleteEntry}} />
+            </div>
+          {{/unless}}
+        </UiButtonRow>
       </Modal.footer>
     </ChForm>
   </ModalDialog>

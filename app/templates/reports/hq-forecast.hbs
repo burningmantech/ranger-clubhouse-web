@@ -26,7 +26,10 @@
   Highlighted rows indicate no HQ staff (window, short, or lead) is available for the given period.
 </p>
 <p>
-  <UiButton @onClick={{this.exportToCsv}}>Export to CSV</UiButton>
+  Click on the counts to show who is signed up for the shift.
+</p>
+<p>
+  <UiExportToCSVButton @onClick={{this.exportToCsv}} />
 </p>
 <UiTab as |tab|>
   <tab.pane @id="visits" @title="{{this.year}} All Shifts">

@@ -1,4 +1,4 @@
-<UiTable>
+<UiTable @noWidthAuto={{true}}>
   <thead>
   <tr>
     <th class="text-end">ID</th>
@@ -49,14 +49,12 @@
       <td>
         <UiButtonRow>
           <UiButton @type="secondary" @size="sm" @onClick={{fn @repeatSlot slot}}>
-            {{fa-icon "clone"}} Repeat
+            {{fa-icon "clone" type="r" right=1}} Repeat
           </UiButton>
           <UiButton @type="secondary" @size="sm" @onClick={{fn @repeatSlotAdd24Hours slot}}>
-            {{fa-icon "clone"}} Repeat+24
+            {{fa-icon "clone" type="r" right=1}} Repeat+24
           </UiButton>
-          <UiButton @type="danger" @size="sm" @onClick={{fn @deleteSlot slot}}>
-            {{fa-icon "trash-alt"type="fas"}} Delete
-          </UiButton>
+          <UiDeleteButton @onClick={{fn @deleteSlot slot}} />
           <UiEditButton @onClick={{fn @editSlot slot}} @size="sm"/>
         </UiButtonRow>
       </td>

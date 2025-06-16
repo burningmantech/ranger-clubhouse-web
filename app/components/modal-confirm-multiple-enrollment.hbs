@@ -14,13 +14,15 @@
     </p>
     <p>
       <b class="text-danger">Multiple enrollments usually require approval from the appropriate cadre.
-        Your actions will be logged if you force the sign up.</b>
+        Your actions will be logged if you force the sign-up.</b>
     </p>
   </modal.body>
   <modal.footer>
-    <UiCancelButton @onClick={{@onClose}} />
-    <UiButton @type="warning" @onClick={{@onConfirm}}>
-      Confirm Sign Up
-    </UiButton>
+    <UiButtonRow>
+      <UiButton @type="warning" @onClick={{@onConfirm}}>
+        Force Sign-Up
+      </UiButton>
+      <UiCancelButton @onClick={{@onClose}} />
+    </UiButtonRow>
   </modal.footer>
 </ModalDialog>

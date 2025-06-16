@@ -22,7 +22,7 @@
 
   {{#if this.passwordOkay}}
     <p>
-      <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+      <UiExportToCSVButton @onClick={{this.exportToCSV}} />
     </p>
     {{pluralize this.people.length "person"}} to send {{this.year}} Thank You cards to.
     <UiTable>

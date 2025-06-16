@@ -12,10 +12,12 @@
     The results will be undefined if two courses are defined for the same position where one has a <i>Course For</i>
     value of <i>All</i>.
   </p>
-  <p>
-    <UiButton @type="primary" @onClick={{this.newEntry}}>{{fa-icon "plus"}} New Course</UiButton>
-    <UiButton @type="primary" @onClick={{this.retrieveCourses}}>{{fa-icon "list"}} Available Moodle Courses</UiButton>
-  </p>
+  <UiButtonRow class="mb-4">
+    <UiButton @type="primary" @size="sm" @onClick={{this.newEntry}}>{{fa-icon "plus" right=1}} New Course</UiButton>
+    <UiButton @type="primary" @size="sm" @onClick={{this.retrieveCourses}}>{{fa-icon "list" right=1}} Available Moodle
+      Courses
+    </UiButton>
+  </UiButtonRow>
   Showing {{pluralize this.onlineCourses.length "Online Course"}}
   <UiTable>
     <thead>
@@ -37,13 +39,15 @@
           <PresentOrNot @value={{course.name}} @empty="-"/>
         </td>
         <td>
-          <UiButton @type="secondary" @onClick={{fn this.setName course}} @size="sm">
-            {{fa-icon "rotate" right=1}} Set Name From LMS
-          </UiButton>
-          <UiButton @type="secondary" @onClick={{fn this.retrieveEnrollment course}} @size="sm">
-            {{fa-icon "list" right=1}} Moodle Enrollment
-          </UiButton>
-          <UiEditButton @onClick={{fn this.editEntry course}} @size="sm"/>
+          <UiButtonRow>
+            <UiButton @type="secondary" @onClick={{fn this.setName course}} @size="sm">
+              {{fa-icon "rotate" right=1}} Set Name From LMS
+            </UiButton>
+            <UiButton @type="secondary" @onClick={{fn this.retrieveEnrollment course}} @size="sm">
+              {{fa-icon "list" right=1}} Moodle Enrollment
+            </UiButton>
+            <UiEditButton @onClick={{fn this.editEntry course}} @size="sm"/>
+          </UiButtonRow>
         </td>
       </tr>
     {{/each}}
@@ -75,15 +79,15 @@
         </FormRow>
       </Modal.body>
       <Modal.footer @align="start">
-        <f.submit @label="Save"/>
-        <UiCancelButton @onClick={{this.cancelEntry}} />
-        {{#unless this.entry.isNew}}
-          <div class="ms-auto">
-            <UiButton @type="danger" @onClick={{this.deleteEntry}}>
-              {{fa-icon "trash"}} Delete
-            </UiButton>
-          </div>
-        {{/unless}}
+        <UiButtonRow>
+          <f.submit @label="Save"/>
+          <UiCancelButton @onClick={{this.cancelEntry}} />
+          {{#unless this.entry.isNew}}
+            <div class="ms-auto">
+              <UiDeleteButton @onClick={{this.deleteEntry}} />
+            </div>
+          {{/unless}}
+        </UiButtonRow>
       </Modal.footer>
     </ChForm>
   </ModalDialog>

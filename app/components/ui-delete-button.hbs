@@ -1,0 +1,3 @@
+<UiButton @onClick={{@onClick}} @type={{or @type "gray"}} @size={{@size}} @responsive={{@responsive}} ...attributes>
+  {{fa-icon "trash-can" type="r" right=1}} {{#if (has-block)}}{{yield}}{{else}}Delete{{/if}}
+</UiButton>

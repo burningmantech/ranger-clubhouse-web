@@ -1,1 +1,7 @@
-<button type="button" class="btn btn-gray btn-link" disabled={{@disabled}} {{on-click @onClick}} ...attributes>Cancel</button>
+<UiButton @onClick={{@onClick}}
+          @type="gray"
+          class="btn-link"
+          disabled={{@disabled}}
+          @responsive={{@responsive}}
+          ...attributes>Cancel
+</UiButton>

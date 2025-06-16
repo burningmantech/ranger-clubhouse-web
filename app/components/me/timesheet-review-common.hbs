@@ -112,39 +112,41 @@
           </div>
           {{#if this.correctionsEnabled}}
             <div class="timesheet-row timesheet-actions">
-              {{#if ts.off_duty}}
-                <UiButton @type="secondary"
-                          @onClick={{fn this.markIncorrectAction ts}}
-                          @disabled={{ts.isLoading}}>
-                  {{#if ts.isPending}}
-                    Add More Info
-                  {{else if ts.isRejected}}
-                    Submit Appeal
-                  {{else}}
-                    Request Correction
-                  {{/if}}
-                </UiButton>
-                {{#unless ts.isVerified}}
-                  <UiButton @type="success"
-                            @onClick={{fn this.markCorrectAction ts}}
-                            @disabled={{ts.isSaving}}>
-                    Mark Correct
+              <UiButtonRow>
+                {{#if ts.off_duty}}
+                  <UiButton @type="secondary"
+                            @onClick={{fn this.markIncorrectAction ts}}
+                            @disabled={{ts.isLoading}}>
+                    {{#if ts.isPending}}
+                      Add More Info
+                    {{else if ts.isRejected}}
+                      Submit Appeal
+                    {{else}}
+                      Request Correction
+                    {{/if}}
                   </UiButton>
-                {{/unless}}
-                {{#if (or ts.isReloading ts.iSaving)}}
-                  <LoadingIndicator/>
-                {{/if}}
-              {{/if}}
-              {{#if ts.notes}}
-                <UiButton @type="gray" @onClick={{fn this.toggleNotes ts}}>
-                  {{fa-icon "comments" type="r" right=1}}
-                  {{#if ts.showNotes}}
-                    Hide Notes
-                  {{else}}
-                    Show Notes
+                  {{#unless ts.isVerified}}
+                    <UiButton @type="success"
+                              @onClick={{fn this.markCorrectAction ts}}
+                              @disabled={{ts.isSaving}}>
+                      Mark Correct
+                    </UiButton>
+                  {{/unless}}
+                  {{#if (or ts.isReloading ts.iSaving)}}
+                    <LoadingIndicator/>
                   {{/if}}
-                </UiButton>
-              {{/if}}
+                {{/if}}
+                {{#if ts.notes}}
+                  <UiButton @type="gray" @onClick={{fn this.toggleNotes ts}}>
+                    {{fa-icon "comments" type="r" right=1}}
+                    {{#if ts.showNotes}}
+                      Hide Notes
+                    {{else}}
+                      Show Notes
+                    {{/if}}
+                  </UiButton>
+                {{/if}}
+              </UiButtonRow>
             </div>
           {{/if}}
         </div>

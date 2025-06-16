@@ -6,9 +6,10 @@
     <Modal.body>
       <p>
         Important: Account banner messages are visible to anyone with Event Management On Playa or Year-Round
-        permissions.
-        This includes HQ Window volunteers who check the person in and out, Mentors, Volunteer Coordinators, and others
-        groups with authorization to look up accounts.
+        permissions. This includes HQ Window volunteers who check the person in and out, Mentors, Volunteer
+        Coordinators, and other groups with authorization to look up accounts.
+      </p>
+      <p>
         <b class="text-danger">Note: the person will not see this message.</b>
       </p>
       <FormRow>
@@ -28,9 +29,7 @@
       <f.submit @label="Submit"/>
       <UiCancelButton @onClick={{@onFinished}} />
       <div class="ms-auto">
-        <UiButton @type="danger" @onClick={{this.deleteBanner}} @size="sm">
-          {{fa-icon "trash" right=1}} Delete
-        </UiButton>
+        <UiDeleteButton @onClick={{this.deleteBanner}} />
       </div>
     </Modal.footer>
   </ChForm>

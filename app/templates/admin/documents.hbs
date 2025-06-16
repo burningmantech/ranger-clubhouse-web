@@ -33,17 +33,19 @@
                   @rows={{20}}
         />
       </FormRow>
-      <f.submit @disabled={{this.editDocument.isSaving}} />
-      <UiCancelButton @onClick={{this.cancelAction}} @disabled={{this.editDocument.isSaving}} />
-      {{#if this.isSaving}}
-        <LoadingIndicator/>
-      {{/if}}
+      <UiButtonRow>
+        <f.submit @disabled={{this.editDocument.isSaving}} />
+        <UiCancelButton @onClick={{this.cancelAction}} @disabled={{this.editDocument.isSaving}} />
+        {{#if this.isSaving}}
+          <LoadingIndicator/>
+        {{/if}}
 
-      {{#unless this.editDocument.isNew}}
-        <div class="d-inline-block ms-4">
-          <UiButton @type="danger" @onClick={{this.deleteAction}}>{{fa-icon "trash"}} Delete</UiButton>
-        </div>
-      {{/unless}}
+        {{#unless this.editDocument.isNew}}
+          <div class="ms-4">
+            <UiDeleteButton @onClick={{this.deleteAction}} />
+          </div>
+        {{/unless}}
+      </UiButtonRow>
     </ChForm>
   {{/if}}
 

@@ -9,7 +9,7 @@
   SAP? = Has claimed or submitted SAP or Staff Credential.
 </p>
 <p>
-  <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+  <UiExportToCSVButton @onClick={{this.exportToCSV}} />
 </p>
 Showing {{pluralize this.people.length "person"}}
 <UiTable>

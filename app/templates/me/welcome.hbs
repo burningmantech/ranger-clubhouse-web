@@ -39,14 +39,12 @@
           />
         </FormRow>
         <div class="mt-3">
-          <f.submit @submitClass="btn-responsive"
-                    @label={{if this.isSubmitting "Setting Password" "Set Password"}}
-                    @disabled={{this.isSubmitting}} />
-          {{#if this.isSubmitting}}
-            <LoadingIndicator/>
-          {{/if}}
+          <f.submit @label="Set Password" @responsive={{true}}  />
         </div>
       </ChForm>
     </Modal.body>
   </ModalDialog>
+{{/if}}
+{{#if this.isSubmitting}}
+  <LoadingDialog>Setting the password</LoadingDialog>
 {{/if}}

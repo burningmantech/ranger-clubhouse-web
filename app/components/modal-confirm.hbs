@@ -3,7 +3,9 @@
     {{this.htmlMessage}}
   </modal.body>
   <modal.footer>
-    <UiCancelButton @onClick={{@onClose}} />
-    <UiButton @onClick={{@onConfirm}}>Confirm</UiButton>
+    <UiButtonRow>
+      <UiButton @onClick={{@onConfirm}} @type="warning">Confirm</UiButton>
+      <UiCancelButton @onClick={{@onClose}} />
+    </UiButtonRow>
   </modal.footer>
 </ModalDialog>

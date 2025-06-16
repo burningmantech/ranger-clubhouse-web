@@ -25,21 +25,21 @@
           <b>{{fa-icon "hourglass-half"}} The request is awaiting review.</b>
         </p>
         <p>
-          <UiEditButton @onClick={{fn @editAction vehicle}} />
-          <UiButton @type="gray" @onClick={{fn @deleteAction vehicle}} class="btn-link">
-            {{fa-icon "trash"}} Delete
-          </UiButton>
+          <UiButtonRow>
+            <UiEditButton @onClick={{fn @editAction vehicle}} />
+            <UiDeleteButton @onClick={{fn @deleteAction vehicle}}/>
+          </UiButtonRow>
         </p>
       {{else if vehicle.isApproved}}
         <p>
           <b class="text-success">
-            {{fa-icon "check"}} Your request has been approved for the following item(s):
+            {{fa-icon "check" right=1}} Your request has been approved for the following item(s):
           </b>
         </p>
       {{else if vehicle.isRejected}}
         <p>
           <b class="text-light-red">
-            {{fa-icon "exclamation"}}  The request has been denied. Your vehicle is not authorized to be driven
+            {{fa-icon "exclamation" right=1}}  The request has been denied. Your vehicle is not authorized to be driven
             on playa
           </b>
         </p>

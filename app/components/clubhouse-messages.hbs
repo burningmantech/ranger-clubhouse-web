@@ -23,18 +23,21 @@
     </div>
     {{#if this.canSendMessages}}
       <div>
-        {{#if @isWorkerInterface}}
-          <UiButton class="btn-responsive mb-2" @onClick={{this.newMessageToAction}}>
-            New Message TO {{@person.callsign}}
-          </UiButton>
-          <UiButton @type="secondary" class="ms-xl-2 btn-responsive mb-2" @onClick={{this.newMessageFromAction}}>
-            New Message FROM {{@person.callsign}}
-          </UiButton>
-        {{else}}
-          <UiButton @type="primary" class="btn-responsive" @onClick={{this.newMessageFromAction}}>
-            {{fa-icon "plus"}} New Message
-          </UiButton>
-        {{/if}}
+        <UiButtonRow>
+          {{#if @isWorkerInterface}}
+            <UiButton  @responsive={{true}} @onClick={{this.newMessageToAction}}>
+              New Message TO {{@person.callsign}}
+            </UiButton>
+            <UiButton @type="secondary" @responsive={{true}}
+                      @onClick={{this.newMessageFromAction}}>
+              New Message FROM {{@person.callsign}}
+            </UiButton>
+          {{else}}
+            <UiButton @type="primary" @responsive={{true}} @onClick={{this.newMessageFromAction}}>
+              {{fa-icon "plus" right=1}} New Message
+            </UiButton>
+          {{/if}}
+        </UiButtonRow>
       </div>
     {{/if}}
   </div>

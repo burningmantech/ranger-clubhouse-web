@@ -12,7 +12,9 @@
     </p>
   </Modal.body>
   <Modal.footer>
-    <UiCancelButton @onClick={{@onClose}} />
-    <UiButton @type="warning" @onClick={{@onConfirm}}>Force Sign Up</UiButton>
+    <UiButtonRow>
+      <UiButton @type="warning" @onClick={{@onConfirm}}>Force Sign Up</UiButton>
+      <UiCancelButton @onClick={{@onClose}} />
+    </UiButtonRow>
   </Modal.footer>
 </ModalDialog>

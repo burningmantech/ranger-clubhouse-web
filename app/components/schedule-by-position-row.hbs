@@ -1,21 +1,16 @@
 <tr>
-  <td class="text-center">
-    {{#if @slot.active}}
-      {{fa-icon "check" color="success"}}
-    {{else}}
-      {{fa-icon "times" color="danger"}}
-    {{/if}}
-  </td>
-  <td class="w-25">
+  <td class="no-wrap">
     {{shift-format @slot.begins @slot.ends tz=@slot.tz tzabbr=@slot.tz_abbr}}<br>
     <PresentOrNot @value={{@slot.description}} @empty="-"/>
   </td>
-  <td class="w-5 text-end">
+  <td class="no-wrap text-center">
+    <UiBadgeActive @active={{@slot.active}} />
+  </td>
+  <td class="no-wrap text-end">
     {{hour-minute-format @slot.duration}}
   </td>
-  <td class="text-center">{{@slot.sign_ups.length}}</td>
-  <td class="text-center">{{@slot.max}}</td>
-  <td class="w-60">
+  <td class="text-center">{{@slot.sign_ups.length}} of {{@slot.max}}</td>
+  <td>
     {{#each @slot.sign_ups as |person idx|}}
       {{~if idx ", "~}}
       <PersonLink @person={{person}} />

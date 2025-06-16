@@ -105,7 +105,9 @@
           <div class="col-sm-12 col-lg-4">
             <f.submit @label="Login"
                       @disabled={{this.isSubmitting}}
-                      @submitClass="btn-lg btn-responsive login-submit mb-4"/>
+                      @size="lg"
+                      @responsive={{true}}
+                      class="login-submit mb-4"/>
             {{#if this.isSubmitting}}
               <LoadingIndicator/>
             {{/if}}

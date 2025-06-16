@@ -7,101 +7,103 @@
   <p>
     The report shows people who may potentially earn a short and long sleeve shirts for a given event year.
   </p>
-  <p>
-    <a href="#shirt-totals">Jump to shirt totals</a>
-  </p>
-  <p>
-    <UiExportToCSVButton @onClick={{this.exportPeople}} />
-  </p>
 </div>
 
 <div class="d-none d-print-block">
   <h1>Quartermaster Potential Earned Shirts Earned In {{this.year}}</h1>
 </div>
 <p>
-{{fa-icon "ban" color="danger"}} = Person has not met the work threshold for the shirt.
+  {{fa-icon "ban" color="danger" right=1}} = Person has not met the work threshold for the shirt.
 </p>
 
-Showing  {{pluralize this.people.length "person"}}
-<UiTable>
-  <thead>
-  <tr>
-    <th>Callsign</th>
-    <th>Name</th>
-    <th class="text-end">Est. Hours</th>
-    <th class="text-end">Actual Hours</th>
-    <th>T-Shirt ({{this.threshold_ss}} hrs)</th>
-    <th>T-Shirt Backup</th>
-    <th>Long Sleeve ({{this.threshold_ls}} hrs)</th>
-  </tr>
-  </thead>
+<UiTab as |tab|>
+  <tab.pane @id="people" @title="Candidates">
+    <p>
+      <UiExportToCSVButton @onClick={{this.exportPeople}} />
+    </p>
+    Showing  {{pluralize this.people.length "person"}}
+    <UiTable>
+      <thead>
+      <tr>
+        <th>Callsign</th>
+        <th>Name</th>
+        <th class="text-end">Est. Hours</th>
+        <th class="text-end">Actual Hours</th>
+        <th>T-Shirt ({{this.threshold_ss}} hrs)</th>
+        <th>T-Shirt Backup</th>
+        <th>Long Sleeve ({{this.threshold_ls}} hrs)</th>
+      </tr>
+      </thead>
 
-  <tbody>
-  {{#each this.people key="id" as |person|}}
-    <tr>
-      <td>
-        <PersonLink @person={{person}} />
-      </td>
-      <td>{{person.first_name}} {{person.middle_name}} {{person.last_name}}</td>
-      <td class="text-end">{{person.estimated_hours}}</td>
-      <td class="text-end">
-        {{or person.actual_hours "0.00"}}
-      </td>
-      <td>
-        {{#unless person.earned_ss}}
-          {{fa-icon "ban" color="danger"}}
-        {{/unless}}
-        {{person.teeshirt_size_style}}
-      </td>
-      <td>
-        {{#unless person.earned_ss}}
-          {{fa-icon "ban" color="danger"}}
-        {{/unless}}
-        {{person.tshirt_secondary_size}}
-      </td>
-      <td>
-        {{#unless person.earned_ls}}
-          {{fa-icon "ban" color="danger"}}
-        {{/unless}}
-        {{person.longsleeveshirt_size_style}}
-      </td>
-    </tr>
-  {{else}}
-    <tr>
-      <td colspan="6"><b class="text-danger">No one was found to have qualified for clothing in {{this.year}}</b></td>
-    </tr>
-  {{/each}}
-  </tbody>
-</UiTable>
+      <tbody>
+      {{#each this.people key="id" as |person|}}
+        <tr>
+          <td>
+            <PersonLink @person={{person}} />
+          </td>
+          <td>{{person.first_name}} {{person.middle_name}} {{person.last_name}}</td>
+          <td class="text-end">{{person.estimated_hours}}</td>
+          <td class="text-end">
+            {{or person.actual_hours "0.00"}}
+          </td>
+          <td>
+            {{#unless person.earned_ss}}
+              {{fa-icon "ban" color="danger"}}
+            {{/unless}}
+            {{person.teeshirt_size_style}}
+          </td>
+          <td>
+            {{#unless person.earned_ss}}
+              {{fa-icon "ban" color="danger"}}
+            {{/unless}}
+            {{person.tshirt_secondary_size}}
+          </td>
+          <td>
+            {{#unless person.earned_ls}}
+              {{fa-icon "ban" color="danger"}}
+            {{/unless}}
+            {{person.longsleeveshirt_size_style}}
+          </td>
+        </tr>
+      {{else}}
+        <tr>
+          <td colspan="6"><b class="text-danger">No one was found to have qualified for clothing in {{this.year}}</b>
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </UiTable>
+  </tab.pane>
 
-{{#if this.people}}
-  <h3 id="shirt-totals">Shirt Totals</h3>
-  <div class="row">
-    {{#each this.shirtGroups as |shirts|}}
-      <div class="col-3">
-        <UiTable class="table-box">
-          <caption>
-            {{shirts.name}} Totals
-            <span class="d-inline-block float-end">
-            <UiButton @type="secondary" @size="sm" @onClick={{fn this.exportCounts shirts}}>Export</UiButton>
-          </span>
-          </caption>
-          <thead>
-          <tr>
-            <th>Shirt Type</th>
-            <th class="text-end">Count</th>
-          </tr>
-          </thead>
-          <tbody>
-          {{#each shirts.types as |shirt|}}
-            <tr>
-              <td>{{shirt.type}}</td>
-              <td class="text-end">{{shirt.count}}</td>
-            </tr>
-          {{/each}}
-          </tbody>
-        </UiTable>
+  <tab.pane @id="totals" @title="Shirt Totals">
+    {{#if this.people}}
+      <div style="grid-template-columns: repeat(auto-fill, 250px)" class="d-grid gap-3">
+        {{#each this.shirtGroups as |shirts|}}
+          <div>
+            <h4>{{shirts.name}} Totals</h4>
+            <p>
+              <UiExportToCSVButton @onClick={{fn this.exportCounts shirts}} />
+
+            </p>
+            <UiTable @noWidthAuto={{true}}>
+              <thead>
+              <tr>
+                <th>Shirt Type</th>
+                <th class="text-end">Count</th>
+              </tr>
+              </thead>
+              <tbody>
+              {{#each shirts.types as |shirt|}}
+                <tr>
+                  <td>{{shirt.type}}</td>
+                  <td class="text-end">{{shirt.count}}</td>
+                </tr>
+              {{/each}}
+              </tbody>
+            </UiTable>
+          </div>
+        {{/each}}
       </div>
-    {{/each}}
-  </div>
-{{/if}}
+    {{/if}}
+  </tab.pane>
+</UiTab>

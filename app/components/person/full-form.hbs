@@ -221,7 +221,9 @@ Everyone else will see person/simple-form
           <LoadingIndicator/>
         {{/if}}
         {{#if (has-role "admin")}}
-          <UiButton @type="secondary" @size="sm" class="ms-auto" @onClick={{@removePersonAction}}>Remove</UiButton>
+          <div class="ms-auto">
+            <UiDeleteButton @onClick={{@removePersonAction}} />
+          </div>
         {{/if}}
       </UiButtonRow>
     </div>

@@ -30,7 +30,7 @@
       <accordion.body>
         {{#if accordion.isOpen}}
           {{#if role.people}}
-            <UiButton @onClick={{fn this.exportToCSV role}} @size="sm">Export To CSV</UiButton>
+            <UiExportToCSVButton @onClick={{fn this.exportToCSV role}} />
             <UiTable class="mt-2">
               <thead>
               <tr>

@@ -51,14 +51,16 @@
       <div class="mail-actions">
         {{#if (and @canSendMessages (not @message.is_rbs))}}
           <UiButton @onClick={{@onReplyTo}}
-                    class="btn-responsive me-4 mb-2"
+                    @responsive={{true}}
+                    class="me-4 mb-2"
                     @disabled={{this.isSubmitting}}>
             {{fa-icon "reply" right=1}} Reply
           </UiButton>
         {{/if}}
-        <UiButton @class="btn-responsive"
+        <UiButton @responsive={{true}}
                   @type="secondary"
-                  class="btn-responsive mb-2"
+                  @responsive={{true}}
+                  class="mb-2"
                   @onClick={{this.toggleRead}}
                   @disabled={{@message.isSubmitting}}>
           {{#if @message.delivered}}
