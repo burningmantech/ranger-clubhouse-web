@@ -43,8 +43,8 @@
         </UiAlert>
       {{else if @message.expires_at}}
         <UiAlert @type="warning" @icon="hand-point-right">
-            This message will no longer be considered relevant after {{shift-format @message.expires_at}}
-            (Pacific).
+          This message will no longer be considered relevant after {{shift-format @message.expires_at}}
+          (Pacific).
         </UiAlert>
       {{/if}}
       {{nl2br @message.body}}
@@ -57,8 +57,7 @@
             {{fa-icon "reply" right=1}} Reply
           </UiButton>
         {{/if}}
-        <UiButton @responsive={{true}}
-                  @type="secondary"
+        <UiButton @type="secondary"
                   @responsive={{true}}
                   class="mb-2"
                   @onClick={{this.toggleRead}}
@@ -79,5 +78,5 @@
         {{/if}}
       </div>
     {{/if}}
-</div>
+  </div>
 </div>
