@@ -1,9 +1,9 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {INTAKE, REGIONAL_MANAGEMENT} from 'clubhouse/constants/roles';
+import {ADMIN, INTAKE, REGIONAL_MANAGEMENT} from 'clubhouse/constants/roles';
 import {forEach} from 'lodash';
 
 export default class PersonUnifiedFlaggingRoute extends ClubhouseRoute {
-  roleRequired = [INTAKE, REGIONAL_MANAGEMENT];
+  roleRequired = [ADMIN, INTAKE, REGIONAL_MANAGEMENT];
 
   model() {
     const year = this.house.currentYear();
@@ -25,7 +25,6 @@ export default class PersonUnifiedFlaggingRoute extends ClubhouseRoute {
       } else {
         result.passedPreviously = didPass;
       }
-      console.log("Result ", result);
       controller.pnvHistory.push({year, ...result});
     })
   }

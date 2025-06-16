@@ -361,7 +361,6 @@ export default class OpsSlotsController extends ClubhouseController {
 
   @action
   bulkEditOpenAction(position) {
-    console.log("position", position);
     this.bulkEditPosition = position;
     this.showBulkEditDialog = true;
   }
