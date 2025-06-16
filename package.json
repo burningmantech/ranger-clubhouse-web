@@ -39,7 +39,7 @@
     "@faker-js/faker": "^9.8.0",
     "@glimmer/component": "^1.1.2",
     "@glimmer/tracking": "^1.1.2",
-    "@nullvoxpopuli/ember-composable-helpers": "^5.2.10",
+    "@nullvoxpopuli/ember-composable-helpers": "^5.2.11",
     "@popperjs/core": "^2.11.8",
     "air-datepicker": "^3.6.0",
     "bootstrap": "^5.3.6",
