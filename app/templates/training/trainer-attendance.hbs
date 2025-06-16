@@ -5,7 +5,7 @@
             @onChange={{set-value this 'year'}} />
 
 <p>
-  <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+  <UiExportToCSVButton @onClick={{this.exportToCSV}} />
 </p>
 
 Showing {{pluralize this.trainers.length "trainer"}}

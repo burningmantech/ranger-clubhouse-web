@@ -12,7 +12,7 @@ This report will show anyone who meets one of the following conditions:
   <li>has signed up for a MVR eligible shift such as Intercept</li>
 </ul>
 <p>
-  <UiButton @onClick={{this.exportToCsv}}>Export to CSV</UiButton>
+  <UiExportToCSVButton @onClick={{this.exportToCsv}} />
 </p>
 Showing {{pluralize this.people.length "person"}}
 <UiTable @noWidthAuto={{true}} @stickyHeader={{true}}>

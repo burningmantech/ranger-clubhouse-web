@@ -8,7 +8,7 @@
     {{pluralize @people.length "person"}}
   </Accordion.title>
   <Accordion.body>
-    <UiButton @onClick={{this.exportToCSV}} @type="secondary" @size="sm">Export To CSV</UiButton>
+    <UiExportToCSVButton @onClick={{this.exportToCSV}} />
     <UiTable class="mt-2">
       <thead>
       <tr>

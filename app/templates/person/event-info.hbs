@@ -35,7 +35,7 @@
                           @hint="Note: updating the course will not enroll the person under Moodle."
                 />
                 <div class="col-auto">
-                  <f.submit @disabled={{this.personEvent.isSaving}} @submitClass="btn-sm"/>
+                  <f.submit @disabled={{this.personEvent.isSaving}} />
                 </div>
               {{else}}
                 <div class="col-auto">
@@ -47,7 +47,7 @@
         {{/if}}
         {{#if (and this.isCurrentYear this.canManageOnlineCourse)}}
           <div class="my-4 d-flex">
-            <div class="fw-bold no-wrap me-2">Moodle Actions</div>
+            <div class="no-wrap me-2">Moodle Actions</div>
             <UiButtonRow>
               {{#unless this.eventInfo.online_course_passed}}
                 <UiButton @type="secondary" @onClick={{this.markOnlineCourseCompleted}} @size="sm">
@@ -102,8 +102,7 @@
               Note: username is the callsign with only alphanumeric characters, lower cased, and no
               spaces.<br>
               The email is the Clubhouse's email with plus addressing stripped out (e.g.,
-              my+inbox@example.com -&gt;
-              my@example.com).
+              my+inbox@example.com -&gt; my@example.com).
             </div>
           {{/if}}
         {{/if}}

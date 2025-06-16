@@ -90,30 +90,20 @@
       {{#if @deletePhotoAction}}
         <td>
           <UiButtonRow>
-            <UiButton @type="danger"
-                      @size="sm"
-                      @onClick={{fn @deletePhotoAction photo}}
-                      @disabled={{photo.isSaving}}>
-              {{fa-icon "trash" right=1}} Delete
-            </UiButton>
+            <UiDeleteButton @onClick={{fn @deletePhotoAction photo}} />
             {{#if photo.is_active}}
-              <UiEditButton @type="secondary"
-                            @size="sm"
-                            @disabled={{photo.isSaving}}
-                            @onClick={{fn this.editPhotoAction photo}} />
+              <UiEditButton @onClick={{fn this.editPhotoAction photo}} />
               {{#if (not-eq photo.status "rejected")}}
                 <UiButton @type="danger"
                           @size="sm"
-                          @onClick={{fn this.showRejectDialog photo}}
-                          @disabled={{photo.isSaving}}>
+                          @onClick={{fn this.showRejectDialog photo}}>
                   {{fa-icon "times" right=1}} Reject
                 </UiButton>
               {{/if}}
               {{#if (not-eq photo.status "approved")}}
                 <UiButton @type="success"
                           @size="sm"
-                          @onClick={{fn this.approveAction photo}}
-                          @disabled={{photo.isSaving}}>
+                          @onClick={{fn this.approveAction photo}}>
                   {{fa-icon "check" right=1}} Approve
                 </UiButton>
               {{/if}}
@@ -123,15 +113,13 @@
               </UiButton>
             {{/if}}
           </UiButtonRow>
-          {{#if photo.isSaving}}
-            <LoadingIndicator/>
-          {{/if}}
         </td>
       {{/if}}
     </tr>
   {{/each}}
   </tbody>
 </UiTable>
+
 
 {{#if this.showPhoto}}
   <PhotoInfo @photo={{this.showPhoto}} @closeAction={{this.closePhotoAction}} @rejectionLabels={{@rejectionLabels}} />

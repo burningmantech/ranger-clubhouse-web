@@ -1,1 +1,10 @@
-<button class="btn btn-{{or @type "primary"}} btn-submit {{@submitClass}}" type="submit" {{on "click" this.submitAction}} disabled={{@disabled}} ...attributes>{{this._label}}</button>
+<UiButton type="submit"
+          class="btn-submit"
+          @type={{@type}}
+          @size={{@size}}
+          @onClick={{this.submitAction}}
+          @responsive={{@responsive}}
+          disabled={{@disabled}}
+          ...attributes>
+  {{this._label}}
+</UiButton>

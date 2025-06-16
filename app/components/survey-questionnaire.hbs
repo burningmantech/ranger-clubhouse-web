@@ -90,7 +90,7 @@
     </div>
   {{/if}}
 
-  <f.submit @label="Submit Feedback" @submitClass="btn-responsive"/>
+  <f.submit @label="Submit Feedback" @responsive={{true}}/>
 </ChForm>
 {{#if this.isSubmitting}}
   <LoadingDialog>

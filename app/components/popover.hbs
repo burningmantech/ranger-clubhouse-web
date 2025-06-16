@@ -2,6 +2,6 @@
   <span class="d-inline-block">{{@text}}</span>
   <BsPopover @title={{@title}} @onShow={{@onShow}} @onHide={{@onHide}} as |po|>
     {{yield po}}
-    <div class="popover-footer mt-2"><UiCloseButton @onClick={{po.close}} @size="sm"/></div>
+    <div class="popover-footer mt-2"><UiCloseButton @onClick={{po.close}}/></div>
   </BsPopover>
 </a>

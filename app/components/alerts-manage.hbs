@@ -45,7 +45,7 @@
           Verify
         </UiButton>
         <UiButton @type="secondary"
-                  @class="ms-2"
+                  class="ms-2"
                   @onClick={{fn this.sendNewCodeAction "off-playa"}}>
           Resend verification code
         </UiButton>
@@ -62,7 +62,7 @@
           Verify
         </UiButton>
         <UiButton @type="secondary"
-                  @class="ms-2"
+                  class="ms-2"
                   @onClick={{fn this.sendNewCodeAction "on-playa"}}>
           Resend verification code
         </UiButton>
@@ -98,7 +98,7 @@
           <f.checkbox @name="is_same" @label="On playa number is the same as the pre-event number"/>
         </div>
       </FormRow>
-      <FormRow @class={{if f.model.is_same "d-none"}}>
+      <FormRow class={{if f.model.is_same "d-none"}}>
         <f.text @name="on_playa"
                 @label="On Playa phone number:"
                 @inputmode="tel"

@@ -4,7 +4,12 @@ import { action } from '@ember/object';
 export default class UiButtonComponent extends Component {
   constructor() {
     super(...arguments);
-    this.sizeClass = this.args.size ? `btn-${this.args.size}` : '';
+    const{size} = this.args;
+    if (size === 'md') {
+      this.sizeClass = '';
+    } else {
+      this.sizeClass = size ? `btn-${size}` : 'btn-sm';
+    }
   }
 
   get typeClass() {

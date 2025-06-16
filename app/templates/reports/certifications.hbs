@@ -17,9 +17,6 @@
                        @cols={{4}} />
     </FormRow>
     <f.submit @label="Submit" @disabled={{this.isSubmitting}}/>
-    {{#if this.isSubmitting}}
-      <LoadingDialog/>
-    {{/if}}
     {{#if (and this.haveResults (not this.people))}}
       <p class="text-danger">No people were found who matched the criteria.</p>
     {{/if}}
@@ -32,7 +29,7 @@
       </:title>
       <:body>
         <p>
-          <UiButton @onClick={{this.exportToCSV}} @type="secondary" @size="sm">Export to CSV</UiButton>
+          <UiExportToCSVButton @onClick={{this.exportToCSV}} />
         </p>
         <UiTable>
           <thead>
@@ -71,3 +68,7 @@
     </UiSection>
   {{/if}}
 </main>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog/>
+{{/if}}

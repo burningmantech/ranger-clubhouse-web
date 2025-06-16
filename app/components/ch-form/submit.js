@@ -5,7 +5,7 @@ import { action } from '@ember/object';
 export default class ChFormSubmitComponent extends Component {
   @action
   submitAction(event) {
-    event.preventDefault();
+    event?.preventDefault();
     this.args.formSubmitAction(this.args.onSubmit);
   }
 

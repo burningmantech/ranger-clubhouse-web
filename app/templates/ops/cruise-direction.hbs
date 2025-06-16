@@ -18,13 +18,13 @@
             @formatSelected={{this.formatSelected}}
             @groups={{this.periodOptions}}
             @onSelect={{this.changeShift}}
-            class="btn-responsive"
+            @responsive={{true}}
           />
         {{else}}
           <b class="text-danger">No shifts were found.</b>
         {{/if}}
         {{#if this.selectedShift}}
-          <UiButton @onClick={{this.createPod}} @class="btn-responsive">
+          <UiButton @onClick={{this.createPod}} @responsive={{true}}>
             {{fa-icon "user-group" right=1}} Create Pod
           </UiButton>
         {{/if}}
@@ -34,15 +34,15 @@
     <div>
       {{#if this.selectedShift}}
         {{#if (gt this.pods.length 1)}}
-          <UiButton @onClick={{this.toggleShowSortControls}} @type="secondary" @class="btn-responsive" @size="sm">
+          <UiButton @onClick={{this.toggleShowSortControls}} @type="secondary" @responsive={{true}} @size="sm">
             {{fa-icon "sort" right=1}} {{if this.showSortControls "Hide" "Show"}} Sorting Controls
           </UiButton>
         {{/if}}
       {{/if}}
-      <UiButton @onClick={{this.togglePositions}} @type="secondary" @class="btn-responsive" @size="sm">
+      <UiButton @onClick={{this.togglePositions}} @type="secondary" @responsive={{true}} @size="sm">
         Show Selectable Positions
       </UiButton>
-      <UiButton @onClick={{this.refreshPage}} @type="secondary" @class="btn-responsive" @size="sm">
+      <UiButton @onClick={{this.refreshPage}} @type="secondary" @responsive={{true}} @size="sm">
         {{fa-icon "arrows-rotate" right=1}} Refresh Page
       </UiButton>
     </div>

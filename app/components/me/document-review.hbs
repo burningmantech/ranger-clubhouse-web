@@ -34,7 +34,7 @@
       {{#unless this.didSign}}
         <UiButton @type="primary"
                   @onClick={{this.signDocument}}
-                  @class="btn-responsive"
+                  @responsive={{true}}
                   @disabled={{this.isSubmitting}}>
           I Agree
         </UiButton>

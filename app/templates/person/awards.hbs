@@ -96,9 +96,7 @@
         <UiCancelButton @onClick={{this.closeAward}} />
         {{#unless this.entry.isNew}}
           <div class="ms-auto">
-            <UiButton @type="danger" @size="sm" @onClick={{this.deleteAward}}>
-              {{fa-icon "trash" right=1}} Delete
-            </UiButton>
+            <UiDeleteButton @onClick={{this.deleteAward}} />
           </div>
         {{/unless}}
       </Modal.footer>

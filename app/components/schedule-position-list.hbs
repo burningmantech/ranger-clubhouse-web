@@ -172,61 +172,49 @@
             </div>
             <div class="schedule-actions">
               {{#if slot.signUpInfo}}
-                <button type="button"
-                  {{on "click" (fn @hidePeople slot)}}
-                        class="btn btn-warning btn-sm"
-                        aria-label="Hide signups for {{slot.position_title}} on {{shift-format slot.slot_begins}}"
-                >
+                <UiButton @onClick={{fn @hidePeople slot}}
+                          @type="warning">
                   {{fa-icon "users" type="fas" fixed=true right=1}}
                   Hide Sign Ups
-                </button>
+                </UiButton>
               {{else}}
-                <button type="button"
-                  {{on "click" (fn @showPeople slot)}}
-                        class="btn btn-secondary btn-sm"
-                        disabled={{slot.isRetrievingSignUps}}
-                        aria-label="Show signups for {{slot.position_title}} on {{shift-format slot.slot_begins}}"
-                >
+                <UiButton @onClick={{fn @showPeople slot}}
+                          @type="secondary"
+                          disabled={{slot.isRetrievingSignUps}}
+                          aria-label="Show signups for {{slot.position_title}} on {{shift-format slot.slot_begins}}">
+                  {{fa-icon "users" type="fas" fixed=true right=1 aria-hidden="true"}}
+                  Sign Ups
                   {{#if slot.isRetrievingSignUps}}
                     <SpinIcon/>
-                  {{else}}
-                    {{fa-icon "users" type="fas" fixed=true right=1 aria-hidden="true"}}
                   {{/if}}
-                  Sign Ups
-                </button>
+                </UiButton>
               {{/if}}
               {{#if slot.person_assigned}}
                 {{#if (or @isAdmin (not slot.has_started))}} {{!template-lint-disable "no-negated-condition"}}
                 {{! Only allow admins to remove a sign up that has started}}
-                  <button type="button"
-                    {{on "click" (fn @leaveSlot slot)}}
-                          class="btn btn-danger btn-sm"
-                          disabled={{slot.isSubmitting}}
-                          aria-label="Remove sign up for {{slot.position_title}} on {{shift-format slot.slot_begins}}"
-                  >
+                  <UiDeleteButton @onClick={{fn @leaveSlot slot}}
+                                  disabled={{slot.isSubmitting}}
+                                  aria-label="Remove sign up for {{slot.position_title}} on {{shift-format
+                                    slot.slot_begins}}">
+                    Remove
                     {{#if slot.isSubmitting}}
                       <SpinIcon/>
-                    {{else}}
-                      {{fa-icon "trash-alt" type="fas" fixed=true right=1}}
                     {{/if}}
-                    Remove
-                  </button>
+                  </UiDeleteButton>
                 {{/if}}
               {{else if @isCurrentYear}}
               {{! Only show action buttons for the current year}}
                 {{#if slot.slot_active}}
                   {{#if (or this.canForceSignUp (and (not slot.isFull) (not slot.has_started)))}}
-                    <button type="button" {{on "click" (fn @joinSlot slot)}}
-                            class="btn btn-primary btn-sm"
-                            aria-label="Add {{slot.position_title}} on {{shift-format slot.slot_begins}} to schedule"
-                            disabled={{slot.isSubmitting}}>
+                    <UiButton @onClick={{fn @joinSlot slot}}
+                              aria-label="Add {{slot.position_title}} on {{shift-format slot.slot_begins}} to schedule"
+                              disabled={{slot.isSubmitting}}>
+                      {{fa-icon "user-plus" type="fas" fixed=true right=1}}
+                      Add
                       {{#if slot.isSubmitting}}
                         <SpinIcon/>
-                      {{else}}
-                        {{fa-icon "user-plus" type="fas" fixed=true right=1}}
                       {{/if}}
-                      Add
-                    </button>
+                    </UiButton>
                   {{/if}}
                 {{else}}
                   <small class="text-danger">inactive</small>

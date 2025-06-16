@@ -11,7 +11,7 @@
     {{yield to="body"}}
     {{#if @nextAction}}
       <div class="d-grid">
-        <UiButton @type="success" @class="mt-4" @disabled={{@nextDisabled}} @onClick={{@nextAction}}>
+        <UiButton @type="success" class="mt-4" @disabled={{@nextDisabled}} @onClick={{@nextAction}}>
           Next {{fa-icon "arrow-right"}}
         </UiButton>
       </div>

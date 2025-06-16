@@ -51,17 +51,19 @@
       {{/each}}
       </tbody>
     </UiTable>
-    <UiButton @onClick={{this.newAccessDocument}}>
-      {{fa-icon "plus"}} New Access Document
-    </UiButton>
+    <UiButtonRow>
+      <UiButton @onClick={{this.newAccessDocument}}>
+        {{fa-icon "plus" right=1}} New Access Document
+      </UiButton>
 
-    <UiButton @type="secondary" @onClick={{this.showAction}} disabled={{this.isLoading}}>
-      {{#if this.isLoading}}
-        <LoadingIndicator @text="Loading"/>
-      {{else}}
-        Show {{if this.isShowingAll "Current" "All"}} Access Documents
-      {{/if}}
-    </UiButton>
+      <UiButton @type="secondary" @onClick={{this.showAction}} disabled={{this.isLoading}}>
+        {{#if this.isLoading}}
+          <LoadingIndicator @text="Loading"/>
+        {{else}}
+          Show {{if this.isShowingAll "Current" "All"}} Access Documents
+        {{/if}}
+      </UiButton>
+    </UiButtonRow>
   </:body>
 </UiSection>
 
@@ -170,7 +172,8 @@
                       <b>{{row.operation}}</b>
                       {{#each (this.changeArray row) as |change|}}
                         <div>
-                          {{change.column}}: <i>{{change.oldValue}}</i> <span class="text-muted">{{fa-icon "arrow-right"}}</span>
+                          {{change.column}}: <i>{{change.oldValue}}</i> <span class="text-muted">{{fa-icon
+                          "arrow-right"}}</span>
                           <i>{{change.newValue}}</i>
                         </div>
                       {{/each}}
@@ -186,29 +189,27 @@
         {{/if}}
       </Modal.body>
       <Modal.footer @align="start">
-        <f.submit @label={{if this.entry.isNew "Create" "Update"}}
-                  @disabled={{this.entry.isSaving}} />
-        {{#unless this.entry.isNew}}
-          <UiButton @onClick={{this.toggleChanges}} @type="secondary">
-            {{#if this.showingChanges}}
-              Hide Changes
-            {{else}}
-              Show Changes
-            {{/if}}
-          </UiButton>
-        {{/unless}}
-        <UiCancelButton @disabled={{this.entry.isSaving}}
-                        @onClick={{this.cancelAccessDocument}} />
-        {{#if this.entry.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
-        {{#unless this.entry.isNew}}
-          <UiButton @type="danger" @class="ms-auto"
-                    @onClick={{fn this.deleteAccessDocument this.entry}}
-                    @disabled={{this.entry.isSaving}}>
-            {{fa-icon "trash"}} Delete
-          </UiButton>
-        {{/unless}}
+        <UiButtonRow>
+          <f.submit @label={{if this.entry.isNew "Create" "Update"}}
+                    @disabled={{this.entry.isSaving}} />
+          {{#unless this.entry.isNew}}
+            <UiButton @onClick={{this.toggleChanges}} @type="secondary" @size="sm">
+              {{#if this.showingChanges}}
+                Hide Changes
+              {{else}}
+                Show Changes
+              {{/if}}
+            </UiButton>
+          {{/unless}}
+          <UiCancelButton @disabled={{this.entry.isSaving}}
+                          @onClick={{this.cancelAccessDocument}} />
+          {{#if this.entry.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
+          {{#unless this.entry.isNew}}
+            <UiDeleteButton @onClick={{fn this.deleteAccessDocument this.entry}} class="ms-auto"/>
+          {{/unless}}
+        </UiButtonRow>
       </Modal.footer>
     </ChForm>
   </ModalDialog>

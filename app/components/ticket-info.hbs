@@ -67,7 +67,7 @@
       If your plans have changed, you may bank the ticket. Note: the ticket will expire on
       {{mdy-format @ticket.expiry_date full=true}}.
     </p>
-    <UiButton @class="btn-responsive" @onClick={{fn @setDocumentStatus @ticket "banked"}}
+    <UiButton @responsive={{true}} @onClick={{fn @setDocumentStatus @ticket "banked"}}
               @disabled={{@isSavingDocumentStatus}}>
       Bank Ticket
       {{#if @isSavingDocumentStatus}}
@@ -82,7 +82,7 @@
       If your plans have changed, you may claim the ticket. Note: the ticket will expire on
       {{mdy-format @ticket.expiry_date full=true}}.
     </p>
-    <UiButton @class="btn-responsive"
+    <UiButton @responsive={{true}}
               @onClick={{fn @setDocumentStatus @ticket "claimed"}}
               @disabled={{@isSavingDocumentStatus}}>
       Claim Ticket
@@ -100,7 +100,7 @@
     </p>
 
     <div class="my-2"><b>What do you want to do with your {{@ticket.typeLabel}}?</b></div>
-    <UiButton @class="btn-responsive"
+    <UiButton @responsive={{true}}
               @onClick={{fn @setDocumentStatus @ticket "claimed"}}
               @disabled={{@isSavingDocumentStatus}}>
       Claim Ticket
@@ -109,7 +109,7 @@
       {{/if}}
     </UiButton>
     <span class="h5 mx-auto mx-xl-4 my-sm-2 my-xl-none d-sm-block d-xl-inline-block">- OR -</span>
-    <UiButton @class="btn-responsive"
+    <UiButton @responsive={{true}}
               @onClick={{fn @setDocumentStatus @ticket "banked"}}
               @disabled={{@isSavingDocumentStatus}}>
       Bank Ticket

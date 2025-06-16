@@ -43,11 +43,11 @@
               <tr>
                 <td class="w-30">
                   {{#if task.param}}
-                    <UiButton @class="btn-block" @onClick={{fn this.askParamAction task}}>
+                    <UiButton class="btn-block" @onClick={{fn this.askParamAction task}}>
                       {{task.title}}
                     </UiButton>
                   {{else}}
-                    <UiButton @class="btn-block" @onClick={{fn this.executeTask task}}>
+                    <UiButton class="btn-block" @onClick={{fn this.executeTask task}}>
                       {{task.title}}
                     </UiButton>
                   {{/if}}

@@ -35,7 +35,7 @@
     <p>
       Do you wish to use your Setup Access Pass?
     </p>
-    <UiButton @type="primary" @class="btn-responsive"
+    <UiButton @type="primary" @responsive={{true}}
               @onClick={{fn @setDocumentStatus this.wap "claimed"}}
               @disabled={{@isSavingDocumentStatus}}>
       Claim Setup Access Pass
@@ -46,7 +46,7 @@
   {{else}}
     <p>Do you no longer need the Setup Access Pass?</p>
     <UiButton @type="primary"
-              @class="btn-responsive"
+              @responsive={{true}}
               @onClick={{fn  @setDocumentStatus this.wap "qualified"}}  @disabled={{@isSavingDocumentStatus}}>
       Release Setup Access Pass
       {{#if @isSavingDocumentStatus}}

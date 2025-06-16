@@ -8,11 +8,11 @@
 
 {{#if this.showEditControls}}
   <p class="mb-2 text-center">
-    <UiButton @type="secondary" @class="me-1" @onClick={{this.zoomOutAction}}>{{fa-icon "search-minus"}}</UiButton>
-    <UiButton @type="secondary" @class="me-1" @onClick={{this.zoomInAction}}>{{fa-icon "search-plus"}}</UiButton>
-    <UiButton @type="secondary" @class="me-1" @onClick={{this.rotateRight}}>{{fa-icon "redo"}}</UiButton>
-    <UiButton @type="secondary" @class="me-1" @onClick={{this.rotateLeft}}>{{fa-icon "undo"}}</UiButton>
-    <UiButton @type="secondary" @class="me-1" @onClick={{this.fipHorizontalAction}}>{{fa-icon "arrows-alt-h"}}</UiButton>
+    <UiButton @type="secondary" class="me-1" @onClick={{this.zoomOutAction}}>{{fa-icon "search-minus"}}</UiButton>
+    <UiButton @type="secondary" class="me-1" @onClick={{this.zoomInAction}}>{{fa-icon "search-plus"}}</UiButton>
+    <UiButton @type="secondary" class="me-1" @onClick={{this.rotateRight}}>{{fa-icon "redo"}}</UiButton>
+    <UiButton @type="secondary" class="me-1" @onClick={{this.rotateLeft}}>{{fa-icon "undo"}}</UiButton>
+    <UiButton @type="secondary" class="me-1" @onClick={{this.fipHorizontalAction}}>{{fa-icon "arrows-alt-h"}}</UiButton>
     <UiButton @type="secondary" @onClick={{this.fipVerticalAction}}>{{fa-icon "arrows-alt-v"}}</UiButton>
   </p>
 {{/if}}
@@ -23,9 +23,9 @@
 
 <div class="mt-2 text-center">
   {{#if @cancelAction}}
-    <UiButton @type="secondary" @class="ms-auto" @onClick={{@cancelAction}} @disabled={{@isSubmitting}}>
+    <UiButton @type="secondary" class="ms-auto" @onClick={{@cancelAction}} @disabled={{@isSubmitting}}>
       Retake
     </UiButton>
   {{/if}}
-  <UiButton @class="ms-auto" @onClick={{this.submitAction}} @disabled={{@isSubmitting}}>Submit</UiButton>
+  <UiButton class="ms-auto" @onClick={{this.submitAction}} @disabled={{@isSubmitting}}>Submit</UiButton>
 </div>

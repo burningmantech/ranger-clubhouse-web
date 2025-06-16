@@ -155,7 +155,7 @@
         Ticket, Vehicle Pass, Setup Access Pass, or Setup Access Passes for your significant others/critical camp mates.
       </p>
     {{/if}}
-    <UiButton @onClick={{this.startTicketing}} @type="success" class="btn-responsive">
+    <UiButton @onClick={{this.startTicketing}} @type="success" @responsive={{true}}>
       {{#if this.hasFinished}}
         Adjust Ticketing Choices
       {{else}}

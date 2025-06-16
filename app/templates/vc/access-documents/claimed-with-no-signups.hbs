@@ -4,7 +4,7 @@
   complete the course yet did not work.
 </p>
 <p>
-  <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+  <UiExportToCSVButton @onClick={{this.exportToCSV}} />
 </p>
 {{pluralize this.people.length "person"}} found.
 <UiTable>

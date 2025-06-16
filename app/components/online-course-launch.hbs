@@ -1,6 +1,6 @@
 <UiButton @onClick={{this.setupAccountAction}}
           @type="{{if @didComplete "secondary" "primary"}}"
-          @class="btn-responsive"
+          @responsive={{true}}
           @size="{{if @didComplete "sm"}}"
 >
   {{@text}}
@@ -61,7 +61,7 @@
       login form that asks for a username and password.</b>
     </Modal.body>
     <Modal.footer>
-      <UiButton @onClick={{this.launchTrainingAction}} @disabled={{this.isSubmitting}} @class="btn-responsive">
+      <UiButton @onClick={{this.launchTrainingAction}} @disabled={{this.isSubmitting}} @responsive={{true}}>
         Go To Online Course
       </UiButton>
       {{#if this.isSubmitting}}

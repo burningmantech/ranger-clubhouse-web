@@ -38,13 +38,13 @@ Showing {{pluralize this.surveys.length "survey"}}
       </td>
       <td>
         <UiButtonRow>
-          <UiButton @type="danger" @size="sm" @onClick={{fn this.deleteSurveyAction survey}}>
-            {{fa-icon "trash" right=1}} Delete
-          </UiButton>
+          <UiDeleteButton @onClick={{fn this.deleteSurveyAction survey}} />
           <UiButton @type="secondary" @size="sm" @onClick={{fn this.duplicateSurveyAction survey}}>
-            Duplicate
+            {{fa-icon "clone" right=1}} Duplicate
           </UiButton>
-          <LinkTo @route="ops.survey.manage" @model={{survey.id}} class="btn btn-primary btn-sm">Manage</LinkTo>
+          <LinkTo @route="ops.survey.manage" @model={{survey.id}} class="btn btn-primary btn-sm">
+            {{fa-icon "pen-to-square" type="r" right=1}} Manage
+          </LinkTo>
         </UiButtonRow>
       </td>
     </tr>

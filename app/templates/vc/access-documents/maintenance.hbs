@@ -23,11 +23,11 @@
                     <LinkTo @route={{task.route}} class="btn btn-primary btn-block">{{task.title}}</LinkTo>
                   {{else}}
                     {{#if task.param}}
-                      <UiButton @class="btn-block" @onClick={{fn this.askParamAction task}}>
+                      <UiButton class="btn-block" @onClick={{fn this.askParamAction task}}>
                         {{task.title}}
                       </UiButton>
                     {{else}}
-                      <UiButton @class="btn-block" @onClick={{fn this.executeTask task}}>
+                      <UiButton class="btn-block" @onClick={{fn this.executeTask task}}>
                         {{task.title}}
                       </UiButton>
                     {{/if}}

@@ -43,22 +43,23 @@
         </UiAlert>
       {{else if @message.expires_at}}
         <UiAlert @type="warning" @icon="hand-point-right">
-            This message will no longer be considered relevant after {{shift-format @message.expires_at}}
-            (Pacific).
+          This message will no longer be considered relevant after {{shift-format @message.expires_at}}
+          (Pacific).
         </UiAlert>
       {{/if}}
       {{nl2br @message.body}}
       <div class="mail-actions">
         {{#if (and @canSendMessages (not @message.is_rbs))}}
           <UiButton @onClick={{@onReplyTo}}
-                    class="btn-responsive me-4 mb-2"
+                    @responsive={{true}}
+                    class="me-4 mb-2"
                     @disabled={{this.isSubmitting}}>
             {{fa-icon "reply" right=1}} Reply
           </UiButton>
         {{/if}}
-        <UiButton @class="btn-responsive"
-                  @type="secondary"
-                  class="btn-responsive mb-2"
+        <UiButton @type="secondary"
+                  @responsive={{true}}
+                  class="mb-2"
                   @onClick={{this.toggleRead}}
                   @disabled={{@message.isSubmitting}}>
           {{#if @message.delivered}}
@@ -77,5 +78,5 @@
         {{/if}}
       </div>
     {{/if}}
-</div>
+  </div>
 </div>

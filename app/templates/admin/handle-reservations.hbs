@@ -10,14 +10,14 @@
 
   <UiTab as |tab|>
     <tab.pane @title="Handle Entries" @id="entries">
-      <p>
-        <UiButton @type="primary" @onClick={{this.newHandleReservation}}>
+      <UiButtonRow class="mb-3">
+        <UiButton @type="primary" @onClick={{this.newHandleReservation}} @size="sm">
           New Handle Reservation
         </UiButton>
-        <UiButton @type="secondary" @onClick={{this.expireHandles}}>
+        <UiButton @type="secondary" @onClick={{this.expireHandles}} @size="sm">
           Delete Expired Handles
         </UiButton>
-      </p>
+      </UiButtonRow>
       <FormRow>
         <FormLabel @auto={{true}}>Filters</FormLabel>
         <div class="col-auto mt-2">
@@ -238,19 +238,19 @@
         </FormRow>
       </Modal.body>
       <Modal.footer @align="start">
-        <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
-        <UiCancelButton @onClick={{this.cancelHandleReservation}}
-                        @disabled={{this.entry.isSaving}} />
-        {{#if this.entry.isSaving}}
-          <LoadingIndicator/>
-        {{/if}}
-        {{#unless this.entry.isNew}}
-          <div class="ms-auto">
-            <button {{on-click this.removeHandleReservation}} type="button" class="btn btn-danger btn-sm">
-              {{fa-icon "trash-alt" type="fas"}} Delete
-            </button>
-          </div>
-        {{/unless}}
+        <UiButtonRow>
+          <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
+          <UiCancelButton @onClick={{this.cancelHandleReservation}}
+                          @disabled={{this.entry.isSaving}} />
+          {{#if this.entry.isSaving}}
+            <LoadingIndicator/>
+          {{/if}}
+          {{#unless this.entry.isNew}}
+            <div class="ms-auto">
+              <UiDeleteButton @onClick={{this.removeHandleReservation}} />
+            </div>
+          {{/unless}}
+        </UiButtonRow>
       </Modal.footer>
     </ChForm>
   </ModalDialog>

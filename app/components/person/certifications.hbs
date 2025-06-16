@@ -27,7 +27,7 @@
           <td>
             <UiButtonRow>
               {{#if this.canManage}}
-                <UiButton @onClick={{fn this.editAction pc}} @size="sm" @type="secondary">Edit</UiButton>
+                <UiEditButton  @onClick={{fn this.editAction pc}} />
               {{/if}}
               <UiButton @onClick={{fn this.showAction pc}} @size="sm" @type="secondary">Show Details</UiButton>
             </UiButtonRow>
@@ -100,9 +100,9 @@
         <f.submit @label="Save"/>
         <UiCancelButton @onClick={{this.cancelAction}} />
         {{#unless this.editEntry.isNew}}
-          <UiButton @type="danger" @class="ms-auto" @onClick={{this.deleteAction}} @disabled={{this.entry.isSaving}}>
-            {{fa-icon "trash"}} Delete
-          </UiButton>
+          <span class="ms-auto">
+          <UiDeleteButton @onClick={{this.deleteAction}} />
+          </span>
         {{/unless}}
       </Dialog.footer>
     </ChForm>

@@ -82,7 +82,7 @@
             </div>
           {{/if}}
           <div class=" d-flex justify-between align-items-center mt-1">
-            <UiButton @type="success" @class="btn-timesheet"
+            <UiButton @type="success" class="btn-timesheet"
                       @onClick={{fn this.toggleEntryVerified entry}}
                       @disabled={{entry.isSaving}}>
               {{#if entry.isVerified}}
@@ -92,7 +92,7 @@
               {{/if}}
             </UiButton>
             <UiButton @type="secondary"
-                      @class="btn-timesheet"
+                      class="btn-timesheet"
                       @onClick={{fn this.markEntryIncorrect entry}}
                       @disabled={{entry.isSaving}}>
               Submit Correction
@@ -101,7 +101,7 @@
               {{/if}}
             </UiButton>
             <UiButton @type="secondary"
-                      @class="btn-timesheet"
+                      class="btn-timesheet"
                       @onClick={{fn this.ignoreEntry entry}}
                       @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
               Skip Review

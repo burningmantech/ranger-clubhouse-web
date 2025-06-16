@@ -9,7 +9,7 @@
     Auditors, Bonked, Prospective, and Past Prospectives are not included.
   </p>
   <p>
-    <UiButton @onClick={{this.exportToCSV}}>Export To CSV</UiButton>
+    <UiExportToCSVButton @onClick={{this.exportToCSV}} />
   </p>
   {{#if this.eventStart}}
     Showing {{pluralize this.people.length "person"}}. {{this.year}} Event week: {{shift-format this.eventStart}}

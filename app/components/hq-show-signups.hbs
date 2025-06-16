@@ -1,7 +1,7 @@
 {{this.label}}:
 {{#if @count}}
   <Popover @text={{@count}}
-           @title={{concat "Period " (shift-format @period) " - " this.desc}}
+           @title={{this.periodTitle}}
            @onShow={{this.onShow}}
            @onHide={{this.onClose}}>
     {{#if this.isOpen}}

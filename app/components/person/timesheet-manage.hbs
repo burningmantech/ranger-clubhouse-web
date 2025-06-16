@@ -122,8 +122,7 @@
                 End Shift
               </UiButton>
             {{else}}
-              <UiButton @type={{if ts.isPending "danger" "primary"}}
-                        @size="sm"
+              <UiButton @type={{if ts.isPending "warning" "primary"}}
                         @onClick={{fn this.editEntryAction ts}}
                         @disabled={{ts.isReloading}}>
                 {{#if this.canManageTimesheets}}
@@ -162,32 +161,30 @@
 {{/if}}
 
 {{#if this.deleteEntry}}
-  <ModalDialog
-    @title="Confirm Timesheet Deletion"
-    @onEscape={{this.cancelDeleteDialogAction}}
-    as |Modal|>
+  <ModalDialog @title="Confirm Timesheet Deletion"
+               @onEscape= {{this.cancelDeleteDialogAction}} as |Modal|>
     <Modal.body>
       {{#if this.deleteEntry.isDirty}}
-        You have edited this entry without saving the record first. Do you wish to save the entry
-        before deletion so the edits are retained in the timesheet log?
+        You’ve made changes to this entry without saving the record. Would you like to archive it before deletion so
+        your edits are kept in the timesheet log?
       {{else}}
-        Are you absolutely sure you want to delete this entry?
+        Are you certain you want to permanently delete this entry?
       {{/if}}
     </Modal.body>
     <Modal.footer>
-      <UiCancelButton @onClick={{this.cancelDeleteDialogAction}} />
-      {{#if this.deleteEntry.isDirty}}
-        <UiButton @onClick={{fn this.deleteEntryAction false}} @type="secondary">
-          Delete w/o Saving
-        </UiButton>
-        <UiButton @onClick={{fn this.deleteEntryAction true}} @type="danger">
-          Save &amp; Delete
-        </UiButton>
-      {{else}}
-        <UiButton @onClick={{fn this.deleteEntryAction false}} @type="danger">
-          Delete
-        </UiButton>
-      {{/if}}
+      <UiButtonRow>
+        {{#if this.deleteEntry.isDirty}}
+          <UiButton @onClick={{fn this.deleteEntryAction true}} @type="danger" @size="sm">
+            Archive To Timesheet Log &amp; Delete
+          </UiButton>
+          <UiButton @onClick={{fn this.deleteEntryAction false}} @type="secondary" @size="sm">
+            Delete w/o Saving
+          </UiButton>
+        {{else}}
+          <UiDeleteButton @onClick={{fn this.deleteEntryAction false}} />
+        {{/if}}
+        <UiCancelButton @onClick={{this.cancelDeleteDialogAction}} />
+      </UiButtonRow>
     </Modal.footer>
   </ModalDialog>
 {{/if}}

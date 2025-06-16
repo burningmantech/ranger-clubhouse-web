@@ -21,7 +21,7 @@
         {{{motd.message}}}
         {{#unless motd.has_read}}
           <div class="mt-2">
-            <UiButton @type="secondary" @class="btn-responsive" @onClick={{fn this.markMotdAsRead motd}} @disabled={{motd.isMarking}}>
+            <UiButton @type="secondary" @responsive={{true}} @onClick={{fn this.markMotdAsRead motd}} @disabled={{motd.isMarking}}>
               {{#if motd.isMarking}}
                 <LoadingIndicator @text="Marking read"/>
               {{else}}

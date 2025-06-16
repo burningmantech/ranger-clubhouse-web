@@ -38,7 +38,7 @@
   {{/each}}
 </div>
 
-<UiButton @class="btn-responsive" @onClick={{this.saveSONamesAction}} @disabled={{this.isSaving}}>
+<UiButton @responsive={{true}} @onClick={{this.saveSONamesAction}} @disabled={{this.isSaving}}>
   Save Names
   {{#if this.isSaving}}
     <SpinIcon/>

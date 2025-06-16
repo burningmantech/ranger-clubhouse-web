@@ -36,10 +36,10 @@
           <tr>
             <td>{{row.fka}}</td>
             <td>
-              <UiEditButton @onClick={{fn this.editFka row}} @type="secondary" @size="sm"/>
-              <UiButton @onClick={{fn this.deleteFka row}} @type="secondary" @size="sm" class="ms-2">
-                {{fa-icon "trash" right=1}} Delete
-              </UiButton>
+              <UiButtonRow>
+                <UiEditButton @onClick={{fn this.editFka row}} @type="secondary"/>
+                <UiDeleteButton @onClick={{fn this.deleteFka row}}/>
+              </UiButtonRow>
             </td>
           </tr>
         {{else}}

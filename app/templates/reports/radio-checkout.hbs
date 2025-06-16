@@ -22,9 +22,7 @@
   </div>
 </FormRow>
 <p>
-  <UiButton @onClick={{this.exportToCSV}}>
-    Export To CSV
-  </UiButton>
+  <UiExportToCSVButton @onClick={{this.exportToCSV}} />
 </p>
 Showing {{pluralize this.radios.length "entry"}}
 <UiTable>

@@ -56,35 +56,36 @@
               {{/if}}
             </div>
             <div class="timesheet-actions">
-              {{#if (or tsm.isPending tsm.isRejected)}}
-                {{#if tsm.isPending}}
-                  <UiButton @type="danger"
-                            class="btn-responsive"
-                            @onClick={{fn this.deleteAction tsm}}
+              <UiButtonRow>
+                {{#if (or tsm.isPending tsm.isRejected)}}
+                  <UiButton @onClick={{fn this.editAction tsm}}
+                            @responsive={{true}}
                             @disabled={{or tsm.isReloading tsm.isSaving}}>
-                    {{fa-icon "trash" right=1}} Delete Request
+                    {{#if tsm.isReloading}}
+                      <SpinIcon/>
+                    {{else if tsm.isRejected}}
+                      {{fa-icon "redo" type="r" right=1}} Submit Appeal
+                    {{else}}
+                      {{fa-icon "edit" type="r" right=1}} Edit Request
+                    {{/if}}
                   </UiButton>
                 {{/if}}
-                <UiButton @onClick={{fn this.editAction tsm}}
-                          class="btn-responsive"
-                          @disabled={{or tsm.isReloading tsm.isSaving}}>
-                  {{#if tsm.isReloading}}
-                    <SpinIcon/>
-                  {{else if tsm.isRejected}}
-                    {{fa-icon "redo" right=1}} Submit Appeal
+                <UiButton @type="gray" @responsive={{true}} @onClick={{fn this.toggleNotes tsm}}>
+                  {{fa-icon "comments" type="r" right=1}}
+                  {{#if tsm.showNotes}}
+                    Hide Notes
                   {{else}}
-                    {{fa-icon "edit" right=1}} Edit Request
+                    Show Notes
                   {{/if}}
                 </UiButton>
-              {{/if}}
-              <UiButton @type="gray" class="btn-responsive" @onClick={{fn this.toggleNotes tsm}}>
-                {{fa-icon "comments" type="r" right=1}}
-                {{#if tsm.showNotes}}
-                  Hide Notes
-                {{else}}
-                  Show Notes
+                {{#if tsm.isPending}}
+                  <div class="ms-xl-auto">
+                    <UiDeleteButton @onClick={{fn this.deleteAction tsm}} @responsive={{true}}>
+                      Delete Request
+                    </UiDeleteButton>
+                  </div>
                 {{/if}}
-              </UiButton>
+              </UiButtonRow>
             </div>
           </div>
         </div>

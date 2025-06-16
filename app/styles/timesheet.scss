@@ -60,14 +60,6 @@
 .timesheet-actions {
   margin-top: 1vh;
   margin-bottom: 0.5vh;
-
-  button {
-    display: inline-block;
-  }
-
-  button:not(:last-child) {
-    margin-right: 0.5vw;
-  }
 }
 
 @media print {
@@ -155,17 +147,5 @@
   .timesheet-actions {
     order: 6;
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-
-    button {
-      display: block;
-      width: 100%;
-    }
-
-    button:not(:last-child) {
-      margin-bottom: 1vh;
-    }
   }
 }

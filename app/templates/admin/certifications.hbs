@@ -97,18 +97,21 @@
           </FormRow>
         </Modal.body>
         <Modal.footer @align="start">
-          <f.submit @label={{if this.entry.isNew "Create" "Update"}} @disabled={{this.entry.isSaving}} />
-          <UiCancelButton @disabled={{this.entry.isSaving}} @onClick={{this.cancelCertificationAction}} />
-          {{#if this.entry.isSaving}}
-            <LoadingIndicator/>
-          {{/if}}
-          {{#unless this.entry.isNew}}
-            <div class="ms-auto">
-              <UiButton @type="danger" @onClick={{this.deleteCertificationAction}}>{{fa-icon "trash"}} Delete</UiButton>
-            </div>
-          {{/unless}}
+          <UiButtonRow>
+            <f.submit @label={{if this.entry.isNew "Create" "Update"}} />
+            <UiCancelButton @onClick={{this.cancelCertificationAction}} />
+            {{#unless this.entry.isNew}}
+              <div class="ms-auto">
+                <UiDeleteButton @onClick={{this.deleteCertificationAction}} />
+              </div>
+            {{/unless}}
+          </UiButtonRow>
         </Modal.footer>
       </ChForm>
     </ModalDialog>
   {{/if}}
 </main>
+
+{{#if this.entry.isSaving}}
+  <LoadingDialog>Saving entry</LoadingDialog>
+{{/if}}

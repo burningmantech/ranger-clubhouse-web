@@ -17,9 +17,9 @@
       <FormLabel @auto={{true}}>Actions</FormLabel>
       <div class="col-auto">
         <UiButtonRow>
-          <UiButton @onClick={{this.newCredit}}>New Position Credit</UiButton>
+          <UiButton @onClick={{this.newCredit}} @size="sm">New Position Credit</UiButton>
           {{#if this.credits.length}}
-            <UiButton @onClick={{fn this.startCopy 0}} @type="secondary">
+            <UiButton @onClick={{fn this.startCopy 0}} @type="secondary" @size="sm">
               Copy Credits
             </UiButton>
           {{/if}}
@@ -79,9 +79,7 @@
                   <td class="w-35">{{credit.description}}</td>
                   <td class="w-20">
                     <UiButtonRow>
-                      <UiButton @onClick={{fn this.deleteCredit credit}} @type="danger" @size="sm">
-                        {{fa-icon "trash-alt" type="s" right=1}} Delete
-                      </UiButton>
+                      <UiDeleteButton @onClick={{fn this.deleteCredit credit}}>Delete</UiDeleteButton>
                       <UiEditButton @onClick={{fn this.editCredit credit}} @size="sm"/>
                     </UiButtonRow>
                   </td>
@@ -95,8 +93,8 @@
     {{/each}}
   </div>
   {{#if this.credit}}
-    <ModalDialog @title="{{if this.credit.isNew "New" "Edit"}} Position Credit" @onEscape={{this.cancelCredit}} as
-                 |Modal|>
+    <ModalDialog @title="{{if this.credit.isNew "New" "Edit"}} Position Credit"
+                 @onEscape={{this.cancelCredit}} as |Modal|>
       <ChForm @formId="credit-form"
               @formFor={{this.credit}}
               @validator={{this.creditValidations}}
@@ -146,13 +144,15 @@
           </div>
         </Modal.body>
         <Modal.footer @align="start">
-          <f.submit @label={{if this.credit.isNew "Create" "Update"}}
-                    @disabled={{or this.credit.isSaving this.isCreditSubmitting}} />
-          <UiCancelButton @disabled={{or this.credit.isSaving this.isCreditSubmitting}}
-                          @onClick={{this.cancelCredit}} />
-          {{#if (or this.credit.isSaving this.isCreditSubmitting)}}
-            <LoadingIndicator/>
-          {{/if}}
+          <UiButtonRow>
+            <f.submit @label={{if this.credit.isNew "Create" "Update"}}
+                      @disabled={{or this.credit.isSaving this.isCreditSubmitting}} />
+            <UiCancelButton @disabled={{or this.credit.isSaving this.isCreditSubmitting}}
+                            @onClick={{this.cancelCredit}} />
+            {{#if (or this.credit.isSaving this.isCreditSubmitting)}}
+              <LoadingIndicator/>
+            {{/if}}
+          </UiButtonRow>
         </Modal.footer>
       </ChForm>
     </ModalDialog>
