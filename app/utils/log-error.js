@@ -8,7 +8,7 @@ import config from 'clubhouse/config/environment';
  * error may be one of several types
  * - ember-model error
  * - ember-ajax error
- * - Javascript exception
+ * - JavaScript exception
  *
  * @param error
  * @param type string event error name (e.g., client-ember-route, client-window-exception, etc.)
@@ -61,7 +61,6 @@ export default function logError(error, type, additionalData = null) {
   const data = {
     name: error.name,
     exception: message,
-    details: JSON.stringify(error, Object.getOwnPropertyNames(error)),
     build_timestamp: config.APP.buildTimestamp,
     version: config.APP.version,
   };
@@ -86,20 +85,6 @@ export default function logError(error, type, additionalData = null) {
 
   const url = config['api-server'] + '/error-log/record';
 
-  if ('sendBeacon' in navigator) {
-    // sendBeacon will continue even if the browser window is closed.
-    navigator.sendBeacon(url, form);
-  } else {
-    // For Safari 11.1 and earlier, Internet Explorer, and other older browsers use good old XMLHttpRequest.
-    // If the window is closed before the request is completed, the request may be aborted hence why
-    // sendBeacon is preferred.
-    try {
-      const req = new XMLHttpRequest();
-      req.open('POST', url);
-      req.setRequestHeader('Accept', '*/*');
-      req.send(form);
-    } catch (exception) {
-      console.error('LOG ERROR', exception);
-    }
-  }
+  // sendBeacon will continue even if the browser window is closed.
+  navigator.sendBeacon?.(url, form);
 }
