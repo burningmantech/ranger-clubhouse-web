@@ -60,7 +60,6 @@ Router.map(function () {
     this.route('action-log');
     this.route('alerts');
     this.route('awards');
-    this.route('bulk-grant-awards');
     this.route('bulk-lookup');
     this.route('bulk-signout');
     this.route('bulk-upload');
