@@ -13,7 +13,10 @@
     <Accordion.body>
       {{#each survey.reports as |report|}}
         {{#each report.summarized_ratings as |summary|}}
-          <SurveyRatingSummaryReport @report={{report}} @summary={{summary}} />
+          <SurveyRatingSummaryReport @report={{report}}
+                                     @summary={{summary}}
+                                     @isSubject={{true}}
+          />
         {{/each}}
 
         {{#if (eq report.type "trainer")}}
@@ -23,6 +26,7 @@
                                     @trainer={{trainer}}
                                     @question={{question}}
                                     @survey={{survey}}
+                                    @isSubject={{true}}
               />
             {{/each}}
           {{/each}}
@@ -31,6 +35,7 @@
             <SurveyQuestionReport @report={{report}}
                                   @question={{question}}
                                   @survey={{survey}}
+                                  @isSubject={{true}}
             />
           {{/each}}
         {{/if}}

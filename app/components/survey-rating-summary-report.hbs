@@ -1,10 +1,12 @@
 {{#unless @noHeader}}
   <i><b>{{@summary.description}}</b></i>
 {{/unless}}
-<UiExportToCSVButton @thing="Ratings Summary"
-                     @onClick={{this.exportRatingsSummary}}
-                     @size="sm"
-                     class="{{if @noheader "ms-4"}}"/>
+{{#unless @isSubject}}
+  <UiExportToCSVButton @thing="Ratings Summary"
+                       @onClick={{this.exportRatingsSummary}}
+                       @size="sm"
+                       class="{{if @noheader "ms-4"}}"/>
+{{/unless}}
 <UiTable>
   <thead>
   <tr>
