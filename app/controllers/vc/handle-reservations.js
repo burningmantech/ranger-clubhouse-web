@@ -6,7 +6,7 @@ import {isEmpty} from '@ember/utils';
 import EmberObject from '@ember/object';
 import {cached} from '@glimmer/tracking';
 
-export default class HandleReservationController extends ClubhouseController {
+export default class VcHandleReservationController extends ClubhouseController {
   @tracked handleReservations;
   @tracked entry = null;
 

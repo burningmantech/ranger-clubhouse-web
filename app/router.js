@@ -67,7 +67,6 @@ Router.map(function () {
     this.route('clubhouse1-log');
     this.route('documents');
     this.route('error-log');
-    this.route('handle-reservations');
     this.route('help');
     this.route('hours-credits');
     this.route('mail-log');
@@ -154,6 +153,7 @@ Router.map(function () {
 
   this.route('ops', function() {
     this.route('assets');
+    this.route('bulk-awards');
     this.route('bulk-positions');
     this.route('bulk-sign-in-out');
     this.route('bulk-teams');
@@ -182,7 +182,6 @@ Router.map(function () {
       this.route('index', { path: '/'});
       this.route('manage', { path: '/:team_id'});
     });
-    this.route('bulk-awards');
   });
 
   this.route('training', {path: '/training/:position_id'}, function () {
@@ -274,6 +273,7 @@ Router.map(function () {
     this.route('bmid-print');
     this.route('bmid-sanity-check');
     this.route('handle-checker');
+    this.route('handle-reservations');
     this.route('maintenance');
     this.route('photo-review');
     this.route('photos');
