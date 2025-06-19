@@ -1,15 +1,12 @@
 <main>
   <h1>Bulk Service Recognition Awards Grants</h1>
-  <p>
-    <UiButton @onClick={{this.rebuildAwards}} @type="secondary" @size="sm">Rebuild All Awards</UiButton>
-  </p>
   The format is:
   <p>
     <code>callsign,type,title,is service,year1,...</code><br>
     type = award, team, or position.<br>
     title = the title of the award, team, or position.<br>
     is service = y or n to indicate the award year will count as a service year.<br>
-    year = the year being recognised. A year range can be entered. e.g., 2019-2023. Multiple years can also be entered
+    year = the year being recognized. A year range can be entered. e.g., 2019-2023. Multiple years can also be entered
     separated by commas.
   </p>
 
@@ -41,7 +38,7 @@
         {{else if this.didCommit}}
           <h4 class="text-success">Bulk Upload SUCCESS!</h4>
         {{else}}
-          <h4>Verify Upload - Nothing submitted yet</h4>
+          <h4>Verify Upload—Nothing submitted yet</h4>
         {{/if}}
 
         {{#if this.resultSuccesses}}
@@ -53,8 +50,9 @@
             <thead>
             <tr>
               <th>Callsign</th>
-              <th class="text-center">Service Type</th>
-              <th>Service Title</th>
+              <th class="text-center">Type</th>
+              <th>Title</th>
+              <th>Service Year?</th>
               <th>Year(s)</th>
             </tr>
             </thead>
@@ -71,6 +69,13 @@
                   {{record.title}}
                 </td>
                 <td>
+                  {{#if record.is_service_year}}
+                    <UiBadge @type="success">service year</UiBadge>
+                  {{else}}
+                    -
+                  {{/if}}
+                </td>
+                <td>
                   {{year-range record.years}}
                 </td>
               </tr>
@@ -80,7 +85,7 @@
         {{/if}}
         {{#if
           (and this.resultSuccesses (not this.resultFailures) (not this.didCommit))}}
-          <UiButton @type="success" @onClick={{this.commitAction}}>
+          <UiButton @type="success" @onClick={{this.commitAction}} @size="md">
             Commit Grants
           </UiButton>
         {{/if}}
@@ -102,12 +107,12 @@
     After the actions have been verified, you'll be able to commit the upload.
   </p>
   <p>
-    <UiButton @disabled={{this.isSubmitting}} @onClick={{this.verifyAction}}>
+    <UiButton @disabled={{this.isSubmitting}} @onClick={{this.verifyAction}} @size="md">
       Verify Grants
     </UiButton>
   </p>
 </main>
 
 {{#if this.isSubmitting}}
-  <LoadingDialog />
+  <LoadingDialog/>
 {{/if}}

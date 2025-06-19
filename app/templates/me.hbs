@@ -11,10 +11,9 @@
         <s.link @route="me.event-info" @title="Event Info" @icon="user"/>
       {{/unless}}
     {{/if}}
-    {{!--
     {{#if this.user.isRanger}}
       <s.link @route="me.awards" @title="Service Recognition" @icon="award" @iconType="s"/>
-    {{/if}} --}}
+    {{/if}}
   </s.group>
 
   {{#if (or this.user.isRanger this.user.isPNV this.user.isEchelon)}}

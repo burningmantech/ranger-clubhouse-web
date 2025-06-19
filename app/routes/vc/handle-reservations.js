@@ -1,8 +1,8 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {ADMIN} from 'clubhouse/constants/roles';
+import {ADMIN, VC} from 'clubhouse/constants/roles';
 
-export default class HandleReservationsRoute extends ClubhouseRoute {
-  roleRequired = ADMIN;
+export default class VcHandleReservationsRoute extends ClubhouseRoute {
+  roleRequired = [ADMIN, VC];
 
   model() {
     return this.store.query('handle-reservation', {});
