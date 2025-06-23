@@ -10,14 +10,18 @@
 
   <UiTab as |tab|>
     <tab.pane @title="Handle Entries" @id="entries">
-      <UiButtonRow class="mb-3">
-        <UiButton @type="primary" @onClick={{this.newHandleReservation}} @size="sm">
-          New Handle Reservation
-        </UiButton>
-        <UiButton @type="secondary" @onClick={{this.expireHandles}} @size="sm">
-          Delete Expired Handles
-        </UiButton>
-      </UiButtonRow>
+      {{#if this.canEdit}}
+        <UiButtonRow class="mb-3">
+          <UiButton @type="primary" @onClick={{this.newHandleReservation}} @size="sm">
+            New Handle Reservation
+          </UiButton>
+          <UiButton @type="secondary" @onClick={{this.expireHandles}} @size="sm">
+            Delete Expired Handles
+          </UiButton>
+        </UiButtonRow>
+      {{else}}
+        <p>You don't have permission to update the list.</p>
+      {{/if}}
       <FormRow>
         <FormLabel @auto={{true}}>Filters</FormLabel>
         <div class="col-auto mt-2">
@@ -49,7 +53,9 @@
           <th>TWII Year</th>
           <th>Expires On</th>
           <th>Reason</th>
-          <th>Actions</th>
+          {{#if this.canEdit}}
+            <th>Actions</th>
+          {{/if}}
         </tr>
         </thead>
         <tbody>
@@ -69,9 +75,11 @@
             <td>
               <PresentOrNot @value={{hr.reason}} @empty="-"/>
             </td>
-            <td>
-              <UiEditButton @onClick={{fn this.editHandleReservation hr}} @size="sm"/>
-            </td>
+            {{#if this.canEdit}}
+              <td>
+                <UiEditButton @onClick={{fn this.editHandleReservation hr}} @size="sm"/>
+              </td>
+            {{/if}}
           </tr>
         {{else}}
           <tr>
@@ -82,39 +90,43 @@
       </UiTable>
     </tab.pane>
     <tab.pane @title="Bulk Upload" @id="upload">
-      <ChForm @formFor={{this.uploadForm}} @formId="upload" @onSubmit={{this.verifyUpload}} as |f|>
-        <FormRow>
-          <f.select @name="reservation_type"
-                    @label="Reservation Type"
-                    @options={{this.typeOptions}} />
-          <f.datetime @name="expires_on" @label="Expires On (optional)" @dateOnly={{true}} />
-          <f.number @name="twii_year"
-                    @label="TWII Year"
-                    @size={{4}}
-                    @maxlength={{4}}
-                    @disabled={{not-eq f.model.reservation_type "twii_person"}} />
-        </FormRow>
-        {{#if (eq f.model.reservation_type "twii_person")}}
-          <p>
-            Note: When no Expires On is given for TWII entries, the expiration date will be set to September 15th in
-            the year of the 3rd event, including this upcoming event, from now. (e.g., uploading the TWII 2023 will
-            have a default expiration of September 15th, 2025.)
-          </p>
-        {{/if}}
-        <FormRow>
-          <f.text @name="reason"
-                  @label="Reason (optional)"
-                  @size={{40}}
-                  @maxlength={{80}} />
-        </FormRow>
-        <FormRow>
-          <f.textarea @name="handles"
-                      @label="Handles"
-                      @rows={{10}}
-                      @cols={{30}} />
-        </FormRow>
-        <f.submit @label="Verify"/>
-      </ChForm>
+      {{#if this.canEdit}}
+        <ChForm @formFor={{this.uploadForm}} @formId="upload" @onSubmit={{this.verifyUpload}} as |f|>
+          <FormRow>
+            <f.select @name="reservation_type"
+                      @label="Reservation Type"
+                      @options={{this.typeOptions}} />
+            <f.datetime @name="expires_on" @label="Expires On (optional)" @dateOnly={{true}} />
+            <f.number @name="twii_year"
+                      @label="TWII Year"
+                      @size={{4}}
+                      @maxlength={{4}}
+                      @disabled={{not-eq f.model.reservation_type "twii_person"}} />
+          </FormRow>
+          {{#if (eq f.model.reservation_type "twii_person")}}
+            <p>
+              Note: When no Expires On is given for TWII entries, the expiration date will be set to September 15th in
+              the year of the 3rd event, including this upcoming event, from now. (e.g., uploading the TWII 2023 will
+              have a default expiration of September 15th, 2025.)
+            </p>
+          {{/if}}
+          <FormRow>
+            <f.text @name="reason"
+                    @label="Reason (optional)"
+                    @size={{40}}
+                    @maxlength={{80}} />
+          </FormRow>
+          <FormRow>
+            <f.textarea @name="handles"
+                        @label="Handles"
+                        @rows={{10}}
+                        @cols={{30}} />
+          </FormRow>
+          <f.submit @label="Verify"/>
+        </ChForm>
+      {{else}}
+        <p>You dont have permission to bulk upload a handle reservations list.</p>
+      {{/if}}
 
       {{#if this.haveResults}}
         <UiSection class="mt-4">

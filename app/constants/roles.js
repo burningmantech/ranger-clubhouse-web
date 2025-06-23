@@ -32,12 +32,12 @@ export const EDIT_CLOTHING = 120;   // Can edit a clothing fields.
 export const MEGAPHONE_TEAM_ONPLAYA = 121;  // On-Playa Megaphone permission
 export const MEGAPHONE_EMERGENCY_ONPLAYA = 122;    // Allows access to the broadcast all emergency
 export const ANNOUNCEMENT_MANAGEMENT = 123;    // Allow announcements to be created and deleted.
+export const QUARTERMASTER = 124;
 export const SHIFT_MANAGEMENT = 125;
 export const POD_MANAGEMENT = 126;
 export const AWARD_MANAGEMENT = 127; // Allows a person to grant or revoke service awards.
 export const FULL_REPORT_ACCESS = 128; // Allows a person to see an unrestrict report view for reports like Timesheets By Callsign
-
-export const QUARTERMASTER = 124;
+export const EDIT_HANDLE_RESERVATIONS = 129; // Can manage the handle reservations list.
 
 export const ROLE_BASE_MASK = 0x7f000000;
 export const POSITION_MASK = 0x0fff;
