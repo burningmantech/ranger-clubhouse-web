@@ -5,6 +5,7 @@ import {ReservationTypeLabels, ReservationTypeOptions, TYPE_UNCATEGORIZED} from 
 import {isEmpty} from '@ember/utils';
 import EmberObject from '@ember/object';
 import {cached} from '@glimmer/tracking';
+import {ADMIN, EDIT_HANDLE_RESERVATIONS} from "clubhouse/constants/roles";
 
 export default class VcHandleReservationController extends ClubhouseController {
   @tracked handleReservations;
@@ -31,6 +32,10 @@ export default class VcHandleReservationController extends ClubhouseController {
 
   typeLabel(type) {
     return ReservationTypeLabels[type] ?? type;
+  }
+
+  get canEdit() {
+    return this.session.hasRole([ADMIN, EDIT_HANDLE_RESERVATIONS]);
   }
 
   @cached
