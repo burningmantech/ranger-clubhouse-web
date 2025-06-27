@@ -277,7 +277,7 @@ export const ONLINE_COURSE = {
     if (isPNV && !prevCompleted) {
       return {
         result: NOT_AVAILABLE,
-        message: 'You must complete the steps in the previous section, including awaiting on any photo approvals, before being allowed to take the Online Course.',
+        message: 'You have one or more uncompleted tasks in the Setup Your Clubhouse Account section. Once those tasks have been completed, the Online Course button will appear.',
         name
       };
     }
