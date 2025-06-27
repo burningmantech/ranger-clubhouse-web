@@ -82,18 +82,20 @@
     {{/if}}
   </tab.pane>
 
-  <tab.pane @title="Teams &amp; Positions" @id="teams-positions">
-    <UiSection>
-      <:title>{{fa-icon "sitemap" right=1}} Teams &amp; Positions</:title>
-      <:body>
-        <p>
-          Your granted positions determine which shifts you can sign up for and which ARTs you’re allowed to attend.
-          The lists below shows the teams you’re part of (if any) and the positions you’ve been granted.
-        </p>
-        <TeamsAndPositions @teams={{this.personTeams}} @membership={{this.personMembership}}/>
-      </:body>
-    </UiSection>
-  </tab.pane>
+  {{#unless this.person.isAuditor}}
+    <tab.pane @title="Teams &amp; Positions" @id="teams-positions">
+      <UiSection>
+        <:title>{{fa-icon "sitemap" right=1}} Teams &amp; Positions</:title>
+        <:body>
+          <p>
+            Your granted positions determine which shifts you can sign up for and which ARTs you’re allowed to attend.
+            The lists below shows the teams you’re part of (if any) and the positions you’ve been granted.
+          </p>
+          <TeamsAndPositions @teams={{this.personTeams}} @membership={{this.personMembership}}/>
+        </:body>
+      </UiSection>
+    </tab.pane>
+  {{/unless}}
 
   {{#if (or this.person.isRanger this.person.isEchelon)}}
     <tab.pane @title="Provisions" @id="provisions">
