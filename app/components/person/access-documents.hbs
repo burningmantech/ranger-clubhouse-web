@@ -1,8 +1,14 @@
 <UiSection>
   <:title>Access Documents (Tickets,Vehicle Passes, SAPs)</:title>
   <:body>
-    Showing {{if this.isShowingAll "ALL including used and expired" "current"}}
-    {{pluralize this.documents.length "access document"}}
+    Showing
+    {{#if this.isShowingAll}}all{{/if}}
+    {{pluralize this.documents.length
+                (concat
+                  (unless this.isShowingAll "current " )
+                  "access document"
+                )
+    }}
     <UiTable>
       <thead>
       <tr>

@@ -1,5 +1,4 @@
 import Component from '@glimmer/component';
-import {isEmpty} from '@ember/utils';
 import {htmlSafe} from '@ember/template';
 
 const MEALS = {
@@ -49,26 +48,24 @@ export default class MealInfoComponent extends Component {
 
     let {meals} = eventInfo;
     let type;
-    if (isEmpty(meals)) {
-      type = 'pogs';
+    const periods = [];
+    if (meals.pre) {
+      periods.push('pre');
+    }
+    if (meals.event) {
+      periods.push('event');
+    }
+
+    if (meals.post) {
+      periods.push('post');
+    }
+
+    if (periods.length === 3) {
+      type = 'all';
+    } else if (periods.length) {
+      type = periods.join('+');
     } else {
-      const periods = [];
-      if (meals.pre) {
-        periods.push('pre');
-      }
-      if (meals.event) {
-        periods.push('event');
-      }
-
-      if (meals.post) {
-        periods.push('post');
-      }
-
-      if (periods.length === 3) {
-        type = 'all';
-      } else {
-        type = periods.join('+');
-      }
+      type = 'pogs';
     }
 
     const mealInfo = MEALS[type];

@@ -1,6 +1,6 @@
 <div class="alert alert-{{or @type "primary"}}" ...attributes>
   {{#if @icon}}
-    {{fa-icon @icon right=1}}
+    {{fa-icon @icon type=@iconType right=1}}
   {{/if}}
   {{yield}}
 </div>
