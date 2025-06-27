@@ -86,41 +86,11 @@
     <UiSection>
       <:title>{{fa-icon "sitemap" right=1}} Teams &amp; Positions</:title>
       <:body>
-        Positions indicate which shifts you are allowed to sign up for and what ARTs you may attend. The following shows
-        what teams you belong to (if any) and/or what positions have been granted.
-        <div class="masonry-container masonry-col-3 mt-2">
-          <div class="masonry-item mb-2">
-            <div class="border-bottom fw-bold px-2">General Positions</div>
-            <div class="px-2">
-              {{#each this.generalPositions as |pos|}}
-                {{position-label pos}}<br>
-              {{else}}
-                <i>None granted.</i>
-              {{/each}}
-            </div>
-          </div>
-
-          {{#each this.personMembership.teams key="id" as |team|}}
-            <div class="masonry-item mb-2">
-              <div class="border-bottom fw-bold px-2">{{team.title}}</div>
-              {{#if team.positions}}
-                <div class="px-2">
-                  {{#each team.positions as |p|}}
-                    {{position-label p}}<br>
-                  {{/each}}
-                </div>
-              {{else}}
-                <div class="px-2 mt-2">
-                  {{#if team.has_positions}}
-                    <i>No {{team.type}} positions have been granted.</i>
-                  {{else}}
-                    <i>The {{team.type}} has no {{team.type}} positions.</i>
-                  {{/if}}
-                </div>
-              {{/if}}
-            </div>
-          {{/each}}
-        </div>
+        <p>
+          Your granted positions determine which shifts you can sign up for and which ARTs you’re allowed to attend.
+          The lists below shows the teams you’re part of (if any) and the positions you’ve been granted.
+        </p>
+        <TeamsAndPositions @teams={{this.personTeams}} @membership={{this.personMembership}}/>
       </:body>
     </UiSection>
   </tab.pane>

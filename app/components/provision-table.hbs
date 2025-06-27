@@ -1,13 +1,17 @@
 <span class="me-2"><b>Meals:</b> {{this.mealsLabel}}</span>
 <span class="me-2"><b>Showers:</b> {{if @package.showers "Yes" "No"}}</span>
 <b>Event Radios:</b> {{@package.radios}}
-<div class="text-muted mb-2">The above is calculated from available, claimed, and/or submitted provisions</div>
+<div class="text-muted mb-2">
+  The above is calculated from available, claimed, and submitted provisions. For multiple event radio provisions, the
+  record with the highest count will be used. Radio provisions are not accumulative.
+</div>
 
 {{#if @package.have_allocated}}
-  <p class="fw-bold">
-    {{fa-icon "hand-point-right" right=1}} One or more provisions have been allocated. All provisions, including
-    those that were earned and then banked, will be used.
-  </p>
+  <UiAlert @type="warning">
+    One or more provisions have been allocated. All provisions, including banked provisions, will be used.
+    The provisions with status <code>available</code> will be marked as <code>claimed</code>
+    upon BMID export.
+  </UiAlert>
 {{/if}}
 <p>
   Type:

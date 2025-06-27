@@ -1,0 +1,46 @@
+<div class="fs-6 fw-bold">Team Membership</div>
+<div class="masonry-container mt-2">
+  {{#each this.teamMembership as |team|}}
+    <div class="masonry-item">
+      <div>
+        {{team.title}}
+        {{#if team.is_manager}}
+          <UiBadge @type="success" class="ms-2">manger</UiBadge>
+        {{/if}}
+      </div>
+    </div>
+  {{else}}
+    <div class="masonry-item">
+      <div>
+        You are not a member of any team at this time.
+      </div>
+    </div>
+  {{/each}}
+</div>
+<hr class="py-1">
+<div class="masonry-container">
+  <div class="masonry-item mb-2">
+    <div class="fw-bold mb-2">General Positions</div>
+    <div>
+      {{#each this.positions.generalPositions as |position|}}
+        {{position-label position}}<br>
+      {{else}}
+        <i>None granted.</i>
+      {{/each}}
+    </div>
+  </div>
+
+  {{#each this.positions.teams as |team|}}
+    {{#if team.positions}}
+      <div class="masonry-item mb-2">
+        <div class="fw-bold mb-1">{{team.title}} Positions</div>
+        <div>
+          {{#each team.positions as |p|}}
+            {{position-label p}}<br>
+          {{/each}}
+        </div>
+      </div>
+    {{/if}}
+  {{/each}}
+</div>
+
