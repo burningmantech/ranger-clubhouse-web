@@ -12,7 +12,7 @@
     <f.select @name="attachment_id"
               @options={{this.attachmentOptions}}/>
     <div class="col-auto">
-      <f.submit @label="Checkout" @disabled={{or (is-empty f.model.barcode) this.isSubmitting}}/>
+      <f.submit @label="Checkout" @disabled={{or (is-empty f.model.barcode) this.isSubmitting}} @size="md"/>
       {{#if this.isSubmitting}}
         <LoadingIndicator/>
       {{/if}}
@@ -28,7 +28,7 @@
       Check out was on {{shift-format this.barcodeCheckedOut.checked_out}}.
     </div>
     <div class="mt-2 mb-4">
-      <UiButton @type="secondary" @onClick={{this.showHistoryAction}}>
+      <UiButton @type="secondary" @onClick={{this.showHistoryAction}} size="md">
         Show Asset History
       </UiButton>
     </div>
@@ -44,8 +44,8 @@
         action will be logged and subject to review.
       </Modal.body>
       <Modal.footer>
-        <UiCloseButton @onClick={{this.closeExpiredDialog}} />
-        <UiButton @onClick={{this.forceCheckout}} @type="warning">
+        <UiCloseButton @onClick={{this.closeExpiredDialog}} @size="md" />
+        <UiButton @onClick={{this.forceCheckout}} @type="warning" @size="md">
           Force Checkout
         </UiButton>
       </Modal.footer>

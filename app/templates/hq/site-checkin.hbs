@@ -1,11 +1,11 @@
-<h1>Site Check In</h1>
+<h1>Site Check-In</h1>
 
 {{#if this.isOnSite}}
   <UiNotice @icon="check" @type="success" @title="{{this.person.callsign}} Marked On Site">
     <p>
-      Site check in is complete for {{this.person.callsign}} and is ready to start a shift.
+      Site check-in is complete for {{this.person.callsign}} and is ready to start a shift.
     </p>
-    <LinkTo @route="hq.shift" class="btn btn-success btn-large">Start Shift Check In</LinkTo>
+    <LinkTo @route="hq.shift" class="btn btn-success btn-lg">Start Shift Check-In</LinkTo>
   </UiNotice>
 {{/if}}
 
@@ -48,19 +48,19 @@
     {{#if this.eventInfo.radio_max}}
       {{#if this.personEvent.asset_authorized}}
         <h4 class="text-success">
-          {{fa-icon "tower-broadcast" right=1 fixed=true}} Authorized for {{pluralize this.eventInfo.radio_max
-                                                                                      "Event Radio"}}
+          {{fa-icon "tower-broadcast" right=1 fixed=true}}
+          Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}
         </h4>
       {{else}}
         <h4 class="text-muted">
-          {{fa-icon "ban" right=1 fixed=true}} Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}
-          &mdash; DO
-          NOT ISSUE UNTIL Radio Checkout Agreement IS SIGNED.
+          {{fa-icon "ban" right=1 fixed=true}}
+          Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}
+          &mdash; DO NOT ISSUE UNTIL Radio Checkout Agreement IS SIGNED.
         </h4>
       {{/if}}
     {{else}}
       <h4>
-        {{fa-icon "tower-broadcast" right=2}} Shift Radios only
+        {{fa-icon "tower-broadcast" right=1 fixed=true}} Shift Radios only
       </h4>
     {{/if}}
     <hr>
@@ -73,8 +73,8 @@
   </:body>
 </UiSection>
 
-<UiButton @onClick={{this.startSiteCheckIn}} class="btn-block btn-lg my-4">
-  Begin Site Check In
+<UiButton @onClick={{this.startSiteCheckIn}} class="btn-block my-4" @size="lg">
+  Begin Site Check-In
 </UiButton>
 
 {{#if this.showSiteCheckInWizard}}
@@ -122,54 +122,66 @@
         {{/if}}
       </w.step>
     </ChForm>
-    <w.step @title="Radios" @nextAction={{this.checkForRadio}}>
-      {{#unless this.eventInfo.radio_info_available}}
-        <UiNotice @type="danger">
-          Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
-        </UiNotice>
-      {{/unless}}
-      {{#if this.eventInfo.radio_eligible}}
-        {{#if this.personEvent.asset_authorized}}
-          <p class="text-success">
-            <b>Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}</b>
-          </p>
-          <p>
-            The radio may be checked out now, or at the start of their first shift.
-          </p>
-          <AssetCheckoutForm @person={{this.person}}
-                             @assets={{this.assets}}
-                             @attachments={{this.attachments}}
-                             @eventInfo={{this.eventInfo}}
-          />
-          {{#if this.activeAssets}}
-            {{pluralize this.activeAssets.length "asset"}} checked out.
-            <HqAssetTable @assetsCheckedOut={{this.activeAssets}}
-                          @attachments={{this.attachments}}
+    {{#unless this.person.isAlpha}}
+      <w.step @title="Radios" @nextAction={{this.checkForRadio}}>
+        {{#unless this.eventInfo.radio_info_available}}
+          <UiNotice @type="danger">
+            Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
+          </UiNotice>
+        {{/unless}}
+        {{#if this.eventInfo.radio_eligible}}
+          {{#if this.personEvent.asset_authorized}}
+            <p class="text-success">
+              <b>Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}</b>
+            </p>
+            <p>
+              The radio may be checked out now, or at the start of their first shift.
+            </p>
+            <AssetCheckoutForm @person={{this.person}}
+                               @assets={{this.assets}}
+                               @attachments={{this.attachments}}
+                               @eventInfo={{this.eventInfo}}
             />
-          {{/if}}
-          {{#if this.assets.isUpdating}}
-            <LoadingIndicator @text="Refreshing assets"/>
+            {{#if this.activeAssets}}
+              {{pluralize this.activeAssets.length "asset"}} checked out.
+              <HqAssetTable @assetsCheckedOut={{this.activeAssets}}
+                            @attachments={{this.attachments}}
+              />
+            {{/if}}
+            {{#if this.assets.isUpdating}}
+              <LoadingIndicator @text="Refreshing assets"/>
+            {{/if}}
+          {{else}}
+            <div class="text-danger">
+              While {{this.person.callsign}} is authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}},
+              {{this.person.callsign}} may not be issued radios and other gear until the Radio Checkout Agreement is
+              signed.
+            </div>
           {{/if}}
         {{else}}
-          <div class="text-danger">
-            While {{this.person.callsign}} is authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}},
-            {{this.person.callsign}} may not be issued radios and other gear until the Radio Checkout Agreement is
-            signed.
-          </div>
+          <h3>Shift Radios Only</h3>
+          {{this.person.callsign}} is only authorized for a shift radio.
+          A radio will need to be checked out for each shift, and then returned at the end of the shift.
         {{/if}}
-      {{else}}
-        <h3>Shift Radios Only</h3>
-        {{this.person.callsign}} is only authorized for a shift radio.
-        A radio will need to be checked out for each shift, and then returned at the end of the shift.
-      {{/if}}
-    </w.step>
+      </w.step>
+    {{/unless}}
     <w.step @title="Mark Person As On Site" @isLast={{true}} @includeCancel={{true}}>
-      <p>
-        Don't forget to hand over their BMID.
-      </p>
-      <p>
-        Mark {{this.person.callsign}} as on site if everything appears to be okay.
-      </p>
+      {{#if this.person.isAlpha}}
+        <p>
+          Direct {{this.person.callsign}} to the Hat Rack where The Mentors will take over. They will be responsible
+          for checking them into their Alpha shift.
+        </p>
+        <p>
+          Do not hand over a Ranger field guide. The Mentors hand these out to newly minted Shiny Pennies.
+        </p>
+      {{else}}
+        <p>
+          Don't forget to hand over their BMID. Offer them a Ranger field guide.
+        </p>
+        <p>
+          Mark {{this.person.callsign}} as on site if everything appears to be okay.
+        </p>
+      {{/if}}
     </w.step>
   </UiWizard>
 {{else if (and this.siteCheckInStarted (not this.siteCheckInFinished))}}

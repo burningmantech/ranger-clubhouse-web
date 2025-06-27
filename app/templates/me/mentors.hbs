@@ -10,7 +10,8 @@
     <:title>
       Year {{event.year}}
       {{#if (eq event.status "pass")}}
-        - <UiBadge @type="success">passed</UiBadge>
+        -
+        <UiBadge @type="success">passed</UiBadge>
       {{/if}}
     </:title>
     <:body>
@@ -21,7 +22,7 @@
             {{#if mentor.profile_url}}
               <img src={{mentor.profile_url}} alt="profile" class="card-img-top" loading="lazy">
             {{else}}
-              <i class="far fa-user fa-8x text-center my-4"></i>
+              <UiPhotoNone class="text-center my-4"/>
               <div class="card-text text-center mb-3">(No Photo)</div>
             {{/if}}
             <div class="card-body">

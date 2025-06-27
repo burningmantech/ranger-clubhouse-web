@@ -21,7 +21,7 @@
       <td>
         <PresentOrNot @value={{ap.attachment.description}} @empty="none"/>
         <br>
-        <UiButton @onClick={{fn this.changeAssetAttachment ap}} @type="secondary" class="mt-1" @size="sm"
+        <UiButton @onClick={{fn this.changeAssetAttachment ap}} @type="secondary" class="mt-1"
                   @disabled={{ap.isSubmitting}}>
           Change Attachment
         </UiButton>
@@ -34,7 +34,7 @@
       </td>
       <td>{{shift-format ap.checked_out}}</td>
       <td>
-        <UiButton @onClick={{fn this.assetCheckInAction ap}} @disabled={{ap.isSubmitting}}>
+        <UiButton @onClick={{fn this.assetCheckInAction ap}} @disabled={{ap.isSubmitting}} @size="md">
           Check In
         </UiButton>
       </td>

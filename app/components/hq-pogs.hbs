@@ -41,29 +41,23 @@
       {{/if}}
     </p>
   {{/if}}
-  <div class="row mb-2">
-    <div class="col-auto">
-      <UiButton @onClick={{this.recordFullMealPog}}>
-        {{#if this.config.meal_half_pog_enabled}}
-          Record Full Meal Pog
-        {{else}}
-          Record Meal Pog
-        {{/if}}
-      </UiButton>
-    </div>
+  <UiButtonRow class="mb-2">
+    <UiButton @onClick={{this.recordFullMealPog}} @size="md">
+      {{#if this.config.meal_half_pog_enabled}}
+        Record Full Meal Pog
+      {{else}}
+        Record Meal Pog
+      {{/if}}
+    </UiButton>
     {{#if this.config.meal_half_pog_enabled}}
-      <div class="col-auto">
-        <UiButton @onClick={{this.recordHalfMealPog}}>
-          Record &half; Meal Pog
-        </UiButton>
-      </div>
-    {{/if}}
-    <div class="col-auto">
-      <UiButton @onClick={{this.recordShowerPog}}>
-        Record Shower Pog
+      <UiButton @onClick={{this.recordHalfMealPog}} @size="md">
+        Record &half; Meal Pog
       </UiButton>
-    </div>
-  </div>
+    {{/if}}
+    <UiButton @onClick={{this.recordShowerPog}} @size="md">
+      Record Shower Pog
+    </UiButton>
+  </UiButtonRow>
   Showing {{pluralize this.pogs.length "pog"}} recorded.
   <UiTable @normalSize={{true}}>
     <thead>

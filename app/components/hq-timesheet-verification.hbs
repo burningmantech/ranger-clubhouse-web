@@ -15,7 +15,7 @@
       </span>
   </div>
   <div>
-    <UiButton @type="secondary" @onClick={{this.newTimesheetMissingRequest}} @size="sm">
+    <UiButton @type="secondary" @onClick={{this.newTimesheetMissingRequest}}>
       New Missing Timesheet Request
     </UiButton>
   </div>
@@ -84,7 +84,8 @@
           <div class=" d-flex justify-between align-items-center mt-1">
             <UiButton @type="success" class="btn-timesheet"
                       @onClick={{fn this.toggleEntryVerified entry}}
-                      @disabled={{entry.isSaving}}>
+                      @disabled={{entry.isSaving}}
+                      @size="md">
               {{#if entry.isVerified}}
                 Un-Verify Entry
               {{else}}
@@ -94,6 +95,7 @@
             <UiButton @type="secondary"
                       class="btn-timesheet"
                       @onClick={{fn this.markEntryIncorrect entry}}
+                      @size="md"
                       @disabled={{entry.isSaving}}>
               Submit Correction
               {{#if entry.isPending}}
@@ -103,6 +105,7 @@
             <UiButton @type="secondary"
                       class="btn-timesheet"
                       @onClick={{fn this.ignoreEntry entry}}
+                      @size="md"
                       @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
               Skip Review
               {{#if entry.isIgnoring}}

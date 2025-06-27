@@ -52,20 +52,13 @@
     </div>
 
     <div class="me-auto px-4 d-print-none order-0 order-lg-1">
-      <div class="mugshot">
+      <div class="photo-medium">
         {{#if this.photo}}
           {{#if this.photo.photo_url}}
-            <img src="{{or this.photo.profile_url this.photo.photo_url}}" class="mx-auto d-block" alt="profile">
-            Photo:
-            {{#if (eq this.photo.photo_status "approved")}}
-              <span class="text-success">Approved</span>
-            {{else}}
-              <span class="text-danger">{{this.photo.photo_status}}</span>
-            {{/if}}
-            <br>
+            <img src="{{or this.photo.profile_url this.photo.photo_url}}" class="d-block" alt="profile">
           {{else}}
-            <i class="far fa-user fa-8x"></i><br>
-            No Photo Uploaded<br>
+            <UiPhoneNone />
+            No Photo Uploaded
           {{/if}}
           {{#if this.photo.message}}
             <div class="text-danger">ERROR: {{this.photo.message}}</div>
@@ -74,7 +67,7 @@
           <LoadingIndicator @text="Loading photo"/>
         {{/if}}
       </div>
-      <dl>
+      <dl class="mt-2">
         <dt>Earned Credits</dt>
         <dd>{{credits-format this.timesheetSummary.total_credits}}</dd>
 

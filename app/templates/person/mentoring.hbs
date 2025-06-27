@@ -12,13 +12,13 @@
       Mentor Year {{event.year}}
       <span class="ms-2">
         {{#if (eq event.status "pass")}}
-          <UiBadge @text="passed" @type="success" />
+          <UiBadge @text="passed" @type="success"/>
         {{else if (eq event.status "bonk")}}
-          <UiBadge @text="bonked" @type="danger" />
+          <UiBadge @text="bonked" @type="danger"/>
         {{else if (eq event.status "self-bonk")}}
-          <UiBadge @text="self bonked" @type="danger" />
+          <UiBadge @text="self bonked" @type="danger"/>
         {{else}}
-          <UiBadge @text="pending" @type="warning" />
+          <UiBadge @text="pending" @type="warning"/>
         {{/if}}
       </span>
     </:title>
@@ -46,7 +46,7 @@
             {{#if mentor.profile_url}}
               <img src={{mentor.profile_url}} alt="profile" class="card-img-top" loading="lazy">
             {{else}}
-              <i class="far fa-user fa-8x text-center my-4"></i>
+              <UiPhotoNone/>
               <div class="card-text text-center mb-3">(No Photo)</div>
             {{/if}}
             <div class="card-body">
