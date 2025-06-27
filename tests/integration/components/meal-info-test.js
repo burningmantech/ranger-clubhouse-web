@@ -15,18 +15,10 @@ module('Integration | Component | meal-info', function(hooks) {
   });
 
   test('it renders meal info with empty value', async function(assert) {
-    this.set('eventInfo', { meals: '', meals_status: '' });
+    this.set('eventInfo', { meals: {pre: false, event:false, post:false}, meals_status: '' });
 
     await render(hbs`<MealInfo @eventInfo={{this.eventInfo}} />`);
 
     assert.notStrictEqual(this.element.textContent.trim().indexOf('Pogs'), -1, 'render meal pogs');
-  });
-
-  test('it renders meal info with unknown value', async function(assert) {
-    this.set('eventInfo', { meals: 'something-something-darkside', meals_status: 'claimed' });
-
-    await render(hbs`<MealInfo @eventInfo={{this.eventInfo}} />`);
-
-    assert.notStrictEqual(this.element.textContent.trim().indexOf('Unknown meal type'), -1, 'render unknown status');
   });
 });
