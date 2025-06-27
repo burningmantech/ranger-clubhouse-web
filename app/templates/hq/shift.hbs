@@ -217,7 +217,7 @@
           {{this.person.callsign}} has no outstanding items and is cleared to be marked off-site.
         </p>
       {{/if}}
-      <UiButton @type="secondary" @onClick={{this.markOffSite}} @disabled={{this.isMarkingOffSite}}>
+      <UiButton @type="secondary" @onClick={{this.markOffSite}} @disabled={{this.isMarkingOffSite}} @size="md">
         Mark As Off Site
       </UiButton>
       {{#if this.isMarkingOffSite}}
@@ -244,7 +244,7 @@
       before attempting to look up another callsign or navigate to another Clubhouse page.
     </Modal.body>
     <Modal.footer>
-      <UiCloseButton @onClick={{this.closeUnsubmittedBarcodeDialog}} />
+      <UiCloseButton @onClick={{this.closeUnsubmittedBarcodeDialog}} @size="md"/>
     </Modal.footer>
   </ModalDialog>
 {{/if}}
@@ -256,12 +256,11 @@
     </Modal.title>
     <Modal.body>
       <div class="text-danger">
-        {{this.person.callsign}} is an Alpha. Do not check them into their Alpha shift. Instead, direct them to the Hat
-        Rack, where the Mentors will take over.
-      </div>
+        {{this.person.callsign}} is an Alpha. Direct them to the Hat Rack, where the Mentors will take over.
+       </div>
     </Modal.body>
     <Modal.footer>
-      <UiCloseButton @onClick={{this.closeIsAlphaDialog}} />
+      <UiCloseButton @onClick={{this.closeIsAlphaDialog}} @size="md"/>
     </Modal.footer>
   </ModalDialog>
 {{/if}}

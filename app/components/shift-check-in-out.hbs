@@ -40,8 +40,8 @@
       </td>
       <td class="text-end align-middle">{{credits-format @onDutyEntry.credits}}</td>
       <td class="align-middle">
-        <UiButton @type="danger" @onClick={{this.endShiftAction}} @disabled={{this.isSubmitting}}>
-          {{fa-icon "bed" right=2}} End Shift
+        <UiButton @type="danger" @onClick={{this.endShiftAction}} @disabled={{this.isSubmitting}} @size="md">
+          {{fa-icon "bed" right=1}} End Shift
         </UiButton>
         {{#if this.isSubmitting}}
           <LoadingIndicator/>

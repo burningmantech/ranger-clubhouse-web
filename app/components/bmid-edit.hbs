@@ -152,9 +152,9 @@
       <div class="col-auto">{{shift-format @bmid.created_at year=true}}</div>
     </div>
   {{/if}}
-  <f.submit @label={{if @bmid.isNew "Create" "Update"}} @size="sm"/>
+  <f.submit @label={{if @bmid.isNew "Create" "Update"}} @size="md"/>
   {{#if @onCancel}}
-    <UiCancelButton @onClick={{@onCancel}} @size="sm"/>
+    <UiCancelButton @onClick={{@onCancel}} @size="md"/>
   {{/if}}
   {{#if @bmid.isSaving}}
     <LoadingDialog/>
