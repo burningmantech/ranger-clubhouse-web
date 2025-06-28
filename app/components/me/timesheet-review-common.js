@@ -86,7 +86,7 @@ export default class MeTimesheetReviewCommonComponent extends Component {
     }
 
     if (ts.isPending) {
-      return 'text-bg-gray';
+      return 'text-bg-warning';
     }
 
     return ''

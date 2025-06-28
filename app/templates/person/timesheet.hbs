@@ -46,7 +46,7 @@
     {{#if (lt this.year 2008)}}
       <p class="text-danger">
         Note: The department did not start tracking volunteer hours until 2008. Any timesheets prior to 2008 are
-        placeholders and do not represent the actual volunteer work performed.
+        placeholders and do not represent the actual volunteer efforts.
       </p>
     {{/if}}
 
@@ -82,6 +82,13 @@
   </tab.pane>
   <tab.pane @title="Shift Check In/Out" @id="shift-manage">
     {{#if (has-role "admin" "shift-management")}}
+      <ShiftCheckInAlerts @positions={{this.positions}}
+                          @person={{this.person}}
+                          @upcomingSlots={{this.upcomingSlots}}
+                          @eventInfo={{this.eventInfo}}
+                          @selfServe={{false}}
+      />
+
       When on playa operations are running, please use the HQ Window Interface to start or end a shift.
       <UiNotice @title="Need to create a timesheet entry?" @type="secondary" @icon="hand-point-right">
         Use the Missing Timesheet Request feature under the 'Timesheet / Missing Entry Requests' tab.

@@ -1,8 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {ECHELON} from 'clubhouse/constants/person_status';
-import {TRAINING} from 'clubhouse/constants/positions';
 
 export default class HqSiteCheckinController extends ClubhouseController {
   @tracked isSubmitting = false;
@@ -16,19 +14,10 @@ export default class HqSiteCheckinController extends ClubhouseController {
     return this.assets.filter((asset) => !asset.checked_in);
   }
 
-  get inPersonTrainingPassed() {
-    if (this.person.status === ECHELON) {
-      return true;
-    }
-
-    const training = this.eventInfo.trainings.find((training) => training.position_id === TRAINING);
-    return (training && training.status === 'pass');
-  }
-
   @action
   saveContactForm(model, callback) {
     this.isContactSaved = false;
-    this._savePerson(model, 'Contact information successfully saved.', () => {
+    this._savePerson(model, 'Emergency Contact info successfully saved.', () => {
       this.isContactSaved = true;
       callback();
     });

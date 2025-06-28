@@ -24,7 +24,7 @@
         {{/if}}
         {{#if this.eventInfo.online_course_only}}
           <p>
-            For this event, you are only required to complete online course in order to work a shift.
+            For this event, you are only required to complete the Online Course to ranger a shift.
           </p>
           {{#if this.eventInfo.online_course_passed}}
             <p>
@@ -61,8 +61,10 @@
           </p>
           {{#if (is-current-year this.year)}}
             {{#if this.person.isActive}}
-              You are not required to complete In-Person Training to sign up for shifts; <span class="text-danger">
-              however, you must be fully trained before working on-playa shifts.</span>
+              You are not required to complete In-Person Training to sign up for shifts;
+              <span class="text-danger">
+                however, you must be fully trained before rangering on-playa shifts.
+              </span>
             {{else if this.person.isProspective}}
               To become an Alpha, you must sign up for and successfully complete an In-Person Training session.
               Additionally, you are required to attend and pass your Alpha shift on playa to become a Ranger.

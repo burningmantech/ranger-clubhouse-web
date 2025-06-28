@@ -107,7 +107,7 @@
       You are not signed in to any shift. You may use the HQ Interface, however, we ask you sign in to a shift first.
     </Modal.body>
     <Modal.footer>
-      <UiCloseButton @onClick={{this.closeSignInWarning}} />
+      <UiCloseButton @onClick={{this.closeSignInWarning}} @size="md"/>
     </Modal.footer>
   </ModalDialog>
 {{else if this.showHatRackInstruction}}
@@ -126,13 +126,13 @@
       check-in, direct the person to the Mentor Shack. The Mentors will be the ones to start their shift.
     </Modal.body>
     <Modal.footer>
-      <UiCloseButton @onClick={{this.closeHatRackInstructions}}/>
+      <UiCloseButton @onClick={{this.closeHatRackInstructions}} @size="md"/>
     </Modal.footer>
   </ModalDialog>
 {{/if}}
 
 {{#if this.showNotAllowedToWork}}
-  <ModalDialog @title="Person may not work" @onEscape={{this.closeNotAllowedToWork}} as |Modal|>
+  <ModalDialog @title="Person may not ranger" @onEscape={{this.closeNotAllowedToWork}} as |Modal|>
     <Modal.body>
       <p>
         <b class="text-danger">
@@ -143,7 +143,7 @@
       The HQ Window Interface cannot be for this person. Contact the HQ Lead, HQ Supervisor or the Personnel Manager.
     </Modal.body>
     <Modal.footer>
-      <UiCloseButton @onClick={{this.closeNotAllowedToWork}} />
+      <UiCloseButton @onClick={{this.closeNotAllowedToWork}} @size="md"/>
     </Modal.footer>
   </ModalDialog>
 {{/if}}

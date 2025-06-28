@@ -8,8 +8,8 @@
   {{#if this.haveOutstandingTasks}}
     <UiNotice @title="Action Required: Timesheet Review" @type="warning" @icon="hand-point-right">
       <p>
-        Please review your timesheet to ensure you receive proper credit for your {{this.year}} Ranger volunteer work
-        and receive a ticket and provisions if applicable.
+        Please review your timesheet to ensure you receive proper credit for your {{this.year}} Ranger volunteer
+        efforts and receive a ticket and provisions if applicable.
       </p>
       <p>
         <b>Missing a timesheet entry?</b> Use the "Missing Requests" tab to submit one or more missing timesheet
@@ -35,10 +35,10 @@
           </li>
         {{/if}}
       </ul>
-      <h6 class="fw-bold">Finished working for the year?</h6>
-      To complete your work for the year, confirm that you won't make any more changes to your {{this.year}} timesheet.
-      Click the "Confirm Final Confirmation" button to signify that you're done. Otherwise, the Timesheet Wranglers
-      will follow up post-event.
+      <h6 class="fw-bold">Finished rangering for the year?</h6>
+      To wrap up the paperwork for the year, confirm that you won't make any more changes to your {{this.year}}
+      timesheet. Click the "Confirm Final Confirmation" button to signify that you're done. Otherwise, the Timesheet
+      Wranglers will follow up post-event.
     </UiNotice>
   {{else if this.finalConfirmation}}
     <UiNotice @title="Timesheet Review & Final Confirmation Completed"
@@ -62,9 +62,9 @@
         All of your timesheet entries have been verified/corrected and there are no outstanding requests.
       </p>
       <p>
-        If you are finished working for the year, and no further corrections will be submitted, let us know
-        by using the button below. Otherwise, the Timesheet Wranglers will reach out post event to ask about
-        your situation.
+        If you’ve finished rangering for the year and don’t plan to submit any more corrections, please let us know by
+        clicking the button below. Otherwise, the Timesheet Wranglers will follow up with you after the event to check
+        in.
       </p>
       <UiButton @onClick={{this.showFinalConfirmationAction}}>Confirm Final Confirmation</UiButton>
     </UiNotice>
@@ -120,6 +120,12 @@
   {{#if this.canSelfManageShifts}}
     <tab.pane @title="Shift Check In/Out" @id="shift">
       {{#if (is-current-year this.year)}}
+        <ShiftCheckInAlerts @positions={{this.positions}}
+                            @person={{this.person}}
+                            @upcomingSlots={{this.upcomingSlots}}
+                            @eventInfo={{this.eventInfo}}
+                            @selfServe={{true}}
+        />
         <ShiftCheckInOut @positions={{this.positions}}
                          @timesheets={{this.timesheets}}
                          @person={{this.person}}

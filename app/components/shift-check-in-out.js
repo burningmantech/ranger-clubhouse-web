@@ -5,13 +5,12 @@ import {service} from '@ember/service';
 import {
   DIRT,
   DIRT_SHINY_PENNY,
-  TRAINING,
   BURN_PERIMETER,
   NVO_RANGER,
   DPW_RANGER,
 } from 'clubhouse/constants/positions';
 import {cached, tracked} from '@glimmer/tracking';
-import {INACTIVE, INACTIVE_EXTENSION, ECHELON} from 'clubhouse/constants/person_status';
+import {ECHELON} from 'clubhouse/constants/person_status';
 import {ADMIN, CAN_FORCE_SHIFT, SHIFT_MANAGEMENT_SELF} from 'clubhouse/constants/roles';
 import {buildBlockerLabels, TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
 import {TYPE_TRAINING} from "clubhouse/models/position";
@@ -97,8 +96,7 @@ export default class ShiftCheckInOutComponent extends Component {
     if (this.args.person.status === ECHELON) {
       this.inPersonTrainingPassed = true;
     } else {
-      const {eventInfo} = this.args;
-      this.inPersonTrainingPassed = !!eventInfo.trainings.find((training) => (training.position_id === TRAINING && training.status === 'pass'));
+      this.inPersonTrainingPassed = this.args.eventInfo.in_person_training_passed;
     }
 
     this.userCanForceCheckIn = this.session.hasRole([ADMIN, CAN_FORCE_SHIFT]);
@@ -110,11 +108,6 @@ export default class ShiftCheckInOutComponent extends Component {
       _.pull(signins, position);
       signins.unshift(position);
     }
-  }
-
-  get isReturningRanger() {
-    const {status} = this.args.person;
-    return (status === INACTIVE || status === INACTIVE_EXTENSION);
   }
 
   /**
@@ -498,12 +491,5 @@ export default class ShiftCheckInOutComponent extends Component {
   @cached
   get selectedPosition() {
     return this.signinPositions.find((p) => p.id === +this.signinPositionId);
-  }
-
-  @cached
-  get selectedPositionDisqualified() {
-    const position = this.selectedPosition;
-
-    return (!position || !position.disqualified) ? null : position.disqualified;
   }
 }

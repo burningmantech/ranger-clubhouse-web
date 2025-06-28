@@ -55,7 +55,7 @@ export default class MeTimesheetRoute extends ClubhouseRoute {
     controller.finalConfirmation = model.timesheetInfo.timesheet_confirmed;
     controller.confirmedAt = model.timesheetInfo.timesheet_confirmed_at;
     controller.isCurrentYear = currentYear() === +model.year;
-    controller.askForFinalConfirmation = (model.eventInfo.event_period !== 'before-event');
+    controller.askForFinalConfirmation = (model.eventInfo.event_period !== 'pre');
   }
 
   resetController(controller, isExiting) {
