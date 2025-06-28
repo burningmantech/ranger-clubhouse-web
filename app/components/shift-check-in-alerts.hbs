@@ -1,0 +1,66 @@
+{{#unless @person.canStartShift}}
+  <UiNotice @icon="hand" @type="danger" @title="Status Issue">
+    {{@person.callsign}} cannot start a shift because their status ({{@person.status}}) does not allow them to
+    work shifts.
+  </UiNotice>
+{{/unless}}
+
+
+{{#if this.isInactive}}
+  <UiNotice @title="Conversion to active status after shift end" @icon="person-walking-arrow-loop-left">
+    {{#if @selfServe}}
+      Since you are an inactive Ranger. You will be automatically converted to active status after
+      completing a regular shift that is not a training, mentee shift, nor Cheetah Cub shift.
+    {{else}}
+      {{@person.callsign}} is {{@person.status}} status. They will be automatically converted to active status after
+      completing a regular shift that is not a training, mentee shift, nor Cheetah Cub shift.
+    {{/if}}
+  </UiNotice>
+{{/if}}
+
+{{#if (and @person.canStartShift (not @selfServe) (not @upcomingSlots.imminent) (not this.trainingNotPassed))}}
+  <UiNotice @title="{{@person.callsign}} Can Still Work An Unscheduled Shift" @icon="thumbs-up">
+    <p>
+      No sign-ups are scheduled for the next {{@upcomingSlots.locate_start_minutes}} minutes. It's all right!
+      Scheduled sign-ups are just a way to make sure we have enough staff.
+    </p>
+    Please ask for their preferred position, select it below, and start the shift. Consult with the HQ Short or
+    Lead if needed.
+  </UiNotice>
+{{/if}}
+
+{{#if this.trainingNotPassed}}
+  {{#if @isSelfServe}}
+    <UiNotice @title="Restricted Check In/Out" @icon="hand" @type="secondary">
+      Because you have not completed an In-Person Training yet, only a small set of positions are allowed
+      to be checked into. Talk with your manager if you need to sign in to a position not listed
+      below.
+    </UiNotice>
+  {{else}}
+    <UiNotice @title="Check In Eligibility Issue" @icon="hand" @type="danger">
+      <p>
+        {{@person.callsign}} should not start a shift because In-Person Training has not been completed.
+        {{#if this.hasTrainingNoRequiredPositions}}
+          While most positions are not available to check in to at this time, a small set is available to sign in
+          to.
+        {{/if}}
+      </p>
+      <p>
+        If the person attended an in-person training earlier today, the trainers may not have recorded their
+        completion yet. Ask the HQ Lead to contact the trainers to confirm whether the person attended and
+        passed. The HQ Lead will be able to sign in the person after training has been verified.
+      </p>
+      {{#if this.userCanForceCheckIn}}
+        <b>
+          You have the privileges to force a shift start. Only force the check in after confirming the person
+          has actually passed training.
+        </b>
+      {{else}}
+        <b class="text-danger">
+          You do not have the privileges to force a shift start for the position requiring an In-Person training.
+          Consult with the HQ Lead
+        </b>
+      {{/if}}
+    </UiNotice>
+  {{/if}}
+{{/if}}

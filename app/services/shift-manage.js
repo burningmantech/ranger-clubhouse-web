@@ -258,7 +258,7 @@ export default class ShiftManageService extends Service {
     message += this.alertRange('On Duty', start, start_status, begins, ends);
     message += this.alertRange('Off Duty', finished, finished_status, begins, ends);
 
-    message += '</ul> <p class="text-danger">Please note that we do not offer credit for work done outside of the event period.</p>Use the Cancel button to correct the dates, or use Confirm to indicate the dates are correct.';
+    message += '</ul> <p class="text-danger">Please note that we do not offer credit for rangering done outside the event period.</p>Use the Cancel button to correct the dates, or use Confirm to indicate the dates are correct.';
 
     this.modal.confirm('Date(s) might be out of range', message, callback);
   }

@@ -1,23 +1,3 @@
-{{#unless this.person.on_site}}
-  <UiNotice @type="warning"
-            @icon="hand-point-right"
-            @title="{{this.person.callsign}} is marked as OFF SITE">
-    <p>
-      Follow the procedures on the Site Check In page before signing the person into a shift.
-    </p>
-    <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-secondary">Begin Site Check In</LinkTo>
-  </UiNotice>
-{{/unless}}
-
-{{#if this.person.unread_message_count}}
-  <UiNotice @title="Unread Message(s)" @type="success" @icon="envelope">
-    <p>
-      {{this.person.callsign}} has {{pluralize this.person.unread_message_count "unread Clubhouse message"}}.
-    </p>
-    <LinkTo @route="hq.messages" class="btn btn-secondary">Read Message(s)</LinkTo>
-  </UiNotice>
-{{/if}}
-
 <div id="todo-list" class="hq-todo-block">
   {{#if (or this.isShinyPenny this.scheduleRecommendations.burn_weekend_shift)}}
     <div class="mb-2 px-3 py-2 mx-n3 mt-n3 text-primary-emphasis bg-primary-subtle">
@@ -60,6 +40,33 @@
     </div>
   {{/unless}}
 </div>
+
+{{#unless this.person.on_site}}
+  <UiNotice @type="warning"
+            @icon="hand-point-right"
+            @title="{{this.person.callsign}} is marked as OFF SITE">
+    <p>
+      Follow the procedures on the Site Check In page before signing the person into a shift.
+    </p>
+    <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-secondary">Begin Site Check In</LinkTo>
+  </UiNotice>
+{{/unless}}
+
+{{#if this.person.unread_message_count}}
+  <UiNotice @title="Unread Message(s)" @type="success" @icon="envelope">
+    <p>
+      {{this.person.callsign}} has {{pluralize this.person.unread_message_count "unread Clubhouse message"}}.
+    </p>
+    <LinkTo @route="hq.messages" class="btn btn-secondary">Read Message(s)</LinkTo>
+  </UiNotice>
+{{/if}}
+
+
+<ShiftCheckInAlerts @positions={{this.positions}}
+                    @person={{this.person}}
+                    @upcomingSlots={{this.upcomingSlots}}
+                    @eventInfo={{this.eventInfo}}
+/>
 
 <HqShiftManageSection @id="shift-manage" @requireAction={{this.onDutyEntry}}>
   <:title>
@@ -129,7 +136,7 @@
         {{/if}}
         {{#if this.collectEventRadios}}
           <li>
-            Collect {{pluralize this.collectEventRadios "event radio"}} when person is finished working the event.
+            Collect {{pluralize this.collectEventRadios "event radio"}} when person is finished rangering the event.
           </li>
         {{/if}}
       </ul>
@@ -257,7 +264,7 @@
     <Modal.body>
       <div class="text-danger">
         {{this.person.callsign}} is an Alpha. Direct them to the Hat Rack, where the Mentors will take over.
-       </div>
+      </div>
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeIsAlphaDialog}} @size="md"/>

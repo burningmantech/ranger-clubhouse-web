@@ -173,13 +173,13 @@ export const MISSING_BPGUID = {
 
 
 export const VERIFY_TIMESHEETS = {
-  name: 'Verify timesheet entries and confirm entire timesheet as final (if done working)',
+  name: 'Verify timesheet entries and confirm entire timesheet as final (if done rangering)',
   immediate: true,
   skipPeriod: [BEFORE_EVENT, AFTER_EVENT],
   check({milestones}) {
     const {did_work, timesheets_unverified, timesheet_confirmed} = milestones;
     if (!did_work || (!timesheets_unverified && timesheet_confirmed)) {
-      // Did not work or all entries are verified and user has confirmed.
+      // Did not work or all entries are verified, and user has confirmed.
       return {result: SKIP};
     }
 
@@ -192,7 +192,7 @@ export const VERIFY_TIMESHEETS = {
     }
 
     if (milestones.period === 'after-event') {
-      message += '<p class="text-danger">You will not be recorded as having worked this event until you review your timesheet entries, ' +
+      message += '<p class="text-danger">You will not be recorded as having rangered this event until you review your timesheet entries, ' +
         ' submit any corrections, and confirm your entire timesheet is correct on the Me &gt; Timesheet Corrections page.</p> ' +
         '<p><b class="text-danger">Deadline to do so is 23:59 Pacific on October 1st.</b></p>';
     }
@@ -282,7 +282,6 @@ export const ONLINE_COURSE = {
       };
     }
 
-    //const duration = milestones.needs_full_online_course ? 'up to 90 minutes or more' : 'around 30 to 45 minutes';
     const duration = 'up to 2 hours or more';
 
     let message;
@@ -328,7 +327,7 @@ export const SIGN_UP_FOR_TRAINING = {
     if (!milestones.online_course_passed) {
       let message = 'You must complete the Online Course before you can sign up for and attend an In-Person Training.';
       if (!milestones.trainings_available) {
-        message += ' The In-Person Training schedule will be available in mid-to-late April.'
+        message += ' The In-Person Training schedule will be available mid-to-late April.'
       }
       return {
         result: NOT_AVAILABLE,
@@ -343,7 +342,7 @@ export const SIGN_UP_FOR_TRAINING = {
       } else if (isAuditor) {
         prefix = ''; // nada.
       } else {
-        prefix = 'An In-Person training must be attended each year. You will to need sign up for and pass an In-Person Training before being allowed to work on playa.';
+        prefix = 'An In-Person training must be attended each year. You will to need sign up for and pass an In-Person Training before being allowed to ranger on playa.';
       }
       return {
         result: ACTION_NEEDED,
@@ -358,7 +357,7 @@ export const SIGN_UP_FOR_TRAINING = {
     } else {
       return {
         result: WAITING,
-        message: 'The schedule for the In-Person Trainings is still being prepared, but it is usually available by mid-to-late April.',
+        message: "The In-Person Training schedule is still being finalized, but it’s typically released by mid to late April.",
       };
     }
   }
@@ -389,7 +388,7 @@ export const ATTEND_TRAINING = {
         if (milestones.is_cheetah_cub) {
           return {
             result: COMPLETED,
-            message: 'You still have to attend a Cheetah Cub shift before being allowed to work on playa.',
+            message: 'You still have to attend a Cheetah Cub shift before being allowed to ranger on playa.',
           }
         } else {
           if (isPNV || isAuditor) {
@@ -397,14 +396,14 @@ export const ATTEND_TRAINING = {
           }
           return {
             result: COMPLETED,
-            message: 'While you are cleared to work dirt shifts, some specialized shifts may require Advanced Ranger Training (ART).'
+            message: 'While you are cleared to ranger dirt shifts, some specialized shifts may require Advanced Ranger Training (ART).'
           }
         }
 
       case 'no-show': // trainer failed to show up
         return {
           result: URGENT,
-          message: `You were scheduled to teach on ${dayjs(training.date).format('dddd, MMMM Do YYYY')}, but did not attend. You must either attend and pass training as a trainee OR teach a session in order to work on playa.`,
+          message: `You were scheduled to teach on ${dayjs(training.date).format('dddd, MMMM Do YYYY')}, but did not attend. You must either attend and pass training as a trainee OR teach a session in order to ranger on playa.`,
           immediate: true
         };
 
@@ -414,7 +413,7 @@ export const ATTEND_TRAINING = {
         if (isPNV) {
           message += 'walk an Alpha shift, and potentially become a Ranger.';
         } else {
-          message += 'work on playa. You will be turned away at HQ Window.';
+          message += 'ranger on playa. You will be turned away at HQ Window.';
         }
 
         message += ' You are prevented from signing up for another session at this point. To sign up for another session, email the Training Academy and explain your absence.';
@@ -429,7 +428,7 @@ export const ATTEND_TRAINING = {
       case 'pending': {
         let prefix, dt;
         if (training.is_trainer) {
-          prefix = 'You are signed up to teach an In-Person Training session. Once you have been marked as having taught the session, you will be considered "trained" and able to work on playa.';
+          prefix = 'You are signed up to teach an In-Person Training session. Once you have been marked as having taught the session, you will be considered "trained" and able to ranger on playa.';
           dt = 'ddd MMM DD [@] HH:mm';
         } else if (milestones.needs_full_training || isAuditor || isPNV) {
           if (isAuditor) {
@@ -531,7 +530,7 @@ export const SIGN_UP_FOR_SHIFTS = {
         linkedMessage: {
           route: 'me.schedule',
           prefix:
-            `You are signed up for ${shift_signups.slot_count} working shift${shift_signups.slot_count === 1 ? '' : 's'}` +
+            `You are signed up for ${shift_signups.slot_count} shift${shift_signups.slot_count === 1 ? '' : 's'}` +
             ` potentially earning ${shift_signups.credits.toFixed(2)} credits. Thank you! Visit`,
           text: 'Me > Schedule / Sign Up',
           suffix: `to adjust your schedule.`
@@ -949,7 +948,7 @@ export const AFTER_EVENT_STATUS_ADVISORY = {
         message: htmlSafe(
           `<p>Your status has been changed to <i>${person.status}</i> because you have not rangered on playa in 3 or more consecutive events.<p>` +
           "<p>If you wish to volunteer with the Rangers next event, you will need to:<ul><li>Attend a full day's " +
-          "In-Person Training</li><li>And work a shift that is neither a training nor a mentee shift. Any Dirt shift or similar will qualify towards restoring your active status.</li></ul>Training and mentee shifts, such as a Sandman Training and Green Dot Mentee shifts, do not count toward qualifying for restoring your active status.</p><p>Your active status will be automatically restored upon completing a shift that is neither a training nor a mentee shift.</p> Contact the Volunteer Coordinators for more information.")
+          "In-Person Training</li><li>And ranger a shift that is neither a training nor a mentee shift. Any regular shift, such as Dirt, or similar will qualify towards restoring your active status.</li></ul>Training and mentee shifts, such as a Sandman Training and Green Dot Mentee shifts, do not count toward qualifying for restoring your active status.</p><p>Your active status will be automatically restored upon completing a shift that is neither a training nor a mentee shift.</p> Contact the Volunteer Coordinators for more information.")
       };
     }
   }

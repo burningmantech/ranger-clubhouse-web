@@ -1,12 +1,11 @@
-<YearSelect @title="{{this.training.title}} - Trained Yet No Work"
+<YearSelect @title="{{this.training.title}} - Trained Yet, No Rangering"
             @year={{this.year}}
             @minYear={{2008}}
             @skipPandemic={{true}}
             @onChange={{set-value this 'year'}} />
 <p>
-  This report lists individuals who completed the training but did not work any shifts that require it. The
-  recommendation
-  is to run this post-event and not before as it may not make any sense.
+  This report lists individuals who completed the training but did not ranger any shifts that require it. It’s recommended
+  to run this report after the event, as running it beforehand may produce misleading or incomplete results.
 </p>
 {{#if this.no_positions}}
   Odd, this position {{this.training.title}} does not appear to have any working positions that require this training.
@@ -17,7 +16,7 @@
   No one has passed training yet.
 {{else if this.people}}
   Showing {{pluralize this.people.length "person"}}
-  <UiExportToCSVButton @onClick={{this.exportToCSV}} @size="sm" />
+  <UiExportToCSVButton @onClick={{this.exportToCSV}} @size="sm"/>
   <UiTable>
     <thead>
     <tr>

@@ -35,8 +35,7 @@ export default class MeTimesheetController extends ClubhouseController {
 
   @cached
   get unreviewedCount() {
-    return countIf(this.timesheets, (ts) => (ts.isUnverified || ts.isApproved))
-      + (this.timesheets.find((t) => !t.off_duty) ? 1 : 0);
+    return countIf(this.timesheets, (ts) => (ts.off_duty && (ts.isUnverified || ts.isApproved)));
   }
 
   @cached

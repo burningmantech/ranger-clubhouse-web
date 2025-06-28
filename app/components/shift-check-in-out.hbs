@@ -1,9 +1,3 @@
-{{#if this.isReturningRanger}}
-  <UiNotice @title="Conversion to active status after shift end">
-    {{@person.callsign}} is {{@person.status}} status. They will be automatically converted to active status after
-    successfully working a regular shift that is not a training, nor Cheetah Cub shift.
-  </UiNotice>
-{{/if}}
 {{#if this.isReloadingTimesheets}}
   <LoadingIndicator @text="Reloading Timesheet Entries"/>
 {{else if @onDutyEntry}}
@@ -41,7 +35,7 @@
       <td class="text-end align-middle">{{credits-format @onDutyEntry.credits}}</td>
       <td class="align-middle">
         <UiButton @type="danger" @onClick={{this.endShiftAction}} @disabled={{this.isSubmitting}} @size="md">
-          {{fa-icon "bed" right=1}} End Shift
+          {{fa-icon "bed" right=2}} End Shift
         </UiButton>
         {{#if this.isSubmitting}}
           <LoadingIndicator/>
@@ -62,16 +56,11 @@
     <NoAppreciateIcon/> = {{@onDutyEntry.position.title}} hours do not count towards provisions and appreciations.
   {{/unless}}
 {{else}}
-  {{#if (not @person.canStartShift)}}
-    <UiNotice @icon="hand" @type="danger" @title="Status Issue">
-      {{@person.callsign}} cannot start a shift because their status ({{@person.status}}) does not allow them to
-      work shifts.
-    </UiNotice>
-  {{else if (not @hasUnreviewedTimesheet)}}
-    {{#if this.inPersonTrainingPassed}}
+  {{#unless @hasUnreviewedTimesheet}}
+    {{#unless this.inPersonTrainingPassed}}
       {{#if @upcomingSlots.imminent}}
         <div class="mb-2 fw-semibold">
-          {{@person.callsign}} can be signed in to a scheduled shift OR a different shift (aka position).
+          {{@person.callsign}} can be signed in to a scheduled shift OR an unscheduled shift (aka position).
         </div>
         <UiTable @normalSize={{true}} @noStriped={{true}}>
           <thead>
@@ -91,7 +80,8 @@
               <td class="align-middle">
                 <UiButton @type="primary"
                           @onClick={{fn this.signInShiftAction slot}}
-                          @disabled={{this.isSubmitting}}>
+                          @disabled={{this.isSubmitting}}
+                          @size="md">
                   {{fa-icon "person-walking" right=2}} Start Shift
                 </UiButton>
                 {{#if this.isSubmitting}}
@@ -116,51 +106,8 @@
             <i>Start Shift</i> button.
           </b>
         </p>
-      {{else if @upcomingSlots}}
-        <UiNotice @title="{{@person.callsign}} Can Still Work A Shift" @icon="thumbs-up">
-          <p>
-            No sign-ups are scheduled for the next {{@upcomingSlots.locate_start_minutes}} minutes. It's all right!
-            Scheduled sign-ups are just a way to make sure we have enough staff.
-          </p>
-          Please ask for their preferred position, select it below, and start the shift. Consult with the HQ Short or
-          Lead if needed.
-        </UiNotice>
       {{/if}}
-    {{else}}
-      {{#if @isSelfServe}}
-        <UiNotice @title="Restricted Check In/Out" @icon="hand" @type="secondary">
-          Because you have not completed an In-Person Training yet, only a small set of positions are allowed
-          to be checked into / out of. Talk with your manager if you need to sign in to a position not listed
-          below.
-        </UiNotice>
-      {{else}}
-        <UiNotice @title="Check In Eligibility Issue" @icon="hand" @type="danger">
-          <p>
-            {{@person.callsign}} should not start a shift because In-Person Training has not been completed.
-            {{#if this.noTrainingRequiredPositions}}
-              While most positions are not available to check in to at this time, a small set is available to sign in
-              to.
-            {{/if}}
-          </p>
-          <p>
-            If the person attended an in-person training earlier today, the trainers may not have recorded their
-            completion yet. Ask the HQ Lead to contact the trainers to confirm whether the person attended and
-            passed. The HQ Lead will be able to sign in the person after training has been verified.
-          </p>
-          {{#if this.userCanForceCheckIn}}
-            <b>
-              You have the privileges to force a shift start. Only force the check in after confirming the person
-              has actually passed training.
-            </b>
-          {{else}}
-            <b class="text-danger">
-              You do not have the privileges to force a shift start for the position requiring an In-Person training.
-              Consult with the HQ Lead
-            </b>
-          {{/if}}
-        </UiNotice>
-      {{/if}}
-    {{/if}}
+    {{/unless}}
 
     <FormRow>
       <label class="col-auto col-form-label">
@@ -174,42 +121,15 @@
         />
       </div>
       <div class="col-auto">
-        {{#if this.selectedPosition.disqualified}}
-          {{#if this.userCanForceCheckIn}}
-            <UiButton @type="warning" @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
-              Force Shift Start
-            </UiButton>
-          {{else}}
-            <div class="text-danger mt-1">
-              Cannot force start this shift.
-              {{#if this.noTrainingRequiredPositions}}
-                Other shifts might be available.
-              {{/if}}
-              Consult with the HQ Short or HQ Lead if this is an error.
-            </div>
-          {{/if}}
-        {{else}}
-          <UiButton @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}}>
-            {{fa-icon "walking" right=2}} Start Shift
-          </UiButton>
-        {{/if}}
+        <UiButton @onClick={{this.startShiftAction}} @disabled={{this.isSubmitting}} @size="md">
+          {{fa-icon "walking" right=2}} Start Shift
+        </UiButton>
         {{#if this.isSubmitting}}
           <LoadingIndicator/>
         {{/if}}
       </div>
     </FormRow>
-    {{#if this.selectedPositionDisqualified}}
-      <UiAlert @type="danger" @icon="ban" class="mb-2">
-        The selected position, {{this.selectedPosition.title}}, should not be signed in to because
-        {{this.selectedPositionDisqualified}}
-      </UiAlert>
-      {{#if this.userCanForceCheckIn}}
-        <b>You do have the privileges to force the shift start.</b>
-      {{else}}
-        <b>Consult with the HQ Short or Lead if this is an error.</b>
-      {{/if}}
-    {{/if}}
-  {{/if}}
+  {{/unless}}
 {{/if}}
 
 {{#if this.showPositionDialog}}
@@ -241,7 +161,7 @@
       <UiButton @onClick={{this.updatePositionAction}} @disabled={{this.isSubmitting}}>
         Update Position
       </UiButton>
-      <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{this.cancelUpdatePosition}} />
+      <UiCancelButton @onClick={{this.cancelUpdatePosition}} @disabled={{this.isSubmitting}} />
     </Modal.footer>
   </ModalDialog>
 {{/if}}
@@ -254,7 +174,8 @@
             @validator={{this.forceShiftValidations}} as |f|>
       <Modal.body>
         <b class="text-danger">
-          {{fa-icon "hand" right=1}} The {{if this.isPositionUpdate "position update" "shift check in"}}  is blocked for the following reason(s):
+          {{fa-icon "hand" right=1}} The {{if this.isPositionUpdate "position update" "shift check in"}}  is blocked for
+          the following reason(s):
         </b>
         <ul class="mt-2">
           {{#each this.blockers as |blocker|}}
@@ -263,7 +184,8 @@
         </ul>
         {{#if this.userCanForceCheckIn}}
           <p>
-            Since you either have the Admin or Force Shift Start permissions, you can force the {{if this.isPositionUpdate "the position update" "check in"}}.
+            Since you either have the Admin or Force Shift Start permissions, you can force the {{if
+            this.isPositionUpdate "the position update" "check in"}}.
           </p>
           <p>
             <b class="text-danger">All forced actions are logged and reviewed.</b>
@@ -280,7 +202,8 @@
             />
           </FormRow>
         {{else}}
-          Refer the person to the HQ Lead as they can force the {{if this.isPositionUpdate "position update" "shift check-in"}}.
+          Refer the person to the HQ Lead as they can force the {{if this.isPositionUpdate "position update"
+                                                                     "shift check-in"}}.
         {{/if}}
       </Modal.body>
       <Modal.footer @align="start">
@@ -356,7 +279,7 @@
       {{/if}}
     </Modal.body>
     <Modal.footer>
-      <UiCancelButton @onClick={{this.closeTooShortDialog}} />
+      <UiCancelButton @onClick={{this.closeTooShortDialog}} @size="md"/>
     </Modal.footer>
   </ModalDialog>
 {{/if}}
