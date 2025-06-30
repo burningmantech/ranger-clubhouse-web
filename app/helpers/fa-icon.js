@@ -37,6 +37,10 @@ export function faIcon([name], namedParams) {
     attrs.push('fa-fw');
   }
 
+  if (namedParams.class) {
+    attrs.push(namedParams.class);
+  }
+
   if (namedParams.right) {
     attrs.push(`me-${namedParams.right}`);
   }

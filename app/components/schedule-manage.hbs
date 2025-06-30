@@ -89,3 +89,105 @@
     {{/if}}
   </div>
 {{/if}}
+
+{{#if this.showShiftInfo}}
+  <ModalDialog @onEscape={{this.closeShiftInfo}} as |Modal|>
+    <Modal.title>Shift Information {{if this.resultInfo.became_full " And Shift Is Full"}}</Modal.title>
+    <Modal.body>
+      <h5 class="text-success">
+        {{fa-icon "check" right=1}} The shift has been successfully signed up for.
+      </h5>
+      {{#if  (and this.resultInfo.became_full this.resultInfo.slot.slot_url)}}
+        <div class="fw-semibold mb-2">
+          Please refer to the information further down this dialog box about this shift and the linked shift(s)
+          reaching full capacity.
+        </div>
+      {{/if}}
+      {{#if this.resultInfo.slot.slot_url}}
+        Here's some important information about this shift:
+        <div class="border border-success p-2">
+          {{hyperlink-text this.resultInfo.slot.slot_url}}
+        </div>
+        <p>
+          To view this information again, click on the shift description with the
+          {{fa-icon "question-circle" class="info-icon" right=1}} icon.
+        </p>
+      {{/if}}
+      {{#if  this.resultInfo.became_full}}
+        <UiAlert @type="warning" class="mt-2">
+          The combined signups for this shift and the listed shift(s) below have reached the maximum of
+          {{this.resultInfo.combined_max}}.
+          <ul class="my-2">
+            {{#each this.resultInfo.linkedPositions as |title|}}
+              <li>{{title}}</li>
+            {{/each}}
+          </ul>
+          As a result, this shift and the shift(s) listed above are considered full, and no additional signups are
+          allowed for any of them.
+        </UiAlert>
+      {{/if}}
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closeShiftInfo}} @size="md"/>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.showMVRInfo}}
+
+  {{#if this.resultInfo.is_past_mvr_deadline}}
+    <ModalDialog @onEscape={{this.closeMVRInfo}} as |Modal|>
+      <Modal.title>Motor Vehicle Record Request</Modal.title>
+      <Modal.body>
+        <p>
+          You have successfully signed up for the shift. This position uses vehicles from the Ranger rental fleet.
+        </p>
+        <p>
+          {{this.resultInfo.agreementWarning}}
+        </p>
+        <p>
+          Unfortunately, the deadline of {{shift-format this.resultInfo.mvr_deadline}} (Pacific) has passed to submit a
+          Motor Vehicle Record (MVR) request. For future events, we encourage you to sign up for a shift before the MVR
+          submission deadline to expand your vehicle options.
+        </p>
+      </Modal.body>
+      <Modal.footer>
+        <UiCloseButton @onClick={{this.closeMVRInfo}} @size="md"/>
+      </Modal.footer>
+    </ModalDialog>
+  {{else}}
+    <ModalDialog @onEscape={{this.closeMVRInfo}} as |Modal|>
+      <Modal.title>'Motor Vehicle Record Request (optional)</Modal.title>
+      <Modal.body>
+        <p>
+          The shift has been successfully signed up for. This position involves operating vehicles from the Ranger
+          rental fleet.
+        </p>
+        <p>
+          {{this.resultInfo.agreementWarning}}
+        </p>
+         <p>
+          This position grants access to the larger rental fleet vehicles, but only if a Motor Vehicle Record (MVR)
+          request is submitted and approved. Note: this is separate from signing the Motor Pool Agreement.
+        </p>
+        <p>
+          If you choose not to submit a MVR Request or if the request is denied, you will be limited to
+          operating UTVs and golf carts.
+        </p>
+        <p>
+          To obtain MVR approval, visit the Clubhouse homepage and follow the instructions on the dashboard.
+          A valid driver’s license is required. License and driving record verification can take 2 weeks
+          or more. Longer for non-US license holders. Enter all information carefully, denials most often
+          occur due to errors when submitting the form.
+        </p>
+        <p class="text-danger">
+          The deadline to submit a MVR Request is {{shift-format this.resultInfo.mvr_deadline}} (Pacific).
+          No exceptions will be made once the deadline has passed.
+        </p>
+      </Modal.body>
+      <Modal.footer>
+        <UiCloseButton @onClick={{this.closeMVRInfo}} @size="md"/>
+      </Modal.footer>
+    </ModalDialog>
+  {{/if}}
+{{/if}}

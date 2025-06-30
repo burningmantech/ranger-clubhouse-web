@@ -1,6 +1,34 @@
 <div class="schedule-signup-row">
+  {{#if @info.parent}}
+    <div class="mb-2">
+      This shift is linked to a parent shift. The combined signup counts for both this shift and the parent shift
+      may not exceed the parent shift's {{@info.combined_max}} signup limit.
+      {{#if (eq @info.parent.max @info.parent.signed_up)}}
+        <div class="text-danger mt-1">
+          That limit has been reached. No more signups are allowed in either shift at this time.
+        </div>
+      {{else}}
+        The combined count is currently {{@info.parent.signed_up}}.
+      {{/if}}
+    </div>
+  {{/if}}
+  {{#if @info.child}}
+    <div class="mb-2">
+      This shift is linked to a child shift. The combined signup counts for both this shift and the child shift
+      may not exceed this shift's {{@info.combined_max}} signup limit.
+      {{#if (eq @info.max @info.signed_up)}}
+        <div class="text-danger mt-1">That limit has been reached. No more signups are allowed in either shift at this
+          time.
+        </div>
+      {{else}}
+        The combined count is currently {{@info.signed_up}}.
+      {{/if}}
+    </div>
+  {{/if}}
   {{#if @info.people}}
-    <b>{{pluralize @info.people.length "sign-up"}}:</b>
+    <div class="fw-semibold my-2">
+      {{pluralize @info.people.length "signup"}} in this shift:
+    </div>
     <div class="callsign-list mt-2">
       {{#each @info.people as |person|}}
         <div>{{person.callsign}}</div>
@@ -10,11 +38,7 @@
     No one is signed up for this shift. Be the first!
   {{/if}}
   {{#if @info.parent}}
-    <div class="my-2 small">
-      This shift is linked to a parent shift. The combined signup counts for both this shift and the parent shift may
-      not exceed the parent's signup limit.
-    </div>
-    <div class="small fw-bold">
+    <div class="fw-semibold my-2">
       {{pluralize @info.parent.people.length "signup"}} in the parent {{@info.parent.position_title}} shift:
     </div>
     {{#if @info.parent.people}}
@@ -24,15 +48,13 @@
         {{/each}}
       </div>
     {{else}}
-      No one has signed up for the shift.
+      <div class="fw-semibold my-2">
+        No one has signed up for the parent shift.
+      </div>
     {{/if}}
   {{/if}}
   {{#if @info.child}}
-    <div class="my-2 small">
-      This shift is linked to a child shift. The combined signup counts for both this shift and the child shift may
-      not exceed this shift's signup limit.
-    </div>
-    <div class="small fw-bold">
+    <div class="fw-semibold my-2">
       {{pluralize @info.child.people.length "signup"}} in the {{@info.child.position_title}} child shift:
     </div>
     {{#if @info.child.people}}
@@ -42,13 +64,21 @@
         {{/each}}
       </div>
     {{else}}
-      No one has signed up for the shift.
+      <div class="fw-semibold my-2">
+        No one has signed up for the child shift.
+      </div>
     {{/if}}
   {{/if}}
 
   {{#if @info.assoc_signups}}
+    {{#if (or @info.parent @info.child)}}
+      <div class="my-2">
+        The signup counts for the following corresponding shift(s) are not combined with those of the parent or child
+        shifts.
+      </div>
+    {{/if}}
     {{#each @info.assoc_signups as |assoc|}}
-      <div class="mt-2 small fw-bold">
+      <div class="fw-semibold mt-2">
         {{pluralize assoc.people.length "signup"}} in the corresponding {{assoc.position_title}} shift:
       </div>
       <div class="mt-2">

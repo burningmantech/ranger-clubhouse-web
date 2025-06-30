@@ -6,6 +6,10 @@ import ModalMultipleEnrollmentComponent from 'clubhouse/components/modal-multipl
 import ModalMissingRequirementsComponent from 'clubhouse/components/modal-missing-requirements';
 import ModalConfirmMultipleEnrollmentComponent from 'clubhouse/components/modal-confirm-multiple-enrollment';
 import ModalConfirmMissingRequirementsComponent from 'clubhouse/components/modal-confirm-missing-requirements';
+import logError from "clubhouse/utils/log-error";
+
+const CONFIRM_FORCE_MESSAGE = 'Please confirm that you want to proceed with forcing the signup. All forced signups are logged and subject to review.';
+const REFRESH_PAGE_MESSAGE = 'Please refresh the page to ensure the most up to date schedule is shown.';
 
 export default class ShiftManageService extends Service {
   @service ajax;
@@ -21,18 +25,22 @@ export default class ShiftManageService extends Service {
    * @param person
    * @param {Function} callback
    * @param {boolean} force
+   * @param {*} slot
+   * @param {PersonModel} person
+   * @param errorCallback
    */
 
-  slotSignup(slot, person, callback = null, force = false) {
+  async slotSignup(slot, person, callback = null, force = false, errorCallback = null) {
     slot.isSubmitting = true;
 
-    this.ajax.request(`person/${person.id}/schedule`, {
-      method: 'POST',
-      data: {slot_id: slot.id, force: (force ? 1 : 0)}
-    }).then((result) => {
+    try {
+      const result = await this.ajax.post(`person/${person.id}/schedule`, {
+        data: {slot_id: slot.id, force: (force ? 1 : 0)}
+      });
+
       slot.isSubmitting = false;
       if (result.status !== 'success') {
-        this.handleSignupError(result, slot, person, callback);
+        this.handleSignupError(result, slot, person, callback, errorCallback);
         return;
       }
 
@@ -40,14 +48,16 @@ export default class ShiftManageService extends Service {
       const name = isMe ? "You are" : `${person.callsign}  is`;
 
       slot.slot_signed_up = result.signed_up;
+
       const forcedReasons = [];
 
       if (result.has_started) {
         forcedReasons.push('the shift has started');
       }
 
-      if (result.overcapacity) {
-        forcedReasons.push('the shift is overcapacity');
+      // TODO: remove overcapcity when all clients have been updated.
+      if (result.overcapacity || result.is_full) {
+        forcedReasons.push('the shift is full');
       }
 
       if (result.multiple_enrollment) {
@@ -69,10 +79,10 @@ export default class ShiftManageService extends Service {
       if (callback) {
         callback(result);
       }
-    }).catch((response) => {
+    } catch (response) {
       slot.isSubmitting = false;
       this.house.handleErrorResponse(response);
-    });
+    }
   }
 
   /**
@@ -82,16 +92,22 @@ export default class ShiftManageService extends Service {
    * @param {*} slot
    * @param {PersonModel} person
    * @param {null|Function}callback
+   * @param errorCallback
    */
 
-  handleSignupError(result, slot, person, callback) {
+  handleSignupError(result, slot, person, callback, errorCallback = null) {
     const status = result.status;
     const isMe = +this.session.userId === +person.id;
 
-    slot.slot_signed_up = result.signed_up;
+    if (errorCallback) {
+      errorCallback(slot, result);
+    } else if ('signed_up' in result) {
+      slot.slot_signed_up = result.signed_up;
+    }
+
 
     if (result.may_force) {
-      // The signup may be forced by the user.
+      // The user may force the signup.
       this.mayForceSignup(result, slot, person, callback);
       return;
     }
@@ -104,16 +120,9 @@ export default class ShiftManageService extends Service {
         );
         break;
 
-      case 'no-slot':
-        this.modal.info(
-          'BUG: Shift Not Found?',
-          `The shift id=[${slot.id}] was not found in the database. This looks like a bug, please report this!`
-        );
-        break;
-
       case 'no-position':
         this.modal.info(
-          'Position not held',
+          'Position Not Granted',
           `${isMe ? "You must have" : person.callsign + " needs"} the position "${result.position_title}" in order to sign up for this shift.`
         );
         break;
@@ -121,24 +130,33 @@ export default class ShiftManageService extends Service {
       case 'exists':
         this.modal.info(
           'Already Signed Up',
-          `${isMe ? "You are" : person.callsign + " is"} already signed up for this shift.`
+          `${isMe ? "You are" : person.callsign + " is"} already signed up for this shift. ${REFRESH_PAGE_MESSAGE}`
         );
         break;
 
       case 'not-active':
         this.modal.info(
           'Inactive Shift',
-          'The shift has not been activated yet and sign ups are not allowed. Please check back later and try again.'
+          'The shift has not been activated yet, so signups are currently not allowed. Please try again later.'
         );
         break;
 
+      case 'has-started':
+      case 'has-ended': {
+        const msg = result.status === 'has-started' ? 'started' : 'ended';
+        this.modal.info(
+          `Shift has ${msg}`,
+          `This shift has $\{msg}. It may not be added to the schedule. ${REFRESH_PAGE_MESSAGE}`,
+        );
+      }
+        return;
       case 'multiple-enrollment':
         this.modal.open(
           ModalMultipleEnrollmentComponent,
           {
             enrolledSlots: result.slots,
             person,
-            slot
+            slot,
           });
         break;
 
@@ -148,14 +166,14 @@ export default class ShiftManageService extends Service {
             requirements: result.requirements,
             hasTrainingBlocker: !result.training_signups_allowed,
             person,
-            slot
+            slot,
           });
         break;
 
       case 'no-employee-id':
         this.modal.info(
           'Paid Shift',
-          `The shift is a paid position, and ${isMe ? 'you do' : person.callsign + ' does'} not have a Paycom ID entered into the Clubhouse. Please talk with this position's manager to resolve the issue.`
+          `The shift is a paid position, and ${isMe ? 'you do' : person.callsign + ' does'} not have an employee ID entered into the Clubhouse. Please talk with this position's manager to resolve the issue.`
         );
         break;
 
@@ -164,6 +182,10 @@ export default class ShiftManageService extends Service {
           'BUG: Unknown Status Response',
           `Sorry, I did not understand the status response of [${status}] from the server. This is a BUG and should be reported.`
         );
+        logError(null,'signup-unknown-server-response', {
+          status,
+          slot
+        });
         break;
     }
   }
@@ -177,6 +199,7 @@ export default class ShiftManageService extends Service {
    * @param callback
    */
 
+
   mayForceSignup(result, slot, person, callback) {
     const signupCallback = () => this.slotSignup(slot, person, callback, true);
 
@@ -184,17 +207,20 @@ export default class ShiftManageService extends Service {
       case 'full':
         this.modal.confirm(
           'Shift is at capacity',
-          'The shift is full, however you have the privileges to add this shift to the schedule. Please confirm you wish to force add the shift to the schedule.',
+          `The shift is full, however you have the privileges to add this shift to the schedule. ${CONFIRM_FORCE_MESSAGE}`,
           signupCallback
         );
         return;
 
       case 'has-started':
+      case 'has-ended': {
+        const msg = result.status === 'has-started' ? 'started' : 'ended';
         this.modal.confirm(
-          'Shift has started',
-          'This shift has already started, however you have the privileges to add this shift to the schedule. Please confirm you wish to force add the shift to the schedule.',
+          `Shift has ${msg}`,
+          `This shift has ${msg}, however you have the privileges to add this shift to the schedule. ${CONFIRM_FORCE_MESSAGE}`,
           signupCallback
         );
+      }
         return;
 
       case 'multiple-enrollment':
@@ -211,6 +237,15 @@ export default class ShiftManageService extends Service {
           ModalConfirmMissingRequirementsComponent,
           {requirements: result.requirements, person},
           signupCallback
+        );
+        return;
+
+      case 'no-employee-id':
+        this.modal.confirm('Paid Position - No Employee ID',
+          '<p>This is a paid position, but the individual does not have an employee ID on file.' +
+          ' Do not force the signup. The individual must contact their manager' +
+          ' to resolve this issue before proceeding.</p>' +
+          'Please confirm you wish to proceed even though this is HIGHLY recommended not to do so.'
         );
         return;
 

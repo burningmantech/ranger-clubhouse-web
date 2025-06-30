@@ -1,13 +1,9 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
-import {schedule} from '@ember/runloop';
 import {cached, tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
-import {htmlSafe} from '@ember/template';
 import {TRAINING} from 'clubhouse/constants/positions';
 import {isEmpty} from '@ember/utils';
-import hyperlinkText from "clubhouse/utils/hyperlink-text";
-import {shiftFormat} from "clubhouse/helpers/shift-format";
 import ScheduleSlotModel from "clubhouse/records/schedule-slot";
 
 export default class ScheduleManageComponent extends Component {
@@ -34,9 +30,12 @@ export default class ScheduleManageComponent extends Component {
   @tracked isLoading = false;
 
   @tracked signUpInfo;
-  @tracked signUpSlot;
 
   @tracked showScheduleBlocker = false;
+
+  @tracked showShiftInfo = false;
+  @tracked showMVRInfo = false;
+  @tracked resultInfo;
 
   activeOptions = [
     ['Active', 'active'],
@@ -167,78 +166,93 @@ export default class ScheduleManageComponent extends Component {
   }
 
   /**
-   * Sign up for a shift. Prevent the page from moving because a new row appeared in the signed up table.
+   * Sign up for a shift.
    *
    * @param slot
    */
 
   @action
   joinSlot(slot) {
-    this.shiftManage.slotSignup(slot, this.args.person, (result) => {
-      // Record the original row position on the page
-      slot.person_assigned = true;
-      this.permission = {...this.permission, recommend_burn_weekend_shift: result.recommend_burn_weekend_shift};
-      this._sortAndMarkSignups();
+    this.shiftManage.slotSignup(slot, this.args.person,
+      (result) => this.joinSlotSuccess(slot, result),
+      false,
+      (slot, result) => this.signupError(slot, result));
+  }
 
-      // And reposition the page so things appear not to move when the sign-up is added
-      // to the schedule.
-      schedule('afterRender',
-        async () => {
-          if (this.isMe) {
-            if (!isEmpty(slot.slot_url)) {
-              this.modal.info('Additional Shift Information',
-                htmlSafe(`<p class="text-success"><i class="fa-solid fa-check"></i> You are signed up for the shift.</p><p>Here's more information about the shift:</p><p>${hyperlinkText(slot.slot_url)}</p>To view this information again, click on the shift description with the <i class="fa-solid fa-question-circle info-icon"></i> icon.`))
-            }
+  /**
+   * Called when the signup was successful.
+   *
+   * @param slot
+   * @param result
+   */
 
-            if (result.is_mvr_eligible) {
-              await this.session.loadUser();
-              let agreementWarning = '';
+  async joinSlotSuccess(slot, result) {
+    // Record the original row position on the page
+    slot.person_assigned = true;
+    this.permission = {...this.permission, recommend_burn_weekend_shift: result.recommend_burn_weekend_shift};
+    if (result.linked_slots) {
+      this._updateLinkedSlots(result.linked_slots);
+    }
+    this._sortAndMarkSignups();
 
-              if (!result.signed_motorpool_agreement) {
-                agreementWarning = '<p>To operate the smaller fleet vehicles, such as the UTVs and golf carts,' +
-                  ' you must first sign the Motor Pool Agreement. Please complete this step to ensure you are authorized' +
-                  ' to drive these vehicles during your shift. Visit the Clubhouse homepage and follow the dashboard' +
-                  ' instructions to sign the agreement.</p>';
-              } else {
-                agreementWarning = '<p>Because you have signed the Motor Pool Agreement, you are permitted to operate the smaller vehicles,' +
-                  ' such as UTVs and golf carts, during your shift.</p>';
-              }
+    if (this.isMe) {
+      result.slot = slot;
 
-              if (result.is_past_mvr_deadline) {
-                this.modal.info('Motor Vehicle Record Request',
-                  htmlSafe(`<p>You have successfully signed up for the shift. This position uses
-                              vehicles from the Ranger rental fleet.</p>
-                              ${agreementWarning}
-                             <p>Unfortunately, the deadline of ${shiftFormat([result.mvr_deadline], {})}
-                               (Pacific) has passed to submit a Motor Vehicle Record (MVR) request. For future events,
-                               we encourage you to sign up for a shift before the MVR submission
-                               deadline to expand your vehicle options.</p>`));
-              } else {
-                this.modal.info('Motor Vehicle Record Request (optional)',
-                  htmlSafe(`<p>
-                    The shift has been signed up for. The position involes using vehicles from the Ranger rental fleet.
-                    </p>
-                   ${agreementWarning}
-                   <p>This position allows access to the larger rental fleet vehicles if a Motor Vehicle Record (MVR)
-                    Request is submitted and approved. This is not the same as signing the Motor Pool Agreement.</p>
-                   <p>If you choose not to submit a MVR Request or if the request is denied, you will be limited to
-                   operating UTVs and golf carts.</p>
-                   <p>To obtain MVR approval, visit the Clubhouse homepage and follow the instructions on the dashboard.
-                    A valid driver’s license is required. License and driving record verification can take 2 weeks
-                    or more. Longer for non-US license holders. Enter all information carefully, denials most often
-                    occur due to errors when submitting the form.
-                   </p>
-                   <p class="text-danger">
-                     The deadline to submit a MVR Request is ${shiftFormat([result.mvr_deadline], {})} (Pacific).
-                     No exceptions will be made once the deadline has passed.
-                   </p>
-                   `));
-              }
-            }
-          }
+      const positions = result.linked_slots?.map(linked => linked.position_title);
+
+      this.resultInfo = result;
+      if (!isEmpty(slot.slot_url) || (result.became_full && positions?.length)) {
+        result.linkedPositions = positions;
+        this.showShiftInfo = true;
+      }
+
+      if (result.is_mvr_eligible) {
+        // Pickup the MVR flags so the Vehicle link appears for the user.
+        await this.session.loadUser();
+        if (!result.signed_motorpool_agreement) {
+          result.agreementWarning = 'To operate the smaller fleet vehicles, such as the UTVs and golf carts,' +
+            ' you must first sign the Motor Pool Agreement. Please complete this step to ensure you are authorized' +
+            ' to drive these vehicles during your shift. Visit the Clubhouse homepage and follow the dashboard' +
+            ' instructions to sign the agreement.';
+        } else {
+          result.agreementWarning = 'Because you have signed the Motor Pool Agreement,' +
+            ' you are permitted to operate the smaller vehicles,' +
+            ' such as UTVs and golf carts, during your shift.';
         }
-      );
-    });
+        this.showMVRInfo = true;
+       }
+    }
+  }
+
+  /**
+   * Called when the signup failed - the Shift Manager will handle showing the error to the user.
+   * Ensure the slot(s) counts are updated.
+   *
+   * @param slot
+   * @param result
+   */
+
+  signupError(slot, result) {
+    // check for the key and not use 'result.signed_up' in case the signup count is zero.
+    if ('signed_up' in result) {
+      slot.slot_signed_up = result.signed_up;
+    }
+
+    if (result.linked_slots) {
+      this._updateLinkedSlots(result.linked_slots);
+    }
+
+    this._sortAndMarkSignups();
+  }
+
+  @action
+  closeShiftInfo() {
+    this.showShiftInfo = false;
+  }
+
+  @action
+  closeMVRInfo() {
+    this.showMVRInfo = false;
   }
 
   /**
@@ -253,31 +267,84 @@ export default class ScheduleManageComponent extends Component {
     let message;
 
     if (slot.has_started && this.isAdmin) {
-      message = 'The shift has already started. Because you are an admin, you are allowed to removed the shift. '
+      message = `<p class="text-danger">
+      The shift has ${slot.has_ended ? 'ended' : 'already started'}.
+      As an admin, you can remove the shift, but it’s not recommended—doing so will delete historical
+       data and cause inaccuracies in reports.
+       </p>`
     } else {
       message = '';
     }
 
     message += `Are you sure you want to remove "${slot.position_title} - ${slot.slot_description}" from the schedule?`;
 
-    this.modal.confirm('Confirm Leaving Shift',
-      message,
-      async () => {
-        slot.isSubmitting = true;
-        try {
-          const result = await this.ajax.request(`person/${this.args.person.id}/schedule/${slot.id}`, {method: 'DELETE'});
-          slot.person_assigned = false;
-          slot.slot_signed_up = result.signed_up;
-          this.permission = {...this.permission, recommend_burn_weekend_shift: result.recommend_burn_weekend_shift};
-          this._sortAndMarkSignups();
-          this.toast.success('The shift has been removed from the schedule.');
-        } catch (response) {
-          this.house.handleErrorResponse(response);
-        } finally {
-          slot.isSubmitting = false;
-        }
+    this.modal.confirm('Confirm Leaving Shift', message, () => this._performSignUpRemoval(slot));
+  }
+
+  async _performSignUpRemoval(slot) {
+    slot.isSubmitting = true;
+    try {
+      const result = await this.ajax.request(`person/${this.args.person.id}/schedule/${slot.id}`, {method: 'DELETE'});
+
+      if (result.linked_slots) {
+        this._updateLinkedSlots(result.linked_slots);
       }
+      slot.slot_signed_up = result.signed_up;
+
+      switch (result.status) {
+        case 'success':
+          break; // Everything a-okay.
+        case 'missing-signup':
+          this._missingSignupDialog();
+          return;
+        case 'has-started':
+          this._hasStartedDialog();
+          return;
+        case 'has-ended':
+          this._hasEndedDialog();
+          return;
+        case 'slot-not-found':
+          this._missingSlotDialog();
+          return;
+
+      }
+      slot.person_assigned = false;
+      this.permission = {...this.permission, recommend_burn_weekend_shift: result.recommend_burn_weekend_shift};
+      this._sortAndMarkSignups();
+      this.toast.success('The shift has been removed from the schedule.');
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      slot.isSubmitting = false;
+    }
+  }
+
+  _missingSignupDialog() {
+    this.modal.info('Missing Signup',
+      'The shift has already been removed from the schedule. Please refresh the page to ensure you’re seeing the most up-to-date schedule.'
     );
+  }
+
+  _hasStartedDialog() {
+    this.modal.info('Shift Has Started', 'The shift has started and cannot be removed from the schedule.');
+  }
+
+  _hasEndedDialog() {
+    this.modal.info('Shift Has Ended', 'The shift has ended and cannot be removed the from the schedule.');
+  }
+
+  _missingSlotDialog() {
+    this.modal.info('Shift Deleted', 'It looks like the shift has been deleted. Please refresh the page to ensure you’re seeing the most up-to-date schedule.');
+  }
+
+
+  _updateLinkedSlots(slots) {
+    slots.forEach((linked) => {
+      const found = this.slots.find((s) => s.id === linked.slot_id)
+      if (found) {
+        found.slot_signed_up = linked.signed_up;
+      }
+    });
   }
 
   /**
@@ -293,6 +360,12 @@ export default class ScheduleManageComponent extends Component {
       slot.signUpInfo = await this.ajax.request(`slot/${slot.id}/people`);
       slot.slot_signed_up = slot.signUpInfo.signed_up;
       slot.slot_max = slot.signUpInfo.max;
+      if (slot.signUpInfo.parent) {
+        this._updateLinkedSlots([slot.signUpInfo.parent]);
+      }
+      if (slot.signUpInfo.child) {
+        this._updateLinkedSlots([slot.signUpInfo.child]);
+      }
     } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
