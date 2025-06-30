@@ -16,7 +16,6 @@ export default class OpsSlotsRoute extends ClubhouseRoute {
       slots: await this.store.query('slot', {year}),
       positions: await this.store.query('position', {}),
       year,
-      yearList: await this.ajax.request('slot/years').then((result) => result.years),
       eventDate: await this.ajax.request('event-dates/year', {data: {year}}).then((result) => result.event_date)
     }
   }
