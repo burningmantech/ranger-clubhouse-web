@@ -75,6 +75,16 @@ export default class OpsSlotsController extends ClubhouseController {
   }
 
   @cached
+  get slotsById() {
+    return _.keyBy(this.slots, 'id');
+  }
+
+  @cached
+  get childrenByParentId() {
+    return _.keyBy(this.slots.filter((s) => s.parent_signup_slot_id), 'parent_signup_slot_id');
+  }
+
+  @cached
   get viewSlots() {
     let slots = this.slots;
     const dayFilter = this.dayFilter;

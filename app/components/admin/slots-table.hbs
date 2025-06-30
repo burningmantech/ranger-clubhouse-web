@@ -2,17 +2,16 @@
   <thead>
   <tr>
     <th class="text-end">ID</th>
-    <th>Active</th>
+    <th class="text-center">Active</th>
     <th>Time</th>
-    <th class="text-end">Max</th>
-    <th class="text-end">Count</th>
+    <th class="text-end">Signups</th>
     <th class="text-end">Credits</th>
     <th>Description</th>
     <th>Actions</th>
   </tr>
   </thead>
   <tbody>
-  {{#each @group.slots key="id" as |slot|}}
+  {{#each @slots key="id" as |slot|}}
     <tr id="slot-{{slot.id}}">
       <td class="text-end">{{slot.id}}</td>
       <td class="text-center">
@@ -28,20 +27,30 @@
         {{#if slot.trainer_slot}}
           <div class="mt-1">
             Multiplier
-            #{{slot.trainer_slot.id}} {{slot.trainer_slot.position.title}} {{slot.trainer_slot.description}}
-            {{shift-format slot.trainer_slot.begins}}
+            #{{slot.trainer_slot.id}} {{slot.trainer_slot.position.title}} - {{slot.trainer_slot.description}}
+            -  {{shift-format slot.trainer_slot.begins}}
           </div>
         {{/if}}
-        {{#if slot.parent_signup_slot}}
-          <div class="mt-1">
-            Parent
-            #{{slot.parent_signup_slot.id}} {{slot.parent_signup_slot.position.title}} {{slot.parent_signup_slot.description}}
-            {{shift-format slot.parent_signup_slot.begins}}
-          </div>
-        {{/if}}
+        {{#let (this.parentSlot slot) as |parent|}}
+          {{#if parent}}
+            <div class="mt-1">
+              Parent
+              #{{parent.id}} {{parent.position.title}}-  {{parent.description}} - {{shift-format parent.begins}}
+            </div>
+          {{/if}}
+        {{/let}}
+        {{#let (this.childSlot slot) as |child|}}
+          {{#if child}}
+            <div class="mt-1">
+              Child
+              #{{child.id}} {{child.position.title}} - {{child.description}} -
+              {{shift-format child.begins}}
+            </div>
+
+          {{/if}}
+        {{/let}}
       </td>
-      <td class="text-end">{{slot.max}}</td>
-      <td class="text-end">{{slot.signed_up}}</td>
+      <td class="text-end">{{slot.signed_up}} of {{slot.max}}</td>
       <td class="text-end">{{credits-format slot.credits}}</td>
       <td>
         <SlotInfoLink @description={{slot.description}} @info={{slot.url}} />

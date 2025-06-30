@@ -2,7 +2,8 @@
   <div class={{if (or this.showSlotCopyDialog this.slot this.showBulkEditDialog this.linkGroup) "d-none"}}>
     <YearSelect @title="Clubhouse Slots"
                 @year={{this.year}}
-                @years={{this.yearList}}
+                @minYear={{2008}}
+                @skipPandemic={{true}}
                 @onChange={{set-value this 'year'}} />
 
     {{#if (and this.eventDate.pre_event_slot_start this.eventDate.pre_event_slot_end)}}
@@ -32,23 +33,33 @@
                         @onChange={{this.changeActiveFilter}} />
       </div>
       <FormLabel @auto={{true}}>Actions</FormLabel>
-      <div class="col-auto hstack gap-3">
-        <UiButton @onClick={{this.newSlot}} @size="sm">New Slot</UiButton>
-        {{#if this.slots.length}}
-          <UiButton @onClick={{fn this.openSlotCopy null}} @type="secondary" @size="sm">Copy Slots</UiButton>
-        {{/if}}
+      <div class="col-auto">
+        <UiButtonRow>
+          <UiButton @onClick={{this.newSlot}} @size="sm">New Slot</UiButton>
+          {{#if this.slots.length}}
+            <UiButton @onClick={{fn this.openSlotCopy null}} @type="secondary" @size="sm">Copy Slots</UiButton>
+          {{/if}}
+        </UiButtonRow>
       </div>
     </FormRow>
-    <FormRow>
+    <FormRow class="g-2">
       <FormLabel @auto={{true}}>
         Filter by description:
       </FormLabel>
       <div class="col-auto">
-        <Input @type="text" @value={{this.filterByDescription}} {{on "input" this.changeFilterByDescription}} size="20"
-               class="form-control"/>
+        <Input @type="text"
+               @value={{this.filterByDescription}}
+               size="20"
+               class="form-control"
+          {{on "input" this.changeFilterByDescription}}
+        />
       </div>
       <div class="col-auto">
-        <UiButton @type="secondary" @size="sm" @onClick={{this.clearFilterByDescription}}>Clear</UiButton>
+        <UiButton @type="secondary" class="btn-link" @size="md" @onClick={{this.clearFilterByDescription}}>
+          Clear
+        </UiButton>
+      </div>
+      <div class="col-auto">
       </div>
     </FormRow>
 
@@ -70,7 +81,9 @@
                 Results
               </UiButton>
             </div>
-            <Admin::SlotsTable @group={{this.filteredDescriptionGroup}}
+            <Admin::SlotsTable @slots={{this.filteredDescriptionGroup.slots}}
+                               @slotsById={{this.slotsById}}
+                               @childrenByParentId={{this.childrenByParentId}}
                                @repeatSlot={{this.repeatSlot}}
                                @repeatSlotAdd24Hours={{this.repeatSlotAdd24Hours}}
                                @deleteSlot={{this.deleteSlot}}
@@ -131,7 +144,9 @@
                   </UiButton>
                 {{/if}}
               </UiButtonRow>
-              <Admin::SlotsTable @group={{group}}
+              <Admin::SlotsTable @slots={{group.slots}}
+                                 @slotsById={{this.slotsById}}
+                                 @childrenByParentId={{this.childrenByParentId}}
                                  @repeatSlot={{this.repeatSlot}}
                                  @repeatSlotAdd24Hours={{this.repeatSlotAdd24Hours}}
                                  @deleteSlot={{this.deleteSlot}}
