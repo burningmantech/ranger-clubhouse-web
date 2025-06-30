@@ -1,20 +1,18 @@
-<ModalDialog @title="Sign up requirements have not been met" @isInline={{@isInline}} as |Modal|>
+<ModalDialog @title="Signup requirements have not been met" @isInline={{@isInline}} as |Modal|>
   <Modal.body>
     <ScheduleRequirements
       @requirements={{this.data.requirements}}
       @person={{this.data.person}}
       @hasTrainingBlocker={{this.hasTrainingBlocker}}
     />
-    <p>
-      <b class="text-danger">
-        You have the privileges to force the sign-up. The action will be logged and may be subject to review.
-      </b>
-    </p>
+    <div class="text-danger mt-2">
+      You have the permission to force this signup. This action will be logged and will be reviewed.
+    </div>
   </Modal.body>
   <Modal.footer>
     <UiButtonRow>
-      <UiButton @type="warning" @onClick={{@onConfirm}}>Force Sign Up</UiButton>
-      <UiCancelButton @onClick={{@onClose}} />
+      <UiButton @type="warning" @onClick={{@onConfirm}} @size="md">Force Sign Up</UiButton>
+      <UiCancelButton @onClick={{@onClose}} @size="md"/>
     </UiButtonRow>
   </Modal.footer>
 </ModalDialog>

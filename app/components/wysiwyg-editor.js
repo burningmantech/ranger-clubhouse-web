@@ -113,6 +113,7 @@ export default class WysiwygEditorComponent extends Component {
         skin: false,
         toolbar_mode: 'sliding',
 
+        forced_root_block : false,
         force_p_newlines : false,
         force_br_newlines : true,
         convert_newlines_to_brs : false,
