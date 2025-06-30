@@ -54,7 +54,6 @@
           <div class="mt-2">
             The ticket must be paid for. An invoice will be sent for ${{@ticketingInfo.spt_cost}} (USD)
             {{#unless this.ticket.isDeliveryWillCall}}
-
               plus additional $
               {{~#if this.ticket.isDeliveryStandardPost}}
                 {{@ticketingInfo.mail_standard_price}} (USD) for USPS Standard Mail.
