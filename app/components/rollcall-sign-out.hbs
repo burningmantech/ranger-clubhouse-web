@@ -1,5 +1,5 @@
 <UiSection>
-  <:title>Sign OUT People {{fa-icon "bed"}}</:title>
+  <:title>{{fa-icon "bed" right=1}} Sign OUT People</:title>
   <:body>
     {{#if this.isLoading}}
       <LoadingPane @item="positions"/>
@@ -13,6 +13,9 @@
                           @onChange={{this.selectPosition}}
                           @controlClass="form-select"/>
         </div>
+        <div class="col-auto">
+
+        </div>
       </FormRow>
 
       {{#if this.position}}
@@ -24,7 +27,7 @@
           out.
         </p>
         <p>
-          {{fa-icon "walking"}} = person is on shift. {{fa-icon "bed"}} = person has been signed off.
+          {{fa-icon "walking" right=1}} = person is on shift. {{fa-icon "bed" right=1}} = person has been signed off.
         </p>
         <div class="rollcall-grid">
           {{#each this.position.people key="id" as |person|}}
