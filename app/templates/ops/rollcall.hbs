@@ -13,10 +13,10 @@
       {{fa-icon "bed" right=1}} Sign OUT People
     </UiButton>
   </UiButtonRow>
-  <RollcallSignIn/>
 
   {{#if this.isSignOut}}
     <RollcallSignOut/>
   {{else if this.isSignIn}}
+    <RollcallSignIn/>
   {{/if}}
 </main>
