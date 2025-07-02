@@ -2,7 +2,7 @@ import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
-import _ from 'lodash';
+import _, {isEmpty} from 'lodash';
 import dayjs from 'dayjs';
 import {ART_CAR_WRANGLER, BURN_PERIMETER, SANDMAN} from 'clubhouse/constants/positions';
 import {buildBlockerLabels} from "clubhouse/models/timesheet";
@@ -36,16 +36,55 @@ export default class RollcallSignInComponent extends Component {
   @tracked isSubmitting = false;
   @tracked isLoading = false;
 
+  @tracked startTime = '';
+
+  @tracked showTimeDialog = false;
+
+  @tracked blockedInfo;
+  @tracked showSignInBlockersDialog = false;
+
   constructor() {
     super(...arguments);
+    this._loadSlots();
+  }
 
+  async _loadSlots() {
     this.isLoading = true;
 
-    // Load up all available slots
-    this.ajax.request('slot', {data: {for_rollcall: 1}})
-      .then(({slot}) => this._setupPositions(slot))
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isLoading = false);
+    try {
+      const {slot} = await this.ajax.request('slot', {data: {for_rollcall: 1}});
+      this._setupPositions(slot);
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
+    }
+  }
+
+  @action
+  clearStartTime(event) {
+    event.preventDefault();
+    this.startTime = '';
+  }
+
+  @action
+  updateStartTime(event) {
+    this.startTime = event.target.value;
+  }
+
+  @action
+  openTimeDialog() {
+    this.showTimeDialog = true;
+  }
+
+  @action
+  closeTimeDialog() {
+    this.showTimeDialog = false;
+  }
+
+  @action
+  closeSignInBlockersDialog() {
+    this.showSignInBlockersDialog = false;
   }
 
   /**
@@ -231,14 +270,17 @@ export default class RollcallSignInComponent extends Component {
   async _signInPerson(person) {
     person.isSubmitting = true;
     try {
-      const result = await this.ajax.request('timesheet/signin', {
-        method: 'POST',
-        data: {
-          position_id: this.positionId,
-          person_id: person.id,
-          slot_id: this.slotId
-        }
-      });
+      const data = {
+        position_id: this.positionId,
+        person_id: person.id,
+        slot_id: this.slotId
+      };
+
+      if (!isEmpty(this.startTime)) {
+        data.start_time = this.startTime;
+      }
+
+      const result = await this.ajax.post('timesheet/signin', {data});
       const {callsign} = person;
       switch (result.status) {
         case 'success':
@@ -261,11 +303,11 @@ export default class RollcallSignInComponent extends Component {
           person.timesheet_id = result.timesheet.id;
           break;
 
-        case 'blocked': {
-          const blockers = buildBlockerLabels(result.blockers).map(b => `<li>${b}</li>`).join('');
-          this.modal.info('Sign In Blocked', `${callsign} is blocked from signing in to the shift for the following reason(s):<ul>${blockers}</ul>Direct ${callsign} to an HQ window to resolve this issue.`);
+        case 'blocked':
+          this.blockedInfo = {callsign, blockers: buildBlockerLabels(result.blockers), start_time: result.start_time};
+          this.showSignInBlockersDialog = true;
           break;
-        }
+
         default:
           this.modal.info('Unknown Server Status', `An unknown status [${result.status}] from the server. This is a bug. Please report this to the Tech Ninjas.`);
           break;

@@ -2,11 +2,11 @@
   <LoadingPane @items="loading shifts"/>
 {{else}}
   <UiSection>
-    <:title>Sign In People {{fa-icon "walking"}}</:title>
+    <:title>{{fa-icon "walking" right=1}} Sign In People</:title>
     <:body>
       {{#if this.positions}}
         <FormRow>
-          <div class="col-sm-12 col-lg-auto">
+          <div class="col-sm-12 col-xl-auto">
             <FormLabel>Position</FormLabel>
             <ChForm::Select @name="positionId"
                             @value={{this.positionId}}
@@ -14,13 +14,19 @@
                             @onChange={{this.selectPosition}}
             />
           </div>
-          <div class="col-sm-12 col-lg-auto">
+          <div class="col-sm-12 col-xl-auto">
             <FormLabel>Shift</FormLabel>
-            <ChForm::Select @name="slotId" @value={{this.slotId}}
+            <ChForm::Select @name="slotId"
+                            @value={{this.slotId}}
                             @options={{this.slotOptions}}
                             @onChange={{this.selectSlot}}
                             @disabled={{eq this.positionId 0}}
             />
+          </div>
+          <div class="col-auto mt-4">
+            <UiButton @type="secondary" @onClick={{this.openTimeDialog}}>
+              Set Time
+            </UiButton>
           </div>
         </FormRow>
       {{else}}
@@ -30,17 +36,25 @@
       {{/if}}
 
       {{#if this.slot}}
-        <div class="row h4 mt-2">
-          <div class="col-auto">{{this.position.title}}</div>
-          <div class="col-auto">{{this.slot.description}}</div>
-          <div class="col-auto">{{shift-format this.slot.begins}}</div>
+        <div class="fs-4 hstack gap-3 my-2">
+          <div>{{this.position.title}}</div>
+          <div>{{this.slot.description}}</div>
+          <div>{{shift-format this.slot.begins}}</div>
+          {{#if this.startTime}}
+            <div class="text-bg-warning px-1">Check-in Time: {{this.startTime}}</div>
+            <div>
+              <a href {{on "click" this.clearStartTime}}>
+                Clear Time
+              </a>
+            </div>
+          {{/if}}
         </div>
       {{/if}}
       {{#if this.isRetrievingPeople}}
         <LoadingPane @item="the signups"/>
       {{else if this.people}}
         <p>
-          {{pluralize this.people.length "sign up"}}. Click the box to sign the person in OR out.
+          {{pluralize this.people.length "signup"}}. Click the box to sign the person in OR out.
         </p>
 
         <div class="rollcall-grid">
@@ -88,4 +102,64 @@
       {{/if}}
     </:body>
   </UiSection>
+{{/if}}
+
+{{#if this.showTimeDialog}}
+  <ModalDialog @onEscape={{this.closeTimeDialog}} as |Modal|>
+    <Modal.title>Set Check-In Time</Modal.title>
+    <Modal.body>
+      <p>
+        Check-in times may be adjusted to an earlier time, but only if you are authorized to do so.
+        All manually set check-in times are logged and will be reviewed.
+      </p>
+      <UiAlert @type="warning" @icon="hand-point-right">
+        Any specified check-in time will be subject to time blockers, if applicable.
+      </UiAlert>
+      <FormRow>
+        <div class="col-sm-12 col-xl-auto">
+          <FormLabel>Set Time</FormLabel>
+          <input type="time"
+                 name="startTime"
+                 class="form-control"
+                 value={{this.startTime}}
+            {{on "change" this.updateStartTime}}
+          />
+        </div>
+        <div class="col-sm-12 col-xl-auto mt-4">
+          <a href {{on "click" this.clearStartTime}}>
+            Clear Time
+          </a>
+        </div>
+      </FormRow>
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closeTimeDialog}} @size="md"/>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.showSignInBlockersDialog}}
+  <ModalDialog @onEscape={{this.closeSignInBlockersDialog}} as |Modal|>
+    <Modal.title>Sign In Blocked</Modal.title>
+    <Modal.body>
+      <p>
+        {{this.blockedInfo.callsign}} is blocked from signing in to the shift for the following reason(s):
+      </p>
+      <ul>
+        {{#each this.blockedInfo.blockers as |blocker|}}
+          <li>{{blocker}}</li>
+        {{/each}}
+      </ul>
+      {{#if this.blockedInfo.start_time}}
+        <p class="text-danger">
+          Note: The manually set check-in time of {{time-format this.blockedInfo.start_time}} was used. This may
+          or may not have triggered any time check-in blockers.
+        </p>
+      {{/if}}
+      Direct {{this.blockedInfo.callsign}} to an HQ window to resolve this issue.
+    </Modal.body>
+    <Modal.footer>
+      <UiCloseButton @onClick={{this.closeSignInBlockersDialog}} @size="md"/>
+    </Modal.footer>
+  </ModalDialog>
 {{/if}}

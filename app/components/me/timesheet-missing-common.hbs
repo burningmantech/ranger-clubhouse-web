@@ -6,6 +6,12 @@
       New Missing Timesheet Request
     </UiButton>
   </div>
+  <UiAlert @type="warning">
+    Please note that the Ranger Department does not offer credit for volunteering with Haven. If you wish to support
+    individuals in similar circumstances and receive credit for your efforts, consider rangering a Green Dot Sanctuary
+    shift. You must be Green Dot trained to ranger any Green Dot position.
+  </UiAlert>
+
   {{#if @timesheetsMissing}}
     Legend:
     <HoursDoCountLegend/>

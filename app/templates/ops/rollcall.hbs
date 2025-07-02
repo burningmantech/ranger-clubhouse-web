@@ -6,17 +6,17 @@
   </p>
 
   <UiButtonRow class="mb-4">
-    <UiButton @responsive={{true}} @onClick={{this.chooseSignIn}}>
-      Sign IN People {{fa-icon "walking"}}
+    <UiButton @responsive={{true}} @onClick={{this.chooseSignIn}} @size="md">
+      {{fa-icon "walking" right=1}} Sign IN People
     </UiButton>
-    <UiButton @responsive={{true}} @onClick={{this.chooseSignOut}}>
-      Sign OUT People {{fa-icon "bed"}}
+    <UiButton @responsive={{true}} @onClick={{this.chooseSignOut}} @size="md">
+      {{fa-icon "bed" right=1}} Sign OUT People
     </UiButton>
   </UiButtonRow>
+  <RollcallSignIn/>
 
   {{#if this.isSignOut}}
     <RollcallSignOut/>
   {{else if this.isSignIn}}
-    <RollcallSignIn/>
   {{/if}}
 </main>
