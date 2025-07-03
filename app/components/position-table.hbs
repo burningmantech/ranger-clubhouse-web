@@ -2,7 +2,8 @@
   <thead>
   <tr>
     <th>ID</th>
-    <th colspan="2">Active / Title (Short Title)</th>
+    <th>Title / Short Title</th>
+    <th>Active</th>
     <th>Team / Category / Type</th>
     <th>Min / Max</th>
     <th>Attributes</th>
@@ -14,16 +15,16 @@
   {{#each @viewPositions key="id" as |position|}}
     <tr id="position-{{position.id}}">
       <td class="text-end">{{position.id}}</td>
-      <td class="text-center">
-        <BooleanIcon @value={{position.active}} @falseIcon="times" @falseClass="text-danger"/>
-      </td>
-      <td>
+      <td class="no-wrap">
         {{position.title}}
         {{#if position.short_title}}
           <br>({{position.short_title}})
         {{/if}}
       </td>
-      <td>
+      <td class="text-center">
+        <UiBadgeActive @active={{position.active}} />
+      </td>
+      <td class="no-wrap">
         {{this.teamName position.team_id}}<br>
         {{#if position.team_id}}
           {{position.teamCategoryLabel}}<br>
@@ -93,6 +94,9 @@
         {{/if}}
         {{#if position.awards_grants_service_year}}
           {{fa-icon "award" fixed=true right=1}} Awards year counts as a service year.<br>
+        {{/if}}
+        {{#if position.allow_echelon}}
+          {{fa-icon "user-check" fixed=true right=1}} Echelon volunteers permitted to work position even if In-Person Training or ART was not completed.
         {{/if}}
         {{#if position.contact_email}}
           Contact email:

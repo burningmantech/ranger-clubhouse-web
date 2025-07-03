@@ -167,7 +167,7 @@ export default class PositionController extends ClubhouseController {
           await this.position.destroyRecord();
           this.toast.success('The position has been deleted.');
           this.position = null;
-          this.house.scrollToTop();
+          this.house.scrollToTop(true);
         } catch (response) {
           this.house.handleErrorResponse(response)
         }
@@ -200,13 +200,13 @@ export default class PositionController extends ClubhouseController {
     if (!this.position.isNew) {
       this._scrollToPosition(this.position.id);
     } else {
-      this.house.scrollToTop();
+      this.house.scrollToTop(true);
     }
     this.position = null;
   }
 
   _scrollToPosition(positionId) {
-    later(() => this.house.scrollToElement(`#position-${positionId}`), 100);
+    later(() => this.house.scrollToElement(`#position-${positionId}`, true), 100);
 
   }
 }

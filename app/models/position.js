@@ -31,6 +31,8 @@ export default class PositionModel extends Model {
 
   @attr('boolean', {defaultValue: false}) no_training_required;
 
+  @attr('boolean', {defaultValue: false}) allow_echelon;
+
   @attr('') role_ids;
 
   @attr('number') min;
