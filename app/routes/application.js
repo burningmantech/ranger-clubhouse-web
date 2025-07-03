@@ -38,7 +38,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
 
   routeChanged(transition) {
     // Move the window back to the top when heading to a new route
-    window.scrollTo(0, 0);
+    window.scrollTo({top: 0, left: 0, behavior: 'instant'});
 
     const burgerMenu = document.querySelector('#top-burger-menu:not(.collapsed)');
     if (burgerMenu) {

@@ -332,20 +332,20 @@ export default class HouseService extends Service {
    * Scroll to top
    */
 
-  scrollToTop() {
-    run('afterRender', () => window.scrollTo(0, 0));
+  scrollToTop(instance = false) {
+    run('afterRender', () => window.scrollTo({top: 0, left: 0, behavior: instance ? 'instant' : 'smooth'}));
   }
 
   /**
    * Scroll to element
    *
    * @param {string} selector Element ID to scroll to
-   * @param {boolean} scroll  Use smooth scrolling (true) or jump scroll (false)
-   * @param {boolean} scrollToTop Scroll the element to top regardless if element is in view.
+   * @param instance
    */
 
-  scrollToElement(selector) {
+  scrollToElement(selector, instance = false) {
     run('afterRender', () => {
+      const behavior = instance ? 'instant' : 'smooth';
       const element = (selector instanceof Element) ? selector : document.querySelector(selector);
       if (!element) {
         return;
@@ -354,10 +354,10 @@ export default class HouseService extends Service {
       const {top, bottom} = element.getBoundingClientRect();
 
       if (bottom > window.innerHeight || top < 0) {
-        element.scrollIntoView({behavior: 'smooth'});
+        element.scrollIntoView({behavior});
       } else {
         // Element is already in view, scroll element mostly to the top.
-        window.scroll({top: top + window.scrollY - 100, behavior: 'smooth'});
+        window.scroll({top: top + window.scrollY - 100, behavior});
       }
     });
   }
@@ -365,7 +365,6 @@ export default class HouseService extends Service {
   /**
    * Scroll to an accordion and, if closed, open it
    * @param {string} id
-   * @param {string|null} belowElement
    */
 
   scrollToAccordion(id) {
