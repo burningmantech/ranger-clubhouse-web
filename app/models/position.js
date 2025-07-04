@@ -18,6 +18,88 @@ export const TeamCategoryLabels = {
   [TEAM_CATEGORY_PUBLIC]: 'Public',
 }
 
+export const ATTR_LABELS = [
+  {
+    id: 'require_training_for_roles',
+    label: 'Requires ART to be passed before roles are granted.'
+  },
+  {
+    id: 'new_user_eligible',
+    label: 'Grant to New Accounts',
+  },
+  {
+    id: 'all_rangers',
+    label: 'Grant To All Rangers',
+  },
+  {
+    id: 'count_hours',
+    label: 'Hours count towards appreciations',
+  },
+  {
+    id: 'on_sl_report',
+    label: 'On Shift Lead Report',
+  },
+  {
+    id: 'on_trainer_report',
+    label: 'On Trainer\'s Report',
+  },
+  {
+    id: 'prevent_multiple_enrollments',
+    label: 'Multiple Enrollments Prevented',
+  },
+  {
+    id: 'alert_when_no_trainers',
+    label: 'Alert when this trainer/mentor slot becomes empty while the trainee/mentee slot still has signups.'
+  },
+  {
+    id: 'alert_when_becomes_empty',
+    label: 'Alert when slot becomes empty of signups.',
+  },
+  {
+    id: 'no_training_required',
+    label: 'In-Person training not required to check in.',
+  },
+  {
+    id: 'pvr_eligible',
+    label: 'Position grants Personal Vehicle eligibility.',
+  },
+  {
+    id: 'mvr_eligible',
+    label: 'Position grants MVR eligibility.',
+  },
+  {
+    id: 'mvr_signup_eligible',
+    label: 'Shift signups grants MVR eligibility.',
+  },
+  {
+    id: 'not_timesheet_eligible',
+    label: 'Used only for scheduling. Timesheet entries may not be created.',
+  },
+  {
+    id: 'cruise_direction',
+    label: 'Selectable on the Cruise Direction interface',
+  },
+  {
+    id: 'awards_eligible',
+    label: 'Awards eligible',
+  },
+  /*
+  {
+    id: 'awards_auto_grant',
+    label: 'Awards will be automatically granted',
+  },
+  {
+    id: 'awards_grants_service_year',
+    label: 'Awards year counts as a service year.',
+  },
+  */
+  {
+    id: 'allow_echelon',
+    label: 'Echelon volunteers permitted to work position even if In-Person Training or ART was not completed.'
+  },
+];
+
+
 export default class PositionModel extends Model {
   @attr('string') title;
   @attr('boolean', {defaultValue: false}) new_user_eligible;
@@ -63,7 +145,7 @@ export default class PositionModel extends Model {
   @attr('boolean', {defaultValue: false}) auto_sign_out;
   @attr('number', {defaultValue: 0.0}) sign_out_hour_cap;
 
-  @attr('boolean', { defaultValue: false }) not_timesheet_eligible;
+  @attr('boolean', {defaultValue: false}) not_timesheet_eligible;
 
   // Paycom employee paycode
   @attr('string') paycode;

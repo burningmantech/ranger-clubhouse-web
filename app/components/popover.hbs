@@ -1,6 +1,6 @@
 <a href="#" {{on "click" this.preventClick}} ...attributes>
-  <span class="d-inline-block">{{@text}}</span>
-  <BsPopover @title={{@title}} @onShow={{@onShow}} @onHide={{@onHide}} as |po|>
+  <span class="d-inline-block">{{@text}}{{#if @arrowDown}}{{fa-icon "chevron-down" left=2}}{{/if}}</span>
+  <BsPopover @title={{@title}} @onShow={{@onShow}} @onHide={{@onHide}} @placement={{or @placement "right"}} as |po|>
     {{yield po}}
     <div class="popover-footer mt-2"><UiCloseButton @onClick={{po.close}}/></div>
   </BsPopover>

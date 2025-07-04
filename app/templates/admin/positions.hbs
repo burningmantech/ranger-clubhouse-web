@@ -31,15 +31,17 @@
                           @options={{this.viewAsOptions}}
                           @onChange={{set-value this 'viewAs'}} />
         </div>
-        <FormLabel @auto={{true}}>Vehicle Eligibility Filter</FormLabel>
-        <div class="col-auto">
-          <ChForm::Select @name="vehicleEligibilityFilter"
-                          @value={{this.vehicleEligibilityFilter}}
-                          @options={{this.vehicleEligibleOptions}}
-                          @onChange={{set-value this 'vehicleEligibilityFilter'}} />
+        <div class="col-auto mt-1">
+          <UiDropDownCheckbox @text="Attribute Filters"
+                              @options={{this.attrOptions}}
+                              @values={{this.attrFilters}}
+                              @name="attrFilters"
+                              @updateValues={{this.updateAttrFilters}}
+                              class="btn btn-secondary btn-sm"
+          />
         </div>
         {{#if this.canManagePositions}}
-          <div class="col-auto">
+          <div class="col-auto mt-1">
             <UiButton @onClick={{this.newAction}}>New Position</UiButton>
           </div>
         {{/if}}

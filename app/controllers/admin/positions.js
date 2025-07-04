@@ -5,6 +5,7 @@ import PositionTypes from 'clubhouse/constants/position-types';
 import {TECH_NINJA} from 'clubhouse/constants/roles';
 import _ from 'lodash';
 import {later} from '@ember/runloop';
+import {ATTR_LABELS} from 'clubhouse/models/position';
 
 export default class PositionController extends ClubhouseController {
   @tracked positions;
@@ -14,7 +15,7 @@ export default class PositionController extends ClubhouseController {
   @tracked activeFilter = 'all';
   @tracked allRangersFilter = '-';
   @tracked viewAs = 'list';
-  @tracked vehicleEligibilityFilter = 'all';
+  @tracked attrFilters = [];
 
   @tracked teams;
   @tracked rolesById;
@@ -24,14 +25,6 @@ export default class PositionController extends ClubhouseController {
     {id: 'all', title: 'All'},
     {id: 'active', title: 'Active'},
     {id: 'inactive', title: 'Inactive'},
-  ];
-
-  vehicleEligibleOptions = [
-    {id: 'all', title: 'All'},
-    {id: 'mvr-eligible', title: 'MVR Eligible'},
-    {id: 'mvr-ineligible', title: 'MVR Ineligible'},
-    {id: 'pvr-eligible', title: 'PVR Eligible'},
-    {id: 'pvr-ineligible', title: 'PVR Ineligible'},
   ];
 
   allRangersOptions = [
@@ -45,6 +38,7 @@ export default class PositionController extends ClubhouseController {
     ['Teams', 'teams']
   ];
 
+  attrOptions = ATTR_LABELS;
 
   constructor() {
     super(...arguments);
@@ -94,25 +88,20 @@ export default class PositionController extends ClubhouseController {
         break;
     }
 
-    switch (this.vehicleEligibilityFilter) {
-      case 'mvr-eligible':
-        positions = positions.filter((p) => p.mvr_eligible || p.mvr_signup_eligible);
-        break;
-      case 'mvr-ineligible':
-        positions = positions.filter((p) => !p.mvr_eligible && !p.mvr_signup_eligible);
-        break;
-      case 'pvr-eligible':
-        positions = positions.filter((p) => p.pvr_eligible);
-        break;
-      case 'pvr-ineligible':
-        positions = positions.filter((p) => !p.pvr_eligible);
-        break;
-
-    }
-
-
     if (this.allRangersFilter === 'all-rangers') {
       positions = positions.filter((p) => p.all_rangers);
+    }
+
+    if (this.attrFilters.length) {
+      positions = positions.filter((p) => {
+        let count = 0;
+        this.attrFilters.forEach(f => {
+          if (p[f]) {
+            count++;
+          }
+        });
+        return (count === this.attrFilters.length);
+      })
     }
 
     return positions;
@@ -205,8 +194,12 @@ export default class PositionController extends ClubhouseController {
     this.position = null;
   }
 
+  @action
+  updateAttrFilters(flags) {
+    this.attrFilters = flags;
+  }
+
   _scrollToPosition(positionId) {
     later(() => this.house.scrollToElement(`#position-${positionId}`, true), 100);
-
   }
 }
