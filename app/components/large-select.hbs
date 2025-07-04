@@ -5,7 +5,7 @@
 {{#if this.showDialog}}
   <ModalDialog @size="xl" @title={{@title}} @onEscape={{this.cancelAction}} as |dialog|>
     <dialog.body>
-      <div class="masonry-container masonry-col-{{or @columns 5}} masonry-border">
+      <div class="masonry-container masonry-col-{{or @columns 5}}">
         {{#each @groups as |group groupIdx|}}
           <div class="masonry-item">
             <div class="masonry-item-header">{{group.label}}</div>
@@ -33,7 +33,7 @@
       </div>
     </dialog.body>
     <dialog.footer>
-      <UiCancelButton @onClick={{this.cancelAction}} />
+      <UiCloseButton @onClick={{this.cancelAction}} @size="md" />
     </dialog.footer>
   </ModalDialog>
 {{/if}}

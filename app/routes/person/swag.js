@@ -1,5 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import shirtOptions from 'clubhouse/utils/shirt-options';
+import {ADMIN, QUARTERMASTER} from "clubhouse/constants/roles";
 
 export default class PersonSwagRoute extends ClubhouseRoute {
   async model() {
@@ -19,5 +20,6 @@ export default class PersonSwagRoute extends ClubhouseRoute {
     controller.shirtsById = shirts.shirtsById;
     controller.swags = model.swags;
     controller.personSwag = model.personSwag;
+    controller.canEdit = this.session.hasRole([ADMIN, QUARTERMASTER]);
   }
 }
