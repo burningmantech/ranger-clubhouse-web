@@ -27,9 +27,9 @@
     </p>
 {{/if}}
 
-<div class="masonry-container {{if this.isAdmin "masonry-col-2" "masonry-col-1 max-width-700"}} masonry-border mb-4">
+<div class="masonry-container {{if this.isAdmin "masonry-col-2" "masonry-col-1 max-width-700"}} mb-4">
     {{#if this.canManageGeneralPositions}}
-        <div class="masonry-item">
+        <div class="masonry-item mb-4">
             <div class="masonry-item-header">General Positions / Unassociated with a Clubhouse Team</div>
             <MembershipPosition @positions={{this.generalPositions}} @positionClick={{this.positionClick}} />
             <div class="ms-2 mt-3">
@@ -38,7 +38,7 @@
         </div>
     {{/if}}
     {{#each this.teams key="id" as |team|}}
-        <div class="masonry-item" id="team-box-{{team.id}}">
+        <div class="masonry-item mb-4" id="team-box-{{team.id}}">
             <div class="masonry-item-header d-flex justify-content-between">
                 <div>
                     <input id="team-{{team.id}}"
@@ -50,7 +50,7 @@
                     />
                     <label for="team-{{team.id}}" class="form-check-label ms-1">{{team-title team}}</label>
                     {{#if team.roles}}
-                        <Popover @text="[{{pluralize team.roles.length "permission"}}]" class="small">
+                        <Popover @text="[{{pluralize team.roles.length "permission"}}]" @placement="bottom" class="ms-1">
                             <p>
                                 The following permission(s) will be given when this team is assigned:
                             </p>
@@ -60,7 +60,7 @@
                         </Popover>
                     {{/if}}
                 </div>
-                <div>
+                <div class="ms-4">
                     <div class="form-check">
                         <input id="team-manager-{{team.id}}"
                                type="checkbox"
@@ -100,7 +100,7 @@
                     <i>Team does not have any positions underneath it.</i>
                 </div>
             {{/if}}
-            <UiButton @onClick={{this.saveAction}} @size="sm">Save</UiButton>
+            <UiButton @onClick={{this.saveAction}} @size="sm" class="ms-3">Save</UiButton>
         </div>
     {{/each}}
 </div>

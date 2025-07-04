@@ -1,7 +1,7 @@
-<div class="fs-6 fw-bold">Team Membership</div>
-<div class="masonry-container mt-2">
+<div class="fs-6 fw-bold p-2">Team Membership</div>
+<div class="masonry-container mt-1">
   {{#each this.teamMembership as |team|}}
-    <div class="masonry-item">
+    <div class="masonry-item mb-1">
       <div>
         {{team.title}}
         {{#if team.is_manager}}
@@ -20,7 +20,7 @@
 <hr class="py-1">
 <div class="masonry-container">
   <div class="masonry-item mb-2">
-    <div class="fw-bold mb-2">General Positions</div>
+    <div class="fw-bold mb-1">General Positions</div>
     <div>
       {{#each this.positions.generalPositions as |position|}}
         {{position-label position}}<br>

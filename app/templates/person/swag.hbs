@@ -1,28 +1,36 @@
 <h3>Swag (Shirts, Service Pins &amp; Patches) for {{this.person.callsign}}</h3>
 
 <p>
-  Do not add, adjust, or remove service items from a person account unless instructed to do so by the Quartermaster.
+  <Person::YearsBreakdown @person={{this.person}} />
 </p>
-<p>
-  Service years:
-  {{#if this.person.years_of_service}}
-    {{pluralize this.person.years_of_service.length "year"}}
-    [{{year-range this.person.years_of_service}}]
-  {{else}}
-    <i>none</i>
-  {{/if}}<br>
-</p>
-<p>
-  <UiButtonRow>
-    <UiButton @onClick={{fn this.newSwag "t-shirt"}}>{{fa-icon "shirt" right=1}} T-Shirt</UiButton>
-    <UiButton @onClick={{fn this.newSwag "long-sleeve"}}>{{fa-icon "shirt" right=1}} Long Sleeve Shirt</UiButton>
-    <UiButton @onClick={{fn this.newSwag "dept-pin"}}>{{fa-icon "map-pin" right=1}} Ranger Pin</UiButton>
-    <UiButton @onClick={{fn this.newSwag "dept-patch"}}>{{fa-icon "medal" right=1}} Ranger Patch</UiButton>
-    <UiButton @onClick={{fn this.newSwag "org-patch"}}>{{fa-icon "location-dot" right=1}} Org Patch</UiButton>
-    <UiButton @onClick={{fn this.newSwag "org-pin"}}>{{fa-icon "location-dot" right=1}} Org Pin</UiButton>
-    <UiButton @onClick={{fn this.newSwag "other"}}>{{fa-icon "star" right=1}} Other Swag</UiButton>
-  </UiButtonRow>
-</p>
+
+{{#if this.canEdit}}
+  <p>
+    <UiButtonRow>
+      <UiButton @onClick={{fn this.newSwag "t-shirt"}} @size="md">
+        {{fa-icon "shirt" right=1}} T-Shirt
+      </UiButton>
+      <UiButton @onClick={{fn this.newSwag "long-sleeve"}} @size="md">
+        {{fa-icon "shirt" right=1}} Long Sleeve Shirt
+      </UiButton>
+      <UiButton @onClick={{fn this.newSwag "dept-pin"}} @size="md">
+        {{fa-icon "map-pin" right=1}} Ranger Pin
+      </UiButton>
+      <UiButton @onClick={{fn this.newSwag "dept-patch"}} @size="md">
+        {{fa-icon "medal" right=1}} Ranger Patch
+      </UiButton>
+      <UiButton @onClick={{fn this.newSwag "org-patch"}} @size="md">
+        {{fa-icon "location-dot" right=1}} Org Patch
+      </UiButton>
+      <UiButton @onClick={{fn this.newSwag "org-pin"}} @size="md">
+        {{fa-icon "location-dot" right=1}} Org Pin
+      </UiButton>
+      <UiButton @onClick={{fn this.newSwag "other"}} @size="md">
+        {{fa-icon "star" right=1}} Other Swag
+      </UiButton>
+    </UiButtonRow>
+  </p>
+{{/if}}
 Showing {{pluralize this.personSwag.length "item"}}
 <UiTable>
   <thead>
@@ -45,9 +53,11 @@ Showing {{pluralize this.personSwag.length "item"}}
       <td>
         <PresentOrNot @value={{ps.notes}} @empty="-"/>
       </td>
-      <td>
-        <UiEditButton @onClick={{fn this.editSwag ps}} />
-      </td>
+      {{#if this.canEdit}}
+        <td>
+          <UiEditButton @onClick={{fn this.editSwag ps}} />
+        </td>
+      {{/if}}
     </tr>
   {{else}}
     <tr>
@@ -81,8 +91,10 @@ Showing {{pluralize this.personSwag.length "item"}}
       </Modal.body>
       <Modal.footer @align="start">
         <UiButtonRow>
-          <f.submit @label={{if this.swagEntry.isNew "Create" "Update"}} @disabled={{this.swagEntry.isSaving}} />
-          <UiCancelButton @onClick={{this.cancelSwag}} @disabled={{this.swagEntry.isSaving}}/>
+          <f.submit @label={{if this.swagEntry.isNew "Create" "Update"}}
+                    @size="md"
+          />
+          <UiCancelButton @onClick={{this.cancelSwag}} @size="md"/>
           {{#unless this.swagEntry.isNew}}
             <div class="ms-auto">
               <UiDeleteButton @onClick={{this.deleteSwag}} />

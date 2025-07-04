@@ -47,7 +47,9 @@ const HqStatuses = [
 const MODE_ROUTES = {
   'account': 'person.index',
   'hq': 'hq.index',
-  'timesheet': 'person.timesheet'
+  'timesheet': 'person.timesheet',
+  'tickets': 'person.tickets-provisions',
+  'swag': 'person.swag',
 };
 
 const SEARCH_MODE_KEY = 'search-mode';
@@ -158,6 +160,14 @@ export default class SearchItemBarComponent extends Component {
 
     if (this.session.hasRole([Role.ADMIN, Role.TIMESHEET_MANAGEMENT])) {
       options.push({value: 'timesheet', label: 'Timesheet Manage'});
+    }
+
+    if (this.session.hasRole([Role.ADMIN, Role.EDIT_ACCESS_DOCS])) {
+      options.push({value: 'tickets', label: 'Tickets & Provisions'});
+    }
+
+    if (this.session.hasRole([Role.ADMIN, Role.QUARTERMASTER])) {
+      options.push({value: 'swag', label: 'Swag'});
     }
 
     return options;

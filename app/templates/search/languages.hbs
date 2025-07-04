@@ -5,9 +5,9 @@
         @changeSet={{false}}
         @onSubmit={{this.submit}} as |f|>
   <div>Quick Search:</div>
-  <div class="masonry-container masonry-col-6 my-2">
+  <div class="masonry-container masonry-hover masonry-col-6 my-2">
     {{#each this.commonLanguages as |name|}}
-      <a href class="small masonry-item" {{on-click this.setLanguage name}}>
+      <a href class="masonry-item" {{on-click this.setLanguage name}}>
         {{name}}
       </a>
     {{/each}}
