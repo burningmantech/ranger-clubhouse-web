@@ -1,7 +1,7 @@
 <UiButton @onClick={{this.setupAccountAction}}
           @type="{{if @didComplete "secondary" "primary"}}"
           @responsive={{true}}
-          @size="{{if @didComplete "sm"}}"
+          ...attributes
 >
   {{@text}}
 </UiButton>
@@ -33,7 +33,7 @@
     <Modal.body>
       <h3 class="text-danger">An unexpected error occurred.</h3>
       <p>
-        Sorry, there was an issue trying to launch the online course. You can try again in a few minutes.
+        Sorry, there was an issue trying to launch the Online Course. You can try again in a few minutes.
       </p>
       <p>
         If the problem persists, please contact the Ranger Tech Team
@@ -54,11 +54,17 @@
         website.
       </h4>
       <p>
-        You have been enrolled in the Online Course. Please remember that you are still required to attend an In-Person
-        Training session after completing the course.
+        {{#if @isART}}
+          The Advanced Ranger Training (ART) online course is hosted on the same website as the mandatory Online Course
+          that all Rangers must complete to ranger on playa. After logging in, select the appropriate ART Online Course
+          from the landing page.
+        {{else}}
+          You have been enrolled in the Online Course. Please remember that you are still required to attend an
+          In-Person Training session after completing the course.
+        {{/if}}
       </p>
-      On the Online Course login page, click the <i>Login Using The Clubhouse</i> button to log in. <b>Do not use the
-      login form that asks for a username and password.</b>
+      On the Online Course website login page, click the <code>Login Using The Clubhouse</code> button to access
+      your account. <span class="text-danger">Do not use the login form that asks for a username and password</span>.
     </Modal.body>
     <Modal.footer>
       <UiButton @onClick={{this.launchTrainingAction}} @disabled={{this.isSubmitting}} @responsive={{true}}>
