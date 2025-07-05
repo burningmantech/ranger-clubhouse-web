@@ -1,23 +1,25 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import {tracked} from '@glimmer/tracking';
-import {DECEASED, AUDITOR, PAST_PROSPECTIVE, SUSPENDED} from "clubhouse/constants/person_status";
-import { action } from '@ember/object';
+import {cached, tracked} from '@glimmer/tracking';
+import {action} from '@ember/object';
+import Selectable from "clubhouse/utils/selectable";
 import _ from 'lodash';
 
 const CSV_COLUMNS = [
-  { title: 'Callsign', key: 'callsign'},
-  { title: 'Status', key: 'status'}
+  {title: 'Callsign', key: 'callsign'},
+  {title: 'Status', key: 'status'}
 ];
 
 class ViewPosition {
   @tracked expanded = false;
   @tracked positionsScrollList;
   @tracked positions;
+  @tracked positionTypes;
 
   constructor(obj) {
     Object.assign(this, obj);
   }
 
+  @cached
   get visiblePeople() {
     const statuses = this.statuses;
     const visibleStatuses = new Set(statuses.filter((s) => s.selected).map((s) => s.name));
@@ -27,34 +29,30 @@ class ViewPosition {
     return this.people.filter((p) => visibleStatuses.has(p.status));
   }
 
+  @cached
   get missingOnPlayaCount() {
     return this.missingPeople.reduce((total, p) => total + (p.on_site ? 1 : 0), 0);
   }
 }
 
-class SelectChoice {
-  @tracked selected;
-
-  constructor(name, selected) {
-    this.name = name;
-    this.selected = selected;
-  }
-}
-
 export default class PeopleByPositionController extends ClubhouseController {
   queryParams = ['onPlaya'];
-  onPlaya = false;
+  @tracked onPlaya = false;
+  @tracked statuses;
+  @tracked showMatch = false;
 
+  @cached
   get visiblePositions() {
     const selected = new Set(this.positionTypes.filter((p) => p.selected).map((p) => p.name));
     const positions = this.viewPositions;
-    return positions.filter((p) => selected.has(p.type));
+    return positions.filter((p) => selected.has(p.type) && (!this.showMatch || p.visiblePeople.length));
   }
 
-  buildViewPositions() {
+  @cached
+  get viewPositions() {
     const people = this.people;
-    const lookupPeople = (ids) => ids ? _.sortBy(ids.map((id) => people[id]),'callsign') : [];
-    this.viewPositions = _.sortBy(this.positions.map((position) =>
+    const lookupPeople = (ids) => ids ? _.sortBy(ids.map((id) => people[id]), 'callsign') : [];
+    return _.sortBy(this.positions.map((position) =>
       new ViewPosition({
         id: position.id,
         title: position.title,
@@ -67,22 +65,18 @@ export default class PeopleByPositionController extends ClubhouseController {
         people: lookupPeople(position.personIds),
         missingPeople: lookupPeople(position.missingPersonIds),
         statuses: this.statuses,
-      })),'title');
+      })), 'title');
   }
 
-  buildPositionTypes() {
-    this.positionTypes = _.uniq(_.map(this.positions, 'type'))
+  @cached
+  get positionTypes() {
+    return _.uniq(_.map(this.positions, 'type'))
       .sort()
-      .map((type) => new SelectChoice(type, true));
-  }
-
-  buildStatuses() {
-    this.statuses = _.map(_.uniq(_.map(_.values(this.people), 'status')).sort(),
-      (status) => new SelectChoice(status, status !== DECEASED && status !== AUDITOR && status !== PAST_PROSPECTIVE && status !== SUSPENDED));
+      .map((type) => new Selectable({name: type}, true));
   }
 
   @action
   exportToCSV(position) {
     this.house.downloadCsv(`${this.house.currentYear()}-${position.title.replace(/ /g, '-')}.csv`, CSV_COLUMNS, position.people);
   }
- }
+}

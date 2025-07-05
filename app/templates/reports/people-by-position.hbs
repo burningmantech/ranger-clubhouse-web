@@ -1,7 +1,4 @@
 <h1>People by Position</h1>
-<p>
-  Legend: {{fa-icon "check" color="green" right=1}} = indicates the person is on site.
-</p>
 <FormRow>
   <FormLabel @fixed={{true}}>Options</FormLabel>
   <div class="col-auto mt-2">
@@ -9,6 +6,12 @@
       <Input @type="checkbox" id="on-playa" class="form-check-input" @checked={{this.onPlaya}}/>
       <label for="on-playa" class="form-check-label">
         On playa only
+      </label>
+    </div>
+    <div class="form-check form-check-inline">
+      <Input @type="checkbox" id="show-match" class="form-check-input" @checked={{this.showMatch}}/>
+      <label for="show-match" class="form-check-label">
+        Only show positions that match the filters
       </label>
     </div>
   </div>
@@ -43,36 +46,40 @@
 
 <DropdownScrollList @items={{this.positionsScrollList}} @openAccordion={{true}} @thing="position"/>
 
+Showing {{this.visiblePositions.length}} of {{this.positions.length}} positions
 {{#each this.visiblePositions key="id" as |position|}}
   <UiAccordion id="position-{{position.id}}" as |accordion|>
     <accordion.title>
-      {{position-label position}}
-      {{#if position.allRangers}}
-        &ndash; all rangers
-      {{/if}}
-      {{#if position.allPeople}}
-        &ndash; all people
-      {{/if}}
-      &ndash; {{pluralize position.totalPeople "person"}}
-      ({{position.onPlayaCount}} on playa)
-      {{position.visiblePeople.length}} of {{pluralize position.people.length  "person"}} shown
-      {{#if (and position.missingPeople.length (or position.allRangers position.allPeople))}}
-        &ndash; <span class="text-danger">{{pluralize position.missingPeople.length "unassigned person"}}</span>
-        ({{position.missingOnPlayaCount}} on playa)
-      {{/if}}
-      &ndash; {{position.type}}
+      <span class="me-2">{{position-label position}}</span>
+      [
+      showing {{position.visiblePeople.length}} of {{pluralize position.people.length  "person"}}
+      {{~#if (and position.active position.missingPeople.length (or position.allRangers position.allPeople))}}
+        <span class="text-danger ms-2">
+          {{pluralize position.missingPeople.length "unassigned person"}}
+        </span>
+      {{/if~}}
+      {{~#if position.allRangers}}
+        / {{fa-icon "universal-access" right=1}} All Ranger
+      {{/if~}}
+
+      {{~#if position.allPeople}}
+        / {{fa-icon "globe" right=1}} All Accounts
+      {{/if~}}
+      ]
     </accordion.title>
     <accordion.body>
       {{#if accordion.isOpen}}
         <p>
-          <UiExportToCSVButton @onClick={{fn this.exportToCSV position}} @size="sm"/>
+          <UiExportToCSVButton @onClick={{fn this.exportToCSV position}}/>
         </p>
         {{#if position.people}}
           <div class="callsign-list">
             {{#each position.visiblePeople key="id" as |person|}}
               <div>
                 <PersonLink @person={{person}} />
-                {{#if person.on_site}}{{fa-icon "check" color="success"}}{{/if}}<br>
+                {{#if person.on_site}}
+                  <UiBadge @type="success">on site</UiBadge>
+                {{/if}}<br>
                 &lt;{{person.status}}&gt;
               </div>
             {{/each}}
@@ -97,7 +104,7 @@
                   <PersonLink @person={{person}} />
                 </td>
                 <td>{{person.status}}</td>
-                <td>{{#if person.on_site}}{{fa-icon "check" color="green" right=1}}{{/if}}</td>
+                <td>{{#if person.on_site}}{{fa-icon "check" color="success" left=2}}{{/if}}</td>
                 <td>{{position.title}}</td>
               </tr>
             {{~/each~}}

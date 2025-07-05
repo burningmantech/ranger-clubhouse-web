@@ -4,7 +4,7 @@ import _ from 'lodash';
 
 
 export function positionLabel([position, muted = false]) {
-  const flag = (position.active) ? '' : ' [inactive]';
+  const flag = (position.active) ? '' : ' <span class="badge text-bg-danger">inactive</span>';
   const decorator = (muted) ? flag : `<span class="text-danger">${flag}</span>`;
   const title = _.escape(position.title);
 
