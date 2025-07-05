@@ -1,45 +1,6 @@
 <h1>Clubhouse Announcements</h1>
 <BackToHome/>
-
-{{#if this.motds}}
-  <p>
-    Showing  {{pluralize this.motds.length "Clubhouse announcement"}}.
-  </p>
-  Click the subject line to read the announcement.
-  {{#each this.motds as |motd|}}
-    <UiAccordion as |Accordion|>
-      <Accordion.title class={{if motd.has_read "text-muted"}}>
-        {{motd.subject}}
-        {{#if motd.has_read}}(Read){{/if}}
-      </Accordion.title>
-      <Accordion.body>
-        <div class="text-muted mb-2">
-          {{dayjs-format motd.created_at "dddd, MMMM Do YYYY"}}
-          {{#if motd.has_read}}
-            <br>
-            You have read this announcement.
-          {{/if}}
-        </div>
-        {{!template-lint-disable no-triple-curlies}}
-        {{{motd.message}}}
-        <div class="mt-2">
-          {{#if motd.has_read}}
-            <br>
-          {{else}}
-            <UiButton @type="secondary" @disabled={{motd.isMarking}} @onClick={{fn this.markMotdAsRead motd}}>
-              Mark As Read
-            </UiButton>
-          {{/if}}
-          {{#if motd.isMarking}}
-            <LoadingIndicator @text="marking ..."/>
-          {{/if}}
-        </div>
-      </Accordion.body>
-    </UiAccordion>
-  {{/each}}
-{{else}}
-  <p>
-    <b>There are no Clubhouse announcements at this time. Check your inbox, and the Announce mailing list for
-      additional messages.</b>
-  </p>
-{{/if}}
+<p>
+  Showing  {{pluralize this.motds.length "announcement"}}.
+</p>
+<Me::Motd @motds={{this.motds}} />

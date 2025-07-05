@@ -1,36 +1,8 @@
-<DashboardGroup @title="Clubhouse Announcements" @isActive={{true}} @hasBottomArrow={{this.hasBottomArrow}}>
-  <div class="dashboard-step-header">Click the subject to read the announcement.</div>
-  {{#each this.motds as |motd|}}
-    <div class="dashboard-step-row {{unless motd.has_read "dashboard-step-active"}}">
-      <div class="dashboard-step-title">
-        <div class="dashboard-icon">
-          {{#if motd.has_read}}
-            {{fa-icon "check-circle"}}
-          {{else}}
-            {{fa-icon "arrow-right" color="success"}}
-          {{/if}}
-        </div>
-        <a href {{on-click this.toggleMotd motd}}>{{motd.subject}}</a>
-        {{#if motd.has_read}}
-          <span class="text-success text-muted">(read)</span>
-        {{/if}}
-      </div>
-      <BsCollapse @collapsed={{not motd.showing}} class="dashboard-step-description">
-        <p class="text-muted">Posted {{dayjs-format motd.created_at "dddd, MMMM Do YYYY"}}</p>
-        {{!template-lint-disable no-triple-curlies}}
-        {{{motd.message}}}
-        {{#unless motd.has_read}}
-          <div class="mt-2">
-            <UiButton @type="secondary" @responsive={{true}} @onClick={{fn this.markMotdAsRead motd}} @disabled={{motd.isMarking}}>
-              {{#if motd.isMarking}}
-                <LoadingIndicator @text="Marking read"/>
-              {{else}}
-                Mark As Read
-              {{/if}}
-            </UiButton>
-          </div>
-        {{/unless}}
-      </BsCollapse>
-    </div>
-  {{/each}}
-</DashboardGroup>
+{{#if @motds}}
+  <Me::Motd @motds={{@motds}} />
+  <div class="fs-5 fw-semibold mt-n2 mb-1">
+    All current announcements can be view again at
+    <LinkTo @route="me.announcements">Me &gt; Announcements</LinkTo>
+    .
+  </div>
+{{/if}}

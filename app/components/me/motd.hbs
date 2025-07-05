@@ -1,0 +1,64 @@
+{{#if this.motds}}
+  {{#each this.motds as |motd|}}
+    <UiAlert @type="warning">
+      <div class="fs-4">
+        <span class="fw-semibold">{{fa-icon "bullhorn" right=2}}{{motd.subject}}</span>
+        {{#if motd.has_read}}
+          <UiBadge @type="success" class="ms-2">have read</UiBadge>
+        {{else}}
+          <UiBadge @type="gray" class="ms-2">unread</UiBadge>
+        {{/if}}
+      </div>
+      <div class="fs-5">
+        Posted {{mdy-format motd.created_at full=true}}
+      </div>
+      <div class="mt-2 fs-4">
+        <a href="#" {{on "click" (fn this.viewMotd motd)}}>
+          Read Announcement
+        </a>
+      </div>
+    </UiAlert>
+  {{/each}}
+{{else}}
+  <b>There are no Clubhouse Announcements at this time. Check your inbox, and the Announce mailing list for
+    additional messages.</b>
+{{/if}}
+
+{{#if this.showMotdDialog}}
+  <ModalDialog @size="xl" @onEscape={{this.closeMotdDialog}} as |Modal|>
+    <Modal.title>{{this.motd.subject}}</Modal.title>
+    <Modal.body>
+      <p class="fw-semibold">
+        Posted {{mdy-format this.motd.created_at full=true}}.
+        {{#if this.motd.expires_at}}
+          Announcement will expire on {{mdy-format this.motd.expires_at full=true}}.
+        {{/if}}
+      </p>
+      {{this.motd.message}}
+      {{#if this.motd.has_read}}
+        <div class="mt-2 text-muted">
+          You have marked this announcement as read.
+        </div>
+      {{/if}}
+    </Modal.body>
+    <Modal.footer @align="left">
+      <UiButtonRow>
+        {{#unless this.motd.has_read}}
+          <UiButton @type="secondary"
+                    @responsive={{true}}
+                    @onClick={{this.markAsRead}}
+                    @disabled={{this.motd.isMarking}}
+                    @size="md">
+            {{#if this.motd.isMarking}}
+              <LoadingIndicator @text="Marking read"/>
+            {{else}}
+              Mark As Read
+            {{/if}}
+          </UiButton>
+        {{/unless}}
+        <UiCloseButton @onClick={{this.closeMotdDialog}} @size="md"/>
+      </UiButtonRow>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+

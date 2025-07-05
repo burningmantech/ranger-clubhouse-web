@@ -1,4 +1,8 @@
 <div class="homepage-title">Clubhouse Onboarding Checklist</div>
+{{#if @motds}}
+  <DashboardMotd @motds={{@motds}} />
+{{/if}}
+
 <p>
   {{#if (eq @person.status "bonked")}}
     Hello {{@person.callsign}}.
@@ -17,23 +21,21 @@
   </UiAlert>
 {{/if}}
 <p>
-  <b>Questions?</b> Contact the Volunteer Coordinators at <VcEmail/>
+  <b>Questions?</b> Contact the Volunteer Coordinators at
+  <VcEmail/>
 </p>
 <p>
   <b>Need to drop your application?</b> Reach out to the Volunteer Coordinators at the email address above. Please note,
   Ranger applications <span class="text-danger">DO NOT roll over</span> to the next year. A new application must be
   submitted.
 </p>
-<DashboardPasswordReminder />
+<DashboardPasswordReminder/>
+
 <div class="dashboard-box">
-  {{#if @motds}}
-    <DashboardMotd @motds={{@motds}} />
-  {{/if}}
 
   {{#each this.stepGroups as |group idx|}}
     <DashboardGroup @title={{group.title}}
                     @isActive={{group.isActive}}
-                    @hasTopArrow={{or @motds (gt idx 0)}}
                     @hasBottomArrow={{not group.isLast}}>
       {{#each group.steps as |step stepIdx|}}
       {{!

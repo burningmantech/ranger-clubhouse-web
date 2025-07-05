@@ -1,16 +1,17 @@
 <div class="homepage-title">Clubhouse Auditor Checklist</div>
+{{#if @motds}}
+  <DashboardMotd @motds={{@motds}} />
+{{/if}}
 <p>
   Hello Auditor {{or @person.desired_first_name @person.first_name}}. Your Clubhouse handle is {{@person.callsign}}.
 </p>
 <p>
-  <b>Questions?</b> Contact the Volunteer Coordinators at <VcEmail />
+  <b>Questions?</b> Contact the Volunteer Coordinators at
+  <VcEmail/>
 </p>
 
 <div class="dashboard-box">
-  {{#if @motds}}
-    <DashboardMotd @motds={{@motds}} />
-  {{/if}}
-  <DashboardGroup @title="Complete the Checklist" @isActive={{true}} @hasTopArrow={{not (is-empty @motds)}} >
+  <DashboardGroup @title="Complete the Checklist" @isActive={{true}}>
     <div class="dashboard-step-row dashboard-step-active">
       <div class="dashboard-step-title">
         <div class="dashboard-icon">
