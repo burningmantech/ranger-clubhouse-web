@@ -1,4 +1,6 @@
 <div class="homepage-title">Clubhouse Ranger Dashboard</div>
+<DashboardMotd @motds={{@motds}} />
+
 {{#if @person.unread_message_count}}
   <p>
     <LinkTo @route="me.messages">
@@ -30,14 +32,10 @@
 {{/unless}}
 
 <div class="dashboard-box">
-  {{#if @motds}}
-    <DashboardMotd @motds={{@motds}} />
-  {{/if}}
   {{#each this.stepGroups as |group idx|}}
     <DashboardGroup @title={{group.title}}
                     @isActive={{eq idx 0}}
                     @isUrgent={{group.isUrgent}}
-                    @hasTopArrow={{or @motds idx}}
                     @hasBottomArrow={{not group.isLast}}
                     @includeSidePhoto={{eq idx 0}}
                     @photo={{@photo}}
