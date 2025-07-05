@@ -52,7 +52,7 @@ export default class PositionEditComponent extends Component {
         this.parentPositionOptions.push([position.title, position.id]);
     })
 
-    this.house.scrollToTop();
+    this.house.scrollToTop(true);
 
     this.isTechNinja = this.session.hasRole(TECH_NINJA);
   }

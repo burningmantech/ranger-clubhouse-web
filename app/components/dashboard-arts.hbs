@@ -26,16 +26,24 @@
         </div>
         <div class="dashboard-art-position">
           {{art.position_title}}
+          {{#if art.has_online_course}}
+            <OnlineCourseLaunch @text="Go to the Online Course"
+                                @person={{@person}}
+                                @url={{@milestones.online_course_url}}
+                                @isART={{true}}
+                                class="d-block"
+            />
+          {{/if}}
         </div>
         <div class="dashboard-art-status">
           {{#if (eq art.status "pass")}}
-            <UiBadge @text="completed" @type="success" />
+            <UiBadge @text="completed" @type="success"/>
           {{else if (or (eq art.status "no-show") (eq art.status "fail"))}}
-            <UiBadge @text="not passed" @type="danger" />
+            <UiBadge @text="not passed" @type="danger"/>
           {{else if (eq art.status "no-shift")}}
-            <UiBadge @text="not signed up" @type="secondary" />
+            <UiBadge @text="not signed up" @type="secondary"/>
           {{else}}
-            <UiBadge @text="pending" @type="warning" />
+            <UiBadge @text="pending" @type="warning"/>
           {{/if}}
         </div>
         <div class="dashboard-art-location">
@@ -63,5 +71,6 @@
 </div>
 
 {{#if (not-eq @step.result "completed")}}
-  Visit <LinkTo @route="me.schedule">Me &gt; Schedule / Sign Up</LinkTo> to sign up for an ART(s).
+  Visit
+  <LinkTo @route="me.schedule">Me &gt; Schedule / Sign Up</LinkTo> to sign up for an ART(s).
 {{/if}}

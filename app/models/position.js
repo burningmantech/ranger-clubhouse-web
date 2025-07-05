@@ -83,6 +83,10 @@ export const ATTR_LABELS = [
     id: 'awards_eligible',
     label: 'Awards eligible',
   },
+  {
+    id: 'has_online_course',
+    label: 'Has Online Course',
+  },
   /*
   {
     id: 'awards_auto_grant',
@@ -139,6 +143,7 @@ export default class PositionModel extends Model {
   @attr('boolean', {defaultValue: false}) awards_eligible;
   @attr('boolean', {defaultValue: false}) awards_auto_grant;
   @attr('boolean', {defaultValue: false}) awards_grants_service_year;
+  @attr('boolean', {defaultValue: false}) has_online_course;
 
   @attr('string') resource_tag;
 

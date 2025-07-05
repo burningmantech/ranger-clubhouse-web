@@ -18,7 +18,7 @@
       Completed.
     {{/if}}
     {{#if @step.message}}
-     {{@step.message}}
+      {{@step.message}}
     {{/if}}
     {{#if @step.linkedMessage}}
       {{@step.linkedMessage.prefix}}
@@ -28,9 +28,9 @@
     {{#if @step.isOnlineTraining}}
       <p>
         <OnlineCourseLaunch @text="Go to the Online Course"
-                              @person={{@person}}
-                              @url={{@milestones.online_course_url}}
-                              @didComplete={{eq @step.result "completed"}}
+                            @person={{@person}}
+                            @url={{@milestones.online_course_url}}
+                            @didComplete={{eq @step.result "completed"}}
         />
       </p>
     {{/if}}
@@ -45,11 +45,16 @@
     {{/if}}
 
     {{#if @step.arts}}
-      <DashboardArts @step={{@step}} />
+      <DashboardArts @step={{@step}}
+                     @person={{@person}}
+                     @milestones={{@milestones}}
+      />
     {{/if}}
 
     {{#if @step.email}}
-      <div><MailTo @to={{@step.email}} /></div>
+      <div>
+        <MailTo @to={{@step.email}} />
+      </div>
     {{/if}}
 
     {{#if @step.survey}}
