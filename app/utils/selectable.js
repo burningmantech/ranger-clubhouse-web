@@ -1,9 +1,10 @@
-import { tracked } from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
 
 export default class Selectable {
-    @tracked selected;
+  @tracked selected;
 
-    constructor(obj) {
-        Object.assign(this, obj);
-    }
+  constructor(obj, selected = false) {
+    Object.assign(this, obj);
+    this.selected = selected;
+  }
 }
