@@ -11,7 +11,7 @@ export default class PersonEmergencyContactRoute extends ClubhouseRoute {
      Person allowed to view EC info if
      - the user is the person OR
      - the person is an Admin
-     - the person has LM and EventManageOnPlayaEnabled is on.
+     - the person has LM and EventManagementOnPlayaEnabled is on.
      */
     controller.set('canAccessEmergencyContact',
       (+person.id === this.session.userId) || this.session.isAdmin || this.session.isEMOPEnabled);

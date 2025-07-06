@@ -38,7 +38,7 @@ export default class PersonRolesComponent extends Component {
 
       let active = true;
       if (role.id === MANAGE_ON_PLAYA) {
-        active = !!setting('EventManageOnPlayaEnabled');
+        active = !!setting('EventManagementOnPlayaEnabled');
         // Fall thru..
       }
       // See if the role is only granted thru the positions, said positions require training before the roles
