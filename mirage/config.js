@@ -29,7 +29,7 @@ function routes() {
       HQWindowInterfaceEnabled: true,
       GeneralSupportEmail: 'rangers@burningman.org',
       JoiningRangerSpecialTeamsUrl: 'https://example.com/special-teams',
-      EventManageOnPlayaEnabled: true,
+      EventManagementOnPlayaEnabled: true,
       MealDates: 'Thanksgiving',
       MealInfoAvailable: true,
       MentorEmail: 'ranger-mentors@burningman.org',
