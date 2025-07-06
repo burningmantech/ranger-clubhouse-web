@@ -120,7 +120,7 @@ export default class extends SessionService {
    */
 
   get isEMOPEnabled() {
-    return (this.hasRole(MANAGE) && !!setting('LoginManageOnPlayaEnabled'));
+    return (this.hasRole(MANAGE) && !!setting('EventManageOnPlayaEnabled'));
   }
 
 
