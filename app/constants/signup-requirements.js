@@ -32,6 +32,10 @@ export const REQUIREMENT_LABELS = {
 export const OC_DISABLED_PREFIX = 'The Online Course has to be completed. However, the course is not quite ready yet and usually available by early April. Check back around then. ';
 
 export function requirementInfo(status, requirements) {
+  if (!requirements) {
+    return [];
+  }
+  
   return requirements.map((r) => {
     if (r === OC_DISABLED) {
       let message = OC_DISABLED_PREFIX;
