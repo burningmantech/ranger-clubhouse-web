@@ -146,7 +146,7 @@ export default class ShiftManageService extends Service {
         const msg = result.status === 'has-started' ? 'started' : 'ended';
         this.modal.info(
           `Shift has ${msg}`,
-          `This shift has $\{msg}. It may not be added to the schedule. ${REFRESH_PAGE_MESSAGE}`,
+          `This shift has ${msg}. It may not be added to the schedule. ${REFRESH_PAGE_MESSAGE}`,
         );
       }
         return;
