@@ -84,7 +84,7 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-ember": "^12.5.0",
     "eslint-plugin-n": "^17.21.0",
-    "eslint-plugin-qunit": "^8.2.2",
+    "eslint-plugin-qunit": "^8.2.3",
     "global": "^4.4.0",
     "ical-generator": "^9.0.0",
     "jscodeshift": "^17.3.0",
@@ -103,7 +103,7 @@
     "tinymce": "^7.9.1",
     "tracked-built-ins": "^4.0.0",
     "validated-changeset": "~1.4.1",
-    "webpack": "^5.99.9"
+    "webpack": "^5.100.1"
   },
   "engines": {
     "node": ">= 20"
