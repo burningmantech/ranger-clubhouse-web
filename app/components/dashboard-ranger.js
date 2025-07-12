@@ -61,7 +61,14 @@ const STEPS = [
 
       return {
         result: URGENT,
-        message: htmlSafe(`<p>Because no ticket has been claimed, nor an In-Person Training signup found, your BMID will NOT be printed.</p>Email the Volunteer Coordinators ASAP if you intend to Ranger this event.`),
+        message: htmlSafe(`
+<p>Because no ticket has been claimed, nor an In-Person Training signup found,
+your BMID will NOT be printed.</p>
+<p>
+This warning will disappear and your BMID will be sent to the printers once you either sign up for an In-Person Training or claim a ticket or SAP (excluding Significant Other SAPs).
+</p>
+Email the Volunteer Coordinators ASAP if you intend to Ranger this event.
+`),
         email: 'VCEmail'
       };
     }
@@ -390,14 +397,14 @@ export default class DashboardRangerComponent extends Component {
     } = this._processStepGroup(this.args.person.isEchelon ? ECHELON_STEPS : STEPS);
 
     const pushNote = () => {
-        if (note.length) {
-          groups.push(new StepGroup('Important Note', note, true, true));
-        }
-      };
+      if (note.length) {
+        groups.push(new StepGroup('Important Note', note, true, true));
+      }
+    };
     if (immediateSteps.length) {
       groups.push(new StepGroup('IMMEDIATE ACTION REQUIRED', immediateSteps, true, true));
       pushNote();
-     } else if (!steps.length) {
+    } else if (!steps.length) {
       pushNote();
       steps.push((isPostEvent || isAfterEvent) ? AFTER_EVENT_NO_MORE_THINGS_STEP : BEFORE_EVENT_NO_MORE_THINGS_STEP);
     } else {
