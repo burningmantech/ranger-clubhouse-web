@@ -3,19 +3,22 @@ import {action} from '@ember/object';
 import Selectable from 'clubhouse/utils/selectable';
 
 export default class RadioGroupComponent extends Component {
-  get options() {
-    const {value} = this.args;
-    return this.args.options.map((opt) => new Selectable({
-      selected: (value === opt.value),
+  constructor() {
+    super(...arguments);
+
+    const value = this.args.value;
+    this.options = this.args.options.map((opt) => new Selectable({
       value: opt.value,
       label: opt.label
-    }));
+    }, (value === opt.value)));
   }
 
   @action
   changeEvent(optClicked, event) {
     event.preventDefault();
-    this.options.forEach((opt) => opt.selected = (opt === optClicked));
+    this.options.forEach((opt) => opt.selected = (opt.value === optClicked.value));
     this.args.onChange(optClicked.value);
+
+    return true;
   }
 }

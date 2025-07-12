@@ -1,12 +1,17 @@
-{{#each this.options as |opt idx|}}
-  <div class="form-check form-check-inline">
-    <input type="radio"
-           id="radio-opt-{{idx}}"
-           class="form-check-input"
-           checked={{opt.selected}} {{on "click" (fn this.changeEvent opt)}}
-    />
-    <label class="form-check-label" for="radio-opt-{{idx}}">
-      {{opt.label}}
-    </label>
-  </div>
-{{/each}}
+{{#let (unique-id) as |domId|}}
+  {{#each this.options as |opt idx|}}
+    <div class="form-check form-check-inline">
+      <input type="radio"
+             id="radio-opt-{{idx}}"
+             name={{domId}}
+             class="form-check-input"
+             value="{{opt.value}}"
+             checked={{opt.selected}}
+        {{on "change" (fn this.changeEvent opt)}}
+      />
+      <label class="form-check-label" for="radio-opt-{{idx}}">
+        {{opt.label}}
+      </label>
+    </div>
+  {{/each}}
+{{/let}}
