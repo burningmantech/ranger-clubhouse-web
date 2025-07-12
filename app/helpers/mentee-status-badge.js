@@ -16,19 +16,23 @@ export function menteeStatusBadge([accountStatus, mentorStatus, alphaShifts] /*,
   if (accountStatus === UBERBONKED) {
     color = 'danger';
     label = 'UBERBONKED';
-  } else if (
-    (mentorStatus === 'pending' && ((isArray(alphaShifts) && !alphaShifts?.length) || !alphaShifts))
-    || mentorStatus === 'none') {
-    return 'no alpha sign-up';
-//    [color, label] = MentorStatusLabels['none'];
   } else {
-    const badge = MentorStatusLabels[mentorStatus];
-    if (badge) {
-      color = badge[0];
-      label = badge[1];
+    if ((isArray(alphaShifts) && !alphaShifts?.length) || !alphaShifts) {
+      return 'no alpha sign-up';
     } else {
-      color = 'warning';
-      label = mentorStatus;
+      if (mentorStatus === 'none') {
+        color = 'success';
+        label = 'has alpha sign-up'
+      } else {
+        const badge = MentorStatusLabels[mentorStatus];
+        if (badge) {
+          color = badge[0];
+          label = badge[1];
+        } else {
+          color = 'warning';
+          label = mentorStatus;
+        }
+      }
     }
   }
 

@@ -62,6 +62,16 @@ export default class MentorPodManageController extends ClubhouseController {
     this.showPeoplePositions = false;
   }
 
+  @action
+  alphaCallsign(alpha) {
+    let callsign = alpha.callsign;
+    if (alpha.prior_bonk) {
+      callsign += ' <span class="badge text-bg-warning">B</span'
+    }
+
+    return htmlSafe(callsign);
+  }
+
   /**
    * Create a new pod. Really, create three new pods that are linked together - mentor, mitten, and alpha.
    *
