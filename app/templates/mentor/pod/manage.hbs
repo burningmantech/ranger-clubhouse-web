@@ -221,10 +221,10 @@
               {{#if pod.alphaPod.people}}
                 <ol class="no-indent">
                   {{#each pod.alphaPod.people key="id" as |alpha alphaIdx|}}
-                    <li class="mb-3">
+                    <li class="mb-2 align-middle">
                       <div class="d-flex">
                         <Popover @title="Relocate Or Remove {{alpha.callsign}}"
-                                 @text={{alpha.callsign}}
+                                 @text={{this.alphaCallsign alpha}}
                                  @onShow={{fn this.onAlphaShow pod.alphaPod alpha}}
                                  as |po|
                         >
