@@ -15,7 +15,7 @@
       </UiNotice>
     {{/unless}}
 
-    {{#if this.showScheduleBlocker}}
+    {{#if (and this.isCurrentYearthis.showScheduleBlocker)}}
       <ScheduleBlocked @requirements={{this.permission.requirements}}
                        @person={{@person}}
                        @overrideAction={{this.overrideAction}}
@@ -166,7 +166,7 @@
         <p>
           {{this.resultInfo.agreementWarning}}
         </p>
-         <p>
+        <p>
           This position grants access to the larger rental fleet vehicles, but only if a Motor Vehicle Record (MVR)
           request is submitted and approved. Note: this is separate from signing the Motor Pool Agreement.
         </p>
