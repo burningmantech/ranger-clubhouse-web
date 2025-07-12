@@ -1,4 +1,4 @@
-<ModalDialog @title="Upload A New BMID Photo" @onEscape={{@closeAction}} as |modal|>
+<ModalDialog @title="Upload A New BMID Photo" @onEscape={{@closeAction}} @position="top" as |modal|>
   <modal.body>
     {{#unless @photo.upload_enabled}}
       <UiAlert @type="danger" @icon="hand-point-right">
@@ -55,7 +55,7 @@
             <h4>- OR -</h4>
           </div>
           <div class="col-sm-12 col-xl-auto text-sm-center text-xl-none">
-            <UiButton @onClick={{this.takeSelfieAction}} @responsive={{true}}>
+            <UiButton @onClick={{this.takeSelfieAction}} @responsive={{true}} @size="md">
               Use Camera / Take Selfie
             </UiButton>
           </div>
@@ -106,13 +106,13 @@
       />
     {{/if}}
   </modal.body>
-  <modal.footer>
-    <UiCancelButton @onClick={{@closeAction}} />
+  <modal.footer @align="start">
     {{#if (eq this.step "showGuidelines")}}
-      <UiButton @onClick={{this.gotoSourceStep}} @type="primary">
+      <UiButton @onClick={{this.gotoSourceStep}} @type="primary" @size="md">
         Upload Photo
       </UiButton>
     {{/if}}
+    <UiCancelButton @onClick={{@closeAction}} />
   </modal.footer>
 </ModalDialog>
 
