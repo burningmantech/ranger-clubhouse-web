@@ -11,7 +11,8 @@
     </p>
   {{/if}}
   {{#if (eq this.status 'no-arrivals')}}
-    <b class="text-danger">No arrivals could be found. Usually this means no SAPs with a date prior to {{ymd-format this.date}} have been created yet.</b>
+    <b class="text-danger">No arrivals could be found. Usually this means no SAPs with a date prior to {{ymd-format
+      this.date}} have been created yet.</b>
   {{else if (eq this.status 'no-event-dates')}}
     <b class="text-danger">The event dates have not been set. Contact the Tech Cadre for help.</b>
   {{else}}
@@ -36,8 +37,16 @@
           <tbody>
           {{#each this.arrivals as |arrival|}}
             <tr>
-              <td><PersonLink @person={{arrival}} /></td>
-              <td>{{dayjs-format arrival.sap_date "ddd, MMM D" }}</td>
+              <td>
+                <PersonLink @person={{arrival}} />
+              </td>
+              <td>
+                {{#if (eq arrival.sap_date "any")}}
+                  any
+                {{else}}
+                  {{dayjs-format arrival.sap_date "ddd, MMM D" }}
+                {{/if}}
+              </td>
               <td class="text-center">
                 {{#if (eq arrival.bmid_status "no-bmid")}}
                   No BMID Found
