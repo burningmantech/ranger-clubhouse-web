@@ -1,9 +1,9 @@
-<h1>Site Check-In</h1>
+<h1>On-Site Registration</h1>
 
 {{#if this.isOnSite}}
   <UiNotice @icon="check" @type="success" @title="{{this.person.callsign}} Marked On Site">
     <p>
-      Site check-in is complete for {{this.person.callsign}} and is ready to start a shift.
+      On-Site Registration is complete for {{this.person.callsign}} and is ready to start a shift.
     </p>
     <LinkTo @route="hq.shift" class="btn btn-success btn-lg">Start Shift Check-In</LinkTo>
   </UiNotice>
@@ -74,7 +74,7 @@
 </UiSection>
 
 <UiButton @onClick={{this.startSiteCheckIn}} class="btn-block my-4" @size="lg">
-  Begin Site Check-In
+  Begin On-Site Registration
 </UiButton>
 
 {{#if this.showSiteCheckInWizard}}
@@ -185,7 +185,7 @@
     </w.step>
   </UiWizard>
 {{else if (and this.siteCheckInStarted (not this.siteCheckInFinished))}}
-  <UiNotice @type="danger" @icon="band" @title="Site Check In Not Completed">
+  <UiNotice @type="danger" @icon="band" @title="On-Site Registration In Not Completed">
     You have not gone through all the Site Check In steps. Use the <b>Begin Site Check In</b> button again and make
     sure all the steps have been completed.
   </UiNotice>

@@ -13,12 +13,14 @@
     <LinkTo @route="mentor.pod">Back to Alpha Pod Management Listing</LinkTo>
   </p>
   <p>
-    <UiButton @onClick={{this.createPod}}>
-      {{fa-icon "plus"}} Create Pod
-    </UiButton>
-    <UiButton @onClick={{this.toggleShowSortControls}} @type="secondary">
-      {{if this.showSortControls "Hide" "Show"}} Sorting Controls
-    </UiButton>
+    <UiButtonRow>
+      <UiButton @onClick={{this.createPod}}>
+        {{fa-icon "plus"}} Create Pod
+      </UiButton>
+      <UiButton @onClick={{this.toggleShowSortControls}} @type="secondary">
+        {{if this.showSortControls "Hide" "Show"}} Sorting Controls
+      </UiButton>
+    </UiButtonRow>
   </p>
   <p>
     Only the checked-in Alphas will be available to add into a pod. Click on the callsign to remove it.
@@ -221,10 +223,10 @@
               {{#if pod.alphaPod.people}}
                 <ol class="no-indent">
                   {{#each pod.alphaPod.people key="id" as |alpha alphaIdx|}}
-                    <li class="mb-3">
+                    <li class="mb-2 align-middle">
                       <div class="d-flex">
                         <Popover @title="Relocate Or Remove {{alpha.callsign}}"
-                                 @text={{alpha.callsign}}
+                                 @text={{this.alphaCallsign alpha}}
                                  @onShow={{fn this.onAlphaShow pod.alphaPod alpha}}
                                  as |po|
                         >
@@ -340,7 +342,7 @@
               {{#if this.peoplePositionsOptions}}
                 <a href {{on-click this.togglePeoplePositions}} class="d-block mb-2">
                   {{if this.showPeoplePositions "Hide" "Show" }} {{pluralize this.peoplePositionsOptions.length
-                                                                     (concat "Not Checked In " this.addType)}}
+                                                                             (concat "Not Checked In " this.addType)}}
                 </a>
 
                 {{#if this.showPeoplePositions}}
@@ -355,7 +357,8 @@
 
       </Modal.body>
       <Modal.footer @align="start">
-        <f.submit @label="Add {{this.addType}}s" @disabled={{and (not f.model.offduty) (not f.model.onduty) (not f.model.peoplePositions)}} />
+        <f.submit @label="Add {{this.addType}}s" @disabled={{and (not f.model.offduty) (not f.model.onduty)
+                                                                 (not f.model.peoplePositions)}} />
         <UiCancelButton @onClick={{this.closeAddDialog}} />
       </Modal.footer>
     </ChForm>
