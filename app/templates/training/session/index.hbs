@@ -185,12 +185,14 @@
           </LinkTo>
           <UiButton @type="secondary"
                     @onClick={{this.toggleEmailListAction}}
-                    @disabled={{is-empty this.students}}>
+                    @disabled={{is-empty this.students}}
+                    @size="md">
             {{fa-icon "envelope" right=1}} {{if this.showEmails "Hide Emails" "List Emails"}}
           </UiButton>
           {{#if this.canAdjustRosters}}
             <UiButton @type="secondary"
-                      @onClick={{this.showAddTraineeAction}}>
+                      @onClick={{this.showAddTraineeAction}}
+                      @size="md">
               {{fa-icon "plus-square" right=1}} Add Person
             </UiButton>
           {{/if}}
@@ -198,7 +200,9 @@
             {{#if this.canGraduate}}
               <UiButton @type="secondary"
                         @onClick={{this.showGraduateStudentsAction}}
-                        @disabled={{is-empty this.students}}>
+                        @disabled={{is-empty this.students}}
+                        @size="md"
+              >
                 {{fa-icon "graduation-cap" right=1}} Graduate Trainees
               </UiButton>
             {{/if}}
@@ -442,6 +446,7 @@
 {{! Add Person dialog box}}
 {{#if this.addPersonForm}}
   <ModalDialog @title="Add {{if this.addingTrainer "Trainer" "Trainee"}} To Session"
+               @position="top"
                @onEscape={{this.cancelSearchAction}} as |Modal|>
     <ChForm @formId="search"
             @formFor={{this.addPersonForm}}
