@@ -6,7 +6,7 @@
     <s.link @route="hq.timesheet" @title="Timesheet / Corrections" @icon="clock"/>
     <s.link @route="hq.assets" @title="Asset History" @icon="broadcast-tower" @iconType="s"/>
     <s.link @route="hq.training-info" @title="Training Info" @icon="graduation-cap" @iconType="s"/>
-    <s.link @route="hq.site-checkin" @title="Site Check In" @icon="list-ol" @iconType="s"/>
+    <s.link @route="hq.site-checkin" @title="On-Site Registration" @icon="list-ol" @iconType="s"/>
   </s.group>
 </UiSidebar>
 
@@ -45,7 +45,7 @@
       {{else if (and this.person.isPNV (not this.userIsMentor))}}
         <UiNotice @title="Direct to the Hat Rack." @type="danger" @icon="exclamation">
           {{this.person.callsign}} is {{if this.person.isAlpha "an Alpha" "a Prospective"}}.
-          This person may only be SITE CHECKED-IN. Do not START THEIR ALPHA SHIFT!
+          This person may only be On-Site Registered. <b class="text-danger">Do not start their Alpha shift.</b>
         </UiNotice>
       {{/if}}
       {{outlet}}
@@ -57,7 +57,7 @@
           {{#if this.photo.photo_url}}
             <img src="{{or this.photo.profile_url this.photo.photo_url}}" class="d-block" alt="profile">
           {{else}}
-            <UiPhoneNone />
+            <UiPhoneNone/>
             No Photo Uploaded
           {{/if}}
           {{#if this.photo.message}}
@@ -112,7 +112,7 @@
   </ModalDialog>
 {{else if this.showHatRackInstruction}}
   <ModalDialog @onEscape={{this.closeHatRackInstructions}} as |Modal|>
-    <Modal.title>Site Check-In ONLY</Modal.title>
+    <Modal.title>On-Site Registration ONLY</Modal.title>
     <Modal.body>
       <p>
         {{this.person.callsign}} is
@@ -122,8 +122,9 @@
           {{if this.person.isAlpha "an Alpha" "a Prospective"}}
         {{/if}}.
       </p>
-      You may site check-in this individual <b>ONLY</b>. Do not start their shift. After completing the site
-      check-in, direct the person to the Mentor Shack. The Mentors will be the ones to start their shift.
+      You may <b>ONLY perform an On-Site Registration</b> for this person. <b class="text-danger">Do not start their
+      Alpha shift.</b> After completing the On-Site Registration, direct the person to the Mentor Shack. The Mentors
+      will be the ones to start their shift.
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeHatRackInstructions}} @size="md"/>
