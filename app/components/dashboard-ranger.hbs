@@ -19,6 +19,11 @@
     {{/if}}
   {{else}}
     Hello Ranger {{@person.callsign}}, thank you for {{this.serviceInfo}}.
+    {{#if @person.years_of_service}}
+      You have {{pluralize @person.years_of_service.length "year"}} of service, which includes
+      rangering at the event and may also include recognition of significant year-round volunteer work and
+      participation in special events.
+    {{/if}}
   {{/if}}
 </p>
 
