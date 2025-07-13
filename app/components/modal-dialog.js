@@ -3,7 +3,6 @@ import {service} from '@ember/service';
 import {schedule} from '@ember/runloop';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {htmlSafe} from '@ember/template';
 
 class DialogEntry {
   @tracked isTopDialog = false;
@@ -57,11 +56,6 @@ export default class ModalDialogComponent extends Component {
   _showDialog() {
 
   }
-
-  get hideDialogStyle() {
-    return htmlSafe(!this.dialogRegistry.isTopDialog ? 'display: none !important' : '');
-  }
-
   /**
    * Remove a non-inline dialog from the modal service when destroyed.
    */
