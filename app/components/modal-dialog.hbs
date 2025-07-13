@@ -6,9 +6,9 @@
   @transitionDuration={{100}}
   @size={{or @size "lg"}}
   @fullscreen={{@fullscreen}}
+  @hideDialog={{not this.dialogRegistry.isTopDialog}}
   {{on-insert this.adjustClassOnInsert}}
   {{!template-lint-disable no-inline-styles}}
-  style={{this.hideDialogStyle}}
   role="dialog"
   aria-modal="true"
   as |modal|>
