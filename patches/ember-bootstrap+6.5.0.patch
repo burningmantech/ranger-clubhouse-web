@@ -11,27 +11,36 @@ index 5031a8e..83e74c5 100644
      {{#if this._renderInPlace}}
        <Dialog
 diff --git a/node_modules/ember-bootstrap/addon/components/bs-modal.ts b/node_modules/ember-bootstrap/addon/components/bs-modal.ts
-index d99766f..793ff28 100644
+index d99766f..cfac065 100644
 --- a/node_modules/ember-bootstrap/addon/components/bs-modal.ts
 +++ b/node_modules/ember-bootstrap/addon/components/bs-modal.ts
+@@ -2,7 +2,7 @@ import { action } from '@ember/object';
+ import { assert } from '@ember/debug';
+ import Component from '@glimmer/component';
+ import { next, schedule } from '@ember/runloop';
+-import { inject as service } from '@ember/service';
++import { service } from '@ember/service';
+ import transitionEnd from '../utils/transition-end';
+ import { getDestinationElement } from '../utils/dom';
+ import usesTransition from '../utils/decorators/uses-transition';
+@@ -217,7 +217,7 @@ export default class Modal extends Component<Signature> {
+   keyboard = true;
+ 
+   /**
+-   * [BS4 only!] Vertical position, either 'top' (default) or 'center'
++   * Vertical position, either 'top' (default) or 'center'
+    * 'center' will apply the `modal-dialog-centered` class
+    *
+    * @property position
 @@ -578,7 +578,7 @@ export default class Modal extends Component<Signature> {
      await nextRunloop();
  
      const { backdropElement } = this;
 -    assert('Backdrop element should be in DOM', backdropElement);
-+   // assert('Backdrop element should be in DOM', backdropElement);
++    //assert('Backdrop element should be in DOM', backdropElement);
  
      await transitionEnd(backdropElement, this.backdropTransitionDuration);
    }
-@@ -597,7 +597,7 @@ export default class Modal extends Component<Signature> {
- 
-     if (this.usesTransition) {
-       const { backdropElement } = this;
--      assert('Backdrop element should be in DOM', backdropElement);
-+      //assert('Backdrop element should be in DOM', backdropElement);
- 
-       await transitionEnd(backdropElement, this.backdropTransitionDuration);
-     }
 diff --git a/node_modules/ember-bootstrap/addon/components/bs-modal/dialog.hbs b/node_modules/ember-bootstrap/addon/components/bs-modal/dialog.hbs
 index 7ed4541..77f5936 100644
 --- a/node_modules/ember-bootstrap/addon/components/bs-modal/dialog.hbs

@@ -1,4 +1,4 @@
-<ModalDialog @title="Confirm Multiple Enrollment Sign Up" @isInline={{@isInline}} as |modal|>
+<ModalDialog @title="Confirm Multiple Enrollment Sign Up" @isInline={{@isInline}} @modalId={{@modalId}} as |modal|>
   <modal.body>
     <p>
       {{if this.isMe "You are " (concat this.data.person.callsign "is")}} already enrolled in

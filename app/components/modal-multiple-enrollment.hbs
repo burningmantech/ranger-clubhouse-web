@@ -1,4 +1,4 @@
-<ModalDialog @title="Already Signed Up" @isInline={{@isInline}} as |modal|>
+<ModalDialog @title="Already Signed Up" @isInline={{@isInline}} @modalId={{@modalId}} as |modal|>
   <modal.body>
     <p>
       Only one {{#if this.isAlpha}}Alpha shift{{else}}{{this.trainingType}} session{{/if}} may be signed up for.
