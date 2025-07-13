@@ -2,16 +2,10 @@ import Component from '@glimmer/component';
 import {service} from '@ember/service';
 import {schedule} from '@ember/runloop';
 import {action} from '@ember/object';
-import {tracked} from '@glimmer/tracking';
-
-class DialogEntry {
-  @tracked isTopDialog = false;
-}
+import ModalService from 'clubhouse/services/modal';
 
 export default class ModalDialogComponent extends Component {
   @service modal;
-
-  dialogRegistry = new DialogEntry();
 
   /**
    * Register a non-inline modal with the modal service. The service handles
@@ -23,13 +17,28 @@ export default class ModalDialogComponent extends Component {
 
     if (this.args.isInline) {
       // An inline modal has already been registered.
+      this.modalId = this.args.modalId;
       return;
     }
 
-    this.dialogRegistry.onEscape = this.args.onEscape;
-    this.dialogRegistry.show = this._showDialog;
-    this.dialogRegistry.hide = this._hideDialog;
-    schedule('afterRender', () => this.modal.addDialog(this.dialogRegistry));
+    this.modalId = ModalService.getNewModalId();
+    this.modalEntry = {
+      modalId: this.modalId,
+      onEscape: this.args.onEscape,
+      show: this._showDialog,
+      hide: this._hideDialog,
+    };
+
+    schedule('afterRender', () => this.modal.addDialog(this.modalEntry));
+  }
+
+  get isTopDialog() {
+    const idx = this.modal.dialogs.length;
+    if (!idx) {
+      // ... Because there's a delay between creating a modal and adding it into the registry
+      return false;
+    }
+    return this.modal.dialogs[idx - 1].modalId === this.modalId;
   }
 
   /**
@@ -52,10 +61,6 @@ export default class ModalDialogComponent extends Component {
     this.args.onInsert?.(element);
   }
 
-  @action
-  _showDialog() {
-
-  }
   /**
    * Remove a non-inline dialog from the modal service when destroyed.
    */
@@ -63,7 +68,7 @@ export default class ModalDialogComponent extends Component {
   willDestroy() {
     super.willDestroy(...arguments);
     if (!this.args.isInline) {
-      this.modal.removeDialog(this.dialogRegistry);
+      this.modal.removeDialog(this.modalEntry);
     }
   }
 }

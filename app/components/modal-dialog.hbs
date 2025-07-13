@@ -6,7 +6,7 @@
   @transitionDuration={{100}}
   @size={{or @size "lg"}}
   @fullscreen={{@fullscreen}}
-  @hideDialog={{not this.dialogRegistry.isTopDialog}}
+  @hideDialog={{not this.isTopDialog}}
   {{on-insert this.adjustClassOnInsert}}
   {{!template-lint-disable no-inline-styles}}
   role="dialog"
