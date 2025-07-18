@@ -7,22 +7,38 @@ import {isEmpty} from 'lodash';
 import dayjs from "dayjs";
 
 export default class MeTimesheetReviewEditComponent extends Component {
+  @service ajax;
   @service house;
   @service modal;
   @service shiftManage;
   @service toast;
 
   @tracked isSubmitting = false;
+  @tracked isLoading = true;
   @tracked desiredPositionOptions;
 
   constructor() {
     super(...arguments);
+
+    this._loadPositions();
+  }
+
+  async _loadPositions() {
     const {entry} = this.args;
-    this.desiredPositionOptions = this.args.positions.map((p) => [p.title, p.id]);
-    this.desiredPositionOptions.unshift({
-      id: null,
-      title: `${entry.position.title} is correct`,
-    })
+    try {
+      const {positions} = await this.ajax.request(`person/${this.args.person.id}/positions`, {
+        data: {
+          include_past_grants: 1,
+          exclude_trainee: 1
+        }
+      });
+      this.desiredPositionOptions = positions.map((p) => [p.title, p.id]);
+      this.desiredPositionOptions.unshift([`${entry.position.title} is correct`, null]);
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   // Save correction notes

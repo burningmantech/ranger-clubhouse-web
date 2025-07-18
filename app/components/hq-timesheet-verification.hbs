@@ -99,7 +99,7 @@
                       @disabled={{entry.isSaving}}>
               Submit Correction
               {{#if entry.isPending}}
-                {{fa-icon "check"}}
+                {{fa-icon "check" left=1}}
               {{/if}}
             </UiButton>
             <UiButton @type="secondary"
@@ -109,7 +109,7 @@
                       @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
               Skip Review
               {{#if entry.isIgnoring}}
-                {{fa-icon "check"}}
+                {{fa-icon "check" left=1}}
               {{/if}}
             </UiButton>
             {{#if entry.isSaving}}
@@ -127,6 +127,7 @@
 
 {{#if this.showCorrectionForm}}
   <Me::TimesheetReviewEdit @entry={{this.entry}}
+                           @person={{@person}}
                            @isMe={{false}}
                            @onCancel={{this.cancelEntryCorrection}}
                            @onUpdate={{this.savedEntryCorrection}}

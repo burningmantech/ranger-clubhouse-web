@@ -159,9 +159,9 @@
 
 {{#if this.entry}}
   <Me::TimesheetReviewEdit @entry={{this.entry}}
+                           @person={{@person}}
                            @isMe={{true}}
                            @onCancel={{this.cancelCorrectionAction}}
-                           @positions={{@positions}}
                            @onUpdate={{this.savedEntry}}
   />
 {{/if}}

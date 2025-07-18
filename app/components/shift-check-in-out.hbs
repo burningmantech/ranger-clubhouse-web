@@ -158,10 +158,12 @@
       {{/if}}
     </Modal.body>
     <Modal.footer @align="start">
-      <UiButton @onClick={{this.updatePositionAction}} @disabled={{this.isSubmitting}}>
-        Update Position
-      </UiButton>
-      <UiCancelButton @onClick={{this.cancelUpdatePosition}} @disabled={{this.isSubmitting}} />
+      <UiButtonRow>
+        <UiButton @onClick={{this.updatePositionAction}} @disabled={{this.isSubmitting}} @size="md">
+          Update Position
+        </UiButton>
+        <UiCancelButton @onClick={{this.cancelUpdatePosition}} @disabled={{this.isSubmitting}} @size="md"/>
+      </UiButtonRow>
     </Modal.footer>
   </ModalDialog>
 {{/if}}
@@ -207,10 +209,12 @@
         {{/if}}
       </Modal.body>
       <Modal.footer @align="start">
-        {{#if this.userCanForceCheckIn}}
-          <f.submit @label="Confirm Force " @type="warning"/>
-        {{/if}}
-        <UiCancelButton @onClick={{this.closeForceConfirm}} />
+        <UiButtonRow>
+          {{#if this.userCanForceCheckIn}}
+            <f.submit @label="Confirm Force " @type="warning"/>
+          {{/if}}
+          <UiCancelButton @onClick={{this.closeForceConfirm}} />
+        </UiButtonRow>
       </Modal.footer>
     </ChForm>
   </ModalDialog>
