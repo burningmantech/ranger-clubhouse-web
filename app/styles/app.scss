@@ -359,6 +359,12 @@ legend {
   z-index: 99999;
 }
 
+html.modal-open, body.modal-open {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
 .modal-header {
   background-color: #f0f0f0;
 }
