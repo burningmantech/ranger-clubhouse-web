@@ -15,7 +15,7 @@ $link-decoration: none;
 $kakhi: #d2b48c;
 $wheatfield: #ded7be;
 
-$badge-font-weight: 500;
+$badge-font-weight: 400;
 
 // bootstrap set the link-color to the primary color
 //$link-color: #007bff;
@@ -37,6 +37,9 @@ $btn-white-space: nowrap;
 
 $card-spacer-y: 0.5rem !default;
 $card-spacer-x: 0.75rem !default;
+
+$alert-padding-y: 0.5rem !default;
+$alert-padding-x: 0.5rem !default;
 
 $font-family-sans-serif: "Source Sans Pro", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !default;
 

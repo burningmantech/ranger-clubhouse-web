@@ -2,7 +2,7 @@ import Service, {service} from '@ember/service';
 import ENV from 'clubhouse/config/environment';
 import {isAbortError} from 'clubhouse/utils/ajax/response-errors';
 import {isArray} from '@ember/array';
-import {run} from '@ember/runloop';
+import {run, later} from '@ember/runloop';
 import {isEmpty} from '@ember/utils';
 import currentYear from 'clubhouse/utils/current-year';
 import {isChangeset} from 'validated-changeset';
@@ -344,7 +344,7 @@ export default class HouseService extends Service {
    */
 
   scrollToElement(selector, instance = false) {
-    run('afterRender', () => {
+    later(() => {
       const behavior = instance ? 'instant' : 'smooth';
       const element = (selector instanceof Element) ? selector : document.querySelector(selector);
       if (!element) {
@@ -359,7 +359,7 @@ export default class HouseService extends Service {
         // Element is already in view, scroll element mostly to the top.
         window.scroll({top: top + window.scrollY - 100, behavior});
       }
-    });
+    }, 100);
   }
 
   /**
@@ -595,4 +595,5 @@ export default class HouseService extends Service {
     selection.removeAllRanges();
     this.toast.success(success);
   }
+
 }

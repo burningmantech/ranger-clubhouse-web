@@ -27,7 +27,6 @@ Router.map(function () {
     this.route('alerts');
     this.route('announcements');
     this.route('awards');
-    this.route('contact');
     this.route('emergency-contact');
     this.route('event-info');
     this.route('mentees');
@@ -47,6 +46,7 @@ Router.map(function () {
     this.route('welcome');
     this.route('oauth2-grant');
     this.route('directory');
+    this.route('contact');
   });
 
   this.route('search', function () {

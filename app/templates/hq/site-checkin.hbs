@@ -186,13 +186,13 @@
   </UiWizard>
 {{else if (and this.siteCheckInStarted (not this.siteCheckInFinished))}}
   <UiNotice @type="danger" @icon="band" @title="On-Site Registration In Not Completed">
-    You have not gone through all the Site Check In steps. Use the <b>Begin Site Check In</b> button again and make
-    sure all the steps have been completed.
+    You have not gone through all the Site Registration steps. Use the <b>Begin Site Registration</b>
+    button again and make sure all the steps have been completed.
   </UiNotice>
 {{/if}}
 
 {{#if this.person.isSaving}}
   <LoadingDialog>
-    Saving the record.
+    Submitting the request
   </LoadingDialog>
 {{/if}}

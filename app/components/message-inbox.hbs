@@ -1,0 +1,80 @@
+{{#if this.isLoading}}
+  <LoadingDialog>Retrieving the messages</LoadingDialog>
+{{else if (not @isContact)}}
+  <div class="max-width-900">
+    {{#if this.canSendMessages}}
+      <UiButtonRow class="mb-2">
+        {{#if @isHQInterface}}
+          <UiButton @responsive={{true}} @onClick={{this.newMessageTo}}>
+            New Message TO {{@person.callsign}}
+          </UiButton>
+          <UiButton @type="secondary"
+                    @responsive={{true}}
+                    @onClick={{this.newMessageFrom}}>
+            New Message FROM {{@person.callsign}}
+          </UiButton>
+        {{else}}
+          <UiButton @type="primary" @responsive={{true}} @onClick={{if @isMe this.newMessageFrom this.newMessageBoth}}>
+            {{fa-icon "plus" right=1}} New Message
+          </UiButton>
+        {{/if}}
+      </UiButtonRow>
+    {{else}}
+      <p>
+        You are not permitted to send Clubhouse Messages. Visit the
+        <LinkTo @route="me.directory">Me &gt; Cadre Directory</LinkTo>
+        page if you are trying to reach a particular Cadre or Delegation.
+      </p>
+    {{/if}}
+    {{#if this.messages}}
+      <div class="d-flex flex-column flex-xl-row justify-content-between">
+        <div>
+          {{pluralize this.messages.length "message"}}
+          {{#if this.unreadCount}}
+            <b>({{this.unreadCount}})</b>
+          {{else}}
+            (all read)
+          {{/if}}
+        </div>
+        <div>
+          Click on a message to view.
+        </div>
+        <div>
+          Unread messages or messages with unread replies appear first.
+        </div>
+      </div>
+
+      {{#each this.messages key="id" as |message|}}
+        <MessageShow @message={{message}}
+                     @person={{@person}}
+                     @updateUnreadCount={{this.updateUnreadCount}}
+                     @canSendMessages={{this.canSendMessages}}
+                     @createReplyMessage={{this.createReplyMessage}}
+                     @sendMessage={{this.sendMessage}}
+                     @toggleRead={{this.toggleRead}}
+        />
+      {{/each}}
+    {{else}}
+      <b>
+        {{#if @isMe}}
+          You have no messages.
+        {{else}}
+          {{@person.callsign}} has no messages.
+        {{/if}}
+      </b>
+    {{/if}}
+  </div>
+{{/if}}
+
+{{#if this.newMessage}}
+  <MessageNew @message={{this.newMessage}}
+              @sendMessage={{this.sendMessage}}
+              @onCancel={{this.cancelNewMessage}}
+              @isMe={{@isMe}}
+              @isContact={{@isContact}}
+  />
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>Sending the message</LoadingDialog>
+{{/if}}

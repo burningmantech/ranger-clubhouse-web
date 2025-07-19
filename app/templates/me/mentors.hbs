@@ -10,8 +10,7 @@
     <:title>
       Year {{event.year}}
       {{#if (eq event.status "pass")}}
-        -
-        <UiBadge @type="success">passed</UiBadge>
+        <UiBadge @type="success" class="ms-2">passed</UiBadge>
       {{/if}}
     </:title>
     <:body>
@@ -43,10 +42,10 @@
 {{/each}}
 
 {{#if this.contactMentor}}
-  <ContactForm @callsign={{this.contactMentor.callsign}}
-               @isInactive={{false}}
-               @recipientId={{this.contactMentor.id}}
-               @contactType="contact"
-               @onDone={{this.doneAction}} />
+  <MessageInbox @person={{this.person}}
+                @isContact={{true}}
+                @contactCallsign={{this.contactMentor.callsign}}
+                @onFinished={{this.finished}}
+  />
 {{/if}}
 

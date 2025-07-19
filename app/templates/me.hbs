@@ -33,7 +33,11 @@
 
   <s.group @title="COMMUNICATION">
     {{#if this.user.isRanger}}
-      <s.link @route="me.messages" @title="Messages" @icon="envelope" @badgeText={{this.session.unreadMessageCount}} />
+      <s.link @route="me.messages"
+              @title="Messages"
+              @icon="envelope"
+              @badgeText={{if this.session.unreadMessageCount (concat this.session.unreadMessageCount " new")}}
+      />
     {{/if}}
     {{#if (or this.user.isRanger this.user.isPNV this.user.isAuditor)}}
       <s.link @route="me.announcements" @title="Announcements" @icon="bullhorn" @iconType="s"/>

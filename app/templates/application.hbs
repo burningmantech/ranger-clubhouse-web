@@ -17,6 +17,12 @@
     {{/if}}
     {{#if this.session.isAuthenticated}}
       <NewVersionNotify/>
+      {{#if (and (not this.session.isSmallScreen) this.session.unreadMessageCount)}}
+        <div class="text-bg-success text-center p-2 m-0">
+          You have {{pluralize this.session.unreadMessageCount "new Clubhouse Message"}}.
+          <LinkTo @route="me.messages" class="btn btn-light-gray btn-sm ms-4">Read</LinkTo>
+        </div>
+      {{/if}}
     {{/if}}
   </header>
 {{/unless}}
@@ -58,6 +64,57 @@
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeOfflineDialog}} />
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.session.showNewMessageDialog}}
+  <ModalDialog as |Modal|>
+    <Modal.title>New Message Received</Modal.title>
+    <Modal.body>
+      <p>
+        A new Clubhouse Message has been received.
+      </p>
+      {{#let this.session.mostRecentMessage as |message|}}
+        <div class="row">
+          <FormLabel @fixedSmall={{true}} class="text-xl-end fw-semibold">
+            From
+          </FormLabel>
+          <div class="col-auto mt-2">
+            {{#if message.isSenderPerson}}
+              Ranger
+            {{/if}}
+            {{message.fromName}}
+            {{#if message.isSenderOther}}
+              (an acquaintance)
+            {{/if}}
+          </div>
+        </div>
+        <div class="row">
+          <FormLabel @fixedSmall={{true}} class="text-xl-end fw-semibold">
+            Time
+          </FormLabel>
+          <div class="col-auto mt-2">
+            <MessageDate @message={{message}}/>
+          </div>
+        </div>
+        <div class="row">
+          <FormLabel @fixedSmall={{true}} class="text-xl-end fw-semibold">
+            Subject
+          </FormLabel>
+          <div class="col-auto mt-2">
+            {{message.subject}}
+          </div>
+        </div>
+      {{/let}}
+    </Modal.body>
+    <Modal.footer @align="start">
+      <UiButtonRow>
+        <UiButton @onClick={{this.transitionToMessages}} @type="success" @size="md">
+          Read Message
+        </UiButton>
+        <UiCancelButton @onClick={{this.closeNewMessageDialog}} @size="md"/>
+      </UiButtonRow>
     </Modal.footer>
   </ModalDialog>
 {{/if}}

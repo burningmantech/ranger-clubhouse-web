@@ -1,0 +1,15 @@
+<div class="d-inline-block">
+  {{#if (eq @person.idNumber @message.sender_person_id)}}
+    {{#if this.unreadReplyCount}}
+      <UiBadge @type="success">{{pluralize this.unreadReplyCount "new reply"}}</UiBadge>
+    {{else}}
+      <UiBadge @type="gray">sent</UiBadge>
+    {{/if}}
+  {{else if this.isUnread}}
+    <UiBadge @type="success">new</UiBadge>
+  {{else if this.unreadReplyCount}}
+    <UiBadge @type="success">{{pluralize this.unreadReplyCount "new reply"}}</UiBadge>
+  {{else}}
+    <UiBadge @type="gray">read</UiBadge>
+  {{/if}}
+</div>

@@ -1,0 +1,79 @@
+{{#unless @isMe}}
+  <div class="mb-2">
+    Use the <code>name:</code> (note the colon) search prefix to search by the default world name instead of
+    their callsign.<br>
+    (e.g., <i>name:Hero Hubcap</i>)
+  </div>
+{{/unless}}
+<FormRow>
+  <FormLabel class="fw-semibold">{{yield}}</FormLabel>
+  <div class="col-auto">
+    <Input @type="text"
+           @value={{this.callsign}}
+           @enter={{this.searchForCallsigns}}
+           size="30"
+           maxlength="30"
+           class="form-control"
+           disabled={{this.isSearchCallsigns}}
+      {{autofocus}}
+    />
+  </div>
+  <div class="col-auto">
+    <UiButton @onClick={{this.searchForCallsigns}} @type="gray" @size="md">
+      Search
+    </UiButton>
+  </div>
+</FormRow>
+{{#if this.isSearchingCallsigns}}
+  <LoadingIndicator @text="Searching for callsigns"/>
+{{else if this.searchError}}
+  <div class="mt-2 text-danger fw-semibold">{{this.searchError}}</div>
+{{else if this.callsignNotFound}}
+  <div class="text-danger">
+    No callsigns were found. Either the callsign was mistyped, or the account may not receive messages.
+  </div>
+{{else if this.searchResults}}
+  <div class="my-2">
+    Click the box to select the person
+  </div>
+  <div class="row row-cols-auto">
+    {{#each this.searchResults as |person|}}
+      <div class="col mb-1">
+        <div class="card" style="width: 120px;" role="button"
+          {{on-click (fn @onSelect person.callsign)}}
+        >
+          <div class="card-body text-center border-bottom border-gray">
+            <div class="fw-semibold">
+              {{person.callsign}}
+            </div>
+            {{#if person.name}}
+              <div class="small">{{person.name}}</div>
+            {{/if}}
+            {{#if person.status}}
+              <div class="card-subtitle text-body-secondary">
+                &lt;{{person.status}}&gt;
+              </div>
+            {{/if}}
+            {{#unless person.mail_permitted}}
+              <div class="mt-1 text-break">
+                Has a status that does not allow messages
+              </div>
+            {{/unless}}
+          </div>
+          {{#if person.profile_url}}
+            <div class="photo-medium photo-no-decoration">
+              <img src={{person.profile_url}} alt="profile" class="card-img-bottom" loading="lazy">
+            </div>
+          {{else}}
+            <div class="card-img-bottom">
+              <div class="card-text text-center">(No Photo)</div>
+              <div class="text-center">
+                <UiPhotoNone class="text-center my-4"/>
+              </div>
+            </div>
+          {{/if}}
+        </div>
+      </div>
+    {{/each}}
+  </div>
+{{/if}}

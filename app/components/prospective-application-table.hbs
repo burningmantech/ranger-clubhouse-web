@@ -19,7 +19,7 @@
     <tbody>
     {{#each @applications key="id" as |row|}}
       <tr>
-        <td class="text-right">
+        <td class="text-end">
           <LinkTo @route="vc.applications.record" @model={{row.applicationId}}>
             {{row.applicationId}}
           </LinkTo>

@@ -90,4 +90,24 @@ export default class ApplicationController extends ClubhouseController {
   closeOfflineDialog() {
     this.session.showOfflineDialog = false;
   }
+
+  @action
+  transitionToMessages() {
+    const {currentRoute} = this.router;
+    const {name} = currentRoute;
+
+    this.session.showNewMessageDialog = false;
+
+    if (name === 'me.messages'
+      || ((name === 'hq.messages' || name === 'person.messages') && +currentRoute.params.person_id === this.session.userId)) {
+      this.session.refreshMessages();
+    } else {
+      this.router.transitionTo('me.messages');
+    }
+  }
+
+  @action
+  closeNewMessageDialog() {
+    this.session.showNewMessageDialog = false;
+  }
 }

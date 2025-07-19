@@ -12,7 +12,7 @@ export default class MeMentorsController extends ClubhouseController {
   }
 
   @action
-  doneAction() {
+  finished() {
     this.contactMentor = null;
   }
 }

@@ -1,30 +1,39 @@
 @import "cropper";
 
+.photo-no-decoration {
+  box-shadow: none !important;
+  border: none !important;
+  border-radius: 0 !important;
+}
+
 .photo-mini, .photo-medium, .photo-large {
   display: flex;
   align-items: center;
   justify-content: center;
+  object-fit: cover;
+  img {
+    display: block;
+  }
 }
 
 .photo-mini {
   background: #fcfcfc;
   border: 1px solid #999;
-  border-radius: $border-radius-lg;
+  border-radius: $border-radius-sm;
   text-align: center;
 
   width: 60px;
 
   img {
-    display: block;
-    // margin: 0 auto;
-    max-width: 55px;
+    max-width: 58px;
   }
 }
+
 
 .photo-medium {
   background: #fcfcfc;
   border: 1px solid #999;
-  border-radius: $border-radius-lg;
+  border-radius: $border-radius;
   text-align: center;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 

@@ -7,7 +7,8 @@
       <s.link @route="person.timesheet" @title="Timesheets" @icon="clock"/>
       <s.link @route="person.assets" @title="Assets" @icon="broadcast-tower" @iconType="s"/>
       <s.link @route="person.messages" @title="Messages" @icon="envelope"
-              @badgeText={{this.person.unread_message_count}} />
+              @badgeText={{if this.person.unread_message_count (concat this.person.unread_message_count " new")}}
+      />
       {{#if (has-role "admin" "view-pii")}}
         <s.link @route="person.personal-info" @title="Personal Info" @icon="home" @iconType="s"/>
       {{/if}}

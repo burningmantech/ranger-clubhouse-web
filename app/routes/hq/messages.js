@@ -1,21 +1,20 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
 export default class HqMessagesRoute extends ClubhouseRoute {
-  model() {
-    const person_id = this.modelFor('hq').person.id;
-
-    this.store.unloadAll('person-message');
+  beforeModel(transition) {
     if (this.session.isEMOPEnabled) {
-      return this.store.query('person-message', {person_id})
+      return super.beforeModel(transition);
     } else {
-      return [];
+      this.modal.info(
+        'Event Operations Not Running',
+        'Messages in the HQ Window Interface can only be viewed while on playa event operations are active.'
+      );
+      this.router.transitionTo('hq.index');
+      return false;
     }
-
   }
-  setupController(controller, model) {
-    controller.setProperties(this.modelFor('hq'));
-    controller.set('messages', model);
-    // Inject session - route has no controller
-    controller.set('session', this.session);
+
+  setupController(controller) {
+    controller.set('person', this.modelFor('hq').person);
   }
 }

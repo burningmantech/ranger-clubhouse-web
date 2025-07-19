@@ -1,0 +1,154 @@
+{{#if (or  @message.isTopMessage (not @isHidden))}}
+  <div id="message-{{@message.id}}" class="d-flex w-100 {{this.messageClass}}"
+    {{on-click (fn @onMessageClick (and @message.isTopMessage @isHidden))}}>
+    <div class="message-photo-container">
+      {{#if (and @message.isSenderPerson @message.sender_photo_url)}}
+        <div class="photo-mini">
+          <img src={{@message.sender_photo_url}} loading="lazy" alt={{@message.sender_person.callsign}}/>
+        </div>
+      {{else}}
+        <div class="message-photo-icon">
+          {{#if @message.isSenderRBS}}
+            {{fa-icon "bullhorn" size="4x"}}
+          {{else if @message.sender_team}}
+            {{fa-icon "people-roof" size="4x"}}
+          {{else if @message.isSenderOther}}
+            {{fa-icon "person-circle-question" size="4x"}}
+          {{else}}
+            {{fa-icon "user" size="4x"}}
+          {{/if}}
+        </div>
+      {{/if}}
+    </div>
+    <div class="ms-3 w-100">
+      {{#if @message.isTopMessage}}
+        <div class="d-flex align-lg-items-center w-100">
+          <div class="d-flex flex-column flex-lg-row ">
+            <div class="fs-4 me-lg-3 {{if this.hasBeenRead "text-muted" "fw-semibold"}}">
+              {{@message.subject}}
+            </div>
+            <div>
+              <MessageStatus @person={{@person}} @message={{@message}} />
+            </div>
+          </div>
+          {{#if (and @message.isTopMessage (not @isHidden))}}
+            <div class="ms-auto me-1 me-lg-2">
+              <a href {{on-click @onClose}}>Close Message</a>
+            </div>
+          {{/if}}
+        </div>
+
+      {{/if}}
+      <div class="fs-6">
+        {{#if (and @message.isTopMessage (eq @person.idNumber @message.sender_person_id))}}
+          Sent to {{@message.person.callsign}} at
+        {{else}}
+          From {{@message.fromName}}
+          {{#if @message.sentFromHQWindow}}
+            at HQ Window
+          {{/if}}
+          sent
+        {{/if}}
+        <div class="d-block d-lg-inline-block">
+          <MessageDate @message={{@message}} />
+          (Pacific)
+        </div>
+        {{#if (and @message.isTopMessage @message.replies.length)}}
+          <div>
+            {{pluralize @message.replies.length "reply"}} &mdash;
+            Last one at
+            <MessageDate @message={{this.lastReply}} />
+            from {{this.lastReply.message_from}}
+          </div>
+        {{/if}}
+        {{#unless @message.isTopMessage}}
+          <span class="ms-2"><MessageStatus @person={{@person}} @message={{@message}} /></span>
+        {{/unless}}
+      </div>
+      {{#if
+        (and (or @message.isSenderPerson @message.isSenderOther) (not-eq @message.sender_person_id @message.creator_person_id))}}
+        <div class="mb-1 text-muted">
+          Message sent
+          {{#if @message.sentFromHQWindow}}
+            from {{@message.creator_person.callsign}} at HQ Window
+          {{else}}
+            by {{@message.creator_person.callsign}}
+            {{#if @message.creator_position}}
+              (on duty as {{@message.creator_position.title}})
+            {{/if}}
+          {{/if}}
+          on behalf of
+          {{#if @message.isSenderPerson}}
+            {{@message.sender_person.callsign}}
+          {{else}}
+            {{@message.message_from}}
+          {{/if}}
+        </div>
+      {{/if}}
+      {{#unless @isHidden}}
+        {{#if  @message.isSenderRBS}}
+          {{#if @message.isTopMessage}}
+            <UiAlert @type="warning" @bottom={{1}}>
+              This is a broadcast-only message and cannot be replied to.
+              {{#if @message.has_expired}}
+                <div class="mt-1">
+                  This message expired on {{shift-format @message.expires_at}} (Pacific) and is no longer relevant.
+                </div>
+              {{else if @message.expires_at}}
+                <div class="mt-1">
+                  This message will no longer be relevant after {{shift-format @message.expires_at}} (Pacific).
+                </div>
+              {{/if}}
+            </UiAlert>
+          {{/if}}
+        {{else if @message.isSenderOther}}
+          <UiAlert @type="warning" @bottom={{1}}>
+            This message is from an acquaintance (e.g., a friend, significant other, or another department). Since it
+            wasn’t sent by a Ranger or Ranger team, a reply cannot be sent.
+          </UiAlert>
+        {{else if @message.isSenderTeam}}
+          <UiAlert @type="warning" @bottom={{1}}>
+            This message was sent by a Ranger Cadre or Delegation. At this time, the Clubhouse does not support
+            replying to teams.
+            {{#if @message.sender_team.email}}
+              <div class="mt-1">
+                Their contact email address is
+                <MailTo @to={{@message.sender_team.email}} />
+                .
+              </div>
+            {{/if}}
+          </UiAlert>
+        {{/if}}
+        <div class="mt-2 mb-3">
+          {{nl2br @message.body}}
+        </div>
+        <div class="d-flex justify-content-between">
+          <div>
+            <UiButtonRow>
+              {{#if (not-eq @person.idNumber @message.sender_person_id)}}
+                <UiButton @type={{if @message.delivered "secondary" "success"}}
+                          @responsive={{true}}
+                          @onClick={{@toggleRead}}
+                          @disabled={{@message.isSubmitting}}>
+                  {{#if @message.delivered}}
+                    {{fa-icon "envelope-circle-check" type="s" right=1}} Mark As Read
+                  {{else}}
+                    {{fa-icon "envelope-circle-check" type="s" right=1}} Mark As Read
+                  {{/if}}
+                </UiButton>
+              {{/if}}
+              {{#if (and @isLast @isSenderPerson)}}
+                <UiButton @type="secondary" @onClick={{@openReplyForm}}>
+                  {{fa-icon "reply" right=1}} Reply
+                  {{#if (not-eq @message.person_id this.session.userId)}}
+                    as {{@message.person.callsign}}
+                  {{/if}}
+                </UiButton>
+              {{/if}}
+            </UiButtonRow>
+          </div>
+        </div>
+      {{/unless}}
+    </div>
+  </div>
+{{/if}}

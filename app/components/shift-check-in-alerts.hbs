@@ -32,9 +32,8 @@
 {{#if this.trainingNotPassed}}
   {{#if @isSelfServe}}
     <UiNotice @title="Restricted Check In/Out" @icon="hand" @type="secondary">
-      Because you have not completed an In-Person Training yet, only a small set of positions are allowed
-      to be checked into. Talk with your manager if you need to sign in to a position not listed
-      below.
+      Since you haven’t completed an in-person training yet, you’re only allowed to check into a limited set of
+      positions. If you need to sign into a position that isn’t listed below, please speak with your manager.
     </UiNotice>
   {{else}}
     <UiNotice @title="Check In Eligibility Issue" @icon="hand" @type="danger">
@@ -46,19 +45,18 @@
         {{/if}}
       </p>
       <p>
-        If the person attended an in-person training earlier today, the trainers may not have recorded their
-        completion yet. Ask the HQ Lead to contact the trainers to confirm whether the person attended and
-        passed. The HQ Lead will be able to sign in the person after training has been verified.
-      </p>
+        If the person attended an in-person training earlier today, the trainers may not have recorded their completion
+        yet. Ask the HQ Lead to contact the trainers to confirm whether the person attended and passed. Once training is
+        verified, the HQ Lead can sign the person in. </p>
       {{#if this.userCanForceCheckIn}}
         <b>
-          You have the privileges to force a shift start. Only force the check in after confirming the person
-          has actually passed training.
+          You have the authority to force a shift start. Only do so after verifying that the person has successfully
+          completed their training.
         </b>
       {{else}}
         <b class="text-danger">
-          You do not have the privileges to force a shift start for the position requiring an In-Person training.
-          Consult with the HQ Lead
+          You don’t have the privileges to force a shift start for positions that require in-person training. Please
+          consult with the HQ Lead for assistance.
         </b>
       {{/if}}
     </UiNotice>

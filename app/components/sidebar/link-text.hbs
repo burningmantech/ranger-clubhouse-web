@@ -3,4 +3,10 @@
 {{else}}
   <span class="fa{{@iconType}} fa-{{@icon}} fa-fw me-2"></span>
 {{/if}}
-<span class="sidebar-link-text">{{@title}}{{#if @badgeText}} <span class="badge badge-pill bg-success ms-1">{{@badgeText}}</span>{{/if}} <span class="sr-only">sidebar menu item</span></span>
+<span class="sidebar-link-text">
+  {{@title}}
+  {{#if @badgeText}}
+    <span class="badge badge-pill text-bg-success ms-2">{{@badgeText}}</span>
+  {{/if}}
+  <span class="sr-only">sidebar menu item</span>
+</span>

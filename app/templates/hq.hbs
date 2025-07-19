@@ -35,7 +35,7 @@
             {{this.person.callsign}} has the status "{{this.person.status}}" which prevents the person
             from working a shift. The HQ Window Interface cannot be used.
           </p>
-          Contact the HQ Lead, HQ Supervisor or the Personnel Manager
+          Contact the HQ Lead, HQ Supervisor, or the Personnel Manager
           <PersonnelEmail/>
         </UiNotice>
       {{else if this.person.needsBpguid}}
@@ -89,8 +89,8 @@
 
 
 {{#if this.showTicketsAndProvisions}}
-  <ModalDialog @title="Tickets and Provisions Progress" @onEscape={{this.toggleTicketsAndProvisionsProgress}} as
-               |Modal|>
+  <ModalDialog @title="Tickets and Provisions Progress"
+               @onEscape={{this.toggleTicketsAndProvisionsProgress}} as |Modal|>
     <Modal.body>
       <HqTicketsAndProvisions @person={{this.person}} />
     </Modal.body>

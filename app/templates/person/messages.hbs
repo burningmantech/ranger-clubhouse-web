@@ -1,8 +1,2 @@
-<h3>Clubhouse Messages</h3>
-{{#if this.canAccessMessages}}
-  <ClubhouseMessages @person={{this.person}} @messages={{this.messages}}  @isWorkerInterface={{true}} />
-{{else}}
-  <UiNotice @type="danger" @icon="exclamation" @title="Access Not Allowed During Off Season">
-    You may only view another person's Clubhouse Messages while the event is happening.
-  </UiNotice>
-{{/if}}
+<h3>Messages for {{this.person.callsign}}</h3>
+<MessageInbox @person={{this.person}} @isHQInterface={{true}} />

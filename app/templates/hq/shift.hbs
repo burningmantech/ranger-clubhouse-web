@@ -46,9 +46,11 @@
             @icon="hand-point-right"
             @title="{{this.person.callsign}} is marked as OFF SITE">
     <p>
-      Follow the procedures on the Site Check In page before signing the person into a shift.
+      Follow the procedures on the Site Registration page before signing the person into a shift.
     </p>
-    <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-secondary">Begin Site Check In</LinkTo>
+    <LinkTo @route="hq.site-checkin" @model={{this.person.id}} class="btn btn-secondary">
+      Begin Site Registration
+    </LinkTo>
   </UiNotice>
 {{/unless}}
 
@@ -231,9 +233,7 @@
         <SpinIcon/>
       {{/if}}
     {{else}}
-      <div class="alert alert-danger">
-        {{this.person.callsign}} is off site.
-      </div>
+        {{this.person.callsign}} is already marked as off site.
     {{/if}}
   </:body>
 </HqShiftManageSection>
