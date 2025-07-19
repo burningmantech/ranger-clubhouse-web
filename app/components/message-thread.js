@@ -11,8 +11,8 @@ export default class MessageThread extends Component {
   @cached
   get hasBeenRead() {
     const {message} = this.args;
-    return (this.isMyMessage && message.delivered)
-      || message.replies.some((r) => r.delivered);
+    return (this.isMyMessage && message?.delivered)
+      || message?.replies?.some((r) => r.delivered);
   }
 
   @cached

@@ -129,7 +129,7 @@ export default class MessageInboxComponent extends Component {
       return true;
     }
 
-    return message.replies.some(reply => reply.sender_person_id !== id && !reply.delivered);
+    return message.replies?.some(reply => reply.sender_person_id !== id && !reply.delivered);
   }
 
   @action
