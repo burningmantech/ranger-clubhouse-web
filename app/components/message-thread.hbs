@@ -1,6 +1,7 @@
 {{#if (or  @message.isTopMessage (not @isHidden))}}
   <div id="message-{{@message.id}}" class="d-flex w-100 {{this.messageClass}}"
-    {{on-click (fn @onMessageClick (and @message.isTopMessage @isHidden))}}>
+    {{on-click @onMessageClick active=(and @message.isHidden @message.isTopMessage)}}
+  >
     <div class="message-photo-container">
       {{#if (and @message.isSenderPerson @message.sender_photo_url)}}
         <div class="photo-mini">

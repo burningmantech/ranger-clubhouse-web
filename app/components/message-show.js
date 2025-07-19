@@ -52,18 +52,12 @@ export default class MessageShowComponent extends Component {
   }
 
   @action
-  messageClicked(isTop, event) {
-    event.stopPropagation();
-    if (!isTop) {
-      return;
-    }
-
-    this.args.message.isHidden = !this.args.message.isHidden;
+  messageOpen() {
+    this.args.message.isHidden = false;
   }
 
   @action
-  closeMessage(event) {
-    event.stopPropagation();
+  closeMessage() {
     this.args.message.isHidden = true;
   }
 

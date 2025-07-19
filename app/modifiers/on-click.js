@@ -1,39 +1,23 @@
-import Modifier from 'ember-modifier';
-import {registerDestructor} from '@ember/destroyable'
+import {modifier} from "ember-modifier";
 
-export default class OnClick extends Modifier {
-  constructor(owner, args) {
-    super(owner, args);
-    registerDestructor(this, this.cleanup);
-  }
-
-  modify(element, [clickCallback], namedArgs) {
-    let active;
-    if ('active' in namedArgs) {
-      active = namedArgs.active;
-    } else {
-      active = true;
-    }
-
-    if (this.active) {
-      this.cleanup();
-    }
-
-    this.element = element;
-    this.active = active;
-    this.clickCallback = clickCallback;
-
-    if (this.active) {
-      element.addEventListener('click', this.onClick);
-    }
-  }
-
-  cleanup = () => {
-    this.element?.removeEventListener('click', this.onClick);
-  }
-
-  onClick = (event) => {
+export default modifier((element, [callback, argument], {active}) => {
+  function onClick(event) {
+    event.stopImmediatePropagation();
     event.preventDefault();
-    this.clickCallback(event);
+    const callbackArguments = [event];
+    if (argument !== undefined) {
+      callbackArguments.unshift(argument);
+    }
+
+    callback(...callbackArguments);
   }
-}
+
+
+  if (active === undefined || active) {
+    element.addEventListener("click", onClick);
+  }
+
+  return () => {
+    element.removeEventListener("click", onClick);
+  };
+});

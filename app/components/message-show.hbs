@@ -3,7 +3,7 @@
                  @person={{@person}}
                  @updateUnreadCount={{@updateUnreadCount}}
                  @isHidden={{this.messageIsHidden}}
-                 @onMessageClick={{this.messageClicked}}
+                 @onMessageClick={{this.messageOpen}}
                  @replyCount={{@message.replies.length}}
                  @onClose={{this.closeMessage}}
                  @openReplyForm={{this.openReplyForm}}
@@ -18,7 +18,7 @@
                    @person={{@person}}
                    @updateUnreadCount={{@updateUnreadCount}}
                    @isHidden={{this.messageIsHidden}}
-                   @onMessageClick={{this.messageClicked}}
+                   @onMessageClick={{this.messageOpen}}
                    @openReplyForm={{if (this.isLastMessage idx) this.openReplyForm}}
                    @toggleRead={{fn @toggleRead reply}}
                    @isLast={{this.isLastMessage idx}}
