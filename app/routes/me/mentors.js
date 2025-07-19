@@ -6,6 +6,8 @@ export default class MeMentorsRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    controller.set('mentors', model.mentors);
+    controller.person = this.session.user;
+    controller.mentors = model.mentors;
+    controller.contactMentor = null;
   }
 }

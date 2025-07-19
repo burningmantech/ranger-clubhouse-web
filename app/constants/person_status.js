@@ -19,7 +19,6 @@ export const UBERBONKED = 'uberbonked';
 export const CHEETAH_CUB = 'cheetahcub';
 
 // Statuses allowed to work / check in
-
 export const ALLOWED_TO_WORK = [
   ACTIVE,
   ALPHA,
@@ -28,6 +27,12 @@ export const ALLOWED_TO_WORK = [
   ECHELON,
   PROSPECTIVE,    // Mentor will need to convert Alpha
   RETIRED,
+];
+
+export const ALLOW_TO_MESSAGE = [
+  ACTIVE,
+  INACTIVE,
+  INACTIVE_EXTENSION,
 ];
 
 // Admins or VCs may have to update legacy defunct accounts with little PII.

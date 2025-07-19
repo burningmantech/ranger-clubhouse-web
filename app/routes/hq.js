@@ -7,7 +7,7 @@ import {setting} from 'clubhouse/utils/setting';
 export default class HqRoute extends ClubhouseRoute {
   beforeModel() {
     if (!setting('HQWindowInterfaceEnabled')) {
-      this.modal.info('HQ Interface not available.', 'The HQ Window Interface is only enabled while the event operations are running.');
+      this.modal.info('HQ Interface not available.', 'The HQ Window Interface is only enabled while on playa event operations are going.');
       this.router.transitionTo('me.homepage');
       return false;
     }

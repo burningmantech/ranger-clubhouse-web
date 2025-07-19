@@ -1,16 +1,28 @@
-<h1>Messages for <span class="d-inline-block">{{this.session.user.callsign}}</span></h1>
-<BackToHome/>
+{{#if this.mayNotUse}}
+  <BackToHome/>
+  <UiNotice @title="Message Service Not Available" @type="danger">
+    <p>
+      Because your status is <code>{{this.session.user.status}}</code>, you may not send Clubhouse Messages.
+    </p>
+    Contact the Volunteer Coordinators if you need assistance.<br>
+    <VcEmail/>
+  </UiNotice>
+{{else}}
+  <h1>Messages for <span class="d-inline-block">{{this.session.user.callsign}}</span></h1>
+  <BackToHome/>
 
-<p>
-  Clubhouse Messages are one way for various Ranger departments to communicate with Rangers
-  while the event is happening.
-</p>
-
-{{#if this.shouldUseContactRanger}}
-  <p>
-    Use the <LinkTo @route="me.contact">Me &gt; Contact Ranger</LinkTo> feature to send a message to another
-    Ranger.
+  <p class="mb-1">
+    Use this page to send a message to a Ranger. You may only contact Rangers who are classified as either active
+    or inactive. An inactive Ranger is someone who has not served in the last three events.
   </p>
-{{/if}}
+  <p class="mb-1">
+    This service cannot be used to message individuals who are Ranger Applicants, Alphas, retired, dismissed, or
+    otherwise not categorized as active or inactive Rangers.
+  </p>
+  <p>
+    Message delivery is not guaranteed. The Ranger may have opted out of email notifications, may have an outdated
+    email address on file, or may not log into the Clubhouse for an extended period.
+  </p>
 
-<ClubhouseMessages @person={{this.session.user}} @messages={{this.messages}} @isMe={{true}} />
+  <MessageInbox @person={{this.session.user}} @isMe={{true}} />
+{{/if}}

@@ -12,6 +12,11 @@ const RANGER_STATUSES = [
 ];
 
 const PersonMixin = (superclass) => class extends superclass {
+  // Screw you ember-data for storing ids as string
+  get idNumber() {
+    return +this.id;
+  }
+
   get isActive() {
     return this.status === ACTIVE;
   }
@@ -78,6 +83,10 @@ const PersonMixin = (superclass) => class extends superclass {
 
   get isInactive() {
     return this.status === INACTIVE;
+  }
+
+  get isInactiveExtension() {
+    return this.status === INACTIVE_EXTENSION;
   }
 
   get canStartShift() {

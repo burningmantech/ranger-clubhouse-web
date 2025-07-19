@@ -7,9 +7,15 @@ import ENV from 'clubhouse/config/environment';
 import dayjs from 'dayjs';
 import RSVP from 'rsvp';
 import isOffline from "clubhouse/utils/is-offline";
+import {later, cancel} from '@ember/runloop';
+import Ember from 'ember';
+
+const MESSAGE_CHECK_INTERVAL = 5 * (60 * 1000);
 
 export default class ApplicationRoute extends ClubhouseRoute {
   authSetup = false;
+
+  firstMessageCheck = true;
 
   constructor() {
     super(...arguments);
@@ -150,12 +156,58 @@ export default class ApplicationRoute extends ClubhouseRoute {
       ENV['clientConfig'] = results.config;
 
       this.authSetup = true;
+      if (!Ember.testing) {
+        this._setupMessageCheck();
+      }
     } catch (response) {
       if (response.status === 401 || response.status === 403) {
         throw response;
       }
       // Can't retrieve the configuration. Consider the application offline for the moment.
       this.router.transitionTo('offline');
+    }
+  }
+
+  async _checkForMessages() {
+    if (!this.session.showOfflineDialog) {
+      try {
+        let {
+          unread_message_count,
+          message
+        } = await this.ajax.request(`person/${this.session.userId}/unread-message-count`);
+        this.session.unreadMessageCount = unread_message_count;
+        if (message) {
+          message = this.house.pushPayload('person-message', message);
+        }
+        const oldMessage = this.session.mostRecentMessage;
+        if (this.firstMessageCheck) {
+          this.firstMessageCheck = false;
+          this.session.mostRecentMessage = message;
+        } else if (message && (!oldMessage || dayjs(oldMessage.created_at).isBefore(dayjs(message.created_at)))) {
+          this.session.mostRecentMessage = message;
+          this.session.showNewMessageDialog = true;
+        }
+      } catch (error) {
+        // ignore any errors.
+      }
+    }
+
+    this._setupMessageCheck();
+  }
+
+  _setupMessageCheck() {
+    this.messageTimerId = later(() => {
+      this.messageTimerId = null;
+      this._checkForMessages();
+    }, MESSAGE_CHECK_INTERVAL);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+
+    if (this.messageTimerId) {
+      cancel(this.messageTimerId);
+      this.messageTimerId = null;
     }
   }
 

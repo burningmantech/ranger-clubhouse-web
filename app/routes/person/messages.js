@@ -2,25 +2,24 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {ADMIN, MESSAGE_MANAGEMENT, VC} from 'clubhouse/constants/roles';
 
 export default class PersonMessagesRoute extends ClubhouseRoute {
-  model() {
-    const person_id = +this.modelFor('person').id;
+  beforeModel(transition) {
+    const personId = +this.modelFor('person').id;
 
     if (this.session.hasRole([ADMIN, VC, MESSAGE_MANAGEMENT])
-      || person_id === this.session.userId
+      || personId === this.session.userId
       || this.session.isEMOPEnabled) {
-      this.canAccessMessages = true;
-      this.store.unloadAll('person-message');
-      return this.store.query('person-message', {person_id})
+      return super.beforeModel(transition);
     } else {
-      this.canAccessMessages = false;
-      return [];
+      this.modal.info(
+        'Permission Denied',
+        'You only have access to another account\'s messages while the event is happening.'
+      );
+      this.router.transitionTo('person.index');
+      return false;
     }
   }
 
-  setupController(controller, model) {
-    controller.set('person', this.modelFor('person'));
-    controller.person.set('unread_message_count', model.reduce((total, msg) => ((msg.delivered ? 0 : 1) + total), 0));
-    controller.set('messages', model);
-    controller.set('canAccessMessages', this.canAccessMessages);
+  setupController(controller) {
+    controller.person = this.modelFor('person');
   }
 }

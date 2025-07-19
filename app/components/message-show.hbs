@@ -1,0 +1,56 @@
+<div class="border border-2 rounded p-1 mb-2 {{this.messageClasses}}">
+  <MessageThread @message={{@message}}
+                 @person={{@person}}
+                 @updateUnreadCount={{@updateUnreadCount}}
+                 @isHidden={{this.messageIsHidden}}
+                 @onMessageClick={{this.messageClicked}}
+                 @replyCount={{@message.replies.length}}
+                 @onClose={{this.closeMessage}}
+                 @openReplyForm={{this.openReplyForm}}
+                 @toggleRead={{fn @toggleRead @message}}
+                 @isLast={{not @message.replies.length}}
+                 @isSenderPerson={{@message.isSenderPerson}}
+                 @haveUnread={{this.haveUnread}}
+  />
+
+  {{#each @message.replies as |reply idx|}}
+    <MessageThread @message={{reply}}
+                   @person={{@person}}
+                   @updateUnreadCount={{@updateUnreadCount}}
+                   @isHidden={{this.messageIsHidden}}
+                   @onMessageClick={{this.messageClicked}}
+                   @openReplyForm={{if (this.isLastMessage idx) this.openReplyForm}}
+                   @toggleRead={{fn @toggleRead reply}}
+                   @isLast={{this.isLastMessage idx}}
+                   @isSenderPerson={{@message.isSenderPerson}}
+                   @haveUnread={{this.haveUnread}}
+    />
+  {{/each}}
+
+  {{#if (and this.showReplyForm @canSendMessages @message.isSenderPerson (not this.messageIsHidden))}}
+    <div class=" mt-2 p-2 mail-reply-form">
+      <ChForm @formId="reply-form" @formFor={{this.replyToMessage}} @onSubmit={{this.sendReply}} as |f|>
+        <FormRow>
+          <FormLabel>
+            {{#if (or @isMe (@person.idNumber this.session.userId))}}
+              Your reply ({{@person.callsign}}):
+            {{else}}
+              The reply from {{@person.callsign}}:
+            {{/if}}
+          </FormLabel>
+          <f.textarea @name="body"
+                      @rows={{10}}
+                      @cols={{80}}
+                      @showCharCount={{true}}
+                      @maxlength={{4000}}
+                      @autofocus={{true}}
+          />
+        </FormRow>
+        <UiButtonRow>
+          <f.submit @label="Send Reply"/>
+          <UiCancelButton @onClick={{this.cancelReply}} />
+        </UiButtonRow>
+      </ChForm>
+    </div>
+  {{/if}}
+</div>

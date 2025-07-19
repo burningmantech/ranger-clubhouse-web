@@ -1,60 +1,182 @@
-<ModalDialog @title="Send A New Clubhouse Message" @onEscape={{@onCancel}} as |Modal|>
-  <ChForm @formId="message-form"
-          @formFor={{@message}}
-          @validator={{this.personMessageValidations}}
-          @onSubmit={{@onSubmit}} as |f|>
-    <Modal.body>
-      <p>
-        <b class="text-danger"> Messages are NOT private (may be seen by HQ staff &amp; Tech Team), for official
-          Ranger business only, and archived each year.</b>
-      </p>
-      <p>
-        Burning Man and the Rangers have a zero-tolerance policy for behavior that is non-consensual,
-        abusive, harassing, or harmful to others.
-      </p>
-      <FormRow>
-        {{#unless @isMe}}
-          <f.text @name="message_from"
-                  @label="From"
-                  @size={{30}}
-                  @maxlength={{60}}
-                  @autofocus={{not this.isFromMessage}}
+{{#unless (or this.askForRecipient this.askForSender)}}
+  <ModalDialog @title="Send A New Clubhouse Message" @onEscape={{@onCancel}} @position="top" as |Modal|>
+    <ChForm @formId="message-form"
+            @formFor={{@message}}
+            @validator={{this.personMessageValidations}}
+            @onSubmit={{this.sendMessage}} as |f|>
+      <Modal.body>
+        <div>
+          <b class="text-danger">Messages are not private</b> and may be seen by HQ staff and the Tech Cadre.
+          All messages are archived annually.
+        </div>
+        <div class="my-2">
+          Burning Man and the Rangers enforce a zero-tolerance policy for any behavior that is non-consensual,
+          abusive, harassing, or otherwise harmful to others. Such conduct is strictly prohibited and will not be
+          tolerated under any circumstances.
+        </div>
+        {{#if (or @isMe @isContact)}}
+          <div class="my-2 fw-semibold">
+            Your email address will not be shared with the recipient. However, it is strongly recommended that you
+            include your email address in the message.
+          </div>
+        {{else}}
+          <div class="row mb-1">
+            <FormLabel @fixedSmall={{true}} class="text-xl-end">
+              From
+            </FormLabel>
+            <div class="col-auto mt-2">
+              <span class="fw-semibold ms-xl-2">{{@message.message_from}}</span>
+              <a href class="ms-2" {{on-click this.changeSender}}>Change</a>
+            </div>
+          </div>
+        {{/if}}
+        <div class="row mb-3">
+          <FormLabel @fixedSmall={{true}} class="text-xl-end">
+            To
+          </FormLabel>
+          <div class="col-auto mt-2">
+            <span class="fw-semibold ms-xl-2">{{@message.recipient_callsign}}</span>
+            {{#unless @isContact}}
+              <a href class="ms-2"  {{on-click this.changeRecipient}}>Change</a>
+            {{/unless}}
+          </div>
+        </div>
+        <FormRow>
+          <FormLabel @fixedSmall={{true}} class="text-xl-end">Subject</FormLabel>
+          <f.text @name="subject"
+                  @size={{80}}
+                  @maxlength={{80}}
+                  @showCharCount={{true}}
+                  @inline={{true}}
+                  @autofocus={{true}}
           />
-        {{/unless}}
-        <f.search @name="recipient_callsign"
-                  @placeholder="Enter a callsign"
-                  @label="To"
-                  @size={{30}}
-                  @maxlength={{60}}
-                  @onSearch={{this.searchCallsignAction}}
-                  @autofocus={{this.isFromMessage}}
-                  @noResultsText="No callsigns found"
-        />
-       </FormRow>
-      <FormRow>
-        <f.text @name="subject"
-                @label="Subject"
-                @size={{80}}
-                @maxlength={{80}}
-                @showCharCount={{true}}
-        />
-      </FormRow>
-      <FormRow>
-        <f.textarea @name="body"
-                    @label="The message (be civil, courteous, polite, & professional)"
-                    @rows={{4}}
-                    @cols={{80}}
-                    @showCharCount={{true}}
-                    @maxlength={{4000}}
-        />
-      </FormRow>
-    </Modal.body>
-    <Modal.footer @align="start">
-      <f.submit @label="Send" @disabled={{@isSubmitting}} />
-      <UiCancelButton @disabled={{@isSubmitting}} @onClick={{@onCancel}} />
-      {{#if @isSubmitting}}
-        <LoadingIndicator @text="Sending Message"/>
+        </FormRow>
+        <FormRow>
+          <FormLabel @fixedSmall={{true}} class="text-xl-end">Message</FormLabel>
+          <f.textarea @name="body"
+                      @rows={{4}}
+                      @cols={{80}}
+                      @showCharCount={{true}}
+                      @maxlength={{4000}}
+                      @inline={{true}}
+                      @placeholder="Be civil, courteous, polite, & professional"
+          />
+        </FormRow>
+        <FormRow class="mt-3">
+          <FormLabel @fixedSmall={{true}}>&nbsp;</FormLabel>
+          <div class="col-sm-12 col-xl-6">
+            <UiButtonRow>
+              {{#unless this.askForCallsign}}
+                <f.submit @label="Send Message" disabled={{@isSubmitting}} />
+              {{/unless}}
+              <UiCancelButton @disabled={{@isSubmitting}} @onClick={{@onCancel}} />
+            </UiButtonRow>
+            {{#if @isSubmitting}}
+              <LoadingIndicator @text="Sending"/>
+            {{/if}}
+          </div>
+        </FormRow>
+      </Modal.body>
+    </ChForm>
+  </ModalDialog>
+{{/unless}}
+
+{{#if (or this.askForRecipient this.askForSender)}}
+  <ModalDialog @onEscape={{@onCancel}} @position="top" as |Modal|>
+    <Modal.title>
+      Enter the
+      {{if this.askForRecipient "recipient's callsign" "sender's name"}}
+    </Modal.title>
+    <Modal.body>
+      {{#if this.askForSender}}
+        <FormRow>
+          <FormLabel class="fw-semibold">
+            Is this message FROM a Ranger, an acquaintance (friend, S.O., another department), or you?
+          </FormLabel>
+          <div class="hstack gap-3 mail-type-container">
+            <a href
+               class="mail-type-choice {{if this.choiceIsCallsign "mail-type-selected"}}"
+              {{on-click this.selectCallsign}}>
+              A Ranger
+              {{#if this.choiceIsCallsign}}
+                {{fa-icon "check" left=1}}
+              {{/if}}
+            </a>
+            <a href class="mail-type-choice  {{if this.choiceIsOther "mail-type-selected"}}"
+              {{on-click this.selectOther}}>
+              An Acquaintance
+              {{#if this.choiceIsOther}}
+                {{fa-icon "check" left=1}}
+              {{/if}}
+            </a>
+            <a href class="mail-type-choice  {{if this.choiceIsMe "mail-type-selected"}}"
+              {{on-click this.selectMe}}>
+              From Me ({{this.session.user.callsign}})
+              {{#if this.choiceIsMe}}
+                {{fa-icon "check" left=1}}
+              {{/if}}
+            </a>
+          </div>
+        </FormRow>
+        {{#if this.choice}}
+          {{#if (eq this.choice "callsign")}}
+            <CallsignSearch @isMe={{@isMe}}
+                            @onSelect={{this.senderSelected}}
+                            @callsign={{@message.message_from}}
+                            @person={{@person}}
+                            @type={{if @isMe 'contact'  'message'}}
+            >
+              Enter the SENDER'S callsign to search for
+            </CallsignSearch>
+          {{else if (eq this.choice "me")}}
+            <p>
+              Are you sure you want to send a message from you?
+            </p>
+            <UiButton @type="primary" @onClick={{this.confirmMe}} @size="md">
+              Confirm
+            </UiButton>
+          {{else}}
+            <FormRow>
+              <FormLabel class="fw-semibold">Enter the acquaintance's name:</FormLabel>
+              <div class="col-auto">
+                <Input @type="text"
+                       @value={{mut @message.message_from}}
+                       @enter={{this.fromNameEntered}}
+                       size="30"
+                       maxlength="30"
+                       class="form-control"
+                  {{autofocus}}
+                />
+              </div>
+              <div class="col-auto">
+                <UiButton @onClick={{this.fromNameEntered}}
+                          @type="gray"
+                          @size="md"
+                          disabled={{not @message.message_from}}>
+                  Continue
+                </UiButton>
+              </div>
+              {{#if this.fromNameError}}
+                <div class="text-danger fw-semibold">
+                  {{this.fromNameError}}
+                </div>
+              {{/if}}
+            </FormRow>
+          {{/if}}
+        {{/if}}
+      {{else}}
+        <CallsignSearch @isMe={{@isMe}}
+                        @onSelect={{this.recipientSelected}}
+                        @person={{@person}}
+                        @callsign={{@message.recipient_callsign}}
+                        @type={{if @isMe 'contact'  'message'}}
+        >
+          Enter the RECIPIENT's callsign to search for
+        </CallsignSearch>
       {{/if}}
+    </Modal.body>
+    <Modal.footer>
+      <UiCancelButton @onClick={{@onCancel}} @size="md"/>
     </Modal.footer>
-  </ChForm>
-</ModalDialog>
+  </ModalDialog>
+{{/if}}

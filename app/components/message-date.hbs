@@ -1,0 +1,9 @@
+{{#if @message.sent_prior_year}}
+  {{dayjs-format @message.created_at "MMM DD, YYYY"}}
+{{else if @message.sent_yesterday}}
+  yesterday @ {{dayjs-format @message.created_at "HH:mm"}}
+{{else if @message.sent_before_today}}
+  {{dayjs-format @message.created_at "ddd MMM DD"}}
+{{else}}
+  today @ {{dayjs-format @message.created_at "HH:mm"}}
+{{/if}}

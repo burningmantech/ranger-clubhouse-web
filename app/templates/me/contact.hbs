@@ -1,66 +1,15 @@
-<h1>Contact An Active Ranger</h1>
+<h1>Contact a Ranger</h1>
 <BackToHome/>
-
 <p>
-  Use this page to send a contact message via email to a Ranger. You may only send messages to Rangers who are either
-  currently active or inactive. An inactive Ranger is someone who has not served as a Ranger in the last three events.
-  Messages cannot be sent through this service to individuals who are prospectives, alphas, retired, dismissed, or
-  otherwise not classified as active or inactive Rangers.
+  <b>Notice:</b> The Contact Ranger feature is now part of
+  <LinkTo @route="me.messages">Me &gt; Messages</LinkTo>
+  . The interface has been improved to make it easier to search for the Ranger you want to contact.
 </p>
-
-{{#if this.isSearchingParam}}
-  <LoadingIndicator @text={{concat "Searching for " this.searchForm.callsign}} />
-{{else}}
-  <p>
-    The Clubhouse will not reveal your email address or the email address of the receiving Ranger.
-  </p>
-  <p>
-    <b>A Ranger callsign will not appear in the search results if the person is no longer active.</b>
-  </p>
-
-  <ChForm @formId="search"
-          @formFor={{this.searchForm}}
-          @changeSet={{false}}
-          @onFormChange={{this.searchOnChange}}
-          as |f|>
-    <FormRow>
-      <f.text @name="callsign"
-              @label="Start typing the callsign of Ranger you wish to contact:"
-              @size={{30}}
-              @autofocus={{true}} />
-    </FormRow>
-    {{#if this.isSubmitting}}
-      <LoadingIndicator @text="Searching . . ."/>
-    {{/if}}
-  </ChForm>
-
-  {{#if this.foundCallsigns}}
-    <b>Click on the callsign below to send a message:</b>
-    <UiTable class="table-bordered">
-      <tbody>
-      {{#each this.foundCallsigns key="id" as |ranger|}}
-        <tr>
-          <td>
-            {{#if ranger.allow_contact}}
-              <a href {{on-click this.contactRanger ranger}}>{{ranger.callsign}}</a>
-            {{else}}
-              <span class="text-danger">{{ranger.callsign}} does not want to be contacted.</span>
-            {{/if}}
-          </td>
-        </tr>
-      {{/each}}
-      </tbody>
-    </UiTable>
-  {{else if this.noMatch}}
-    <p class="text-danger"><b>No callsigns match "{{this.noMatch}}"</b></p>
-  {{/if}}
-{{/if}}
-
-{{#if this.ranger}}
-  <ContactForm @callsign={{this.ranger.callsign}}
-               @recipientId={{this.ranger.id}}
-               @isInactive={{this.ranger.is_inactive}}
-               @contactType="ranger"
-               @onDone={{this.doneAction}} />
-{{/if}}
-
+<p class="text-success">
+  {{fa-icon "thumbs-up" type="r" right=1}} Contact messages are now stored in the Clubhouse, unlike in the previous
+  interface.
+</p>
+<p>
+  As a reminder, you may only message Rangers with active, inactive, or inactive status. Message delivery is
+  not guaranteed.
+</p>

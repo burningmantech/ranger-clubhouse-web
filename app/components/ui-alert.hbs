@@ -1,4 +1,4 @@
-<div class="alert alert-{{or @type "primary"}}" ...attributes>
+<div class="alert alert-{{or @type "primary"}} {{if @bottom (concat "mb-" @bottom)}}" ...attributes>
   {{#if @icon}}
     {{fa-icon @icon type=@iconType right=1}}
   {{/if}}

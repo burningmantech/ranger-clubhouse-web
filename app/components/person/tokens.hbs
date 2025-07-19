@@ -9,7 +9,7 @@
   <UiTable>
     <thead>
     <tr>
-      <th class="text-right">ID</th>
+      <th class="text-end">ID</th>
       <th>Issued For</th>
       <th>Last Used At</th>
       <th>Created At</th>
@@ -21,7 +21,7 @@
     <tbody>
     {{#each this.tokens as |token|}}
       <tr>
-        <td class="text-right">{{token.id}}</td>
+        <td class="text-end">{{token.id}}</td>
         <td>{{token.name}}</td>
         <td>{{shift-format token.last_used_at}}</td>
         <td>{{shift-format token.created_at}}</td>

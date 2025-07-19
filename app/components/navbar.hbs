@@ -10,27 +10,32 @@
   </LinkTo>
 
   {{#if (and this.session.hasEventManagement this.session.isSmallScreen)}}
-    <button type="button" class="border rounded p-1 bg-white text-muted mx-auto" {{on "click" this.launchSearchDialog}} tabindex="-1">
-      <span class="mx-1">
-        {{fa-icon "search"}}
-      </span>
-      Search
+    <button type="button"
+            class="border rounded px-2 py-1 text-bg-white text-muted mx-auto" {{on "click" this.launchSearchDialog}}
+            tabindex="-1">
+      {{fa-icon "search"}} Search
     </button>
   {{/if}}
+
+  {{#if (and this.session.unreadMessageCount this.session.isSmallScreen)}}
+    <button type="button"
+            class="px-2 py-1 btn btn-sm btn-success mx-auto" {{on "click"this.launchSearchDialog}}
+            tabindex="-1">
+      {{fa-icon "envelope" right=1}} Read {{pluralize this.session.unreadMessageCount "message"}}
+    </button>
+  {{/if}}
+
 
   <navbar.toggle id="top-burger-menu">
     <span class="navbar-toggler-icon"></span>
     Menu
-    {{#if this.session.unreadMessageCount}}
-      <span class="badge badge-pill bg-success">{{fa-icon "envelope"}} {{this.session.unreadMessageCount}}</span>
-    {{/if}}
   </navbar.toggle>
 
   <navbar.content>
     <navbar.nav as |nav|>
       {{#if this.session.isAuthenticated}}
         {{#if this.session.isSmallScreen}}
-          <div class="navbar-text d-lg-none h4 text-black mt-2">
+          <div class="navbar-text d-xl-none h4 text-black mt-2">
             {{this.user.callsign}}
             <LinkTo @route="logout" class="btn btn-secondary text-white">Logout</LinkTo>
           </div>
@@ -96,30 +101,17 @@
     </navbar.content>
   {{/if}}
   {{#if this.session.isAuthenticated}}
-    <div class="d-none d-lg-flex">
+    <div class="d-none d-xl-flex">
       <navbar.content>
         <navbar.nav as |nav|>
           <nav.dropdown as |dropdown|>
             <dropdown.toggle>
-              {{#if this.session.unreadMessageCount}}
-                <span class="badge badge-pill bg-success">
-                  {{fa-icon "envelope"}} {{this.session.unreadMessageCount}}
-                </span>
-              {{/if}}
               {{this.user.callsign}}
               {{#if this.user.onduty_position}}
                 ({{this.user.onduty_position.title}})
               {{/if}}
             </dropdown.toggle>
             <dropdown.menu class="dropdown-menu-right" as |menu|>
-              <menu.item>
-                {{#if this.user.isRanger}}
-                  <LinkTo @route="me.messages" class="dropdown-item">
-                    {{pluralize this.session.unreadMessageCount "message"}}
-                  </LinkTo>
-                  <div class="dropdown-divider"></div>
-                {{/if}}
-              </menu.item>
               <NavbarMenuItem @menu={{menu}} @route="logout" @item="Logout"/>
             </dropdown.menu>
           </nav.dropdown>

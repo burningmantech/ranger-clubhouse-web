@@ -2,7 +2,7 @@
   <ModalDialog @position="top" @onEscape={{this.hideSearchBoxAction}} @onInsert={{this.onModalInsert}} as |Modal|>
     <Modal.body>
       {{#if (gt this.modeOptions.length 1)}}
-        <FormRow class="align-items-center">
+        <FormRow class="align-items-center ms-1">
           <div class="col-auto">
             <label class="col-form-label">
               Mode:
@@ -23,6 +23,11 @@
             {{/if}}
           </div>
         </FormRow>
+      {{/if}}
+      {{#if (eq this.searchMode "hq")}}
+        <div class="ms-2">
+          Use the search prefix <code>name:</code> (note the colon) to search by default world name. (e.g., <i>name:Harper Hubcap</i>)
+        </div>
       {{/if}}
       <AutocompleteInput @placeholder={{this.searchPlaceholder}}
                          @onSearch={{this.searchAction}}

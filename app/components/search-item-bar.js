@@ -599,7 +599,6 @@ export default class SearchItemBarComponent extends Component {
 
     if (this.searchMode === 'hq') {
       fields.push('callsign');
-      fields.push('name:real name');
     } else {
       fields.push('callsign');
       fields.push('name');

@@ -64,6 +64,9 @@ export default class extends SessionService {
   @tracked isOffline = false;
   @tracked showingBookmark = false;
 
+  @tracked showNewMessageDialog = false;
+  @tracked mostRecentMessage = null;
+
   constructor() {
     super(...arguments);
 
@@ -462,6 +465,11 @@ export default class extends SessionService {
 
   get userId() {
     return this.isAuthenticated ? this.data.authenticated.person_id : null;
+  }
+
+  @action
+  refreshMessages() {
+    this.loadMessages?.();
   }
 }
 

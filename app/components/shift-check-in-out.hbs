@@ -202,8 +202,9 @@
             />
           </FormRow>
         {{else}}
-          Refer the person to the HQ Lead as they can force the {{if this.isPositionUpdate "position update"
-                                                                     "shift check-in"}}.
+          Refer the person to the HQ Lead, who has the authority to force the
+          {{if this.isPositionUpdate "position update" "shift check-in"}}.
+          If no HQ Lead is on duty, contact Khaki on Control 1 for assistance.
         {{/if}}
       </Modal.body>
       <Modal.footer @align="start">
