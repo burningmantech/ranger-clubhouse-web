@@ -1,5 +1,6 @@
 import Component from '@glimmer/component';
 import {cached} from '@glimmer/tracking';
+import {action} from '@ember/object';
 
 export default class MessageThread extends Component {
   @cached
@@ -24,5 +25,14 @@ export default class MessageThread extends Component {
     const {message} = this.args;
 
     return message.replies.length ? message.replies[message.replies.length - 1] : null;
+  }
+
+  @action
+  onMessageClick() {
+    const {message} = this.args;
+
+    if (message.isTopMessage && message.isHidden) {
+      this.args.onMessageClick();
+    }
   }
 }
