@@ -119,7 +119,7 @@
 {{/if}}
 
 {{#if this.pogToIssue}}
-  <ModalDialog as |Modal|>
+  <ModalDialog @position="top" as |Modal|>
     <ChForm @formId="pog"
             @changeSet={{false}}
             @formFor={{this.pogIssueForm}}
@@ -129,27 +129,70 @@
         {{#if this.pogIssueWarnings}}
           <UiAlert @type="danger" @icon="hand">
             Please note the following:
-            <ul>
+            <ul class="mb-0">
               {{#each this.pogIssueWarnings as |warning|}}
-                <li class="text-danger">{{warning}}</li>
+                <li>{{warning}}</li>
               {{/each}}
             </ul>
           </UiAlert>
         {{/if}}
-        <p>
-          Are you sure you want to issue a {{this.pogLabel this.pogToIssue}}?
-        </p>
+        {{#unless (eq this.pogToIssue "shower")}}
+          Meal pog guidelines:
+          <div class="my-2 ms-3">
+            <dl>
+              <dt class="fw-semibold">
+                {{fa-icon "utensils" type="s" right=1 fixed=true}} 1 pog for 6+ hours, 2 for 10+ hours
+              </dt>
+              <dt class="text-danger fw-semibold">
+                {{fa-icon "ban" right=1 fixed=true}} No pog for less than 6 hours or while on duty.
+                Mentors, Gerlach Patrol & Sandman handle their own.
+              </dt>
+              <dd>
+                Exception for less than 6 hours: Back-to-back shifts (e.g., Burn Perimeter followed by another within 1
+                hour) totaling 6+ hours are eligible. The break between shifts is not counted.<br>
+                No pog issued for on duty Rangers either way.<br>
+                Mentors &amp; Sandman handle their own. Gerlach Patrol gets to eat at Bruno's.
+              </dd>
+
+              <dt class="fw-semibold">
+                {{fa-icon "shuffle" right=1 fixed=true}} Pog swaps
+              </dt>
+              <dd>
+                The new pog must fall within the original 24-hour three-meal window following the end of their shift.
+                Document both the original &amp; new meals.
+              </dd>
+
+              <dt class="fw-semibold">
+                {{fa-icon "heart" type="r" right=1 fixed=true}} Green Dot hungry participant situations or similar
+                is allowed
+              </dt>
+              <dd>
+                Document the situation clearly. Even if the Ranger has a BMID meal pass for the current period, issuing
+                a pog is allowed for the participant.
+              </dd>
+              <dt class="fw-semibold">
+                {{fa-icon "question" type="s" right=1 fixed=true}} Questions or Exceptions
+              </dt>
+              <dd>
+                For questions, ask the HQ Short or HQ Lead. For exceptions, refer to the person to the HQ Lead.
+              </dd>
+            </dl>
+          </div>
+        {{/unless}}
         <FormRow>
           <f.textarea @name="notes"
-                      @label="Optional note to record with this pog:"
+                      @label="Optional note to record with this pog - Do not record the barcode:"
                       @rows={{2}}
                       @cols={{80}}
+                      @autofocus={{true}}
           />
         </FormRow>
       </Modal.body>
       <Modal.footer @align="start">
-        <f.submit @label="Record {{this.pogLabel this.pogToIssue}}"/>
-        <UiCancelButton @onClick={{this.cancelPogIssue}} />
+        <UiButtonRow>
+          <f.submit @label="Record {{this.pogLabel this.pogToIssue}}" @size="md"/>
+          <UiCancelButton @onClick={{this.cancelPogIssue}} @size="md"/>
+        </UiButtonRow>
       </Modal.footer>
     </ChForm>
   </ModalDialog>
