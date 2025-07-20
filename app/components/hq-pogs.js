@@ -120,7 +120,7 @@ export default class HqPogsComponent extends Component {
    */
 
   @action
-   setupToIssue(type) {
+  setupToIssue(type) {
     let moreInfo = '';
     const warnings = [];
     const {callsign} = this.args.person;
@@ -128,7 +128,7 @@ export default class HqPogsComponent extends Component {
       case POG_HALF_MEAL:
       case POG_MEAL:
         if (this.hasMealPass) {
-          warnings.push(`${callsign} has a BMID Meal Pass for the current event period. No meal pog should be issued.`);
+          warnings.push(`${callsign} has a BMID Meal Pass for the current event period. No meal pog should be issued unless this is a Green Dot situation or similar (see below).`);
         }
         break;
       case POG_SHOWER:
@@ -145,8 +145,8 @@ export default class HqPogsComponent extends Component {
     this.pogIssueWarnings = warnings;
     this.pogIssueInfo = moreInfo;
     this.pogToIssue = type;
-    this.pogIssueForm = { notes: ''};
-   }
+    this.pogIssueForm = {notes: ''};
+  }
 
   @action
   async savePog(model) {
@@ -197,7 +197,7 @@ export default class HqPogsComponent extends Component {
       await model.save();
       this.toast.success('Pog successfully updated.');
       this.pogToEdit = null;
-    } catch (response){
+    } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
