@@ -5,6 +5,7 @@ import {ADMIN, EDIT_BMIDS} from 'clubhouse/constants/roles';
 import {
   ACTIVE,
   ALPHA,
+  ECHELON,
   INACTIVE,
   INACTIVE_EXTENSION,
   NON_RANGER,
@@ -17,6 +18,7 @@ import {DO_NOT_PRINT, ISSUES, SUBMITTED} from "clubhouse/models/bmid";
 const ALLOWED_STATUSES = [
   ACTIVE,
   ALPHA,
+  ECHELON,
   INACTIVE,
   INACTIVE_EXTENSION,
   NON_RANGER,
