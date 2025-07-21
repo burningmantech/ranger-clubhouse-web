@@ -4,11 +4,11 @@
 
 // prettier-ignore
 const browsers = [
-  'safari >= 12',
-  'chrome >= 100',
-  'edge >= 103',
-  'firefox >= 100',
-  '>= 0.6%',
+  'safari >= 14',
+  'chrome >= 108',
+  'edge >= 120',
+  'firefox >= 106',
+  '>= 2%',
 ];
 
 module.exports = {
