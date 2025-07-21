@@ -19,7 +19,7 @@ jobs:
           egress-policy: audit
 
       - name: Check user
-        if: ${{ ! contains('["wsanchez", "mikeburg", "plapsley"]', github.actor) }}
+        if: ${{ ! contains('["wsanchez", "mikeburg", "plapsley", "techxorcist", "srabraham"]', github.actor) }}
         run: false
 
       - name: Configure AWS Credentials
