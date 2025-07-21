@@ -1,17 +1,15 @@
 import {modifier} from "ember-modifier";
 
-export default modifier((element, [callback, argument], {active}) => {
+export default modifier((element, positional, {active}) => {
   function onClick(event) {
     event.stopImmediatePropagation();
     event.preventDefault();
-    const callbackArguments = [event];
-    if (argument !== undefined) {
-      callbackArguments.unshift(argument);
-    }
+    // make a copy because EmberJS passes down an immutable positional argument.
+    const [callback, ...rest] = positional;
+    const callbackArguments = [...rest, event];
 
     callback(...callbackArguments);
   }
-
 
   if (active === undefined || active) {
     element.addEventListener("click", onClick);

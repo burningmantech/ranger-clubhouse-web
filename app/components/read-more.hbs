@@ -1,8 +1,18 @@
-{{#if (and this.shouldTruncate this.hideFullText)~}}
+{{#if @hideFullText}}
+  {{#if this.hideFullText}}
+    {{!template-lint-disable no-invalid-link-text}}
+    <a href {{on-click this.toggleText}}>Read More</a>
+  {{else}}
+    {{yield}}
+    <div class="mt-1">
+      <a href {{on-click this.toggleText}}>Hide Text</a>
+    </div>
+  {{/if}}
+{{else if (and this.shouldTruncate this.hideFullText)~}}
   {{this.truncatedText}} <a href {{on-click this.toggleText}}> [+more]</a>
-{{~else~}}
-  {{@text~}}
-  {{#if this.shouldTruncate~}}
+{{else}}
+  {{@text}}
+  {{#if this.shouldTruncate}}
     <a class="d-block" href {{on-click this.toggleText}}> [-less]</a>
-  {{~/if}}
+  {{/if}}
 {{/if}}

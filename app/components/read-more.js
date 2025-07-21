@@ -15,8 +15,8 @@ export default class ReadMoreComponent extends Component {
   }
 
   get truncatedText() {
-    return this.args.text.substr(0, this.limit);
- }
+    return this.args.text.slice(0, this.limit);
+  }
 
   get shouldTruncate() {
     const text = this.args.text;
