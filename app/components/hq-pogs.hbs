@@ -138,50 +138,127 @@
         {{/if}}
         {{#unless (eq this.pogToIssue "shower")}}
           Meal pog guidelines:
-          <div class="my-2 ms-3">
-            <dl>
-              <dt class="fw-semibold">
-                {{fa-icon "utensils" type="s" right=1 fixed=true}} 1 pog for 6+ hours, 2 for 10+ hours
-              </dt>
-              <dt class="text-danger fw-semibold">
-                {{fa-icon "ban" right=1 fixed=true}} No pog for less than 6 hours or while on duty.
-                Mentors, Gerlach Patrol & Sandman handle their own.
-              </dt>
-              <dd>
-                Exception for less than 6 hours: Back-to-back shifts (e.g., Burn Perimeter followed by another within 1
-                hour) totaling 6+ hours are eligible. The break between shifts is not counted.<br>
-                No pog issued for on duty Rangers either way.<br>
-                Mentors &amp; Sandman handle their own. Gerlach Patrol gets to eat at Bruno's.
-              </dd>
+          <div class="my-2 mx-3">
+            <div class="d-flex align-items-start mb-2">
+              <div class="me-2">
+                {{fa-icon "utensils" type="s" fixed=true}}
+              </div>
+              <div>
+                <div class="fw-semibold">
+                  One pog for 6+ hours, two for 10+ hours &mdash; for one of the next three meals, not 24-hour period.
+                </div>
+                <div>
+                  <ReadMore @hideFullText={{true}}>
+                    Pogs can only be issued for one of the next three meals following the end of the shift—not
+                    within a 24-hour window. Example: for going off duty at 18:15, the pog may be for that night’s
+                    dinner, or the next day’s breakfast or lunch. If two pogs are issued, each may be for a different
+                    meal within that three-meal window.
+                  </ReadMore>
+                </div>
+              </div>
+            </div>
 
-              <dt class="fw-semibold">
-                {{fa-icon "shuffle" right=1 fixed=true}} Pog swaps
-              </dt>
-              <dd>
-                The new pog must fall within the original 24-hour three-meal window following the end of their shift.
-                Document both the original &amp; new meals.
-              </dd>
+            <div class="d-flex align-items-start mb-2">
+              <div class="me-2">
+                {{fa-icon "ban" fixed=true}}
+              </div>
+              <div>
+                <div class="fw-semibold text-danger">
+                  No pog for shifts under 6 hours, unless rangered two contiguous, back-to-back shifts totaling 6+
+                  hours.
+                </div>
+                <div>
+                  <ReadMore @hideFullText={{true}}>
+                    <p>
+                      Two back-to-back, contiguous shifts totaling over 6 hours are eligible for one pog.
+                      Example: for Rangering a Burn Perimeter shift immediately followed by a Dirt shift, only one pog
+                      is issued for 6+ hours, even though two shifts were worked.
+                    </p>
+                    If the combined time exceeds 10 hours, two pogs may be issued.
+                  </ReadMore>
+                </div>
+              </div>
+            </div>
 
-              <dt class="fw-semibold">
-                {{fa-icon "heart" type="r" right=1 fixed=true}} Green Dot hungry participant situations or similar
-                is allowed
-              </dt>
-              <dd>
-                Document the situation clearly. Even if the Ranger has a BMID meal pass for the current period, issuing
-                a pog is allowed for the participant.
-              </dd>
-              <dt class="fw-semibold">
-                {{fa-icon "question" type="s" right=1 fixed=true}} Questions or Exceptions
-              </dt>
-              <dd>
-                For questions, ask the HQ Short or HQ Lead. For exceptions, refer to the person to the HQ Lead.
-              </dd>
-            </dl>
+            <div class="d-flex align-items-start mb-2">
+              <div class="me-2">
+                {{fa-icon "people-group" type="s"  fixed=true}}
+              </div>
+              <div>
+                <div class="fw-semibold">
+                  Mentors, Sandman &amp; Gerlach Patrol handles their own &mdash; no pogs issued.
+                </div>
+                <div>
+                  <ReadMore @hideFullText={{true}}>
+                    Mentors and Sandman receive pogs directly from their Cadres. Gerlach Patrol gets to eat at
+                    Bruno’s for free. If a Ranger walks up to HQ Window and claims they were approved for a pog,
+                    the HQ Lead must confirm the authorization with the appropriate Cadre.
+                  </ReadMore>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-start mb-2">
+              <div class="me-2">
+                {{fa-icon "shuffle" fixed=true}}
+              </div>
+              <div>
+                <div class="fw-semibold">
+                  Pog swaps &mdash; only for the same three-meal window &amp; only one swap allowed
+                </div>
+                <div>
+                  <ReadMore @hideFullText={{true}}>
+                    A pog may be swapped for a different meal, but only if the new pog falls within the original
+                    three-meal window &mdash; not a 24-hour period &mdash; following the shift’s end. Timing is based
+                    on the shift, not when the Ranger returns to request it. Only one replacement pog may be granted per
+                    shift.
+                  </ReadMore>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-start mb-2">
+              <div class="me-2">
+                {{fa-icon "person-walking-arrow-loop-left" fixed=true}}
+              </div>
+              <div>
+                <div class="fw-semibold">Forgotten Pog &mdash; only for the three-meal window after the shift</div>
+                <div>
+                  <ReadMore @hideFullText={{true}}>
+                    <p>
+                      A pog may be issued later if it’s within the original three-meal window, not 24-hour period,
+                      of the shift’s end time, not from when the Ranger returns to ask for a pog.
+                    </p>
+                    The Ranger, not HQ, is responsible for getting a pog.
+                  </ReadMore>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-start mb-2">
+              <div class="me-2">
+                {{fa-icon "question" fixed=true}}
+              </div>
+              <div>
+                <div class="fw-semibold">Questions &amp; Exceptions</div>
+                <div>
+                  <ReadMore @hideFullText={{true}}>
+                    <p>
+                      For questions, talk with the HQ Short or HQ Lead. For exceptions, refer the person to the HQ Lead.
+                    </p>
+                    The <i>Ranger Commissary Meals Policy</i> &mdash; found in <i>the Ranger Department Policies,
+                    Protocols, and Procedures</i> folder on Google Drive &mdash; outlines how pogs are issued.
+                    A link to the Ranger Google Drive is further down on the Clubhouse Homepage in the <i>Links &amp;
+                    Things</i> section.
+                  </ReadMore>
+                </div>
+              </div>
+            </div>
           </div>
         {{/unless}}
         <FormRow>
           <f.textarea @name="notes"
-                      @label="Optional note to record with this pog - Do not record the barcode:"
+                      @label="Optional note to record with this pog (do not record the barcode):"
                       @rows={{2}}
                       @cols={{80}}
                       @autofocus={{true}}
