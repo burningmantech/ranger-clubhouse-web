@@ -1,5 +1,6 @@
 {{#if @hideFullText}}
   {{#if this.hideFullText}}
+    {{!template-lint-disable no-invalid-link-text}}
     <a href {{on-click this.toggleText}}>Read More</a>
   {{else}}
     {{yield}}
