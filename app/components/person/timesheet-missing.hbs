@@ -119,7 +119,7 @@
         </fieldset>
         {{#if this.hasTimesheetManagement}}
           <fieldset>
-            <legend>Timesheet Wrangler Notes</legend>
+            <legend>Timesheet Reviewer Notes</legend>
             <FormRow>
               <f.textarea @name="additional_wrangler_notes"
                           @label="New note to {{@person.callsign}} (your callsign & the time will automatically be added):"
@@ -286,7 +286,7 @@
           </fieldset>
         {{/if}}
         <fieldset>
-          <legend>User &amp; Timesheet Wrangler Notes</legend>
+          <legend>User &amp; Timesheet Reviewer Notes</legend>
           <TimesheetNotes @notes={{this.editEntry.notes}} @showNoNotesMessage={{true}} />
           {{#if this.canManageTimesheets}}
             <FormRow>
@@ -388,7 +388,7 @@
         </tbody>
       </UiTable>
       <fieldset>
-        <legend>User &amp; Timesheet Wranglers Notes</legend>
+        <legend>User &amp; Timesheet Reviewer Notes</legend>
         <TimesheetNotes @notes={{this.viewEntry.notes}} @showNoNotesMessage={{true}} />
       </fieldset>
     </Modal.body>

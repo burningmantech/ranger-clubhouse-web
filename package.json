@@ -81,10 +81,10 @@
     "ember-template-lint": "^7.9.1",
     "ember-truth-helpers": "^4.0.3",
     "eslint": "^8.57.0",
-    "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-ember": "^12.5.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-ember": "^12.6.0",
     "eslint-plugin-n": "^17.21.0",
-    "eslint-plugin-qunit": "^8.2.3",
+    "eslint-plugin-qunit": "^8.2.4",
     "global": "^4.4.0",
     "ical-generator": "^9.0.0",
     "jscodeshift": "^17.3.0",
@@ -97,13 +97,13 @@
     "qunit": "^2.24.1",
     "qunit-dom": "^3.4.0",
     "sass": "^1.89.2",
-    "stylelint": "^16.21.1",
+    "stylelint": "^16.22.0",
     "stylelint-config-standard": "^38.0.0",
     "stylelint-prettier": "^5.0.3",
     "tinymce": "^7.9.1",
     "tracked-built-ins": "^4.0.0",
     "validated-changeset": "~1.4.1",
-    "webpack": "^5.100.1"
+    "webpack": "^5.100.2"
   },
   "engines": {
     "node": ">= 20"

@@ -20,8 +20,8 @@ export const TOO_SHORT_DURATION = (15 * 60);
 export const NoteTypeLabels = {
   [NOTE_TYPE_USER]: 'User',
   [NOTE_TYPE_HQ_WORKER]: 'HQ Worker',
-  [NOTE_TYPE_WRANGLER]: 'Timesheet Wrangler',
-  [NOTE_TYPE_ADMIN]: 'Admin',
+  [NOTE_TYPE_WRANGLER]: 'Timesheet Reviewer',
+  [NOTE_TYPE_ADMIN]: 'Timesheet Reviewer',
 };
 
 export const BLOCKED_IS_RETIRED = 'is-retired'; // Person is retired, and trying to work a non-cheetah cub shift.

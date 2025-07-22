@@ -11,15 +11,17 @@
 
   {{#if (and this.session.hasEventManagement this.session.isSmallScreen)}}
     <button type="button"
-            class="border rounded px-2 py-1 text-bg-white text-muted mx-auto" {{on "click" this.launchSearchDialog}}
-            tabindex="-1">
+            class="border rounded px-2 py-1 text-bg-white text-muted mx-auto"
+            tabindex="-1"
+      {{on-click this.launchSearchDialog}}
+    >
       {{fa-icon "search"}} Search
     </button>
   {{/if}}
 
   {{#if (and this.session.unreadMessageCount this.session.isSmallScreen)}}
     <button type="button"
-            class="px-2 py-1 btn btn-sm btn-success mx-auto" {{on "click"this.launchSearchDialog}}
+            class="px-2 py-1 btn btn-sm btn-success mx-auto" {{on-click this.launchSearchDialog}}
             tabindex="-1">
       {{fa-icon "envelope" right=1}} Read {{pluralize this.session.unreadMessageCount "message"}}
     </button>
@@ -101,7 +103,7 @@
     </navbar.content>
   {{/if}}
   {{#if this.session.isAuthenticated}}
-    <div class="d-none d-xl-flex">
+    <div class="d-none d-lg-flex">
       <navbar.content>
         <navbar.nav as |nav|>
           <nav.dropdown as |dropdown|>
