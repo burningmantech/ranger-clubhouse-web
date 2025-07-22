@@ -24,7 +24,7 @@ export default class TimesheetNotesComponent extends Component {
         case NOTE_TYPE_HQ_WORKER:
           return `submitted for you by HQ Worker ${callsign}`;
         case NOTE_TYPE_WRANGLER:
-          return `from Timesheet Wrangler ${callsign}`;
+          return `from Timesheet Reviewer ${callsign}`;
       }
     }
 
