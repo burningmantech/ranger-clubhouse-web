@@ -91,12 +91,15 @@ const ALPHA_STEPS = [
             message: htmlSafe(
               `<p>Please read "<a href="${milestones.alpha_shift_prep_link}" target="_blank" rel="noopener noreferrer">Becoming a Ranger: On-playa Alpha Shifts</a>"`
               + ` on the Ranger website.</p>Your Alpha shift starts ${dayjs(milestones.alpha_shift.begins).format('ddd MMM DD [@] HH:mm')}.`
-              + `<p class="text-danger"><b>PLEASE ARRIVE 30 MINUTES EARLY.</b> Late arrivals will be turned away.</p>`
-              + `<p>Alpha shifts are over 10 hours long. The first 2 hours are review and practice, followed by 6 hours of fieldwork alongside Mentors, with meal and rest breaks included. The final 2+ hours are for Mentor evaluations, which may require some waiting as we assess many Alphas at the end of the day. Thank you for your patience and commitment to the process!</p>`
-              + `<p>Show up prepared with snacks and a meal, layered clothing, a hat, sunglasses, comfortable walking shoes,
-            sunscreen, a water container (water and electrolytes are offered), a pen or pencil, a notebook, and, if
-            attending a swing shift (2pm til midnight), a flashlight or headlamp. </p>`
-              + `<p>Check-in at HQ Window at Ranger HQ, then proceed to the Hat Rack just to the right of HQ Window. Ranger HQ is located on the Esplanade and 6:31 (NEW LOCATION FOR 2025)</p>`
+              + `<p class="text-danger"><b>PLEASE ARRIVE 20 MINUTES EARLY.</b> Late arrivals will be turned away.</p>`
+              + `<p>Alpha shifts are over 10 hours long. The first 2 hours are review and practice, followed `
+              + `by 6 hours of fieldwork alongside Mentors, with meal and rest breaks included. The final 2+ hours are `
+              + `for Mentor evaluations, which may require some waiting as we assess many Alphas at the end of the day. `
+              + `Thank you for your patience and commitment to the process!</p>`
+              + `<p>Show up prepared with snacks and a meal, layered clothing, a hat, sunglasses, comfortable walking `
+              + `shoes, sunscreen, a water container (water and electrolytes are offered), a pen or pencil, a notebook, `
+              + `and, if attending a swing shift (2pm til midnight), a flashlight or headlamp. </p>`
+              + `<p>Check-in at The Hat Rack, just to the right of the HQ Windows.  Ranger HQ (Headquarters) is located on the Esplanade and 6:31  (NEW LOCATION FOR 2025)</p>`
               + `If you are unable to make your Alpha shift, promptly notify the Mentor Cadre by email or visit Ranger HQ on playa.`),
             email: 'MentorEmail'
           };
