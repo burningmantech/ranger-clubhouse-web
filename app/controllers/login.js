@@ -47,8 +47,7 @@ export default class LoginController extends ClubhouseController {
   }
 
   get isServerOnPlaya() {
-    return true;
-//    return window.location.hostname.endsWith('.nv.burningman.org');
+    return window.location.hostname.endsWith('.nv.burningman.org');
   }
 
   /*
