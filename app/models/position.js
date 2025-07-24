@@ -101,6 +101,10 @@ export const ATTR_LABELS = [
     id: 'allow_echelon',
     label: 'Echelon volunteers permitted to work position even if In-Person Training or ART was not completed.'
   },
+  {
+    id: 'ignore_time_check',
+    label: 'Early/late check-in time is not enforced',
+  }
 ];
 
 
@@ -136,6 +140,7 @@ export default class PositionModel extends Model {
   @attr('boolean', {defaultValue: false}) alert_when_no_trainers;
   @attr('boolean', {defaultValue: false}) cruise_direction;
   @attr('boolean', {defaultValue: false}) deselect_on_team_join;
+  @attr('boolean', {defaultValue: false}) ignore_time_check;
   @attr('boolean', {defaultValue: false}) no_payroll_hours_adjustment;
   @attr('boolean', {defaultValue: false}) mvr_eligible;
   @attr('boolean', {defaultValue: false}) mvr_signup_eligible;
