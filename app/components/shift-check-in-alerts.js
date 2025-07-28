@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import {ECHELON, INACTIVE, INACTIVE_EXTENSION} from "clubhouse/constants/person_status";
+import {ECHELON} from "clubhouse/constants/person_status";
 import {isEmpty} from "lodash";
 import {cached} from '@glimmer/tracking';
 import {ADMIN, CAN_FORCE_SHIFT} from "clubhouse/constants/roles";
@@ -12,11 +12,6 @@ export default class ShiftCheckInAlerts extends Component {
     super(...arguments);
 
     this.userCanForceCheckIn = this.session.hasRole([ADMIN, CAN_FORCE_SHIFT]);
-  }
-
-  get isInactive() {
-    const {status} = this.args.person;
-    return (status === INACTIVE || status === INACTIVE_EXTENSION);
   }
 
   @cached
