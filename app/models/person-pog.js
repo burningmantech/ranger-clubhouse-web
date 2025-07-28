@@ -10,7 +10,7 @@ export const STATUS_CANCELLED = 'cancelled';
 export const STATUS_REDEEMED = 'redeemed';
 
 export const PogLabels = {
-  [POG_MEAL]: 'Full Meal Pog',
+  [POG_MEAL]: 'Meal Pog',
   [POG_HALF_MEAL]: '1/2 Meal Pog',
   [POG_SHOWER]: 'Shower Pog'
 };

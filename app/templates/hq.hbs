@@ -116,11 +116,7 @@
     <Modal.body>
       <p>
         {{this.person.callsign}} is
-        {{#if this.person.isRetired}}
-          a retired Ranger
-        {{else}}
-          {{if this.person.isAlpha "an Alpha" "a Prospective"}}
-        {{/if}}.
+          {{if this.person.isAlpha "an Alpha" "a Prospective"}}.
       </p>
       You may <b>ONLY perform an On-Site Registration</b> for this person. <b class="text-danger">Do not start their
       Alpha shift.</b> After completing the On-Site Registration, direct the person to the Mentor Shack. The Mentors
@@ -133,7 +129,7 @@
 {{/if}}
 
 {{#if this.showNotAllowedToWork}}
-  <ModalDialog @title="Person may not ranger" @onEscape={{this.closeNotAllowedToWork}} as |Modal|>
+  <ModalDialog @title="Person may not Ranger" @onEscape={{this.closeNotAllowedToWork}} as |Modal|>
     <Modal.body>
       <p>
         <b class="text-danger">

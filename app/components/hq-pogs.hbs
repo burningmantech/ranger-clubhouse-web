@@ -27,19 +27,18 @@
   {{else}}
     {{#if this.isMentor}}
       <UiAlert @type="danger" @icon="hand">
-        {{@person.callsign}} is on a Mentor shift and will receive their meal pogs directly from the Mentor Shack.
+        {{@person.callsign}} is on a Mentor shift and will receive their meal pogs directly from the Mentors.
+      </UiAlert>
+    {{else}}
+      <UiAlert @type="secondary">
+        For the current event period, issue: one meal pog for shifts of 6 hours or more, or two pogs for shifts of 10
+        hours or more.
+        {{#if this.config.meal_half_pog_enabled}}
+          <br>
+          1/2 Meal Pogs are available for a shift less than 6 hours.
+        {{/if}}
       </UiAlert>
     {{/if}}
-    <p>
-      <b>
-        For the current event period, issue a {{if this.config.meal_half_pog_enabled "Full"}} Meal Pog for
-        every 6+ hours worked in a shift.
-      </b>
-      {{#if this.config.meal_half_pog_enabled}}
-        <br>
-        1/2 Meal Pogs are available for a shift worked less than 6 hours.
-      {{/if}}
-    </p>
   {{/if}}
   <UiButtonRow class="mb-2">
     <UiButton @onClick={{this.recordFullMealPog}} @size="md">
