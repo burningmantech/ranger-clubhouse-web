@@ -5,7 +5,6 @@ import {setting} from 'clubhouse/utils/setting';
 import {UnauthorizedError} from '@ember-data/adapter/error';
 import ENV from 'clubhouse/config/environment';
 import dayjs from 'dayjs';
-import RSVP from 'rsvp';
 import isOffline from "clubhouse/utils/is-offline";
 import {later, cancel} from '@ember/runloop';
 import Ember from 'ember';
