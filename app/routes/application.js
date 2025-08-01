@@ -5,10 +5,10 @@ import {setting} from 'clubhouse/utils/setting';
 import {UnauthorizedError} from '@ember-data/adapter/error';
 import ENV from 'clubhouse/config/environment';
 import dayjs from 'dayjs';
-import RSVP from 'rsvp';
 import isOffline from "clubhouse/utils/is-offline";
 import {later, cancel} from '@ember/runloop';
 import Ember from 'ember';
+import {isEmpty} from "lodash";
 
 const MESSAGE_CHECK_INTERVAL = 5 * (60 * 1000);
 
@@ -34,6 +34,32 @@ export default class ApplicationRoute extends ClubhouseRoute {
     window.addEventListener('offline', () => {
       this.session.showOfflineDialog = true;
     });
+  }
+
+  async _loadGoogleAnalytics() {
+    if (this._isGALoaded) {
+      return;
+    }
+
+    const gaID = setting('GoogleAnalyticsID');
+    if (isEmpty(gaID)) {
+      return;
+    }
+
+    try {
+      await this.house.loadScript(`https://www.googletagmanager.com/gtag/js?id=${gaID}`);
+    } catch (_) {
+      console.log('Google Analytics failed to load');
+      return;
+    }
+
+    const dataLayer = window.dataLayer;
+    if (dataLayer) {
+      dataLayer.push(['js', new Date()]);
+      dataLayer.push(['config', gaID]);
+    }
+
+    this._isGALoaded = true;
   }
 
   /**
@@ -148,12 +174,12 @@ export default class ApplicationRoute extends ClubhouseRoute {
          after the login token is successfully retrieved in {route,controller}/login.js
       */
 
-      const results = await RSVP.hash({
-        config: this.ajax.request('config'),
-        user: this.session.loadUser(true)
-      });
+      const config = await this.ajax.request('config');
+      await this.session.loadUser(true);
 
-      ENV['clientConfig'] = results.config;
+      ENV['clientConfig'] = config;
+
+      this._loadGoogleAnalytics();
 
       this.authSetup = true;
       if (!Ember.testing) {
