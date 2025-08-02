@@ -37,7 +37,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
   }
 
   async _loadGoogleAnalytics() {
-    if (this._isGALoaded) {
+    if (this._isGALoaded || !ENV.logRoutes || this.session.isStaging || this.session.isTraining) {
       return;
     }
 
@@ -57,6 +57,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
     if (dataLayer) {
       dataLayer.push(['js', new Date()]);
       dataLayer.push(['config', gaID]);
+      dataLayer.push(['page_view', {page_location: window.location.href}]);
     }
 
     this._isGALoaded = true;
@@ -82,10 +83,15 @@ export default class ApplicationRoute extends ClubhouseRoute {
       this.send('collectTitleTokens', []);
     }
 
+
     if (!ENV.logRoutes) {
       // don't bother setting up recording route transitions if not enabled.
       return;
     }
+
+    window.dataLayer?.push(['page_view', {
+      page_location: window.location.href,
+    }])
 
     const name = transition?.to?.name;
     if (name === 'admin.action-log' || name === 'offline') {
@@ -148,7 +154,6 @@ export default class ApplicationRoute extends ClubhouseRoute {
    *
    * beforeModel will be called only once.
    *
-   * @param {Transition} transition
    */
 
   async beforeModel(transition) {
