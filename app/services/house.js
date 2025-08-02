@@ -352,8 +352,8 @@ export default class HouseService extends Service {
       }
 
       const {top, bottom} = element.getBoundingClientRect();
-
-      if (bottom > window.innerHeight || top < 0) {
+      const isModal = element.closest('.modal');
+       if (isModal || bottom > window.innerHeight || top < 0) {
         element.scrollIntoView({behavior});
       } else {
         // Element is already in view, scroll element mostly to the top.
