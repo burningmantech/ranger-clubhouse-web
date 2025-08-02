@@ -19,13 +19,13 @@ WORKDIR /build
 # The copy creates a cache in the primary layer. The only time to re-run
 # the npm install and related commands is if package*.json changes.
 COPY package*.json ./
+COPY ./patches/           ./patches/
 RUN npm install
 
 COPY ./app/               ./app/
 COPY ./config/            ./config/
 COPY ./mirage/            ./mirage/
 COPY ./public/            ./public/
-COPY ./patches/           ./patches/
 COPY ./tests/             ./tests/
 COPY ["./.ember-cli.js", "./.eslintignore", "./.eslintrc.js", "./ember-cli-build.js", "./package.json", "./package-lock.json", "./testem.js", "./"]
 
