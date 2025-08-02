@@ -37,7 +37,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
   }
 
   async _loadGoogleAnalytics() {
-    if (this._isGALoaded || !ENV.logRoutes || this.session.isStaging) {
+    if (this._isGALoaded || !ENV.logRoutes || this.session.isStaging || this.session.isTraining) {
       return;
     }
 
