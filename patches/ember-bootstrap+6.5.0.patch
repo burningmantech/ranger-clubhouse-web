@@ -62,3 +62,15 @@ index 7ed4541..77f5936 100644
      >
        {{yield}}
      </div>
+diff --git a/node_modules/ember-bootstrap/package.json b/node_modules/ember-bootstrap/package.json
+index a54a1d4..54a7bab 100644
+--- a/node_modules/ember-bootstrap/package.json
++++ b/node_modules/ember-bootstrap/package.json
+@@ -53,7 +53,6 @@
+     "ember-cli-version-checker": "^5.1.2",
+     "ember-concurrency": "^2.1.2 || ^3.0.0 || ^4.0.0",
+     "ember-element-helper": "^0.6.0 || ^0.7.0 || ^0.8.0",
+-    "ember-focus-trap": "^1.0.0",
+     "ember-on-helper": "^0.1.0",
+     "ember-popper-modifier": "^2.0.0 || ^3.0.0 || ^4.0.0",
+     "ember-ref-bucket": "^4.0.0 || ^5.0.0",
