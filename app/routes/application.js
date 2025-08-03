@@ -56,9 +56,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
     const dataLayer = window.dataLayer;
     if (dataLayer) {
       dataLayer.push(['js', new Date()]);
-      dataLayer.push(['config', gaID, {
-          cookie_flags: 'SameSite=None;Secure'
-      }]);
+      dataLayer.push(['config', gaID, {send_page_view: false}]);
       dataLayer.push(['page_view', {page_location: window.location.href}]);
     }
 
@@ -91,8 +89,13 @@ export default class ApplicationRoute extends ClubhouseRoute {
       return;
     }
 
-    window.dataLayer?.push(['page_view', {
+    window.dataLayer?.push(['event', 'page_view', {
+      page_title: document.title,
       page_location: window.location.href,
+      page_path: window.location.pathname,
+      page_referrer: document.referrer,
+      language: navigator.language,
+      screen_resolution: `${screen.width}x${screen.height}`,
     }])
 
     const name = transition?.to?.name;
