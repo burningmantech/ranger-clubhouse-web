@@ -56,7 +56,9 @@ export default class ApplicationRoute extends ClubhouseRoute {
     const dataLayer = window.dataLayer;
     if (dataLayer) {
       dataLayer.push(['js', new Date()]);
-      dataLayer.push(['config', gaID]);
+      dataLayer.push(['config', gaID, {
+          cookie_flags: 'SameSite=None;Secure'
+      }]);
       dataLayer.push(['page_view', {page_location: window.location.href}]);
     }
 
