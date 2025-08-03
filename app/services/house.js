@@ -497,12 +497,14 @@ export default class HouseService extends Service {
     }
     return new Promise((resolve, reject) => {
       const script = document.createElement('script');
-      document.body.append(script);
-      script.addEventListener('load', () => {
+      script.type = 'text/javascript';
+      script.async = true;
+      document.head.append(script);
+      script.onload = () => {
         this.cachedScripts[url] = true;
         resolve();
-      });
-      script.addEventListener('error', () => reject());
+      };
+      script.onerror = () => reject();
       script.src = url; // Boom!
     });
   }
