@@ -59,7 +59,7 @@
             {{pluralize @message.replies.length "reply"}} &mdash;
             Last one at
             <MessageDate @message={{this.lastReply}} />
-            from {{this.lastReply.message_from}}
+            from {{this.lastReply.fromName}}
           </div>
         {{/if}}
         {{#unless @message.isTopMessage}}
