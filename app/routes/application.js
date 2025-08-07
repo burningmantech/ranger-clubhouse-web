@@ -205,7 +205,10 @@ export default class ApplicationRoute extends ClubhouseRoute {
   }
 
   async _checkForMessages() {
-    if (!this.session.showOfflineDialog) {
+    if (this.session.isAuthenticated
+      && !this.session.showOfflineDialog
+      && !this.session.isStaging
+      && !this.session.isTraining) {
       try {
         let {
           unread_message_count,
@@ -223,11 +226,16 @@ export default class ApplicationRoute extends ClubhouseRoute {
           this.session.mostRecentMessage = message;
           this.session.showNewMessageDialog = true;
         }
-      } catch (error) {
-        // ignore any errors.
+      } catch (response) {
+        if (response.status === 401) {
+          // The session has expired.
+          if (this.session.isAuthenticated) {
+            this.session.sessionExpiredNotification();
+          }
+          return;
+        }
       }
     }
-
     this._setupMessageCheck();
   }
 
