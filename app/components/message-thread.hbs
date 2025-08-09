@@ -52,7 +52,6 @@
         {{/if}}
         <div class="d-block d-lg-inline-block">
           <MessageDate @message={{@message}} />
-          (Pacific)
         </div>
         {{#if (and @message.isTopMessage @message.replies.length)}}
           <div>
@@ -104,7 +103,7 @@
           {{/if}}
         {{else if @message.isSenderOther}}
           <UiAlert @type="warning" @bottom={{1}}>
-            This message is from an acquaintance (e.g., a friend, significant other, or another department). Since it
+            This message is from an acquaintance (e.g., a friend, significant other, another department, etc.). Since it
             wasn’t sent by a Ranger or Ranger team, a reply cannot be sent.
           </UiAlert>
         {{else if @message.isSenderTeam}}
@@ -120,7 +119,7 @@
             {{/if}}
           </UiAlert>
         {{/if}}
-        <div class="mt-2 mb-3">
+        <div class="mb-3 me-4 {{if @isTop "ms-2" "me-4"}}">
           {{nl2br @message.body}}
         </div>
         <div class="d-flex justify-content-between">
@@ -141,7 +140,7 @@
               {{#if (and @isLast @isSenderPerson)}}
                 <UiButton @type="secondary" @onClick={{@openReplyForm}}>
                   {{fa-icon "reply" right=1}} Reply
-                  {{#if (not-eq @message.person_id this.session.userId)}}
+                  {{#if (and (not this.isMe) (not-eq @message.person_id this.session.userId))}}
                     as {{@message.person.callsign}}
                   {{/if}}
                 </UiButton>
