@@ -38,6 +38,7 @@ export const POD_MANAGEMENT = 126;
 export const AWARD_MANAGEMENT = 127; // Allows a person to grant or revoke service awards.
 export const FULL_REPORT_ACCESS = 128; // Allows a person to see an unrestrict report view for reports like Timesheets By Callsign
 export const EDIT_HANDLE_RESERVATIONS = 129; // Can manage the handle reservations list.
+export const EDIT_EMERGENCY_CONTACT = 130; // Can edit / view Emergency Contact Info even if EMOP is disabled.
 
 export const ROLE_BASE_MASK = 0x7f000000;
 export const POSITION_MASK = 0x0fff;
