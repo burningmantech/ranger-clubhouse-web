@@ -16,6 +16,6 @@ export default class SlotInfoLink extends Component {
       return;
     }
 
-    this.modal.info('Additional Shift Information', hyperlinkText(text));
+    this.modal.info('Shift Information', hyperlinkText(text));
   }
 }
