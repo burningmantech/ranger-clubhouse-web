@@ -61,7 +61,7 @@ export default class ShiftCheckInOutComponent extends Component {
 
     let {positions} = this.args;
 
-    positions = positions.filter((p) => p.type !== TYPE_TRAINING);
+    positions = positions.filter((p) => (p.type !== TYPE_TRAINING || p.title.match(/trainer/i)));
     this.noTrainingRequiredPositions = positions.filter((p) => isEmpty(p.blockers));
     if (this.noTrainingRequiredPositions.length && this.args.isSelfServe) {
       this.activePositions = this.noTrainingRequiredPositions;
