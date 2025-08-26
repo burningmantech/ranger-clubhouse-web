@@ -18,7 +18,19 @@ export default class HqShiftRoute extends ClubhouseRoute {
     this.router.on('routeWillChange', (transition) => {
       const controller = this.controllerFor('hq.shift');
 
+      if (transition.to.find(route => route.name === this.routeName) ||
+        transition.to.find(route => route.name.match(/loading/))) {
+        return;
+      }
+
       if (!transition.from?.find(route => route.name === this.routeName)) {
+        return;
+      }
+
+      if (controller.noShiftHandled && !controller.showNoShiftHandled) {
+        controller.showNoShiftHandled = true;
+        controller.shiftTransition = transition;
+        transition.abort();
         return;
       }
 
@@ -53,6 +65,7 @@ export default class HqShiftRoute extends ClubhouseRoute {
     controller.unsubmittedBarcode = '';
     controller._findOnDuty();
     controller.timesheetsToReview = model.timesheets.filter((t) => t.isUnverified);
+    controller.noShiftHandled = true;
 
     controller.todos = [];
 
