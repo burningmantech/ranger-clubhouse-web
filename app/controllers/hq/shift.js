@@ -34,6 +34,8 @@ export default class HqShiftController extends ClubhouseController {
 
   @tracked showIsAlpha = false;
 
+  @tracked showNoShiftHandled = false;
+
   correctionValidations = {
     additional_notes: [validatePresence(true)]
   };
@@ -195,6 +197,7 @@ export default class HqShiftController extends ClubhouseController {
   async startShiftNotify() {
 
     try {
+      this.noShiftHandled = false;
       await this.timesheets.update();
       this.completeTodo(HQ_TODO_START_SHIFT);
       this._findOnDuty();
@@ -226,6 +229,7 @@ export default class HqShiftController extends ClubhouseController {
   @action
   async endShiftNotify(timesheet, submitCorrection) {
     try {
+      this.noShiftHandled = false;
       await this.timesheets.update();
       const ignored = {}, previousReview = {};
       this.timesheetsToReview.forEach((t) => {
@@ -470,5 +474,17 @@ export default class HqShiftController extends ClubhouseController {
   @action
   closeIsAlphaDialog() {
     this.showIsAlpha = false;
+  }
+
+  @action
+  closeNoShiftHandled() {
+    this.showNoShiftHandled = false;
+  }
+
+  @action
+  navigateAway() {
+    this.showNoShiftHandled = false;
+    this.noShiftHandled = false;
+    this.shiftTransition.retry();
   }
 }

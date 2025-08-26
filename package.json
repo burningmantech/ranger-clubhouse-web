@@ -44,7 +44,7 @@
     "air-datepicker": "^3.6.0",
     "bootstrap": "^5.3.7",
     "broccoli-asset-rev": "^3.0.0",
-    "concurrently": "^9.2.0",
+    "concurrently": "^9.2.1",
     "cropperjs": "^1.6.2",
     "dayjs": "^1.11.13",
     "double-metaphone": "^2.0.1",
@@ -96,14 +96,14 @@
     "mobile-drag-drop": "^2.2.0",
     "qunit": "^2.24.1",
     "qunit-dom": "^3.4.0",
-    "sass": "^1.89.2",
+    "sass": "^1.91.0",
     "stylelint": "^16.22.0",
     "stylelint-config-standard": "^38.0.0",
     "stylelint-prettier": "^5.0.3",
-    "tinymce": "^7.9.1",
+    "tinymce": "^8.0.2",
     "tracked-built-ins": "^4.0.0",
     "validated-changeset": "~1.4.1",
-    "webpack": "^5.100.2"
+    "webpack": "^5.101.3"
   },
   "engines": {
     "node": ">= 20"
