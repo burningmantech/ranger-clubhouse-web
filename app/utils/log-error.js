@@ -35,6 +35,7 @@ export default function logError(error, type, additionalData = null) {
     || error instanceof AbortError
     || error instanceof ForbiddenError
     || error instanceof UnauthorizedError
+    || (error instanceof DOMException  && error.name === 'NotFoundError') // Seeing this with some extensions loaded
     // ember-ajax errors
     || isAbortError(error)
     || isAbortError(error)
