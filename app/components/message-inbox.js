@@ -170,7 +170,7 @@ export default class MessageInboxComponent extends Component {
   createReplyMessage(topMessage) {
     return this._newMessageSetup({
       from: this.args.person.callsign,
-      to: topMessage.message_from,
+      to: (this.args.person.idNumber === topMessage.sender_person_id) ? topMessage.person.callsign : topMessage.sender_person.callsign,
       subject: topMessage.subject,
       replyId: topMessage.id,
     }, true);
@@ -198,6 +198,7 @@ export default class MessageInboxComponent extends Component {
     }
     const personId = this.args.person.idNumber;
     this.isSubmitting = true;
+
     try {
       await model.save();
       this.toast.success(`Message successfully sent`);
