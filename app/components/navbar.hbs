@@ -21,8 +21,10 @@
 
   {{#if (and this.session.unreadMessageCount this.session.isSmallScreen)}}
     <button type="button"
-            class="px-2 py-1 btn btn-sm btn-success mx-auto" {{on-click this.launchSearchDialog}}
-            tabindex="-1">
+            class="px-2 py-1 btn btn-sm btn-success mx-auto"
+            tabindex="-1"
+      {{on-click this.readMessages}}
+    >
       {{fa-icon "envelope" right=1}} Read {{pluralize this.session.unreadMessageCount "message"}}
     </button>
   {{/if}}

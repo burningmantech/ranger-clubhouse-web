@@ -57,57 +57,55 @@
   {{/unless}}
 {{else}}
   {{#unless @hasUnreviewedTimesheet}}
-    {{#unless this.inPersonTrainingPassed}}
-      {{#if @upcomingSlots.imminent}}
-        <div class="mb-2 fw-semibold">
-          {{@person.callsign}} can be signed in to a scheduled shift OR an unscheduled shift (aka position).
-        </div>
-        <UiTable @normalSize={{true}} @noStriped={{true}}>
-          <thead>
-          <tr>
-            <th>Shift</th>
-            <th>Time</th>
-            <th>Action</th>
+    {{#if @upcomingSlots.imminent}}
+      <div class="mb-2 fw-semibold">
+        {{@person.callsign}} can be signed in to a scheduled shift OR an unscheduled shift (aka position).
+      </div>
+      <UiTable @normalSize={{true}} @noStriped={{true}}>
+        <thead>
+        <tr>
+          <th>Shift</th>
+          <th>Time</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each @upcomingSlots.imminent as |slot|}}
+          <tr class="{{if slot.slot_description "tr-no-border"}}">
+            <td class="align-middle">
+              {{slot.position_title}}
+            </td>
+            <td class="align-middle">{{shift-format slot.slot_begins slot.slot_ends}}</td>
+            <td class="align-middle">
+              <UiButton @type="primary"
+                        @onClick={{fn this.signInShiftAction slot}}
+                        @disabled={{this.isSubmitting}}
+                        @size="md">
+                {{fa-icon "person-walking" right=2}} Start Shift
+              </UiButton>
+              {{#if this.isSubmitting}}
+                <LoadingIndicator/>
+              {{/if}}
+            </td>
           </tr>
-          </thead>
-          <tbody>
-          {{#each @upcomingSlots.imminent as |slot|}}
-            <tr class="{{if slot.slot_description "tr-no-border"}}">
-              <td class="align-middle">
-                {{slot.position_title}}
-              </td>
-              <td class="align-middle">{{shift-format slot.slot_begins slot.slot_ends}}</td>
-              <td class="align-middle">
-                <UiButton @type="primary"
-                          @onClick={{fn this.signInShiftAction slot}}
-                          @disabled={{this.isSubmitting}}
-                          @size="md">
-                  {{fa-icon "person-walking" right=2}} Start Shift
-                </UiButton>
-                {{#if this.isSubmitting}}
-                  <LoadingIndicator/>
-                {{/if}}
+          {{#if slot.slot_description}}
+            <tr class="tr-no-top-padding">
+              <td colspan="3">
+                <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
               </td>
             </tr>
-            {{#if slot.slot_description}}
-              <tr class="tr-no-top-padding">
-                <td colspan="3">
-                  <SlotInfoLink @description={{slot.slot_description}} @info={{slot.slot_url}} />
-                </td>
-              </tr>
-            {{/if}}
+          {{/if}}
 
-          {{/each}}
-          </tbody>
-        </UiTable>
-        <p>
-          <b>
-            To sign in to a different shift / position, select the position below, and use the
-            <i>Start Shift</i> button.
-          </b>
-        </p>
-      {{/if}}
-    {{/unless}}
+        {{/each}}
+        </tbody>
+      </UiTable>
+      <p>
+        <b>
+          To sign in to a different shift / position, select the position below, and use the
+          <i>Start Shift</i> button.
+        </b>
+      </p>
+    {{/if}}
 
     <FormRow>
       <label class="col-auto col-form-label">

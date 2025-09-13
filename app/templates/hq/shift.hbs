@@ -233,7 +233,7 @@
         <SpinIcon/>
       {{/if}}
     {{else}}
-        {{this.person.callsign}} is already marked as off site.
+      {{this.person.callsign}} is already marked as off site.
     {{/if}}
   </:body>
 </HqShiftManageSection>
@@ -268,6 +268,31 @@
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeIsAlphaDialog}} @size="md"/>
+    </Modal.footer>
+  </ModalDialog>
+{{/if}}
+
+{{#if this.showNoShiftHandled}}
+  <ModalDialog @onEscape={{this.closeNoShiftHandled}} as |Modal|>
+    <Modal.title>
+      {{#if this.isOffDuty}}
+        No Shift Started
+      {{else}}
+        No Shift Ended
+      {{/if}}
+    </Modal.title>
+    <Modal.body>
+      <p>
+        It looks like a shift was not
+        {{if this.isOffDuty "started." "ended."}}
+      </p>
+      Are you sure want to navigate away from this page?
+    </Modal.body>
+    <Modal.footer>
+      <UiButtonRow>
+        <UiButton @type="warning" @onClick={{this.navigateAway}} @size="md">Navigate Away</UiButton>
+        <UiCancelButton @onClick={{this.closeNoShiftHandled}} @size="md"/>
+      </UiButtonRow>
     </Modal.footer>
   </ModalDialog>
 {{/if}}

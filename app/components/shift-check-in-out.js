@@ -7,7 +7,7 @@ import {
   DIRT_SHINY_PENNY,
   BURN_PERIMETER,
   NVO_RANGER,
-  DPW_RANGER,
+  DPW_RANGER, TOW_TRUCK_TRAINING, TROUBLESHOOTER_TRAINING, SANDMAN_TRAINING,
 } from 'clubhouse/constants/positions';
 import {cached, tracked} from '@glimmer/tracking';
 import {ECHELON} from 'clubhouse/constants/person_status';
@@ -61,7 +61,17 @@ export default class ShiftCheckInOutComponent extends Component {
 
     let {positions} = this.args;
 
-    positions = positions.filter((p) => p.type !== TYPE_TRAINING);
+    positions = positions.filter((p) => {
+      if (p.type !== TYPE_TRAINING) {
+        return true;
+      }
+
+      if (p.title.match(/trainer/i)) {
+        return true;
+      }
+
+      return  (p.id === TOW_TRUCK_TRAINING || p.id === TROUBLESHOOTER_TRAINING || p.id === SANDMAN_TRAINING);
+    });
     this.noTrainingRequiredPositions = positions.filter((p) => isEmpty(p.blockers));
     if (this.noTrainingRequiredPositions.length && this.args.isSelfServe) {
       this.activePositions = this.noTrainingRequiredPositions;

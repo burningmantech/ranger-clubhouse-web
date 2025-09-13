@@ -99,7 +99,7 @@
       <w.step @title="Verify Emergency Contact Information"
               @nextLabel="Save & Next"
               @nextAction={{fn this.saveContactForm f.model}}>
-        {{#if this.session.isEMOPEnabled}}
+        {{#if this.canEditEmergencyContact}}
           <p class="ms-2">
             <b>Off-Playa:</b>
             Real world name, relationship (partner, friend, sibling, parent), phone number, &amp; email.<br>
@@ -122,7 +122,7 @@
         {{/if}}
       </w.step>
     </ChForm>
-    {{#unless this.person.isAlpha}}
+    {{#unless (or this.person.isAlpha this.person.isProspective)}}
       <w.step @title="Radios" @nextAction={{this.checkForRadio}}>
         {{#unless this.eventInfo.radio_info_available}}
           <UiNotice @type="danger">
@@ -166,7 +166,7 @@
       </w.step>
     {{/unless}}
     <w.step @title="Mark Person As On Site" @isLast={{true}} @includeCancel={{true}}>
-      {{#if this.person.isAlpha}}
+      {{#if (or this.person.isAlpha this.person.isProspective)}}
         <p>
           Direct {{this.person.callsign}} to the Hat Rack where The Mentors will take over. They will be responsible
           for checking them into their Alpha shift.
