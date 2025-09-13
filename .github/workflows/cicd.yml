@@ -26,7 +26,7 @@ jobs:
             registry.npmjs.org:443
 
       - name: Checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Node
         uses: actions/setup-node@v4
@@ -57,7 +57,7 @@ jobs:
             registry.npmjs.org:443
 
       - name: Checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Install Node
         uses: actions/setup-node@v4
@@ -94,7 +94,7 @@ jobs:
             registry.npmjs.org:443
 
       - name: Checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Cache node modules
         id: cache-npm
@@ -147,7 +147,7 @@ jobs:
             github.com:443
 
       - name: Checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Download Docker image artifact
         uses: actions/download-artifact@v4
@@ -177,7 +177,7 @@ jobs:
           egress-policy: audit
 
       - name: Checkout source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Download Docker image artifacts
         uses: actions/download-artifact@v4
