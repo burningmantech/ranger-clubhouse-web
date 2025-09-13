@@ -1,11 +1,19 @@
 import Component from '@glimmer/component';
 import {cached} from '@glimmer/tracking';
 import {action} from '@ember/object';
+import {service} from '@ember/service';
 
 export default class MessageThread extends Component {
+  @service session;
+
   @cached
   get isMyMessage() {
     return this.args.person.idNumber === this.args.message.sender_person_id;
+  }
+
+  @cached
+  get isMe() {
+    return this.args.person.idNumber === this.session.userId;
   }
 
   @cached

@@ -81,7 +81,7 @@ export default class extends SessionService {
     this._windowResized();
     window.addEventListener('resize', this._bounceResizeEvent, false);
 
-    this.isDevelopment = ENV.environment === 'development';
+    this.isDevelopment = ENV.environment === 'Development';
     this.isMac = navigator.userAgent.indexOf("Mac") !== -1;
     this.browserDetect = new BrowserDetector();
 

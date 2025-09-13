@@ -46,6 +46,10 @@ export default class LoginController extends ClubhouseController {
     }
   }
 
+  get isServerOnPlaya() {
+    return window.location.hostname.endsWith('.nv.burningman.org');
+  }
+
   /*
 
   TODO if Okta is to be used:

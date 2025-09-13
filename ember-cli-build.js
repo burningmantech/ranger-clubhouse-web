@@ -79,7 +79,9 @@ module.exports = function (defaults) {
         },
         resolve: {
           fallback: {
-            fs: false
+            fs: false,
+            'focus-trap': false,
+            'ember-focus-trap': false,
           }
         },
       },

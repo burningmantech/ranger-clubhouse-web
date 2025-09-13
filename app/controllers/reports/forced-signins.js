@@ -9,7 +9,7 @@ const CSV_COLUMNS = [
   {title: 'Position', key: 'position_title'},
   {title: 'Shift Start', key: 'on_duty'},
   {title: 'Forced By', key: 'forced_by_callsign'},
-  {title: 'Blockers', key: 'blockers'},
+  {title: 'Blockers', key: 'blockers_human'},
   {title: 'Reason', key: 'signin_force_reason'},
 ];
 
@@ -20,6 +20,9 @@ export default class ReportsForcedSigninsController extends ClubhouseController 
 
   @action
   exportToCSV() {
+    this.entries.forEach(entry => {
+      entry.blockers_human = buildBlockerAuditLabels(entry.blockers).join("\n");
+    });
     this.house.downloadCsv(`${this.year}-forced-signins.csv`, CSV_COLUMNS, this.entries);
   }
 

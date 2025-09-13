@@ -6,6 +6,7 @@
 #
 FROM node:20-alpine as development
 
+
 # Install Ember CLI
 RUN npm install --global ember-cli && \
     ember --version && \
@@ -15,11 +16,16 @@ RUN npm install --global ember-cli && \
 # Set up build directory
 WORKDIR /build
 
+# The copy creates a cache in the primary layer. The only time to re-run
+# the npm install and related commands is if package*.json changes.
+COPY package*.json ./
+COPY ./patches/           ./patches/
+RUN npm install
+
 COPY ./app/               ./app/
 COPY ./config/            ./config/
 COPY ./mirage/            ./mirage/
 COPY ./public/            ./public/
-COPY ./patches/           ./patches/
 COPY ./tests/             ./tests/
 COPY ["./.ember-cli.js", "./.eslintignore", "./.eslintrc.js", "./ember-cli-build.js", "./package.json", "./package-lock.json", "./testem.js", "./"]
 
@@ -31,7 +37,7 @@ COPY ["./.ember-cli.js", "./.eslintignore", "./.eslintrc.js", "./ember-cli-build
 FROM development as build
 
 # Install dependencies & build the application
-RUN npm install && ember build --environment production;
+RUN ember build --environment production;
 
 # -----------------------------------------------------------------------------
 # This stage builds the application container using Nginx

@@ -5,10 +5,10 @@ import {setting} from 'clubhouse/utils/setting';
 import {UnauthorizedError} from '@ember-data/adapter/error';
 import ENV from 'clubhouse/config/environment';
 import dayjs from 'dayjs';
-import RSVP from 'rsvp';
 import isOffline from "clubhouse/utils/is-offline";
 import {later, cancel} from '@ember/runloop';
 import Ember from 'ember';
+import {isEmpty} from "lodash";
 
 const MESSAGE_CHECK_INTERVAL = 5 * (60 * 1000);
 
@@ -36,6 +36,33 @@ export default class ApplicationRoute extends ClubhouseRoute {
     });
   }
 
+  async _loadGoogleAnalytics() {
+    if (this._isGALoaded || !ENV.logRoutes || this.session.isStaging || this.session.isTraining) {
+      return;
+    }
+
+    const gaID = setting('GoogleAnalyticsID');
+    if (isEmpty(gaID)) {
+      return;
+    }
+
+    try {
+      await this.house.loadScript(`https://www.googletagmanager.com/gtag/js?id=${gaID}`);
+    } catch (_) {
+      console.log('Google Analytics failed to load');
+      return;
+    }
+
+    const dataLayer = window.dataLayer;
+    if (dataLayer) {
+      dataLayer.push(['js', new Date()]);
+      dataLayer.push(['config', gaID, {send_page_view: false}]);
+      dataLayer.push(['page_view', {page_location: window.location.href}]);
+    }
+
+    this._isGALoaded = true;
+  }
+
   /**
    * When a route (page) transition occurs, scroll the window back to the top,
    * and try to record the transition
@@ -56,10 +83,20 @@ export default class ApplicationRoute extends ClubhouseRoute {
       this.send('collectTitleTokens', []);
     }
 
+
     if (!ENV.logRoutes) {
       // don't bother setting up recording route transitions if not enabled.
       return;
     }
+
+    window.dataLayer?.push(['event', 'page_view', {
+      page_title: document.title,
+      page_location: window.location.href,
+      page_path: window.location.pathname,
+      page_referrer: document.referrer,
+      language: navigator.language,
+      screen_resolution: `${screen.width}x${screen.height}`,
+    }])
 
     const name = transition?.to?.name;
     if (name === 'admin.action-log' || name === 'offline') {
@@ -122,7 +159,6 @@ export default class ApplicationRoute extends ClubhouseRoute {
    *
    * beforeModel will be called only once.
    *
-   * @param {Transition} transition
    */
 
   async beforeModel(transition) {
@@ -148,12 +184,12 @@ export default class ApplicationRoute extends ClubhouseRoute {
          after the login token is successfully retrieved in {route,controller}/login.js
       */
 
-      const results = await RSVP.hash({
-        config: this.ajax.request('config'),
-        user: this.session.loadUser(true)
-      });
+      const config = await this.ajax.request('config');
+      await this.session.loadUser(true);
 
-      ENV['clientConfig'] = results.config;
+      ENV['clientConfig'] = config;
+
+      this._loadGoogleAnalytics();
 
       this.authSetup = true;
       if (!Ember.testing) {
@@ -169,7 +205,10 @@ export default class ApplicationRoute extends ClubhouseRoute {
   }
 
   async _checkForMessages() {
-    if (!this.session.showOfflineDialog) {
+    if (this.session.isAuthenticated
+      && !this.session.showOfflineDialog
+      && !this.session.isStaging
+      && !this.session.isTraining) {
       try {
         let {
           unread_message_count,
@@ -187,11 +226,16 @@ export default class ApplicationRoute extends ClubhouseRoute {
           this.session.mostRecentMessage = message;
           this.session.showNewMessageDialog = true;
         }
-      } catch (error) {
-        // ignore any errors.
+      } catch (response) {
+        if (response.status === 401) {
+          // The session has expired.
+          if (this.session.isAuthenticated) {
+            this.session.sessionExpiredNotification();
+          }
+          return;
+        }
       }
     }
-
     this._setupMessageCheck();
   }
 

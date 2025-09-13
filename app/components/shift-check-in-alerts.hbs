@@ -6,20 +6,33 @@
 {{/unless}}
 
 
-{{#if this.isInactive}}
+{{#if @person.isInactive}}
   <UiNotice @title="Conversion to active status after shift end" @icon="person-walking-arrow-loop-left">
-    {{#if @selfServe}}
-      Since you are an inactive Ranger. You will be automatically converted to active status after
-      completing a regular shift that is not a training, mentee shift, nor Cheetah Cub shift.
-    {{else}}
-      {{@person.callsign}} is {{@person.status}} status. They will be automatically converted to active status after
-      completing a regular shift that is not a training, mentee shift, nor Cheetah Cub shift.
-    {{/if}}
+    {{@person.callsign}} is currently Inactive. They will automatically be restored Active status after
+    completing a regular shift — excluding training shifts, mentee shifts, and Cheetah Cub shifts.
+  </UiNotice>
+{{else if (or @person.isInactiveExtension @person.isRetired)}}
+  <UiNotice @title="Must Walk A Cheetah Cub Shift" @icon="person-walking-arrow-loop-left" @type="warning">
+    <p>
+      {{@person.callsign}} currently has an account status of <code>{{@person.status}}</code>.
+    </p>
+
+    <p class="fw-semibold">
+      Only Cheetah Cub shifts are available for check-in.
+    </p>
+    <p>
+      <b>Restoring Active Status:</b> To be restored to active status, {{@person.callsign}} must complete a
+      Cheetah Cub shift under mentor supervision. The Mentors will assess their readiness to resume rangering and will
+      update their account status at the end of the shift.
+    </p>
   </UiNotice>
 {{/if}}
 
 {{#if (and @person.canStartShift (not @selfServe) (not @upcomingSlots.imminent) (not this.trainingNotPassed))}}
-  <UiNotice @title="{{@person.callsign}} Can Still Work An Unscheduled Shift" @icon="thumbs-up">
+  <UiNotice @title="{{@person.callsign}} Can Still Work An Unscheduled Shift"
+            @icon="thumbs-up"
+            @iconType="r"
+            @type="gray">
     <p>
       No sign-ups are scheduled for the next {{@upcomingSlots.locate_start_minutes}} minutes. It's all right!
       Scheduled sign-ups are just a way to make sure we have enough staff.

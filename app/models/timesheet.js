@@ -20,11 +20,11 @@ export const TOO_SHORT_DURATION = (15 * 60);
 export const NoteTypeLabels = {
   [NOTE_TYPE_USER]: 'User',
   [NOTE_TYPE_HQ_WORKER]: 'HQ Worker',
-  [NOTE_TYPE_WRANGLER]: 'Timesheet Wrangler',
-  [NOTE_TYPE_ADMIN]: 'Admin',
+  [NOTE_TYPE_WRANGLER]: 'Timesheet Reviewer',
+  [NOTE_TYPE_ADMIN]: 'Timesheet Reviewer',
 };
 
-export const BLOCKED_IS_RETIRED = 'is-retired'; // Person is retired, and trying to work a non-cheetah cub shift.
+export const BLOCKED_NOT_CHEETAH_CUB = 'not-cheetah-cub'; // Person is retired or inactive extension, and trying to work a non-cheetah cub shift.
 export const BLOCKED_NOT_TRAINED = 'not-trained'; // Person is not trained. Either In-Person or ART.
 export const BLOCKED_NO_BURN_PERIMETER_EXP = 'no-burn-perimeter-exp'; // Person has no burn perimeter experience
 export const BLOCKED_NO_EMPLOYEE_ID = 'no-employee-id'; // Position is paid -- person does not have employee id on file.
@@ -49,8 +49,8 @@ export function createdVia(via) {
 export function buildBlockerLabels(blockers) {
   return blockers.map(b => {
     switch (b.blocker) {
-      case BLOCKED_IS_RETIRED:
-        return 'Person is retired  and may only sign in to a Cheetah Cub shift. Once they complete the shift, the Mentors will update their status to active.';
+      case BLOCKED_NOT_CHEETAH_CUB:
+        return 'Because the person is either has an Inactive Extension or Retired status, they  must first complete a Cheetah Cub shift with the Mentors. After that, the Mentors will update their status to active if the person is deemed fix to return back to active status .';
 
       case BLOCKED_NOT_TRAINED:
         if (b.position.id === TRAINING) {
@@ -83,7 +83,10 @@ export function buildBlockerLabels(blockers) {
 export function buildBlockerAuditLabels(blockers) {
   return blockers.map(b => {
     switch (b.blocker) {
-      case BLOCKED_IS_RETIRED:
+      case BLOCKED_NOT_CHEETAH_CUB:
+        return 'Person is inactive extension or retired, non-Cheetah Cub shift attempted.';
+
+      case 'is-retired':        // old blocker status superseded by the above
         return 'Person is retired';
 
       case BLOCKED_NOT_TRAINED:

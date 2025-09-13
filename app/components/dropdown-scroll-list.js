@@ -18,15 +18,13 @@ export default class DropdownScrollListComponent extends Component {
       letters[letter].push({id: p.id, title: p.title});
     });
 
-    return Object.keys(letters).sort().map((letter) => {
-      return {letter, items: letters[letter]};
-    });
+    return Object.keys(letters).sort().map((letter) => ({letter, items: letters[letter]}));
   }
 
   @action
   scrollToItem(id, closeMenu) {
     if (this.args.openAccordion) {
-      document.querySelector(`#${id} .accordion-title`)?.click();
+      document.querySelector(`#${id} .accordion-title button`)?.click();
       setTimeout(() => this._scrollToElement(id), 350);
     } else {
       this._scrollToElement(id);

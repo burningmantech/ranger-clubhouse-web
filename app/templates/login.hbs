@@ -30,7 +30,24 @@
       The real production server can be found here:<br>
       <a href="https://ranger-clubhouse.burningman.org">ranger-clubhouse.burningman.org</a>
     </UiNotice>
+  {{else if this.isServerOnPlaya}}
+    <UiNotice @type="secondary"
+              @icon="lock-open"
+              @title="Using A Password Manager?">
+      <p>
+        During the event, the Clubhouse runs under the on-playa domain
+        <span class="d-inline-block fw-bold">ranger-clubhouse.nv.burningman.org</span> (note the <code>.nv</code>
+        portion). If you're having trouble logging in with a password manager, check that it’s not using saved
+        credentials for this <code>.nv</code> domain—those may have an outdated password.
+      </p>
 
+      <p>
+      Make sure your password manager is selecting the correct entry for the year-round domain:
+      <span class="d-inline-block fw-bold">ranger-clubhouse.burningman.org</span> (WITHOUT the <code>.nv</code> portion).
+      You may have to manually copy-n-paste the password from the password manager into the login form.
+      </p>
+      Passwords <i>are not touched</i> when the Clubhouse is migrated to and from the playa.
+    </UiNotice>
   {{/if}}
   <h2>Welcome To The Ranger Secret Clubhouse!</h2>
   {{#if this.tokenError}}

@@ -931,25 +931,28 @@ export const AFTER_EVENT_STATUS_ADVISORY = {
       return {result: SKIP};
     }
 
-    if (status === RETIRED) {
+    if (status === INACTIVE) {
       return {
-        name: 'Retired Status',
-        email: 'VCEmail',
-        result: NOTE,
-        message: htmlSafe("<p>Your status has been changed to <i>retired</i> because you have not rangered on playa in 5 or more consecutive events.</p>" +
-          "<p>If you wish to volunteer with the Rangers next event, you will need to attend a full day's " +
-          "In-Person Training, and walk a Cheetah Cub shift with a Mentor.</p><p>The Mentor Cadre will restore your active status at the end of the Cheetah Cub shift if they determine you are fit to resume rangering.</p>Contact the Volunteer Coordinators for more information.")
-      };
-    } else {
-      return {
-        name: `Inactive ${person.status === INACTIVE_EXTENSION ? 'Extension ' : ''}Status`,
+        name: `Inactive Status`,
         email: 'VCEmail',
         result: NOTE,
         message: htmlSafe(
-          `<p>Your status has been changed to <i>${person.status}</i> because you have not rangered on playa in 3 or more consecutive events.<p>` +
+          `<p>Your status has been changed to <i>${person.status}</i> because you have not rangered on playa in three or more consecutive events.<p>` +
           "<p>If you wish to volunteer with the Rangers next event, you will need to:<ul><li>Attend a full day's " +
           "In-Person Training</li><li>And ranger a shift that is neither a training nor a mentee shift. Any regular shift, such as Dirt, or similar will qualify towards restoring your active status.</li></ul>Training and mentee shifts, such as a Sandman Training and Green Dot Mentee shifts, do not count toward qualifying for restoring your active status.</p><p>Your active status will be automatically restored upon completing a shift that is neither a training nor a mentee shift.</p> Contact the Volunteer Coordinators for more information.")
       };
+    } else {
+      const isRetired = (status === RETIRED);
+      const reason = isRetired ? '<p>Your status has been changed to <i>Retired</i> because you have not rangered on playa in five or more consecutive events.</p>' : '';
+      return {
+        name: `${isRetired ? 'Retired' : 'Inactive Extension'}  Status`,
+        email: 'VCEmail',
+        result: NOTE,
+        message: htmlSafe(reason +
+          `<p>If you wish to volunteer with the Rangers next event, you will need to attend a full day's `+
+          `In-Person Training, and walk a Cheetah Cub shift with a Mentor.</p><p>The Mentor Cadre will restore your active status at the end of the Cheetah Cub shift if they determine you are fit to resume rangering.</p>Contact the Volunteer Coordinators for more information.`)
+      };
+
     }
   }
 }

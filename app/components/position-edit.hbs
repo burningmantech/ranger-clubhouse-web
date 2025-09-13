@@ -132,6 +132,25 @@
     </FormRow>
   </fieldset>
   <fieldset>
+    <legend>Shift Check-In</legend>
+    <FormRow>
+      <div class="col-12">
+        <f.checkbox @name="no_training_required"
+                    @label="In-Person training not required to check-in for this position (note, all positions with type Training automatically do not require passing an In-Person training) "/>
+        <f.checkbox @name="not_timesheet_eligible"
+                    @label="Used only for scheduling. Timesheet entries may not be created."
+        />
+        <f.checkbox @name="allow_echelon"
+                    @label="Echelon volunteers are permitted to work this position even if they haven’t completed In-Person Training or ART."
+        />
+        <f.checkbox @name="ignore_time_check"
+                    @label="Early/late check-in time is not enforced. Shift check-in may be any time, regardless of whether the check-in is early or late."
+        />
+      </div>
+    </FormRow>
+  </fieldset>
+
+  <fieldset>
     <legend>Other Flags</legend>
     <FormRow>
       <div class="col-12">
@@ -143,18 +162,10 @@
                     @label="For the Shift Lead Report: indicates the person holds this position of interest"/>
         <f.checkbox @name="on_trainer_report"
                     @label="For the Trainer's Report: indicates the position is relevant to trainers"/>
-        <f.checkbox @name="no_training_required"
-                    @label="In-Person training not required to check-in for this position (note, all positions with type Training automatically do not require passing an In-Person training) "/>
-        <f.checkbox @name="not_timesheet_eligible"
-                    @label="Used only for scheduling. Timesheet entries may not be created."
-        />
-        <f.checkbox @name="allow_echelon"
-                    @label="Echelon volunteers are permitted to work this position even if they haven’t completed In-Person Training or ART."
-        />
         <f.checkbox @name="has_online_course"
-                    @label="Has Online Course - only applicable to ARTs. Online Course button will appear in the ARTs table on the dashboard.",
+                    @label="Has Online Course - only applicable to ARTs. Online Course button will appear in the ARTs table on the dashboard."
+                    ,
         />
-
       </div>
     </FormRow>
   </fieldset>
