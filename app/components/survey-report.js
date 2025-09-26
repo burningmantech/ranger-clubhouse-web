@@ -298,6 +298,7 @@ export default class SurveyReport extends Component {
       if (q.type === TYPE_RATING) {
         return;
       }
+
       q.slots?.forEach((s) => {
         s.responses?.forEach((r) => {
           const {person} = r;
@@ -321,17 +322,7 @@ export default class SurveyReport extends Component {
     const rows = Object.values(responses);
 
     rows.sort((a, b) => {
-      const dateCmp = a.begins.localeCompare(b.begins);
-      if (dateCmp) {
-        return dateCmp;
-      }
-
-      const trainer = a.trainer_callsign.localeCompare(b.trainer_callsign);
-      if (trainer) {
-        return trainer;
-      }
-
-      return a.trainee_callsign.localeCompare(b.trainee_callsign);
+      return a.begins.localeCompare(b.begins) || a.trainee_callsign.localeCompare(b.trainee_callsign);
     });
 
     this.questions.forEach((q) => {
