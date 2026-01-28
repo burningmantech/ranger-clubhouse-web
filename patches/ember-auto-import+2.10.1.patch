@@ -1,5 +1,5 @@
 diff --git a/node_modules/ember-auto-import/js/webpack.js b/node_modules/ember-auto-import/js/webpack.js
-index 24d4238..281b90a 100644
+index 4ccbe91..f294b4b 100644
 --- a/node_modules/ember-auto-import/js/webpack.js
 +++ b/node_modules/ember-auto-import/js/webpack.js
 @@ -201,6 +201,7 @@ class WebpackBundler extends broccoli_plugin_1.default {

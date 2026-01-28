@@ -75,6 +75,7 @@ export default class WysiwygEditorComponent extends Component {
       const uiCSS = (await import('tinymce/skins/ui/oxide/content.min.css?raw')).default;
 
       editorModule.init({
+        license_key: 'gpl',
         selector: '#' + this.elementId,
         content_css: false,
         content_style: `${contentCSS}\n${uiCSS}`,

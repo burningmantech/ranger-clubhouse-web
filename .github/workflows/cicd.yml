@@ -16,7 +16,7 @@ jobs:
     steps:
 
       - name: Harden CI
-        uses: step-security/harden-runner@v2.13.0
+        uses: step-security/harden-runner@v2.13.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -47,7 +47,7 @@ jobs:
 
     steps:
       - name: Harden CI
-        uses: step-security/harden-runner@v2.13.0
+        uses: step-security/harden-runner@v2.13.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -80,7 +80,7 @@ jobs:
     steps:
 
       - name: Harden CI
-        uses: step-security/harden-runner@v2.13.0
+        uses: step-security/harden-runner@v2.13.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -122,7 +122,7 @@ jobs:
         run: docker image save ranger-clubhouse-web:dev | gzip -9 > docker_image.tgz
 
       - name: Upload Docker image artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: docker
           path: docker_image.tgz
@@ -138,7 +138,7 @@ jobs:
     steps:
 
       - name: Harden CI
-        uses: step-security/harden-runner@v2.13.0
+        uses: step-security/harden-runner@v2.13.1
         with:
           disable-sudo: true
           egress-policy: block
@@ -172,7 +172,7 @@ jobs:
     steps:
 
       - name: Harden CI
-        uses: step-security/harden-runner@v2.13.0
+        uses: step-security/harden-runner@v2.13.1
         with:
           egress-policy: audit
 
