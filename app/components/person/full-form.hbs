@@ -220,7 +220,7 @@ Everyone else will see person/simple-form
         {{#if @person.isSaving}}
           <LoadingIndicator/>
         {{/if}}
-        {{#if (has-role "admin")}}
+        {{#if (has-role "tech-ninja")}}
           <div class="ms-auto">
             <UiDeleteButton @onClick={{@removePersonAction}} />
           </div>
