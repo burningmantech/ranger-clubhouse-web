@@ -1,10 +1,3 @@
-<div class="loading-pane">
-  <div class="loading-text">
-    {{#if @text}}
-      {{@text}}
-    {{else}}
-      First, do nothing. We're loading {{or @item "the information"}}.
-    {{/if}}
-  </div>
-  <div class="loading-spinner"></div>
-</div>
+<UiLoading @variant="section"
+           @text={{if @text @text (concat "First, do nothing. We're loading " (or @item "the information") ".")}}
+           ...attributes />

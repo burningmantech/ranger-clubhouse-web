@@ -1,0 +1,18 @@
+<div class="ui-empty-state text-center py-4" ...attributes>
+  {{#if @icon}}
+    <div class="ui-empty-state-icon mb-2">
+      {{fa-icon @icon size="2x" type=@iconType}}
+    </div>
+  {{/if}}
+  {{#if @title}}
+    <div class="ui-empty-state-title fw-semibold fs-5">{{@title}}</div>
+  {{/if}}
+  {{#if @description}}
+    <div class="ui-empty-state-description text-muted mt-1">{{@description}}</div>
+  {{/if}}
+  {{#if (has-block)}}
+    <div class="ui-empty-state-action mt-3">
+      {{yield}}
+    </div>
+  {{/if}}
+</div>
