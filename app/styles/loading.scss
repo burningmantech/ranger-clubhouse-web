@@ -1,0 +1,40 @@
+// Loading state components
+
+.loading-pane {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+}
+
+.loading-text {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+  color: var(--bs-secondary-color, #6c757d);
+}
+
+.loading-spinner {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0.3rem solid var(--bs-secondary-color, #6c757d);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: loading-spin 0.75s linear infinite;
+}
+
+@keyframes loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// Empty state component
+.ui-empty-state {
+  color: var(--bs-secondary-color, #6c757d);
+}
+
+.ui-empty-state-title {
+  color: var(--bs-body-color, #212529);
+}

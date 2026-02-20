@@ -1,0 +1,16 @@
+{{#if this.errorList.length}}
+  <UiAlert @type="danger" ...attributes>
+    {{#if (gt this.errorList.length 1)}}
+      <ul class="mb-0">
+        {{#each this.errorList as |msg|}}
+          <li>{{msg}}</li>
+        {{/each}}
+      </ul>
+    {{else}}
+      {{get this.errorList 0}}
+    {{/if}}
+    {{#if @onDismiss}}
+      <button type="button" class="btn-close float-end" aria-label="Dismiss" {{on "click" @onDismiss}}></button>
+    {{/if}}
+  </UiAlert>
+{{/if}}

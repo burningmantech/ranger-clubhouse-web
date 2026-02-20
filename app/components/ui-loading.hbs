@@ -1,0 +1,18 @@
+{{#if this.isInline}}
+  <span class="d-inline-block" aria-live="polite" ...attributes>
+    {{this.text}} <SpinIcon />
+  </span>
+{{else if this.isSection}}
+  <div class="loading-pane" aria-live="polite" ...attributes>
+    <div class="loading-text">{{this.text}}</div>
+    <div class="loading-spinner"></div>
+  </div>
+{{else if this.isModal}}
+  <ModalDialog as |Modal|>
+    <Modal.body>
+      <div class="text-center" aria-live="polite" ...attributes>
+        {{this.text}} <SpinIcon />
+      </div>
+    </Modal.body>
+  </ModalDialog>
+{{/if}}
