@@ -245,6 +245,8 @@ export default class ProspectiveApplicationModel extends Model {
   @attr('', {readOnly: true}) notes;
   @attr('', {readOnly: true}) screened_handles;
 
+  @attr('') problem_handles;
+
   get hasStopStatus() {
     return this.status === STATUS_REJECT_PRE_BONK
       || this.status === STATUS_REJECT_UBERBONKED

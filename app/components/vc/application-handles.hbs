@@ -64,6 +64,18 @@
               </ul>
             </div>
           {{/if}}
+        {{#if @application.problem_handles}}
+          <div class="text-danger">
+            {{fa-icon "exclamation" right=1}} The following handles are problematic:
+            <ul>
+              {{#each @application.problem_handles as |h|}}
+                {{#each h.problems  as |p|}}
+                  <li><b>{{h.handle}}</b>: {{p}}</li>
+                {{/each}}
+              {{/each}}
+            </ul>
+          </div>
+        {{/if}}
           <table>
             <tbody>
             {{#each @application.screened_handles as |handle|}}
@@ -324,6 +336,22 @@
             {{fa-icon "hand-point-right" right=1}} Account has been created. No more handles should be recorded.
           </UiAlert>
         {{/if}}
+        <div class="mb-2">
+          {{#if @application.problem_handles}}
+            <div class="mb-2 text-danger">
+            {{fa-icon "exclamation" right=1}} The following handles are problematic:
+              <ul>
+                {{#each @application.problem_handles as |h|}}
+                  {{#each h.problems  as |p|}}
+                    <li><b>{{h.handle}}</b>: {{p}}</li>
+                  {{/each}}
+                {{/each}}
+              </ul>
+            </div>
+          {{else}}
+            {{fa-icon "check" right=1}} No problematic handles found.
+          {{/if}}
+        </div>
         <div class="row flex-row">
           <f.textarea @name="handles"
                       @label="Extracted Handles:"
