@@ -7,7 +7,7 @@
         {{/each}}
       </ul>
     {{else}}
-      {{this.errorList.[0]}}
+      {{get this.errorList 0}}
     {{/if}}
     {{#if @onDismiss}}
       <button type="button" class="btn-close float-end" aria-label="Dismiss" {{on "click" @onDismiss}}></button>

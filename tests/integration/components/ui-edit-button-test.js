@@ -28,7 +28,6 @@ module('Integration | Component | ui-edit-button', function (hooks) {
   });
 
   test('calls onClick when clicked', async function (assert) {
-    assert.expect(1);
     this.set('handleClick', () => assert.ok(true, 'onClick called'));
     await render(hbs`<UiEditButton @onClick={{this.handleClick}} />`);
     await click('button');

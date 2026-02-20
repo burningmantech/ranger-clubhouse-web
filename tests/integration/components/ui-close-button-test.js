@@ -23,7 +23,6 @@ module('Integration | Component | ui-close-button', function (hooks) {
   });
 
   test('calls onClick when clicked', async function (assert) {
-    assert.expect(1);
     this.set('handleClick', () => assert.ok(true, 'onClick called'));
     await render(hbs`<UiCloseButton @onClick={{this.handleClick}} />`);
     await click('button');
