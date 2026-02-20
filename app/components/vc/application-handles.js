@@ -36,6 +36,7 @@ export default class VcApplicationHandlesComponent extends Component {
   @tracked showEditAndApproveCallsign;
 
   @tracked extractedHandlesForm = null;
+  @tracked handleProblems;
 
   moreHandlesValidation = {
     message: [validatePresence({presence: true, message: 'Please supply a reason / message.'})]
@@ -186,9 +187,9 @@ export default class VcApplicationHandlesComponent extends Component {
       });
       await application.reload();
       if (application.hasPersonalInfoIssues) {
-       this.modal.info('Personal Information Issue',
-         'The application is on hold because one or more Personal Info fields are blank. While the callsign has been approved, the applicant has not been notified of the assignment. An email has been sent asking for the missing info. Once they respond, the application should be updated and approved.');
-      }  else {
+        this.modal.info('Personal Information Issue',
+          'The application is on hold because one or more Personal Info fields are blank. While the callsign has been approved, the applicant has not been notified of the assignment. An email has been sent asking for the missing info. Once they respond, the application should be updated and approved.');
+      } else {
         this.toast.success('The callsign has been updated and approved.');
       }
       this.showEditAndApproveCallsign = false;
@@ -215,11 +216,13 @@ export default class VcApplicationHandlesComponent extends Component {
 
   @action
   async extractHandles() {
+    const {application} = this.args;
     try {
       this.isSubmitting = true;
-      const { handles } = await this.ajax.request(`prospective-application/handles-extract`, { data: { text: this.args.application.handles}});
-      this.extractedHandlesForm = EmberObject.create({ handles: handles.join("\n") });
-    } catch(response) {
+      const {handles} = await this.ajax.request(`prospective-application/handles-extract`, {data: {text: application.handles}});
+      this.extractedHandlesForm = EmberObject.create({handles: handles.map((h) => h[0]).join("\n") });
+      application.problem_handles = handles.filter((h) => h[1].length > 0).map((h) => ({ handle: h[0], problems: h[1]}));
+    } catch (response) {
       this.house.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
@@ -235,7 +238,7 @@ export default class VcApplicationHandlesComponent extends Component {
   async saveExtractedHandles(model) {
     try {
       this.isSubmitting = true;
-      const { application } = this.args;
+      const {application} = this.args;
       application.handles = model.handles;
       await application.save();
       this.toast.success('The handles has been saved successfully.');
