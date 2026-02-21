@@ -426,7 +426,7 @@ export default class SearchItemBarComponent extends Component {
         }
 
         if (!isEmpty(v.sticker_number)) {
-          numbers.push(`Sticker #${v.sticker_number}`);
+          numbers.push(`Permit #${v.sticker_number}`);
         }
 
         return {

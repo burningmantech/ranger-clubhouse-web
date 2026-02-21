@@ -180,10 +180,12 @@
           or more. Longer for non-US license holders. Enter all information carefully, denials most often
           occur due to errors when submitting the form.
         </p>
-        <p class="text-danger">
-          The deadline to submit a MVR Request is {{shift-format this.resultInfo.mvr_deadline}} (Pacific).
-          No exceptions will be made once the deadline has passed.
-        </p>
+        {{#if this.resultInfo.mvr_deadline}}
+          <p class="text-danger">
+            The deadline to submit a MVR Request is {{shift-format this.resultInfo.mvr_deadline}} (Pacific).
+            No exceptions will be made once the deadline has passed.
+          </p>
+        {{/if}}
       </Modal.body>
       <Modal.footer>
         <UiCloseButton @onClick={{this.closeMVRInfo}} @size="md"/>

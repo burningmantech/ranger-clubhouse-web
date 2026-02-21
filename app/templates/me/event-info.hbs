@@ -159,7 +159,7 @@
             {{#if this.eventInfo.signed_motorpool_agreement}}
               <UiBadge @text="Authorized" @type="success"/>
               You are authorized to drive golf carts &amp; gators (UTVs) on playa for
-              Ranger business. Vehicle must have a valid Burning Man driving sticker.
+              Ranger business. Vehicle must have a valid Burning Man driving permit.
             {{else}}
               <UiBadge @text="Not Authorized" @type="warning"/>
               You are NOT authorized to drive golf carts &amp; gators (UTVs) on
@@ -177,8 +177,8 @@
                 <UiBadge @text="Authorized" @type="success"/>
                 You are authorized to operate cars and trucks (including your own
                 personal vehicle, provided you have an approved Personal Vehicle Request) on the playa for Ranger
-                business. The vehicle must be equipped with a valid Burning Man driving sticker issued for the
-                current event. Please note that stickers are not transferable from year to year.
+                business. The vehicle must be equipped with a valid Burning Man driving permit issued for the
+                current event. Please note that permits are not transferable from year to year.
               {{else if this.eventInfo.mvr_eligible}}
                 <UiBadge @text="MVR Eligible" @type="success"/>
                 You are eligible to submit a MVR request.
