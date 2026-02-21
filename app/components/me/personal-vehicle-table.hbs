@@ -53,13 +53,13 @@
             {{vehicle.response}}
           </dd>
         {{/if}}
-        <dt>Driving Sticker</dt>
+        <dt>Driving Permit</dt>
         <dd>
           {{#if vehicle.isRejected}}
             Denied
           {{else if (or (eq vehicle.driving_sticker "prepost") (eq vehicle.driving_sticker "staff"))}}
             {{if vehicle.isApproved "Approved" "Awaiting approval"}}
-            for a {{if (eq vehicle.driving_sticker "prepost") "Pre/Post" "Staff"}} sticker.
+            for a {{if (eq vehicle.driving_sticker "prepost") "Pre/Post" "Staff"}} permit.
           {{else}}
             Other
             <p>

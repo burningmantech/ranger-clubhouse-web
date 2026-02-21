@@ -70,7 +70,7 @@
                   @disabled={{eq f.model.type "personal"}}
           />
           <f.text @name="sticker_number"
-                  @label="Driving Sticker #"
+                  @label="Driving Permit #"
                   @size={{10}}
                   @fieldSize="sm"
           />
@@ -157,7 +157,7 @@
         <legend>Personal Vehicle Use Items (Stickers &amp; Other Items)</legend>
         <FormRow>
           <f.radioGroup @name="driving_sticker"
-                        @label="Driving Sticker"
+                        @label="Driving Permit"
                         @fixedLabel={{true}}
                         @options={{this.drivingStickerOptions}}
                         @inline={{true}}/>

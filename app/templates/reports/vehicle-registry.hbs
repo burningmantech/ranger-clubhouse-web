@@ -47,7 +47,7 @@
         <div class="vehicle-registry-status">Status</div>
         <div class="vehicle-registry-vehicle">Vehicle/Class/Lic.</div>
         <div class="vehicle-registry-rental">DPW Request ID</div>
-        <div class="vehicle-registry-sticker">Driving Sticker / #</div>
+        <div class="vehicle-registry-sticker">Driving Permit / #</div>
         <div class="vehicle-registry-logo">Ranger Logo</div>
         <div class="vehicle-registry-fuel-chit">Fuel Chit</div>
         <div class="vehicle-registry-amber-light">Amber Light</div>
@@ -103,7 +103,7 @@
           </div>
           <div class="vehicle-registry-sticker">
             {{#if this.session.isSmallScreen}}
-              <b>Driving Sticker / #</b><br>
+              <b>Driving Permit / #</b><br>
             {{/if}}
             {{#if vehicle.isRejected}}
               -
@@ -163,7 +163,7 @@
               {{/if}}
               <UiButton @type="secondary" @size="sm"
                         @onClick={{fn this.editStickerAction vehicle}}>
-                {{fa-icon "plus" right=1}} View / Add Sticker
+                {{fa-icon "plus" right=1}} View / Add Permit
               </UiButton>
             </UiButtonRow>
           </div>

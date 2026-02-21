@@ -51,7 +51,7 @@ export default class SearchVehiclesRoute extends ClubhouseRoute {
 
     controller.set('vehicleForm', {number: this.number});
     if (notFound) {
-      controller.set('vehicleNotFound', (this.vehicleId ? `Vehicle Record #${this.vehicleId}` : `License, Rental, or Sticker # ${this.numbers}`));
+      controller.set('vehicleNotFound', (this.vehicleId ? `Vehicle Record #${this.vehicleId}` : `License, Rental, or Permit # ${this.numbers}`));
     } else {
       controller.set('vehicleNotFound', null);
     }

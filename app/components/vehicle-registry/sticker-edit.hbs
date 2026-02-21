@@ -24,7 +24,7 @@
       {{#unless @entry.isRejected}}
         <div class="row mb-2">
           <div class="col-6 col-xl-auto mb-2">
-            <b>Driving Sticker</b><br>
+            <b>Driving Permit</b><br>
             {{#if (eq @entry.driving_sticker "none")}}
               <i>- none -</i>
             {{else}}
@@ -69,14 +69,14 @@
         {{#if (not-eq @entry.driving_sticker "none")}}
           <FormRow class="mt-3">
             <f.text @name="sticker_number"
-                    @label="Enter STAFF Driving Sticker #"
+                    @label="Enter STAFF Driving Permit #"
                     @size={{15}}
                     @autofocus={{true}}
             />
           </FormRow>
         {{else}}
           <div class="mt-2">
-            <b>No driving sticker has been requested.</b>
+            <b>No driving permit has been requested.</b>
           </div>
         {{/if}}
       {{/unless}}
