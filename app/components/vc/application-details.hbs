@@ -50,7 +50,7 @@
         {{#if @application.isStatusHoldQualificationIssue}}
           Applicant asked to confirm attendance.
         {{else if (not @application.isBRCExperienceOkay)}}
-          <UiButton @onClick={{this.qualificationIssue}} @size="sm">Ask to confirm attendance</UiButton>
+          <UiButton @onClick={{fn this.openStatusAction "qualification-issue"}} @size="sm">Ask to confirm attendance</UiButton>
         {{/if}}
       </t.column>
       <t.label>Age</t.label>
@@ -63,7 +63,7 @@
             {{#if @application.isStatusHoldAgeIssue}}
               Applicant asked to confirm age.
             {{else}}
-              <UiButton @onClick={{this.ageIssue}} @size="sm">Ask for age confirmation</UiButton>
+              <UiButton @onClick={{fn this.openStatusAction "age-issue"}} @size="sm">Ask for age confirmation</UiButton>
             {{/if}}
           </div>
         {{/if}}
@@ -146,27 +146,27 @@
           Approve for Callsign Processing
         </UiButton>
         <UiDropdownButton @label="Reject Application" as |dd|>
-          <dd.item @onSelect={{this.rejectQualification}}>
+          <dd.item @onSelect={{fn this.openStatusAction "reject-unqualified"}}>
             Lacking Event Experience
           </dd.item>
           {{!--
-          <dd.item @onSelect={{this.rejectRegional}}>
+          <dd.item @onSelect={{fn this.openStatusAction "reject-regional" true}}>
             Failed Regional Verification
           </dd.item>
           --}}
-          <dd.item @onSelect={{this.rejectTooYoung}}>
+          <dd.item @onSelect={{fn this.openStatusAction "reject-too-young"}}>
             Too Young (&lt; 18 years old)
           </dd.item>
-          <dd.item @onSelect={{this.rejectPreBonk}}>
+          <dd.item @onSelect={{fn this.openStatusAction "reject-pre-bonk"}}>
             Pre-Bonk
           </dd.item>
-          <dd.item @onSelect={{this.rejectUberbonk}}>
+          <dd.item @onSelect={{fn this.openStatusAction "reject-uber-bonked"}}>
             Uberbonk
           </dd.item>
           <dd.item @onSelect={{this.rejectReturningRanger}}>
             Returning Ranger
           </dd.item>
-          <dd.item @onSelect={{this.rejectDuplicateApplication}}>
+          <dd.item @onSelect={{fn this.openStatusAction "duplicate"}}>
             Duplicate Application
           </dd.item>
         </UiDropdownButton>
@@ -174,13 +174,13 @@
         <UiButton @type="secondary" @size="sm" @onClick={{this.requestRRNCheck}}>Request RRN Check</UiButton>
         --}}
         <UiDropdownButton @label="Hold Application" as |dd|>
-          <dd.item @onSelect={{this.whyRangerIssue}}>
+          <dd.item @onSelect={{fn this.openStatusAction "why-ranger-question" true}}>
             Why Ranger Answer Issue
           </dd.item>
-          <dd.item @onSelect={{this.qualificationIssue}}>
+          <dd.item @onSelect={{fn this.openStatusAction "qualification-issue"}}>
             Ask for Event Confirmation
           </dd.item>
-          <dd.item @onSelect={{this.ageIssue}}>
+          <dd.item @onSelect={{fn this.openStatusAction "age-issue"}}>
             Ask for Age Confirmation
           </dd.item>
         </UiDropdownButton>
@@ -245,79 +245,15 @@
 </EditableSection>
 
 {{#if this.showProblemReviewDialog}}
-  <ModalDialog @onEscape={{this.cancelProblemReviewDialog}} as |Modal|>
-    <ChForm @formId="reason"
-            @formFor={{this.messageForm}}
-            @validator={{this.messageValidation}}
-            @onSubmit={{this.submitProblemReview}} as |f|>
-      <Modal.title>Mark Paragraph as Problematic</Modal.title>
-      <Modal.body>
-        <div class="row">
-          <f.textarea @name="message"
-                      @label="Why is the paragraph problematic?"
-                      @rows={{10}}
-                      @cols={{80}}
-                      @autofocus={{true}}
-          />
-        </div>
-      </Modal.body>
-      <Modal.footer @align="start">
-        <f.submit @label="Mark As Problem"/>
-        <UiCancelButton @onClick={{this.cancelProblemReviewDialog}} />
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
+  <Vc::ApplicationProblemReviewDialog @application={{@application}} @onClose={{this.cancelProblemReviewDialog}} />
 {{/if}}
 
 {{#if this.showStatusWithMessageDialog}}
-  <ModalDialog @onEscape={{this.cancelStatusMessageDialog}} as |Modal|>
-    <ChForm @formId="reason"
-            @formFor={{this.messageForm}}
-            @validator={{this.messageValidation}}
-            @onSubmit={{this.updateStatusWithMessage}} as |f|>
-      <Modal.title>Update Status</Modal.title>
-      <Modal.body>
-        {{#if this.askForMessage}}
-          <p>
-            You are to update the status to "{{this.statusLabel this.newStatus}}".
-          </p>
-          <p>
-            The new status requires a reason / message to be sent to the applicant. The email's from address
-            will be
-            <VcEmail/>
-            .
-          </p>
-          <div class="row">
-            <f.textarea @name="message"
-                        @label="Your message to the applicant:"
-                        @rows={{10}}
-                        @cols={{80}}
-                        @autofocus={{true}}
-            />
-          </div>
-        {{else}}
-          Please confirm updating the status to "{{this.statusLabel this.newStatus}}"
-        {{/if}}
-        <div class="mt-3">
-          {{#if this.doesStatusSendEmail}}
-            This action will email the applicant.
-          {{else}}
-            No emails will be sent to the applicant.
-          {{/if}}
-        </div>
-      </Modal.body>
-      <Modal.footer @align="start">
-        <UiButtonRow>
-          <f.submit @label={{if this.askForMessage "Submit" "Confirm"}} />
-          {{#if this.doesStatusSendEmail}}
-            <UiButton @onClick={{fn this.previewEmailAction f.model}} @type="secondary">
-              Preview Email
-            </UiButton>
-          {{/if}}
-          <UiCancelButton @onClick={{this.cancelStatusMessageDialog}} />
-        </UiButtonRow>
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
+  <Vc::ApplicationStatusMessageDialog
+    @application={{@application}}
+    @status={{this.newStatus}}
+    @askForMessage={{this.askForMessage}}
+    @onClose={{this.cancelStatusMessageDialog}}
+  />
 {{/if}}
 

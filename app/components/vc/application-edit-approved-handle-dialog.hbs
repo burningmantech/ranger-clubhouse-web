@@ -1,0 +1,24 @@
+<ModalDialog @onEscape={{@onClose}} as |Modal|>
+  <ChForm @formId="approved"
+          @formFor={{this.approvedHandleForm}}
+          @onSubmit={{this.submitApprovedHandle}} as |f|>
+    <Modal.title>Update Approved Callsign</Modal.title>
+    <Modal.body>
+      <Vc::AccountCreatedWarning @application={{@application}} @message="Updating the callsign here will not update the Clubhouse account." />
+      <p>
+        Updating the approved callsign field will not email the applicant, nor update the application's status.
+      </p>
+      <div class="row">
+        <f.text @name="approved_handle"
+                @label="Approved Callsign"
+                @size={{40}}
+                @autofocus={{true}}
+        />
+      </div>
+    </Modal.body>
+    <Modal.footer @align="start">
+      <f.submit @label="Submit"/>
+      <UiCancelButton @onClick={{@onClose}} />
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>

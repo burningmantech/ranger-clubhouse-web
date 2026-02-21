@@ -1,0 +1,38 @@
+<ModalDialog @onEscape={{@onClose}} as |Modal|>
+  <ChForm @formId="approved"
+          @formFor={{this.approvedHandleForm}}
+          @validator={{this.approvedHandleValidation}}
+          @onSubmit={{this.submitHandleAndApprove}} as |f|>
+    <Modal.title>Update Approved Callsign &amp; Approve Application</Modal.title>
+    <Modal.body>
+      <Vc::AccountCreatedWarning @application={{@application}} @message="Updating the callsign here will not update the Clubhouse account." />
+      <p>
+        {{#if @application.hasPersonalInfoIssues}}
+          The callsign will be approved, HOWEVER, the application has missing Personal Info fields. The applicant
+          will be emailed asking to supply the missing information. Once they respond, the application should be
+          updated and approved.
+        {{else}}
+          The callsign will be updated, the application's status marked as ready for account creation, and
+          the applicant emailed.
+        {{/if}}
+      </p>
+      <div class="row">
+        <f.text @name="approved_handle"
+                @label="Approved Handle"
+                @size={{40}}
+                @autofocus={{true}}
+        />
+      </div>
+    </Modal.body>
+    <Modal.footer @align="start">
+      <f.submit @label="Update &amp; Approve"/>
+      <UiCancelButton @onClick={{@onClose}} />
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting the request
+  </LoadingDialog>
+{{/if}}

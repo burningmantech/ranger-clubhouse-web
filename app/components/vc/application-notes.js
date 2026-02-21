@@ -52,7 +52,7 @@ export default class VcApplicationNotesComponent extends Component {
         data.type = this.args.isComment ? TYPE_VC_COMMENT : TYPE_VC;
         await this.ajax.post(this.url, {data});
       }
-      this._reloadApplication();
+      this.args.application.reload();
       this.showDialog = false;
     } catch (response) {
       this.house.handleErrorResponse(response);
@@ -76,7 +76,7 @@ export default class VcApplicationNotesComponent extends Component {
             prospective_application_note_id: note.id
           }
         });
-        this._reloadApplication();
+        this.args.application.reload();
         this.toast.success(`The ${name} was successfully deleted.`);
       } catch (response) {
         this.house.handleErrorResponse(response);
@@ -97,9 +97,5 @@ export default class VcApplicationNotesComponent extends Component {
   @action
   isMyNote(note) {
     return note.person_id === this.session.userId;
-  }
-
-  _reloadApplication() {
-    this.args.application.reload();
   }
 }

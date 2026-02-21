@@ -1,0 +1,22 @@
+<ModalDialog @onEscape={{@onClose}} as |Modal|>
+  <ChForm @formId="reason"
+          @formFor={{this.messageForm}}
+          @validator={{this.messageValidation}}
+          @onSubmit={{this.submitProblemReview}} as |f|>
+    <Modal.title>Mark Paragraph as Problematic</Modal.title>
+    <Modal.body>
+      <div class="row">
+        <f.textarea @name="message"
+                    @label="Why is the paragraph problematic?"
+                    @rows={{10}}
+                    @cols={{80}}
+                    @autofocus={{true}}
+        />
+      </div>
+    </Modal.body>
+    <Modal.footer @align="start">
+      <f.submit @label="Mark As Problem"/>
+      <UiCancelButton @onClick={{@onClose}} />
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>

@@ -1,0 +1,59 @@
+<ModalDialog @onEscape={{@onClose}} as |Modal|>
+  <ChForm @formId="reason"
+          @formFor={{this.messageForm}}
+          @validator={{this.messageValidation}}
+          @onSubmit={{this.updateStatusWithMessage}} as |f|>
+    <Modal.title>Update Status</Modal.title>
+    <Modal.body>
+      {{#if @askForMessage}}
+        <p>
+          You are to update the status to "{{application-status-label @status}}".
+        </p>
+        <p>
+          The new status requires a reason / message to be sent to the applicant. The email's from address
+          will be
+          <VcEmail/>
+          .
+        </p>
+        <div class="row">
+          <f.textarea @name="message"
+                      @label="Your message to the applicant:"
+                      @rows={{10}}
+                      @cols={{80}}
+                      @autofocus={{true}}
+          />
+        </div>
+      {{else}}
+        Please confirm updating the status to "{{application-status-label @status}}"
+      {{/if}}
+      <div class="mt-3">
+        {{#if this.doesStatusSendEmail}}
+          This action will email the applicant.
+        {{else}}
+          No emails will be sent to the applicant.
+        {{/if}}
+      </div>
+    </Modal.body>
+    <Modal.footer @align="start">
+      <UiButtonRow>
+        <f.submit @label={{if @askForMessage "Submit" "Confirm"}} />
+        {{#if this.doesStatusSendEmail}}
+          <UiButton @onClick={{fn this.previewEmailAction f.model}} @type="secondary">
+            Preview Email
+          </UiButton>
+        {{/if}}
+        <UiCancelButton @onClick={{@onClose}} />
+      </UiButtonRow>
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>
+
+{{#if this.emailToPreview}}
+  <Vc::ApplicationEmailPreview @emailHtml={{this.emailToPreview}} @onClose={{this.closePreviewEmailDialog}} />
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting your request
+  </LoadingDialog>
+{{/if}}

@@ -1,0 +1,29 @@
+<ModalDialog @onEscape={{@onClose}} as |Modal|>
+  <ChForm @formId="more_handles"
+          @formFor={{this.handlesForm}}
+          @validator={{this.handlesValidation}}
+          @onSubmit={{this.submitHandlesList}} as |f|>
+    <Modal.title>Edit Handles List</Modal.title>
+    <Modal.body>
+      <Vc::AccountCreatedWarning @application={{@application}} @message="No more handles should be recorded." />
+      <div class="row">
+        <f.textarea @name="handles"
+                    @label="Handles to add to the application, each handle should be on a separate line:"
+                    @rows={{10}}
+                    @cols={{80}}
+                    @autofocus={{true}}
+        />
+      </div>
+    </Modal.body>
+    <Modal.footer @align="start">
+      <f.submit @label="Submit"/>
+      <UiCancelButton @onClick={{@onClose}} />
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting the request
+  </LoadingDialog>
+{{/if}}

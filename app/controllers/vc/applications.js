@@ -1,8 +1,6 @@
 import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
 import EmberObject, {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {StatusLabels} from 'clubhouse/models/prospective-application';
-
 export default class VcApplicationsController extends ClubhouseController {
   @tracked searchForm = EmberObject.create({query: ''});
   @tracked isSubmitting = false;
@@ -48,9 +46,5 @@ export default class VcApplicationsController extends ClubhouseController {
   clearResults() {
     this.noneFound = false;
     this.results = [];
-  }
-
-  statusLabel(status) {
-    return StatusLabels[status] ?? `Bug: ${status}`;
   }
 }
