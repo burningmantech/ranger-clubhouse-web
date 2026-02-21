@@ -1,0 +1,17 @@
+<ModalDialog @onEscape={{@onClose}} as |Modal|>
+  <ChForm @formId="assign" @formFor={{this.assignmentForm}} @onSubmit={{this.submitAssignment}} as |f|>
+    <Modal.title>Update Application Assignment</Modal.title>
+    <Modal.body>
+      <FormRow>
+        <f.select @name="assigned_person_id"
+                  @label="Volunteer Coordinator to assign to:"
+                  @options={{@vcOptions}}
+        />
+      </FormRow>
+    </Modal.body>
+    <Modal.footer @align="start">
+      <f.submit @label="Update"/>
+      <UiCancelButton @onClick={{@onClose}} />
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>

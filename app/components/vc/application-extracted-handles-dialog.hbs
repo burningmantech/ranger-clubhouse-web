@@ -1,0 +1,55 @@
+<ModalDialog @onEscape={{@onClose}} as |Modal|>
+  <ChForm @formId="handles"
+          @formFor={{@extractedHandlesForm}}
+          @validator={{this.handlesValidation}}
+          @onSubmit={{this.saveExtractedHandles}} as |f|>
+    <Modal.title>Edit Handles List</Modal.title>
+    <Modal.body>
+      <Vc::AccountCreatedWarning @application={{@application}} @message="No more handles should be recorded." />
+      <div class="mb-2">
+        {{#if @application.problem_handles}}
+          <div class="mb-2 text-danger">
+          {{fa-icon "exclamation" right=1}} The following handles are problematic:
+            <ul>
+              {{#each @application.problem_handles as |h|}}
+                {{#each h.problems  as |p|}}
+                  <li><b>{{h.handle}}</b>: {{p}}</li>
+                {{/each}}
+              {{/each}}
+            </ul>
+          </div>
+        {{else}}
+          {{fa-icon "check" right=1}} No problematic handles found.
+        {{/if}}
+      </div>
+      <div class="row flex-row">
+        <f.textarea @name="handles"
+                    @label="Extracted Handles:"
+                    @rows={{10}}
+                    @cols={{30}}
+                    @autofocus={{true}}
+                    @wrapClass="col-6"
+        />
+        <div class="col-auto align-self-center">
+          {{fa-icon "arrow-left" size="2x"}}
+        </div>
+        <div class="col-5 align-self-stretch overflow-auto">
+          Original Handles:
+          <div class="border p-2 mt-1 h-100">
+            {{nl2br @application.handles}}
+          </div>
+        </div>
+      </div>
+    </Modal.body>
+    <Modal.footer @align="start">
+      <f.submit @label="Save"/>
+      <UiCancelButton @onClick={{@onClose}} />
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting the request
+  </LoadingDialog>
+{{/if}}

@@ -1,0 +1,34 @@
+<ModalDialog @onEscape={{@onClose}} as |Modal|>
+  <ChForm @formId="more_handles"
+          @formFor={{this.handlesForm}}
+          @validator={{this.moreHandlesValidation}}
+          @onSubmit={{this.submitMoreHandles}} as |f|>
+    <Modal.title>Reject Submissions &amp; Request More Handles</Modal.title>
+    <Modal.body>
+      <Vc::AccountCreatedWarning @application={{@application}} @message="No more handles should be recorded." />
+      <p>
+        The submitted handles will be moved into rejected handles list, and an email send to the applicant
+        asking for more handles.
+      </p>
+
+      <div class="row">
+        <f.textarea @name="message"
+                    @label="Supply a brief message to email on why each of the handles are being rejected:"
+                    @rows={{10}}
+                    @cols={{80}}
+                    @autofocus={{true}}
+        />
+      </div>
+    </Modal.body>
+    <Modal.footer @align="start">
+      <f.submit @label="Submit"/>
+      <UiCancelButton @onClick={{@onClose}} />
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting the request
+  </LoadingDialog>
+{{/if}}

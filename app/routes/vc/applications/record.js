@@ -27,16 +27,6 @@ export default class VcApplicationsRecordRoute extends ClubhouseRoute {
     controller.relatedApplications = related;
     controller.VCs = VCs;
 
-    /*
-    if (application.isProcessingCallsign) {
-      controller.initialTabId = 'handles';
-    } else if ((application.isStatusApproved && application.hasPersonalInfoIssues) || application.isStatusHoldPiiIssues) {
-      controller.initialTabId = 'personal-info';
-    } else {
-      controller.initialTabId = 'details';
-    }
-
-     */
     let id;
     if (application.isProcessingCallsign) {
       id = 'handles';

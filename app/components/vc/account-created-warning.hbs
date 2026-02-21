@@ -1,0 +1,5 @@
+{{#if @application.isStatusCreated}}
+  <UiAlert @type="danger">
+    {{fa-icon "hand-point-right" right=1}} Account has been created. {{@message}}
+  </UiAlert>
+{{/if}}

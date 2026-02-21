@@ -1,0 +1,27 @@
+<ModalDialog @onEscape={{@onClose}} as |Modal|>
+  <ChForm @formId="assign" @formFor={{@application}} @onSubmit={{this.submitStatus}} as |f|>
+    <Modal.title>Adjust Application Status</Modal.title>
+    <Modal.body>
+      <UiAlert @type="danger" @icon="hand">
+        This is considered an emergency fix feature. Please note:
+        <ul>
+          <li>No emails wil be sent when updating the status through this dialog.</li>
+          <li>Confirm with your fellow V.C.s that this action is appropriate.</li>
+        </ul>
+      </UiAlert>
+      <p>
+        <b class="text-danger">No emails will be sent when updating the status through this dialog.</b>
+      </p>
+      <FormRow>
+        <f.select @name="status"
+                  @label="Update status to:"
+                  @options={{this.statusOptions}}
+        />
+      </FormRow>
+    </Modal.body>
+    <Modal.footer @align="start">
+      <f.submit @label="Update"/>
+      <UiCancelButton @onClick={{@onClose}} />
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>

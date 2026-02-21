@@ -1,0 +1,45 @@
+<ModalDialog @onEscape={{@onClose}} as |Modal|>
+  <ChForm @formId="email"
+          @formFor={{this.emailForm}}
+          @validator={{this.emailValidation}}
+          @onSubmit={{this.sendEmail}} as |f|>
+    <Modal.title>Send Email To {{@application.first_name}} {{@application.last_name}}</Modal.title>
+    <Modal.body>
+      <p>
+        The email message will be sent as
+        <VcEmail/>
+        .
+      </p>
+      <FormRow>
+        <f.text @name="subject" @label="Subject:" @size={{80}} />
+      </FormRow>
+      <FormRow>
+        <f.textarea @name="message"
+                    @label="Your message:"
+                    @rows={{10}}
+                    @cols={{80}}
+                    @autofocus={{true}}
+        />
+      </FormRow>
+    </Modal.body>
+    <Modal.footer @align="start">
+      <UiButtonRow>
+        <f.submit @label="Send Email"/>
+        <UiButton @onClick={{fn this.previewRawEmail f.model}} @type="secondary">
+          Preview Email
+        </UiButton>
+        <UiCancelButton @onClick={{@onClose}} />
+      </UiButtonRow>
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>
+
+{{#if this.emailToPreview}}
+  <Vc::ApplicationEmailPreview @emailHtml={{this.emailToPreview}} @onClose={{this.closePreviewEmailDialog}} />
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting your request
+  </LoadingDialog>
+{{/if}}

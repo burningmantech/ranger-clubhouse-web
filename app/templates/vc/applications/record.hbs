@@ -62,7 +62,7 @@
   <div class="d-flex justify-content-between p-2">
     <div>
       A-{{this.application.id}} Year {{this.application.year}}
-      <span class="ms-4 border p-1 rounded {{this.statusColor this.application.status}}">
+      <span class="ms-4 border p-1 rounded {{application-status-color this.application.status}}">
         {{this.application.statusLabel}}
       </span>
       <span class="ms-4">{{this.application.first_name}} {{this.application.last_name}}</span>
@@ -111,12 +111,8 @@
   </div>
 </div>
 
-<Vc::ApplicationDetails @application={{this.application}}
-                        @previewEmail={{this.previewEmail}}
-/>
-<Vc::ApplicationHandles @application={{this.application}}
-                        @previewEmail={{this.previewEmail}}
-/>
+<Vc::ApplicationDetails @application={{this.application}} />
+<Vc::ApplicationHandles @application={{this.application}} />
 <Vc::ApplicationPersonalInfo @application={{this.application}}
                              @onSubmit={{this.save}}
 
@@ -156,110 +152,16 @@
 </div>
 
 {{#if this.showSendEmailDialog}}
-  <ModalDialog @onEscape={{this.cancelSendEmailDialog}} as |Modal|>
-    <ChForm @formId="email"
-            @formFor={{this.emailForm}}
-            @validator={{this.emailValidation}}
-            @onSubmit={{this.sendEmail}} as |f|>
-      <Modal.title>Send Email To {{this.application.first_name}} {{this.application.last_name}}</Modal.title>
-      <Modal.body>
-        <p>
-          The email message will be sent as
-          <VcEmail/>
-          .
-        </p>
-        <FormRow>
-          <f.text @name="subject" @label="Subject:" @size={{80}} />
-        </FormRow>
-        <FormRow>
-          <f.textarea @name="message"
-                      @label="Your message:"
-                      @rows={{10}}
-                      @cols={{80}}
-                      @autofocus={{true}}
-          />
-        </FormRow>
-      </Modal.body>
-      <Modal.footer @align="start">
-        <UiButtonRow>
-          <f.submit @label="Send Email"/>
-          <UiButton @onClick={{fn this.previewRawEmail f.model}} @type="secondary">
-            Preview Email
-          </UiButton>
-          <UiCancelButton @onClick={{this.cancelSendEmailDialog}} />
-        </UiButtonRow>
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
+  <Vc::ApplicationSendEmailDialog @application={{this.application}} @onClose={{this.cancelSendEmailDialog}} />
 {{/if}}
 
 {{#if this.showAssignDialog}}
-  <ModalDialog @onEscape={{this.cancelAssignDialog}} as |Modal|>
-    <ChForm @formId="assign" @formFor={{this.assignmentForm}} @onSubmit={{this.submitAssignment}} as |f|>
-      <Modal.title>Update Application Assignment</Modal.title>
-      <Modal.body>
-        <FormRow>
-          <f.select @name="assigned_person_id"
-                    @label="Volunteer Coordinator to assign to:"
-                    @options={{this.VCOptions}}
-          />
-        </FormRow>
-      </Modal.body>
-      <Modal.footer @align="start">
-        <f.submit @label="Update"/>
-        <UiCancelButton @onClick={{this.cancelAssignDialog}} />
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
+  <Vc::ApplicationAssignDialog @application={{this.application}} @vcOptions={{this.VCOptions}} @onClose={{this.cancelAssignDialog}} />
 {{/if}}
 
 {{#if this.showStatusDialog}}
-  <ModalDialog @onEscape={{this.cancelStatusDialog}} as |Modal|>
-    <ChForm @formId="assign" @formFor={{this.application}} @onSubmit={{this.submitStatus}} as |f|>
-      <Modal.title>Adjust Application Status</Modal.title>
-      <Modal.body>
-        <UiAlert @type="danger" @icon="hand">
-          This is considered an emergency fix feature. Please note:
-          <ul>
-            <li>No emails wil be sent when updating the status through this dialog.</li>
-            <li>Confirm with your fellow V.C.s that this action is appropriate.</li>
-          </ul>
-        </UiAlert>
-        <p>
-          <b class="text-danger">No emails will be sent when updating the status through this dialog.</b>
-        </p>
-        <FormRow>
-          <f.select @name="status"
-                    @label="Update status to:"
-                    @options={{this.statusOptions}}
-          />
-        </FormRow>
-      </Modal.body>
-      <Modal.footer @align="start">
-        <f.submit @label="Update"/>
-        <UiCancelButton @onClick={{this.cancelStatusDialog}} />
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
+  <Vc::ApplicationAdjustStatusDialog @application={{this.application}} @onClose={{this.cancelStatusDialog}} />
 {{/if}}
-
-{{#if this.emailToPreview}}
-  <ModalDialog @title="Preview Email " @onEscape={{this.closePreviewEmailDialog}} as |modal|>
-    <modal.body>
-      <div class="border">
-        <iframe {{on-insert this.insertPreviewEmail}}
-          id="mail-preview-iframe"
-          class="mail-preview-iframe"
-          title="preview email">
-        </iframe>
-      </div>
-    </modal.body>
-    <modal.footer>
-      <UiCloseButton @onClick={{this.closePreviewEmailDialog}} />
-    </modal.footer>
-  </ModalDialog>
-{{/if}}
-
 
 {{#if this.isSubmitting}}
   <LoadingDialog>

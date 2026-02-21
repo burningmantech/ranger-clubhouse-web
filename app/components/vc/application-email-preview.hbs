@@ -1,0 +1,14 @@
+<ModalDialog @title="Preview Email " @onEscape={{@onClose}} as |modal|>
+  <modal.body>
+    <div class="border">
+      <iframe {{on-insert this.insertPreviewEmail}}
+        id="mail-preview-iframe"
+        class="mail-preview-iframe"
+        title="preview email">
+      </iframe>
+    </div>
+  </modal.body>
+  <modal.footer>
+    <UiCloseButton @onClick={{@onClose}} />
+  </modal.footer>
+</ModalDialog>
