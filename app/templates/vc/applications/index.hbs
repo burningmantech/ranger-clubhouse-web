@@ -14,6 +14,43 @@
 {{/if}}
 
 {{#if this.applications}}
+  {{! Status Dashboard }}
+  <div class="vc-app-dashboard d-print-none">
+    {{#each this.statusGroups as |group|}}
+      <div class="vc-app-dashboard-card {{if (eq this.statusFilter group.filterValue) 'active'}}"
+           role="button"
+           {{on "click" (fn this.applyDashboardFilter group.filterValue)}}>
+        <div class="vc-app-dashboard-count {{group.colorClass}}">{{group.count}}</div>
+        <div class="small">{{fa-icon group.icon}} {{group.label}}</div>
+      </div>
+    {{/each}}
+  </div>
+
+  {{! Workflow Presets }}
+  <div class="vc-app-presets d-print-none">
+    <button type="button"
+            class="btn btn-sm {{if (eq this.activePreset 'my-queue') 'btn-primary' 'btn-outline-secondary'}}"
+            {{on "click" (fn this.applyPreset "my-queue")}}>
+      {{fa-icon "user" right=1}} My Queue
+    </button>
+    <button type="button"
+            class="btn btn-sm {{if (eq this.activePreset 'needs-triage') 'btn-primary' 'btn-outline-secondary'}}"
+            {{on "click" (fn this.applyPreset "needs-triage")}}>
+      {{fa-icon "inbox" right=1}} Needs Triage
+    </button>
+    <button type="button"
+            class="btn btn-sm {{if (eq this.activePreset 'awaiting-response') 'btn-primary' 'btn-outline-secondary'}}"
+            {{on "click" (fn this.applyPreset "awaiting-response")}}>
+      {{fa-icon "hourglass-half" right=1}} Awaiting Response
+    </button>
+    <button type="button"
+            class="btn btn-sm {{if (eq this.activePreset 'ready-for-callsign') 'btn-primary' 'btn-outline-secondary'}}"
+            {{on "click" (fn this.applyPreset "ready-for-callsign")}}>
+      {{fa-icon "id-badge" right=1}} Ready for Callsign
+    </button>
+  </div>
+
+  {{! Filter Bar }}
   <FormRow class="mb-3 small">
     <FormLabel @auto={{true}}>Status</FormLabel>
     <div class="col-auto">

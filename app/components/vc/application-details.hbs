@@ -49,8 +49,6 @@
          {{/if}}
         {{#if @application.isStatusHoldQualificationIssue}}
           Applicant asked to confirm attendance.
-        {{else if (not @application.isBRCExperienceOkay)}}
-          <UiButton @onClick={{fn this.openStatusAction "qualification-issue"}} @size="sm">Ask to confirm attendance</UiButton>
         {{/if}}
       </t.column>
       <t.label>Age</t.label>
@@ -59,13 +57,11 @@
           <UiBadge @type="success">{{fa-icon "check" right=1}} Is 18 or older</UiBadge>
         {{else}}
           <UiBadge @type="danger">{{fa-icon "times" right=1}} Under 18</UiBadge>
-          <div class="mt-1">
-            {{#if @application.isStatusHoldAgeIssue}}
+          {{#if @application.isStatusHoldAgeIssue}}
+            <div class="mt-1">
               Applicant asked to confirm age.
-            {{else}}
-              <UiButton @onClick={{fn this.openStatusAction "age-issue"}} @size="sm">Ask for age confirmation</UiButton>
-            {{/if}}
-          </div>
+            </div>
+          {{/if}}
         {{/if}}
       </t.column>
 
@@ -140,51 +136,6 @@
       <t.column>
         <Vc::ApplicationNotes @application={{@application}} @isComment={{false}} />
       </t.column>
-      <t.label>Actions</t.label>
-      <t.column class="ui-button-row">
-        <UiButton @type="secondary" @size="sm" @onClick={{this.approveForCallsignProcessing}}>
-          Approve for Callsign Processing
-        </UiButton>
-        <UiDropdownButton @label="Reject Application" as |dd|>
-          <dd.item @onSelect={{fn this.openStatusAction "reject-unqualified"}}>
-            Lacking Event Experience
-          </dd.item>
-          {{!--
-          <dd.item @onSelect={{fn this.openStatusAction "reject-regional" true}}>
-            Failed Regional Verification
-          </dd.item>
-          --}}
-          <dd.item @onSelect={{fn this.openStatusAction "reject-too-young"}}>
-            Too Young (&lt; 18 years old)
-          </dd.item>
-          <dd.item @onSelect={{fn this.openStatusAction "reject-pre-bonk"}}>
-            Pre-Bonk
-          </dd.item>
-          <dd.item @onSelect={{fn this.openStatusAction "reject-uber-bonked"}}>
-            Uberbonk
-          </dd.item>
-          <dd.item @onSelect={{this.rejectReturningRanger}}>
-            Returning Ranger
-          </dd.item>
-          <dd.item @onSelect={{fn this.openStatusAction "duplicate"}}>
-            Duplicate Application
-          </dd.item>
-        </UiDropdownButton>
-        {{!--
-        <UiButton @type="secondary" @size="sm" @onClick={{this.requestRRNCheck}}>Request RRN Check</UiButton>
-        --}}
-        <UiDropdownButton @label="Hold Application" as |dd|>
-          <dd.item @onSelect={{fn this.openStatusAction "why-ranger-question" true}}>
-            Why Ranger Answer Issue
-          </dd.item>
-          <dd.item @onSelect={{fn this.openStatusAction "qualification-issue"}}>
-            Ask for Event Confirmation
-          </dd.item>
-          <dd.item @onSelect={{fn this.openStatusAction "age-issue"}}>
-            Ask for Age Confirmation
-          </dd.item>
-        </UiDropdownButton>
-      </t.column>
     </UiGridTable>
   </:view>
   <:edit as |f|>
@@ -246,14 +197,5 @@
 
 {{#if this.showProblemReviewDialog}}
   <Vc::ApplicationProblemReviewDialog @application={{@application}} @onClose={{this.cancelProblemReviewDialog}} />
-{{/if}}
-
-{{#if this.showStatusWithMessageDialog}}
-  <Vc::ApplicationStatusMessageDialog
-    @application={{@application}}
-    @status={{this.newStatus}}
-    @askForMessage={{this.askForMessage}}
-    @onClose={{this.cancelStatusMessageDialog}}
-  />
 {{/if}}
 

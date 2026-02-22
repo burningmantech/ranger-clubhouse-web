@@ -1,7 +1,12 @@
 import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
-import {STATUS_DUPLICATE} from "clubhouse/models/prospective-application";
+import {
+  STATUS_DUPLICATE,
+  STATUS_HANDLE_CHECK,
+  STATUS_REJECT_RETURNING_RANGER,
+  WHY_VOLUNTEER_REVIEW_OKAY,
+} from "clubhouse/models/prospective-application";
 
 export default class VcApplicationsRecordController extends ClubhouseController {
   @tracked application;
@@ -10,6 +15,9 @@ export default class VcApplicationsRecordController extends ClubhouseController 
   @tracked showSendEmailDialog;
   @tracked showAssignDialog;
   @tracked showStatusDialog;
+  @tracked showStatusWithMessageDialog;
+  @tracked newStatus;
+  @tracked askForMessage;
 
   @tracked VCs;
 
@@ -118,5 +126,58 @@ export default class VcApplicationsRecordController extends ClubhouseController 
           this.isSubmitting = false;
         }
       });
+  }
+
+  @action
+  openStatusAction(status, askForMessage = null) {
+    this.showStatusWithMessageDialog = true;
+    this.newStatus = status;
+    this.askForMessage = askForMessage;
+  }
+
+  @action
+  cancelStatusMessageDialog() {
+    this.showStatusWithMessageDialog = false;
+  }
+
+  @action
+  approveForCallsignProcessing() {
+    const review = this.application.why_volunteer_review;
+    if (review !== WHY_VOLUNTEER_REVIEW_OKAY) {
+      this.modal.confirm('Paragraph issue',
+        `The Why Ranger paragraph status is ${this.application.whyVolunteerReviewLabel}. Are you sure you want to clear this application for handle processing?`,
+        () => this._submitStatusUpdate(STATUS_HANDLE_CHECK));
+    } else {
+      this.openStatusAction(STATUS_HANDLE_CHECK);
+    }
+  }
+
+  @action
+  rejectReturningRanger() {
+    if (this.application.isReturningRanger) {
+      this.openStatusAction(STATUS_REJECT_RETURNING_RANGER);
+    } else {
+      this.modal.confirm('May not be a Returning Ranger',
+        'This application does not appear to be associated with a returning Ranger. Are you absolutely sure you wish to continue?',
+        () => this.openStatusAction(STATUS_REJECT_RETURNING_RANGER));
+    }
+  }
+
+  async _submitStatusUpdate(status, message = null) {
+    try {
+      const data = {status};
+      if (message) {
+        data.message = message;
+      }
+      this.isSubmitting = true;
+      await this.ajax.post(`prospective-application/${this.application.id}/status`, {data});
+      await this.application.reload();
+      this.showStatusWithMessageDialog = false;
+      this.toast.success('Status was successfully updated.');
+    } catch (response) {
+      this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 }

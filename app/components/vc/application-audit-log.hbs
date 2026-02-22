@@ -1,41 +1,43 @@
-<UiSection>
-  <:title>Audit Log</:title>
-  <:body>
-    <UiTable>
-      <thead>
-      <tr>
-        <th>Timestamp (UTC-7)</th>
-        <th>Who</th>
-        <th colspan="2">Action</th>
-      </tr>
-      </thead>
-      <tbody>
-      {{#each @application.audit_logs as |row|}}
+<UiAccordion as |accordion|>
+  <accordion.title>Audit Log</accordion.title>
+  <accordion.body>
+    {{#if accordion.isOpen}}
+      <UiTable>
+        <thead>
         <tr>
-          <td>{{shift-format row.created_at}}</td>
-          <td>
-            {{#if row.person}}
-              {{row.person.callsign}}
-            {{else}}
-              <i>- unknown -</i>
-            {{/if}}
-          </td>
-          <td>
-            <b>{{row.action}}</b>
-          </td>
-          <td>
-            {{#if row.data}}
-              {{#each-in row.data as |column changes|}}
-                <div class="mb-2">
-                  <b>{{this.columnLabel column}}</b><br>
-                  {{this.changeValues changes column row.meta}}
-                </div>
-              {{/each-in}}
-            {{/if}}
-          </td>
+          <th>Timestamp (UTC-7)</th>
+          <th>Who</th>
+          <th colspan="2">Action</th>
         </tr>
-      {{/each}}
-      </tbody>
-    </UiTable>
-  </:body>
-</UiSection>
+        </thead>
+        <tbody>
+        {{#each @application.audit_logs as |row|}}
+          <tr>
+            <td>{{shift-format row.created_at}}</td>
+            <td>
+              {{#if row.person}}
+                {{row.person.callsign}}
+              {{else}}
+                <i>- unknown -</i>
+              {{/if}}
+            </td>
+            <td>
+              <b>{{row.action}}</b>
+            </td>
+            <td>
+              {{#if row.data}}
+                {{#each-in row.data as |column changes|}}
+                  <div class="mb-2">
+                    <b>{{this.columnLabel column}}</b><br>
+                    {{this.changeValues changes column row.meta}}
+                  </div>
+                {{/each-in}}
+              {{/if}}
+            </td>
+          </tr>
+        {{/each}}
+        </tbody>
+      </UiTable>
+    {{/if}}
+  </accordion.body>
+</UiAccordion>
