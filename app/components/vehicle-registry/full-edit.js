@@ -8,10 +8,12 @@ import { service } from '@ember/service';
 import { tracked } from '@glimmer/tracking';
 import RSVP from 'rsvp';
 import {TYPE_PERSONAL} from "clubhouse/models/vehicle";
+import {ADMIN, VEHICLE_INFO_UPDATE} from "clubhouse/constants/roles";
 
 export default class VehicleRegistryFullEditComponent extends Component {
   @service ajax;
   @service house;
+  @service session;
 
   @tracked isLoading = false;
   @tracked requestInfo = null;
@@ -83,9 +85,15 @@ export default class VehicleRegistryFullEditComponent extends Component {
     super(...arguments);
 
     const {entry} = this.args;
-    if (!entry.isNew && entry.type === TYPE_PERSONAL) {
+
+    const isPersonal =  !entry.isNew && entry.type === TYPE_PERSONAL;
+    if (isPersonal) {
       this._loadPersonInfo(entry.person_id);
     }
+
+
+    this.canEditFullRecord = this.session.hasRole(ADMIN);
+    this.canEditInfo = this.session.hasRole([ADMIN, VEHICLE_INFO_UPDATE]);
   }
 
   async _loadPersonInfo(personId) {
