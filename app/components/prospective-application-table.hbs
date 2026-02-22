@@ -25,10 +25,16 @@
           </LinkTo>
         </td>
         <td>
-          {{row.statusLabel}}
+          <span class="badge {{application-status-color row.status}}">{{row.statusLabel}}</span>
         </td>
         <td>
-          {{row.first_name}} {{row.last_name}}<br>
+          {{row.first_name}} {{row.last_name}}
+          {{#if (eq row.why_volunteer_review "okay")}}
+            <span class="text-success ms-1">{{fa-icon "check"}}</span>
+          {{else if (eq row.why_volunteer_review "problem")}}
+            <span class="text-danger ms-1">{{fa-icon "flag"}}</span>
+          {{/if}}
+          <br>
           <MailTo @to={{row.email}} />
         </td>
         <td>
@@ -54,8 +60,10 @@
         </td>
         <td>
           {{#if row.updated_by_person_at}}
+            <span class="staleness-dot {{application-staleness-class row.updated_by_person_at}}"></span>
             {{shift-format row.updated_by_person_at}}
           {{else}}
+            <span class="staleness-dot staleness-stale"></span>
             -
           {{/if}}
           <br>

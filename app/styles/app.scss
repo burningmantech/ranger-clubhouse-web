@@ -35,6 +35,7 @@ main {
 .ui-section {
   // margin-top: 20px;
   margin-bottom: 20px;
+  scroll-margin-top: 120px;
   padding: 10px;
   background-color: #ffffff;
   box-shadow: 0 1px 5px 0 rgb(50 50 50 / 50%); //rgba(0, 0, 0, 0.24) 0px 3px 8px;
@@ -822,4 +823,82 @@ summary:hover {
 
 .hover-pointer {
   cursor: pointer;
+}
+
+// VC Application Dashboard
+.vc-app-dashboard {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.vc-app-dashboard-card {
+  flex: 1;
+  padding: 0.75rem;
+  border: 2px solid transparent;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  text-align: center;
+  background: #fcfcfc;
+  box-shadow: 0 1px 3px rgb(50 50 50 / 20%);
+
+  &:hover {
+    background: #f0f0f0;
+  }
+
+  &.active {
+    border-color: #d2b48c;
+    background: #fffaf0;
+  }
+}
+
+.vc-app-dashboard-count {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+// Staleness dots
+.staleness-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.staleness-fresh { background-color: #198754; }
+.staleness-aging { background-color: #ffc107; }
+.staleness-stale { background-color: #dc3545; }
+
+// Application action bar in sticky header
+.vc-app-action-bar {
+  background-color: #f8f8f0;
+}
+
+// Workflow presets
+.vc-app-presets {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+// Status checks + action buttons row (last row inside sticky bar)
+.vc-app-quick-checks {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.375rem 0.5rem;
+  background-color: #fafaf5;
+  align-items: center;
+  border-top: 1px solid rgba(128, 128, 128, 0.3);
+}
+
+// Section zone indicators
+.vc-app-zone-review > .ui-section {
+  border-left: 3px solid $kakhi;
+}
+
+.vc-app-zone-processing > .ui-section {
+  border-left: 3px solid #6c757d;
 }
