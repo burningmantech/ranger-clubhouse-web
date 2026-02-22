@@ -105,14 +105,9 @@
             {{/if}}
           </span>
         {{/if}}
-        <div class="my-2 {{unless this.showParagraphExpanded "vc-paragraph-truncated"}}">
+        <div class="my-2">
           {{nl2br @application.why_volunteer}}
         </div>
-        {{#if this.shouldTruncateParagraph}}
-          <a href class="small" {{on "click" this.toggleParagraph}}>
-            {{if this.showParagraphExpanded "Show less" "Show full response"}}
-          </a>
-        {{/if}}
         <div class="vc-paragraph-review-bar mt-2">
           {{#if (not-eq @application.why_volunteer_review 'okay')}}
             <UiButton @type="success" @size="sm" @onClick={{this.setReviewOkay}}>
