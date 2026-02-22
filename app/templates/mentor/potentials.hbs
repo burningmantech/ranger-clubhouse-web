@@ -82,9 +82,6 @@ Showing {{this.viewPotentials.length}} of {{pluralize this.mentees.length "poten
         {{/each}}
       </td>
       <td class="w-75">
-        {{#if person.has_note_on_file}}
-          <div class="mb-2"><b class="text-danger">Personnel Note</b></div>
-        {{/if}}
         {{#if person.personnel_issue}}
           <div class="mb-2">
             <h4 class="text-danger">{{fa-icon "flag"}} PERSONNEL FLAG RAISED &mdash; TAKE NO ACTION UNTIL RESOLVED</h4>

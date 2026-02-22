@@ -70,13 +70,6 @@
       <i>no previous callsigns</i>
     {{/each}}
   </div>
-  {{#if @person.has_note_on_file}}
-    <div class="grid-table-label">Personnel Note</div>
-    <div>
-      <b class="text-danger">Has note on file</b>. Contact the Personnel Manager for more information:
-      <PersonnelEmail/>
-    </div>
-  {{/if}}
   {{#if (has-role "shift-management")}}
     <div class="grid-table-label">On Site</div>
     <div>

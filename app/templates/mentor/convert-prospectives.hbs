@@ -11,7 +11,8 @@
 
 {{#if this.personnelFlagCount}}
   <p>
-    <b class="text-danger">The Personnel Flag has been raised on {{pluralize this.personnelFlagCount "person"}}. The prospective(s) have to be selected by hand.</b>
+    <b class="text-danger">The Personnel Flag has been raised on {{pluralize this.personnelFlagCount "person"}}. The
+      prospective(s) have to be selected by hand.</b>
   </p>
 {{/if}}
 
@@ -22,7 +23,8 @@
       <thead>
       <tr>
         <th class="w-15">
-          <Input @type="checkbox" @checked={{this.selectedAll}} {{on "change" this.toggleAll}} class="d-inline-block me-1"/>
+          <Input @type="checkbox" @checked={{this.selectedAll}} {{on "change" this.toggleAll}}
+                 class="d-inline-block me-1"/>
           Callsign
         </th>
         <th class="w-85">Notes</th>
@@ -35,14 +37,11 @@
             {{#if person.converted}}
               {{fa-icon "check"}}
             {{else}}
-              <Input @type="checkbox" @checked={{person.selected}}  class="d-inline-block me-1" />
+              <Input @type="checkbox" @checked={{person.selected}}  class="d-inline-block me-1"/>
             {{/if}}
-             <PersonLink @person={{person}} />
+            <PersonLink @person={{person}} />
           </td>
           <td class="w-85">
-            {{#if person.has_note_on_file}}
-              <div class="mb-2"><b class="text-danger">Personnel Note</b></div>
-            {{/if}}
             {{#if person.personnel_issue}}
               <div class="mb-2">
                 <b class="text-danger">PERSONNEL FLAG RAISED &mdash; TAKE NO ACTION UNTIL RESOLVED</b>
