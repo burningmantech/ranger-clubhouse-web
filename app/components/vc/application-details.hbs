@@ -105,19 +105,26 @@
             {{/if}}
           </span>
         {{/if}}
-        <div class="my-2">
+        <div class="my-2 {{unless this.showParagraphExpanded "vc-paragraph-truncated"}}">
           {{nl2br @application.why_volunteer}}
         </div>
-        {{#if (not-eq @application.why_volunteer_review 'okay')}}
-          <UiButton @type="secondary" @size="sm" @onClick={{this.setReviewOkay}} class="me-2">
-            Mark Okay
-          </UiButton>
+        {{#if this.shouldTruncateParagraph}}
+          <a href class="small" {{on "click" this.toggleParagraph}}>
+            {{if this.showParagraphExpanded "Show less" "Show full response"}}
+          </a>
         {{/if}}
-        {{#if (not-eq @application.why_volunteer_review 'problem')}}
-          <UiButton @type="secondary" @size="sm" @onClick={{this.openProblemReviewDialog}}>
-            Mark As Problem
-          </UiButton>
-        {{/if}}
+        <div class="vc-paragraph-review-bar mt-2">
+          {{#if (not-eq @application.why_volunteer_review 'okay')}}
+            <UiButton @type="success" @size="sm" @onClick={{this.setReviewOkay}}>
+              {{fa-icon "check" right=1}} Mark Okay
+            </UiButton>
+          {{/if}}
+          {{#if (not-eq @application.why_volunteer_review 'problem')}}
+            <UiButton @type="danger" @size="sm" @onClick={{this.openProblemReviewDialog}}>
+              {{fa-icon "flag" right=1}} Mark As Problem
+            </UiButton>
+          {{/if}}
+        </div>
       </t.column>
       <t.label>Regional Experience</t.label>
       <t.column>

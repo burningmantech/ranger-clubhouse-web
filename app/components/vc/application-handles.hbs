@@ -137,19 +137,13 @@
           <b class="text-danger">{{fa-icon "alert" right=1}} none submitted</b>
         {{/if}}
         <div class="mt-2">
-          <UiButtonRow>
-            <UiButton @type="secondary" @size="sm" @onClick={{this.openMoreHandlesDialog}}>
-              Reject Handle Submissions
-            </UiButton>
-            <UiButton @type="secondary" @size="sm" @onClick={{this.openEditHandlesListDialog}}>
-              Edit Handles List
-            </UiButton>
+          <UiDropdownButton @label="Handle Actions" as |dd|>
+            <dd.item @onSelect={{this.openMoreHandlesDialog}}>Reject Handle Submissions</dd.item>
+            <dd.item @onSelect={{this.openEditHandlesListDialog}}>Edit Handles List</dd.item>
             {{#if @application.handles}}
-              <UiButton @type="secondary" @size="sm" @onClick={{this.extractHandles}}>
-                Extract Handles
-              </UiButton>
+              <dd.item @onSelect={{this.extractHandles}}>Extract Handles</dd.item>
             {{/if}}
-          </UiButtonRow>
+          </UiDropdownButton>
         </div>
       </t.column>
       <t.label>Rejected Handles</t.label>

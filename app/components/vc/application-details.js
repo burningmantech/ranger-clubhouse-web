@@ -16,6 +16,8 @@ export default class VcApplicationDetailsComponent extends Component {
 
   @tracked showProblemReviewDialog;
 
+  @tracked isParagraphExpanded = false;
+
   experienceOptions = ExperienceOptions;
 
   @cached
@@ -61,6 +63,20 @@ export default class VcApplicationDetailsComponent extends Component {
     } finally {
       this.isSubmitting = false;
     }
+  }
+
+  get shouldTruncateParagraph() {
+    const text = this.args.application.why_volunteer;
+    return text && text.length > 200;
+  }
+
+  get showParagraphExpanded() {
+    return this.isParagraphExpanded || !this.shouldTruncateParagraph;
+  }
+
+  @action
+  toggleParagraph() {
+    this.isParagraphExpanded = !this.isParagraphExpanded;
   }
 
   @action

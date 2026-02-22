@@ -25,6 +25,43 @@ export default class VcApplicationsRecordController extends ClubhouseController 
     return this.application.year !== this.house.currentYear();
   }
 
+  // Review progress strip classes
+  get brcEventsCheckClass() {
+    if (!this.application.eventsList?.length) {
+      return 'vc-progress-danger';
+    }
+    return this.application.isBRCExperienceOkay ? 'vc-progress-success' : 'vc-progress-danger';
+  }
+
+  get ageCheckClass() {
+    return this.application.is_over_18 ? 'vc-progress-success' : 'vc-progress-danger';
+  }
+
+  get paragraphCheckClass() {
+    const review = this.application.why_volunteer_review;
+    if (review === 'okay') {
+      return 'vc-progress-success';
+    }
+    if (review === 'problem') {
+      return 'vc-progress-danger';
+    }
+    return 'vc-progress-warning';
+  }
+
+  get piiCheckClass() {
+    return this.application.hasPersonalInfoIssues ? 'vc-progress-warning' : 'vc-progress-success';
+  }
+
+  get handlesCheckClass() {
+    if (this.application.approved_handle) {
+      return 'vc-progress-success';
+    }
+    if (this.application.isProcessingCallsign) {
+      return 'vc-progress-pending';
+    }
+    return 'vc-progress-neutral';
+  }
+
   @action
   async save(model, isValid) {
     if (!isValid) {

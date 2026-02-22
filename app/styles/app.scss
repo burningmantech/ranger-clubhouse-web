@@ -871,11 +871,6 @@ summary:hover {
 .staleness-aging { background-color: #ffc107; }
 .staleness-stale { background-color: #dc3545; }
 
-// Application action bar in sticky header
-.vc-app-action-bar {
-  background-color: #f8f8f0;
-}
-
 // Workflow presets
 .vc-app-presets {
   display: flex;
@@ -883,22 +878,153 @@ summary:hover {
   margin-bottom: 0.75rem;
 }
 
-// Status checks + action buttons row (last row inside sticky bar)
-.vc-app-quick-checks {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-  padding: 0.375rem 0.5rem;
-  background-color: #fafaf5;
-  align-items: center;
-  border-top: 1px solid rgba(128, 128, 128, 0.3);
+// ==============================
+// VC Record Page — Sticky Header
+// ==============================
+
+.vc-record-header {
+  background: #f7f6f0;
+  border: 1px solid rgba(100, 100, 80, 0.25);
+  border-radius: 0.25rem;
+  box-shadow: 0 2px 6px rgba(50, 50, 40, 0.12);
 }
 
-// Section zone indicators
+// Row 1: Identity bar
+.vc-record-identity-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+// Assignment chip styles
+.vc-record-assign-chip {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.15rem 0.5rem;
+  border-radius: 1rem;
+  white-space: nowrap;
+}
+
+.vc-record-assign-mine {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.vc-record-assign-other {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.vc-record-assign-none {
+  background-color: #e9ecef;
+  color: #6c757d;
+}
+
+// Row 2: Actions bar
+.vc-record-actions-bar {
+  padding: 0.375rem 0.75rem;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.15);
+  background-color: #faf9f4;
+}
+
+// Row 3: Review progress strip
+.vc-record-progress-strip {
+  display: flex;
+  gap: 0;
+  padding: 0;
+  background-color: #f0efe8;
+}
+
+.vc-progress-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  text-decoration: none;
+  border-right: 1px solid rgba(128, 128, 128, 0.15);
+  white-space: nowrap;
+
+  &:last-child {
+    border-right: none;
+  }
+
+  &:hover {
+    filter: brightness(0.95);
+  }
+}
+
+.vc-progress-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.vc-progress-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.vc-progress-warning {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.vc-progress-pending {
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.vc-progress-neutral {
+  background-color: #e9ecef;
+  color: #6c757d;
+}
+
+// ==============================
+// VC Record Page — Section Zones
+// ==============================
+
 .vc-app-zone-review > .ui-section {
   border-left: 3px solid $kakhi;
 }
 
 .vc-app-zone-processing > .ui-section {
   border-left: 3px solid #6c757d;
+}
+
+// ==============================
+// VC Record Page — Paragraph
+// ==============================
+
+.vc-paragraph-truncated {
+  max-height: 4.5em;
+  overflow: hidden;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2em;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), #ffffff);
+    pointer-events: none;
+  }
+}
+
+.vc-paragraph-review-bar {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background-color: #f8f8f4;
+  border: 1px solid rgba(128, 128, 128, 0.2);
+  border-radius: 0.25rem;
 }
