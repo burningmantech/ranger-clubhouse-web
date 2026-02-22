@@ -110,9 +110,7 @@ export default class PersonModel extends PersonMixin(Model) {
   @attr('string') lms_username;
 
   @attr('boolean') behavioral_agreement;
-
-  @attr('boolean') has_note_on_file;
-
+  
   @attr('string', {readOnly: true}) sfuid;
   @attr('string', {readOnly: true}) updated_at;
 
