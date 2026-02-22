@@ -1,10 +1,10 @@
-<div class="my-3">
+<div class="mt-2 mb-1">
   <LinkTo @route="vc.applications.index" @query={{hash year=this.application.year}}>
-    Back to {{this.application.year}} Prospective Applications Listing
+    {{fa-icon "arrow-left" right=1}} {{this.application.year}} Applications
   </LinkTo>
 </div>
 
-
+{{!-- Alert banners --}}
 {{#if this.application.isBonked}}
   <UiAlert @type="danger" class="mb-2">
     {{fa-icon "ban" right=1}} Application has been bonked. Take no further action. Do not contact the individual unless
@@ -17,9 +17,8 @@
     {{fa-icon "hand" type="r" right=1}} Application marked as a duplicate. No further action should take place.
   </UiAlert>
 {{else if this.haveDuplicateApplications}}
-  <UiAlert @type="warning" class="mb-3">
-    {{fa-icon "exclamation" right=1}} Multiple active applications found for this year. See the Related Applications
-    section below to determine which one to proceed with.
+  <UiAlert @type="warning" class="mb-2">
+    {{fa-icon "exclamation" right=1}} Multiple active applications found for this year. See Related Applications below.
   </UiAlert>
 {{/if}}
 
@@ -53,33 +52,33 @@
   {{/if}}
 {{/if}}
 
-<div class="sticky-top bg-light-gray border border-dark-gray border-opacity-50 mb-2">
+{{!-- ===== STICKY HEADER ===== --}}
+<div class="sticky-top vc-record-header mb-2">
   {{#if this.notCurrentYear}}
     <div class="text-bg-warning p-2">
       {{fa-icon "exclamation" right=1}} You are viewing an application from a prior year.
     </div>
   {{/if}}
-  <div class="d-flex justify-content-between align-items-center p-2">
-    <div class="d-flex align-items-center gap-3 flex-wrap">
-      <span>A-{{this.application.id}}</span>
+
+  {{!-- Row 1: Identity bar --}}
+  <div class="vc-record-identity-bar">
+    <div class="d-flex align-items-center gap-2">
+      <span class="fw-bold">A-{{this.application.id}}</span>
       <span class="border p-1 rounded {{application-status-color this.application.status}}">
         {{this.application.statusLabel}}
       </span>
-      <span>{{this.application.first_name}} {{this.application.last_name}}</span>
-      <span class="small"><MailTo @to={{this.application.email}} /></span>
+      <span class="fw-semibold">{{this.application.first_name}} {{this.application.last_name}}</span>
+      <span class="small text-muted"><MailTo @to={{this.application.email}} /></span>
     </div>
-    <div class="d-flex align-items-center gap-2 flex-shrink-0">
+    <div class="d-flex align-items-center gap-2">
       {{#if this.isAssignedToMe}}
-        <span class="small">{{fa-icon "thumbs-up" right=1}} Assigned to you</span>
+        <span class="vc-record-assign-chip vc-record-assign-mine">{{fa-icon "thumbs-up" right=1}} You</span>
       {{else if this.assignedToOther}}
-        <b class="text-danger small">
-          {{fa-icon "hand" right=1}}
-          Assigned to {{this.application.assigned_person.callsign}}
-        </b>
+        <span class="vc-record-assign-chip vc-record-assign-other">{{fa-icon "hand" right=1}} {{this.application.assigned_person.callsign}}</span>
       {{else if (not this.application.assigned_person_id)}}
-        <span class="text-muted small">Unassigned</span>
+        <span class="vc-record-assign-chip vc-record-assign-none">Unassigned</span>
       {{/if}}
-      <UiDropdownButton @label="Assignment Actions" as |dd|>
+      <UiDropdownButton @label="Assign" as |dd|>
         {{#unless this.isAssignedToMe}}
           <dd.item @onSelect={{this.assignToSelf}}>Assign To Self</dd.item>
         {{/unless}}
@@ -88,46 +87,27 @@
           <dd.item @onSelect={{this.unassignApplication}}>Clear Assignment</dd.item>
         {{/if}}
       </UiDropdownButton>
+      {{#if this.application.updated_by_person}}
+        <span class="small text-muted d-none d-xl-inline">
+          Updated {{shift-format this.application.updated_by_person_at}}
+        </span>
+      {{/if}}
     </div>
   </div>
-  <div class="vc-app-quick-checks">
+
+  {{!-- Row 2: Actions bar --}}
+  <div class="vc-record-actions-bar">
     <div class="d-flex align-items-center gap-2 flex-wrap">
-      {{#if this.application.eventsList.length}}
-        {{#if this.application.isBRCExperienceOkay}}
-          <UiBadge @type="success">{{fa-icon "check" right=1}} BRC Events</UiBadge>
-        {{else}}
-          <UiBadge @type="danger">{{fa-icon "hand" right=1}} BRC Issue</UiBadge>
-        {{/if}}
-      {{else}}
-        <UiBadge @type="danger">{{fa-icon "ban" right=1}} No Events</UiBadge>
-      {{/if}}
-      {{#if this.application.is_over_18}}
-        <UiBadge @type="success">{{fa-icon "check" right=1}} 18+</UiBadge>
-      {{else}}
-        <UiBadge @type="danger">{{fa-icon "times" right=1}} Under 18</UiBadge>
-      {{/if}}
-      {{#if (eq this.application.why_volunteer_review 'okay')}}
-        <UiBadge @type="success">{{fa-icon "check" right=1}} Paragraph OK</UiBadge>
-      {{else if (eq this.application.why_volunteer_review 'problem')}}
-        <UiBadge @type="danger">{{fa-icon "ban" right=1}} Paragraph Issue</UiBadge>
-      {{else}}
-        <UiBadge @type="warning">{{fa-icon "question" right=1}} Paragraph Unreviewed</UiBadge>
-      {{/if}}
-      {{#if this.application.hasPersonalInfoIssues}}
-        <UiBadge @type="warning">{{fa-icon "exclamation" right=1}} PII Incomplete</UiBadge>
-      {{/if}}
-    </div>
-    <div class="d-flex align-items-center gap-2 flex-wrap flex-shrink-0">
       <UiButton @onClick={{this.openSendEmailDialog}} @type="secondary" @size="sm">
-        Send Email
+        {{fa-icon "envelope" right=1}} Email
       </UiButton>
       {{#unless (or this.application.hasStopStatus this.application.isStatusCreated)}}
         {{#unless (or this.application.isProcessingCallsign this.application.isStatusApproved)}}
           <UiButton @type="success" @size="sm" @onClick={{this.approveForCallsignProcessing}}>
-            Approve for Callsign Processing
+            {{fa-icon "check" right=1}} Approve for Callsign Processing
           </UiButton>
         {{/unless}}
-        <UiDropdownButton @label="Reject Application" as |dd|>
+        <UiDropdownButton @label="Reject" as |dd|>
           <dd.item @onSelect={{fn this.openStatusAction "reject-unqualified"}}>Lacking Event Experience</dd.item>
           <dd.item @onSelect={{fn this.openStatusAction "reject-too-young"}}>Too Young (&lt; 18 years old)</dd.item>
           <dd.item @onSelect={{fn this.openStatusAction "reject-pre-bonk"}}>Pre-Bonk</dd.item>
@@ -135,7 +115,7 @@
           <dd.item @onSelect={{this.rejectReturningRanger}}>Returning Ranger</dd.item>
           <dd.item @onSelect={{fn this.openStatusAction "duplicate"}}>Duplicate Application</dd.item>
         </UiDropdownButton>
-        <UiDropdownButton @label="Hold Application" as |dd|>
+        <UiDropdownButton @label="Hold" as |dd|>
           <dd.item @onSelect={{fn this.openStatusAction "why-ranger-question" true}}>Why Ranger Answer Issue</dd.item>
           <dd.item @onSelect={{fn this.openStatusAction "qualification-issue"}}>Ask for Event Confirmation</dd.item>
           <dd.item @onSelect={{fn this.openStatusAction "age-issue"}}>Ask for Age Confirmation</dd.item>
@@ -146,16 +126,56 @@
       {{/unless}}
     </div>
   </div>
-</div>
-<div class="small text-muted mb-2">
-  {{#if this.application.updated_by_person}}
-    Updated at {{shift-format this.application.updated_by_person_at}}
-    by {{this.application.updated_by_person.callsign}}
-  {{else}}
-    <i>Application has not been updated yet.</i>
-  {{/if}}
+
+  {{!-- Row 3: Review progress strip --}}
+  <div class="vc-record-progress-strip">
+    <a href="#details" class="vc-progress-item {{this.brcEventsCheckClass}}">
+      {{#if this.application.eventsList.length}}
+        {{#if this.application.isBRCExperienceOkay}}
+          {{fa-icon "check"}} BRC Events
+        {{else}}
+          {{fa-icon "xmark"}} BRC Issue
+        {{/if}}
+      {{else}}
+        {{fa-icon "ban"}} No Events
+      {{/if}}
+    </a>
+    <a href="#details" class="vc-progress-item {{this.ageCheckClass}}">
+      {{#if this.application.is_over_18}}
+        {{fa-icon "check"}} Age 18+
+      {{else}}
+        {{fa-icon "xmark"}} Under 18
+      {{/if}}
+    </a>
+    <a href="#details" class="vc-progress-item {{this.paragraphCheckClass}}">
+      {{#if (eq this.application.why_volunteer_review 'okay')}}
+        {{fa-icon "check"}} Paragraph
+      {{else if (eq this.application.why_volunteer_review 'problem')}}
+        {{fa-icon "ban"}} Paragraph
+      {{else}}
+        {{fa-icon "question"}} Paragraph
+      {{/if}}
+    </a>
+    <a href="#personal-info" class="vc-progress-item {{this.piiCheckClass}}">
+      {{#if this.application.hasPersonalInfoIssues}}
+        {{fa-icon "exclamation"}} PII
+      {{else}}
+        {{fa-icon "check"}} PII
+      {{/if}}
+    </a>
+    <a href="#handles" class="vc-progress-item {{this.handlesCheckClass}}">
+      {{#if this.application.approved_handle}}
+        {{fa-icon "check"}} Handle
+      {{else if this.application.isProcessingCallsign}}
+        {{fa-icon "hourglass-half"}} Handle
+      {{else}}
+        {{fa-icon "minus"}} Handle
+      {{/if}}
+    </a>
+  </div>
 </div>
 
+{{!-- ===== CONTENT SECTIONS ===== --}}
 <div class="vc-app-zone-review">
   <Vc::ApplicationDetails @application={{this.application}} />
 </div>
@@ -164,9 +184,10 @@
 </div>
 <Vc::ApplicationPersonalInfo @application={{this.application}}
                              @onSubmit={{this.save}}
-
 />
+
 <Vc::ApplicationRelated @relatedApplications={{this.relatedApplications}} />
+
 <UiAccordion as |accordion|>
   <accordion.title>Mail Log</accordion.title>
   <accordion.body>
@@ -176,32 +197,36 @@
   </accordion.body>
 </UiAccordion>
 <Vc::ApplicationAuditLog @application={{this.application}} />
-<UiSection>
-  <:title>Misc.</:title>
-  <:body>
-    <UiGridTable as |t|>
-      <t.label>BPGUID</t.label>
-      <t.column>{{this.application.bpguid}}</t.column>
-      <t.label>SFUID</t.label>
-      <t.column>{{this.application.sfuid}}</t.column>
-      <t.label>Salesforce ID</t.label>
-      <t.column>
-        <ExtLink @href="https://burningman.my.salesforce.com/{{this.application.salesforce_id}}">
-          {{this.application.salesforce_name}}
-        </ExtLink>
-      </t.column>
-      <t.label>Actions</t.label>
-      <t.column>
-        <UiButton @onClick={{this.deleteApplication}} @type="secondary" @size="sm" class="me-2">
-          Delete Application
-        </UiButton>
-      </t.column>
-    </UiGridTable>
-  </:body>
-</UiSection>
-<div class="mt-3">
+
+<UiAccordion as |accordion|>
+  <accordion.title>Misc. &amp; Admin</accordion.title>
+  <accordion.body>
+    {{#if accordion.isOpen}}
+      <UiGridTable as |t|>
+        <t.label>BPGUID</t.label>
+        <t.column>{{this.application.bpguid}}</t.column>
+        <t.label>SFUID</t.label>
+        <t.column>{{this.application.sfuid}}</t.column>
+        <t.label>Salesforce ID</t.label>
+        <t.column>
+          <ExtLink @href="https://burningman.my.salesforce.com/{{this.application.salesforce_id}}">
+            {{this.application.salesforce_name}}
+          </ExtLink>
+        </t.column>
+        <t.label>Actions</t.label>
+        <t.column>
+          <UiButton @onClick={{this.deleteApplication}} @type="secondary" @size="sm" class="me-2">
+            Delete Application
+          </UiButton>
+        </t.column>
+      </UiGridTable>
+    {{/if}}
+  </accordion.body>
+</UiAccordion>
+
+<div class="mt-3 mb-3">
   <LinkTo @route="vc.applications.index" @query={{hash year=this.application.year}}>
-    Back to {{this.application.year}} Prospective Applications Listing
+    {{fa-icon "arrow-left" right=1}} {{this.application.year}} Applications
   </LinkTo>
 </div>
 
