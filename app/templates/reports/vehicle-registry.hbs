@@ -3,64 +3,66 @@
             @minYear={{2019}}
             @onChange={{set-value this 'year'}}
 />
-<div class="row">
-  <FormLabel @auto={{true}}>Filter by Status</FormLabel>
-  <div class="col-sm-12 col-xl-auto">
-    <ChForm::Select @name="filter"
-                    @value={{this.filter}}
-                    @options={{this.filterOptions}}
-                    @onChange={{set-value this 'filter'}} />
-  </div>
-  <FormLabel @auto={{true}}>Filter by type</FormLabel>
-  <div class="col-sm-12 col-xl-auto">
-    <ChForm::Select @name="filter"
-                    @value={{this.typeFilter}}
-                    @options={{this.filterTypeOptions}}
-                    @onChange={{set-value this 'typeFilter'}} />
-  </div>
-  <FormLabel @auto={{true}}>Filter by rental, driving, or license #:</FormLabel>
-  <div class="col-sm-6 col-xl-auto">
-    <Input @type="text" @value={{this.numberFilter}} size="10" class="form-control"/>
-  </div>
-  <div class="col-sm-12 col-xl-auto mt-2 mt-xl-1">
-    <UiButton @type="secondary" @size="sm" @onClick={{this.clearNumberFilterAction}}>
-      Clear
-    </UiButton>
-  </div>
-</div>
-
-{{#if this.canEditVehicles}}
-  <UiButtonRow class="my-3">
-    <UiButton @onClick={{this.newEditAction}} @size="sm">New Vehicle</UiButton>
-    <UiExportToCSVButton @onClick={{this.exportToCSV}} />
-  </UiButtonRow>
-{{/if}}
 
 <UiSection>
   <:title>
-    Showing {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "Vehicle"}}
+    {{this.year}} Vehicle Registry
+    <span class="text-muted ms-2 fs-6 fw-normal">
+      {{this.viewVehicles.length}} of {{pluralize this.person_vehicle.length "vehicle"}}
+    </span>
   </:title>
+  <:actions>
+  </:actions>
   <:body>
-    <div class="vehicle-registry-table">
-      <div class="vehicle-registry-header">
-        <div class="vehicle-registry-person">Person/Team</div>
-        <div class="vehicle-registry-status">Status</div>
-        <div class="vehicle-registry-vehicle">Vehicle/Class/Lic.</div>
-        <div class="vehicle-registry-rental">DPW Request ID</div>
-        <div class="vehicle-registry-sticker">Driving Permit / #</div>
-        <div class="vehicle-registry-logo">Ranger Logo</div>
-        <div class="vehicle-registry-fuel-chit">Fuel Chit</div>
-        <div class="vehicle-registry-amber-light">Amber Light</div>
-        <div class="vehicle-registry-mvr">MVR</div>
-        <div class="vehicle-registry-motorpool">Motor Pool</div>
-        <div class="vehicle-registry-action">Action</div>
+    <div class="vr-filter-bar mb-3">
+      <div class="vr-filter-group">
+        <label class="form-label mb-0 small">Status</label>
+        <ChForm::Select @name="filter"
+                        @value={{this.filter}}
+                        @options={{this.filterOptions}}
+                        @onChange={{set-value this 'filter'}} />
+      </div>
+      <div class="vr-filter-group">
+        <label class="form-label mb-0 small">Type</label>
+        <ChForm::Select @name="typeFilter"
+                        @value={{this.typeFilter}}
+                        @options={{this.filterTypeOptions}}
+                        @onChange={{set-value this 'typeFilter'}} />
+      </div>
+      <div class="vr-filter-group vr-filter-search">
+        <label class="form-label mb-0 small">Rental / Driving / License #</label>
+        <div class="input-group">
+          <span class="input-group-text">{{fa-icon "search"}}</span>
+          <Input @type="text" @value={{this.numberFilter}} class="form-control" placeholder="Search..."/>
+          {{#if this.numberFilter}}
+            <button type="button" class="btn btn-outline-secondary" {{on "click" this.clearNumberFilterAction}}>
+              {{fa-icon "times"}}
+            </button>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+
+    {{#if this.canEditVehicles}}
+      <UiButtonRow class="mb-3">
+        <UiButton @onClick={{this.newEditAction}} @size="sm">New Vehicle</UiButton>
+        <UiExportToCSVButton @onClick={{this.exportToCSV}} />
+      </UiButtonRow>
+    {{/if}}
+
+    {{!-- Desktop table (xl+) --}}
+    <div class="vr-table d-none d-xl-block">
+      <div class="vr-header">
+        <div class="vr-col-person">Person/Team</div>
+        <div class="vr-col-status">Status</div>
+        <div class="vr-col-vehicle">Vehicle</div>
+        <div class="vr-col-permit">Permit &amp; IDs</div>
+        <div class="vr-col-items">Items</div>
+        <div class="vr-col-action">Action</div>
       </div>
       {{#each this.viewVehicles as |vehicle|}}
-        <div class="vehicle-registry-row">
-          <div class="vehicle-registry-person">
-            {{#if this.session.isSmallScreen}}
-              <b>Owner</b><br>
-            {{/if}}
+        <div class="vr-row {{if vehicle.isFleet "vr-fleet" "vr-personal"}}">
+          <div class="vr-col-person">
             {{#if vehicle.isPersonal}}
               <PersonLink @person={{vehicle.person}} />
             {{else if vehicle.team_assignment}}
@@ -69,11 +71,104 @@
               <i>Fleet Vehicle</i>
             {{/if}}
           </div>
-          <div class="vehicle-registry-status">
-            {{#if this.session.isSmallScreen}}
-              <b>Status</b><br>
+          <div class="vr-col-status">
+            {{#if vehicle.isApproved}}
+              <UiBadge @type="success">approved</UiBadge>
+            {{else if vehicle.isRejected}}
+              <UiBadge @type="danger">denied</UiBadge>
+            {{else if vehicle.isPending}}
+              <UiBadge @type="secondary">pending</UiBadge>
+            {{else}}
+              {{vehicle.status}}
             {{/if}}
-            {{#if vehicle.isPersonal}}
+          </div>
+          <div class="vr-col-vehicle">
+            {{vehicle.vehicle_year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}} {{vehicle.vehicle_color}}<br>
+            {{vehicle.vehicle_class}}<br>
+            {{vehicle.license_state}}-{{vehicle.license_number}}
+          </div>
+          <div class="vr-col-permit">
+            {{#if vehicle.isRejected}}
+              -
+            {{else}}
+              {{vehicle.drivingStickerLabel}}
+              {{#if vehicle.sticker_number}}
+                #{{vehicle.sticker_number}}
+              {{/if}}
+            {{/if}}
+            <br>
+            <PresentOrNot @value={{vehicle.rental_number}} @empty="-"/>
+          </div>
+          <div class="vr-col-items">
+            {{#if vehicle.isRejected}}
+              -
+            {{else}}
+              {{#if (not-eq vehicle.ranger_logo "none")}}
+                <span class="vr-item-pill">{{vehicle.rangerLogoLabel}}</span>
+              {{/if}}
+              {{#if (not-eq vehicle.fuel_chit "none")}}
+                <span class="vr-item-pill">{{vehicle.fuelChitLabel}}</span>
+              {{/if}}
+              {{#if (not-eq vehicle.amber_light "none")}}
+                <span class="vr-item-pill">{{vehicle.amberLightLabel}}</span>
+              {{/if}}
+              {{#if vehicle.org_vehicle_insurance}}
+                <span class="vr-item-pill vr-item-mvr">MVR</span>
+              {{/if}}
+              {{#if vehicle.signed_motorpool_agreement}}
+                <span class="vr-item-pill vr-item-mp">Motor Pool</span>
+              {{/if}}
+              {{#if (not (or
+                (not-eq vehicle.ranger_logo "none")
+                (not-eq vehicle.fuel_chit "none")
+                (not-eq vehicle.amber_light "none")
+                vehicle.org_vehicle_insurance
+                vehicle.signed_motorpool_agreement
+              ))}}
+                -
+              {{/if}}
+            {{/if}}
+          </div>
+          <div class="vr-col-action">
+            <UiButtonRow>
+              {{#if this.canEditVehicles}}
+                <UiEditButton @type="secondary" @size="sm"
+                              @onClick={{fn this.editEntryAction vehicle}} />
+              {{/if}}
+              <UiButton @type="secondary" @size="sm"
+                        @onClick={{fn this.editStickerAction vehicle}}>
+                Permit
+              </UiButton>
+            </UiButtonRow>
+          </div>
+        </div>
+      {{else}}
+        <div class="vr-row">
+          <UiEmptyState @icon="car"
+                        @title="No vehicles found"
+                        @description={{if this.person_vehicle
+                                          (concat "No " this.year " vehicles matched the criteria.")
+                                          (concat "No " this.year " vehicles were found.")
+          }} />
+        </div>
+      {{/each}}
+    </div>
+
+    {{!-- Mobile card list (below xl) --}}
+    <div class="vr-card-list d-xl-none">
+      {{#each this.viewVehicles as |vehicle|}}
+        <div class="vr-card {{if vehicle.isFleet "vr-fleet" "vr-personal"}}">
+          <div class="vr-card-header">
+            <div class="vr-card-owner">
+              {{#if vehicle.isPersonal}}
+                <PersonLink @person={{vehicle.person}} />
+              {{else if vehicle.team_assignment}}
+                Team {{vehicle.team_assignment}}
+              {{else}}
+                <i>Fleet Vehicle</i>
+              {{/if}}
+            </div>
+            <div>
               {{#if vehicle.isApproved}}
                 <UiBadge @type="success">approved</UiBadge>
               {{else if vehicle.isRejected}}
@@ -83,101 +178,61 @@
               {{else}}
                 {{vehicle.status}}
               {{/if}}
-            {{else}}
-              -
-            {{/if}}
-          </div>
-          <div class="vehicle-registry-vehicle">
-            {{#if this.session.isSmallScreen}}
-              <b>Vehicle Desc./Class/Lic.</b><br>
-            {{/if}}
-            {{vehicle.vehicle_year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}} {{vehicle.vehicle_color}}<br>
-            {{vehicle.vehicle_class}}<br>
-            {{vehicle.license_state}}-{{vehicle.license_number}}
-          </div>
-          <div class="vehicle-registry-rental">
-            {{#if this.session.isSmallScreen}}
-              <b>DPW Request ID</b><br>
-            {{/if}}
-            <PresentOrNot @value={{vehicle.rental_number}} @empty="-"/>
-          </div>
-          <div class="vehicle-registry-sticker">
-            {{#if this.session.isSmallScreen}}
-              <b>Driving Permit / #</b><br>
-            {{/if}}
-            {{#if vehicle.isRejected}}
-              -
-            {{else}}
-              {{vehicle.drivingStickerLabel}}<br>
-              <PresentOrNot @value={{vehicle.sticker_number}} @empty="-"/>
-            {{/if}}
-          </div>
-          <div class="vehicle-registry-logo">
-            {{#if this.session.isSmallScreen}}
-              <b>Ranger Logo</b><br>
-            {{/if}}
-            {{#if vehicle.isRejected}}
-              -
-            {{else}}
-              {{vehicle.rangerLogoLabel}}
-            {{/if}}
-          </div>
-          <div class="vehicle-registry-fuel-chit">
-            {{#if this.session.isSmallScreen}}
-              <b>Fuel Chit</b><br>
-            {{/if}}
-            {{#if vehicle.isRejected}}
-              -
-            {{else}}
-              {{vehicle.fuelChitLabel}}
-            {{/if}}
-          </div>
-          <div class="vehicle-registry-amber-light">
-            {{#if this.session.isSmallScreen}}
-              <b>Amber Light</b><br>
-            {{/if}}
-
-            {{#if vehicle.isRejected}}
-              -
-            {{else}}
-              {{vehicle.amberLightLabel}}
-            {{/if}}
-          </div>
-          <div class="vehicle-registry-mvr">
-            {{#if this.session.isSmallScreen}}
-              <b>Has MVR?</b><br>
-            {{/if}}
-            {{if vehicle.org_vehicle_insurance "MVR" "-"}}
-          </div>
-          <div class="vehicle-registry-motorpool">
-            {{#if this.session.isSmallScreen}}
-              <b>Has Motor Pool?</b><br>
-            {{/if}}
-            {{if vehicle.signed_motorpool_agreement "Motor Pool" "-"}}
-          </div>
-          <div class="vehicle-registry-action">
-            <UiButtonRow>
-              {{#if this.canEditVehicles}}
-                <UiEditButton @type="secondary" @size="sm"
-                              @onClick={{fn this.editEntryAction vehicle}}/>
+              {{#if vehicle.isFleet}}
+                <UiBadge @type="info" class="ms-1">Fleet</UiBadge>
               {{/if}}
-              <UiButton @type="secondary" @size="sm"
-                        @onClick={{fn this.editStickerAction vehicle}}>
-                {{fa-icon "plus" right=1}} View / Add Permit
-              </UiButton>
-            </UiButtonRow>
+            </div>
           </div>
+          <div class="vr-card-vehicle">
+            {{vehicle.vehicle_year}} {{vehicle.vehicle_make}} {{vehicle.vehicle_model}} {{vehicle.vehicle_color}}
+            | {{vehicle.vehicle_class}}
+            | {{vehicle.license_state}}-{{vehicle.license_number}}
+          </div>
+          {{#unless vehicle.isRejected}}
+            <div class="vr-card-permit-row">
+              Permit: {{vehicle.drivingStickerLabel}}
+              {{#if vehicle.sticker_number}}
+                #{{vehicle.sticker_number}}
+              {{/if}}
+            </div>
+          {{/unless}}
+          <div class="vr-card-actions">
+            <UiButton @type="primary" @size="sm"
+                      @onClick={{fn this.editStickerAction vehicle}}>
+              {{fa-icon "plus" right=1}} View / Add Permit
+            </UiButton>
+            {{#if this.canEditVehicles}}
+              <UiEditButton @type="secondary" @size="sm"
+                            @onClick={{fn this.editEntryAction vehicle}} />
+            {{/if}}
+          </div>
+          <details class="vr-card-details">
+            <summary>More details</summary>
+            <div class="vr-card-details-grid">
+              <span class="text-muted">DPW Req. ID</span>
+              <span><PresentOrNot @value={{vehicle.rental_number}} @empty="-"/></span>
+              {{#unless vehicle.isRejected}}
+                <span class="text-muted">Ranger Logo</span>
+                <span>{{vehicle.rangerLogoLabel}}</span>
+                <span class="text-muted">Fuel Chit</span>
+                <span>{{vehicle.fuelChitLabel}}</span>
+                <span class="text-muted">Amber Light</span>
+                <span>{{vehicle.amberLightLabel}}</span>
+                <span class="text-muted">MVR</span>
+                <span>{{if vehicle.org_vehicle_insurance "Yes" "-"}}</span>
+                <span class="text-muted">Motor Pool</span>
+                <span>{{if vehicle.signed_motorpool_agreement "Yes" "-"}}</span>
+              {{/unless}}
+            </div>
+          </details>
         </div>
       {{else}}
-        <div class="vehicle-registry-row">
-          <div class="vehicle-registry-not-found">
-            {{#if this.person_vehicle}}
-              No {{this.year}} vehicles matched the criteria.
-            {{else}}
-              No {{this.year}} vehicles were found.
-            {{/if}}
-          </div>
-        </div>
+        <UiEmptyState @icon="car"
+                      @title="No vehicles found"
+                      @description={{if this.person_vehicle
+                                        (concat "No " this.year " vehicles matched the criteria.")
+                                        (concat "No " this.year " vehicles were found.")
+        }} />
       {{/each}}
     </div>
   </:body>

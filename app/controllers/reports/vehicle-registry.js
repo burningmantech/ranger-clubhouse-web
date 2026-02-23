@@ -2,6 +2,7 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {isEmpty} from '@ember/utils';
+import {ADMIN, VEHICLE_INFO_UPDATE} from "clubhouse/constants/roles";
 
 export default class ReportsPersonVehiclesController extends ClubhouseController {
   queryParams = ['year'];
@@ -25,7 +26,6 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
     {id: 'approved', title: 'Approved'},
     {id: 'rejected', title: 'Rejected'},
   ];
-
 
   get viewVehicles() {
     let vehicles = this.person_vehicle;
@@ -147,7 +147,7 @@ export default class ReportsPersonVehiclesController extends ClubhouseController
   }
 
   get canEditVehicles() {
-    return this.session.isAdmin;
+    return this.session.hasRole([ ADMIN, VEHICLE_INFO_UPDATE]);
   }
 
   @action

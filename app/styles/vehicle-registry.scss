@@ -1,191 +1,226 @@
-.vehicle-registry-table {
-  margin-bottom: 10px;
+// ── Fleet / Personal visual distinction ──
+
+.vr-fleet {
+  border-left: 3px solid #0d6efd;
 }
 
-.vehicle-registry-row:nth-child(odd) {
+.vr-personal {
+  border-left: 3px solid #6c757d;
+}
+
+// ── Desktop flex table ──
+
+.vr-table {
+  margin-bottom: 10px;
+
+  .vr-fleet {
+    background-color: #f0f6ff;
+  }
+}
+
+.vr-row:nth-child(odd) {
   background-color: $table-striped-bg;
 }
 
-.vehicle-registry-header {
+.vr-header {
   color: $table-head-color;
   background-color: $table-head-bg !important;
   border-color: $table-border-color;
   font-weight: bold;
+  align-items: center;
+  position: sticky;
+  top: 0.25vh;
+  z-index: 10;
 }
 
-
-.vehicle-registry-row {
+.vr-row {
   border-top: 1px solid #ddd;
 }
 
-.vehicle-registry-row:hover {
+.vr-row:hover {
   background-color: $table-hover-bg;
 }
 
-@media print {
-  .vehicle-registry-table {
-    font-size: 1rem;
-  }
-}
-
-.vehicle-registry-header, .vehicle-registry-row {
+.vr-header, .vr-row {
   display: flex;
   width: 100%;
   flex-wrap: wrap;
   flex-direction: row;
-  flex-shrink: 1;
 
   > div {
     padding: 5px 7px;
   }
 }
 
-.vehicle-registry-header {
-  align-items: center;
+.vr-col-person {
+  width: 15%;
 }
 
-.vehicle-registry-status {
+.vr-col-status {
+  width: 5%;
   text-align: center;
 }
 
-@include media-breakpoint-up(xl) {
-  .vehicle-registry-table {
-    font-size: 0.90em;
-  }
+.vr-col-vehicle {
+  width: 25%;
+}
 
-  .vehicle-registry-header, .vehicle-registry-row {
-    width: 100%;
-   }
+.vr-col-permit {
+  width: 15%;
+}
 
-  .vehicle-registry-header {
-    position: sticky;
-    top: 0.25vh;
-    z-index: 10;
-  }
+.vr-col-items {
+  width: 25%;
+}
 
-  .vehicle-registry-person {
-    width: 8%;
-  }
+.vr-col-action {
+  width: 15%;
+}
 
-  .vehicle-registry-status {
-    width: 7%;
-  }
-  .vehicle-registry-vehicle {
-    width: 17%;
+// ── Item pills ──
 
-  }
-  .vehicle-registry-rental {
-    width: 8%;
+.vr-item-pill {
+  display: inline-block;
+  font-size: 0.75em;
+  font-weight: 500;
+  background-color: #e9ecef;
+  border-radius: 2px;
+  padding: 1px 6px;
+  margin: 1px 2px;
+}
 
-  }
-  .vehicle-registry-sticker {
-    width: 10%;
+.vr-item-mvr {
+  background-color: #d4edda;
+}
 
-  }
+.vr-item-mp {
+  background-color: #d1ecf1;
+}
 
-  .vehicle-registry-logo {
-    text-align: center;
-    width: 8%;
+// ── Mobile card list (below xl) ──
 
-  }
-  .vehicle-registry-fuel-chit {
-    text-align: center;
-    width: 5%;
+.vr-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 
-  }
-  .vehicle-registry-amber-light {
-    text-align: center;
-    width: 5%;
-  }
-  .vehicle-registry-mvr {
-    text-align: center;
-    width: 4%;
+.vr-card {
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  padding: 0.75rem;
+}
 
-  }
-  .vehicle-registry-motorpool {
-    text-align: center;
-    width: 10%;
+.vr-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
 
-  }
-  .vehicle-registry-action {
-    width: 18%;
+.vr-card-owner {
+  font-weight: 600;
+}
+
+.vr-card-vehicle {
+  font-size: 0.88em;
+  color: $text-muted;
+  margin-bottom: 0.25rem;
+}
+
+.vr-card-permit-row {
+  font-size: 0.85em;
+  margin-bottom: 0.5rem;
+}
+
+.vr-card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+
+  > :first-child {
+    flex: 1;
   }
 }
 
-@include media-breakpoint-down(xl) {
-  .vehicle-registry-header {
-    display: none !important;
+.vr-card-details {
+  summary {
+    font-size: 0.85em;
+    font-weight: 500;
+    margin: 0;
+    padding: 4px 8px;
+    background-color: #f8f9fa;
+    border-bottom: none;
   }
+}
 
-  .vehicle-registry-row {
-    padding: 5px;
-    border: 1px solid #bebebe;
-  }
+.vr-card-details-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.25rem 0.75rem;
+  font-size: 0.85em;
+  padding: 0.5rem 0;
+}
 
-  .vehicle-registry-person {
-    width: 49%;
-    order: 1;
-  }
-  .vehicle-registry-status {
-    order: 2;
-    width: 49%;
-    text-align: right;
-  }
-  .vehicle-registry-vehicle {
-    order: 3;
-    width: 100%;
+// ── Filter bar ──
 
-  }
-  .vehicle-registry-rental {
-    order: 4;
-    width: 49%;
-  }
+.vr-filter-bar {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
 
-  .vehicle-registry-sticker {
-    order: 5;
-    width: 49%;
-    text-align: right;
+.vr-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.vr-filter-search {
+  flex: 1;
+  min-width: 200px;
+}
+
+@include media-breakpoint-down(md) {
+  .vr-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
   }
+}
 
-  .vehicle-registry-license {
-    order: 6;
-    width: 49%;
-  }
+// ── Sticker modal ──
 
-  .vehicle-registry-logo {
-    order: 7;
-    width: 49%;
-  }
+.vr-sticker-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
 
-  .vehicle-registry-fuel-chit {
-    order: 8;
-    width: 49%;
-    text-align: right;
-  }
+.vr-sticker-item {
+  border: 1px solid #dee2e6;
+  background-color: #fafafa;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
 
-  .vehicle-registry-amber-light {
-    order: 9;
-    width: 49%;
-  }
+.vr-sticker-item-label {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: $text-muted;
+}
 
-  .vehicle-registry-mvr {
-    order: 10;
-    width: 49%;
-    text-align: right;
-  }
+.vr-sticker-item-value {
+  margin-top: 0.125rem;
+}
 
-  .vehicle-registry-motorpool {
-    order: 10;
-    width: 49%;
-  }
+// ── Print ──
 
-  .vehicle-registry-action {
-    order: 11;
-    width: 100%;
-
-    button {
-      display: inline-block;
-      width: 49%;
-    }
+@media print {
+  .vr-table {
+    font-size: 1rem;
   }
 }
