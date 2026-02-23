@@ -1,227 +1,240 @@
 <ModalDialog @title="{{if @entry.isNew "Create" "Update"}} Personal Vehicle"
              @onEscape={{@cancelAction}}
-             @size="xl" as |Modal|>
+             @size={{this.modalSize}} as |Modal|>
   <ChForm @formId="vehicle"
           @formFor={{@entry}}
           @validator={{this.vehicleValidations}}
           @onSubmit={{@saveAction}} as |f|>
     <Modal.body>
       {{#if this.canEditFullRecord}}
-        <fieldset class="mt-2">
-          <legend>Vehicle Record Type &amp; Assignment</legend>
-          <FormRow>
-            <div class="col-auto">
-              <FormLabel>Type</FormLabel>
-              <div class="mt-2">
-                <f.radioGroup @name="type"
-                              @options={{this.typeOptions}}
-                              @inline={{true}}
-                              @fieldSize="sm"
-                />
+        <UiSection>
+          <:title>Vehicle Record Type &amp; Assignment</:title>
+          <:body>
+            <FormRow>
+              <div class="col-auto">
+                <FormLabel>Type</FormLabel>
+                <div class="mt-2">
+                  <f.radioGroup @name="type"
+                                @options={{this.typeOptions}}
+                                @inline={{true}}
+                                @fieldSize="sm"
+                  />
+                </div>
               </div>
-            </div>
-            <f.text @name="event_year"
-                    @label="Event Year"
-                    @size={{4}}
-                    @fieldSize="sm"
-            />
-            {{#if (eq f.model.type "personal")}}
-              <f.search @name="callsign"
-                        @label="Personal Vehicle Owner"
-                        @controlClass="form-control form-control-sm autocomplete-input"
-                        @onSearch={{this.searchCallsignAction}}
-                        @noResultsText="No callsigns found"
-                        @fieldSize="sm"
+              <f.text @name="event_year"
+                      @label="Event Year"
+                      @size={{4}}
+                      @fieldSize="sm"
               />
-            {{else}}
-              <f.text @name="team_assignment"
-                      @label="Team Assignment"
-                      @size={{10}}
-                      @fieldSize="sm"/>
-            {{/if}}
-          </FormRow>
-        </fieldset>
+              {{#if (eq f.model.type "personal")}}
+                <f.search @name="callsign"
+                          @label="Personal Vehicle Owner"
+                          @controlClass="form-control form-control-sm autocomplete-input"
+                          @onSearch={{this.searchCallsignAction}}
+                          @noResultsText="No callsigns found"
+                          @fieldSize="sm"
+                />
+              {{else}}
+                <f.text @name="team_assignment"
+                        @label="Team Assignment"
+                        @size={{10}}
+                        @fieldSize="sm"/>
+              {{/if}}
+            </FormRow>
+          </:body>
+        </UiSection>
       {{/if}}
       {{#if this.canEditInfo}}
-        <fieldset>
-          <legend>Vehicle Description &amp; Licensing</legend>
-          <FormRow>
-            <f.select @name="vehicle_class"
-                      @label="Class"
-                      @options={{this.vehicleClassOptions}}
+        <UiSection>
+          <:title>Vehicle Description &amp; Licensing</:title>
+          <:body>
+            <FormRow>
+              <f.select @name="vehicle_class"
+                        @label="Class"
+                        @options={{this.vehicleClassOptions}}
+                        @fieldSize="sm"/>
+              <f.text @name="vehicle_year"
+                      @label="Year"
+                      @size={{4}}
+                      @maxlength={{4}}
                       @fieldSize="sm"/>
-            <f.text @name="vehicle_year"
-                    @label="Year"
-                    @size={{4}}
-                    @maxlength={{4}}
-                    @fieldSize="sm"/>
-            <f.text @name="vehicle_make"
-                    @label="Make"
-                    @size={{15}}
-                    @fieldSize="sm"
-                    @hint="e.g., Ford, GMC, Toyota, etc."/>
-            <f.text @name="vehicle_model" @label="Model"
-                    @hint="e.g., F-350, Tacoma, etc."
-                    @size={{15}}
-                    @fieldSize="sm"/>
-            <f.text @name="vehicle_color"
-                    @label="Color"
-                    @size={{15}}
-                    @fieldSize="sm"/>
-          </FormRow>
-          <FormRow>
-            <f.text @name="rental_number"
-                    @label="DPW Request ID"
-                    @fieldSize="sm"
-                    @disabled={{eq f.model.type "personal"}}
-            />
-            <f.text @name="sticker_number"
-                    @label="Driving Permit #"
-                    @size={{10}}
-                    @fieldSize="sm"
-            />
-            <f.select @name="license_state"
-                      @label="License State/Province"
-                      @options={{this.stateOptions}}
+              <f.text @name="vehicle_make"
+                      @label="Make"
+                      @size={{15}}
                       @fieldSize="sm"
-            />
-            <f.text @name="license_number"
-                    @label="License Plate #"
-                    @size={{10}}
-                    @fieldSize="sm"/>
-          </FormRow>
-        </fieldset>
+                      @hint="e.g., Ford, GMC, Toyota, etc."/>
+              <f.text @name="vehicle_model" @label="Model"
+                      @hint="e.g., F-350, Tacoma, etc."
+                      @size={{15}}
+                      @fieldSize="sm"/>
+              <f.text @name="vehicle_color"
+                      @label="Color"
+                      @size={{15}}
+                      @fieldSize="sm"/>
+            </FormRow>
+            <FormRow>
+              <f.text @name="rental_number"
+                      @label="DPW Request ID"
+                      @fieldSize="sm"
+                      @disabled={{eq f.model.type "personal"}}
+              />
+              <f.text @name="sticker_number"
+                      @label="Driving Permit #"
+                      @size={{10}}
+                      @fieldSize="sm"
+              />
+              <f.select @name="license_state"
+                        @label="License State/Province"
+                        @options={{this.stateOptions}}
+                        @fieldSize="sm"
+              />
+              <f.text @name="license_number"
+                      @label="License Plate #"
+                      @size={{10}}
+                      @fieldSize="sm"/>
+            </FormRow>
+          </:body>
+        </UiSection>
       {{/if}}
-      <fieldset class="mb-2">
-        <legend>Person MVR / PVR Details</legend>
-        {{#if (eq f.model.type "personal")}}
-          {{#if this.requestInfo}}
-            <UiGridTable as |t|>
-              <t.label>MVR Positions</t.label>
-              <t.column>
-                <div class="columns-container columns-4">
-                  {{#each this.requestInfo.mvr_positions as |position|}}
-                    <div>{{position.title}}</div>
-                  {{else}}
-                    <i>No MVR positions found.</i>
-                  {{/each}}
-                </div>
-              </t.column>
-              <t.label>MVR Signups</t.label>
-              <t.column>
-                <div class="columns-container columns-4">
-                  {{#each this.requestInfo.mvr_signups as |slot|}}
-                    <div class="mb-1">
-                      {{slot.position_title}}<br>
-                      {{shift-format slot.begins}}
+      {{#if (eq f.model.type "personal")}}
+        <UiAccordion as |accordion|>
+          <accordion.title>
+            Person MVR / PVR Details
+            {{#if this.mvrSummaryCount}}
+              <span class="text-muted ms-2">({{this.mvrSummaryCount}})</span>
+            {{/if}}
+          </accordion.title>
+          <accordion.body>
+            {{#if accordion.isOpen}}
+              {{#if this.requestInfo}}
+                <UiGridTable as |t|>
+                  <t.label>MVR Positions</t.label>
+                  <t.column>
+                    <div class="columns-container columns-4">
+                      {{#each this.requestInfo.mvr_positions as |position|}}
+                        <div>{{position.title}}</div>
+                      {{else}}
+                        <i>No MVR positions found.</i>
+                      {{/each}}
                     </div>
-                  {{else}}
-                    <i>No MVR signups found.</i>
-                  {{/each}}
-                </div>
-              </t.column>
-              <t.label>PVR Positions</t.label>
-              <t.column>
-                <div class="columns-container columns-4">
-                  {{#each this.requestInfo.pvr_positions as |position|}}
-                    <div>{{position.title}}</div>
-                  {{else}}
-                    <i>No PVR positions found.</i>
-                  {{/each}}
-                </div>
-              </t.column>
-              <t.label>
-                MVR Teams
-              </t.label>
-              <t.column>
-                <div class="columns-container columns-4">
-                  {{#each this.requestInfo.mvr_teams as |team|}}
-                    <div>{{team.title}}</div>
-                  {{else}}
-                    <i>No MVR teams found.</i>
-                  {{/each}}
-                </div>
-              </t.column>
-              <t.label>PVR Teams</t.label>
-              <t.column>
-                <div class="columns-container columns-4">
-                  {{#each this.requestInfo.pvr_teams as |team|}}
-                    <div>{{team.title}}</div>
-                  {{else}}
-                    <i>No PVR teams found.</i>
-                  {{/each}}
-                </div>
-              </t.column>
-            </UiGridTable>
-          {{else}}
-            No MVR positions / signups details available.
-          {{/if}}
-        {{else}}
-          The vehicle is not a personal one, so no MVR / PVR details are shown.
-        {{/if}}
-      </fieldset>
+                  </t.column>
+                  <t.label>MVR Signups</t.label>
+                  <t.column>
+                    <div class="columns-container columns-4">
+                      {{#each this.requestInfo.mvr_signups as |slot|}}
+                        <div class="mb-1">
+                          {{slot.position_title}}<br>
+                          {{shift-format slot.begins}}
+                        </div>
+                      {{else}}
+                        <i>No MVR signups found.</i>
+                      {{/each}}
+                    </div>
+                  </t.column>
+                  <t.label>PVR Positions</t.label>
+                  <t.column>
+                    <div class="columns-container columns-4">
+                      {{#each this.requestInfo.pvr_positions as |position|}}
+                        <div>{{position.title}}</div>
+                      {{else}}
+                        <i>No PVR positions found.</i>
+                      {{/each}}
+                    </div>
+                  </t.column>
+                  <t.label>MVR Teams</t.label>
+                  <t.column>
+                    <div class="columns-container columns-4">
+                      {{#each this.requestInfo.mvr_teams as |team|}}
+                        <div>{{team.title}}</div>
+                      {{else}}
+                        <i>No MVR teams found.</i>
+                      {{/each}}
+                    </div>
+                  </t.column>
+                  <t.label>PVR Teams</t.label>
+                  <t.column>
+                    <div class="columns-container columns-4">
+                      {{#each this.requestInfo.pvr_teams as |team|}}
+                        <div>{{team.title}}</div>
+                      {{else}}
+                        <i>No PVR teams found.</i>
+                      {{/each}}
+                    </div>
+                  </t.column>
+                </UiGridTable>
+              {{else}}
+                No MVR positions / signups details available.
+              {{/if}}
+            {{/if}}
+          </accordion.body>
+        </UiAccordion>
+      {{/if}}
       {{#if this.canEditFullRecord}}
-        <fieldset>
-          <legend>Personal Vehicle Use Items (Stickers &amp; Other Items)</legend>
-          <FormRow>
-            <f.radioGroup @name="driving_sticker"
-                          @label="Driving Permit"
-                          @fixedLabel={{true}}
-                          @options={{this.drivingStickerOptions}}
-                          @inline={{true}}/>
-          </FormRow>
-          <FormRow>
-            <f.radioGroup @name="ranger_logo"
-                          @label="Ranger Logo"
-                          @fixedLabel={{true}}
-                          @options={{this.rangerLogoOptions}}
-                          @inline={{true}}/>
-          </FormRow>
-          <FormRow>
-            <f.radioGroup @name="fuel_chit"
-                          @label="Fuel Chit"
-                          @fixedLabel={{true}}
-                          @options={{this.fuelChitOptions}}
-                          @inline={{true}}/>
-          </FormRow>
-          <FormRow>
-            <f.radioGroup @name="amber_light"
-                          @label="Amber Light"
-                          @fixedLabel={{true}}
-                          @options={{this.amberLightOptions}}
-                          @inline={{true}}/>
-          </FormRow>
-        </fieldset>
-        <fieldset class="mt-2">
-          <legend>Notes &amp; Status</legend>
-          <FormRow>
-            <f.textarea @name="notes"
-                        @label="Private Notes"
-                        @rows={{2}}
-                        @cols={{80}}
-            />
-          </FormRow>
-          <FormRow>
-            <f.textarea @name="request_comment"
-                        @label="Comment from person (only used for personal vehicles)"
-                        @rows={{2}}
-                        @cols={{80}}
-                        @disabled={{not-eq f.model.type "personal"}}/>
-          </FormRow>
-          <FormRow>
-            <f.textarea @name="response"
-                        @label="Response to person (only used for personal vehicles)"
-                        @rows={{2}}
-                        @cols={{80}}
-                        @disabled={{not-eq f.model.type "personal"}}/>
-          </FormRow>
-          <FormRow>
-            <f.radioGroup @name="status"
-                          @label="Request Status"
-                          @options={{this.statusOptions}}
-                          @inline={{true}} />
-          </FormRow>
-        </fieldset>
+        <UiSection>
+          <:title>Personal Vehicle Use Items (Stickers &amp; Other Items)</:title>
+          <:body>
+            <FormRow>
+              <f.radioGroup @name="driving_sticker"
+                            @label="Driving Permit"
+                            @fixedLabel={{true}}
+                            @options={{this.drivingStickerOptions}}
+                            @inline={{true}}/>
+            </FormRow>
+            <FormRow>
+              <f.radioGroup @name="ranger_logo"
+                            @label="Ranger Logo"
+                            @fixedLabel={{true}}
+                            @options={{this.rangerLogoOptions}}
+                            @inline={{true}}/>
+            </FormRow>
+            <FormRow>
+              <f.radioGroup @name="fuel_chit"
+                            @label="Fuel Chit"
+                            @fixedLabel={{true}}
+                            @options={{this.fuelChitOptions}}
+                            @inline={{true}}/>
+            </FormRow>
+            <FormRow>
+              <f.radioGroup @name="amber_light"
+                            @label="Amber Light"
+                            @fixedLabel={{true}}
+                            @options={{this.amberLightOptions}}
+                            @inline={{true}}/>
+            </FormRow>
+          </:body>
+        </UiSection>
+        <UiSection>
+          <:title>Notes &amp; Status</:title>
+          <:body>
+            <FormRow>
+              <f.textarea @name="notes"
+                          @label="Private Notes"
+                          @rows={{2}}
+                          @cols={{80}}
+              />
+            </FormRow>
+            <FormRow>
+              <f.textarea @name="request_comment"
+                          @label="Comment from person (only used for personal vehicles)"
+                          @rows={{2}}
+                          @cols={{80}}
+                          @disabled={{not-eq f.model.type "personal"}}/>
+            </FormRow>
+            <FormRow>
+              <f.textarea @name="response"
+                          @label="Response to person (only used for personal vehicles)"
+                          @rows={{2}}
+                          @cols={{80}}
+                          @disabled={{not-eq f.model.type "personal"}}/>
+            </FormRow>
+            <FormRow>
+              <f.radioGroup @name="status"
+                            @label="Request Status"
+                            @options={{this.statusOptions}}
+                            @inline={{true}} />
+            </FormRow>
+          </:body>
+        </UiSection>
       {{/if}}
     </Modal.body>
     <Modal.footer @align="start">

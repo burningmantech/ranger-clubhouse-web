@@ -96,6 +96,16 @@ export default class VehicleRegistryFullEditComponent extends Component {
     this.canEditInfo = this.session.hasRole([ADMIN, VEHICLE_INFO_UPDATE]);
   }
 
+  get modalSize() {
+    return this.canEditFullRecord ? 'xl' : 'lg';
+  }
+
+  get mvrSummaryCount() {
+    if (!this.requestInfo) return 0;
+    return (this.requestInfo.mvr_positions?.length ?? 0)
+      + (this.requestInfo.pvr_positions?.length ?? 0);
+  }
+
   async _loadPersonInfo(personId) {
     this.isLoading = true;
     try {

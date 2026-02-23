@@ -1,59 +1,71 @@
-<ModalDialog @onEscape={{@cancelAction}}  as |Modal|>
+<ModalDialog @onEscape={{@cancelAction}} as |Modal|>
   <ChForm @formId="vehicle"
           @formFor={{@entry}}
           @onSubmit={{@saveAction}} as |f|>
     <Modal.title>
-      {{@entry.person.callsign}} - {{@entry.vehicle_year}} {{@entry.vehicle_make}} {{@entry.vehicle_model}}
-      {{@entry.vehicle_color}}
-      Lic #{{@entry.license_number}}
+      <div class="d-flex justify-content-between align-items-baseline">
+        <strong>{{@entry.person.callsign}}</strong>
+        <span class="text-muted ms-2">{{@entry.vehicle_year}} {{@entry.vehicle_make}} {{@entry.vehicle_model}}</span>
+      </div>
+      <div class="text-muted small">
+        {{@entry.vehicle_color}} &middot; Lic #{{@entry.license_number}}
+      </div>
     </Modal.title>
     <Modal.body>
       {{#if @entry.isApproved}}
-        <div class="alert alert-success">
-          {{fa-icon "check"}} Request has been approved for the following items:
-        </div>
+        <UiAlert @type="success" @icon="check">
+          Request has been approved for the following items:
+        </UiAlert>
       {{else if @entry.isRejected}}
-        <div class="alert alert-danger">
-          {{fa-icon "exclamation-triangle"}} Request has been denied. DO NOT ISSUE ANY STICKERS/ITEMS.
-        </div>
+        <UiAlert @type="danger" @icon="exclamation-triangle">
+          Request has been denied. DO NOT ISSUE ANY STICKERS/ITEMS.
+        </UiAlert>
       {{else}}
-        <div class="alert alert-warning">
-          {{fa-icon "exclamation"}} Vehicle request is pending review. Wait for approval before issuing items.
-        </div>
+        <UiAlert @type="warning" @icon="exclamation">
+          Vehicle request is pending review. Wait for approval before issuing items.
+        </UiAlert>
       {{/if}}
       {{#unless @entry.isRejected}}
-        <div class="row mb-2">
-          <div class="col-6 col-xl-auto mb-2">
-            <b>Driving Permit</b><br>
-            {{#if (eq @entry.driving_sticker "none")}}
-              <i>- none -</i>
-            {{else}}
-              {{@entry.drivingStickerLabel}}
-            {{/if}}
+        <div class="vr-sticker-items mb-2">
+          <div class="vr-sticker-item">
+            <div class="vr-sticker-item-label">Driving Permit</div>
+            <div class="vr-sticker-item-value">
+              {{#if (eq @entry.driving_sticker "none")}}
+                <i>- none -</i>
+              {{else}}
+                {{@entry.drivingStickerLabel}}
+              {{/if}}
+            </div>
           </div>
-          <div class="col-6 col-xl-auto mb-2">
-            <b>Ranger Logo Decal</b><br>
-            {{#if (eq @entry.ranger_logo "none")}}
-              <i>- none -</i>
-            {{else}}
-              {{@entry.rangerLogoLabel}}
-            {{/if}}
+          <div class="vr-sticker-item">
+            <div class="vr-sticker-item-label">Ranger Logo Decal</div>
+            <div class="vr-sticker-item-value">
+              {{#if (eq @entry.ranger_logo "none")}}
+                <i>- none -</i>
+              {{else}}
+                {{@entry.rangerLogoLabel}}
+              {{/if}}
+            </div>
           </div>
-          <div class="col-6 col-xl-auto">
-            <b>Fuel Chit</b><br>
-            {{#if (eq @entry.fuel_chit "none")}}
-              <i>- none -</i>
-            {{else}}
-              {{@entry.fuelChitLabel}}
-            {{/if}}
+          <div class="vr-sticker-item">
+            <div class="vr-sticker-item-label">Fuel Chit</div>
+            <div class="vr-sticker-item-value">
+              {{#if (eq @entry.fuel_chit "none")}}
+                <i>- none -</i>
+              {{else}}
+                {{@entry.fuelChitLabel}}
+              {{/if}}
+            </div>
           </div>
-          <div class="col-6 col-xl-auto">
-            <b>Amber Light</b><br>
-            {{#if (eq @entry.amber_light "none")}}
-              <i>- none -</i>
-            {{else}}
-              {{@entry.amberLightLabel}}
-            {{/if}}
+          <div class="vr-sticker-item">
+            <div class="vr-sticker-item-label">Amber Light</div>
+            <div class="vr-sticker-item-value">
+              {{#if (eq @entry.amber_light "none")}}
+                <i>- none -</i>
+              {{else}}
+                {{@entry.amberLightLabel}}
+              {{/if}}
+            </div>
           </div>
         </div>
       {{/unless}}
