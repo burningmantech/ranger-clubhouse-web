@@ -84,6 +84,7 @@ export const Role = {
   TRAINER,
   TRAINER_SEASONAL,
   VC,
+  VEHICLE_INFO_UPDATE,
   VEHICLE_MANAGEMENT,
   VIEW_EMAIL,
   VIEW_PII,
@@ -126,6 +127,7 @@ export const RoleToString = {
   [TRAINER_SEASONAL]: 'trainer-seasonal',
   [VC]: 'vc',
   [VEHICLE_MANAGEMENT]: 'vehicle',
+  [VEHICLE_INFO_UPDATE]: 'vehicle-info-update',
   [VIEW_EMAIL]: 'view-email',
   [VIEW_PII]: 'view-pii',
 };

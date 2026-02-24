@@ -182,6 +182,7 @@ Router.map(function () {
       this.route('index', { path: '/'});
       this.route('manage', { path: '/:team_id'});
     });
+    this.route('vehicle-registry');
   });
 
   this.route('training', {path: '/training/:position_id'}, function () {
@@ -246,7 +247,6 @@ Router.map(function () {
     this.route('timesheet-sanity-checker');
     this.route('timesheet-unconfirmed');
     this.route('vehicle-paperwork');
-    this.route('vehicle-registry');
   });
 
   this.route('vc', function () {

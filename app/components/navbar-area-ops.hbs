@@ -12,6 +12,7 @@
           "pod-management"
           "shift-management"
           "timesheet-management"
+          "vehicle-info-update"
         )
         this.session.user.is_team_manager
       )}}
@@ -89,6 +90,11 @@
     {{#if (has-role "payroll")}}
       <NavbarMenuSection @section="Payroll">
         <NavbarMenuItem @menu={{menu}} @route="ops.payroll" @item="Payroll Export"/>
+      </NavbarMenuSection>
+    {{/if}}
+    {{#if (has-role "admin" "vehicle-info-update")}}
+      <NavbarMenuSection @section="Vehicles">
+        <NavbarMenuItem @menu={{menu}} @route="ops.vehicle-registry" @item="Vehicle Registry"/>
       </NavbarMenuSection>
     {{/if}}
   </NavbarMenu>
