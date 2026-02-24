@@ -4,7 +4,7 @@ import {tracked} from '@glimmer/tracking';
 import {isEmpty} from '@ember/utils';
 import {ADMIN, VEHICLE_INFO_UPDATE} from "clubhouse/constants/roles";
 
-export default class ReportsPersonVehiclesController extends ClubhouseController {
+export default class OpsPersonVehiclesController extends ClubhouseController {
   queryParams = ['year'];
 
   @tracked editEntry;

@@ -76,7 +76,11 @@
 
         {{#if (has-role "admin" "manage")}}
           <NavbarAreaReports @nav={{nav}} />
+        {{/if}}
+        {{#if (has-role "admin" "manage" "vehicle-info-update")}}
           <NavbarAreaOps @nav={{nav}} />
+        {{/if}}
+        {{#if (has-role "admin" "manage")}}
           <NavbarAreaSearch @nav={{nav}} />
         {{/if}}
       {{else}}
