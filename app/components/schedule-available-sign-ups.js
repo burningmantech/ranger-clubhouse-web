@@ -32,7 +32,7 @@ export default class ScheduleAvailableSignUpsComponent extends Component {
 
     if (filterDay) {
       if (filterDay === 'upcoming') {
-        slots = slots.filter((slot) => !slot.has_started);
+        slots = slots.filter((slot) => !slot.has_ended);
       } else if (filterDay !== 'all') {
         slots = slots.filter((slot) => slot.slotDay === filterDay);
       }
