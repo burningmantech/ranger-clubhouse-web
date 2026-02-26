@@ -5,14 +5,18 @@
     to assist with assembling SITE Setup arrival packets.
   </p>
 
-  {{#if this.date}}
+  {{#if this.pre_event_start}}
     <p>
-      Reporting on individuals who have SAPs prior to {{dayjs-format this.date "ddd MM/DD/YY"}}.
+      Reporting on individuals who have SAPs prior to {{dayjs-format this.pre_event_start "ddd MM/DD/YY"}}
+      or who have shifts between {{dayjs-format this.pre_event_start "ddd MM/DD/YY"}} and
+      {{dayjs-format this.pre_event_end "ddd MM/DD/YY"}}
     </p>
   {{/if}}
   {{#if (eq this.status 'no-arrivals')}}
-    <b class="text-danger">No arrivals could be found. Usually this means no SAPs with a date prior to {{ymd-format
-      this.date}} have been created yet.</b>
+    <b class="text-danger">
+      No arrivals could be found. Usually this means no SAPs with a date prior to {{ymd-format this.pre_event_start}}
+      have been created yet.
+    </b>
   {{else if (eq this.status 'no-event-dates')}}
     <b class="text-danger">The event dates have not been set. Contact the Tech Cadre for help.</b>
   {{else}}
@@ -27,8 +31,10 @@
           <tr>
             <th>Callsign</th>
             <th>SAP</th>
+            <th>First Pre-Event Shift</th>
             <th class="text-center">BMID Status</th>
             <th class="text-center">On Site</th>
+            <th>Radio Agreement</th>
             <th>Radio Count</th>
             <th>Radio Barcode</th>
             <th>Radio Type</th>
@@ -41,10 +47,21 @@
                 <PersonLink @person={{arrival}} />
               </td>
               <td>
-                {{#if (eq arrival.sap_date "any")}}
+                {{#if (eq arrival.sap_date "no-sap")}}
+                  <b class="text-danger">No pre-event SAP</b>
+                {{else if (eq arrival.sap_date "any")}}
                   any
                 {{else}}
                   {{dayjs-format arrival.sap_date "ddd, MMM D" }}
+                {{/if}}
+              </td>
+              <td>
+                {{#if arrival.first_shift}}
+                  {{arrival.first_shift.position_title}}<br>
+                  {{shift-format arrival.first_shift.begins}}<br>
+                  {{arrival.first_shift.description}}
+                {{else}}
+                  <b class="text-danger">no pre-event shift</b>
                 {{/if}}
               </td>
               <td class="text-center">
@@ -59,6 +76,13 @@
                   <UiBadge @type="success">on site</UiBadge>
                 {{else}}
                   <UiBadge @type="secondary">off site</UiBadge>
+                {{/if}}
+              </td>
+              <td>
+                {{#if arrival.radio_agreement}}
+                  <UiBadge @type="success">signed</UiBadge>
+                {{else}}
+                  <UiBadge @type="warning">unsigned</UiBadge>
                 {{/if}}
               </td>
               <td class="text-end">
