@@ -11,6 +11,7 @@ export default class ReportsEarlyArrivalRoute extends ClubhouseRoute {
   setupController(controller, model) {
     controller.status = model.status;
     controller.arrivals = model.arrivals;
-    controller.date = model.date;
+    controller.pre_event_start = model.pre_event_start;
+    controller.pre_event_end = model.pre_event_end;
   }
 }
