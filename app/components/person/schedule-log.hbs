@@ -6,7 +6,8 @@
     <thead>
     <tr>
       <th>&nbsp;</th>
-      <th>Start</th>
+      <th>Time</th>
+      <th>Duration</th>
       <th>Position / Description</th>
       <th>Added On/By</th>
       <th>Removed On/By</th>
@@ -20,18 +21,18 @@
     {{else}}
       {{#each this.auditLogs as |entry|}}
         <tr>
-          <td>
+          <td class="text-center ">
             {{#if entry.no_signup}}
-              {{fa-icon "times" color="danger"}}
+              <UiBadge @type="danger">removed</UiBadge>
             {{else}}
-              &nbsp;
+              <UiBadge @type="success">signed up</UiBadge>
             {{/if}}
           </td>
           <td>
-            {{shift-format entry.slot_begins}}
-            {{#if entry.no_signup}}
-              <br><b class="text-danger">No longer signed up.</b>
-            {{/if}}
+            {{shift-format entry.slot_begins entry.slot_ends}}
+            </td>
+          <td class="text-end">
+            {{hour-minute-words entry.duration}}
           </td>
           <td>
             {{entry.position_title}}<br>
