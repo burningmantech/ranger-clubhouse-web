@@ -6,6 +6,10 @@ export default class EmailListComponent extends Component {
   @service house;
   @service toast;
 
+  get showWarning() {
+    return this.args.showWarning !== false;
+  }
+
   constructor() {
     super(...arguments);
 

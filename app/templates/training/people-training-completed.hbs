@@ -3,27 +3,86 @@
             @minYear={{2008}}
             @skipPandemic={{true}}
             @onChange={{set-value this 'year'}} />
+{{#if this.session.canViewEmail}}
+  <PersonalInfoWarning/>
+{{/if}}
 <div class="hstack gap-3 my-4">
   <div>
-    Showing {{pluralize this.slots.length "session"}}
+    Showing {{pluralize this.slots.length "session"}}, {{pluralize this.totalTrainees "trainee"}}, {{pluralize
+    this.totalTrainers "trainer"}}
   </div>
-  <div>
-    <UiExportToCSVButton @onClick={{this.exportToCSV}} @size="sm"/>
-  </div>
+  {{#if this.slots.length}}
+    <div>
+      <UiButton @type="secondary" @size="sm" @onClick={{this.toggleExpandAll}} @disabled={{this.isExpanding}}>
+        {{#if this.expandAll}}Collapse All Sessions{{else}}Expand All Sessions{{/if}}
+      </UiButton>
+    </div>
+  {{/if}}
 </div>
 
+
+{{#if this.slots.length}}
+  <div class="my-4 hstack gap-3">
+    <div>
+      <b>Note:</b> The export only contains trainees, not trainers.
+    </div>
+    <div>
+      <UiExportToCSVButton @onClick={{this.exportToCSV}} @size="sm"/>
+    </div>
+  </div>
+  <UiTable>
+    <thead>
+    <tr>
+      <th>Session</th>
+      <th>Location</th>
+      <th class="text-end">Trainees</th>
+      <th class="text-end">Trainers</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each this.slots as |slot|}}
+      <tr>
+        <td>{{shift-format slot.slot_begins}}</td>
+        <td>{{slot.slot_description}}</td>
+        <td class="text-end">{{slot.people.length}}</td>
+        <td class="text-end">{{slot.trainers.length}}</td>
+      </tr>
+    {{/each}}
+    </tbody>
+    <tfoot>
+    <tr class="fw-bold">
+      <td colspan="2">Totals</td>
+      <td class="text-end">{{this.totalTrainees}}</td>
+      <td class="text-end">{{this.totalTrainers}}</td>
+    </tr>
+    </tfoot>
+  </UiTable>
+{{/if}}
+
 {{#each this.slots as |slot idx|}}
-  <UiSection>
-    <:title>{{shift-format slot.slot_begins}} {{slot.slot_description}}</:title>
-    <:body>
-      <h3>Trainees</h3>
-      <EmailList @people={{slot.people}} @listId="slot-trainees-{{idx}}"/>
-      <h3 class="mt-4">Trainers</h3>
-      <EmailList @people={{slot.trainers}} @listId="slot-trainers-{{idx}}"/>
-    </:body>
-  </UiSection>
+  <UiAccordion @onInsert={{this.onAccordionInsert}} @onWillDestroy={{this.onAccordionDestroy}} id="session-{{idx}}" as
+               |accordion|>
+    <accordion.title>
+      {{shift-format slot.slot_begins}} {{slot.slot_description}} &mdash; {{pluralize slot.people.length "trainee"}}
+      , {{pluralize slot.trainers.length "trainer"}}
+    </accordion.title>
+    <accordion.body>
+      {{#if accordion.isOpen}}
+        <strong>Trainees</strong>
+        <EmailList @people={{slot.people}} @listId="slot-trainees-{{idx}}" @showWarning={{false}} />
+        <strong class="d-block mt-4">Trainers</strong>
+        <EmailList @people={{slot.trainers}} @listId="slot-trainers-{{idx}}" @showWarning={{false}} />
+      {{/if}}
+    </accordion.body>
+  </UiAccordion>
 {{else}}
   <div class="mt-4 text-danger">
     No trainees found to have completed {{this.year}} training.
   </div>
 {{/each}}
+
+{{#if this.isExpanding}}
+  <LoadingDialog>
+    Hang Tight - toggling the list
+  </LoadingDialog>
+{{/if}}
