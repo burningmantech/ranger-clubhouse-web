@@ -1,6 +1,8 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import {tracked} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
+import {later, schedule} from '@ember/runloop';
+import _ from 'lodash';
 
 const CSV_COLUMNS = [
   {title: 'Session', key: 'begins'},
@@ -12,6 +14,55 @@ export default class TrainingPeopleTrainingCompletedController extends Clubhouse
 
   @tracked year;
   @tracked slots;
+  @tracked expandAll = false;
+  @tracked isExpanding = false;
+
+  accordions = [];
+
+  @cached
+  get totalTrainees() {
+    return this.slots.reduce((sum, slot) => sum + slot.people.length, 0);
+  }
+
+  @cached
+  get totalTrainers() {
+    return this.slots.reduce((sum, slot) => sum + slot.trainers.length, 0);
+  }
+
+  @action
+  toggleExpandAll() {
+    this.expandAll = !this.expandAll;
+    this.isExpanding = true;
+    this.toggleAccordion(0);
+  }
+
+  toggleAccordion(idx) {
+    schedule('afterRender', () => {
+      if (idx >= this.accordions.length) {
+        this.isExpanding = false;
+        return;
+      }
+      const accordion = this.accordions[idx];
+      if (!accordion) {
+        return;
+      }
+      if (accordion.isOpen !== this.expandAll) {
+        accordion.onClickAction();
+      }
+
+      later(() => schedule('afterRender', () => this.toggleAccordion(idx + 1)), 1);
+    });
+  }
+
+  @action
+  onAccordionInsert(accordion) {
+    this.accordions.push(accordion);
+  }
+
+  @action
+  onAccordionDestroy(accordion) {
+    _.pull(this.accordions, accordion);
+  }
 
   @action
   exportToCSV() {

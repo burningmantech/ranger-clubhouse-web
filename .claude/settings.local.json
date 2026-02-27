@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npm run:*)",
       "Bash(find:*)",
-      "Bash(tail:*)"
+      "Bash(tail:*)",
+      "Bash(head:*)"
     ]
   }
 }
