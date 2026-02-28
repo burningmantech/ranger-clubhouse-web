@@ -43,6 +43,16 @@ export default class OpsTeamsManageController extends ClubhouseController {
   }
 
   @cached
+  get allPositions() {
+    const tag = (positions) => positions.map((p, i) => ({...p, groupStart: i === 0}));
+    return [
+      ...tag(this.allMembersPositions),
+      ...tag(this.optionalPositions),
+      ...tag(this.publicPositions),
+    ];
+  }
+
+  @cached
   get viewPeople() {
     switch (this.viewFilter) {
       case 'never-all':

@@ -1,53 +1,55 @@
 <tr class={{if @person.selected "table-warning"}}>
-  <td>
+  <td class="roster-col-fixed roster-col-checkbox">
     <Input @type="checkbox" @checked={{@person.selected}} class="form-check-input"/>
   </td>
-  <td>
+  <td class="roster-col-fixed roster-col-callsign">
     <PersonLink @person={{@person}} />
   </td>
-  <td>
+  <td class="roster-col-fixed roster-col-member text-center text-nowrap">
     {{#if @person.revoked}}
-      <div class="text-muted">membership revoked</div>
+      <span class="text-muted small fst-italic">revoked</span>
+    {{else if @person.is_member}}
+      <div class="roster-member-cell">
+        <UiBadge @type="success">member</UiBadge>
+        <a href {{on-click @onRevoke @person}} class="roster-revoke-link">revoke</a>
+      </div>
     {{else}}
-      {{#if @person.is_member}}
-        {{fa-icon "check" color="success" fixed=true right=1}}
-        <a href {{on-click @onRevoke @person}}>revoke</a>
-      {{else}}
-        <span class="text-danger">
-         {{fa-icon "times" fixed=true right=1}} not member
-        </span>
-      {{/if}}
+      <span class="text-danger small">
+        {{fa-icon "xmark" fixed=true right=1}}not member
+      </span>
     {{/if}}
   </td>
 
-  <td>
-    {{#each this.allMembersPositions as |position|}}
-      {{position.title}}<br>
-    {{else}}
-      -
-    {{/each}}
-  </td>
-  <td>
-    <TeamMembershipWorked @positions={{this.allMembersPositions}} />
-  </td>
-  <td>
-    {{#each this.optionalPositions as |position|}}
-      {{position.title}}<br>
-    {{else}}
-      -
-    {{/each}}
-  </td>
-  <td>
-    <TeamMembershipWorked @positions={{this.optionalPositions}} />
-  </td>
-  <td>
-    {{#each this.publicPositions as |position|}}
-      {{position.title}}<br>
-    {{else}}
-      -
-    {{/each}}
-  </td>
-  <td>
-    <TeamMembershipWorked @positions={{this.publicPositions}} />
-  </td>
+  {{#each this.allPositions as |position|}}
+    <td class="text-center {{if position.groupStart "roster-group-border"}}">
+      {{#let position.granted as |g|}}
+        {{#if g}}
+          <div class="roster-cell-granted">
+            {{#if g.joined_on}}
+              <span class="roster-grant-date">
+                {{fa-icon "check" fixed=true}} {{mdy-format g.joined_on}}
+              </span>
+            {{else}}
+              <span class="roster-grant-date-unknown">
+                {{fa-icon "check" fixed=true}} date unknown
+              </span>
+            {{/if}}
+            {{#if g.worked_on}}
+              <span class="roster-last-worked"
+                    title={{if g.is_training "Last trained" (if g.is_trainer "Last taught" "Last rangered")}}>
+                {{year-format g.worked_on}}
+              </span>
+            {{else}}
+              <span class="roster-status-nw"
+                    title={{if g.is_training "Never trained" (if g.is_trainer "Never taught" "Never rangered")}}>
+                NW
+              </span>
+            {{/if}}
+          </div>
+        {{else}}
+          <span class="roster-status-ng">—</span>
+        {{/if}}
+      {{/let}}
+    </td>
+  {{/each}}
 </tr>
