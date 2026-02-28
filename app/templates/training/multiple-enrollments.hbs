@@ -4,48 +4,58 @@
             @skipPandemic={{true}}
             @onChange={{set-value this 'year'}} />
 
-{{#if this.enrollments}}
-  <p>
-    <a href="#email-list-link">Jump to email list</a>
-  </p>
-{{/if}}
-Showing {{pluralize this.enrollments.length "trainee"}}
-<UiTable>
-  <thead>
-  <tr>
-    <th>Callsign</th>
-    <th>Email</th>
-    <th>Training Date</th>
-    <th>Training Location</th>
-  </tr>
-  </thead>
 
-  <tbody>
-  {{#each this.enrollments as |person|}}
-    <tr>
-      <td>
-        <PersonLink @personId={{person.person_id}} @callsign={{person.callsign}} />
-      </td>
-      <td><MailTo @to={{person.email}} /></td>
-      <td>
-        {{#each person.enrollments as |slot|}}
-          {{shift-format slot.date}}<br>
+{{#each this.enrollments as |position|}}
+  <UiSection>
+    <:title>
+      {{position.position_title}}: {{pluralize position.people.length "trainee"}}
+    </:title>
+    <:body>
+      {{#if position.people}}
+        <a href="#email-list-{{position.position_id}}">Jump to email list</a>
+      {{/if}}
+      <UiTable class="mt-4">
+        <thead>
+        <tr>
+          <th>Callsign</th>
+          <th>Email</th>
+          <th>Time</th>
+          <th>Location</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {{#each position.people as |person|}}
+          <tr>
+            <td>
+              <PersonLink @personId={{person.person_id}} @callsign={{person.callsign}} />
+            </td>
+            <td>
+              <MailTo @to={{person.email}} />
+            </td>
+            <td>
+              {{#each person.enrollments as |slot|}}
+                {{shift-format slot.begins}}<br>
+              {{/each}}
+            </td>
+            <td>
+              {{#each person.enrollments as |slot|}}
+                {{slot.description}}<br>
+              {{/each}}
+            </td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="4" class="text-success">
+              Congratulations! No multiple enrollments were found for {{this.year}}
+            </td>
+          </tr>
         {{/each}}
-      </td>
-      <td>
-        {{#each person.enrollments as |slot|}}
-          {{slot.location}}<br>
-        {{/each}}
-      </td>
-    </tr>
-  {{else}}
-    <tr>
-      <td colspan="4"><b class="text-success">Congratulations! No multiple enrollments were found for {{this.year}}.</b>
-      </td>
-    </tr>
-  {{/each}}
-  </tbody>
-</UiTable>
-{{#if this.enrollments}}
-  <EmailList @people={{this.enrollments}} />
-{{/if}}
+        </tbody>
+      </UiTable>
+      {{#if position.people}}
+        <EmailList @people={{position.people}} @listId="email-list-{{position.position_id}}" />
+      {{/if}}
+    </:body>
+  </UiSection>
+{{/each}}
