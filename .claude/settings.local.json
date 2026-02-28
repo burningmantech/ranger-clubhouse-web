@@ -4,7 +4,10 @@
       "Bash(npm run:*)",
       "Bash(find:*)",
       "Bash(tail:*)",
-      "Bash(head:*)"
+      "Bash(head:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(curl:*)",
+      "Bash(node:*)"
     ]
   }
 }

@@ -11,9 +11,10 @@
   }
 
   // override highlight border color between thead, tbody and tfoot.
-   > :not(:first-child) {
+  > :not(:first-child) {
     border-top: 1px solid #313838 !important;
   }
+
   font-variant-numeric: tabular-nums;
 }
 
@@ -78,12 +79,251 @@ caption {
 
 @media not print {
   .table-sticky {
-    thead tr:nth-child(1) th {
+    thead {
       background: $table-head-bg;
       position: sticky;
       top: 0;
       z-index: 10;
     }
+  }
+}
+
+
+.roster-pos-header {
+  white-space: normal;
+  word-break: break-word;
+  min-width: 5rem;
+  max-width: 7rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.25;
+  vertical-align: bottom;
+  padding-bottom: 0.5rem !important;
+}
+
+.roster-status-nw {
+  color: #9f6800;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.roster-status-ng {
+  color: #c8cdd3;
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* Section group header bands */
+%roster-section-base {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.roster-section-recommended {
+  @extend %roster-section-base;
+  // background-color: #1a3a2a !important;
+  //color: #a8d5b5 !important;
+  //border-bottom: 2px solid #2d6a4a !important;
+}
+
+.roster-section-optional {
+  @extend %roster-section-base;
+  //background-color: #1a2a3a !important;
+  //color: #a8c4d5 !important;
+}
+
+.roster-section-public {
+  @extend %roster-section-base;
+  //  background-color: #2a2a2a !important;
+  //  color: #b5b5b5 !important;
+}
+
+/* Roster fixed-column layout variables */
+$col-checkbox-width: 2.25rem;
+$col-callsign-width: 10rem;
+$col-member-width: 6.5rem;
+
+/* Sticky left columns */
+.roster-col-fixed {
+  position: sticky;
+  background-color: #fff;
+  z-index: 1;
+}
+
+/* Per-row state overrides for fixed columns */
+.table-striped > tbody > tr:nth-of-type(odd) > .roster-col-fixed {
+  background-color: $table-striped-bg;
+}
+
+tr.table-warning > .roster-col-fixed {
+  background-color: #fff3cd;
+}
+
+@media not print {
+  .table-sticky {
+    thead th {
+      background-color: $table-head-bg !important;
+      z-index: 20;
+    }
+
+    thead .roster-col-fixed {
+      z-index: 30;
+    }
+  }
+}
+
+.roster-col-checkbox {
+  left: 0;
+  width: $col-checkbox-width;
+  min-width: $col-checkbox-width;
+}
+
+.roster-col-callsign {
+  left: $col-checkbox-width;
+  width: $col-callsign-width;
+  font-weight: 600;
+}
+
+.roster-col-member {
+  left: calc(#{$col-checkbox-width} + #{$col-callsign-width});
+  width: $col-member-width;
+  box-shadow: 4px 0 6px -2px rgba(0, 0, 0, 0.12);
+  border-right: 2px solid #dee2e6 !important;
+}
+
+/* Cell status display */
+.roster-cell-granted {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+%roster-grant-date-base {
+  font-size: 0.68rem;
+  line-height: 1.1;
+}
+
+.roster-grant-date {
+  @extend %roster-grant-date-base;
+  color: #2d6a4a;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.roster-grant-date-unknown {
+  @extend %roster-grant-date-base;
+  color: #6c757d;
+  font-style: italic;
+}
+
+.roster-last-worked {
+  font-size: 0.72rem;
+  color: #495057;
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* Controls bar */
+.roster-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.6rem 0.75rem;
+  background-color: #f0f2f5;
+  border: 1px solid #dee2e6;
+  border-radius: 0.375rem;
+  margin-bottom: 0.75rem;
+}
+
+.roster-controls-count {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #3f454d;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 0.25rem;
+  padding: 0.15rem 0.5rem;
+}
+
+.roster-controls-divider {
+  width: 1px;
+  height: 1.5rem;
+  background-color: #dee2e6;
+  flex-shrink: 0;
+}
+
+/* Legend card */
+.roster-legend {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background-color: #f8f9fa;
+  border-left: 3px solid #6c757d;
+  border-radius: 0 0.25rem 0.25rem 0;
+  margin-bottom: 0.75rem;
+  font-size: 0.78rem;
+}
+
+.roster-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #495057;
+}
+
+.roster-legend-label {
+  font-weight: 600;
+  color: #3f454d;
+  margin-right: 0.25rem;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* Position column section border */
+.roster-group-border {
+  border-left: 2px solid #adb5bd !important;
+}
+
+/* Roster table scroll wrapper: bounded scroll container so sticky headers work */
+.roster-table-scroll {
+  overflow: auto;
+  max-height: calc(100vh - 280px); /* navbar ~54px + above-table content ~210px + buffer */
+}
+
+/* Info note */
+.roster-info-note {
+  font-size: 0.78rem;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+  padding-left: 0.25rem;
+  border-left: 2px solid #dee2e6;
+}
+
+/* Member column */
+.roster-member-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.roster-revoke-link {
+  font-size: 0.68rem;
+  color: #dc3545;
+  text-decoration: none;
+  opacity: 0.7;
+
+  &:hover {
+    opacity: 1;
+    text-decoration: underline;
   }
 }
 

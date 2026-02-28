@@ -1,86 +1,121 @@
-<h1 class="mb-2">Manage {{this.team.title}} Roster</h1>
-<p>
-  <LinkTo @route="ops.teams.index">
-    Back to the Team Management Listing
-  </LinkTo>
+<h1 class="mb-1">{{this.team.title}} Team Roster</h1>
+<p class="mb-3">
+  <LinkTo @route="ops.teams.index" class="small">← Back to Team Management</LinkTo>
 </p>
-<p>
-  <i>not granted</i> = Position is not granted to the person.<br>
-  <i>never worked</i> = Person has never worked the position.
-</p>
-<p>
-  For training and trainer positions, the year will be when the person last passed a training session, or taught a
-  session respectively as indicated through the Trainer &amp; ART interfaces.
-</p>
-<FormRow>
-  <FormLabel @auto={{true}}>View</FormLabel>
-  <div class="col-auto">
-
-    <ChForm::Select @options={{this.viewFilterOptions}}
-                    @onChange={{set-value this 'viewFilter'}}
-                    @value={{this.viewFilter}}
-                    @fieldSize="sm"
-    />
-  </div>
-</FormRow>
 
 {{#if this.people}}
-  <p>
-    Only people who are team members, or who have Recommended or Optional positions are shown. Individuals who
-    are not team members, and have only Public positions granted are excluded.
-  </p>
-  <p>
-    Showing {{pluralize this.viewPeople.length "person"}}
-  </p>
-  <a href {{on-click this.selectAll}}>select all</a>
-  <a href {{on-click this.deselectAll}} class="ms-4">deselect all</a>
-  <UiButton @size="sm" @type="secondary" @onClick={{this.revokeSelected}} class="ms-4">
-    Revoke Team Membership ({{pluralize this.selectedPeople.length "person"}})
-  </UiButton>
-  <UiTable>
-    <thead>
-    <tr>
-      <th>&nbsp;</th>
-      <th>Callsign</th>
-      <th>Team Member?</th>
-      <th>Recommended Positions</th>
-      <th>Last Worked</th>
-      <th>Optional Positions</th>
-      <th>Last Worked</th>
-      <th>Public Positions</th>
-      <th>Last Worked</th>
-    </tr>
-    </thead>
-    <tbody>
-    {{#each this.viewPeople key="id" as |person|}}
-      <TeamMembershipRow @person={{person}}
-                         @allMembershipPositions={{this.allMembersPositions}}
-                         @optionalPositions={{this.optionalPositions}}
-                         @publicPositions={{this.publicPositions}}
-                         @onRevoke={{this.revokeMembership}}
+  {{! ── Legend ── }}
+  <div class="roster-legend mb-2">
+    <span class="roster-legend-label">Legend:</span>
+    <span class="roster-legend-item">
+      {{fa-icon "check" color="success" fixed=true}}
+      <span>position granted (date shown if known)</span>
+    </span>
+    <span class="roster-legend-item">
+      <span class="roster-status-nw">NW</span>
+      <span>= granted, never rangered</span>
+    </span>
+    <span class="roster-legend-item">
+      <span class="roster-status-ng">—</span>
+      <span>= not granted</span>
+    </span>
+    <span class="roster-legend-item text-muted">
+      Training positions show year last trained or taught.
+    </span>
+  </div>
+
+  {{! ── Controls bar ── }}
+  <div class="roster-controls">
+    <div class="d-flex align-items-center gap-2">
+      <span class="fw-semibold small">View:</span>
+      <ChForm::Select @options={{this.viewFilterOptions}}
+                      @onChange={{set-value this 'viewFilter'}}
+                      @value={{this.viewFilter}}
+                      @fieldSize="sm"
       />
-    {{else}}
+    </div>
+    <div class="roster-controls-divider"></div>
+    <span class="roster-controls-count">{{pluralize this.viewPeople.length "person"}}</span>
+    <div class="roster-controls-divider"></div>
+    <a href {{on-click this.selectAll}} class="small">select all</a>
+    <a href {{on-click this.deselectAll}} class="small">deselect all</a>
+    <div class="roster-controls-divider"></div>
+    <UiButton @size="sm" @type="danger" @onClick={{this.revokeSelected}}>
+      {{fa-icon "user-minus" right=1}} Revoke Selected ({{this.selectedPeople.length}})
+    </UiButton>
+  </div>
+
+  <p class="roster-info-note">
+    Showing team members and those with Recommended or Optional positions.
+    Individuals with only Public positions and no team membership are excluded.
+  </p>
+
+  {{! ── Roster grid ── }}
+  <div class="roster-table-scroll">
+    <UiTable @stickyHeader={{true}}>
+      <thead>
       <tr>
-        <td colspan="9" class="text-danger">
-          No people were found who match the filter criteria.
-        </td>
+        <th rowspan="2" class="roster-col-fixed roster-col-checkbox">&nbsp;</th>
+        <th rowspan="2" class="roster-col-fixed roster-col-callsign">Callsign</th>
+        <th rowspan="2" class="roster-col-fixed roster-col-member text-center">Member?</th>
+        {{#if this.allMembersPositions.length}}
+          <th colspan={{this.allMembersPositions.length}}
+              class="text-center roster-section-recommended roster-group-border">
+            {{fa-icon "star" right=1}} Recommended
+          </th>
+        {{/if}}
+        {{#if this.optionalPositions.length}}
+          <th colspan={{this.optionalPositions.length}}
+              class="text-center roster-section-optional roster-group-border">
+            {{fa-icon "circle-dot" right=1}} Optional
+          </th>
+        {{/if}}
+        {{#if this.publicPositions.length}}
+          <th colspan={{this.publicPositions.length}}
+              class="text-center roster-section-public roster-group-border">
+            {{fa-icon "globe" right=1}} Public
+          </th>
+        {{/if}}
       </tr>
-    {{/each}}
-    </tbody>
-  </UiTable>
+      <tr>
+        {{#each this.allPositions as |pos|}}
+          <th class="text-center roster-pos-header {{if pos.groupStart "roster-group-border"}}"
+              title={{pos.title}}>{{pos.title}}</th>
+        {{/each}}
+      </tr>
+      </thead>
+      <tbody>
+      {{#each this.viewPeople key="id" as |person|}}
+        <TeamMembershipRow @person={{person}}
+                           @allMembershipPositions={{this.allMembersPositions}}
+                           @optionalPositions={{this.optionalPositions}}
+                           @publicPositions={{this.publicPositions}}
+                           @onRevoke={{this.revokeMembership}}
+        />
+      {{else}}
+        <tr>
+          <td colspan="3" class="text-danger py-3">
+            {{fa-icon "triangle-exclamation" right=1}} No people match the filter criteria.
+          </td>
+        </tr>
+      {{/each}}
+      </tbody>
+    </UiTable>
+  </div>
+
 {{else}}
-  <div class="text-danger">
-    The team appears not to have any members, nor team positions granted.
+  <div class="alert alert-warning d-inline-flex align-items-center gap-2">
+    {{fa-icon "circle-info"}}
+    This team has no members and no team positions have been granted.
   </div>
 {{/if}}
+
 <div class="mt-4">
-  <LinkTo @route="ops.teams.index">
-    Back to the Team Management Listing
-  </LinkTo>
+  <LinkTo @route="ops.teams.index" class="small">← Back to Team Management</LinkTo>
 </div>
 
 {{#if this.showPerson}}
   <LoadingDialog>
-    Revoking team membership and positions from {{this.showPerson.callsign}}
+    Revoking team membership and positions from {{this.showPerson.callsign}}…
   </LoadingDialog>
 {{/if}}
