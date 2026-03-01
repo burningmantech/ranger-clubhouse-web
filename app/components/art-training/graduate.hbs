@@ -3,89 +3,117 @@
     {{#if this.isLoading}}
       <LoadingIndicator @text="loading the candidates"/>
     {{else}}
-      <p>
-        Eligible candidates are ones who have passed training, and do not already have the following position(s):<br>
-        <b>{{this.positionTitles}}</b>
+      <p class="text-muted mb-2">
+        Granting: <strong>{{this.positionTitles}}</strong>
+        {{#if this.fullyGraduatedPosition}}
+          &middot; Individuals already holding <strong>{{this.fullyGraduatedPosition.title}}</strong> will be skipped.
+        {{/if}}
       </p>
-      {{#if this.fullyGraduatedPosition}}
-        <p>
-          Individuals who already have the <b>{{this.fullyGraduatedPosition.title}}</b>
-          position are considered "fully graduated" and will be skipped.
-        </p>
-      {{/if}}
-      {{#if this.candidates}}
-        The following candidates are eligible to be granted the position(s):
-        <UiTable>
-          <thead>
-          <tr>
-            <th class="w-15 text-center">Graduate?</th>
-            <th class="w-15">Callsign</th>
-            <th class="w-10">Status</th>
-            <th class="w-60">Result</th>
-          </tr>
-          </thead>
 
-          <tbody>
-          {{#each this.candidates as |candidate|}}
+      <div class="d-flex gap-3 mb-3">
+        <UiBadge @type="success">{{this.readyCandidates.length}} eligible</UiBadge>
+        <UiBadge @type="warning">{{this.overrideCandidates.length}} override</UiBadge>
+        <UiBadge @type="secondary">{{this.ineligible.length}} ineligible</UiBadge>
+      </div>
+
+      {{#if this.candidates}}
+        {{#if this.readyCandidates}}
+          <h6>Ready to Graduate</h6>
+          <UiTable>
+            <thead>
             <tr>
-              <td class="w-15 text-center">
-                {{#if candidate.didGraduate}}
-                  {{fa-icon "check" color="success"}}
-                {{else}}
-                  <Input @type="checkbox" @checked={{candidate.selected}} />
-                {{/if}}
-              </td>
-              <td class="w-15">
-                {{candidate.person.callsign}}
-              </td>
-              <td class="w-15">{{candidate.person.status}}</td>
-              <td class="w-50">
-                {{candidate.reason}}
-                {{#if candidate.missingRequirements}}
-                  Has not met the following {{pluralize candidate.missingRequirements.length "requirement"}}:
-                  <ul>
-                    {{#each candidate.missingRequirements as |req|}}
-                      <li>{{req}}</li>
-                    {{/each}}
-                  </ul>
-                  The graduation can be forced through; however, this action is strongly discouraged.
-                {{/if}}
-              </td>
+              <th class="w-10 text-center">Graduate?</th>
+              <th class="w-20">Callsign</th>
+              <th class="w-15">Status</th>
+              <th>Result</th>
             </tr>
-          {{/each}}
-          </tbody>
-        </UiTable>
+            </thead>
+            <tbody>
+            {{#each this.readyCandidates as |candidate|}}
+              <tr>
+                <td class="text-center">
+                  {{#if candidate.didGraduate}}
+                    {{fa-icon "check" color="success"}}
+                  {{else}}
+                    <Input @type="checkbox" @checked={{candidate.selected}}
+                           aria-label="Graduate {{candidate.person.callsign}}" />
+                  {{/if}}
+                </td>
+                <td>{{candidate.person.callsign}}</td>
+                <td>{{candidate.person.status}}</td>
+                <td>{{candidate.reason}}</td>
+              </tr>
+            {{/each}}
+            </tbody>
+          </UiTable>
+        {{/if}}
+
+        {{#if this.overrideCandidates}}
+          <UiNotice @type="warning" @icon="triangle-exclamation" @title="Graduation Override" class="mt-3">
+            <p class="mb-2">
+              These candidates have not met all requirements. Graduation can be forced but is strongly discouraged.
+            </p>
+            {{#each this.overrideCandidates as |candidate|}}
+              <div class="d-flex align-items-start gap-3 border-top pt-2 mt-2">
+                <div class="text-nowrap">
+                  {{#if candidate.didGraduate}}
+                    {{fa-icon "check" color="success"}}
+                  {{else}}
+                    <div class="form-check">
+                      <Input class="form-check-input" @type="checkbox" @checked={{candidate.selected}}
+                             id="override-{{candidate.person.id}}" />
+                      <label class="form-check-label fw-semibold"
+                             for="override-{{candidate.person.id}}">Force graduate</label>
+                    </div>
+                  {{/if}}
+                </div>
+                <div>
+                  <strong>{{candidate.person.callsign}}</strong>
+                  <UiBadge @type="secondary" class="ms-1">{{candidate.person.status}}</UiBadge>
+                  {{#if candidate.reason}}
+                    <div class="mt-1">{{candidate.reason}}</div>
+                  {{/if}}
+                  {{#unless candidate.didGraduate}}
+                    <ul class="mb-0 mt-1">
+                      {{#each candidate.missingRequirements as |req|}}
+                        <li>{{req}}</li>
+                      {{/each}}
+                    </ul>
+                  {{/unless}}
+                </div>
+              </div>
+            {{/each}}
+          </UiNotice>
+        {{/if}}
       {{else}}
         <p>
           <b class="text-danger">No eligible candidates were found.</b>
         </p>
       {{/if}}
+
       {{#if this.ineligible}}
-        <div class="text-danger">The following are not eligible for graduation:</div>
+        <h6 class="text-muted mt-3">Not Eligible for Graduation</h6>
         <UiTable>
           <thead>
           <tr>
-            <th class="w-15">Callsign</th>
-            <th class="w-10">Status</th>
-            <th class="w-75">Reason</th>
+            <th class="w-20">Callsign</th>
+            <th class="w-15">Status</th>
+            <th>Reason</th>
           </tr>
           </thead>
-
           <tbody>
           {{#each this.ineligible as |candidate|}}
             <tr>
-              <td class="w-15">
-                {{candidate.person.callsign}}
-              </td>
-              <td class="w-10">{{candidate.person.status}}</td>
-              <td class="w-75">{{candidate.reason}}</td>
+              <td>{{candidate.person.callsign}}</td>
+              <td>{{candidate.person.status}}</td>
+              <td>{{candidate.reason}}</td>
             </tr>
           {{/each}}
           </tbody>
         </UiTable>
-      {{else}}
-        <p>
-          <b class="text-success">No ineligible candidates found. (Congratulations?)</b>
+      {{else if this.candidates}}
+        <p class="text-muted mt-3">
+          {{fa-icon "circle-check" color="success"}} All candidates are eligible.
         </p>
       {{/if}}
     {{/if}}

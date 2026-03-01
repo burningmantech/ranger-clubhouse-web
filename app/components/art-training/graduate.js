@@ -100,6 +100,14 @@ export default class ArtTrainingGraduateComponent extends Component {
     }
   }
 
+  get readyCandidates() {
+    return this.candidates.filter((c) => !c.missingRequirements);
+  }
+
+  get overrideCandidates() {
+    return this.candidates.filter((c) => c.missingRequirements);
+  }
+
   @cached
   get selectedCount() {
     return this.candidates.reduce((total, c) => (c.selected ? 1 : 0) + total, 0);
