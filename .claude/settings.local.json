@@ -7,7 +7,8 @@
       "Bash(head:*)",
       "mcp__ide__getDiagnostics",
       "Bash(curl:*)",
-      "Bash(node:*)"
+      "Bash(node:*)",
+      "Bash(git:*)"
     ]
   }
 }
