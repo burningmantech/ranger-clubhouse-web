@@ -1,4 +1,4 @@
-<ModalDialog @title="Graduate Trainees" @onEscape={{@onCancel}} as |Modal|>
+<ModalDialog @title="Graduate candidates" @onEscape={{@onCancel}} @size="xl" as |Modal|>
   <Modal.body>
     {{#if this.isLoading}}
       <LoadingIndicator @text="loading the candidates"/>
@@ -9,8 +9,8 @@
       </p>
       {{#if this.fullyGraduatedPosition}}
         <p>
-          Individuals who already have the <b>{{this.fullyGraduatedPosition.title}}</b> position are considered "fully
-          graduated" and will be skipped.
+          Individuals who already have the <b>{{this.fullyGraduatedPosition.title}}</b>
+          position are considered "fully graduated" and will be skipped.
         </p>
       {{/if}}
       {{#if this.candidates}}
@@ -18,7 +18,7 @@
         <UiTable>
           <thead>
           <tr>
-            <th class="w-15">Graduate?</th>
+            <th class="w-15 text-center">Graduate?</th>
             <th class="w-15">Callsign</th>
             <th class="w-10">Status</th>
             <th class="w-60">Result</th>
@@ -26,20 +26,31 @@
           </thead>
 
           <tbody>
-          {{#each this.candidates as |student|}}
+          {{#each this.candidates as |candidate|}}
             <tr>
               <td class="w-15 text-center">
-                {{#if student.didGraduate}}
+                {{#if candidate.didGraduate}}
                   {{fa-icon "check" color="success"}}
                 {{else}}
-                  <Input @type="checkbox" @checked={{student.selected}} />
+                  <Input @type="checkbox" @checked={{candidate.selected}} />
                 {{/if}}
               </td>
               <td class="w-15">
-                {{student.person.callsign}}
+                {{candidate.person.callsign}}
               </td>
-              <td class="w-15">{{student.person.status}}</td>
-              <td class="w-50">{{student.reason}}</td>
+              <td class="w-15">{{candidate.person.status}}</td>
+              <td class="w-50">
+                {{candidate.reason}}
+                {{#if candidate.missingRequirements}}
+                  Has not met the following {{pluralize candidate.missingRequirements.length "requirement"}}:
+                  <ul>
+                    {{#each candidate.missingRequirements as |req|}}
+                      <li>{{req}}</li>
+                    {{/each}}
+                  </ul>
+                  The graduation can be forced through; however, this action is strongly discouraged.
+                {{/if}}
+              </td>
             </tr>
           {{/each}}
           </tbody>
@@ -61,13 +72,13 @@
           </thead>
 
           <tbody>
-          {{#each this.ineligible as |student|}}
+          {{#each this.ineligible as |candidate|}}
             <tr>
               <td class="w-15">
-                {{student.person.callsign}}
+                {{candidate.person.callsign}}
               </td>
-              <td class="w-10">{{student.person.status}}</td>
-              <td class="w-75">{{student.reason}}</td>
+              <td class="w-10">{{candidate.person.status}}</td>
+              <td class="w-75">{{candidate.reason}}</td>
             </tr>
           {{/each}}
           </tbody>
@@ -83,7 +94,7 @@
   <Modal.footer @align="start">
     {{#unless this.isLoading}}
       <UiButton @onClick={{this.saveGraduateAction}} @disabled={{or (not this.selectedCount) this.isSubmitting}}>
-        Graduate {{pluralize this.selectedCount "Trainee"}}
+        Graduate {{pluralize this.selectedCount "candidate"}}
       </UiButton>
       <UiCancelButton @disabled={{this.isSubmitting}} @onClick={{@onCancel}} />
       {{#if this.isSubmitting}}
