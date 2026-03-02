@@ -104,10 +104,9 @@
   </div>
 
 {{else}}
-  <div class="alert alert-warning d-inline-flex align-items-center gap-2">
-    {{fa-icon "circle-info"}}
+  <UiAlert @type="warning" @icon="circle-info">
     This team has no members and no team positions have been granted.
-  </div>
+  </UiAlert>
 {{/if}}
 
 <div class="mt-4">

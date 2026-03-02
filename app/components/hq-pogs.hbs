@@ -299,9 +299,9 @@
       </Modal.body>
       <Modal.footer @align="start">
         <f.submit @label="Cancel {{this.pogToCancel.pogLabel}}"/>
-        <UiButton @onClick={{this.cancelCancelPog}} @type="gray" class="btn-link">
+        <UiCancelButton @onClick={{this.cancelCancelPog}}>
           Do Not Cancel Pog
-        </UiButton>
+        </UiCancelButton>
       </Modal.footer>
     </ChForm>
   </ModalDialog>

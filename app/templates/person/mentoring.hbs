@@ -41,8 +41,7 @@
       {{/if}}
       <div class="d-flex flex-wrap">
         {{#each event.mentors as |mentor|~}}
-        {{! template-lint-disable no-inline-styles}}
-          <div class="card me-4 mb-2" style="width: 10rem;">
+          <div class="card card-10rem me-4 mb-2">
             {{#if mentor.profile_url}}
               <img src={{mentor.profile_url}} alt="profile" class="card-img-top" loading="lazy">
             {{else}}

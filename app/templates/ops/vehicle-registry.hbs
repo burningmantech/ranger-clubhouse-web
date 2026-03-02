@@ -36,9 +36,9 @@
             <span class="input-group-text">{{fa-icon "search"}}</span>
             <Input @type="text" @value={{this.numberFilter}} class="form-control" placeholder="Search..."/>
             {{#if this.numberFilter}}
-              <button type="button" class="btn btn-outline-secondary" {{on "click" this.clearNumberFilterAction}}>
+              <UiButton @type="secondary" @onClick={{this.clearNumberFilterAction}}>
                 {{fa-icon "times"}}
-              </button>
+              </UiButton>
             {{/if}}
           </div>
         </div>

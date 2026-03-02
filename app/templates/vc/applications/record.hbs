@@ -64,7 +64,7 @@
   <div class="vc-record-identity-bar">
     <div class="d-flex align-items-center gap-2">
       <span class="fw-bold">A-{{this.application.id}}</span>
-      <span class="border p-1 rounded {{application-status-color this.application.status}}">
+      <span class="border p-1 rounded text-bg-{{application-status-color this.application.status}}">
         {{this.application.statusLabel}}
       </span>
       <span class="fw-semibold">{{this.application.first_name}} {{this.application.last_name}}</span>
