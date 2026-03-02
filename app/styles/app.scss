@@ -825,6 +825,32 @@ summary:hover {
   cursor: pointer;
 }
 
+// Profile/person card widths
+.card-10rem {
+  width: 10rem;
+}
+
+.card-12rem {
+  width: 12rem;
+}
+
+// Auto-fit/fill grid layouts
+.grid-auto-170 {
+  grid-template-columns: repeat(auto-fit, 170px);
+}
+
+.grid-auto-250 {
+  grid-template-columns: repeat(auto-fill, 250px);
+}
+
+.grid-auto-270 {
+  grid-template-columns: repeat(auto-fit, 270px);
+}
+
+.overflow-x-scroll {
+  overflow-x: scroll;
+}
+
 // VC Application Dashboard
 .vc-app-dashboard {
   display: flex;

@@ -49,10 +49,10 @@
       </td>
       <td>
         {{#if person.personnel_issue}}
-          <div class="alert alert-danger h4 mb-2">
-            {{fa-icon "ban" right=1}} PERSONNEL FLAG RAISED ON {{person.callsign}} -
+          <UiAlert @type="danger" @icon="ban" @bottom="2">
+            PERSONNEL FLAG RAISED ON {{person.callsign}} -
             TAKE NO ACTIONS UNTIL RESOLVED {{fa-icon "ban"}}
-          </div>
+          </UiAlert>
         {{/if}}
 
         <div class="fs-5 fw-semibold">Personnel</div>

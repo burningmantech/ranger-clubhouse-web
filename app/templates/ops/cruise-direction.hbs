@@ -53,7 +53,7 @@
         Click on the person's photo to edit or remove them from the pod. Click and drag a person's photo to move
         between pods. Click and drag the pod title to move the pod.
       </p>
-      <div style="grid-template-columns: repeat(auto-fit, 270px)" class="d-grid gap-2">
+      <div class="d-grid grid-auto-270 gap-2">
         {{#each this.pods key="id" as |pod|}}
           <CruiseDirectionPod @pod={{pod}}
                               @thingDroppedOnPod={{this.thingDroppedOnPod}}
