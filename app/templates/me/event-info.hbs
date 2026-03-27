@@ -154,7 +154,7 @@
         </UiSection>
       {{else}}
         <UiSection>
-          <:title>{{fa-icon "car" right=1}} Motor Pool Protocol</:title>
+          <:title>{{fa-icon "car" right=1}} Vehicle Use Protocol</:title>
           <:body>
             {{#if this.eventInfo.signed_motorpool_agreement}}
               <UiBadge @text="Authorized" @type="success"/>
@@ -164,7 +164,7 @@
               <UiBadge @text="Not Authorized" @type="warning"/>
               You are NOT authorized to drive golf carts &amp; gators (UTVs) on
               the playa for Ranger business. You can fix this by agreeing to the
-              <LinkTo @route="me.agreements">Motor Pool Protocol</LinkTo>
+              <LinkTo @route="me.agreements">Vehicle Use Protocol</LinkTo>
               .
             {{/if}}
           </:body>

@@ -575,11 +575,11 @@ export const SIGN_BEHAVIORAL_AGREEMENT = {
 };
 
 export const SIGN_MOTOR_POOL_PROTOCOL = {
-  name: 'Sign the Ranger Motor Pool Protocol',
+  name: 'Sign the Ranger Vehicle Use Protocol',
   skipPeriod: [POST_EVENT, AFTER_EVENT],
   check({milestones, isPNV}) {
     const {mvr_eligible} = milestones;
-    const name = `Sign the Ranger Motor Pool Protocol ${mvr_eligible ? '' : '(optional)'}`;
+    const name = `Sign the Ranger Vehicle Use Protocol ${mvr_eligible ? '' : '(optional)'}`;
 
     if (!milestones.motorpool_agreement_available) {
       return {result: SKIP};
@@ -592,18 +592,18 @@ export const SIGN_MOTOR_POOL_PROTOCOL = {
     if (isPNV && milestones.training.status !== 'pass') {
       return {
         result: NOT_AVAILABLE,
-        message: 'You need to pass In-Person Training first before you may sign the Motor Pool Protocol.'
+        message: 'You need to pass In-Person Training first before you may sign the Vehicle Use Protocol.'
       };
     }
 
     let prefix = '';
-    let suffix = 'to review and agree to the Ranger Motor Pool Protocol, which is required to drive a golf cart or UTV ("gator").';
+    let suffix = 'to review and agree to the Ranger Vehicle Use Protocol, which is required to drive a golf cart or UTV ("gator").';
 
     if (isPNV) {
       prefix = 'While most shifts do not involve the use of a Ranger vehicle, sometimes Khaki may ask a Ranger pair to drive a golf cart or UTV for a mission. A Ranger vehicle will NOT be used during your Alpha shift. Visit';
     } else if (mvr_eligible || milestones.mvr_potential) {
       prefix = 'Ranger vehicles are assigned based on operational need rather than convenience, as they are a limited resource issued according to availability. Visit';
-      suffix = htmlSafe(`${suffix}<div class="mt-2">Signing the Motor Pool Protocol is optional. However, if you choose not to sign, you will not be eligible to drive any vehicle on behalf of the Rangers.</div>`);
+      suffix = htmlSafe(`${suffix}<div class="mt-2">Signing the Vehicle Use Protocol is optional. However, if you choose not to sign, you will not be eligible to drive any vehicle on behalf of the Rangers.</div>`);
     }
 
     return {
