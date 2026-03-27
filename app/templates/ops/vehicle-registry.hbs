@@ -117,7 +117,7 @@
                   <span class="vr-item-pill vr-item-mvr">MVR</span>
                 {{/if}}
                 {{#if vehicle.signed_motorpool_agreement}}
-                  <span class="vr-item-pill vr-item-mp">Motor Pool</span>
+                  <span class="vr-item-pill vr-item-mp">Vehicle Use</span>
                 {{/if}}
                 {{#if (not (or
                   (not-eq vehicle.ranger_logo "none")
@@ -221,7 +221,7 @@
                   <span>{{vehicle.amberLightLabel}}</span>
                   <span class="text-muted">MVR</span>
                   <span>{{if vehicle.org_vehicle_insurance "Yes" "-"}}</span>
-                  <span class="text-muted">Motor Pool</span>
+                  <span class="text-muted">Vehicle Use</span>
                   <span>{{if vehicle.signed_motorpool_agreement "Yes" "-"}}</span>
                 {{/unless}}
               </div>

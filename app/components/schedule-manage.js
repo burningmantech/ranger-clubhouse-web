@@ -211,11 +211,11 @@ export default class ScheduleManageComponent extends Component {
         await this.session.loadUser();
         if (!result.signed_motorpool_agreement) {
           result.agreementWarning = 'To operate the smaller fleet vehicles, such as the UTVs and golf carts,' +
-            ' you must first sign the Motor Pool Agreement. Please complete this step to ensure you are authorized' +
+            ' you must first sign the Vehicle Use Agreement. Please complete this step to ensure you are authorized' +
             ' to drive these vehicles during your shift. Visit the Clubhouse homepage and follow the dashboard' +
             ' instructions to sign the agreement.';
         } else {
-          result.agreementWarning = 'Because you have signed the Motor Pool Agreement,' +
+          result.agreementWarning = 'Because you have signed the Vehicle Use Agreement,' +
             ' you are permitted to operate the smaller vehicles,' +
             ' such as UTVs and golf carts, during your shift.';
         }
