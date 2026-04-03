@@ -1,11 +1,20 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
-import currentYear from "clubhouse/utils/current-year";
+import {tracked} from '@glimmer/tracking';
 
-export default class ReportsServiceYearsController extends ClubhouseController {
+export default class ReportsEventsRangeredController extends ClubhouseController {
+  queryParams = ['showAll'];
+
+  @tracked showAll = 0;
+
+  showOptions = [
+    { label: 'Show only active status accounts', value: 0},
+    { label: 'Show all accounts', value: 1}
+  ];
+
   get totalPeople() {
     let total = 0;
-    this.serviceYears.forEach((serviceYear) => total += serviceYear.people.length);
+    this.events_rangered.forEach((freaks) => total += freaks.people.length);
     return total;
   }
 
@@ -15,22 +24,24 @@ export default class ReportsServiceYearsController extends ClubhouseController {
       {title: 'Callsign', key: 'callsign'},
       {title: 'Last Name', key: 'last_name'},
       {title: 'First Name', key: 'first_name'},
-      {title: 'Total Years of Service', key: 'tally'},
+      {title: 'Years', key: 'years'},
       {title: 'First Year', key: 'first_year'},
-      {title: 'Last Year', key: 'last_year'}
+      {title: 'Last Year', key: 'last_year'},
+      {title: `Signed Up In ${this.signed_up_year}`, key: 'signed_up'}
     ];
 
     const people = [];
 
-    this.serviceYears.forEach((serviceYear) => {
-      serviceYear.people.forEach((row) => {
+    this.events_rangered.forEach((events) => {
+      events.people.forEach((row) => {
         people.push({
           callsign: row.callsign,
           first_name: row.first_name,
           last_name: row.last_name,
-          tally: row.years_of_service ? row.years_of_service.length : 0,
+          years: row.years,
           first_year: row.first_year,
-          last_year: row.last_year
+          last_year: row.last_year,
+          signed_up: row.signed_up ? 'Y' : 'N'
         });
       })
     })
@@ -45,6 +56,6 @@ export default class ReportsServiceYearsController extends ClubhouseController {
       }
     });
 
-    this.house.downloadCsv(`${currentYear()}-service-years.csv`, CSV_COLUMNS, people);
+    this.house.downloadCsv(`${this.signed_up_year}-events-rangered.csv`, CSV_COLUMNS, people);
   }
 }
