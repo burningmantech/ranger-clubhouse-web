@@ -1,20 +1,11 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
-import {tracked} from '@glimmer/tracking';
+import currentYear from "clubhouse/utils/current-year";
 
 export default class ReportsFreakingYearsController extends ClubhouseController {
-  queryParams = ['showAll'];
-
-  @tracked showAll = 0;
-
-  showOptions = [
-    { label: 'Show only active status accounts', value: 0},
-    { label: 'Show all accounts', value: 1}
-  ];
-
   get totalPeople() {
     let total = 0;
-    this.freaking.forEach((freaks) => total += freaks.people.length);
+    this.serviceYears.forEach((serviceYear) => total += serviceYear.people.length);
     return total;
   }
 
@@ -24,24 +15,22 @@ export default class ReportsFreakingYearsController extends ClubhouseController 
       {title: 'Callsign', key: 'callsign'},
       {title: 'Last Name', key: 'last_name'},
       {title: 'First Name', key: 'first_name'},
-      {title: 'Years', key: 'years'},
+      {title: 'Total Years of Service', key: 'tally'},
       {title: 'First Year', key: 'first_year'},
-      {title: 'Last Year', key: 'last_year'},
-      {title: `Signed Up In ${this.signed_up_year}`, key: 'signed_up'}
+      {title: 'Last Year', key: 'last_year'}
     ];
 
     const people = [];
 
-    this.freaking.forEach((freaks) => {
-      freaks.people.forEach((row) => {
+    this.serviceYears.forEach((serviceYear) => {
+      serviceYear.people.forEach((row) => {
         people.push({
           callsign: row.callsign,
           first_name: row.first_name,
           last_name: row.last_name,
-          years: row.years,
+          tally: row.years_of_service ? row.years_of_service.length : 0,
           first_year: row.first_year,
-          last_year: row.last_year,
-          signed_up: row.signed_up ? 'Y' : 'N'
+          last_year: row.last_year
         });
       })
     })
@@ -56,6 +45,6 @@ export default class ReportsFreakingYearsController extends ClubhouseController 
       }
     });
 
-    this.house.downloadCsv(`${this.signed_up_year}-freaking-years.csv`, CSV_COLUMNS, people);
+    this.house.downloadCsv(`${currentYear()}-freaking-years.csv`, CSV_COLUMNS, people);
   }
 }

@@ -1,25 +1,12 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
 export default class ReportsFreakingYearsRoute extends ClubhouseRoute {
-  queryParams = {
-    showAll: { refreshModel: true }
-  };
-
-  model(params) {
-    const query = {};
-    if (params.showAll) {
-      query.include_all = 1;
-      this.showAll = 1;
-    } else {
-      this.showAll = 0;
-    }
-    return this.ajax.request(`timesheet/freaking-years`, { data: query });
+  model() {
+    return this.ajax.request(`award/service-years`);
   }
 
   setupController(controller, model) {
-    controller.set('freaking', model.freaking);
-    controller.set('signed_up_year', model.signed_up_year);
-    controller.set('showAll', this.showAll);
+    controller.set('serviceYears', model.serviceYears);
   }
 
   resetController(controller, isExiting) {
