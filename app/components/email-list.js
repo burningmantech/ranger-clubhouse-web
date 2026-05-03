@@ -27,7 +27,7 @@ export default class EmailListComponent extends Component {
 
   @action
   copyToClipboardAction(event) {
-    event.preventDefault();
+    event?.preventDefault();
 
     // Find out the element to copy to the clipboard
     const element = document.querySelector('#'+this.listId);
