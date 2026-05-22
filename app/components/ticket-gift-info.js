@@ -29,14 +29,12 @@ export default class TicketGiftInfoComponent extends Component {
 
   @action
   ticketDelivery(ticket) {
-    const info = this.args.ticketingInfo;
-
     if (ticket.isDeliveryNone) {
       return 'no delivery method chosen';
     } else if (ticket.isDeliveryPriorityPost) {
-      return `delivery via USPS Priority Mail ($${info.mail_priority_price})`;
+      return `delivery via USPS Priority Mail (free)`;
     } else if (ticket.isDeliveryStandardPost) {
-      return `delivery via USPS Standard Mail ($${info.mail_standard_price})`;
+      return `delivery via USPS Standard Mail (free)`;
     } else if (ticket.isDeliveryWillCall) {
       return 'for pickup at Will Call (free)';
     } else {
