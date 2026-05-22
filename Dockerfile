@@ -4,7 +4,7 @@
 # Note we need a version of Node that is supported by ember-cli.
 # See: https://github.com/ember-cli/ember-cli/blob/master/docs/node-support.md
 #
-FROM node:24-alpine as development
+FROM node:24-alpine AS development
 
 
 # Install Ember CLI
@@ -34,7 +34,7 @@ COPY ["./.ember-cli.js", "./.eslintignore", "./.eslintrc.js", "./ember-cli-build
 # This stage builds the Ember application
 # -----------------------------------------------------------------------------
 
-FROM development as build
+FROM development AS build
 
 # Install dependencies & build the application
 RUN ember build --environment production;
@@ -42,7 +42,7 @@ RUN ember build --environment production;
 # -----------------------------------------------------------------------------
 # This stage builds the application container using Nginx
 # -----------------------------------------------------------------------------
-FROM nginx:1.31-alpine as application
+FROM nginx:1.31-alpine AS application
 
 # Copy the application with dependencies from the build container
 COPY --from=build /build/dist /var/www/application/client
