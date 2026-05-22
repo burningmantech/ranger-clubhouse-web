@@ -24,6 +24,7 @@ jobs:
             api.github.com:443
             github.com:443
             registry.npmjs.org:443
+            production.cloudfront.docker.com:443
 
       - name: Checkout source code
         uses: actions/checkout@v5
@@ -55,6 +56,7 @@ jobs:
             api.github.com:443
             github.com:443
             registry.npmjs.org:443
+            production.cloudfront.docker.com:443
 
       - name: Checkout source code
         uses: actions/checkout@v5
