@@ -5,6 +5,13 @@ name: CI/CD
 
 on: [push]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
 
 jobs:
 
@@ -76,6 +83,8 @@ jobs:
   docker:
     name: Build Docker image
 
+    needs: [lint, test]
+
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -91,7 +100,7 @@ jobs:
             auth.docker.io:443
             docker.io:443
             github.com:443
-            production.cloudflare.docker.com:443
+            production.cloudfront.docker.com:443
             registry-1.docker.io:443
             registry.npmjs.org:443
 
@@ -212,8 +221,8 @@ jobs:
           CI: true
           PROJECT_NAME: Ranger Secret Clubhouse Web Application
           REPOSITORY_ID: ${{ github.repository }}
-          BUILD_NUMBER: 0
-          BUILD_URL: https://github.com/burningmantech/ranger-secret-clubhouse/commit/${{ github.sha }}/checks
+          BUILD_NUMBER: ${{ github.run_number }}
+          BUILD_URL: https://github.com/burningmantech/ranger-secret-clubhouse/actions/runs/${{ github.run_id }}
           COMMIT_ID: ${{ github.event.head_commit.id }}
           COMMIT_URL: ${{ github.event.head_commit.url }}
           COMMIT_AUTHOR_USER: ${{ github.event.head_commit.author.username }}
