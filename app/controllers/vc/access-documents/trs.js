@@ -49,12 +49,12 @@ const PAID_AND_GIFT_TICKET_EXPORT_FORMAT = [
   ['Shipping Address (Required if Mail Delivery type selected):: State', 'not_used_state'],
   ['Shipping Address (Required if Mail Delivery type selected):: Zip', 'not_used_zip'],
   ['Shipping Address (Required if Mail Delivery type selected):: Phone', 'not_used_phone'],
-  ['Request: $225 Ticket', 'spt'],
-  ['Request: Vehicle Pass $150', 'paid_vp'],
+  ['Request: $250 Ticket', 'spt'],
+  ['Request: $165 Vehicle Pass', 'paid_vp'],
   ['Request: Gift Ticket', 'not_used_gift_ticket'], // We use the transfferrable gift ticket
   ['Request: Gift Vehicle Pass', 'gift_vp'],
-  ['Request: Transferrable $225 Ticket', 'spt_xfer'],
-  ['Request: Transferrable $150 Vehicle Pass', 'vp_xfer'],
+  ['Request: Transferrable $250 Ticket', 'spt_xfer'],
+  ['Request: Transferrable $165 Vehicle Pass', 'vp_xfer'],
   ['Request: Transferrable Gift Ticket', 'gift_ticket'],
   ['Request: Transferrable Gift Vehicle Pass', 'vehicle_pass_gift'],
   // New for 2023, not used currently.
@@ -82,10 +82,10 @@ const UNPAID_EXPORT_FORMAT = [
   ['Shipping Address (Required if Mail Delivery type selected):: Phone', 'not_used_phone'],
   //['Request: Gift Ticket', 'gift_ticket'],
   ['Request: Gift Vehicle Pass', 'gift_vp'],
-  ['Request: Setup Access Pass (SAP) 8/4 &amp; Later', 'sap_0804'],
-  ['Request: Setup Access Pass (SAP) 8/5 &amp; Later', 'sap_0805'],
-  ['Request: Setup Access Pass (SAP) 8/6 &amp; Later', 'sap_0806'],
-  ['Request: Setup Access Pass (SAP) 8/7 &amp; Later', 'sap_0807'],
+  ['Request: Setup Access Pass (SAP) 8/26 &amp; Later', 'sap_0826'],
+  ['Request: Setup Access Pass (SAP) 8/27 &amp; Later', 'sap_0827'],
+  ['Request: Setup Access Pass (SAP) 8/28 &amp; Later', 'sap_0828'],
+  ['Request: Setup Access Pass (SAP) 8/29 &amp; Later', 'sap_0829'],
   ['Request: Setup Access Pass (SAP) 8/8 &amp; Later', 'sap_0808'],
   ['Request: Setup Access Pass (SAP) 8/9 &amp; Later', 'sap_0809'],
   ['Request: Setup Access Pass (SAP) 8/10 &amp; Later', 'sap_0810'],
@@ -93,7 +93,7 @@ const UNPAID_EXPORT_FORMAT = [
   ['Request: Setup Access Pass (SAP) 8/12 &amp; Later', 'sap_0812'],
   ['Request: Setup Access Pass (SAP) 8/13 &amp; Later', 'sap_0813'],
   ['Request: Setup Access Pass (SAP) 8/14 &amp; Later', 'sap_0814'],
-  ['Request: Setup Access Pass (SAP) 8/15 &amp; Later', 'sap_0815'],
+  ['Request: Setup Access Pass (SAP)  8/15 &amp; Later', 'sap_0815'],
   ['Request: Setup Access Pass (SAP) 8/16 &amp; Later', 'sap_0816'],
   ['Request: Setup Access Pass (SAP) 8/17 &amp; Later', 'sap_0817'],
   ['Request: Setup Access Pass (SAP) 8/18 &amp; Later', 'sap_0818'],
@@ -102,15 +102,15 @@ const UNPAID_EXPORT_FORMAT = [
   ['Request: Setup Access Pass (SAP) 8/21 &amp; Later', 'sap_0821'],
   ['Request: Setup Access Pass (SAP) 8/22 &amp; Later', 'sap_0822'],
   ['Request: Setup Access Pass (SAP) 8/23 &amp; Later', 'sap_0823'],
-  ['Request: Setup Access Pass (SAP) 8/2 &amp; Later', 'sap_0802'],
-  ['Request: Setup Access Pass (SAP) 8/3 &amp; Later', 'sap_0803'],
+  ['Request: Setup Access Pass (SAP) 8/24 &amp; Later', 'sap_0824'],
+  ['Request: Setup Access Pass (SAP) 8/25 &amp; Later', 'sap_0825'],
   ['Request: Setup Access Pass (SAP) - Anytime', 'sap_anytime'],
   ['Request: Staff Credential Pickup 8/14 &amp; After', 'sc_0814'],
   ['Request: Staff Credential Pickup 8/13 &amp; After', 'sc_0813'],
-  ['Request: Staff Credential Pickup 8/4 &amp; After', 'sc_0804'],
-  ['Request: Staff Credential Pickup 8/5 &amp; After', 'sc_0805'],
-  ['Request: Staff Credential Pickup 8/6 &amp; After', 'sc_0806'],
-  ['Request: Staff Credential Pickup 8/7 &amp; After', 'sc_0807'],
+  ['Request: Staff Credential Pickup 8/26 &amp; After', 'sc_0826'],
+  ['Request: Staff Credential Pickup 8/27 &amp; After', 'sc_0827'],
+  ['Request: Staff Credential Pickup 8/28 &amp; After', 'sc_0828'],
+  ['Request: Staff Credential Pickup 8/29 &amp; After', 'sc_0829'],
   ['Request: Staff Credential Pickup 8/8 &amp; After', 'sc_0808'],
   ['Request: Staff Credential Pickup 8/9 &amp; After', 'sc_0809'],
   ['Request: Staff Credential Pickup 8/10 &amp; After', 'sc_0810'],
@@ -125,16 +125,16 @@ const UNPAID_EXPORT_FORMAT = [
   ['Request: Staff Credential Pickup 8/21 &amp; After', 'sc_0821'],
   ['Request: Staff Credential Pickup 8/22 &amp; After', 'sc_0822'],
   ['Request: Staff Credential Pickup 8/23 &amp; After', 'sc_0823'],
-  ['Request: Staff Credential Pickup 8/2 &amp; After', 'sc_0802'],
+  ['Request: Staff Credential Pickup 8/24 &amp; After', 'sc_0823'],
   ['Request: Staff Credential Pickup Anytime', 'sc_anytime'],
-  ['Request: Staff Credential Pickup 8/3 &amp; After', 'sc_0803'],
+  ['Request: Staff Credential Pickup 8/25 &amp; After', 'sc_0803'],
 ];
 
 const LSD_EXPORT_FORMAT = [
   ['First Name', 'first_name'],
   ['Last Name', 'last_name'],
   ['Email', 'email'],
-  ['Question: Method Of Delivery', 'delivery_type'],
+  ['Question: Method Of Delivery:', 'delivery_type'],
   ['Question: Nickname/Project:', 'project_name'],
   ['Question: Notes:', 'note'],
   // Shipping addresses are not used in 2022, however the headers are still present. sigh.
@@ -147,14 +147,15 @@ const LSD_EXPORT_FORMAT = [
   ['Shipping Address:: State', 'not_used_state'],
   ['Shipping Address:: Zip', 'not_used_zip'],
   ['Shipping Address:: Phone', 'not_used_phone'],
-  ['Request: $150 Vehicle Pass - Directed', 'lsd_vp'],
+  ['Request: $165 Vehicle Pass - Directed', 'lsd_vp'],
   ['Request: $550 Ticket - Directed', 'lsd'],
   // Not used.
-  ['Request: $650 Ticket - Directed', 'ignore'],
-  ['Request: $750 Ticket - Directed', 'ignore'],
-  ['Request: $950 Ticket - Directed', 'ignore'],
+  ['Request: $675 Ticket - Directed', 'ignore'],
+  ['Request: $775 Ticket - Directed', 'ignore'],
+  ['Request: $975 Ticket - Directed', 'ignore'],
   ['Request: $1500 Ticket - Directed', 'ignore'],
   ['Request: $3000 Ticket - Directed', 'ignore'],
+  ['Request: Non-Transferrable $550 Ticket', 'ignore']
 ];
 
 
@@ -167,6 +168,7 @@ const STAFF_CREDENTIAL_VP = 'staff_credential_vp';
 const WAP_ALL = 'work_access_pass_all';
 const WAP_PNV = 'work_access_pass_pnv';
 const WAP_RANGER = 'work_access_pass_ranger';
+const WAP_RANGER_PLUS_SO = 'work_access_pass_ranger_plus_so';
 
 const CREDENTIAL_PICKUP = 'Credential Pick Up'; // Pick up in Gerlach before Box Office is running
 const WILL_CALL = 'Will Call';  // Box office
@@ -211,6 +213,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
       options:
         [
           ['SAP Ranger', WAP_RANGER],
+          ['SAP Ranger + Significant Other', WAP_RANGER_PLUS_SO],
           ['SAP Significant Other', WAPSO],
           ['SAP Prospective / Alpha', WAP_PNV],
           ['SAP All', WAP_ALL],
@@ -341,6 +344,9 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
       case WAP_RANGER:
         return this.accessDocuments.filter((r) => r.type === WAP && r.person.status !== ALPHA && r.person.status !== PROSPECTIVE);
+
+      case WAP_RANGER_PLUS_SO:
+        return this.accessDocuments.filter((r) => (r.type === WAP || r.type === WAPSO) && r.person.status !== ALPHA && r.person.status !== PROSPECTIVE);
 
       case WAP_ALL:
         return this.accessDocuments.filter((r) => r.type === WAP || r.type === WAPSO);
