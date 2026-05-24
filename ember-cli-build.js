@@ -1,9 +1,7 @@
 'use strict';
 
 const EmberApp = require('ember-cli/lib/broccoli/ember-app');
-// eslint-disable-next-line n/no-extraneous-require
 const writeFile = require('broccoli-file-creator');
-// eslint-disable-next-line n/no-extraneous-require
 const MergeTrees = require("broccoli-merge-trees");
 
 const env = EmberApp.env();
