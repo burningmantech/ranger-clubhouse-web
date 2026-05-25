@@ -84,7 +84,7 @@ export default class VcBmidPrintController extends ClubhouseController {
   @action
   toggleBmid(bmid) {
     if (bmid) {
-      bmid.set('selected', !bmid.selected);
+      bmid.selected = !bmid.selected;
     }
 
     this._updateSelectedCount();

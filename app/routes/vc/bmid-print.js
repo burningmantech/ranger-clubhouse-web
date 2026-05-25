@@ -82,7 +82,7 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
       }
 
       if (bmid.has_approved_photo && !bmid.notQualifiedToPrint) {
-        set(bmid, 'selected', 1);
+        bmid.selected = 1;
       } else if (!bmid.has_approved_photo) {
         noPhoto.push(bmid);
       } else {
