@@ -1,5 +1,4 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {set} from '@ember/object';
 import RSVP from 'rsvp';
 import {ADMIN, EDIT_BMIDS} from 'clubhouse/constants/roles';
 import {
