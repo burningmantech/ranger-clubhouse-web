@@ -1,5 +1,4 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {set} from '@ember/object';
 import RSVP from 'rsvp';
 import {ADMIN, EDIT_BMIDS} from 'clubhouse/constants/roles';
 import {
@@ -82,7 +81,7 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
       }
 
       if (bmid.has_approved_photo && !bmid.notQualifiedToPrint) {
-        set(bmid, 'selected', 1);
+        bmid.selected = 1;
       } else if (!bmid.has_approved_photo) {
         noPhoto.push(bmid);
       } else {
