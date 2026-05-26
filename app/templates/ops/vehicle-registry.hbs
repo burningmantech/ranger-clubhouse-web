@@ -59,6 +59,7 @@
           <div class="vr-col-vehicle">Vehicle</div>
           <div class="vr-col-permit">Permit &amp; IDs</div>
           <div class="vr-col-items">Items</div>
+          <div class="vr-col-sap">SAP</div>
           <div class="vr-col-action">Action</div>
         </div>
         {{#each this.viewVehicles as |vehicle|}}
@@ -128,6 +129,19 @@
                 ))}}
                   -
                 {{/if}}
+              {{/if}}
+            </div>
+            <div class="vr-col-sap">
+              {{#if vehicle.person_id}}
+              {{#if (eq vehicle.arrival_date "any")}}
+                <UiBadge @type="success">any</UiBadge>
+              {{else if vehicle.arrival_date}}
+                {{dayjs-format vehicle.arrival_date "ddd, MMM D"}}
+              {{else}}
+                <UiBadge @type="danger">No SAP</UiBadge>
+              {{/if}}
+              {{else}}
+                <span class="text-muted">not applicable</span>
               {{/if}}
             </div>
             <div class="vr-col-action">
@@ -210,6 +224,20 @@
             <details class="vr-card-details">
               <summary>More details</summary>
               <div class="vr-card-details-grid">
+                <span class="text-muted">SAP</span>
+                <span>
+                  {{#if vehicle.person_id}}
+                    {{#if (eq vehicle.arrival_date "any")}}
+                      <UiBadge @type="success">any</UiBadge>
+                    {{else if vehicle.arrival_date}}
+                      {{dayjs-format vehicle.arrival_date "ddd, MMM D"}}
+                    {{else}}
+                      <UiBadge @type="danger">No SAP</UiBadge>
+                    {{/if}}
+                  {{else}}
+                    <span class="text-muted">not applicable</span>
+                  {{/if}}
+                </span>
                 <span class="text-muted">DPW Req. ID</span>
                 <span><PresentOrNot @value={{vehicle.rental_number}} @empty="-"/></span>
                 {{#unless vehicle.isRejected}}
