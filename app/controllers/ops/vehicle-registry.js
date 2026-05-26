@@ -3,6 +3,29 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {isEmpty} from '@ember/utils';
 import {ADMIN, VEHICLE_INFO_UPDATE} from "clubhouse/constants/roles";
+import dayjs from 'dayjs';
+
+const CSV_COLUMNS = [
+  {key: 'callsign_team', title: 'Person/Team'},
+  {key: 'status', title: 'Status'},
+  {key: 'arrival_date', title: 'SAP'},
+  {key: 'vehicle_year', title: 'Vehicle Year'},
+  {key: 'vehicle_make', title: 'Vehicle Make'},
+  {key: 'vehicle_model', title: 'Vehicle Model'},
+  {key: 'vehicle_color', title: 'Vehicle Color'},
+  {key: 'rental_number', title: 'DPW Request ID'},
+  {key: 'driving_sticker', title: 'Driving Permit'},
+  {key: 'sticker_number', title: 'Permit #'},
+  {key: 'license_state', title: 'License State'},
+  {key: 'license_number', title: 'License #'},
+  {key: 'ranger_logo', title: 'Ranger Logo'},
+  {key: 'fuel_chit', title: 'Fuel Chit'},
+  {key: 'amber_light', title: 'Amber Light'},
+  {key: 'notes', title: 'Notes'},
+  {key: 'response', title: 'Response to person'},
+  {key: 'request_comment', title: 'Requester Comment'},
+];
+
 
 export default class OpsPersonVehiclesController extends ClubhouseController {
   queryParams = ['year'];
@@ -172,30 +195,11 @@ export default class OpsPersonVehiclesController extends ClubhouseController {
 
   @action
   exportToCSV() {
-    const COLUMNS = [
-      {key: 'callsign_team', title: 'Person/Team'},
-      {key: 'status', title: 'Status'},
-      {key: 'vehicle_year', title: 'Vehicle Year'},
-      {key: 'vehicle_make', title: 'Vehicle Make'},
-      {key: 'vehicle_model', title: 'Vehicle Model'},
-      {key: 'vehicle_color', title: 'Vehicle Color'},
-      {key: 'rental_number', title: 'DPW Request ID'},
-      {key: 'driving_sticker', title: 'Driving Permit'},
-      {key: 'sticker_number', title: 'Permit #'},
-      {key: 'license_state', title: 'License State'},
-      {key: 'license_number', title: 'License #'},
-      {key: 'ranger_logo', title: 'Ranger Logo'},
-      {key: 'fuel_chit', title: 'Fuel Chit'},
-      {key: 'amber_light', title: 'Amber Light'},
-      {key: 'notes', title: 'Notes'},
-      {key: 'response', title: 'Response to person'},
-      {key: 'request_comment', title: 'Requester Comment'},
-    ];
-
     const rows = this.viewVehicles.map((v) => {
       return {
         callsign_team: (v.isFleet ? v.team_assignment : (v.person ? v.person.callsign : `Deleted Person #${v.person_id}`)),
         status: v.status,
+        arrival_date: v.arrival_date ? (v.arrival_date === 'any' ? 'any' : dayjs(v.arrival_date).format('MM-DD-YYYY')) : 'none',
         vehicle_year: v.vehicle_year,
         vehicle_make: v.vehicle_make,
         vehicle_model: v.vehicle_model,
@@ -211,9 +215,9 @@ export default class OpsPersonVehiclesController extends ClubhouseController {
         notes: v.notes,
         response: v.response,
         request_comment: v.request_comment,
-      };
+       };
     });
 
-    this.house.downloadCsv(`${this.year}-vehicles.csv`, COLUMNS, rows);
+    this.house.downloadCsv(`${this.year}-vehicles.csv`, CSV_COLUMNS, rows);
   }
 }
