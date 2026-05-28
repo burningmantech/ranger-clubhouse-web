@@ -1,4 +1,4 @@
-{{#each this.teamNotes as |intake|}}
+{{#each this.sortedTeamNotes as |intake|}}
   <div class="mb-2">
     <div class="hstack gap-3">
       <div class="fw-semibold">{{intake.year}}</div>
@@ -35,9 +35,9 @@
   <div class="mb-2">
     <UiButton @type="secondary" @size="sm" @onClick={{this.addNoteAction}} class="note-button">
       {{#if this.canAddNote}}
-        Add {{uppercase @type}} Note / Rank
+        Add Note / Rank
       {{else}}
-        View {{uppercase @type}} Details
+        View Details
       {{/if}}
     </UiButton>
   </div>
