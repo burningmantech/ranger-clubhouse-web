@@ -1,5 +1,5 @@
 {{#if @trainings}}
-  {{#each @trainings as |training|}}
+  {{#each this.sortedTrainings as |training|}}
     <div class="mb-2">
       <div class="hstack gap-4">
         <div>
@@ -54,7 +54,7 @@
                @onEscape={{this.closeHistoryAction}} as |Modal|>
     <Modal.body>
 
-      {{#each @trainings as |row|}}
+      {{#each this.sortedTrainings as |row|}}
         <div class="mb-3">
           <h4 class="text-bg-gray p-2">
             {{mdy-format row.slot_begins}}

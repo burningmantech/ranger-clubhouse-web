@@ -20,6 +20,14 @@ export default class IntakeNotesComponent extends Component {
     return this.args.person[this.args.type + '_team'];
   }
 
+  get sortedTeamNotes() {
+    const notes = this.teamNotes;
+    if (!notes) {
+      return notes;
+    }
+    return notes.slice().sort((a, b) => b.year - a.year);
+  }
+
   // Is the user allowed to add a team note?
   get canAddNote() {
     let role;

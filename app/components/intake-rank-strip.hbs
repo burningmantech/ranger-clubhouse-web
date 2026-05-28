@@ -1,0 +1,25 @@
+<div class="intake-rank-strip mb-3">
+  {{#each this.rankedSummaries key="key" as |team|}}
+    <span class="intake-rank-chip intake-rank-chip-rank-{{team.rank}}">
+      <span class="intake-rank-chip-value">
+        {{#if (eq team.rank 1)}}
+          {{fa-icon "award" right=1}}1/Green
+        {{else if (eq team.rank 2)}}
+          2/Normal
+        {{else if (eq team.rank 3)}}
+          {{fa-icon "bell" type="r" right=1}}3/Yellow
+        {{else if (eq team.rank 4)}}
+          {{fa-icon "flag" right=1}}4/FLAG
+        {{else}}
+          {{team.rank}}/?
+        {{/if}}
+      </span>
+      <span class="intake-rank-chip-sep">&middot;</span>
+      <span class="intake-rank-chip-label">{{team.label}} {{team.year}}</span>
+    </span>
+  {{else}}
+    {{#unless @person.personnel_issue}}
+      <span class="intake-rank-chip-empty-note">No ranks recorded yet</span>
+    {{/unless}}
+  {{/each}}
+</div>

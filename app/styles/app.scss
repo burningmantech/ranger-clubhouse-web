@@ -519,6 +519,159 @@ html.modal-open, body.modal-open {
   width: 25ch;
 }
 
+// Unified Flagging — severity-sorted person cards.
+// Each person is a full-width card; the left edge color and a top banner
+// let reviewers scan the list for concerns (Rank 3/4) and Personnel flags.
+.uf-card {
+  position: relative;
+  background-color: #ffffff;
+  border: 1px solid #dcdcdc;
+  border-left: 6px solid #adb5bd;
+  border-radius: 6px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.uf-card-flag {
+  border-left-color: #dc3545;
+}
+
+.uf-card-yellow {
+  border-left-color: #9f6800;
+}
+
+.uf-card-green {
+  border-left-color: #28a745;
+}
+
+.uf-card-normal {
+  border-left-color: #adb5bd;
+}
+
+// Full-width alarm bleeding to the card edges — a Personnel flag means
+// "take no actions", so it must be impossible to miss.
+.uf-flag-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: -1rem -1.25rem 1rem;
+  padding: 0.65rem 1rem;
+  background-color: #dc3545;
+  color: #ffffff;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-radius: 5px 5px 0 0;
+}
+
+.uf-card-id {
+  margin-bottom: 0.5rem;
+}
+
+.uf-card-status {
+  color: #6c757d;
+}
+
+.uf-card-id-secondary {
+  color: #6c757d;
+}
+
+.uf-card-id-sep {
+  color: #adb5bd;
+  margin: 0 0.25rem;
+}
+
+.uf-card-pnv {
+  margin-top: 0.35rem;
+}
+
+.uf-card-pnv-year {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-right: 1rem;
+}
+
+.uf-card-teams {
+  margin-top: 0.5rem;
+}
+
+.uf-team {
+  padding: 0.6rem 0;
+  border-top: 1px solid #f0f0f0;
+}
+
+.uf-team:first-child {
+  border-top: 0;
+}
+
+.uf-team-label {
+  font-weight: 600;
+  font-size: 1.15rem;
+  margin-bottom: 0.25rem;
+}
+
+.intake-rank-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.intake-rank-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid;
+  border-radius: 999px;
+  line-height: 1.2;
+  background-color: #ffffff;
+}
+
+.intake-rank-chip-label {
+  font-weight: 600;
+}
+
+.intake-rank-chip-sep {
+  color: #999999;
+}
+
+.intake-rank-chip-value {
+  font-weight: 600;
+}
+
+.intake-rank-chip-rank-1 {
+  border-color: #28a745;
+  background-color: #e8f6ec;
+  color: #1c5b2c;
+}
+
+.intake-rank-chip-rank-2 {
+  border-color: #6c757d;
+  background-color: #f1f3f5;
+  color: #495057;
+}
+
+.intake-rank-chip-rank-3 {
+  border-color: #9a9005;
+  background-color: #fff8d7;
+  color: #9f6800;
+}
+
+.intake-rank-chip-rank-4 {
+  border-color: #dc3545;
+  background-color: #f8d7da;
+  color: #842029;
+  font-weight: 700;
+}
+
+.intake-rank-chip-empty-note {
+  color: #6c757d;
+  font-style: italic;
+}
+
 .homepage-title {
   font-weight: 500;
 }
