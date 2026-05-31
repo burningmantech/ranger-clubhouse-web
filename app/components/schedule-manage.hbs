@@ -34,6 +34,9 @@
       <UiTab as |tab|>
         <tab.pane @title="Schedule" @id="schedule">
           <ScheduleBurnWeekendRecommendation @person={{@person}} @permission={{this.permission}} />
+          <UiAlert @type="warning" @icon="hand-point-right">
+            Click on the <i class="fw-bold">Available Sign-Ups</i> tab above to see what signups are available.
+          </UiAlert>
           <ScheduleTable @slots={{this.signedUpSlots}}
                          @person={{@person}}
                          @isMe={{this.isMe}}
@@ -47,6 +50,9 @@
           />
         </tab.pane>
         <tab.pane @title="Available Sign-Ups" @id="sign-ups">
+          <UiAlert @type="warning" @icon="hand-point-right">
+            Click on a <i class="fw-bold">position title</i> (e.g., Training) to show the available shifts
+          </UiAlert>
           <ScheduleBurnWeekendRecommendation @person={{@person}}
                                              @permission={{this.permission}} />
           <ScheduleAvailableSignUps @availableSlots={{this.availableSlots}}

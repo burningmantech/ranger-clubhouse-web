@@ -5,6 +5,7 @@ import {tracked} from '@glimmer/tracking';
 import {
   validatePresence,
   validateFormat,
+  validateLength,
 } from 'ember-changeset-validations/validators';
 import validateState from "clubhouse/validators/state";
 import {STATUS_OPTIONS} from "clubhouse/constants/person_status";
@@ -16,7 +17,7 @@ export default class AdminPersonCreateController extends ClubhouseController {
   @tracked passwordForm;
 
   personValidations = {
-    callsign: [validatePresence(true), validateFormat({min: 3})],
+    callsign: [validatePresence(true), validateLength({min: 3})],
     first_name: [validatePresence(true)],
     last_name: [validatePresence(true)],
     email: [validatePresence(true), validateFormat({type: 'email'})],
@@ -25,7 +26,7 @@ export default class AdminPersonCreateController extends ClubhouseController {
     state: [validateState()],
     zip: [validatePresence(true)],
     country: [validatePresence(true)],
-    home_phone: [validatePresence(true), validateFormat({min: 9})],
+    home_phone: [validatePresence(true), validateLength({min: 9})],
   };
 
   statusOptions = STATUS_OPTIONS;
