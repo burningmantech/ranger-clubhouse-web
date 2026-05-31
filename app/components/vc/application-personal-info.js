@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import {validatePresence, validateFormat} from 'ember-changeset-validations/validators';
+import {validatePresence, validateFormat, validateLength} from 'ember-changeset-validations/validators';
 import {CountryOptions, StateLabels, StateOptions} from 'clubhouse/constants/countries';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
@@ -26,7 +26,7 @@ export default class VcApplicationPersonalInfoComponent extends Component {
     postal_code: [validatePresence({presence: true})],
     country: [validatePresence({presence: true})],
 
-    phone: [validatePresence(true), validateFormat({min: 9})],
+    phone: [validatePresence(true), validateLength({min: 9})],
     email: [validatePresence(true), validateFormat({type: 'email'})],
   };
 

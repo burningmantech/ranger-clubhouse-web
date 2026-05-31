@@ -17,7 +17,7 @@ export default class MeWelcomeController extends ClubhouseController {
       validateLength({min: 5, message: 'The password should be 5 characters or more.'})
     ],
     password_confirmation: [
-      validateConfirmation({on: 'password', message: 'The password do not match.'})
+      validateConfirmation({on: 'password', message: 'The passwords do not match.'})
     ]
   };
 

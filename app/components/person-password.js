@@ -25,7 +25,7 @@ export default class PersonPasswordComponent extends Component {
       validateLength({max: 30, message: 'The password may only be 30 characters or less.'})
     ],
     password_confirmation: [
-      validateConfirmation({on: 'password', message: 'The password do not match.'})
+      validateConfirmation({on: 'password', message: 'The passwords do not match.'})
     ],
   };
 
