@@ -60,6 +60,8 @@
           <div class="vr-col-permit">Permit &amp; IDs</div>
           <div class="vr-col-items">Items</div>
           <div class="vr-col-sap">SAP</div>
+          <div class="vr-col-pvr">PVR Teams</div>
+          <div class="vr-col-pvr">PVR Positions</div>
           <div class="vr-col-action">Action</div>
         </div>
         {{#each this.viewVehicles as |vehicle|}}
@@ -79,7 +81,7 @@
               {{else if vehicle.isRejected}}
                 <UiBadge @type="danger">denied</UiBadge>
               {{else if vehicle.isPending}}
-                <UiBadge @type="secondary">pending</UiBadge>
+                <UiBadge @type="warning">pending</UiBadge>
               {{else}}
                 {{vehicle.status}}
               {{/if}}
@@ -133,15 +135,37 @@
             </div>
             <div class="vr-col-sap">
               {{#if vehicle.person_id}}
-              {{#if (eq vehicle.arrival_date "any")}}
-                <UiBadge @type="success">any</UiBadge>
-              {{else if vehicle.arrival_date}}
-                {{dayjs-format vehicle.arrival_date "ddd, MMM D"}}
+                {{#if (eq vehicle.arrival_date "any")}}
+                  <UiBadge @type="success">any</UiBadge>
+                {{else if vehicle.arrival_date}}
+                  {{dayjs-format vehicle.arrival_date "ddd, MMM D"}}
+                {{else}}
+                  <UiBadge @type="danger">No SAP</UiBadge>
+                {{/if}}
               {{else}}
-                <UiBadge @type="danger">No SAP</UiBadge>
+                -
               {{/if}}
+            </div>
+            <div class="vr-col-pvr">
+              {{#if vehicle.person_id}}
+                {{#each vehicle.pvr_teams as |team|}}
+                  {{team.title}}<br>
+                {{else}}
+                  <div class="text-muted">no teams</div>
+                {{/each}}
               {{else}}
-                <span class="text-muted">not applicable</span>
+                -
+              {{/if}}
+            </div>
+            <div class="vr-col-pvr">
+              {{#if vehicle.person_id}}
+                {{#each vehicle.pvr_positions as |position|}}
+                  {{position.title}}<br>
+                {{else}}
+                  <div class="text-muted">no positions</div>
+                {{/each}}
+              {{else}}
+                -
               {{/if}}
             </div>
             <div class="vr-col-action">
@@ -189,7 +213,7 @@
                 {{else if vehicle.isRejected}}
                   <UiBadge @type="danger">denied</UiBadge>
                 {{else if vehicle.isPending}}
-                  <UiBadge @type="secondary">pending</UiBadge>
+                  <UiBadge @type="warning">pending</UiBadge>
                 {{else}}
                   {{vehicle.status}}
                 {{/if}}
@@ -224,6 +248,20 @@
             <details class="vr-card-details">
               <summary>More details</summary>
               <div class="vr-card-details-grid">
+                 <span class="text-muted">DPW Req. ID</span>
+                <span><PresentOrNot @value={{vehicle.rental_number}} @empty="-"/></span>
+                {{#unless vehicle.isRejected}}
+                  <span class="text-muted">Ranger Logo</span>
+                  <span>{{vehicle.rangerLogoLabel}}</span>
+                  <span class="text-muted">Fuel Chit</span>
+                  <span>{{vehicle.fuelChitLabel}}</span>
+                  <span class="text-muted">Amber Light</span>
+                  <span>{{vehicle.amberLightLabel}}</span>
+                  <span class="text-muted">MVR</span>
+                  <span>{{if vehicle.org_vehicle_insurance "Yes" "-"}}</span>
+                  <span class="text-muted">Vehicle Use</span>
+                  <span>{{if vehicle.signed_motorpool_agreement "Yes" "-"}}</span>
+                {{/unless}}
                 <span class="text-muted">SAP</span>
                 <span>
                   {{#if vehicle.person_id}}
@@ -238,20 +276,31 @@
                     <span class="text-muted">not applicable</span>
                   {{/if}}
                 </span>
-                <span class="text-muted">DPW Req. ID</span>
-                <span><PresentOrNot @value={{vehicle.rental_number}} @empty="-"/></span>
-                {{#unless vehicle.isRejected}}
-                  <span class="text-muted">Ranger Logo</span>
-                  <span>{{vehicle.rangerLogoLabel}}</span>
-                  <span class="text-muted">Fuel Chit</span>
-                  <span>{{vehicle.fuelChitLabel}}</span>
-                  <span class="text-muted">Amber Light</span>
-                  <span>{{vehicle.amberLightLabel}}</span>
-                  <span class="text-muted">MVR</span>
-                  <span>{{if vehicle.org_vehicle_insurance "Yes" "-"}}</span>
-                  <span class="text-muted">Vehicle Use</span>
-                  <span>{{if vehicle.signed_motorpool_agreement "Yes" "-"}}</span>
-                {{/unless}}
+                <span class="text-muted">PVR Teams</span>
+                <span>
+                  {{#if vehicle.person_id}}
+                    {{#if vehicle.pvr_teams}}
+                      {{join (map-by "title"vehicle.pvr_teams) ", "}}
+                    {{else}}
+                      <i class="text-muted">no teams</i>
+                    {{/if}}
+                  {{else}}
+                    no applicable
+                  {{/if}}
+                </span>
+                <span class="text-muted">PVR Positions</span>
+                <span>
+                  {{#if vehicle.person_id}}
+                    {{#if vehicle.pvr_positions}}
+                      {{join (map-by "title"vehicle.pvr_positions) ", "}}
+                    {{else}}
+                      <i class="text-muted">no positions</i>
+                    {{/if}}
+                  {{else}}
+                    no applicable
+                  {{/if}}
+                </span>
+
               </div>
             </details>
           </div>

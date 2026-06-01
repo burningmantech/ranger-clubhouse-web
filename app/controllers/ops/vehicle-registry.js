@@ -21,6 +21,9 @@ const CSV_COLUMNS = [
   {key: 'ranger_logo', title: 'Ranger Logo'},
   {key: 'fuel_chit', title: 'Fuel Chit'},
   {key: 'amber_light', title: 'Amber Light'},
+  {key: 'SAP', title: 'SAP'},
+  {key: 'pvr_teams', title: 'PVR Teams'},
+  {key: 'pvr_positions', title: 'PVR Positions'},
   {key: 'notes', title: 'Notes'},
   {key: 'response', title: 'Response to person'},
   {key: 'request_comment', title: 'Requester Comment'},
@@ -215,6 +218,9 @@ export default class OpsPersonVehiclesController extends ClubhouseController {
         notes: v.notes,
         response: v.response,
         request_comment: v.request_comment,
+        sap: v.arrival_date,
+        pvr_teams: v.pvr_teams?.map((p) => p.title).join("\n"),
+        pvr_positions: v.pvr_positions?.map((p) => p.title).join("\n"),
        };
     });
 
