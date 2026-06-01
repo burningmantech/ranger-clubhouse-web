@@ -66,6 +66,9 @@ export default class VehicleModel extends Model {
   @attr('boolean', { readOnly: true }) signed_motorpool_agreement;
   @attr('boolean', { readOnly: true }) signed_personal_vehicle_agreement;
   @attr('', { readOnly: true }) arrival_date;
+  @attr('', { readOnly: true }) pvr_teams;
+  @attr('', { readOnly: true }) pvr_positions;
+
   @attr('string') callsign; // only used for creation or update
 
   get isApproved() {
