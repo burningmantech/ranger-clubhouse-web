@@ -1,0 +1,6 @@
+<UiButton @type={{this.type}} @size={{this.size}} @onClick={{this.open}}>
+  {{this.label}}
+</UiButton>
+{{#if this.showHistory}}
+  <ModalAssetHistory @assetId={{@assetId}} @onClose={{this.close}} />
+{{/if}}

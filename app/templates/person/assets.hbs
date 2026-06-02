@@ -18,14 +18,18 @@
                          @assets={{this.assets}}
                          @attachments={{this.attachments}}
                          @eventInfo={{this.eventInfo}} />
+      <AssetTable @assets={{this.assets}}
+                  @attachments={{this.attachments}}
+                  @year={{this.year}}
+                  @mode="checkout" />
     </:body>
   </UiSection>
 {{/if}}
 
 <UiSection>
-  <:title>Asset Check In/Out History</:title>
+  <:title>Asset Checkout History</:title>
   <:body>
-    <AssetTable @assets={{this.assets}} @year={{this.year}} />
+    <AssetTable @assets={{this.assets}} @year={{this.year}} @mode="history" />
   </:body>
 </UiSection>
 
