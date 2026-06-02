@@ -13,6 +13,7 @@ export const TypeLabels = {
 export default class TeamModel extends Model {
   @attr('string') title;
   @attr('string', {defaultValue: TYPE_TEAM}) type;
+  @attr('string') resource_tag;
   @attr('boolean', {defaultValue: true}) active;
   @attr('boolean', {defaultValue: false}) mvr_eligible;
   @attr('boolean', {defaultValue: false}) pvr_eligible;
