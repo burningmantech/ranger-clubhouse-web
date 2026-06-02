@@ -12,16 +12,15 @@ export default class PersonAssetsRoute extends ClubhouseRoute {
     const person_id = this.modelFor('person').id;
     const year = requestYear(params);
 
-    this.store.unloadAll('asset-person');
-    this.store.unloadAll('asset-attachment');
-    this.year = year;
-
+    // Reload only the year-scoped asset-person collection; let asset-attachment
+    // (a static, year-independent reference list) serve from cache.
     return RSVP.hash({
-      assets: this.store.query('asset-person', {person_id, year}),
+      year,
+      assets: this.store.query('asset-person', {person_id, year}, {reload: true}),
       attachments: this.store.findAll('asset-attachment'),
       eventInfo: this.ajax.request(`person/${person_id}/event-info`, {data: {year}})
         .then((result) => result.event_info),
-      personEvent: this.store.findRecord('person-event', `${person_id}-${year}`, {reload: true}),
+      personEvent: this.store.findRecord('person-event', `${person_id}-${year}`, {backgroundReload: true}),
     });
   }
 
@@ -29,7 +28,7 @@ export default class PersonAssetsRoute extends ClubhouseRoute {
     super.setupController(...arguments);
 
     controller.set('person', this.modelFor('person'));
-    controller.set('year', this.year);
+    controller.set('year', model.year);
     controller.setProperties(model);
   }
 

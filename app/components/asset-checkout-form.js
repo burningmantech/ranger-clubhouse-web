@@ -1,8 +1,18 @@
 import Component from '@glimmer/component';
 import EmberObject from '@ember/object';
-import {action} from '@ember/object';
-import {tracked} from '@glimmer/tracking';
-import {service} from '@ember/service';
+import { action } from '@ember/object';
+import { tracked } from '@glimmer/tracking';
+import { service } from '@ember/service';
+import {
+  CHECKOUT_SUCCESS,
+  CHECKOUT_NOT_FOUND,
+  CHECKOUT_CHECKED_OUT,
+  CHECKOUT_EXPIRED,
+  CHECKOUT_ENTITY_ASSIGNED,
+  ENTITY_ASSIGNED_MESSAGE,
+  UNKNOWN_STATUS_MESSAGE,
+  NAVIGATE_AWAY_WARNING,
+} from 'clubhouse/utils/asset-checkout-status';
 
 export default class AssetCheckoutFormComponent extends Component {
   @service ajax;
@@ -12,12 +22,21 @@ export default class AssetCheckoutFormComponent extends Component {
 
   @tracked assetForm = EmberObject.create({barcode: ''});
 
-  @tracked barcodeNotFound = null;
+  // Error/result state. notFoundBarcode holds the barcode string when a
+  // not-found result comes back (null when there is no such error) - the
+  // template both gates on it and prints it, so it intentionally carries a
+  // payload rather than being a boolean. Initialized and reset to the same
+  // sentinel (null) everywhere.
+  @tracked notFoundBarcode = null;
   @tracked barcodeCheckedOut = null;
-  @tracked isSubmitting = false;
-  @tracked showHistory = false;
-
   @tracked assetExpired = null;
+  @tracked isSubmitting = false;
+
+  // Retry payload for force-checkout, captured from the 'expired' result and
+  // consumed by forceCheckout(). Declared explicitly (not tracked - not
+  // rendered) so the cross-call state is visible at the top of the class.
+  forceBarcode = null;
+  forceAttachmentId = null;
 
   constructor() {
     super(...arguments);
@@ -29,110 +48,103 @@ export default class AssetCheckoutFormComponent extends Component {
   }
 
   /**
-   * Clear out the search errors.
+   * Clear out the search/result errors.
    */
-
   clearErrors() {
-    this.barcodeNotFound = false;
+    this.notFoundBarcode = null;
     this.barcodeCheckedOut = null;
     this.assetExpired = null;
   }
 
   /**
-   * Check out an asset
+   * Check out an asset.
    * @param model
-   * @returns {Promise<void>}
    */
-
   @action
   checkoutAsset(model) {
-    const {barcode} = model;
+    const barcode = (model.barcode ?? '').trim();
     this.clearErrors();
 
-    if (barcode.trim() === '') {
+    if (barcode === '') {
       this.modal.info(null, 'No barcode number was entered.');
       return;
     }
 
-    this._performCheckout(model.barcode, model.attachment_id);
+    this.performCheckout(barcode, model.attachment_id);
   }
 
-  async _performCheckout(barcode, attachment_id, force = false) {
+  /**
+   * POST the checkout request and dispatch on the result. Transport is kept
+   * thin; per-status UI handling lives in handleCheckoutResult so it can be
+   * reasoned about (and tested) independently of the network call.
+   */
+  async performCheckout(barcode, attachment_id, force = false) {
     this.isSubmitting = true;
     try {
-      const data = {person_id: this.args.person.id, barcode, attachment_id};
+      const data = {
+        person_id: this.args.person.id,
+        barcode,
+        attachment_id: attachment_id || null,
+      };
       if (force) {
         data.force = 1;
       }
       const result = await this.ajax.post('asset/checkout', {data});
-
-      switch (result.status) {
-        case 'success':
-          this.toast.success('Asset was successfully checked out.');
-          this.assetForm = EmberObject.create({barcode: ''});
-          await this.args.assets.update();
-          this.args.onCheckOut?.(result.asset);
-          break;
-
-        case 'not-found':
-          this.barcodeNotFound = barcode;
-          break;
-
-        case 'checked-out':
-          this.barcodeCheckedOut = result;
-          this.barcodeCheckedOut.barcode = barcode;
-          break;
-        case 'expired':
-          this.assetExpired = result;
-          this.forceBarcode = barcode;
-          this.forceAttachmentId = attachment_id;
-          break;
-
-        case 'entity-assigned':
-          this.modal.info('Asset Is Assigned', `Asset #${barcode} cannot be checked out because it has been assigned to ${result.entity}. Asset assignments differ from asset checkouts because assignments are for situations where the person does not have a Clubhouse account, such as Burn Perimeter Support or High Rock Security members, or where the asset is used by a team or service rather than an individual.`);
-          break;
-
-        default:
-          this.modal.info('Unknown Status', `A bug was tripped over. The status ${result.status} is not known.`);
-          break;
-      }
+      this.handleCheckoutResult(result, barcode, attachment_id);
     } catch (response) {
-      this.house.handleErrorResponse(response)
+      this.house.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
+    }
+  }
+
+  /**
+   * Apply the per-status side effects of a checkout result.
+   */
+  async handleCheckoutResult(result, barcode, attachment_id) {
+    switch (result.status) {
+      case CHECKOUT_SUCCESS:
+        this.toast.success('Asset was successfully checked out.');
+        this.assetForm = EmberObject.create({barcode: ''});
+        await this.args.assets.update();
+        this.args.onCheckOut?.(result.asset);
+        break;
+
+      case CHECKOUT_NOT_FOUND:
+        this.notFoundBarcode = barcode;
+        break;
+
+      case CHECKOUT_CHECKED_OUT:
+        result.barcode = barcode;
+        this.barcodeCheckedOut = result;
+        break;
+
+      case CHECKOUT_EXPIRED:
+        this.assetExpired = result;
+        this.forceBarcode = barcode;
+        this.forceAttachmentId = attachment_id;
+        break;
+
+      case CHECKOUT_ENTITY_ASSIGNED:
+        this.modal.info('Asset Is Assigned', ENTITY_ASSIGNED_MESSAGE(barcode, result.entity));
+        break;
+
+      default:
+        this.modal.info('Unknown Status', UNKNOWN_STATUS_MESSAGE(result.status));
+        break;
     }
   }
 
   @action
   forceCheckout() {
     this.assetExpired = null;
-    this._performCheckout(this.forceBarcode, this.forceAttachmentId, true);
+    this.performCheckout(this.forceBarcode, this.forceAttachmentId, true);
   }
 
   /**
-   * Show the asset history for a checked out asset.
-   */
-
-  @action
-  showHistoryAction() {
-    this.showHistory = true;
-  }
-
-  /**
-   * Close up the asset history
-   */
-
-  @action
-  closeHistory() {
-    this.showHistory = false;
-  }
-
-  /**
-   * Check to see if the barcode field is blank, and allow the navigation to be tabbed away.
-   *
+   * Check whether the barcode field is blank, allowing navigation away.
    * @param resume
    */
-
   @action
   checkForBlankOnNavigate(resume) {
     if (this.assetForm.barcode.trim() === '') {
@@ -140,13 +152,12 @@ export default class AssetCheckoutFormComponent extends Component {
       return;
     }
 
-    this.modal.info('Asset not checked out', 'A barcode was entered, yet was not checked out. Either complete the check out process, or blank the barcode field before clicking on another tab.');
+    this.modal.info('Asset not checked out', NAVIGATE_AWAY_WARNING);
   }
 
   /**
-   * Close up the expired asset dialog
+   * Close the expired asset dialog.
    */
-
   @action
   closeExpiredDialog() {
     this.assetExpired = null;

@@ -18,8 +18,8 @@
       {{/if}}
     </div>
   </FormRow>
-  {{#if this.barcodeNotFound}}
-    <span class="fw-semibold text-danger">Barcode "{{this.barcodeNotFound}}" was not found.</span>
+  {{#if this.notFoundBarcode}}
+    <span class="fw-semibold text-danger">Barcode "{{this.notFoundBarcode}}" was not found.</span>
   {{else if this.barcodeCheckedOut}}
     <div class="mt-2">
       <span class="fw-semibold text-danger">
@@ -28,9 +28,9 @@
       Check out was on {{shift-format this.barcodeCheckedOut.checked_out}}.
     </div>
     <div class="mt-2 mb-4">
-      <UiButton @type="secondary" @onClick={{this.showHistoryAction}} size="md">
-        Show Asset History
-      </UiButton>
+      <AssetHistoryLauncher @assetId={{this.barcodeCheckedOut.asset_id}}
+                            @label="Show Asset History"
+                            @size="md" />
     </div>
   {{else if this.assetExpired}}
     <ModalDialog @onEscape={{this.closeExpiredDialog}} as |Modal|>
@@ -54,6 +54,3 @@
     <br>
   {{/if}}
 </ChForm>
-{{#if this.showHistory}}
-  <ModalAssetHistory @assetId={{this.barcodeCheckedOut.asset_id}} @onClose={{this.closeHistory}} />
-{{/if}}

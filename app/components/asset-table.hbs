@@ -1,4 +1,4 @@
-{{pluralize @assets.length "asset"}} found
+{{pluralize this.rows.length "asset"}} found
 <UiTable>
   <thead>
   <tr>
@@ -14,12 +14,19 @@
   </tr>
   </thead>
   <tbody>
-  {{#each @assets as |ap|}}
+  {{#each this.rows as |ap|}}
     <tr>
       <td>{{ap.asset.type}}</td>
       <td>{{ap.asset.barcode}}</td>
       <td>
         <PresentOrNot @value={{ap.attachment.description}} @empty="-"/>
+        {{#if (eq @mode "checkout")}}
+          <br>
+          <UiButton @onClick={{fn this.changeAssetAttachment ap}}
+                    @type="secondary" @size="sm" class="mt-1">
+            Change Attachment
+          </UiButton>
+        {{/if}}
       </td>
       <td class="text-center">
         <AssetDurationLabel @asset={{ap.asset}}/>
@@ -44,33 +51,57 @@
             -
           {{/if}}
         {{else}}
-          <UiButton @size="sm" @onClick={{fn this.checkInAsset ap.asset ap}} @disabled={{ap.asset.isSubmitting}}>
-            Check In
-          </UiButton>
-          {{#if ap.asset.isSubmitting}}
-            <SpinIcon/>
-          {{/if}}
+          {{#let (this.isSubmitting ap.asset.id) as |submitting|}}
+            <UiButton @size="sm" @onClick={{fn this.checkInAsset ap.asset ap}} @disabled={{submitting}}>
+              Check In
+            </UiButton>
+            {{#if submitting}}
+              <SpinIcon/>
+            {{/if}}
+          {{/let}}
         {{/if}}
       </td>
       <td class="text-end">
         {{hour-minute-format ap.duration}}
       </td>
       <td>
-        <UiButton @type="secondary" @size="sm" @onClick={{fn this.showHistoryAction ap.asset}}>
-          History
-        </UiButton>
+        <AssetHistoryLauncher @assetId={{ap.asset.id}} />
       </td>
     </tr>
   {{else}}
     <tr>
-      <td colspan="8">
-        <b class="text-danger">No assets were found for {{@year}}</b>
+      <td colspan="9">
+        <b class="text-danger">
+          {{#if (eq @mode "checkout")}}
+            No assets are currently checked out.
+          {{else}}
+            No assets were returned in {{@year}}.
+          {{/if}}
+        </b>
       </td>
     </tr>
   {{/each}}
   </tbody>
 </UiTable>
 
-{{#if this.assetForHistory}}
-  <ModalAssetHistory @assetId={{this.assetForHistory.id}} @onClose={{this.closeHistory}} />
+{{#if this.updateAsset}}
+  <ModalDialog @title="Update attachment for {{this.updateAsset.asset.barcode}}"
+               @onEscape={{this.cancelAttachmentDialog}} as |Modal|>
+    <ChForm @formFor={{this.updateAsset}}
+            @formId="asset"
+            @onSubmit={{this.submitAsset}} as |f|>
+
+      <Modal.body>
+        <FormRow>
+          <f.select @name="attachment_id"
+                    @label="Choose the new attachment"
+                    @options={{this.attachmentOptions}}/>
+        </FormRow>
+      </Modal.body>
+      <Modal.footer @align="start">
+        <f.submit @label="Update" />
+        <UiCancelButton @onClick={{this.cancelAttachmentDialog}} />
+      </Modal.footer>
+    </ChForm>
+  </ModalDialog>
 {{/if}}
