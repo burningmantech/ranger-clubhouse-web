@@ -36,7 +36,7 @@
       <th>Associated Roles</th>
       <th>Attributes</th>
       <th>Managers</th>
-      <th>Email</th>
+      <th>Email / Document Tag</th>
       <th>Actions</th>
     </tr>
     </thead>
@@ -68,7 +68,7 @@
           {{#if team.awards_eligible}}
             Awards Eligible<br>
           {{/if}}
-        </td>
+         </td>
         <td>
           {{#each team.managers as |person|}}
             <PersonLink @person={{person}} />
@@ -79,9 +79,14 @@
         </td>
         <td>
           {{#if team.email}}
-            {{team.email}}
+            <div>{{team.email}}</div>
           {{else}}
-            -
+            <div class="fst-italic text-muted">no email</div>
+          {{/if}}
+          {{#if team.resource_tag}}
+            Document info tag:<br> {{team.resource_tag}}
+          {{else}}
+            <i class="text-muted">no document tag</i>
           {{/if}}
         </td>
         <td>
@@ -111,6 +116,13 @@
           <f.text @name="title" @label="Team Title" @maxlength={{40}} @size={{25}}/>
           <f.select @name="type" @label="Team Type" @options={{this.typeOptions}} />
           <f.text @name="email" @label="Contact Email" @maxlength={{255}} @size={{35}} />
+        </FormRow>
+        <FormRow>
+          <f.text @name="resource_tag"
+                  @label="Team Info Document Tag (shown to team members)"
+                  @size={{30}}
+                  @maxlength={{30}}
+          />
         </FormRow>
         <FormRow>
           <f.textarea @name="description"
