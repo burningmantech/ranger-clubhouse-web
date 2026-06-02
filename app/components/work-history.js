@@ -30,7 +30,12 @@ export default class WorkHistoryComponent extends Component {
 
   async _loadWorkHistory() {
     try {
-      this.timesheet = await this.ajax.request('timesheet', {data: {person_id: this.args.person.id}}).then(({timesheet}) => timesheet);
+      const positionId = this.args.trainingId;
+      const data = {person_id: this.args.person.id}
+      if (positionId) {
+        data.wh_training_id = positionId;
+      }
+      this.timesheet = await this.ajax.request('timesheet', {data}).then(({timesheet}) => timesheet);
     } catch (response) {
       this.house.handleErrorResponse(response);
       this.timesheet = [];
