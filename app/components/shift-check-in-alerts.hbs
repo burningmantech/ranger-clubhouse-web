@@ -43,7 +43,7 @@
 {{/if}}
 
 {{#if this.trainingNotPassed}}
-  {{#if @isSelfServe}}
+  {{#if @selfServe}}
     <UiNotice @title="Restricted Check In/Out" @icon="hand" @type="secondary">
       Since you haven’t completed an in-person training yet, you’re only allowed to check into a limited set of
       positions. If you need to sign into a position that isn’t listed below, please speak with your manager.

@@ -1,49 +1,49 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import RSVP from 'rsvp';
-import {
-  HQ_TODO_COLLECT_RADIO,
-  HQ_TODO_END_SHIFT,
-  HQ_TODO_START_SHIFT,
-  HQ_TODO_VERIFY_TIMESHEET,
-  HQ_TODO_ISSUE_RADIO,
-  HQ_TODO_DELIVERY_MESSAGE,
-  HqTodoTask, HQ_TODO_OFF_SITE, HQ_TODO_COLLECT_RADIO_IF_DONE,
-} from "clubhouse/constants/hq-todo";
-import {isEmpty} from "lodash";
 
 export default class HqShiftRoute extends ClubhouseRoute {
-  constructor() {
-    super(...arguments);
+  /**
+   * Guard against navigating away with an unhandled shift or an unsubmitted
+   * barcode. Bound once and registered/torn down with the route lifecycle.
+   */
+  routeWillChange = (transition) => {
+    const controller = this.controllerFor('hq.shift');
 
-    this.router.on('routeWillChange', (transition) => {
-      const controller = this.controllerFor('hq.shift');
+    if (transition.to?.find(route => route.name === this.routeName) ||
+      transition.to?.find(route => route.name.match(/loading/))) {
+      return;
+    }
 
-      if (transition.to.find(route => route.name === this.routeName) ||
-        transition.to.find(route => route.name.match(/loading/))) {
-        return;
-      }
+    if (!transition.from?.find(route => route.name === this.routeName)) {
+      return;
+    }
 
-      if (!transition.from?.find(route => route.name === this.routeName)) {
-        return;
-      }
+    if (controller.noShiftHandled && !controller.showNoShiftHandled) {
+      controller.showNoShiftHandled = true;
+      controller.shiftTransition = transition;
+      transition.abort();
+      return;
+    }
 
-      if (controller.noShiftHandled && !controller.showNoShiftHandled) {
-        controller.showNoShiftHandled = true;
-        controller.shiftTransition = transition;
-        transition.abort();
-        return;
-      }
+    if (!controller.unsubmittedBarcode) {
+      return;
+    }
 
-      if (isEmpty(controller.unsubmittedBarcode)) {
-        return;
-      }
+    if (!controller.showUnsubmittedBarcodeDialog) {
+      // May see multiple route transitions, only abort once.
+      controller.showUnsubmittedBarcodeDialog = true;
+      transition.abort();
+    }
+  };
 
-      if (!controller.showUnsubmittedBarcodeDialog) {
-        // May see multiple route transitions, only abort once.
-        controller.showUnsubmittedBarcodeDialog = true;
-        transition.abort();
-      }
-    });
+  activate() {
+    super.activate(...arguments);
+    this.router.on('routeWillChange', this.routeWillChange);
+  }
+
+  deactivate() {
+    this.router.off('routeWillChange', this.routeWillChange);
+    super.deactivate(...arguments);
   }
 
   model() {
@@ -67,61 +67,7 @@ export default class HqShiftRoute extends ClubhouseRoute {
     controller.timesheetsToReview = model.timesheets.filter((t) => t.isUnverified);
     controller.noShiftHandled = true;
 
-    controller.todos = [];
-
-    if (controller.person.unread_message_count) {
-      controller.setupTodo(HQ_TODO_DELIVERY_MESSAGE);
-    }
-
-    if (controller.timesheetsToReview.length) {
-      controller.setupTodo(HQ_TODO_VERIFY_TIMESHEET);
-    }
-
-    const {upcomingSlots} = model;
-
-    let noMoreScheduled = false;
-    if (!upcomingSlots.imminent.length && !upcomingSlots.upcoming.length) {
-      controller.askIfDone = new HqTodoTask(HQ_TODO_OFF_SITE, false, true);
-      noMoreScheduled = true;
-    } else {
-      controller.askIfDone = null;
-    }
-
-    let radioTask = null;
-    if (!controller.isOffDuty) {
-      controller.setupTodo(HQ_TODO_END_SHIFT);
-      if (controller.collectRadioCount) {
-        radioTask = HQ_TODO_COLLECT_RADIO;
-      } else if (controller.eventRadios && noMoreScheduled) {
-        radioTask = HQ_TODO_COLLECT_RADIO_IF_DONE;
-      }
-    } else {
-      controller.setupTodo(HQ_TODO_START_SHIFT);
-      const radioMax = controller.eventInfo.radio_max;
-      if (radioMax > 0) {
-        if (controller.collectRadioCount) {
-          // Person is above the event radio checkout limit and/or has a shift radio
-          radioTask = HQ_TODO_COLLECT_RADIO;
-        } else if (noMoreScheduled && controller.eventRadios) {
-          // Has radios, and has no more upcoming shifts.
-          radioTask = HQ_TODO_COLLECT_RADIO_IF_DONE;
-        } else if (controller.eventRadios < radioMax) {
-          // Below their event radio issue count,
-          radioTask = HQ_TODO_ISSUE_RADIO;
-        }
-        // else, has an event radio, and still working - don't nag.
-      } else if (controller.collectRadioCount) {
-        // Off duty with radios, and not event authorized?
-        radioTask = HQ_TODO_COLLECT_RADIO;
-      } else {
-        // No radio - Give 'em one.
-        radioTask = HQ_TODO_ISSUE_RADIO;
-      }
-    }
-
-    if (radioTask) {
-      controller.setupTodo(radioTask);
-    }
+    controller.initializeTodos(model);
 
     controller.showIsAlpha = (!this.controllerFor('hq').userIsMentor && hqModel.person.isPNV);
   }
