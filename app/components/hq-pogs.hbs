@@ -2,23 +2,23 @@
   <LoadingIndicator @text="Loading pogs"/>
 {{else}}
   {{#if @endedShiftEntry}}
-    <p>
-    <div class="fs-5 mb-2">
-      The shift <i>{{@endedShiftEntry.position.title}}</i> worked
-      {{shift-format @endedShiftEntry.on_duty @endedShiftEntry.off_duty}}
-      was {{hour-minute-words @endedShiftEntry.duration}} in length.
+    <div>
+      <div class="fs-5 mb-2">
+        The shift <i>{{@endedShiftEntry.position.title}}</i> worked
+        {{shift-format @endedShiftEntry.on_duty @endedShiftEntry.off_duty}}
+        was {{hour-minute-words @endedShiftEntry.duration}} in length.
+      </div>
+      {{#if @endedShiftEntry.isUnverified}}
+        <b class="text-danger">
+          The timesheet entry has not been reviewed. Review the timesheet entry to ensure the worked shift duration is
+          accurate.
+        </b>
+      {{else if @endedShiftEntry.isPending}}
+        <b class="text-danger">
+          The timesheet entry has a pending correction. The worked shift duration might be incorrect.
+        </b>
+      {{/if}}
     </div>
-    {{#if @endedShiftEntry.isUnverified}}
-      <b class="text-danger">
-        The timesheet entry has not been reviewed. Review the timesheet entry to ensure the worked shift duration is
-        accurate.
-      </b>
-    {{else if @endedShiftEntry.isPending}}
-      <b class="text-danger">
-        The timesheet entry has a pending correction. The worked shift duration might be incorrect.
-      </b>
-    {{/if}}
-    </p>
   {{/if}}
   {{#if this.hasMealPass}}
     <UiNotice @icon="hand-point-right" @type="secondary" @title="Has Meal Pass">
@@ -41,7 +41,7 @@
     {{/if}}
   {{/if}}
   <UiButtonRow class="mb-2">
-    <UiButton @onClick={{this.recordFullMealPog}} @size="md">
+    <UiButton @onClick={{fn this.setupToIssue this.POG_MEAL}} @disabled={{this.isSubmitting}} @size="md">
       {{#if this.config.meal_half_pog_enabled}}
         Record Full Meal Pog
       {{else}}
@@ -49,11 +49,11 @@
       {{/if}}
     </UiButton>
     {{#if this.config.meal_half_pog_enabled}}
-      <UiButton @onClick={{this.recordHalfMealPog}} @size="md">
+      <UiButton @onClick={{fn this.setupToIssue this.POG_HALF_MEAL}} @disabled={{this.isSubmitting}} @size="md">
         Record &half; Meal Pog
       </UiButton>
     {{/if}}
-    <UiButton @onClick={{this.recordShowerPog}} @size="md">
+    <UiButton @onClick={{fn this.setupToIssue this.POG_SHOWER}} @disabled={{this.isSubmitting}} @size="md">
       Record Shower Pog
     </UiButton>
   </UiButtonRow>
@@ -95,10 +95,10 @@
               Update Note
             </UiButton>
             {{#if (and pog.isHalfMealPog pog.isIssued)}}
-              <UiButton @onClick={{fn this.redeemForFullMealPog pog}} @size="sm">
+              <UiButton @onClick={{fn this.redeemForFullMealPog pog}} @disabled={{this.isSubmitting}} @size="sm">
                 Redeem for Full Meal Pog
               </UiButton>
-            {{else if (not pog.isCancelled)}}
+            {{else}}
               <UiButton @onClick={{fn this.confirmPogCancel pog}} @size="sm" @type="gray" class="btn-link">
                 Cancel
               </UiButton>
@@ -135,125 +135,8 @@
             </ul>
           </UiAlert>
         {{/if}}
-        {{#unless (eq this.pogToIssue "shower")}}
-          Meal pog guidelines:
-          <div class="my-2 mx-3">
-            <div class="d-flex align-items-start mb-2">
-              <div class="me-2">
-                {{fa-icon "utensils" type="s" fixed=true}}
-              </div>
-              <div>
-                <div class="fw-semibold">
-                  One pog for 6+ hours, two for 10+ hours &mdash; for one of the next three meals, not 24-hour period.
-                </div>
-                <div>
-                  <ReadMore @hideFullText={{true}}>
-                    Pogs can only be issued for one of the next three meals following the end of the shift—not
-                    within a 24-hour window. Example: for going off duty at 18:15, the pog may be for that night’s
-                    dinner, or the next day’s breakfast or lunch. If two pogs are issued, each may be for a different
-                    meal within that three-meal window.
-                  </ReadMore>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start mb-2">
-              <div class="me-2">
-                {{fa-icon "ban" fixed=true}}
-              </div>
-              <div>
-                <div class="fw-semibold text-danger">
-                  No pog for shifts under 6 hours, unless rangered two contiguous, back-to-back shifts totaling 6+
-                  hours.
-                </div>
-                <div>
-                  <ReadMore @hideFullText={{true}}>
-                    <p>
-                      Two back-to-back, contiguous shifts totaling over 6 hours are eligible for one pog.
-                      Example: for Rangering a Burn Perimeter shift immediately followed by a Dirt shift, only one pog
-                      is issued for 6+ hours, even though two shifts were worked.
-                    </p>
-                    If the combined time exceeds 10 hours, two pogs may be issued.
-                  </ReadMore>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start mb-2">
-              <div class="me-2">
-                {{fa-icon "people-group" type="s"  fixed=true}}
-              </div>
-              <div>
-                <div class="fw-semibold">
-                  Mentors, Sandman &amp; Gerlach Patrol handles their own &mdash; no pogs issued.
-                </div>
-                <div>
-                  <ReadMore @hideFullText={{true}}>
-                    Mentors and Sandman receive pogs directly from their Cadres. Gerlach Patrol gets to eat at
-                    Bruno’s for free. If a Ranger walks up to HQ Window and claims they were approved for a pog,
-                    the HQ Lead must confirm the authorization with the appropriate Cadre.
-                  </ReadMore>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start mb-2">
-              <div class="me-2">
-                {{fa-icon "shuffle" fixed=true}}
-              </div>
-              <div>
-                <div class="fw-semibold">
-                  Pog swaps &mdash; only for the same three-meal window &amp; only one swap allowed
-                </div>
-                <div>
-                  <ReadMore @hideFullText={{true}}>
-                    A pog may be swapped for a different meal, but only if the new pog falls within the original
-                    three-meal window &mdash; not a 24-hour period &mdash; following the shift’s end. Timing is based
-                    on the shift, not when the Ranger returns to request it. Only one replacement pog may be granted per
-                    shift.
-                  </ReadMore>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start mb-2">
-              <div class="me-2">
-                {{fa-icon "person-walking-arrow-loop-left" fixed=true}}
-              </div>
-              <div>
-                <div class="fw-semibold">Forgotten Pog &mdash; only for the three-meal window after the shift</div>
-                <div>
-                  <ReadMore @hideFullText={{true}}>
-                    <p>
-                      A pog may be issued later if it’s within the original three-meal window, not 24-hour period,
-                      of the shift’s end time, not from when the Ranger returns to ask for a pog.
-                    </p>
-                    The Ranger, not HQ, is responsible for getting a pog.
-                  </ReadMore>
-                </div>
-              </div>
-            </div>
-
-            <div class="d-flex align-items-start mb-2">
-              <div class="me-2">
-                {{fa-icon "question" fixed=true}}
-              </div>
-              <div>
-                <div class="fw-semibold">Questions &amp; Exceptions</div>
-                <div>
-                  <ReadMore @hideFullText={{true}}>
-                    <p>
-                      For questions, talk with the HQ Short or HQ Lead. For exceptions, refer the person to the HQ Lead.
-                    </p>
-                    The <i>Ranger Commissary Meals Policy</i> &mdash; found in <i>the Ranger Department Policies,
-                    Protocols, and Procedures</i> folder on Google Drive &mdash; outlines how pogs are issued.
-                    A link to the Ranger Google Drive is further down on the Clubhouse Homepage in the <i>Links &amp;
-                    Things</i> section.
-                  </ReadMore>
-                </div>
-              </div>
-            </div>
-          </div>
+        {{#unless (eq this.pogToIssue this.POG_SHOWER)}}
+          <HqPogGuidelines/>
         {{/unless}}
         <FormRow>
           <f.textarea @name="notes"
@@ -266,7 +149,7 @@
       </Modal.body>
       <Modal.footer @align="start">
         <UiButtonRow>
-          <f.submit @label="Record {{this.pogLabel this.pogToIssue}}" @size="md"/>
+          <f.submit @label="Record {{this.pogLabel this.pogToIssue}}" @disabled={{this.isSubmitting}} @size="md"/>
           <UiCancelButton @onClick={{this.cancelPogIssue}} @size="md"/>
         </UiButtonRow>
       </Modal.footer>
@@ -298,7 +181,7 @@
         </FormRow>
       </Modal.body>
       <Modal.footer @align="start">
-        <f.submit @label="Cancel {{this.pogToCancel.pogLabel}}"/>
+        <f.submit @label="Cancel {{this.pogToCancel.pogLabel}}" @disabled={{this.isSubmitting}}/>
         <UiCancelButton @onClick={{this.cancelCancelPog}}>
           Do Not Cancel Pog
         </UiCancelButton>
@@ -313,7 +196,7 @@
             @formFor={{this.pogToEdit}}
             @validator={{this.pogValidations}}
             @onSubmit={{this.updatePog}} as |f|>
-      <Modal.title>Edit Pog {{this.pogType this.pogToEdit.pog}}</Modal.title>
+      <Modal.title>Edit Pog {{this.pogToEdit.pogLabel}}</Modal.title>
       <Modal.body>
         <div class="d-flex mb-4">
           <div class="me-4">
@@ -335,7 +218,7 @@
         </FormRow>
       </Modal.body>
       <Modal.footer @align="start">
-        <f.submit @label="Update"/>
+        <f.submit @label="Update" @disabled={{this.isSubmitting}}/>
         <UiCancelButton @onClick={{this.cancelPogEdit}} />
       </Modal.footer>
     </ChForm>

@@ -131,158 +131,35 @@
 {{/if}}
 
 {{#if this.showPositionDialog}}
-  <ModalDialog @title="Correct Shift Position" @onEscape={{this.cancelUpdatePosition}} as |Modal|>
-    <Modal.body>
-      <p>
-        This action is intended to correct a shift check in where the wrong position was selected.
-      </p>
-      <p>
-        <b>
-          When switching between an on-call shift (e.g., 007 Standby, Tech On Call) and an on-duty shift (e.g., 007,
-          Tech Team), or vice versa, you must end the current shift before starting the new one.
-        </b>
-      </p>
-      Select the new position the shift should be corrected to:
-      <FormRow>
-        <div class="col-auto">
-          <ChForm::Select @name="newPositionId"
-                          @value={{this.newPositionId}}
-                          @options={{this.signinPositions}}
-                          @onChange={{set-value this 'newPositionId'}}/>
-        </div>
-      </FormRow>
-      {{#if this.changePositionError}}
-        <b class="text-danger">{{this.changePositionError}}</b>
-      {{/if}}
-    </Modal.body>
-    <Modal.footer @align="start">
-      <UiButtonRow>
-        <UiButton @onClick={{this.updatePositionAction}} @disabled={{this.isSubmitting}} @size="md">
-          Update Position
-        </UiButton>
-        <UiCancelButton @onClick={{this.cancelUpdatePosition}} @disabled={{this.isSubmitting}} @size="md"/>
-      </UiButtonRow>
-    </Modal.footer>
-  </ModalDialog>
+  <ShiftCorrectPositionModal @positionId={{this.newPositionId}}
+                             @positions={{this.signinPositions}}
+                             @onPositionChange={{this.updateNewPosition}}
+                             @error={{this.changePositionError}}
+                             @isSubmitting={{this.isSubmitting}}
+                             @onUpdate={{this.updatePositionAction}}
+                             @onCancel={{this.cancelUpdatePosition}}/>
 {{/if}}
 
 {{#if this.showBlockers}}
-  <ModalDialog @title="{{if this.isPositionUpdate "Position Update" "Check In"}} Is Blocked"
-               @onEscape={{this.closeForceConfirm}} as |Modal|>
-    <ChForm @formFor={{this.forceStartForm}}
-            @onSubmit={{if this.isPositionUpdate this.confirmForcePosition this.confirmForceStart}}
-            @validator={{this.forceShiftValidations}} as |f|>
-      <Modal.body>
-        <b class="text-danger">
-          {{fa-icon "hand" right=1}} The {{if this.isPositionUpdate "position update" "shift check in"}}  is blocked for
-          the following reason(s):
-        </b>
-        <ul class="mt-2">
-          {{#each this.blockers as |blocker|}}
-            <li>{{blocker}}</li>
-          {{/each}}
-        </ul>
-        {{#if this.userCanForceCheckIn}}
-          <p>
-            Since you either have the Admin or Force Shift Start permissions, you can force the {{if
-            this.isPositionUpdate "the position update" "check in"}}.
-          </p>
-          <p>
-            <b class="text-danger">All forced actions are logged and reviewed.</b>
-          </p>
-          <p>
-            Are you sure you want to force this through? A reason must be given below if you wish to proceed.
-          </p>
-          <FormRow>
-            <f.textarea @name="reason"
-                        @label="Enter a reason why this is being forced:"
-                        @autofocus={{true}}
-                        @rows={{4}}
-                        @cols={{80}}
-            />
-          </FormRow>
-        {{else}}
-          Refer the person to the HQ Lead, who has the authority to force the
-          {{if this.isPositionUpdate "position update" "shift check-in"}}.
-          If no HQ Lead is on duty, contact Khaki on Control 1 for assistance.
-        {{/if}}
-      </Modal.body>
-      <Modal.footer @align="start">
-        <UiButtonRow>
-          {{#if this.userCanForceCheckIn}}
-            <f.submit @label="Confirm Force " @type="warning"/>
-          {{/if}}
-          <UiCancelButton @onClick={{this.closeForceConfirm}} />
-        </UiButtonRow>
-      </Modal.footer>
-    </ChForm>
-  </ModalDialog>
+  <ShiftBlockedModal @title={{this.blockedTitle}}
+                     @blockedPhrase={{this.blockedPhrase}}
+                     @forcePhrase={{this.forcePhrase}}
+                     @referPhrase={{this.referPhrase}}
+                     @blockers={{this.blockers}}
+                     @userCanForceCheckIn={{this.userCanForceCheckIn}}
+                     @form={{this.forceStartForm}}
+                     @validations={{this.forceShiftValidations}}
+                     @onConfirm={{this.confirmForce}}
+                     @onCancel={{this.closeForceConfirm}}/>
 {{/if}}
 
 {{#if this.showTooShortDialog}}
-  <ModalDialog as |Modal|>
-    <Modal.title>
-      Timesheet entry might be too short
-    </Modal.title>
-    <Modal.body>
-      <p class="text-danger fw-semibold">
-        The shift has not been ended. The timesheet entry might be too short at
-        {{hour-minute-words @onDutyEntry.duration}}.
-      </p>
-      <p>
-        Several options can be taken:
-      </p>
-      <UiInfoBox>
-        <:title>If the position {{@onDutyEntry.position.title}} is wrong:</:title>
-        <:body>
-          <p>
-            Use this option if the wrong position was signed in to and needs to be fixed. The shift will NOT be ended.
-          </p>
-          <UiButton @onClick={{this.updatePositionInstead}} @type="secondary" class="w-50">
-            {{fa-icon "edit" right=1}} Correct Position &amp; Remain On Shift
-          </UiButton>
-        </:body>
-      </UiInfoBox>
-      <UiInfoBox>
-        <:title>If the shift was started by mistake:</:title>
-        <:body>
-          <p>
-            Use this option if the shift was started by mistake, and {{@person.callsign}} is not working at this moment.<br>
-            The timesheet entry will be deleted.
-          </p>
-          <UiButton @onClick={{this.deleteEntry}}  @type="secondary" class="w-50">
-            {{fa-icon "trash" right=1}} Accidental Shift Start - Delete Entry
-          </UiButton>
-        </:body>
-      </UiInfoBox>
-      <UiInfoBox>
-        <:title>If the duration is actually correct at {{hour-minute-words @onDutyEntry.duration}}:</:title>
-        <:body>
-          <p>
-            Use this option if the shift was really this short in length. The shift will be ended.
-          </p>
-          <UiButton @onClick={{this.confirmEndShift}}  @type="secondary" class="w-50">
-            {{fa-icon "check" right=1}} Duration is correct - End Shift
-          </UiButton>
-        </:body>
-      </UiInfoBox>
-      {{#if @allowCorrectionOnEnd}}
-        <UiInfoBox>
-          <:title>If {{@person.callsign}} did not check-in:</:title>
-          <:body>
-            <p>
-              Use this option if {{@person.callsign}} forgot to check in but is now at the end of their shift.
-              The shift will be ended, and a timesheet correction request will be opened.
-            </p>
-            <UiButton @onClick={{this.missedShiftCheckIn}}  @type="secondary" class="w-50">
-              {{fa-icon "person-walking-arrow-loop-left" right=1}} End Shift &amp; Submit Correction
-            </UiButton>
-          </:body>
-        </UiInfoBox>
-      {{/if}}
-    </Modal.body>
-    <Modal.footer>
-      <UiCancelButton @onClick={{this.closeTooShortDialog}} @size="md"/>
-    </Modal.footer>
-  </ModalDialog>
+  <ShiftTooShortModal @onDutyEntry={{@onDutyEntry}}
+                      @person={{@person}}
+                      @allowCorrectionOnEnd={{@allowCorrectionOnEnd}}
+                      @onCorrectPosition={{this.updatePositionInstead}}
+                      @onDelete={{this.deleteEntry}}
+                      @onConfirmEnd={{this.confirmEndShift}}
+                      @onMissedCheckIn={{this.missedShiftCheckIn}}
+                      @onCancel={{this.closeTooShortDialog}}/>
 {{/if}}

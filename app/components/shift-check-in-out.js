@@ -9,7 +9,7 @@ import {
   NVO_RANGER,
   DPW_RANGER, TOW_TRUCK_TRAINING, TROUBLESHOOTER_TRAINING, SANDMAN_TRAINING,
 } from 'clubhouse/constants/positions';
-import {cached, tracked} from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
 import {ECHELON} from 'clubhouse/constants/person_status';
 import {ADMIN, CAN_FORCE_SHIFT, SHIFT_MANAGEMENT_SELF} from 'clubhouse/constants/roles';
 import {buildBlockerLabels, TOO_SHORT_DURATION} from 'clubhouse/models/timesheet';
@@ -17,10 +17,14 @@ import {TYPE_TRAINING} from "clubhouse/models/position";
 import _, {isEmpty} from 'lodash';
 import {htmlSafe} from '@ember/template';
 import hyperlinkText from "clubhouse/utils/hyperlink-text";
+import Ember from 'ember';
 import {validatePresence} from 'ember-changeset-validations/validators';
+
+const escapeExpression = Ember.Handlebars.Utils.escapeExpression;
 
 export default class ShiftCheckInOutComponent extends Component {
   @service ajax;
+  @service hqAction;
   @service house;
   @service modal;
   @service store;
@@ -42,19 +46,33 @@ export default class ShiftCheckInOutComponent extends Component {
   @tracked forcePosition = null;
   @tracked showMayNotForceCheckIn = false;
   @tracked forceStartForm = null;
+  @tracked newPositionId = null;
+  @tracked forceSlotId = null;
 
   @tracked inPersonTrainingPassed;
   @tracked userCanForceCheckIn;
 
   @tracked blockers;
-  @tracked isPositionUpdate = false;
 
+  // Distinguishes whether the blocker modal is confirming a shift check-in or a
+  // position update, used purely to pick the user-facing wording. The actual
+  // action to run on confirmation is stored in `_forceConfirm`.
+  @tracked forceIsPositionUpdate = false;
+
+  // Positions derived in the constructor.
+  activePositions = [];
+  noTrainingRequiredPositions = [];
+  signinPositions = [];
+
+  // The callback to invoke (with the operator-supplied reason) when a blocked
+  // action is force-confirmed.
+  _forceConfirm = null;
 
   tooShortDuration = TOO_SHORT_DURATION;
 
   forceShiftValidations = {
     reason: [validatePresence({presence: true, message: 'A reason must be entered.'})]
-  }
+  };
 
   constructor() {
     super(...arguments);
@@ -121,6 +139,20 @@ export default class ShiftCheckInOutComponent extends Component {
   }
 
   /**
+   * If the timesheet entry being modified belongs to the signed-in user, refresh
+   * the navigation bar so it reflects the current on-duty position.
+   *
+   * @returns {Promise<void>}
+   * @private
+   */
+
+  async _refreshNavIfSelf() {
+    if (+this.args.person.id === this.session.userId) {
+      await this.session.updateOnDuty();
+    }
+  }
+
+  /**
    * Does the person actually need a radio?
    *
    * @returns {boolean}
@@ -129,6 +161,46 @@ export default class ShiftCheckInOutComponent extends Component {
   get mayNotNeedRadio() {
     const id = this.args.onDutyEntry?.position_id;
     return id === BURN_PERIMETER;
+  }
+
+  /**
+   * The title shown on the blocker modal.
+   *
+   * @returns {string}
+   */
+
+  get blockedTitle() {
+    return `${this.forceIsPositionUpdate ? 'Position Update' : 'Check In'} Is Blocked`;
+  }
+
+  /**
+   * The phrase describing the blocked action in the modal body.
+   *
+   * @returns {string}
+   */
+
+  get blockedPhrase() {
+    return this.forceIsPositionUpdate ? 'position update' : 'shift check in';
+  }
+
+  /**
+   * The phrase describing the action a privileged operator can force.
+   *
+   * @returns {string}
+   */
+
+  get forcePhrase() {
+    return this.forceIsPositionUpdate ? 'the position update' : 'check in';
+  }
+
+  /**
+   * The phrase used when referring the person to an HQ Lead.
+   *
+   * @returns {string}
+   */
+
+  get referPhrase() {
+    return this.forceIsPositionUpdate ? 'position update' : 'shift check-in';
   }
 
   /**
@@ -144,17 +216,17 @@ export default class ShiftCheckInOutComponent extends Component {
   }
 
   /**
-   * User confirmed yes, they do want to start the shift.
+   * User confirmed yes, they do want to force the blocked action.
    */
 
   @action
-  confirmForceStart(model, isValid) {
+  confirmForce(model, isValid) {
     if (!isValid) {
       return;
     }
 
     this.showBlockers = false;
-    this._signInPerson(this.forcePosition, this.forceSlotId, model.reason, true);
+    this._forceConfirm?.(model.reason);
   }
 
   /**
@@ -166,6 +238,7 @@ export default class ShiftCheckInOutComponent extends Component {
     this.showBlockers = false;
     this.forcePosition = null;
     this.forceSlotId = null;
+    this._forceConfirm = null;
   }
 
   @action
@@ -173,6 +246,23 @@ export default class ShiftCheckInOutComponent extends Component {
     this.showMayNotForceCheckIn = false;
     this.forcePosition = null;
     this.forceSlotId = null;
+  }
+
+  /**
+   * Open the blocker confirmation modal for a blocked action.
+   *
+   * @param {boolean} isPositionUpdate true if confirming a position update, false for a check-in
+   * @param {object[]} blockers raw blockers returned by the server
+   * @param {function(string):void} onConfirm invoked with the operator-supplied reason
+   * @private
+   */
+
+  _showBlockers(isPositionUpdate, blockers, onConfirm) {
+    this.forceIsPositionUpdate = isPositionUpdate;
+    this.showBlockers = true;
+    this.blockers = buildBlockerLabels(blockers);
+    this.forceStartForm = EmberObject.create({reason: ''});
+    this._forceConfirm = onConfirm;
   }
 
   /**
@@ -185,6 +275,10 @@ export default class ShiftCheckInOutComponent extends Component {
    */
 
   async _signInPerson(position, slotId, reason = null, force = false) {
+    if (this.isSubmitting) {
+      return;
+    }
+
     const person = this.args.person;
 
     const data = {
@@ -201,55 +295,48 @@ export default class ShiftCheckInOutComponent extends Component {
       data.signin_force_reason = reason;
     }
 
+    const callsign = person.callsign;
     this.isSubmitting = true;
     try {
-      const result = await this.ajax.post('timesheet/signin', {data});
-      const callsign = person.callsign;
-      switch (result.status) {
-        case 'success':
-          this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
+      await this.hqAction.perform('timesheet/signin', data, {
+        statusHandlers: {
+          success: async (result) => {
+            this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
 
-          this.args?.startShiftNotify();
-          if (+person.id === this.session.userId) {
+            this.args.startShiftNotify?.();
             // Ensure the navigation bar is updated with the signed in to position
-            await this.session.updateOnDuty();
-          }
-          if (result.slot_url) {
-            this._showShiftInfo(position.title, result.slot_url);
-          }
-          break;
+            await this._refreshNavIfSelf();
+            if (result.slot_url) {
+              this._showShiftInfo(position.title, result.slot_url);
+            }
+          },
 
-        case 'blocked':
-          this.isPositionUpdate = false;
-          this.showBlockers = true;
-          this.forcePosition = position;
-          this.forceSlotId = slotId;
-          this.blockers = buildBlockerLabels(result.blockers);
-          this.forceStartForm = EmberObject.create({reason: ''});
-          break;
+          blocked: (result) => {
+            this.forcePosition = position;
+            this.forceSlotId = slotId;
+            this._showBlockers(false, result.blockers,
+              (forceReason) => this._signInPerson(position, slotId, forceReason, true));
+          },
 
-        case 'position-not-held':
-          this.modal.info('Position Not Held', `${callsign} does hold the '${position.title}' in order to start the shift.`);
-          break;
+          'position-not-held': () => {
+            this.modal.info('Position Not Held', `${callsign} does NOT hold the '${position.title}' and cannot start the shift.`);
+          },
 
-        case 'missing-force-reason':
-          this.modal.info('Missing Shift Force Reason', 'Since this check-in is being forced, a reason must be supplied');
-          break;
-
-        default:
-          this.modal.info('Unknown Server Status', `An unknown status [${result.status}] from the server. This is a bug. Please report this to the Tech Ninjas.`);
-          break;
-      }
-    } catch (response) {
-      this.house.handleErrorResponse(response);
+          'missing-force-reason': () => {
+            this.modal.info('Missing Shift Force Reason', 'Since this check-in is being forced, a reason must be supplied');
+          },
+        },
+      });
     } finally {
       this.isSubmitting = false;
     }
   }
 
   _showShiftInfo(positionTitle, slotUrl) {
+    // Escape the (server-supplied) slot URL/text BEFORE auto-linking so it
+    // cannot inject markup once handed to htmlSafe (stored XSS guard).
     this.modal.info(`Shift Information For ${positionTitle}`,
-      htmlSafe(`<p>Convey the following information to the person:</p>${hyperlinkText(slotUrl)}`)
+      htmlSafe(`<p>Convey the following information to the person:</p>${hyperlinkText(escapeExpression(slotUrl))}`)
     );
   }
 
@@ -279,20 +366,28 @@ export default class ShiftCheckInOutComponent extends Component {
 
   @action
   async endShiftAction() {
-    this.isSubmitting = true;
+    if (this.isSubmitting) {
+      return;
+    }
+
     const entry = this.args.onDutyEntry;
+    let tooShort = false;
+    this.isSubmitting = true;
     try {
       // Pick up the most recent times.
       await entry.reload();
-      if (entry.duration < TOO_SHORT_DURATION) {
-        this.showTooShortDialog = true;
-      } else {
-        await this._signoff();
-      }
+      tooShort = entry.duration < TOO_SHORT_DURATION;
     } catch (response) {
-      this.house.handleErrorResponse(response)
+      this.house.handleErrorResponse(response);
+      return;
     } finally {
-      this.isSubmitting = false
+      this.isSubmitting = false;
+    }
+
+    if (tooShort) {
+      this.showTooShortDialog = true;
+    } else {
+      await this._signoff();
     }
   }
 
@@ -304,7 +399,12 @@ export default class ShiftCheckInOutComponent extends Component {
    */
 
   async _signoff(submitCorrection = false) {
+    if (this.isSubmitting) {
+      return;
+    }
+
     const {onDutyEntry, endShiftNotify} = this.args;
+    this.isSubmitting = true;
     try {
       const result = await this.ajax.request(`timesheet/${onDutyEntry.id}/signoff`, {method: 'POST'});
       const callsign = this.args.person.callsign;
@@ -313,10 +413,8 @@ export default class ShiftCheckInOutComponent extends Component {
         case 'success':
           await endShiftNotify?.(this.store.peekRecord('timesheet', result.timesheet.id), submitCorrection);
           this.toast.success(`${callsign} has been successfully signed off. Enjoy your rest.`);
-          if (+this.args.person.id === this.session.userId) {
-            // Update the user's navigation bar to remove the signed in position.
-            await this.session.updateOnDuty();
-          }
+          // Update the user's navigation bar to remove the signed in position.
+          await this._refreshNavIfSelf();
           break;
 
         case 'already-signed-off':
@@ -334,6 +432,8 @@ export default class ShiftCheckInOutComponent extends Component {
       }
     } catch (response) {
       this.house.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
     }
   }
 
@@ -381,10 +481,8 @@ export default class ShiftCheckInOutComponent extends Component {
         try {
           await this.ajax.request(`timesheet/${this.args.onDutyEntry.id}`, {method: 'DELETE'});
           this.toast.success('Entry successfully deleted');
-          if (+this.args.person.id === this.session.userId) {
-            // Update the user's navigation bar to remove the signed in position.
-            this.session.updateOnDuty();
-          }
+          // Update the user's navigation bar to remove the signed in position.
+          await this._refreshNavIfSelf();
           this.args.endShiftNotify?.(null);
         } catch (response) {
           this.house.handleErrorResponse(response);
@@ -400,6 +498,16 @@ export default class ShiftCheckInOutComponent extends Component {
   @action
   updateShiftPosition(value) {
     this.signinPositionId = value;
+  }
+
+  /**
+   * Update the position selected in the correct-position dialog.
+   * @param value
+   */
+
+  @action
+  updateNewPosition(value) {
+    this.newPositionId = value;
   }
 
   /**
@@ -422,14 +530,18 @@ export default class ShiftCheckInOutComponent extends Component {
     this._updatePosition(this.newPositionId);
   }
 
-  async _updatePosition(position_id, reason = null, force = false) {
-    const {onDutyEntry, person} = this.args;
+  async _updatePosition(positionId, reason = null, force = false) {
+    if (this.isSubmitting) {
+      return;
+    }
+
+    const {onDutyEntry} = this.args;
     this.isSubmitting = true;
     this.changePositionError = null;
 
     try {
       const data = {
-        position_id: this.newPositionId
+        position_id: positionId
       };
       if (force) {
         data.force_sign_in = true;
@@ -442,10 +554,8 @@ export default class ShiftCheckInOutComponent extends Component {
           await onDutyEntry.reload();
           this.showPositionDialog = false;
           this.toast.success('Position has been successfully updated.');
-          if (+person.id === this.session.userId) {
-            // Ensure the navigation bar is updated with the signed in to position
-            await this.session.updateOnDuty();
-          }
+          // Ensure the navigation bar is updated with the signed in to position
+          await this._refreshNavIfSelf();
 
           if (result.slot_url) {
             this._showShiftInfo(result.position_title, result.slot_url);
@@ -461,11 +571,9 @@ export default class ShiftCheckInOutComponent extends Component {
           break;
 
         case 'blocked':
-          this.isPositionUpdate = true;
-          this.showBlockers = true;
-          this.forcePosition = this.activePositions.find((p) => +p.id === +this.newPositionId);
-          this.blockers = buildBlockerLabels(result.blockers);
-          this.forceStartForm = EmberObject.create({reason: ''});
+          this.forcePosition = this.activePositions.find((p) => +p.id === +positionId);
+          this._showBlockers(true, result.blockers,
+            (forceReason) => this._updatePosition(positionId, forceReason, true));
           break;
 
         default:
@@ -479,16 +587,6 @@ export default class ShiftCheckInOutComponent extends Component {
     }
   }
 
-  @action
-  confirmForcePosition(model, isValid) {
-    if (!isValid) {
-      return;
-    }
-
-    this.showBlockers = false;
-    this._updatePosition(this.forcePosition.id, model.reason, true);
-  }
-
   /**
    * Close out the correct position dialog
    */
@@ -496,10 +594,5 @@ export default class ShiftCheckInOutComponent extends Component {
   @action
   cancelUpdatePosition() {
     this.showPositionDialog = false;
-  }
-
-  @cached
-  get selectedPosition() {
-    return this.signinPositions.find((p) => p.id === +this.signinPositionId);
   }
 }
