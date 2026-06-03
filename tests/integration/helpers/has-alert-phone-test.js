@@ -1,12 +1,10 @@
 import { module, skip /* test */ } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
-
+import {hbs} from 'ember-cli-htmlbars';
 module('Integration | Helper | has-alert-phone', function(hooks) {
   setupRenderingTest(hooks);
 
-  // Replace this with your real tests.
   skip('it renders', async function(assert) {
     this.set('inputValue', '1234');
 

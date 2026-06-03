@@ -8,6 +8,12 @@ import {loadTests} from 'ember-qunit/test-loader';
 
 setApplication(Application.create(config.APP));
 setup(QUnit.assert);
-loadTests()
+
+// Fail (rather than hang CI forever) if a test leaks a timer or never resolves.
+QUnit.config.testTimeout = 60000;
+
+// loadTests() is synchronous in ember-qunit 9; it eagerly requires every
+// `*-test` module before start() kicks off the run.
+loadTests();
 
 start();

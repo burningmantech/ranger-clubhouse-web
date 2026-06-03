@@ -30,6 +30,13 @@ module('Unit | Utility | human-check', function () {
     assert.false(isHumanAnswerValid(undefined), 'undefined');
   });
 
+  test('it throws on a numeric (non-string) input because it calls .trim()', function (assert) {
+    // The helper does `(raw ?? '').trim()`. A number is not nullish, so the ??
+    // passes it straight through and `.trim` is not a function — this throws.
+    // Callers are expected to pass the raw string field value.
+    assert.throws(() => isHumanAnswerValid(HUMAN_ANSWER), TypeError);
+  });
+
   test('it accepts leading-zero forms that parse to the answer (preserved behavior)', function (assert) {
     // The digits-only regex passes '035' and parseInt('035', 10) === 35. This is
     // unchanged from the original controller; documented here so a future tighten

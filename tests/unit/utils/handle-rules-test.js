@@ -3,90 +3,54 @@ import {
   AmericanSoundexRule,
   DoubleMetaphoneRule,
   EditDistanceRule,
-  // TODO test ExperimentalEyeRhymeRule
+  ExperimentalEyeRhymeRule,
   EyeRhymeRule,
   MinLengthRule,
   PhoneticAlphabetRule,
   SubstringRule,
 } from 'clubhouse/utils/handle-rules';
 import { module, test } from 'qunit';
-import { setupTest } from 'ember-qunit';
 import {TYPE_PHONETIC_ALPHABET, TYPE_UNCATEGORIZED} from "clubhouse/models/handle-reservation";
 
-module('Unit | Utility | handle-rules', function(hooks) {
-  setupTest(hooks);
-
-  const natoHandles = [
-    {name: 'Alfa', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Bravo', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Charlie', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Delta', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Echo', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Foxtrot', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Golf', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Hotel', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'India', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Juliett', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Kilo', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Lima', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Mike', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'November', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Oscar', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Papa', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Quebec', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Romeo', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Sierra', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Tango', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Uniform', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Victor', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Whiskey', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'X-ray', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Yankee', entityType: TYPE_PHONETIC_ALPHABET},
-    {name: 'Zulu', entityType: TYPE_PHONETIC_ALPHABET},
+module('Unit | Utility | handle-rules', function() {
+  // The NATO phonetic alphabet, used to build both the phonetic-alphabet
+  // reserved handles and a set of generic word handles.
+  const NATO_WORDS = [
+    'Alfa', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf', 'Hotel',
+    'India', 'Juliett', 'Kilo', 'Lima', 'Mike', 'November', 'Oscar', 'Papa',
+    'Quebec', 'Romeo', 'Sierra', 'Tango', 'Uniform', 'Victor', 'Whiskey',
+    'X-ray', 'Yankee', 'Zulu',
   ];
 
-  const wordHandles = [
-    {name: 'Alfa', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Bravo', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Charlie', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Delta', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Echo', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Foxtrot', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Golf', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Hotel', entityType: TYPE_UNCATEGORIZED},
-    {name: 'India', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Juliett', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Kilo', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Lima', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Mike', entityType: TYPE_UNCATEGORIZED},
-    {name: 'November', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Oscar', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Papa', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Quebec', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Romeo', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Sierra', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Tango', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Uniform', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Victor', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Whiskey', entityType: TYPE_UNCATEGORIZED},
-    {name: 'X-ray', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Yankee', entityType: TYPE_UNCATEGORIZED},
-    {name: 'Zulu', entityType: TYPE_UNCATEGORIZED},
-  ];
+  const natoHandles = NATO_WORDS.map((name) => ({name, entityType: TYPE_PHONETIC_ALPHABET}));
+  const wordHandles = NATO_WORDS.map((name) => ({name, entityType: TYPE_UNCATEGORIZED}));
 
   const noConflicts = (assert, rule, name) => {
     let conflicts = rule.check(name);
     assert.strictEqual(conflicts.length, 0, `Conflicts for ${rule.id}.check(${name}): ${conflicts.map(c => c.description)}`);
   };
 
-  const conflictsWithExisting = (assert, rule, name, existing, descriptionPattern) => {
+  // Asserts that `name` conflicts with `existing`: all conflicts carry the
+  // rule's id, one of them is against `existing`, and its description contains
+  // `descriptionSubstring` (a literal substring, NOT a regular expression).
+  // Performs exactly 3 assertions.
+  const conflictPresent = (assert, rule, name, existing, descriptionSubstring) => {
     let conflicts = rule.check(name);
-    assert.notEqual(conflicts.length, 0, `Conflicts for ${name}`);
-    conflicts.forEach((x) => assert.strictEqual(x.ruleId, rule.id));
-    let found = conflicts.find((x) => x.conflictingHandle.name === existing);
-    assert.ok(found, `${existing} in ${JSON.stringify(conflicts)}`);
-    assert.strictEqual(found.candidateName, name);
-    assert.ok(found.description.match(descriptionPattern), `no match for ${descriptionPattern}`);
+    assert.true(conflicts.length > 0 && conflicts.every((x) => x.ruleId === rule.id),
+      `non-empty conflicts all carrying id ${rule.id} for ${name}, got ${JSON.stringify(conflicts)}`);
+    let found = conflicts.find((x) => x.conflictingHandle.name === existing && x.candidateName === name);
+    assert.ok(found, `${existing} (candidate ${name}) in ${JSON.stringify(conflicts)}`);
+    assert.ok(found && found.description.includes(descriptionSubstring),
+      `no substring match for "${descriptionSubstring}" in "${found && found.description}"`);
+  };
+
+  // Like conflictPresent, but additionally asserts the exact total number of
+  // conflicts.  Use for deterministic rules.  Performs exactly 4 assertions.
+  const conflictsWithExisting = (assert, rule, name, existing, descriptionSubstring, expectedCount = 1) => {
+    let conflicts = rule.check(name);
+    assert.strictEqual(conflicts.length, expectedCount,
+      `Expected ${expectedCount} conflict(s) for ${name}, got ${JSON.stringify(conflicts)}`);
+    conflictPresent(assert, rule, name, existing, descriptionSubstring);
   };
 
   test('ALL_RULE_CLASSES contains all rules', function(assert) {
@@ -103,20 +67,18 @@ module('Unit | Utility | handle-rules', function(hooks) {
     ]);
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('all rules ignore empty string', function(assert) {
     const handles = [{name: 'Foo Bar', entityType: 'jargon'}];
+    const blanks = ['', ' ', '   ', '\t\n'];
     for (let ruleClass of ALL_RULE_CLASSES) {
       let rule = new ruleClass(handles);
-      noConflicts(assert, rule, '');
-      noConflicts(assert, rule, ' ');
-      noConflicts(assert, rule, '   ');
-      noConflicts(assert, rule, '\t\n');
+      for (let blank of blanks) {
+        noConflicts(assert, rule, blank);
+      }
     }
   });
 
   // === MinLengthRule tests ===
-  // eslint-disable-next-line qunit/require-expect
   test('min-length allows three letters', function(assert) {
     const rule = new MinLengthRule();
     noConflicts(assert, rule, 'Bob');
@@ -128,7 +90,7 @@ module('Unit | Utility | handle-rules', function(hooks) {
     let conflicts = rule.check('X');
     assert.strictEqual(conflicts.length, 1);
     assert.strictEqual(conflicts[0].candidateName, 'X');
-    assert.ok(conflicts[0].description.match(/too short/));
+    assert.ok(conflicts[0].description.includes('too short'));
   });
 
   test('min-length rejects two letters', function(assert) {
@@ -136,16 +98,14 @@ module('Unit | Utility | handle-rules', function(hooks) {
     let conflicts = rule.check('Ed');
     assert.strictEqual(conflicts.length, 1);
     assert.strictEqual(conflicts[0].candidateName, 'Ed');
-    assert.ok(conflicts[0].description.match(/too short/));
+    assert.ok(conflicts[0].description.includes('too short'));
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('min-length rejects two capital letters', function(assert) {
     const rule = new MinLengthRule();
     noConflicts(assert, rule, 'LK');
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('min-length allows numbers with at least one letter', function(assert) {
     const rule = new MinLengthRule();
     noConflicts(assert, rule, 'Go2Girl');
@@ -154,104 +114,93 @@ module('Unit | Utility | handle-rules', function(hooks) {
   });
 
 
-  // eslint-disable-next-line qunit/require-expect
   test('min-length rejects non-alphabetic', function(assert) {
     const rule = new MinLengthRule();
+    const names = ['137', '54 46', '@#!', 'ΑΒΓ', String.fromCodePoint(0x1F4A9)];
     const checkit = (name) => {
       let conflicts = rule.check(name);
       assert.strictEqual(conflicts.length, 1, `${JSON.stringify(conflicts)} conflicts for ${name}`);
       assert.strictEqual(conflicts[0].candidateName, name);
       assert.strictEqual(conflicts[0].description, 'should have letters');
     };
-    checkit('137');
-    checkit('54 46');
-    checkit('@#!');
-    checkit('\u0391\u0392\u0393');
-    checkit(String.fromCodePoint(0x1F4A9));
+    names.forEach(checkit);
   });
 
 
   // === PhoneticAlphabetRule tests ===
-  // eslint-disable-next-line qunit/require-expect
   test('phonetic-alphabet rejects names with just NATO letters', function(assert) {
     const rule = new PhoneticAlphabetRule(natoHandles);
+    const names = [
+      'Fox Trot', 'FoxTrot', 'Tango Charlie', 'golf uniform',
+      'Romeo & Juliett', 'WhiskeyTangoFoxtrot', 'Quebec2Lima',
+    ];
     let checkit = (name) => {
       let result = rule.check(name);
       assert.strictEqual(result.length, 1, `Got ${result.length} conflicts for ${name}`);
       assert.strictEqual(result[0].candidateName, name);
-      assert.ok(result[0].description.match('phonetic alphabet'), `Check for ${name}`);
+      assert.ok(result[0].description.includes('phonetic alphabet'), `Check for ${name}`);
     };
-    checkit('Fox Trot');
-    checkit('FoxTrot');
-    checkit('Tango Charlie');
-    checkit('golf uniform');
-    checkit('Romeo & Juliett');
-    checkit('WhiskeyTangoFoxtrot');
-    checkit('Quebec2Lima');
+    names.forEach(checkit);
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('phonetic-alphabet accepts names with more than NATO letters', function(assert) {
     const rule = new PhoneticAlphabetRule(natoHandles);
-    noConflicts(assert, rule, 'Baker');
-    noConflicts(assert, rule, 'Indian');
-    noConflicts(assert, rule, 'Wherefore Romeo');
-    noConflicts(assert, rule, 'Quebec City');
-    noConflicts(assert, rule, '2 Kilos');
-    noConflicts(assert, rule, 'Hotels');
+    const names = ['Baker', 'Indian', 'Wherefore Romeo', 'Quebec City', '2 Kilos', 'Hotels'];
+    names.forEach((name) => noConflicts(assert, rule, name));
   });
 
   // === SubstringRule tests ===
-  // eslint-disable-next-line qunit/require-expect
   test('substring rejects exact matches', function(assert) {
     const rule = new SubstringRule(wordHandles);
-    let checkit = (name, existing) =>
-      conflictsWithExisting(assert, rule, name, existing, 'in use');
-    checkit('Zulu', 'Zulu');
-    checkit('golf', 'Golf');
-    // checkit('CHARLIE', 'Charlie'); // CHARLIE now treated as 'C H A R L I E'
-    checkit('SiErRa', 'Sierra');
-    checkit('wHiSkEy', 'Whiskey');
+    const cases = [
+      ['Zulu', 'Zulu'],
+      ['golf', 'Golf'],
+      // ['CHARLIE', 'Charlie'], // CHARLIE now treated as 'C H A R L I E'
+      ['SiErRa', 'Sierra'],
+      ['wHiSkEy', 'Whiskey'],
+    ];
+    cases.forEach(([name, existing]) =>
+      conflictsWithExisting(assert, rule, name, existing, 'in use'));
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('substring rejects partial matches', function(assert) {
     const rule = new SubstringRule(wordHandles);
-    let checkit = (name, existing) =>
-      conflictsWithExisting(assert, rule, name, existing, `${existing} contains`);
-    checkit('Fox', 'Foxtrot');
-    checkit('Ray', 'X-ray');
-    checkit('Julie', 'Juliett');
-    checkit('pa', 'Papa');
-    checkit('eMbEr', 'November');
-    checkit('ot', 'Hotel');
-    checkit('ot', 'Foxtrot');
+    const cases = [
+      ['Fox', 'Foxtrot'],
+      ['Ray', 'X-ray'],
+      ['Julie', 'Juliett'],
+      ['pa', 'Papa'],
+      ['eMbEr', 'November'],
+      ['ot', 'Hotel'],
+      // "ot" is contained by both Hotel and Foxtrot, hence 2 conflicts.
+      ['ot', 'Foxtrot'],
+    ];
+    cases.forEach(([name, existing]) => {
+      const expectedCount = name === 'ot' ? 2 : 1;
+      conflictsWithExisting(assert, rule, name, existing, `${existing} contains`, expectedCount);
+    });
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('substring rejects names that contain another name', function(assert) {
     const rule = new SubstringRule(wordHandles);
-    let checkit = (name, existing) =>
-      conflictsWithExisting(assert, rule, name, existing, `contains ${existing}`);
-    checkit('AlfalfA', 'Alfa');
-    checkit('TheGolfather', 'Golf');
-    checkit('paparazi', 'Papa');
-    checkit('Gary Indiana', 'India');
-    checkit('Hotel Moron', 'Hotel');
-    checkit('CzEcHoSlOvAkIa', 'Echo');
+    const cases = [
+      ['AlfalfA', 'Alfa'],
+      ['TheGolfather', 'Golf'],
+      ['paparazi', 'Papa'],
+      ['Gary Indiana', 'India'],
+      ['Hotel Moron', 'Hotel'],
+      ['CzEcHoSlOvAkIa', 'Echo'],
+    ];
+    cases.forEach(([name, existing]) =>
+      conflictsWithExisting(assert, rule, name, existing, `contains ${existing}`));
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('substring accepts non-substring names', function(assert) {
     const rule = new SubstringRule(wordHandles);
-    noConflicts(assert, rule, 'Danger');
-    noConflicts(assert, rule, 'Fawkestrot');
-    noConflicts(assert, rule, 'Romero');
-    noConflicts(assert, rule, 'Unicorn');
-    noConflicts(assert, rule, 'Alice Bob Carol');
+    const names = ['Danger', 'Fawkestrot', 'Romero', 'Unicorn', 'Alice Bob Carol'];
+    names.forEach((name) => noConflicts(assert, rule, name));
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('substring rejects acronym matches', function(assert) {
     const acronymHandles = [
       {name: 'L E', entityType: 'jargon'},
@@ -259,29 +208,32 @@ module('Unit | Utility | handle-rules', function(hooks) {
       {name: 'r.e.m.', entityType: 'jargon'},
     ];
     const rule = new SubstringRule(acronymHandles);
-    let exactMatch = (name, existing) =>
-      conflictsWithExisting(assert, rule, name, existing, `${existing} is already in use`);
-    let substringMatch = (name, existing) =>
-      conflictsWithExisting(assert, rule, name, existing, `contains ${existing}`);
-    exactMatch('L E', 'L E');
-    exactMatch('l e', 'L E');
-    exactMatch('l-e', 'L E');
-    substringMatch('L E O', 'L E');
-    substringMatch('L-E-A-L', 'L E');
-    substringMatch('A.B.L.E.', 'L E');
-    exactMatch('B.L.M', 'B-L-M');
-    exactMatch('B L M', 'B-L-M');
-    exactMatch('b L m', 'B-L-M');
-    substringMatch('B.L.M. H.Q.', 'B-L-M');
-    substringMatch('U-S-F-S B-L-M N-P-S', 'B-L-M');
-    exactMatch('r.e.m.', 'r.e.m.');
-    exactMatch('R.E.M', 'r.e.m.');
-    exactMatch('R-E M', 'r.e.m.');
-    exactMatch('R E M', 'r.e.m.');
-    substringMatch('R E M S.L.E-E-P-', 'r.e.m.');
+    const exactCases = [
+      ['L E', 'L E'],
+      ['l e', 'L E'],
+      ['l-e', 'L E'],
+      ['B.L.M', 'B-L-M'],
+      ['B L M', 'B-L-M'],
+      ['b L m', 'B-L-M'],
+      ['r.e.m.', 'r.e.m.'],
+      ['R.E.M', 'r.e.m.'],
+      ['R-E M', 'r.e.m.'],
+      ['R E M', 'r.e.m.'],
+    ];
+    const substringCases = [
+      ['L E O', 'L E', 1],
+      ['L-E-A-L', 'L E', 1],
+      ['A.B.L.E.', 'L E', 1],
+      ['B.L.M. H.Q.', 'B-L-M', 1],
+      ['U-S-F-S B-L-M N-P-S', 'B-L-M', 1],
+      ['R E M S.L.E-E-P-', 'r.e.m.', 2], // contains both r.e.m. and L E
+    ];
+    exactCases.forEach(([name, existing]) =>
+      conflictsWithExisting(assert, rule, name, existing, `${existing} is already in use`));
+    substringCases.forEach(([name, existing, expectedCount]) =>
+      conflictsWithExisting(assert, rule, name, existing, `contains ${existing}`, expectedCount));
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('substring accepts non-acronym matches to acronyms', function(assert) {
     const acronymHandles = [
       {name: 'L E', entityType: 'jargon'},
@@ -289,183 +241,183 @@ module('Unit | Utility | handle-rules', function(hooks) {
       {name: 'r.e.m.', entityType: 'jargon'},
     ];
     const rule = new SubstringRule(acronymHandles);
-    let substringMatch = (name, existing) =>
-      conflictsWithExisting(assert, rule, name, existing, `contains ${existing}`);
-    noConflicts(assert, rule, 'Leaf');
-    noConflicts(assert, rule, 'abLE');
-    noConflicts(assert, rule, 'Bald Eagle');
-    substringMatch('Bell Eagle', 'L E'); // Bell end with L, Eagle starts with E
-    noConflicts(assert, rule, 'fechez le vache');
-    noConflicts(assert, rule, 'Kablm');
-    substringMatch('BLM Director', 'B-L-M');
-    substringMatch("BOB L'May", 'B-L-M');
-    substringMatch('rob l. martin', 'B-L-M');
-    noConflicts(assert, rule, 'Remember');
-    //noConflicts(assert, rule, 'rem'); // "rem" vs. "are ee em"
-    substringMatch('R.E.M. Songs', 'r.e.m.');
+    const cleanNames = ['Leaf', 'abLE', 'Bald Eagle', 'fechez le vache', 'Kablm', 'Remember'];
+    const substringCases = [
+      ['Bell Eagle', 'L E'], // Bell ends with L, Eagle starts with E
+      ['BLM Director', 'B-L-M'],
+      ["BOB L'May", 'B-L-M'],
+      ['rob l. martin', 'B-L-M'],
+      ['R.E.M. Songs', 'r.e.m.'],
+    ];
+    cleanNames.forEach((name) => noConflicts(assert, rule, name));
+    substringCases.forEach(([name, existing]) =>
+      conflictsWithExisting(assert, rule, name, existing, `contains ${existing}`));
   });
 
   // === EditDistanceRule tests ===
-  // eslint-disable-next-line qunit/require-expect
   test('edit-distance rejects one character different', function(assert) {
     const rule = new EditDistanceRule(wordHandles);
-    let checkit = (name, existing) =>
-      conflictsWithExisting(assert, rule, name, existing, `is spelled like ${existing}`);
-    checkit('Braco', 'Bravo'); // change
-    checkit('Gold', 'Golf'); // change
-    checkit('mile', 'Mike'); // change
-    checkit('Movember', 'November'); // change
-    checkit('Yanker', 'Yankee'); // change
-    checkit('oshcar', 'Oscar'); // add
-    checkit('ViCtOrY', 'Victor'); // add
-    checkit('ZUL', 'Zulu'); // add
-    checkit('I\'m A', 'Lima'); // remove
-    checkit('Rome', 'Romeo'); // remove
+    const cases = [
+      ['Braco', 'Bravo'], // change
+      ['Gold', 'Golf'], // change
+      ['mile', 'Mike'], // change
+      ['Movember', 'November'], // change
+      ['Yanker', 'Yankee'], // change
+      ['oshcar', 'Oscar'], // add
+      ['ViCtOrY', 'Victor'], // add
+      ['ZUL', 'Zulu'], // add
+      ["I'm A", 'Lima'], // remove
+      ['Rome', 'Romeo'], // remove
+    ];
+    cases.forEach(([name, existing]) =>
+      conflictsWithExisting(assert, rule, name, existing, `is spelled like ${existing}`));
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('edit-distance accepts 2+ characters different', function(assert) {
     const rule = new EditDistanceRule(wordHandles);
-    noConflicts(assert, rule, 'Alpha');
-    noConflicts(assert, rule, 'Bravado');
-    noConflicts(assert, rule, 'Golfer');
-    noConflicts(assert, rule, 'Julie');
-    noConflicts(assert, rule, 'Vember');
-    noConflicts(assert, rule, 'Popo');
-    noConflicts(assert, rule, 'Sierra Nevada');
-    noConflicts(assert, rule, 'Sex-ray');
-    noConflicts(assert, rule, 'Wanker');
+    const names = ['Alpha', 'Bravado', 'Golfer', 'Julie', 'Vember', 'Popo', 'Sierra Nevada', 'Sex-ray', 'Wanker'];
+    names.forEach((name) => noConflicts(assert, rule, name));
   });
 
   // === AmericanSoundexRule tests ===
-  // eslint-disable-next-line qunit/require-expect
   test('american-soundex rejects when soundex matches', function(assert) {
     const rule = new AmericanSoundexRule(wordHandles);
-    let checkit = (name, existing) =>
-      conflictsWithExisting(assert, rule, name, existing, `may sound like ${existing}`);
-    checkit('alpha', 'Alfa');
-    checkit('BRAVE', 'Bravo');
-    checkit('Charly', 'Charlie');
-    checkit('FocsDryad', 'Foxtrot');
-    checkit('Jeweled', 'Juliett');
-    checkit('Mice', 'Mike');
-    checkit('Nabenfir', 'November');
-    checkit('Popo', 'Papa');
-    checkit('Sero', 'Sierra');
-    checkit('Victoria', 'Victor');
-    checkit('Wishco', 'Whiskey');
+    const cases = [
+      ['alpha', 'Alfa'],
+      ['BRAVE', 'Bravo'],
+      ['Charly', 'Charlie'],
+      ['FocsDryad', 'Foxtrot'],
+      ['Jeweled', 'Juliett'],
+      ['Mice', 'Mike'],
+      ['Nabenfir', 'November'],
+      ['Popo', 'Papa'],
+      ['Sero', 'Sierra'],
+      ['Victoria', 'Victor'],
+      ['Wishco', 'Whiskey'],
+    ];
+    cases.forEach(([name, existing]) =>
+      conflictsWithExisting(assert, rule, name, existing, `may sound like ${existing}`));
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('american-soundex accepts when soundex does not match', function(assert) {
     const rule = new AmericanSoundexRule(wordHandles);
-    noConflicts(assert, rule, 'Elfa');
-    noConflicts(assert, rule, 'Shirley');
-    noConflicts(assert, rule, 'Tilde');
-    noConflicts(assert, rule, 'Foxrot');
-    noConflicts(assert, rule, 'Motel');
-    noConflicts(assert, rule, 'Nike');
-    noConflicts(assert, rule, 'Quebec City');
-    noConflicts(assert, rule, 'Unicorn');
-    noConflicts(assert, rule, 'Vitcor');
-    noConflicts(assert, rule, '4242');
+    const names = ['Elfa', 'Shirley', 'Tilde', 'Foxrot', 'Motel', 'Nike', 'Quebec City', 'Unicorn', 'Vitcor', '4242'];
+    names.forEach((name) => noConflicts(assert, rule, name));
   });
 
   // === DoubleMetaphoneRule tests ===
-  // eslint-disable-next-line qunit/require-expect
   test('double-metaphone rejects when metaphone matches', function(assert) {
     const rule = new DoubleMetaphoneRule(wordHandles);
-    let checkit = (name, existing) =>
-      conflictsWithExisting(assert, rule, name, existing, `may sound like ${existing}`);
-    checkit('alpha', 'Alfa');
-    checkit('Elpha', 'Alfa');
-    checkit('BRAVE', 'Bravo');
-    checkit('Shirley', 'Charlie');
-    checkit('tilde', 'Delta');
-    checkit('Phockstroth', 'Foxtrot');
-    checkit('FocsDryad', 'Foxtrot');
-    checkit('K. L. F.', 'Golf');
-    checkit('Jeweled', 'Juliett');
-    checkit('Popo', 'Papa');
-    checkit('Sero', 'Sierra');
-    checkit('Victoria', 'Victor');
+    // [name, existing, expectedCount]
+    const cases = [
+      ['alpha', 'Alfa', 1],
+      ['Elpha', 'Alfa', 1],
+      ['BRAVE', 'Bravo', 1],
+      ['Shirley', 'Charlie', 1],
+      ['tilde', 'Delta', 1],
+      ['Phockstroth', 'Foxtrot', 1],
+      ['FocsDryad', 'Foxtrot', 1],
+      ['K. L. F.', 'Golf', 1],
+      ['Jeweled', 'Juliett', 2], // both metaphone variants hash to Juliett
+      ['Popo', 'Papa', 1],
+      ['Sero', 'Sierra', 2], // also matches X-ray
+      ['Victoria', 'Victor', 1],
+    ];
+    cases.forEach(([name, existing, expectedCount]) =>
+      conflictsWithExisting(assert, rule, name, existing, `may sound like ${existing}`, expectedCount));
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('double-metaphone accepts when metaphone does not match', function(assert) {
     const rule = new DoubleMetaphoneRule(wordHandles);
-    noConflicts(assert, rule, 'Foxrot');
-    noConflicts(assert, rule, 'Motel');
-    noConflicts(assert, rule, 'Mice');
-    noConflicts(assert, rule, 'Nike');
-    noConflicts(assert, rule, 'Nabenfir');
-    noConflicts(assert, rule, 'Quebec City');
-    noConflicts(assert, rule, 'Unicorn');
-    noConflicts(assert, rule, 'Vitcor');
-    noConflicts(assert, rule, 'Wishco');
-    noConflicts(assert, rule, '4242');
+    const names = ['Foxrot', 'Motel', 'Mice', 'Nike', 'Nabenfir', 'Quebec City', 'Unicorn', 'Vitcor', 'Wishco', '4242'];
+    names.forEach((name) => noConflicts(assert, rule, name));
   });
 
   // === EyeRhymeRule tests ===
-  // eslint-disable-next-line qunit/require-expect
   test('eye-rhyme rejects when one syllable is spelled like another', function(assert) {
     const rule = new EyeRhymeRule(wordHandles);
-    let checkit = (name, existing, multiple = false) =>
-      conflictsWithExisting(assert, rule, name, existing,
-        multiple ? `rhyming syllables with ${existing}` : `a syllable rhyming with ${existing}`);
-    // Several of these test cases are opportunities to improve the algorithm,
-    // if code changes and breaks these tests, it may be a positive sign.
-    // A lot of the phonetic letters have syllables without a coda, so this
-    // test using just the NATO alphabet is particularly awkward.
-    checkit('Alfalfa', 'Alfa', true);
-    checkit('Da Mal', 'Alfa'); // not a great match
-    checkit('A', 'Bravo'); // not a great match
-    checkit('You lie', 'Charlie');
-    checkit('Nice Car!', 'Charlie');
-    checkit('gwar', 'Charlie'); // not a great match
-    checkit('Ta Bel', 'Delta', true); // not a great match
-    checkit('Malta', 'Delta'); // non-multiple
-    checkit('Go be', 'Echo'); // not a great match
-    checkit('Unboxt', 'Foxtrot'); // foxt/rot rather than fox/trot
-    checkit('Adolf', 'Golf');
-    checkit('olfactory', 'Golf');
-    checkit('Elgo', 'Hotel'); // not a great match
-    checkit('Shia mind', 'India', true);
-    checkit('Zulu', 'Juliett', true); // so-so match
-    checkit('Loki', 'Kilo', true);
-    checkit('O-I', 'Kilo', true); // not a great match
-    checkit('I, A Word', 'Lima', true); // not a great match
-    checkit('Hike', 'Mike');
-    checkit('Remember', 'November', true);
-    checkit('Alemonger', 'November'); // not a good match
-    checkit('A', 'Papa', true); // not a great match
-    checkit('accrue', 'Quebec'); // not a great match
-    checkit('OK', 'Romeo');
-    checkit('Amplifier', 'Sierra'); // not a great match
-    checkit('The Man', 'Tango'); // not a great match
-    checkit('Maelstorm', 'Uniform');
-    checkit('unique', 'Uniform', true); // not a great match
-    checkit('Hiccup', 'Victor'); // not a great match
-    checkit('Misdeed', 'Whiskey');
-    checkit('They Is', 'Whiskey', true); // not a good match
-    checkit('Nice Day', 'X-ray');
-    checkit('Mr. X', 'X-ray');
-    checkit('An old bee', 'Yankee');
-    checkit('I <3 U', 'Zulu', true); // not a good match
+    // [name, existing, multiple]
+    const cases = [
+      // Several of these test cases are opportunities to improve the algorithm,
+      // if code changes and breaks these tests, it may be a positive sign.
+      // A lot of the phonetic letters have syllables without a coda, so this
+      // test using just the NATO alphabet is particularly awkward.
+      ['Alfalfa', 'Alfa', true],
+      ['Da Mal', 'Alfa', false], // not a great match
+      ['A', 'Bravo', false], // not a great match
+      ['You lie', 'Charlie', false],
+      ['Nice Car!', 'Charlie', false],
+      ['gwar', 'Charlie', false], // not a great match
+      ['Ta Bel', 'Delta', true], // not a great match
+      ['Malta', 'Delta', false], // non-multiple
+      ['Go be', 'Echo', false], // not a great match
+      ['Unboxt', 'Foxtrot', false], // foxt/rot rather than fox/trot
+      ['Adolf', 'Golf', false],
+      ['olfactory', 'Golf', false],
+      ['Elgo', 'Hotel', false], // not a great match
+      ['Shia mind', 'India', true],
+      ['Zulu', 'Juliett', true], // so-so match
+      ['Loki', 'Kilo', true],
+      ['O-I', 'Kilo', true], // not a great match
+      ['I, A Word', 'Lima', true], // not a great match
+      ['Hike', 'Mike', false],
+      ['Remember', 'November', true],
+      ['Alemonger', 'November', false], // not a good match
+      ['A', 'Papa', true], // not a great match
+      ['accrue', 'Quebec', false], // not a great match
+      ['OK', 'Romeo', false],
+      ['Amplifier', 'Sierra', false], // not a great match
+      ['The Man', 'Tango', false], // not a great match
+      ['Maelstorm', 'Uniform', false],
+      ['unique', 'Uniform', true], // not a great match
+      ['Hiccup', 'Victor', false], // not a great match
+      ['Misdeed', 'Whiskey', false],
+      ['They Is', 'Whiskey', true], // not a good match
+      ['Nice Day', 'X-ray', false],
+      ['Mr. X', 'X-ray', false],
+      ['An old bee', 'Yankee', false],
+      ['I <3 U', 'Zulu', true], // not a good match
+    ];
+    // The eye-rhyme rule is intentionally noisy and can flag several handles for
+    // one candidate, so assert presence of the target conflict rather than an
+    // exact total count.
+    cases.forEach(([name, existing, multiple]) =>
+      conflictPresent(assert, rule, name, existing,
+        multiple ? `rhyming syllables with ${existing}` : `a syllable rhyming with ${existing}`));
   });
 
-  // eslint-disable-next-line qunit/require-expect
   test('eye-rhyme accepts when no syllables rhyme', function(assert) {
     const rule = new EyeRhymeRule(wordHandles);
     // Some of these should have a conflict.  If the algorithm is improved, remove the check.
-    noConflicts(assert, rule, 'Adolph'); // should rhyme with Golf
-    noConflicts(assert, rule, 'oubliette'); // should rhyme with Juliett
-    noConflicts(assert, rule, 'Keee-Low'); // should rhyme with Kilo
-    noConflicts(assert, rule, 'forme'); // should rhyme with Uniform
-    noConflicts(assert, rule, 'Mice'); // silent e
-    noConflicts(assert, rule, 'Vine');
-    noConflicts(assert, rule, 'bang');
-    noConflicts(assert, rule, 'T-Rex');
+    const names = [
+      'Adolph', // should rhyme with Golf
+      'oubliette', // should rhyme with Juliett
+      'Keee-Low', // should rhyme with Kilo
+      'forme', // should rhyme with Uniform
+      'Mice', // silent e
+      'Vine',
+      'bang',
+      'T-Rex',
+      '4242',
+    ];
+    names.forEach((name) => noConflicts(assert, rule, name));
+  });
+
+  // === ExperimentalEyeRhymeRule tests ===
+  // The experimental rule requires at least 50% of a candidate's syllables to
+  // rhyme with an existing handle before flagging a conflict.
+  test('experimental-eye-rhyme flags names where the rhyme ratio is high enough', function(assert) {
+    const rule = new ExperimentalEyeRhymeRule(wordHandles);
+    // "Alfalfa" -> al/fal/fa; two of three syllables rhyme with Alfa (al, fa),
+    // a 0.66 ratio that clears the 0.5 threshold.  (Papa is also flagged, so
+    // assert presence rather than an exact total count.)
+    conflictPresent(assert, rule, 'Alfalfa', 'Alfa', 'rhyming syllables with Alfa');
+  });
+
+  test('experimental-eye-rhyme ignores names below the rhyme threshold', function(assert) {
+    const rule = new ExperimentalEyeRhymeRule(wordHandles);
+    // A single rhyming syllable out of many does not reach the 0.5 ratio.
+    noConflicts(assert, rule, 'Amplifier'); // one weak rhyme with Sierra, ratio too low
     noConflicts(assert, rule, '4242');
   });
 });

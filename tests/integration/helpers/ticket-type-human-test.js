@@ -1,7 +1,7 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import {hbs} from 'ember-cli-htmlbars';
 import { STAFF_CREDENTIAL} from 'clubhouse/models/access-document';
 
 module('Integration | Helper | ticket-type-human', function(hooks) {
