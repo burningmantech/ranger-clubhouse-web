@@ -92,6 +92,7 @@ module('Integration | Component | asset-table', function (hooks) {
     await render(hbs`<AssetTable @assets={{this.assets}} @attachments={{this.attachments}}
                                  @year={{this.year}} @mode="checkout" />`);
 
+    assert.dom('tbody tr').exists({count: 1}, 'only the empty-state row renders');
     assert.dom('tbody').includesText('No assets are currently checked out.');
   });
 
@@ -101,6 +102,7 @@ module('Integration | Component | asset-table', function (hooks) {
 
     await render(hbs`<AssetTable @assets={{this.assets}} @year={{this.year}} @mode="history" />`);
 
+    assert.dom('tbody tr').exists({count: 1}, 'only the empty-state row renders');
     assert.dom('tbody').includesText(`No assets were returned in ${YEAR}.`);
   });
 
@@ -128,10 +130,10 @@ module('Integration | Component | asset-table', function (hooks) {
     // Cell starts with no attachment.
     assert.dom('tbody').doesNotIncludeText('Mini Mag Mount', 'attachment not yet set');
 
-    // Open the modal. The "Change Attachment" button is the only one carrying
-    // the mt-1 class (the History launcher is also btn-secondary but has no mt-1).
-    assert.dom('tbody button.mt-1').hasText('Change Attachment');
-    await click('tbody button.mt-1');
+    // Open the modal via the stable data-test hook on the Change Attachment
+    // button (keyed by barcode), rather than an incidental utility class.
+    assert.dom('[data-test-change-attachment="B-1001"]').hasText('Change Attachment');
+    await click('[data-test-change-attachment="B-1001"]');
     await waitFor('.modal-title');
     assert.dom('.modal-title').includesText('Update attachment for B-1001');
 

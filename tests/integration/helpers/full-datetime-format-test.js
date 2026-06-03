@@ -1,12 +1,10 @@
 import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
-
+import {hbs} from 'ember-cli-htmlbars';
 module('Integration | Helper | full-datetime-format', function(hooks) {
   setupRenderingTest(hooks);
 
-  // Replace this with your real tests.
   test('it renders', async function(assert) {
     this.set('date', '2018-08-31 23:59:00');
 

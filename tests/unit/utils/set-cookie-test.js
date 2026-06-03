@@ -1,32 +1,36 @@
 import setCookie from 'clubhouse/utils/set-cookie';
 import { module, test } from 'qunit';
 
-module('Unit | Utility | setCookie', function(/*hooks*/) {
+const COOKIE_NAME = 'my-cookie';
+const COOKIE_VALUE = 'test-value-12345';
 
-  function makeCookieValue() {
-    let text = "";
-    const possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+function readCookie(name) {
+  const match = document.cookie
+    .split('; ')
+    .map((pair) => pair.split('='))
+    .find(([key]) => key === name);
 
-    for (var i = 0; i < 10; i++)
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
+  return match ? match[1] : undefined;
+}
 
-    return text;
-  }
+module('Unit | Utility | set-cookie', function(hooks) {
 
-  test('should set a cookie', function(assert) {
-    const cookie = makeCookieValue();
-
-    setCookie('my-cookie', cookie, 1000);
-    assert.strictEqual(document.cookie.split(';').filter((item) => item.includes('my-cookie='+cookie)).length, 1);
+  hooks.afterEach(function() {
+    // Ensure the cookie never leaks into other tests.
+    setCookie(COOKIE_NAME, '', 0);
   });
 
-  test('should delete a cookie', function(assert) {
-    const cookie = makeCookieValue();
+  test('it sets a cookie with the exact name and value', function(assert) {
+    setCookie(COOKIE_NAME, COOKIE_VALUE, 1000);
 
-    setCookie('my-cookie', cookie, 1000);
-    setCookie('my-cookie', '', 0);
-
-    assert.strictEqual(document.cookie.split(';').filter((item) => item.includes('my-cookie')).length, 0);
+    assert.strictEqual(readCookie(COOKIE_NAME), COOKIE_VALUE);
   });
 
+  test('it deletes a cookie when the expiry is zero', function(assert) {
+    setCookie(COOKIE_NAME, COOKIE_VALUE, 1000);
+    assert.strictEqual(readCookie(COOKIE_NAME), COOKIE_VALUE, 'cookie is set first');
+
+    setCookie(COOKIE_NAME, '', 0);
+    assert.strictEqual(readCookie(COOKIE_NAME), undefined, 'cookie is removed');
+  });
 });

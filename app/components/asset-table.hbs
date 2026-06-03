@@ -23,7 +23,7 @@
         {{#if (eq @mode "checkout")}}
           <br>
           <UiButton @onClick={{fn this.changeAssetAttachment ap}}
-                    @type="secondary" @size="sm" class="mt-1">
+                    @type="secondary" @size="sm" class="mt-1" data-test-change-attachment={{ap.asset.barcode}}>
             Change Attachment
           </UiButton>
         {{/if}}
@@ -52,7 +52,8 @@
           {{/if}}
         {{else}}
           {{#let (this.isSubmitting ap.asset.id) as |submitting|}}
-            <UiButton @size="sm" @onClick={{fn this.checkInAsset ap.asset ap}} @disabled={{submitting}}>
+            <UiButton @size="sm" @onClick={{fn this.checkInAsset ap.asset ap}} @disabled={{submitting}}
+                      data-test-check-in={{ap.asset.barcode}}>
               Check In
             </UiButton>
             {{#if submitting}}

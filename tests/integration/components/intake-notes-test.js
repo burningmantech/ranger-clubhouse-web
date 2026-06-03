@@ -3,9 +3,13 @@ import {setupRenderingTest} from 'ember-qunit';
 import {render} from '@ember/test-helpers';
 import {hbs} from 'ember-cli-htmlbars';
 import Service from '@ember/service';
+import {makePerson, makeTeamNotes} from 'clubhouse/tests/helpers/factories';
+import {spy} from 'clubhouse/tests/helpers/spy';
 
-class ServiceStub extends Service{
-  hasRole() { return true }
+class ServiceStub extends Service {
+  hasRole() {
+    return true;
+  }
 }
 
 module('Integration | Component | intake-notes', function (hooks) {
@@ -15,18 +19,21 @@ module('Integration | Component | intake-notes', function (hooks) {
     this.owner.register('service:session', ServiceStub);
   });
 
-  test('it renders', async function (assert) {
+  test('it renders the team note text and the add-note button', async function (assert) {
     this.setProperties({
-      person: {
-        rrn_team: [{
-          year: 2020,
-          notes: [{note: 'A note', created_at: '2020-01-01 12:34:56', person_source: {id: 9999, callsign: 'Bucket'}}]
-        }]
-      },
+      person: makePerson({rrn_team: makeTeamNotes({year: 2020})}),
       year: 2020,
-      noteSubmitted() { }
+      noteSubmitted: spy(),
     });
-    await render(hbs`<IntakeNotes @type="rrn" @person={{this.person}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />`);
-    assert.dom('button').hasText('Add Note / Rank');
+
+    await render(hbs`<IntakeNotes @type="rrn"
+                                  @person={{this.person}}
+                                  @viewYear={{this.year}}
+                                  @onSubmit={{this.noteSubmitted}} />`);
+
+    assert.dom('button.note-button').hasText('Add Note / Rank');
+    // have_notes is true and the note is not a log, so the note text renders.
+    assert.dom('ul.no-indent li').exists();
+    assert.dom('ul.no-indent').includesText('A note');
   });
 });

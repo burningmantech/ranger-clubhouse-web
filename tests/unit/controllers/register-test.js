@@ -1,6 +1,7 @@
 import { module, test } from 'qunit';
 import { setupTest } from 'ember-qunit';
 import Service from '@ember/service';
+import { spy } from 'clubhouse/tests/helpers/spy';
 
 // Minimal changeset stand-in: createAccount() only uses get() and pushErrors().
 class FakeModel {
@@ -47,26 +48,35 @@ module('Unit | Controller | register', function (hooks) {
 
   hooks.beforeEach(function () {
     this.posted = null;
+    // Status the fake ajax endpoint reports back; tests can override.
+    this.responseStatus = 'success';
+    // When set, the fake ajax rejects with this value instead of resolving.
+    this.rejectWith = null;
     const test = this;
 
     this.owner.register('service:ajax', class extends Service {
       post(url, options) {
         test.posted = { url, options };
-        return Promise.resolve({ status: 'success' });
+        if (test.rejectWith) {
+          return Promise.reject(test.rejectWith);
+        }
+        return Promise.resolve({ status: test.responseStatus });
       }
     });
-    // Swallow the success modal without firing its transition callback, while
-    // recording calls so tests can assert info() fired.
+    // Record info() calls and capture the success callback so tests can fire it.
     this.modalInfoCalls = [];
     this.owner.register('service:modal', class extends Service {
       info(...args) { test.modalInfoCalls.push(args); }
     });
+    this.transitionTo = spy();
     this.owner.register('service:router', class extends Service {
-      transitionTo() {}
+      transitionTo = test.transitionTo;
     });
+    this.scrollToTop = spy();
+    this.handleErrorResponse = spy();
     this.owner.register('service:house', class extends Service {
-      scrollToTop() {}
-      handleErrorResponse() {}
+      scrollToTop = test.scrollToTop;
+      handleErrorResponse = test.handleErrorResponse;
     });
   });
 
@@ -97,6 +107,7 @@ module('Unit | Controller | register', function (hooks) {
       'person payload carries only the allow-listed fields plus status'
     );
     assert.strictEqual(person.status, 'auditor', 'status is set to auditor');
+    assert.strictEqual(person.password, 'secret-pw', 'password IS forwarded into the person payload');
 
     // human and intent ride alongside person, not inside it.
     assert.strictEqual(human, '35', 'human is sent at the top level for server re-validation');
@@ -131,5 +142,106 @@ module('Unit | Controller | register', function (hooks) {
 
     assert.strictEqual(this.posted, null, 'no request is posted when intent is Ranger');
     assert.strictEqual(this.modalInfoCalls.length, 1, 'an info modal is shown');
+  });
+
+  test('a successful registration shows the success modal and transitions to login', async function (assert) {
+    this.responseStatus = 'success';
+    const controller = this.owner.lookup('controller:register');
+    const model = new FakeModel(validValues());
+
+    await controller.createAccount(model, true);
+
+    assert.strictEqual(this.modalInfoCalls.length, 1, 'a success modal is shown');
+    assert.strictEqual(
+      this.modalInfoCalls[0][0],
+      'Account Successfully Created',
+      'the success modal uses the success title'
+    );
+
+    // The transition is wired to the modal dismissal callback, not fired eagerly.
+    assert.false(this.transitionTo.called, 'no transition before the modal is dismissed');
+    const dismissCallback = this.modalInfoCalls[0][2];
+    dismissCallback();
+    assert.true(this.transitionTo.called, 'transition fires when the modal is dismissed');
+    assert.deepEqual(this.transitionTo.lastArgs, ['login'], 'transitions to the login route');
+  });
+
+  test('an unknown server status falls through to the Unknown Status modal', async function (assert) {
+    this.responseStatus = 'wat';
+    const controller = this.owner.lookup('controller:register');
+    const model = new FakeModel(validValues());
+
+    await controller.createAccount(model, true);
+
+    assert.strictEqual(this.modalInfoCalls.length, 1, 'a modal is shown for the unknown status');
+    assert.strictEqual(this.modalInfoCalls[0][0], 'Unknown Status', 'the default branch reports Unknown Status');
+    assert.true(
+      this.modalInfoCalls[0][1].includes('wat'),
+      'the unknown status value is surfaced in the modal body'
+    );
+    assert.false(this.transitionTo.called, 'no transition occurs on an unknown status');
+  });
+
+  test('handleRegisterResult success path transitions through the modal callback', function (assert) {
+    const controller = this.owner.lookup('controller:register');
+
+    controller.handleRegisterResult({ status: 'success' });
+
+    assert.strictEqual(this.modalInfoCalls.length, 1, 'the success modal is shown');
+    this.modalInfoCalls[0][2]();
+    assert.deepEqual(this.transitionTo.lastArgs, ['login'], 'the dismissal callback transitions to login');
+  });
+
+  test('a re-entrant createAccount is a no-op while a save is in flight', async function (assert) {
+    const controller = this.owner.lookup('controller:register');
+    const model = new FakeModel(validValues());
+
+    // Simulate a request already in flight: the double-submit guard must bail
+    // before posting anything.
+    controller.isSaving = true;
+    await controller.createAccount(model, true);
+
+    assert.strictEqual(this.posted, null, 'no request is posted while isSaving is true');
+    assert.strictEqual(this.modalInfoCalls.length, 0, 'no modal is shown by the guarded call');
+  });
+
+  test('a rejected request routes to the house error handler and clears isSaving', async function (assert) {
+    const failure = { status: 422 };
+    this.rejectWith = failure;
+    const controller = this.owner.lookup('controller:register');
+    const model = new FakeModel(validValues());
+
+    await controller.createAccount(model, true);
+
+    assert.ok(this.posted, 'the request was attempted');
+    assert.true(this.handleErrorResponse.called, 'house.handleErrorResponse is invoked on failure');
+    assert.deepEqual(
+      this.handleErrorResponse.lastArgs,
+      [failure, model],
+      'the error response and the model are passed to the handler'
+    );
+    assert.strictEqual(this.modalInfoCalls.length, 0, 'no success modal is shown on failure');
+    assert.false(controller.isSaving, 'isSaving is reset after the request settles');
+  });
+
+  test('stepAction only accepts known wizard steps', function (assert) {
+    const controller = this.owner.lookup('controller:register');
+
+    controller.stepAction('register');
+    assert.strictEqual(controller.step, 'register', 'a known step is accepted');
+
+    controller.stepAction('bogus-step');
+    assert.strictEqual(controller.step, 'register', 'an unknown step is ignored');
+  });
+
+  test('resetWizard restores the initial wizard state', function (assert) {
+    const controller = this.owner.lookup('controller:register');
+    controller.step = 'register';
+    controller.registerForm = { email: 'x@example.com' };
+
+    controller.resetWizard();
+
+    assert.strictEqual(controller.step, 'ask-intent', 'step resets to ask-intent');
+    assert.deepEqual(controller.registerForm, {}, 'registerForm resets to empty');
   });
 });
