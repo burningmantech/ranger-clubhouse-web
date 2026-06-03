@@ -1,0 +1,46 @@
+{{! Template-only presentational component for the radio / Radio Checkout
+    Agreement messaging on the On-Site Registration page. Each variant is
+    byte-equivalent to the inline markup it replaced in hq/site-checkin.hbs:
+      - "agreement" — Radio Checkout Agreement signed / NOT-SIGNED notice.
+      - "summary"   — radio_max provisions authorization line (gated on
+                      radio_info_available so missing data is not rendered as
+                      "Shift Radios only").
+    Args: @variant ("agreement" | "summary"), @personEvent, @eventInfo, @callsign.
+    The wizard "Radios" step is intentionally NOT handled here: it embeds the
+    AssetCheckoutForm / asset tables / loading state and is not pure messaging. }}
+{{#if (eq @variant "agreement")}}
+  {{#if @personEvent.asset_authorized}}
+    <h4 class="text-success">
+      {{fa-icon "check" right=1 fixed=true}} Radio Checkout Agreement has been signed.
+    </h4>
+  {{else}}
+    <h4 class="text-danger">
+      {{fa-icon "ban" right=1 fixed=true}} Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE RADIOS.
+    </h4>
+    <p>
+      Direct {{@callsign}} to a kiosk and have them agree to the Radio Checkout Agreement. Only after the
+      agreement is signed may they be given a radio.
+    </p>
+  {{/if}}
+{{else if (eq @variant "summary")}}
+  {{#if @eventInfo.radio_info_available}}
+    {{#if @eventInfo.radio_max}}
+      {{#if @personEvent.asset_authorized}}
+        <h4 class="text-success">
+          {{fa-icon "tower-broadcast" right=1 fixed=true}}
+          Authorized for {{pluralize @eventInfo.radio_max "Event Radio"}}
+        </h4>
+      {{else}}
+        <h4 class="text-muted">
+          {{fa-icon "ban" right=1 fixed=true}}
+          Authorized for {{pluralize @eventInfo.radio_max "Event Radio"}}
+          &mdash; DO NOT ISSUE UNTIL Radio Checkout Agreement IS SIGNED.
+        </h4>
+      {{/if}}
+    {{else}}
+      <h4>
+        {{fa-icon "tower-broadcast" right=1 fixed=true}} Shift Radios only
+      </h4>
+    {{/if}}
+  {{/if}}
+{{/if}}
