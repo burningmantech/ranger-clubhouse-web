@@ -3,7 +3,9 @@
   <BackToHome/>
 </p>
 
-{{#if this.vehicleInfo.motorpool_agreement_signed}}
+{{#if this.showAgreementTag}}
+  <Me::DocumentReview @tag={{this.showAgreementTag}} @onClose={{this.closeAgreement}} />
+{{else if this.vehicleInfo.motorpool_agreement_signed}}
   <UiAlert @type="success">
     {{fa-icon "check" right=1 fixed=true}} The Vehicle Use Protocol has been agreed to.<br>
     {{#if this.vehicleInfo.org_vehicle_insurance}}
@@ -70,10 +72,6 @@
       Uh oh, it appears the Vehicle Use Protocol is not available yet. This might be an issue!
     </p>
   {{/if}}
-{{/if}}
-
-{{#if this.showAgreementTag}}
-  <Me::DocumentReview @tag={{this.showAgreementTag}} @onClose={{this.closeAgreement}} />
 {{/if}}
 
 {{#if this.isSubmitting}}
