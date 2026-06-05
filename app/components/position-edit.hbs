@@ -179,7 +179,11 @@
       <FormRow>
         <div class="col-12">
           <f.checkbox @name="require_training_for_roles"
-                      @label="ART training must be passed each year before roles are granted"/>
+                      @label="ART training must be passed each year before permissions are granted"/>
+        </div>
+        <div class="col-12">
+          <f.checkbox @name="require_signin_for_roles"
+                      @label="Permissions are only granted while signed into this position"/>
         </div>
       </FormRow>
       <FormRow>

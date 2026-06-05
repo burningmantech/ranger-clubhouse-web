@@ -1,4 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
+import {setting} from "clubhouse/utils/setting";
 
 export default class MeHomepageRoute extends ClubhouseRoute {
   async model() {
@@ -12,10 +13,18 @@ export default class MeHomepageRoute extends ClubhouseRoute {
       data.agreements = await this.ajax.request(`agreements/${user.id}`).then(({agreements}) => agreements);
     }
     return data;
+
   }
 
   setupController(controller, model) {
     const bullentins = model.bullentins;
+    const {user} = this.session;
+
+    if ((user.isRanger || user.isEchelon) && !!setting('EventManagementOnPlayaEnabled')) {
+      controller.set('signinPositions', user.role_signin_positions);
+    } else {
+      controller.set('signinPositions', null);
+    }
 
     controller.set('person', this.modelFor('me'));
     controller.set('photo', model.milestones.photo);
