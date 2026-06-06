@@ -94,6 +94,7 @@
     "miragejs": "^0.1.48",
     "mobile-detect": "^1.4.5",
     "mobile-drag-drop": "^2.2.0",
+    "patch-package": "^8.0.1",
     "qunit": "^2.26.0",
     "qunit-dom": "^3.5.1",
     "sass": "^1.100.0",
@@ -111,7 +112,5 @@
   "ember": {
     "edition": "octane"
   },
-  "dependencies": {
-    "patch-package": "^8.0.1"
-  }
+  "dependencies": {}
 }
