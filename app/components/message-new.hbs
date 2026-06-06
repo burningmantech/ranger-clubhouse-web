@@ -66,9 +66,7 @@
           <FormLabel @fixedSmall={{true}}>&nbsp;</FormLabel>
           <div class="col-sm-12 col-xl-6">
             <UiButtonRow>
-              {{#unless this.askForCallsign}}
-                <f.submit @label="Send Message" disabled={{@isSubmitting}} />
-              {{/unless}}
+              <f.submit @label="Send Message" @disabled={{@isSubmitting}} />
               <UiCancelButton @disabled={{@isSubmitting}} @onClick={{@onCancel}} />
             </UiButtonRow>
             {{#if @isSubmitting}}
