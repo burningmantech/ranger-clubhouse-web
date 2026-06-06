@@ -47,4 +47,4 @@ ${build} ${cache_args} \
     --target=application --tag="${app_image_name}" "${wd}";
 
 echo "==> Built images:";
-docker image ls "${image_repo}" "${dev_image_name}" "${build_image_name}";
+docker image ls --filter=reference="${image_repo}*";
