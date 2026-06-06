@@ -2,7 +2,12 @@ import Component from '@glimmer/component';
 import {action, set} from '@ember/object';
 import {service} from '@ember/service';
 import {cached, tracked} from '@glimmer/tracking';
-import {MESSAGE_TYPE_CONTACT, MESSAGE_TYPE_NORMAL, SENDER_TYPE_PERSON} from "clubhouse/models/person-message";
+import {
+  isMessageUnread,
+  MESSAGE_TYPE_CONTACT,
+  MESSAGE_TYPE_NORMAL,
+  SENDER_TYPE_PERSON
+} from "clubhouse/models/person-message";
 import {ALLOW_TO_MESSAGE} from "clubhouse/constants/person_status";
 import {pluralize} from 'ember-inflector';
 import {TrackedArray} from 'tracked-built-ins';
@@ -17,9 +22,7 @@ export default class MessageInboxComponent extends Component {
   @tracked isLoading;
   @tracked isSubmitting;
 
-  @tracked openNewMessage = true;
   @tracked newMessage;
-  @tracked messageToShow;
 
   @tracked messages = new TrackedArray([]);
 
@@ -71,7 +74,7 @@ export default class MessageInboxComponent extends Component {
           message.isHidden = this.messagesHidden[message.id];
         }
         message.replies = new TrackedArray(
-          message.replies.map((reply) => this.house.pushPayload('person-message', reply))
+          (message.replies ?? []).map((reply) => this.house.pushPayload('person-message', reply))
         );
         return this.house.pushPayload('person-message', message);
       }));
@@ -103,7 +106,7 @@ export default class MessageInboxComponent extends Component {
     let count = 0;
 
     this.messages.forEach((message) => {
-      if (message.sender_person_id !== personId && !message.delivered) {
+      if (isMessageUnread(message, personId)) {
         count++;
       }
     });
@@ -120,16 +123,6 @@ export default class MessageInboxComponent extends Component {
     });
 
     return count;
-  }
-
-  @action
-  isAnyUnread(message) {
-    const {id} = this.args.person;
-    if (message.sender_person_id !== id && !message.delivered) {
-      return true;
-    }
-
-    return message.replies?.some(reply => reply.sender_person_id !== id && !reply.delivered);
   }
 
   @action
@@ -168,9 +161,14 @@ export default class MessageInboxComponent extends Component {
 
   @action
   createReplyMessage(topMessage) {
+    const isOutgoing = this.args.person.idNumber === topMessage.sender_person_id;
+    const to = isOutgoing
+      ? (topMessage.person?.callsign ?? topMessage.message_from)
+      : (topMessage.sender_person?.callsign ?? topMessage.fromName);
+
     return this._newMessageSetup({
       from: this.args.person.callsign,
-      to: (this.args.person.idNumber === topMessage.sender_person_id) ? topMessage.person.callsign : topMessage.sender_person.callsign,
+      to,
       subject: topMessage.subject,
       replyId: topMessage.id,
     }, true);
@@ -192,7 +190,7 @@ export default class MessageInboxComponent extends Component {
   }
 
   @action
-  async sendMessage(model, isValid, callback = null, topMessage = null, record = null) {
+  async sendMessage(model, isValid, {onSuccess = null, topMessage = null, record = null} = {}) {
     if (!isValid) {
       return;
     }
@@ -218,7 +216,7 @@ export default class MessageInboxComponent extends Component {
       if (this.args.onFinished) {
         this.args.onFinished();
       } else {
-        callback?.();
+        onSuccess?.();
       }
       this.newMessage = null;
     } catch (response) {

@@ -11,18 +11,12 @@
   <h1>Messages for <span class="d-inline-block">{{this.session.user.callsign}}</span></h1>
   <BackToHome/>
 
-  <p class="mb-1">
-    Use this page to send a message to a Ranger. You may only contact Rangers who are classified as either active
-    or inactive. An inactive Ranger is someone who has not served in the last three events.
-  </p>
-  <p class="mb-1">
-    This service cannot be used to message individuals who are Ranger Applicants, Alphas, retired, dismissed, or
-    otherwise not categorized as active or inactive Rangers.
-  </p>
-  <p>
-    Message delivery is not guaranteed. The Ranger may have opted out of email notifications, may have an outdated
-    email address on file, or may not log into the Clubhouse for an extended period.
-  </p>
-
+  Use this page to send a message to a Ranger.
+  <ul>
+    <li><b>You can message:</b> Active Rangers, Inactive Rangers (anyone who hasn't Rangered in the last 3 events)</li>
+    <li><b>You can't message:</b> Ranger Applicants, Past Prospectives, Retired or dismissed Rangers</li>
+    <li><b>Heads up: delivery isn't guaranteed.</b> Your message might not get through if the Ranger
+      has: turned off email notifications, has an old email address on file, or hasn't logged in a while</li>
+  </ul>
   <MessageInbox @person={{this.session.user}} @isMe={{true}} />
 {{/if}}
