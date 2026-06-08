@@ -1,0 +1,47 @@
+h1 select, h1 option, .h1 select, .h1 option {
+  font-size: $h1-font-size;
+}
+
+h2 select, h2 option, .h2 select, .h2 option {
+  font-size: $h2-font-size;
+}
+
+h3 select, h3 option, .h3 select, .h3 option {
+  font-size: $h3-font-size;
+}
+
+b {
+  font-weight: 600;
+}
+
+.text-black {
+  color: #000 !important;
+}
+legend {
+  border-bottom: 1px solid #dcdcdc;
+  font-size: 1rem;
+  font-weight: 500;
+  padding-left: 0;
+}
+summary {
+  font-size: 1.1em;
+  font-weight: 400;
+  margin: -7px -7px 7px -7px;
+  padding: 7px 10px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #dddddd;
+}
+
+summary:hover {
+  background-color: #dee2e6 !important;
+}
+
+.custom-icons {
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary {
+    list-style: none;
+  }
+}

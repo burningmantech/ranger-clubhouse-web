@@ -1,0 +1,211 @@
+// Potential Alphas — Dense Triage / Scan-First rows.
+// One thin severity-striped row per person; flagged/ranked people auto-expand
+// so notes are never a click away, while the benign majority stays one compact
+// line. Shares the uf-* / intake-rank-* visual language with Unified Flagging.
+.uf-row-stack {
+  margin-top: 0.5rem;
+}
+
+.uf-row {
+  position: relative;
+  background-color: #ffffff;
+  border: 1px solid #dcdcdc;
+  border-left: 6px solid #adb5bd;
+  border-radius: 6px;
+  padding: 0.55rem 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.uf-row-flag {
+  border-left-color: #dc3545;
+}
+
+.uf-row-yellow {
+  border-left-color: #9f6800;
+}
+
+.uf-row-green {
+  border-left-color: #28a745;
+}
+
+.uf-row-normal {
+  border-left-color: #adb5bd;
+}
+
+// Tiny color squares for the Unified Flagging legend band, echoing the 6px
+// row severity left-stripe colors (see .uf-row-flag / -yellow / -green / -normal).
+.uf-legend-swatch {
+  display: inline-block;
+  width: 0.85rem;
+  height: 0.85rem;
+  border-radius: 2px;
+  vertical-align: middle;
+}
+
+.uf-legend-swatch-flag {
+  background-color: #dc3545;
+}
+
+.uf-legend-swatch-yellow {
+  background-color: #9f6800;
+}
+
+.uf-legend-swatch-green {
+  background-color: #28a745;
+}
+
+.uf-legend-swatch-normal {
+  background-color: #adb5bd;
+}
+
+// Keep each stripe-color swatch tight to its label so the four colors read as
+// grouped pairs under the single "Left stripe =" legend item.
+.uf-legend-stripe {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+// Re-anchor the shared full-bleed Personnel banner to the slimmer row padding.
+.uf-row .uf-flag-banner {
+  margin: -0.55rem -0.85rem 0.5rem;
+}
+
+// Collapsed header: two stacked rows (line 1 = identity head, line 2 = status
+// meta). .uf-row-anchor flips from a single wrapping flex row to a vertical
+// stack; the optical-centering invariants that used to live on the single row
+// now live on each inner row (.uf-row-head, .uf-row-meta): align-items:center +
+// a normalized line-height, plus `> * { align-self: center }` so every direct
+// child is its own centered box and the heterogeneous tokens (toggle SVG, text
+// run, pill chips, badges) share one optical center line.
+.uf-row-anchor {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  line-height: 1.2;
+}
+
+// Line 1: chevron toggle + identity run only.
+.uf-row-head {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem 0.75rem;
+  line-height: 1.2;
+
+  > * {
+    align-self: center;
+  }
+}
+
+// Line 2: status tokens (training badge, optional mentor-bonk badge, rank strip,
+// optional note dots). Indented by 2rem so it nests flush under the identity
+// text (callsign), past the chevron — toggle footprint (~1.375rem glyph+padding)
+// plus the old toggle/identity column gap (0.75rem) ~ 2rem.
+.uf-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.75rem;
+  line-height: 1.2;
+  padding-left: 2rem;
+
+  > * {
+    align-self: center;
+  }
+}
+
+.uf-row-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0 0.25rem;
+  line-height: 1.2;
+  color: #495057;
+  cursor: pointer;
+}
+
+.uf-row-identity {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.uf-row-name {
+  color: #212529;
+}
+
+.uf-row-gender {
+  color: #6c757d;
+}
+
+// Compact "FKA: ..." hint shown on the collapsed unified-flagging row anchor.
+.uf-row-fka {
+  color: #6c757d;
+}
+
+// Re-center the shared rank strip within line 2. It ships with a Bootstrap .mb-3
+// (margin-bottom: 1rem !important) for its standalone use; inside the row that
+// bottom margin enlarges its flex margin-box and shoves the chips up off the
+// centered line, so it must be overridden with !important to beat the utility.
+// Re-homed onto .uf-row-meta so it follows the rank strip to its new line-2
+// container.
+.uf-row-meta .intake-rank-strip {
+  margin-bottom: 0 !important;
+}
+
+// Notes-present digest: one badge per stream that has a note, colored by rank.
+.uf-row-dots {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+// Size the badge to read at the same height as a rank chip (.intake-rank-chip:
+// padding 0.35rem 0.7rem, line-height 1.2, ~1rem font). Override the Bootstrap
+// .badge defaults (0.75em font-size, 0.65em/0.4em padding) so a badge and a
+// rank chip render the same height side by side.
+.uf-row-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.9rem;
+  font-weight: 400;
+  padding: 0.35rem 0.5rem;
+}
+
+// Training-status badge only: render ~20% smaller than a rank chip / note badge
+// so it reads as a secondary status pill. Font-size 1rem -> 0.8rem and padding
+// 0.35rem 0.7rem -> 0.28rem 0.56rem (80% of .uf-row-badge).
+.uf-row-badge-training {
+  font-size: 0.9rem;
+  padding: 0.35rem 0.5rem;
+}
+
+// Grouped potentials: a titled block per priority group, each holding its own
+// .uf-row-stack. Title is a ~1.3rem semibold heading with a light bottom border.
+.uf-row-section {
+  margin-bottom: 1.5rem;
+}
+
+.uf-row-section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #212529;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+// Expanded detail reuses the unified-flagging team blocks verbatim.
+.uf-row-detail {
+  margin-top: 0.5rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.uf-row-mentor-history {
+  margin-bottom: 0.35rem;
+}

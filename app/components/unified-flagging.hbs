@@ -1,13 +1,63 @@
-<p>
-  A {{@year}} Prospective or Alpha is shown who meets one or more of criteria in {{@year}} or previous year :
-  a team rank (aka flag) of 3/Yellow or 4/Flag, Personnel flag raised, or a bonk/self-bonk.
-</p>
-<p>
-  Showing {{pluralize this.people.length "person"}} in the class of {{@year}}.
-</p>
 
-{{#each this.sortedPeople key="id" as |person|}}
-  <UnifiedFlaggingCard @person={{person}} @year={{@year}} @onSubmit={{this.noteSubmitted}} />
+{{#if this.sortedPeople.length}}
+  <div class="roster-legend mb-2">
+    <span class="roster-legend-label">Legend:</span>
+    <span class="roster-legend-item">
+      Left stripe =
+      <span class="uf-legend-stripe">
+        <span class="uf-legend-swatch uf-legend-swatch-flag"></span>
+        4/Flag
+      </span>
+      <span class="uf-legend-stripe">
+        <span class="uf-legend-swatch uf-legend-swatch-yellow"></span>
+        3/Yellow
+      </span>
+      <span class="uf-legend-stripe">
+        <span class="uf-legend-swatch uf-legend-swatch-green"></span>
+        1/Green
+      </span>
+      <span class="uf-legend-stripe">
+        <span class="uf-legend-swatch uf-legend-swatch-normal"></span>
+        2/Normal or no ranks
+      </span>
+    </span>
+    <span class="roster-legend-item">
+      <span class="badge text-bg-secondary">Note</span>
+      = team has notes (color follows that team's latest rank)
+    </span>
+  </div>
+  {{#if this.personnelFlaggedPeople.length}}
+    <div class="uf-row-section">
+      <div class="uf-row-section-title">Personnel Flag Raised</div>
+      <div class="uf-row-stack">
+        {{#each this.personnelFlaggedPeople key="id" as |person|}}
+          <UnifiedFlaggingRow @person={{person}} @year={{@year}} @showGender={{@showGender}} @onSubmit={{this.noteSubmitted}} />
+        {{/each}}
+      </div>
+    </div>
+  {{/if}}
+
+  {{#if this.rankFlaggedPeople.length}}
+    <div class="uf-row-section">
+      <div class="uf-row-section-title">Rank 3/4 or Bonk</div>
+      <div class="uf-row-stack">
+        {{#each this.rankFlaggedPeople key="id" as |person|}}
+          <UnifiedFlaggingRow @person={{person}} @year={{@year}} @showGender={{@showGender}} @onSubmit={{this.noteSubmitted}} />
+        {{/each}}
+      </div>
+    </div>
+  {{/if}}
+
+  {{#if this.otherPeople.length}}
+    <div class="uf-row-section">
+      <div class="uf-row-section-title">Other Potential Alphas</div>
+      <div class="uf-row-stack">
+        {{#each this.otherPeople key="id" as |person|}}
+          <UnifiedFlaggingRow @person={{person}} @year={{@year}} @showGender={{@showGender}} @onSubmit={{this.noteSubmitted}} />
+        {{/each}}
+      </div>
+    </div>
+  {{/if}}
 {{else}}
   <p><b class="text-danger">No {{@year}} flagged Prospectives or Alphas were found</b></p>
-{{/each}}
+{{/if}}
