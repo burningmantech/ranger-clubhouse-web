@@ -52,6 +52,23 @@ export default class UnifiedFlaggingRowComponent extends Component {
     return this.userExpanded;
   }
 
+  // Selection support (selectable mode, e.g. /mentor/convert-prospectives).
+  // Selection and converted state are owned by the parent UnifiedFlagging
+  // component as id Sets, so the row derives its own flags rather than holding
+  // them. Ids are normalized to strings to match the parent's storage.
+  get isSelected() {
+    return this.args.selectedIds?.has(String(this.args.person.id)) ?? false;
+  }
+
+  get isConverted() {
+    return this.args.convertedIds?.has(String(this.args.person.id)) ?? false;
+  }
+
+  @action
+  onSelectChange() {
+    this.args.onToggleSelect?.(this.args.person);
+  }
+
   // The gender label for the collapsed anchor, gated behind @showGender so it
   // only appears on mentor/potentials. A custom identity shows the free-text
   // value, otherwise the labeled value with a raw fallback. Returns null (chip
@@ -110,7 +127,7 @@ export default class UnifiedFlaggingRowComponent extends Component {
       .filter((stream) => !(stream.key === 'personnel' && ranks[stream.key] === 4))
       .map((stream) => {
         const slug = severitySlug(ranks[stream.key]) ?? 'normal';
-        return { label: `${stream.label} Note`, badgeType: RANK_BADGE_TYPE[slug] };
+        return { label: `${stream.label} Note`, badgeType: RANK_BADGE_TYPE[slug], rank: ranks[stream.key] };
       });
   }
 
@@ -153,12 +170,12 @@ export default class UnifiedFlaggingRowComponent extends Component {
         && new Date(training.slot_begins).getFullYear() === this.args.year
     );
     if (thisYear.some((training) => training.slot_has_ended && training.training_passed)) {
-      return { text: 'trained', badgeType: 'success' };
+      return { text: 'trained', badgeType: 'success', rank: 1, icon: 'check' };
     }
     if (thisYear.length) {
-      return { text: 'training pending', badgeType: 'warning' };
+      return { text: 'training pending', badgeType: 'warning', rank: 3, icon:  'hourglass'};
     }
-    return { text: 'no training signup', badgeType: 'danger' };
+    return { text: 'no training signup', badgeType: 'danger', rank: 4, icon: 'ban' };
   }
 
   teamHasNotes(team) {

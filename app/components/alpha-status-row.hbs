@@ -1,0 +1,51 @@
+{{! Single-sourced roster row for /mentor/alpha-status, shared by both the
+    "Needs Attention" and "All Other" sections. Routine not-yet states render as
+    a muted dash so the only red on the page is a genuine Personnel Black Flag. }}
+<tr class={{if @person.personnel_issue "table-danger"}}>
+  <td>
+    {{#if @person.personnel_issue}}
+      {{fa-icon "exclamation-triangle" color="danger"}}
+    {{/if}}
+    <PersonLink @person={{@person}} />
+    {{#if @person.email}}
+      <MailTo @to={{@person.email}} class="ms-1 text-muted" title="Email {{@person.email}}">
+        {{fa-icon "envelope"}}
+      </MailTo>
+    {{/if}}
+  </td>
+  <td>{{@person.first_name}} {{@person.last_name}}</td>
+  <td>{{@person.status}}</td>
+  <td>
+    {{#if @person.have_mentor_flags}}
+      {{#each @person.mentor_team as |info|}}
+        {{#if (gte info.rank 3)}}
+          {{info.year}}
+          <IntakeRanking @type="mentor" @rank={{info.rank}} />
+        {{/if}}
+      {{/each}}
+    {{else}}
+      <span class="text-muted">&mdash;</span>
+    {{/if}}
+  </td>
+  <td class="text-center">
+    {{#if @person.trained}}
+      <span class="text-success" title="Trained">{{fa-icon "check"}}</span>
+    {{else}}
+      <span class="text-muted" title="Not yet trained">&mdash;</span>
+    {{/if}}
+  </td>
+  <td class="text-center">
+    {{#if @person.alpha_status_eligible}}
+      <span class="text-success" title="Status eligible">{{fa-icon "check"}}</span>
+    {{else}}
+      <span class="text-muted" title="Not status eligible">&mdash;</span>
+    {{/if}}
+  </td>
+  <td class="text-center">
+    {{#if @person.alpha_position_eligible}}
+      <span class="text-success" title="Position eligible">{{fa-icon "check"}}</span>
+    {{else}}
+      <span class="text-muted" title="Position missing">&mdash;</span>
+    {{/if}}
+  </td>
+</tr>

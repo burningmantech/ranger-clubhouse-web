@@ -31,7 +31,7 @@
     No {{uppercase @type}} notes
   </div>
 {{/each}}
-{{#if (or this.canAddNote this.teamNotes)}}
+{{#if this.showNoteButton}}
   <div class="mb-2">
     <UiButton @type="secondary" @size={{this.noteButtonSize}} @onClick={{this.addNoteAction}} class="note-button">
       {{#if this.canAddNote}}

@@ -9,6 +9,20 @@
 
   <div class="uf-row-anchor">
     <div class="uf-row-head">
+      {{#if @selectable}}
+        <span class="uf-row-select">
+          {{#if this.isConverted}}
+            <span class="text-success" title="Converted to Alpha">{{fa-icon "check"}}</span>
+          {{else}}
+            <input type="checkbox"
+                   class="form-check-input m-0 uf-row-checkbox"
+                   checked={{this.isSelected}}
+                   aria-label="Select {{@person.callsign}}"
+                   {{on "change" this.onSelectChange}} />
+          {{/if}}
+        </span>
+      {{/if}}
+
       <button type="button"
               class="uf-row-toggle"
               aria-expanded="{{if this.expanded "true" "false"}}"
@@ -34,10 +48,10 @@
     </div>
 
     <div class="uf-row-meta">
-      <UiBadge @type={{this.trainingStatus.badgeType}} @text={{this.trainingStatus.text}} class="uf-row-badge uf-row-badge-training" />
+      <IntakeChip @rank={{this.trainingStatus.rank}} @label={{this.trainingStatus.text}} @icon={{this.trainingStatus.icon}} />
 
       {{#if this.mentorBonk}}
-        <UiBadge @type={{this.mentorBonk.badgeType}} @text={{this.mentorBonk.text}} class="uf-row-badge" />
+        <IntakeChip @rank={{4}} @label={{this.mentorBonk.text}} />
       {{/if}}
 
       <IntakeRankStrip @person={{@person}} @hidePersonnelFlag={{true}} />
@@ -45,7 +59,7 @@
       {{#if this.noteBadges}}
         <div class="uf-row-dots">
           {{#each this.noteBadges as |badge|}}
-            <UiBadge @type={{badge.badgeType}} @text={{badge.label}} class="uf-row-badge" />
+            <IntakeChip @rank={{badge.rank}} @label={{badge.label}}  />
           {{/each}}
         </div>
       {{/if}}
@@ -73,15 +87,15 @@
       <div class="uf-card-teams">
         <div class="uf-team">
           <div class="uf-team-label">Personnel</div>
-          <IntakeNotes @type="personnel" @person={{@person}} @viewYear={{@year}} @buttonSize="md" @onSubmit={{@onSubmit}} />
+          <IntakeNotes @type="personnel" @person={{@person}} @viewYear={{@year}} @buttonSize="md" @onSubmit={{@onSubmit}} @readOnly={{or @mentorNotesOnly @trainingNotesOnly}} />
         </div>
         <div class="uf-team">
           <div class="uf-team-label">RRN</div>
-          <IntakeNotes @type="rrn" @person={{@person}} @viewYear={{@year}} @buttonSize="md" @onSubmit={{@onSubmit}} />
+          <IntakeNotes @type="rrn" @person={{@person}} @viewYear={{@year}} @buttonSize="md" @onSubmit={{@onSubmit}} @readOnly={{or @mentorNotesOnly @trainingNotesOnly}} />
         </div>
         <div class="uf-team">
           <div class="uf-team-label">VC</div>
-          <IntakeNotes @type="vc" @person={{@person}} @viewYear={{@year}} @buttonSize="md" @onSubmit={{@onSubmit}} />
+          <IntakeNotes @type="vc" @person={{@person}} @viewYear={{@year}} @buttonSize="md" @onSubmit={{@onSubmit}} @readOnly={{or @mentorNotesOnly @trainingNotesOnly}} />
         </div>
         <div class="uf-team">
           <div class="uf-team-label">Training</div>
@@ -90,7 +104,7 @@
         <div class="uf-team">
           <div class="uf-team-label">Mentor</div>
           <UnifiedFlaggingBonk @person={{@person}} />
-          <IntakeNotes @type="mentor" @person={{@person}} @viewYear={{@year}} @buttonSize="md" @onSubmit={{@onSubmit}} />
+          <IntakeNotes @type="mentor" @person={{@person}} @viewYear={{@year}} @buttonSize="md" @onSubmit={{@onSubmit}} @readOnly={{@trainingNotesOnly}}/>
         </div>
       </div>
     </div>
