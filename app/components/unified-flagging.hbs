@@ -26,12 +26,30 @@
       = team has notes (color follows that team's latest rank)
     </span>
   </div>
+
+  {{#if @selectable}}
+    <div class="roster-controls">
+      <span class="roster-controls-count">{{pluralize this.selectablePeople.length "candidate"}}</span>
+      <div class="roster-controls-divider"></div>
+      <a href {{on-click this.selectAll}} class="small">select all</a>
+      <a href {{on-click this.deselectAll}} class="small">deselect all</a>
+      <div class="roster-controls-divider"></div>
+      <UiButton @size="sm"
+                @type="success"
+                @onClick={{this.convert}}
+                @disabled={{this.convertDisabled}}>
+        {{fa-icon (or @actionIcon "user-plus") right=1}} {{this.actionLabel}} ({{this.selectedPeople.length}})
+      </UiButton>
+    </div>
+  {{/if}}
+
   {{#if this.personnelFlaggedPeople.length}}
     <div class="uf-row-section">
       <div class="uf-row-section-title">Personnel Flag Raised</div>
       <div class="uf-row-stack">
         {{#each this.personnelFlaggedPeople key="id" as |person|}}
-          <UnifiedFlaggingRow @person={{person}} @year={{@year}} @showGender={{@showGender}} @onSubmit={{this.noteSubmitted}} />
+          <UnifiedFlaggingRow @person={{person}} @year={{@year}} @showGender={{@showGender}} @onSubmit={{this.noteSubmitted}}
+            @selectable={{@selectable}} @selectedIds={{this.selectedIds}} @convertedIds={{this.convertedIds}} @onToggleSelect={{this.toggleSelect}} @mentorNotesOnly={{@mentorNotesOnly}} @trainingNotesOnly={{@trainingNotesOnly}} />
         {{/each}}
       </div>
     </div>
@@ -42,7 +60,8 @@
       <div class="uf-row-section-title">Rank 3/4 or Bonk</div>
       <div class="uf-row-stack">
         {{#each this.rankFlaggedPeople key="id" as |person|}}
-          <UnifiedFlaggingRow @person={{person}} @year={{@year}} @showGender={{@showGender}} @onSubmit={{this.noteSubmitted}} />
+          <UnifiedFlaggingRow @person={{person}} @year={{@year}} @showGender={{@showGender}} @onSubmit={{this.noteSubmitted}}
+            @selectable={{@selectable}} @selectedIds={{this.selectedIds}} @convertedIds={{this.convertedIds}} @onToggleSelect={{this.toggleSelect}} @mentorNotesOnly={{@mentorNotesOnly}} @trainingNotesOnly={{@trainingNotesOnly}} />
         {{/each}}
       </div>
     </div>
@@ -53,11 +72,16 @@
       <div class="uf-row-section-title">Other Potential Alphas</div>
       <div class="uf-row-stack">
         {{#each this.otherPeople key="id" as |person|}}
-          <UnifiedFlaggingRow @person={{person}} @year={{@year}} @showGender={{@showGender}} @onSubmit={{this.noteSubmitted}} />
+          <UnifiedFlaggingRow @person={{person}} @year={{@year}} @showGender={{@showGender}} @onSubmit={{this.noteSubmitted}}
+            @selectable={{@selectable}} @selectedIds={{this.selectedIds}} @convertedIds={{this.convertedIds}} @onToggleSelect={{this.toggleSelect}} @mentorNotesOnly={{@mentorNotesOnly}} @trainingNotesOnly={{@trainingNotesOnly}} />
         {{/each}}
       </div>
     </div>
   {{/if}}
 {{else}}
-  <p><b class="text-danger">No {{@year}} flagged Prospectives or Alphas were found</b></p>
+  <p><b class="text-danger">{{or @emptyMessage (concat "No " @year " flagged Prospectives or Alphas were found")}}</b></p>
+{{/if}}
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>{{this.busyMessage}}</LoadingDialog>
 {{/if}}

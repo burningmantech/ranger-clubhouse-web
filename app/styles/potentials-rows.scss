@@ -108,10 +108,26 @@
   gap: 0.4rem 0.75rem;
   line-height: 1.2;
   padding-left: 2rem;
+  font-size: 0.8rem;
 
   > * {
     align-self: center;
   }
+}
+
+// Selection control on the collapsed row (selectable mode, e.g.
+// /mentor/convert-prospectives): a checkbox, or a green check once converted.
+// Sits left of the chevron toggle as the first child of .uf-row-head; the
+// head's `> * { align-self: center }` keeps it on the shared optical center.
+.uf-row-select {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.1rem;
+}
+
+.uf-row-checkbox {
+  cursor: pointer;
 }
 
 .uf-row-toggle {

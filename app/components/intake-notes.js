@@ -34,6 +34,17 @@ export default class IntakeNotesComponent extends Component {
     return notes.slice().sort((a, b) => b.year - a.year);
   }
 
+  // Whether to render the action button at all. Pages that show a team's notes
+  // purely for reference (e.g. /mentor/convert-prospectives, where only the
+  // Mentor stream is editable) pass @readOnly to suppress both "Add Note / Rank"
+  // and "View Details" while the notes above still render inline.
+  get showNoteButton() {
+    if (this.args.readOnly) {
+      return false;
+    }
+    return this.canAddNote || this.teamNotes;
+  }
+
   // Is the user allowed to add a team note?
   get canAddNote() {
     let role;

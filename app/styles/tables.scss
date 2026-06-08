@@ -299,6 +299,45 @@ tr.table-warning > .roster-col-fixed {
   letter-spacing: 0.06em;
 }
 
+/* Alpha-status grouped triage sections — full-width band header rows that
+   partition the roster into a worst-first "Needs Attention" group above the
+   calm "All Other" majority. */
+.alpha-section-header th {
+  background-color: #f0f2f5;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #212529;
+  padding-top: 0.6rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.alpha-section-header.alpha-section-attention th {
+  background-color: #fdecec;
+  color: #842029;
+  border-bottom-color: #f5c2c7;
+}
+
+.alpha-section-count {
+  color: #6c757d;
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+
+.alpha-section-attention .alpha-section-count {
+  color: #a86b70;
+}
+
+.alpha-section-toggle {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+  cursor: pointer;
+}
+
 /* Position column section border */
 .roster-group-border {
   border-left: 2px solid #adb5bd !important;
