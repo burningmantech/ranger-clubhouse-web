@@ -66,6 +66,43 @@ export function severitySlug(rank) {
   }
 }
 
+// Most recent year a person was bonked BY the mentors (status === 'bonk',
+// NOT 'self-bonk'), or null if never. Coerces year to a number since
+// mentor_history years may arrive as numeric or string.
+export function mentorBonkYear(person) {
+  const history = person?.mentor_history;
+  let latest = null;
+
+  if (!Array.isArray(history) || history.length === 0) {
+    if (person.pnv_history) {
+      Object.keys(person.pnv_history).forEach((event) => {
+        const year = person.pnv_history[event];
+        if (year.mentor_status === 'bonk') {
+          if (latest === null || event > latest) {
+            latest = event;
+          }
+        }
+      });
+    }
+
+    return latest;
+  }
+
+  for (const entry of history) {
+    if (!entry || entry.status !== 'bonk') {
+      continue;
+    }
+    const year = +entry.year;
+    if (!Number.isFinite(year)) {
+      continue;
+    }
+    if (latest === null || year > latest) {
+      latest = year;
+    }
+  }
+  return latest;
+}
+
 // Numeric weight for sorting people worst-first. A raised Personnel flag
 // outranks everything, then 4 > 3 > 1 > 2, then people with no rank.
 export function severityWeight(person) {

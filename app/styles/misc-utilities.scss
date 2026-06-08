@@ -1,0 +1,160 @@
+// Indicate action on elements which are clickable
+[data-ember-action]:not(:disabled) {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed !important;
+}
+
+
+dl {
+  margin-bottom: 0;
+}
+.no-wrap {
+  white-space: nowrap;
+}
+.popover-footer {
+  padding-top: 20px;
+  text-align: right;
+}
+
+/*
+ * JSON formatter
+ */
+
+.json-formatter-row {
+  font-size: 0.9rem;
+}
+.homepage-title {
+  font-weight: 500;
+}
+
+@include media-breakpoint-up(xl) {
+  .homepage-title {
+    font-size: $h1-font-size;
+  }
+}
+
+@include media-breakpoint-down(xl) {
+  .homepage-title {
+    font-size: $h2-font-size;
+  }
+}
+.hq-navigation-container {
+  padding: 0.5rem 1.25rem;
+  margin: -1rem -1.25rem 0.25rem;
+
+  a {
+    font-size: 0.9rem !important;
+  }
+}
+.callsign-list {
+  /* display: grid;
+   grid-template-columns: repeat(auto-fit, minmax(8em, 10em));*/
+
+  column-count: auto;
+  column-width: 18ch;
+  column-gap: 15px;
+
+  > a {
+    display: block;
+  }
+
+  > div, > a {
+    overflow-wrap: break-word;
+    margin-bottom: 0.5vh;
+    break-inside: avoid-column;
+  }
+
+  > div:hover, > a:hover {
+    background-color: #d8fbd8;
+  }
+}
+
+ul.no-indent, ol.no-indent {
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 20px;
+  padding-right: 0;
+  margin-top: 5px;
+
+  li {
+    margin-left: 0;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.overflow-y-auto {
+  overflow-y: auto;
+}
+.award-card {
+  width: 175px;
+  padding: 10px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0 1px 2px 0, rgba(60, 64, 67, 0.15) 0 1px 3px 1px;
+}
+
+// Datetime picker close button. Adds "Close" text next to the icon.
+.calendar-close-text::after {
+  padding-left: 10px;
+  content: 'Close';
+}
+
+.scroll-to-top-button {
+  display: none;
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  background-color: #007A00FF;
+  color: #f0f0f0;
+  font-size: 1rem;
+  line-height: 48px;
+  width: 48px;
+  text-align: center;
+}
+
+.scroll-to-top-button:hover {
+  background-color: #02a802;
+  color: #ffffff;
+}
+.highlight-hover:hover {
+  background-color: #f0f0f0;
+}
+.air-datepicker-global-container {
+  z-index: 10000;
+  --adp-z-index: 10000;
+}
+
+.move-cursor:hover {
+  cursor: move;
+}
+
+.bmid-input {
+  border: 1px solid rgba(100, 109, 122, 0.5);
+}
+
+.hover-pointer {
+  cursor: pointer;
+}
+// Auto-fit/fill grid layouts
+.grid-auto-170 {
+  grid-template-columns: repeat(auto-fit, 170px);
+}
+
+.grid-auto-250 {
+  grid-template-columns: repeat(auto-fill, 250px);
+}
+
+.grid-auto-270 {
+  grid-template-columns: repeat(auto-fit, 270px);
+}
+
+.overflow-x-scroll {
+  overflow-x: scroll;
+}
+
+.toast-container {
+  z-index: 99999;
+}

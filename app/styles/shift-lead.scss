@@ -1,0 +1,31 @@
+/*
+ * Shift Lead Reports
+ */
+
+.bg-shift-lead-greendot {
+  background-color: #d8fbd8 !important;
+}
+
+.text-shift-lead-greendot {
+  color: #038403 !important;
+}
+
+.bg-shift-lead-troubleshooter {
+  background-color: #ffff99 !important;
+}
+
+.text-shift-lead-troubleshooter {
+  color: #555 !important;
+}
+
+// The div is two lines high, and the text will wrap and be truncated
+.text-two-line-wrap-max {
+  width: auto;
+  height: 2lh;
+  line-height: 1lh;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* number of lines to show */
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}

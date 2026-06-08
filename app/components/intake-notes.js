@@ -20,6 +20,12 @@ export default class IntakeNotesComponent extends Component {
     return this.args.person[this.args.type + '_team'];
   }
 
+  // Callers may request a full-size action button (e.g. the potentials Dense
+  // Triage rows, which must avoid small text). Defaults to the compact button.
+  get noteButtonSize() {
+    return this.args.buttonSize ?? 'sm';
+  }
+
   get sortedTeamNotes() {
     const notes = this.teamNotes;
     if (!notes) {

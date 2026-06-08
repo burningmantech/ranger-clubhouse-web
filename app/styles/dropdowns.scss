@@ -1,0 +1,36 @@
+.dropdown-large {
+  position: static !important;
+
+  .dropdown-menu {
+    left: 0;
+  }
+}
+
+.dropdown-menu-container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: stretch;
+  min-width: 230px;
+}
+
+@include media-breakpoint-up(xl) {
+  .dropdown-menu-container {
+    flex-direction: row;
+  }
+}
+
+.dropdown-menu-section {
+  min-width: 180px;
+}
+
+.dropdown-menu .navbar-text {
+  margin-left: 10px;
+  font-weight: 600;
+  color: #000;
+}
+
+.dropdown-menu-right {
+  right: 0;
+  left: auto;
+}
