@@ -182,6 +182,10 @@ Router.map(function () {
       this.route('index', { path: '/'});
       this.route('manage', { path: '/:team_id'});
     });
+    this.route('team-resources',function() {
+      this.route('index', { path: '/'});
+      this.route('manage', { path: '/:team_id'});
+    });
     this.route('vehicle-registry');
   });
 

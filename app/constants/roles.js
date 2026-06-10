@@ -40,13 +40,15 @@ export const FULL_REPORT_ACCESS = 128; // Allows a person to see an unrestrict r
 export const EDIT_HANDLE_RESERVATIONS = 129; // Can manage the handle reservations list.
 export const EDIT_EMERGENCY_CONTACT = 130; // Can edit / view Emergency Contact Info even if EMOP is disabled.
 export const VEHICLE_INFO_UPDATE = 131; // Can edit existing vehicle records' identifying info.
+export const TEAM_RESOURCE_MANAGEMENT = 132; // Can edit the team resource document, but only for team managers
 
 export const ROLE_BASE_MASK = 0x7f000000;
 export const POSITION_MASK = 0x0fff;
 
-export const ART_TRAINER_BASE = 0x1000000;
+export const ART_INTERFACE_BASE = 0x1000000;
 export const SURVEY_MANAGEMENT_BASE = 0x2000000;
 export const ART_GRADUATE_BASE = 0x30000000;
+export const TRAINER_RESOURCE_MANAGEMENT_BASE = 0x40000000;
 
 export const Role = {
   ADMIN,
