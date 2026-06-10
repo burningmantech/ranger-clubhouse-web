@@ -2,7 +2,7 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
 import PositionTypes from 'clubhouse/constants/position-types';
-import {ADMIN, TECH_NINJA} from 'clubhouse/constants/roles';
+import {ADMIN} from 'clubhouse/constants/roles';
 import {ATTR_LABELS, TYPE_FRONTLINE} from 'clubhouse/models/position';
 import _ from 'lodash';
 import {later} from '@ember/runloop';
