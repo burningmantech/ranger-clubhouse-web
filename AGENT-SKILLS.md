@@ -4,6 +4,7 @@ This document provides quick-reference guides for common UI/UX tasks in the Club
 
 ## Table of Contents
 
+0. Introduction
 1. [Creating a New Page](#skill-creating-a-new-page)
 2. [Adding a Button](#skill-adding-a-button)
 3. [Creating a Form](#skill-creating-a-form)
@@ -15,6 +16,25 @@ This document provides quick-reference guides for common UI/UX tasks in the Club
 9. [Styling Components](#skill-styling-components)
 
 ---
+**0. Implementation Directives**:
+
+1. Code Quality:
+   - Naming clarity (functions, variables, classes)
+   - Complexity (cyclomatic, cognitive)
+   - DRY violations
+2. Robustness:
+   - Error handling completeness
+   - Input validation
+   - Edge cases (null, empty, extreme values)
+3. Documentation:
+  - API docs for public interfaces
+  - Complex logic explained
+  - README updates if needed
+4. Security:
+  - Input sanitization
+  - Authentication/authorization checks
+  - Sensitive data handling
+
 
 ## SKILL: Creating a New Page
 
@@ -23,10 +43,10 @@ This document provides quick-reference guides for common UI/UX tasks in the Club
 **1. Create Route**:
 ```javascript
 // app/routes/admin/example.js
-import Route from '@ember/routing/route';
+import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import { inject as service } from '@ember/service';
 
-export default class AdminExampleRoute extends Route {
+export default class AdminExampleRoute extends ClubhoueRoute {
   @service store;
 
   model() {
@@ -38,13 +58,12 @@ export default class AdminExampleRoute extends Route {
 **2. Create Controller** (optional, if you need actions/state):
 ```javascript
 // app/controllers/admin/example.js
-import Controller from '@ember/controller';
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { inject as service } from '@ember/service';
 
-export default class AdminExampleController extends Controller {
-  @service house;
+export default class AdminExampleController extends ClubhouseController {
   @tracked selectedItem = null;
 
   @action
@@ -165,11 +184,11 @@ Router.map(function() {
 ### Controller Action Pattern
 
 ```javascript
-import Controller from '@ember/controller';
+import ClubhouseController from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 
-export default class ExampleController extends Controller {
+export default class ExampleController extends ClubhouseController {
   @tracked isProcessing = false;
 
   @action
@@ -222,14 +241,12 @@ export default {
 **2. Controller Setup**:
 ```javascript
 // app/controllers/admin/example/edit.js
-import Controller from '@ember/controller';
+import ClubhouseControler from '@ember/controller';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
-import { inject as service } from '@ember/service';
 import ExampleValidations from 'clubhouse/validations/example';
 
-export default class AdminExampleEditController extends Controller {
-  @service house;
+export default class AdminExampleEditController extends ClubhouseController {
   @tracked isSubmitting = false;
 
   exampleValidations = ExampleValidations;
@@ -301,12 +318,18 @@ export default class AdminExampleEditController extends Controller {
         </FormRow>
 
         <UiButtonRow>
-          <f.submit @label="Save" @disabled={{this.isSubmitting}} />
-          <UiCancelButton @onClick={{this.cancel}} @disabled={{this.isSubmitting}} />
+          <f.submit @label="Save" />
+          <UiCancelButton @onClick={{this.cancel}} />
         </UiButtonRow>
       </ChForm>
     </:body>
   </UiSection>
+  
+  {{#if this.isSubmitting}}
+    <LoadingDialog>
+      Saving the form
+    </LoadingDialog>
+  {{/if}}
 </main>
 ```
 
@@ -406,10 +429,11 @@ categoryOptions = [
 
 ```javascript
 // In controller
+import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 
-export default class ExampleController extends Controller {
+export default class ExampleController extends ClubhouseController {
   @tracked showDeleteConfirm = false;
   @tracked itemToDelete = null;
 
@@ -532,12 +556,12 @@ export default class ExampleController extends Controller {
 
 **Table with Sorting** (using controller):
 ```javascript
-import Controller from '@ember/controller';
+import ClubhouseController from '@ember/controller';
 import { tracked } from '@glimmer/tracking';
 import { action } from '@ember/object';
 import { sort } from '@ember/object/computed';
 
-export default class ExampleController extends Controller {
+export default class ExampleController extends ClubhouseController {
   @tracked sortBy = ['name:asc'];
 
   @sort('model', 'sortBy') sortedItems;
@@ -788,8 +812,8 @@ export default {
 ### Breakpoint Reference
 
 ```scss
-xs: 0px       // Extra small (default, mobile)
-sm: 576px     // Small (large phone)
+xs: 0px       // Do not use
+sm: 576px     // Small (phone)
 md: 768px     // Medium (tablet)
 lg: 992px     // Large (small desktop)
 xl: 1200px    // Extra large (desktop)
@@ -834,9 +858,6 @@ xxl: 1400px   // Extra extra large (wide screen)
 
 **Responsive Text**:
 ```handlebars
-{{!-- Center on mobile, left on desktop --}}
-<p class="text-center text-lg-start">Text content</p>
-
 {{!-- Different sizes --}}
 <h1 class="fs-4 fs-lg-1">Responsive heading</h1>
 ```
@@ -885,7 +906,7 @@ xxl: 1400px   // Extra extra large (wide screen)
 
 3. **Is this styling specific to one component?**
    - YES → Add to component-specific SCSS file
-   - NO → Add to shared SCSS file
+   - NO → Confirm with user before adding to shared SCSS file
 
 ### Bootstrap Utility Classes
 
