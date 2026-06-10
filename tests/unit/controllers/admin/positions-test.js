@@ -24,7 +24,7 @@ module('Unit | Controller | admin/positions', function (hooks) {
   test('viewPositions returns everything with the default filters', function (assert) {
     const controller = setup(this);
 
-    // Defaults: typeFilter 'All', activeFilter 'all', allRangersFilter '-', no attrs.
+    // Defaults: typeFilter 'All', activeFilter 'all', allRangersFilter 'all', no attrs.
     const view = controller.viewPositions;
     assert.strictEqual(view.length, 4, 'all positions shown with default filters');
   });
@@ -62,12 +62,20 @@ module('Unit | Controller | admin/positions', function (hooks) {
     assert.deepEqual(view.map((p) => p.id), [1, 3], 'only all_rangers positions shown');
   });
 
-  test('allRangersFilter "-" does not filter at all', function (assert) {
+  test('allRangersFilter "all" does not filter at all', function (assert) {
     const controller = setup(this);
-    controller.set('allRangersFilter', '-');
+    controller.set('allRangersFilter', 'all');
 
     const view = controller.viewPositions;
-    assert.strictEqual(view.length, 4, 'the "-" sentinel leaves the list untouched');
+    assert.strictEqual(view.length, 4, 'the "all" sentinel leaves the list untouched');
+  });
+
+  test('allRangersFilter "not" keeps only non-all_rangers positions', function (assert) {
+    const controller = setup(this);
+    controller.set('allRangersFilter', 'not');
+
+    const view = controller.viewPositions;
+    assert.deepEqual(view.map((p) => p.id), [2, 4], 'only non-all_rangers positions shown');
   });
 
   test('a single attrFilter keeps positions that have the flag set', function (assert) {
@@ -114,5 +122,57 @@ module('Unit | Controller | admin/positions', function (hooks) {
 
     assert.deepEqual(controller.attrFilters, ['all_rangers'], 'attrFilters updated');
     assert.deepEqual(controller.viewPositions.map((p) => p.id), [1, 3], 'view reflects the new attr filter');
+  });
+
+  test('resetFilters restores every filter to its default', function (assert) {
+    const controller = setup(this);
+    controller.set('typeFilter', 'Training');
+    controller.set('activeFilter', 'active');
+    controller.set('allRangersFilter', 'not');
+    controller.set('viewAs', 'teams');
+    controller.set('attrFilters', ['count_hours']);
+
+    controller.resetFilters();
+
+    assert.strictEqual(controller.typeFilter, 'All', 'typeFilter reset');
+    assert.strictEqual(controller.activeFilter, 'all', 'activeFilter reset');
+    assert.strictEqual(controller.allRangersFilter, 'all', 'allRangersFilter reset');
+    assert.strictEqual(controller.viewAs, 'list', 'viewAs reset');
+    assert.deepEqual(controller.attrFilters, [], 'attrFilters reset');
+    assert.strictEqual(controller.viewPositions.length, 4, 'view shows everything again');
+  });
+
+  function buildTeamPositions() {
+    return [
+      EmberObject.create({id: 1, title: 'A', type: 'A Type', active: true, team_id: 10}),
+      EmberObject.create({id: 2, title: 'B', type: 'Training', active: true, team_id: 10}),
+      EmberObject.create({id: 3, title: 'C', type: 'A Type', active: true, team_id: null}),
+      EmberObject.create({id: 4, title: 'D', type: 'Training', active: true, team_id: 99}), // team no longer exists
+    ];
+  }
+
+  test('viewByTeams groups by team and routes teamless & orphaned positions to the general bucket', function (assert) {
+    const controller = setup(this);
+    controller.set('positions', buildTeamPositions());
+    controller.set('teams', [{id: 10, title: 'Team Ten'}]);
+
+    const view = controller.viewByTeams;
+    assert.strictEqual(view.length, 2, 'general bucket plus one team');
+    assert.deepEqual(view[0].team_positions.map((p) => p.id), [3, 4],
+      'teamless and orphaned-team positions land in the general bucket');
+    assert.strictEqual(view[1].id, 10, 'team section present');
+    assert.deepEqual(view[1].team_positions.map((p) => p.id), [1, 2], 'team positions grouped under their team');
+  });
+
+  test('viewByTeams general bucket respects the active filters', function (assert) {
+    const controller = setup(this);
+    controller.set('positions', buildTeamPositions());
+    controller.set('teams', [{id: 10, title: 'Team Ten'}]);
+    controller.set('typeFilter', 'A Type');
+
+    const view = controller.viewByTeams;
+    assert.deepEqual(view[0].team_positions.map((p) => p.id), [3],
+      'filtered-out positions do not leak into the general bucket');
+    assert.deepEqual(view[1].team_positions.map((p) => p.id), [1], 'team section is filtered too');
   });
 });

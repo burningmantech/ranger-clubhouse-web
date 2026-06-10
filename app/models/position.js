@@ -91,16 +91,6 @@ export const ATTR_LABELS = [
     id: 'has_online_course',
     label: 'Has Online Course',
   },
-  /*
-  {
-    id: 'awards_auto_grant',
-    label: 'Awards will be automatically granted',
-  },
-  {
-    id: 'awards_grants_service_year',
-    label: 'Awards year counts as a service year.',
-  },
-  */
   {
     id: 'allow_echelon',
     label: 'Echelon volunteers permitted to work position even if In-Person Training or ART was not completed.'
