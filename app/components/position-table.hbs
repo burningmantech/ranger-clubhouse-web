@@ -8,59 +8,65 @@
     <th>Min / Max</th>
     <th>Attributes</th>
     <th>Associated Roles</th>
-    <th>Action</th>
+    {{#if @canManagePositions}}
+      <th>Action</th>
+    {{/if}}
   </tr>
   </thead>
   <tbody>
-  {{#each @viewPositions key="id" as |position|}}
-    <tr id="position-{{position.id}}">
-      <td class="text-end">{{position.id}}</td>
+  {{#each this.rows key="id" as |row|}}
+    <tr id="position-{{row.id}}">
+      <td class="text-end">{{row.id}}</td>
       <td class="no-wrap">
-        {{position.title}}
-        {{#if position.short_title}}
-          <br>({{position.short_title}})
+        {{row.position.title}}
+        {{#if row.position.short_title}}
+          <br>({{row.position.short_title}})
         {{/if}}
       </td>
       <td class="text-center">
-        <UiBadgeActive @active={{position.active}} />
+        <UiBadgeActive @active={{row.position.active}} />
       </td>
       <td class="no-wrap">
-        {{this.teamName position.team_id}}<br>
-        {{#if position.team_id}}
-          {{position.teamCategoryLabel}}<br>
+        {{#if row.team}}
+          {{row.team.title}}<br>
+          {{row.position.teamCategoryLabel}}<br>
+        {{else}}
+          <i class="text-muted">Not Assigned</i><br>
         {{/if}}
-        {{position.type}}
+        {{row.position.type}}
       </td>
-      <td class="text-center">{{position.min}} / {{position.max}}</td>
+      <td class="text-center">{{row.position.min}} / {{row.position.max}}</td>
       <td>
-        {{#if position.training_position_id}}
-          Training position: {{pluck position.training_position_id @positions "title" "-"}}<br>
+        {{#if row.position.training_position_id}}
+          Training position: {{pluck row.position.training_position_id @positions "title" "-"}}<br>
         {{/if}}
-        {{#if position.parent_position_id}}
-          Parent position: {{pluck position.parent_position_id @positions "title" "-"}}<br>
+        {{#if row.position.parent_position_id}}
+          Parent position: {{pluck row.position.parent_position_id @positions "title" "-"}}<br>
         {{/if}}
-        {{#each (this.positionAttributeLabels position) as |label|}}
+        {{#each row.attributeLabels as |label|}}
           {{label}}<br>
         {{/each}}
-        {{#if position.contact_email}}
+        {{#if row.position.contact_email}}
           Contact email:
-          <MailTo @to={{position.contact_email}} />
+          <MailTo @to={{row.position.contact_email}} />
         {{/if}}
       </td>
       <td>
-        {{#if position.role_ids}}
-          {{this.roleList position.role_ids}}
+        {{#each row.roleTitles as |title|}}
+          {{title}}<br>
         {{else}}
           <i class="text-muted">None</i>
-        {{/if}}
+        {{/each}}
       </td>
-      <td>
-        <UiEditButton @size="sm" @onClick={{fn @editAction position}}/>
-      </td>
+      {{#if @canManagePositions}}
+        <td>
+          <UiEditButton @size="sm" @onClick={{fn @editAction row.position}} />
+        </td>
+      {{/if}}
     </tr>
   {{else}}
     <tr>
-      <td colspan="7"><b class="text-danger">No positions found</b></td>
+      <td colspan={{if @canManagePositions 8 7}}><b class="text-danger">No positions found</b></td>
     </tr>
   {{/each}}
   </tbody>

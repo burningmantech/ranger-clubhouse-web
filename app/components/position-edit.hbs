@@ -59,12 +59,10 @@
   <fieldset>
     <legend>Active &amp; Grant Flags</legend>
     <UiAlert @type="warning" @icon="hand-point-right">
-      The "Position Sanity Checker" has be run after deactivating a position, setting <i>All Rangers</i>, and/or
-      checking <i>Grant to new Prospective accounts</i> in order to adjust the effected accounts. No accounts
+      The "Position Sanity Checker" has to be run after deactivating a position, setting <i>All Rangers</i>, and/or
+      checking <i>Grant to new Prospective accounts</i> in order to adjust the affected accounts. No accounts
       will be automatically updated after adjusting these checkboxes.
     </UiAlert>
-    <p class="text-danger">
-    </p>
     <FormRow>
       <div class="col-12">
         <f.checkbox @name="active" @label="Active"/>
@@ -92,7 +90,7 @@
     <FormRow>
       <f.select @name="team_id"
                 @label="Team"
-                @options={{this.teamPositionOptions}}
+                @options={{this.teamOptions}}
                 @inline={{true}}
       />
       <f.select @name="team_category"
@@ -119,16 +117,6 @@
                     @label="Position is eligible to issue awards with."
         />
       </div>
-      {{!--
-      <f.checkbox @name="awards_auto_grant"
-                  @label="An award will be automatically granted. For training positions, the person must be marked as attended / passed. For all others, a backing timesheet must be present. When the flag is initially set, no awards will be automatically granted for past work."
-                  @disabled={{not f.model.awards_eligible}}
-      />
-      <f.checkbox @name="awards_grants_service_year"
-                  @label="When an award is granted, the award year will count as a service year."
-                  @disabled={{not f.model.awards_eligible}}
-      />
-      --}}
     </FormRow>
   </fieldset>
   <fieldset>
@@ -164,7 +152,6 @@
                     @label="For the Trainer's Report: indicates the position is relevant to trainers"/>
         <f.checkbox @name="has_online_course"
                     @label="Has Online Course - only applicable to ARTs. Online Course button will appear in the ARTs table on the dashboard."
-                    ,
         />
       </div>
     </FormRow>
@@ -242,13 +229,13 @@
       <div class="col-12">
         <f.checkbox @name="mvr_eligible"
                     @inline={{true}}
-                    @label="MVR Position Grant Eligibility: The person will be shown a MVR submission link under the Vehicle Dashboard when granted the position AND signs up for this shift. The homepage dashboard MVR prompt WILL ALWAYS APPEAR regardless if the person has signed up for this shift or not."
+                    @label="MVR Position Grant Eligibility: The person will be shown a MVR submission link under the Vehicle Dashboard when granted the position. The homepage dashboard MVR prompt WILL ALWAYS APPEAR regardless if the person has signed up for this shift or not."
         />
       </div>
       <div class="col-12">
         <f.checkbox @name="pvr_eligible"
                     @inline={{true}}
-                    @label="Personal Vehicle Request Eligibility: The person will be allowed to submit a PVR under the Vehicle Dashboard when granted the position AND signs up for this shift. The homepage dashboard PVR prompt WILL ALWAYS APPEAR regardless if the person has signed up for this shift or not."
+                    @label="Personal Vehicle Request Eligibility: The person will be allowed to submit a PVR under the Vehicle Dashboard when granted the position. The homepage dashboard PVR prompt WILL ALWAYS APPEAR regardless if the person has signed up for this shift or not."
         />
       </div>
     </FormRow>
@@ -328,14 +315,16 @@
   <UiButtonRow class="mt-4">
     <f.submit @disabled={{@position.isSaving}} />
     <UiCancelButton @onClick={{@cancelAction}} />
-    <div class="ms-auto">
-      <UiDeleteButton @onClick={{@deleteAction}} />
-    </div>
+    {{#unless @position.isNew}}
+      <div class="ms-auto">
+        <UiDeleteButton @onClick={{@deleteAction}} />
+      </div>
+    {{/unless}}
   </UiButtonRow>
 </ChForm>
 
 {{#if @position.isSaving}}
   <LoadingDialog>
-    Saving Positions
+    Saving Position
   </LoadingDialog>
 {{/if}}
