@@ -1,7 +1,7 @@
 import Component from '@glimmer/component';
 import {action} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
-import {Role} from 'clubhouse/constants/roles';
+import {Role, SHIFT_MANAGEMENT} from 'clubhouse/constants/roles';
 import {
   ACTIVE,
   ALPHA,
@@ -141,6 +141,17 @@ export default class SearchItemBarComponent extends Component {
   }
 
   /**
+   * Is HQ Window activated, the person has Shift Management granted, yet it's not activated
+   * either to due lack of training or needing to be signed in.
+   *
+   * @returns {*|boolean}
+   */
+  @cached
+  get showHQNotAllowedAtThisTime() {
+    return setting('HQWindowInterfaceEnabled') && !this.session.hasRole(SHIFT_MANAGEMENT) && this.session.hasTrueRole(SHIFT_MANAGEMENT);
+  }
+
+  /**
    * Build up the options for search type
    *
    * account - redirect to Person Manage
@@ -154,7 +165,7 @@ export default class SearchItemBarComponent extends Component {
   get modeOptions() {
     const options = [{value: 'account', label: 'Person Manage'}];
 
-    if (setting('HQWindowInterfaceEnabled')) {
+    if (setting('HQWindowInterfaceEnabled') && this.session.hasRole(SHIFT_MANAGEMENT)) {
       options.unshift({value: 'hq', label: 'HQ Window'});
     }
 
