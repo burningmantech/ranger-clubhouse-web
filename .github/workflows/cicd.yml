@@ -34,7 +34,7 @@ jobs:
             production.cloudfront.docker.com:443
 
       - name: Checkout source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install Node
         uses: actions/setup-node@v6.4.0
@@ -66,7 +66,7 @@ jobs:
             production.cloudfront.docker.com:443
 
       - name: Checkout source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install Node
         uses: actions/setup-node@v6.4.0
@@ -108,7 +108,7 @@ jobs:
             *.blob.core.windows.net:443
 
       - name: Checkout source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -152,7 +152,7 @@ jobs:
             github.com:443
 
       - name: Checkout source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Download Docker image artifact
         uses: actions/download-artifact@v8
@@ -182,7 +182,7 @@ jobs:
           egress-policy: audit
 
       - name: Checkout source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Download Docker image artifacts
         uses: actions/download-artifact@v8
