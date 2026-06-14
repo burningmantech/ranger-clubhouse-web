@@ -81,6 +81,6 @@ export default class ReportsScheduleByPositionController extends ClubhouseContro
     }));
 
     SLOT_SIGNUP_COLUMNS[0].title = `${this.year} ${position.title}`;
-    this.house.downloadCsv(`${this.year}-${position.title}-shifts.csv`, SLOT_SIGNUP_COLUMNS, slots);
+    this.download.downloadCsv(`${this.year}-${position.title}-shifts.csv`, SLOT_SIGNUP_COLUMNS, slots);
   }
 }

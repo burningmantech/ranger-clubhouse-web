@@ -32,8 +32,7 @@ const PLUGINS = [
 ];
 
 export default class WysiwygEditorComponent extends Component {
-  @service house;
-
+  @service errors;
   @tracked isLoading = false;
   @tracked isReady = false;
   @tracked didError = false;
@@ -127,7 +126,7 @@ export default class WysiwygEditorComponent extends Component {
       });
       this.isReady = true;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       this.didError = true;
       this.args.onLoadError?.();
     } finally {

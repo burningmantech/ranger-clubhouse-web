@@ -128,15 +128,18 @@ export default class OpsPersonVehiclesController extends ClubhouseController {
     this._commonEdit(entry, false);
   }
 
-  _commonEdit(entry, isSticker) {
-    entry.reload().then(() => {
+  async _commonEdit(entry, isSticker) {
+    try {
+      await entry.reload();
       if (isSticker) {
         this.stickerEditEntry = entry;
       } else {
         this.editEntry = entry;
       }
       entry.callsign = entry.person ? entry.person.callsign : '';
-    }).catch((response) => this.house.handleErrorResponse(response));
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    }
   }
 
   @action
@@ -150,7 +153,7 @@ export default class OpsPersonVehiclesController extends ClubhouseController {
   }
 
   @action
-  _commonSaveEntry(model, isValid, isSticker) {
+  async _commonSaveEntry(model, isValid, isSticker) {
     if (!isValid) {
       return;
     }
@@ -159,17 +162,16 @@ export default class OpsPersonVehiclesController extends ClubhouseController {
     if (model.type === 'fleet') {
       model.driving_sticker = 'staff';
     }
-    this.house.saveModel(model, 'Vehicle successfully saved',
-      () => {
-        if (isSticker) {
-          this.stickerEditEntry = null;
-        } else {
-          this.editEntry = null;
-        }
-        if (isNew) {
-          this.person_vehicle.update().catch((response) => this.house.handleErrorResponse(response));
-        }
-      });
+    if (await this.saveModel.save({model, message: 'Vehicle successfully saved'})) {
+      if (isSticker) {
+        this.stickerEditEntry = null;
+      } else {
+        this.editEntry = null;
+      }
+      if (isNew) {
+        this.person_vehicle.update().catch((response) => this.errors.handleErrorResponse(response));
+      }
+    }
   }
 
   get canEditVehicles() {
@@ -178,11 +180,14 @@ export default class OpsPersonVehiclesController extends ClubhouseController {
 
   @action
   deleteAction(entry) {
-    this.modal.confirm('Delete Entry', 'Are you sure you want to delete this entry?', () => {
-      entry.destroyRecord().then(() => {
+    this.modal.confirm('Delete Entry', 'Are you sure you want to delete this entry?', async () => {
+      try {
+        await entry.destroyRecord();
         this.editEntry = null;
         this.toast.success('Vehicle record has been deleted.');
-      }).catch((response) => this.house.handleErrorResponse(response));
+      } catch (response) {
+        this.errors.handleErrorResponse(response);
+      }
     });
   }
 
@@ -224,6 +229,6 @@ export default class OpsPersonVehiclesController extends ClubhouseController {
        };
     });
 
-    this.house.downloadCsv(`${this.year}-vehicles.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.year}-vehicles.csv`, CSV_COLUMNS, rows);
   }
 }

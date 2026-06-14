@@ -37,7 +37,7 @@ export default class PersonMentoringController extends ClubhouseController {
       event.status = event.newStatus;
       this.toast.success('Mentor results was successfully updated.');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

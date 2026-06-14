@@ -31,7 +31,7 @@ export default class MentorPotentialsRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     controller.set('mentees', model.mentees.map(normalizeMentee));
-    controller.set('year', this.house.currentYear());
+    controller.set('year', this.session.currentYear());
     controller.set('filter', 'all');
   }
 }

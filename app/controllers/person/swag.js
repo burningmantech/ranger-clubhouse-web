@@ -28,7 +28,7 @@ export default class PersonSwagController extends ClubhouseController {
   @action
   newSwag(type) {
     const {person} = this;
-    const fields = {person_id: person.id, year_issued: this.house.currentYear()};
+    const fields = {person_id: person.id, year_issued: this.session.currentYear()};
 
     this._setupForSwagEdit(type);
 
@@ -100,15 +100,11 @@ export default class PersonSwagController extends ClubhouseController {
     }
 
     const isNew = this.swagEntry.isNew;
-    try {
-      await model.save();
+    if (await this.saveModel.save({model, message: 'The swag was successfully saved.'})) {
       if (isNew) {
         this.personSwag.update();
       }
       this.swagEntry = null;
-      this.toast.success('The swag was successfully saved.');
-    } catch (e) {
-      this.house.handleErrorResponse(e);
     }
   }
 
@@ -121,7 +117,7 @@ export default class PersonSwagController extends ClubhouseController {
           this.toast.success('The swag has been deleted.');
           this.swagEntry = null;
         } catch (e) {
-          this.house.handleErrorResponse(e);
+          this.errors.handleErrorResponse(e);
         }
       });
   }

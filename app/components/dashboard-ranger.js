@@ -358,8 +358,7 @@ function matchPeriod(actionPeriod, currentPeriod, doesNotEqual) {
 
 export default class DashboardRangerComponent extends Component {
   @service session;
-  @service house;
-
+  @service storePayload;
   constructor() {
     super(...arguments);
     this.isAfterEvent = this.args.milestones.period === AFTER_EVENT;
@@ -458,7 +457,7 @@ export default class DashboardRangerComponent extends Component {
         return;
       }
 
-      const check = step.check({milestones, photo, person, house: this.house, agreements});
+      const check = step.check({milestones, photo, person, storePayload: this.storePayload, agreements});
       if (check.result === SKIP) {
         return;
       }

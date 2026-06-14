@@ -24,17 +24,19 @@ export default class SearchAssetsController extends ClubhouseController {
   }
 
   @action
-  checkIn(row) {
+  async checkIn(row) {
     set(row, 'isSaving', true);
-    this.ajax.request(`asset/${this.asset.id}/checkin`, { method: 'POST' })
-      .then((result) => {
-        set(row, 'checked_in', result.checked_in);
-        if (this.checkedOut === row) {
-          this.checkedOut = null;
-        }
-        this.toast.success('Asset successfully checked in');
-      })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => set(row, 'isSaving', false));
+    try {
+      const result = await this.ajax.request(`asset/${this.asset.id}/checkin`, { method: 'POST' });
+      set(row, 'checked_in', result.checked_in);
+      if (this.checkedOut === row) {
+        this.checkedOut = null;
+      }
+      this.toast.success('Asset successfully checked in');
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      set(row, 'isSaving', false);
+    }
   }
 }

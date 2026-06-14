@@ -45,6 +45,6 @@ export default class ReportsFreakingYearsController extends ClubhouseController 
       }
     });
 
-    this.house.downloadCsv(`${currentYear()}-freaking-years.csv`, CSV_COLUMNS, people);
+    this.download.downloadCsv(`${currentYear()}-freaking-years.csv`, CSV_COLUMNS, people);
   }
 }

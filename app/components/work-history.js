@@ -8,7 +8,7 @@ import { service } from '@ember/service';
 
 export default class WorkHistoryComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service session;
 
   @tracked showPositionYearEntries = false;
@@ -35,9 +35,10 @@ export default class WorkHistoryComponent extends Component {
       if (positionId) {
         data.wh_training_id = positionId;
       }
-      this.timesheet = await this.ajax.request('timesheet', {data}).then(({timesheet}) => timesheet);
+      const {timesheet} = await this.ajax.request('timesheet', {data});
+      this.timesheet = timesheet;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       this.timesheet = [];
     } finally {
       this.isLoading = false;

@@ -7,16 +7,23 @@ export default class PersonScheduleLogComponent extends Component {
   @tracked auditLogs;
 
   @service ajax;
-  @service house;
-
+  @service errors;
   constructor() {
     super(...arguments);
     this.personId = +this.args.person.id; // stored as  string sometime. grr.
+    this._loadAuditLogs();
+  }
+
+  async _loadAuditLogs() {
     this.isLoading = true;
-    this.ajax.request(`person/${this.personId}/schedule/log`, {data: {year: this.args.year}})
-      .then(({logs}) => this.auditLogs = logs)
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isLoading = false);
+    try {
+      const {logs} = await this.ajax.request(`person/${this.personId}/schedule/log`, {data: {year: this.args.year}});
+      this.auditLogs = logs;
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   get isBefore2019() {

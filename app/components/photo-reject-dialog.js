@@ -7,7 +7,8 @@ export default class PhotoRejectDialogComponent extends Component {
   @service toast;
   @service ajax;
   @service modal;
-  @service house;
+  @service errors;
+  @service saveModel;
 
   @tracked reviewForm = {reasons: [], message: ''};
   @tracked rejectMail = null;
@@ -35,20 +36,12 @@ export default class PhotoRejectDialogComponent extends Component {
       return;
     }
 
-    this.isSubmitting = true;
-
     photo.status = 'rejected';
     photo.reject_reasons = model.reasons;
     photo.reject_message = model.message;
 
-    try {
-      await photo.save();
+    if (await this.saveModel.save({model: photo, owner: this})) {
       this.args.onClose();
-    } catch (response) {
-      photo.rollbackAttributes();
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 
@@ -69,7 +62,7 @@ export default class PhotoRejectDialogComponent extends Component {
       const {mail} = await this.ajax.request(`person-photo/${this.args.photo.id}/reject-preview`, {data});
       this.rejectMail = mail;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

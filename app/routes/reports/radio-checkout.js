@@ -1,6 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
-import RSVP from 'rsvp';
 
 export default class ReportsRadioCheckoutRoute extends ClubhouseRoute {
   queryParams = {
@@ -9,7 +8,7 @@ export default class ReportsRadioCheckoutRoute extends ClubhouseRoute {
     event_summary: { refreshModel: true },
   };
 
-  model(params) {
+  async model(params) {
     const year = requestYear(params);
     const query = { year };
 
@@ -21,14 +20,14 @@ export default class ReportsRadioCheckoutRoute extends ClubhouseRoute {
       query.event_summary = 1;
     }
 
-    return RSVP.hash({
-      radios: this.ajax.request('asset-person/radio-checkout-report', {
+    return {
+      radios: (await this.ajax.request('asset-person/radio-checkout-report', {
         data: query
-      }).then((results) => results.radios),
+      })).radios,
       year,
       include_qualified: query.include_qualified ? 1 : 0,
       event_summary: query.event_summary ? 1 : 0,
-    });
+    };
   }
 
   setupController(controller, model) {

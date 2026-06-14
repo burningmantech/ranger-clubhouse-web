@@ -5,8 +5,8 @@ import {service} from '@ember/service';
 
 export default class TicketGiftInfoComponent extends Component {
   @service ajax;
-  @service house;
-
+  @service errors;
+  @service storePayload;
   get hasMultiple() {
     return this.args.ticketPackage.giftTickets.length > 1;
   }
@@ -21,9 +21,9 @@ export default class TicketGiftInfoComponent extends Component {
     try {
       const data = {delivery_method: method, special_document_id: ticket.id};
       const {access_document} = await this.ajax.post(`ticketing/${this.args.person.id}/delivery`, {data});
-      this.house.pushPayload('access-document', access_document);
+      this.storePayload.pushPayload('access-document', access_document);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 

@@ -97,22 +97,20 @@ export default class PersonIndexController extends ClubhouseController {
 
     this.isSaving = true;
     try {
-      await model.save()
-      this.showEditNote = false;
-      this.house.scrollToTop();
-      this.toast.success('The information was successfully updated.');
+      if (await this.saveModel.save({model, message: 'The information was successfully updated.'})) {
+        this.showEditNote = false;
+        this.scroll.scrollToTop();
 
-      // When the status changes, the positions & roles are likely changed.
-      // Reload the roles & positions
-      if (statusChanged) {
-        await this._reloadMembershipAndRoles();
+        // When the status changes, the positions & roles are likely changed.
+        // Reload the roles & positions
+        if (statusChanged) {
+          await this._reloadMembershipAndRoles();
+        }
+        this._reloadUserIfMe();
+        if (callsignChanged || statusChanged) {
+          await this.personFkas.update();
+        }
       }
-      this._reloadUserIfMe();
-      if (callsignChanged || statusChanged) {
-        await this.personFkas.update();
-      }
-    } catch (response) {
-      this.house.handleErrorResponse(response, model);
     } finally {
       this.isSaving = false
     }
@@ -317,11 +315,14 @@ export default class PersonIndexController extends ClubhouseController {
       () => {
         this.modal.confirm('Really Confirm Person Removal',
           'This is <span class="spinner-grow spinner-grow-sm text-danger"></span><b class="text-danger">NOT RECOMMENDED</b><span class="spinner-grow spinner-grow-sm text-danger"></span>! Are you absolutely sure you want to <b class="text-danger">DELETE THIS ACCOUNT?</b>',
-          () => {
-            this.person.destroyRecord().then(() => {
+          async () => {
+            try {
+              await this.person.destroyRecord();
               this.toast.success('The person was successfully removed from the Clubhouse.');
               this.router.transitionTo('me.homepage');
-            }).catch((response) => this.house.handleErrorResponse(response));
+            } catch (response) {
+              this.errors.handleErrorResponse(response);
+            }
           })
       }
     )
@@ -342,7 +343,7 @@ export default class PersonIndexController extends ClubhouseController {
       this.personMembership = membership;
       this.grantedRoles = await this.ajax.request(`person/${personId}/roles`, {data: {include_memberships: 1}});
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
@@ -363,21 +364,24 @@ export default class PersonIndexController extends ClubhouseController {
   }
 
   @action
-  saveRoles(roles) {
+  async saveRoles(roles) {
     const role_ids = roles.filter((r) => r.selected).map((r) => r.id);
 
     this.isSavingRoles = true;
-    this.ajax.request(`person/${this.person.id}/roles`, {
-      type: 'POST',
-      data: {role_ids}
-    }).then(() => {
+    try {
+      await this.ajax.request(`person/${this.person.id}/roles`, {
+        type: 'POST',
+        data: {role_ids}
+      });
       this.toast.success('The roles have been successfully updated.');
       this.editRoles = false;
       this._reloadUserIfMe();
-      return this.ajax.request(`person/${this.person.id}/roles`, {data: {include_memberships: 1}})
-        .then((results) => this.grantedRoles = results)
-    }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSavingRoles = false);
+      this.grantedRoles = await this.ajax.request(`person/${this.person.id}/roles`, {data: {include_memberships: 1}});
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isSavingRoles = false;
+    }
   }
 
   _reloadUserIfMe() {
@@ -394,10 +398,13 @@ export default class PersonIndexController extends ClubhouseController {
 
 
   @action
-  refreshPhoto() {
-    this.ajax.request(`person/${this.person.id}/photo`).then((result) => {
+  async refreshPhoto() {
+    try {
+      const result = await this.ajax.request(`person/${this.person.id}/photo`);
       this.photo = result.photo;
-    }).catch((response) => this.house.handleErrorResponse(response));
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    }
   }
 
   @action
@@ -412,17 +419,17 @@ export default class PersonIndexController extends ClubhouseController {
 
   @action
   sendWelcomeMailAction() {
-    this.modal.confirm('Resend Welcome Mail', 'Are you sure you want to resend the PNV Welcome Mail?', () => {
-      this.ajax.request(`intake/${this.person.id}/send-welcome-email`, {method: 'POST'})
-        .then(() => {
-          this.toast.success('Welcome Mail successfully queued to be sent.');
-        }).catch((response) => {
+    this.modal.confirm('Resend Welcome Mail', 'Are you sure you want to resend the PNV Welcome Mail?', async () => {
+      try {
+        await this.ajax.request(`intake/${this.person.id}/send-welcome-email`, {method: 'POST'});
+        this.toast.success('Welcome Mail successfully queued to be sent.');
+      } catch (response) {
         if (response.status === 400) {
           this.toast.error('Person is not a prospective');
         } else {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         }
-      })
+      }
     })
   }
 

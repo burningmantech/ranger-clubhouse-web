@@ -24,7 +24,7 @@ export default class VcAccessDocumentsUnsubmitProvisionsController extends Clubh
   }
 
   @action
-  unsubmitAction() {
+  async unsubmitAction() {
     const people_ids = this.people.filter((p) => p.selected).map((p) => p.id);
 
     if (!people_ids.length) {
@@ -33,18 +33,21 @@ export default class VcAccessDocumentsUnsubmitProvisionsController extends Clubh
     }
 
     this.isSubmitting = true;
-    this.ajax.request('provision/unsubmit-provisions', {method: 'POST', data: {people_ids}})
-      .then(() => {
-        people_ids.forEach((id) => {
-          const person = this.people.find((p) => p.id === id);
-          if (person) {
-            person.selected = false;
-            person.didUnsubmit = true;
-          }
-        })
-        this.toast.success('Provisions successfully un-submitted.');
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    try {
+      await this.ajax.request('provision/unsubmit-provisions', {method: 'POST', data: {people_ids}});
+      people_ids.forEach((id) => {
+        const person = this.people.find((p) => p.id === id);
+        if (person) {
+          person.selected = false;
+          person.didUnsubmit = true;
+        }
+      })
+      this.toast.success('Provisions successfully un-submitted.');
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action
@@ -55,6 +58,6 @@ export default class VcAccessDocumentsUnsubmitProvisionsController extends Clubh
       provisions_list: person.provisions.map((p) => `RP-${p.id} ${ProvisionLabels[p.type]} ${p.status}`).join("\n"),
     }));
 
-    this.house.downloadCsv(`${this.house.currentYear()}-unsubmit-provisions.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.session.currentYear()}-unsubmit-provisions.csv`, CSV_COLUMNS, rows);
   }
 }

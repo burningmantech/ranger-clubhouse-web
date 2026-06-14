@@ -9,6 +9,6 @@ export default class ReportsTimesheetUnconfirmedController extends ClubhouseCont
   queryParmas = ['year'];
 
   @action downloadCsv() {
-    this.house.downloadCsv(`${this.year}-timesheet-unconfirmed.csv`, CSV_COLUMNS, this.unconfirmed_people);
+    this.download.downloadCsv(`${this.year}-timesheet-unconfirmed.csv`, CSV_COLUMNS, this.unconfirmed_people);
   }
 }

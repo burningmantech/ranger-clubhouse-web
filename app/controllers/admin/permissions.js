@@ -49,7 +49,7 @@ export default class AdminRolesController extends ClubhouseController {
       await this.roles.update(); // refresh the list.
       this.artForm = null;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = true;
     }
@@ -76,7 +76,7 @@ export default class AdminRolesController extends ClubhouseController {
           this.toast.success('The role has been deleted.');
           this.entry = null;
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }
@@ -84,23 +84,23 @@ export default class AdminRolesController extends ClubhouseController {
   }
 
   @action
-  saveRole(model, isValid) {
+  async saveRole(model, isValid) {
     if (!isValid) {
       return;
     }
 
-    this.isSubmitting = true;
-    this.house.saveModel(model,
-      `The permission has been ${model.isNew ? 'created' : 'updated'}.`,
-      async () => {
-        this.entry = null;
-        try {
-          await this.roles.update(); // refresh the list.
-        } catch (response) {
-          this.house.handleErrorResponse(response);
-        }
-      },
-      () => this.isSubmitting = false);
+    if (await this.saveModel.save({
+      model,
+      message: `The permission has been ${model.isNew ? 'created' : 'updated'}.`,
+      owner: this,
+    })) {
+      this.entry = null;
+      try {
+        await this.roles.update(); // refresh the list.
+      } catch (response) {
+        this.errors.handleErrorResponse(response);
+      }
+    }
   }
 
   @action

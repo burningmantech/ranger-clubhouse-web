@@ -22,12 +22,12 @@ export default class PersonTicketsProvisionsController extends ClubhouseControll
       const {bmid} = await this.ajax.request(`bmid/manage-person`, {
         data: {
           person_id: this.person.id,
-          year: this.house.currentYear()
+          year: this.session.currentYear()
         }
       });
       this.bmid = BmidModel.pushToStore(this, bmid)
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }

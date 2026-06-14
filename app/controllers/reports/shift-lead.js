@@ -122,7 +122,7 @@ export default class ReportsShiftLeadController extends ClubhouseController {
         this.shiftStart = now;
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }

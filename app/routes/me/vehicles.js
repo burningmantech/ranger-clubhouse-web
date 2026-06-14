@@ -5,7 +5,7 @@ export default class MeVehiclesRoute extends ClubhouseRoute {
   @service modal;
 
   async model() {
-    const year = this.house.currentYear();
+    const year = this.session.currentYear();
     this.year = year;
     const person = this.modelFor('me'), user = this.session.user;
 

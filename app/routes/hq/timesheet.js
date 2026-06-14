@@ -1,24 +1,22 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import RSVP from 'rsvp';
 
 export default class HqTimesheetRoute extends ClubhouseRoute {
-  model() {
+  async model() {
     const person_id = this.modelFor('hq').person.id;
-    const year = this.house.currentYear();
+    const year = this.session.currentYear();
 
     this.store.unloadAll('timesheet-missing');
 
-    return RSVP.hash({
-      timesheetInfo: this.ajax.request('timesheet/info', {
+    return {
+      timesheetInfo: (await this.ajax.request('timesheet/info', {
         method: 'GET',
         data: { person_id }
-      }).then((result) => result.info),
-      timesheetsMissing: this.store.query('timesheet-missing', { person_id, year }),
-      correctionPositions: this.ajax.request(`person/${person_id}/positions`,{ data: { include_past_grants: 1 } }).then((results) => results.positions),
-      timesheetSummary: this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }})
-        .then((result) => result.summary),
-      timesheets: this.store.query('timesheet', { person_id, year }),
-    });
+      })).info,
+      timesheetsMissing: await this.store.query('timesheet-missing', { person_id, year }),
+      correctionPositions: (await this.ajax.request(`person/${person_id}/positions`,{ data: { include_past_grants: 1 } })).positions,
+      timesheetSummary: (await this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }})).summary,
+      timesheets: await this.store.query('timesheet', { person_id, year }),
+    };
   }
 
   setupController(controller, model) {
@@ -26,6 +24,6 @@ export default class HqTimesheetRoute extends ClubhouseRoute {
 
     controller.setProperties(this.modelFor('hq'));
     controller.setProperties(model);
-    controller.set('year', this.house.currentYear());
+    controller.set('year', this.session.currentYear());
   }
 }

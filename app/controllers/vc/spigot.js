@@ -42,7 +42,7 @@ export default class VcSpigotController extends ClubhouseController {
       });
       return info;
     });
-    this.house.downloadCsv(`${this.year}-spigot-flow.csv`, CSV_COLUMNS, data);
+    this.download.downloadCsv(`${this.year}-spigot-flow.csv`, CSV_COLUMNS, data);
   }
 
   @action

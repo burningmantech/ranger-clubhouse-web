@@ -9,7 +9,7 @@ export default class IntakeNotesComponent extends Component {
   @tracked updateNote;
 
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
   @service session;
   @service toast;
@@ -96,16 +96,18 @@ export default class IntakeNotesComponent extends Component {
 
   @action
   deleteNoteAction(note) {
-    this.modal.confirm('Confirm Deletion', 'Are you really sure you want to delete this note?', () => {
-      this.ajax.request(`intake/${note.id}/delete-note`, {method: 'DELETE'})
-        .then(() => {
-          this.teamNotes.forEach((intakeYear) => {
-            if (intakeYear.year === note.year) {
-              set(intakeYear, 'notes', intakeYear.notes.filter((n) => n.id !== note.id));
-            }
-          });
-          this.toast.success('The note was successfully deleted.');
-        }).catch((response) => this.house.handleErrorResponse(response));
+    this.modal.confirm('Confirm Deletion', 'Are you really sure you want to delete this note?', async () => {
+      try {
+        await this.ajax.request(`intake/${note.id}/delete-note`, {method: 'DELETE'});
+        this.teamNotes.forEach((intakeYear) => {
+          if (intakeYear.year === note.year) {
+            set(intakeYear, 'notes', intakeYear.notes.filter((n) => n.id !== note.id));
+          }
+        });
+        this.toast.success('The note was successfully deleted.');
+      } catch (response) {
+        this.errors.handleErrorResponse(response);
+      }
     });
   }
 }

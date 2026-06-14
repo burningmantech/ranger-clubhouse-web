@@ -225,12 +225,12 @@ export default class HqShiftController extends ClubhouseController {
         this._scrollToAssets();
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
   _scrollToAssets() {
-    this.house.scrollToAccordion('assets');
+    this.scroll.scrollToAccordion('assets');
     schedule('afterRender', () => document.querySelector('#checkout-barcode')?.focus());
   }
 
@@ -269,7 +269,7 @@ export default class HqShiftController extends ClubhouseController {
         this.correctionCallback?.(timesheet);
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
@@ -316,7 +316,7 @@ export default class HqShiftController extends ClubhouseController {
       await this.person.save();
       this.toast.success(`${this.person.callsign} has been successfully marked ${isOnSite ? 'ON' : 'OFF'} SITE.`);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isMarkingOffSite = false
     }
@@ -495,8 +495,8 @@ export default class HqShiftController extends ClubhouseController {
   @action
   afterShiftReview() {
     if (this.endedShiftEntry) {
-      this.house.scrollToAccordion('assets', 'todo-list');
-      this.house.openAccordion('pogs');
+      this.scroll.scrollToAccordion('assets', 'todo-list');
+      this.scroll.openAccordion('pogs');
     }
   }
 

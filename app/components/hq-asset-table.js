@@ -5,7 +5,7 @@ import {tracked} from '@glimmer/tracking';
 
 export default class HqAssetTableComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service toast;
 
   @tracked updateAsset = null;
@@ -41,7 +41,7 @@ export default class HqAssetTableComponent extends Component {
       this.toast.success('Asset has been successfully checked in.');
       this.args.onCheckIn?.(ap.asset);
     } catch (response) {
-      this.house.handleErrorResponse(response)
+      this.errors.handleErrorResponse(response)
     } finally {
       set(ap, 'isSubmitting', false);
     }
@@ -94,7 +94,7 @@ export default class HqAssetTableComponent extends Component {
       this.updateAsset = null;
       this.toast.success('Attachment successfully updated.');
     } catch (response) {
-      this.house.handleErrorResponse(response)
+      this.errors.handleErrorResponse(response)
     } finally {
       this.isSubmitting = false;
     }

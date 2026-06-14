@@ -21,7 +21,7 @@ class PersonSignIn {
 
 export default class RollcallSignInComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
   @service toast;
 
@@ -55,7 +55,7 @@ export default class RollcallSignInComponent extends Component {
       const {slot} = await this.ajax.request('slot', {data: {for_rollcall: 1}});
       this._setupPositions(slot);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }
@@ -204,7 +204,7 @@ export default class RollcallSignInComponent extends Component {
         {data: {is_onduty: 1, include_photo: 1}});
       this.people = people.map((p) => new PersonSignIn(p));
     } catch (response) {
-      this.house.handleErrorResponse(response)
+      this.errors.handleErrorResponse(response)
     } finally {
       this.isRetrievingPeople = false;
     }
@@ -251,7 +251,7 @@ export default class RollcallSignInComponent extends Component {
                 break;
             }
           } catch (response) {
-            this.house.handleErrorResponse(response);
+            this.errors.handleErrorResponse(response);
           } finally {
             person.isSubmitting = false;
           }
@@ -313,7 +313,7 @@ export default class RollcallSignInComponent extends Component {
           break;
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       person.isSubmitting = false
     }

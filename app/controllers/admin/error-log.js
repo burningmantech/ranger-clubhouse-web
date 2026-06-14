@@ -19,10 +19,13 @@ export default class AdminErrorLogController extends ClubhouseController {
 
   @action
   purgeLog() {
-    this.modal.confirm('Delete All Error Logs', 'Are you sure you wish to delete the entire error log?', () => {
-      this.ajax.request('error-log/purge', {method: 'DELETE'})
-        .then(() => this.send('refreshRoute'))
-        .catch((response) => this.house.handleErrorResponse(response));
+    this.modal.confirm('Delete All Error Logs', 'Are you sure you wish to delete the entire error log?', async () => {
+      try {
+        await this.ajax.request('error-log/purge', {method: 'DELETE'});
+        this.send('refreshRoute');
+      } catch (response) {
+        this.errors.handleErrorResponse(response);
+      }
     })
   }
 

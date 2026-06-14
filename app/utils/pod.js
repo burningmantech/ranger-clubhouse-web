@@ -51,7 +51,7 @@ export async function updatePods(pods) {
         p.sort_index = sortIdx;
         await p.save();
       } catch (response) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       }
     }
   }

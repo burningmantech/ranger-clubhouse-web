@@ -28,7 +28,7 @@ export default class PersonTimesheetController extends ClubhouseController {
       this.timesheetInfo = info;
       await this.person.reload();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
@@ -45,8 +45,9 @@ export default class PersonTimesheetController extends ClubhouseController {
   }
 
   @action
-  startShiftNotify() {
-    this.timesheets.update().then(() => this._findOnDuty());
+  async startShiftNotify() {
+    await this.timesheets.update();
+    this._findOnDuty();
   }
 
   @action
@@ -75,7 +76,7 @@ export default class PersonTimesheetController extends ClubhouseController {
           };
           this.toast.success(`Timesheet has been ${timesheet_confirmed ? 'CONFIRMED' : 'UN-CONFIRMED'}`);
         } catch (response) {
-          this.house.handleErrorResponse(response)
+          this.errors.handleErrorResponse(response)
         } finally {
           this.isSubmitting = false;
         }

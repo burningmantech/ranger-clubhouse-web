@@ -38,8 +38,9 @@ const SELF_SERVE_POG_POSITIONS = [
 
 export default class HqPogsComponent extends Component {
   @service ajax;
-  @service hqAction;
-  @service house;
+  @service saveModel;
+  @service errors;
+  @service session;
   @service modal;
   @service store;
 
@@ -84,13 +85,14 @@ export default class HqPogsComponent extends Component {
 
   async _loadPogs() {
     try {
-      this.config = await this.ajax.request('person-pog/config').then(({config}) => config);
+      const {config} = await this.ajax.request('person-pog/config');
+      this.config = config;
       this.pogs = await this.store.query('person-pog', {
         person_id: this.args.person.id,
-        year: this.house.currentYear()
+        year: this.session.currentYear()
       });
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }
@@ -146,18 +148,14 @@ export default class HqPogsComponent extends Component {
 
     this.isSubmitting = true;
     try {
-      // On failure, saveWithRollback calls rollbackAttributes() which discards
-      // this never-persisted record from the store.
-      await this.hqAction.saveWithRollback(pog, {
-        successMessage: 'Pog successfully created.',
-        onSuccess: async () => {
-          await this.pogs.update();
-          this.pogToIssue = null;
-          if (type === POG_MEAL || type === POG_HALF_MEAL) {
-            this.args.onPogIssue?.();
-          }
+      // On failure, save-model rolls the never-persisted record back out of the store.
+      if (await this.saveModel.save({model: pog, message: 'Pog successfully created.'})) {
+        await this.pogs.update();
+        this.pogToIssue = null;
+        if (type === POG_MEAL || type === POG_HALF_MEAL) {
+          this.args.onPogIssue?.();
         }
-      });
+      }
     } finally {
       this.isSubmitting = false;
     }
@@ -186,10 +184,9 @@ export default class HqPogsComponent extends Component {
 
     this.isSubmitting = true;
     try {
-      await this.hqAction.saveWithRollback(model, {
-        successMessage: 'Pog successfully updated.',
-        onSuccess: () => this.pogToEdit = null
-      });
+      if (await this.saveModel.save({model, message: 'Pog successfully updated.'})) {
+        this.pogToEdit = null;
+      }
     } finally {
       this.isSubmitting = false;
     }
@@ -218,7 +215,7 @@ export default class HqPogsComponent extends Component {
         this.isSubmitting = true;
         try {
           pog.status = STATUS_REDEEMED;
-          await this.hqAction.saveWithRollback(pog, {successMessage: 'Pog has been redeemed.'});
+          await this.saveModel.save({model: pog, message: 'Pog has been redeemed.'});
         } finally {
           this.isSubmitting = false;
         }
@@ -279,10 +276,9 @@ export default class HqPogsComponent extends Component {
     this.isSubmitting = true;
     try {
       pog.status = STATUS_CANCELLED;
-      await this.hqAction.saveWithRollback(pog, {
-        successMessage: 'Pog has been cancelled.',
-        onSuccess: () => this.pogToCancel = null
-      });
+      if (await this.saveModel.save({model: pog, message: 'Pog has been cancelled.'})) {
+        this.pogToCancel = null;
+      }
     } finally {
       this.isSubmitting = false;
     }

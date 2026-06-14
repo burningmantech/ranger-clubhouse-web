@@ -6,7 +6,7 @@ import {tracked} from '@glimmer/tracking';
 import {isEmpty} from '@ember/utils';
 
 export default class AdminSlotBulkEditComponent extends Component {
-  @service house;
+  @service errors;
   @service modal;
   @service toast;
   @tracked slotUpdating = null;
@@ -78,7 +78,7 @@ export default class AdminSlotBulkEditComponent extends Component {
       try {
         await slot.save();
       } catch (response) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
         errors++;
       } finally {
         this.slotUpdating = null;

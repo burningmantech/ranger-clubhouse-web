@@ -14,8 +14,7 @@ class RejectedHandle {
 
 export default class VcApplicationHandlesComponent extends Component {
   @service ajax;
-  @service house;
-
+  @service errors;
   @tracked isSubmitting = false;
   @tracked showMoreHandlesDialog;
   @tracked showEditHandlesListDialog;
@@ -94,7 +93,7 @@ export default class VcApplicationHandlesComponent extends Component {
       this.extractedHandlesForm = EmberObject.create({handles: handles.map((h) => h[0]).join("\n") });
       application.problem_handles = handles.filter((h) => h[1].length > 0).map((h) => ({ handle: h[0], problems: h[1]}));
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

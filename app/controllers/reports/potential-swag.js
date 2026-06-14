@@ -18,6 +18,6 @@ export default class ReportsPotentialSwagController extends ClubhouseController 
       {title: `Service Eligible`, key: 'service_eligible'}
     ];
 
-    this.house.downloadCsv(`${this.house.currentYear()}-potential-swag.csv`, CSV_COLUMNS, this.people);
+    this.download.downloadCsv(`${this.session.currentYear()}-potential-swag.csv`, CSV_COLUMNS, this.people);
   }
 }

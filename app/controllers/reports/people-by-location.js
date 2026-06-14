@@ -126,7 +126,7 @@ export default class ReportsPeopleByLocationController extends ClubhouseControll
       person.did_work = person.worked ? 'Y' : 'N';
     });
 
-    return this.house.downloadCsv(`${year}-people-location-${suffix.replace(/ /g, '-')}`, CSV_COLUMNS, people);
+    return this.download.downloadCsv(`${year}-people-location-${suffix.replace(/ /g, '-')}`, CSV_COLUMNS, people);
   }
 
   @action

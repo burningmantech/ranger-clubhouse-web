@@ -36,6 +36,6 @@ export default class ReportsRadioCheckoutController extends ClubhouseController 
       }
     });
 
-    this.house.downloadCsv(`${this.year}-radio-checkout.csv`, (this.event_summary || this.include_eligible) ? CSV_FULL_COLUMNS : CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.year}-radio-checkout.csv`, (this.event_summary || this.include_eligible) ? CSV_FULL_COLUMNS : CSV_COLUMNS, rows);
   }
 }

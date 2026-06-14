@@ -5,8 +5,7 @@ import {service} from '@ember/service';
 
 export default class CallsignSearch extends Component {
   @service ajax;
-  @service house;
-
+  @service errors;
   @tracked callsign;
   @tracked searchResults;
   @tracked searchError;
@@ -47,7 +46,7 @@ export default class CallsignSearch extends Component {
         this.callsignNotFound = true;
       }
     } catch (e) {
-      this.house.handleErrorResponse(e);
+      this.errors.handleErrorResponse(e);
     } finally {
       this.isSearchingCallsigns = false;
     }

@@ -37,14 +37,8 @@ export default class AdminPersonCreateController extends ClubhouseController {
       return;
     }
 
-    this.isSubmitting = true;
-    try {
-      await model.save();
+    if (await this.saveModel.save({model, owner: this})) {
       this.askForPassword = true;
-    } catch (response) {
-      this.house.handleErrorResponse(response, model);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 

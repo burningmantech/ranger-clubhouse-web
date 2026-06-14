@@ -7,7 +7,7 @@ import {STATUS_HOLD_MORE_HANDLES} from "clubhouse/models/prospective-application
 
 export default class VcApplicationMoreHandlesDialogComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service toast;
 
   @tracked isSubmitting;
@@ -44,7 +44,7 @@ export default class VcApplicationMoreHandlesDialogComponent extends Component {
       this.toast.success('More Handles request successfully submitted.');
       this.args.onClose();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

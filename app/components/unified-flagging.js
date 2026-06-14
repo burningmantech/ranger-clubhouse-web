@@ -7,8 +7,7 @@ import { severityWeight, worstRank, mentorBonkYear } from 'clubhouse/utils/intak
 export default class UnifiedFlaggingComponent extends Component {
   queryParams=['year'];
   @service ajax;
-  @service house;
-
+  @service errors;
   // Locally-merged note/history updates, keyed by person id. Kept separate from
   // @args.people so the list stays reactive: when the parent re-filters and
   // passes a new @people array, we re-derive from it rather than rendering a
@@ -181,7 +180,7 @@ export default class UnifiedFlaggingComponent extends Component {
       next.set(person.id, {...person, ...result.person});
       this.noteOverrides = next;
     } catch (response) {
-      return this.house.handleErrorResponse(response);
+      return this.errors.handleErrorResponse(response);
     }
   }
 }

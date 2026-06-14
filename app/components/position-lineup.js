@@ -8,7 +8,8 @@ export default class PositionLineupComponent extends Component {
   @tracked entry;
   @tracked isSubmitting = false;
 
-  @service house;
+  @service errors;
+  @service saveModel;
   @service store;
 
   validations = {
@@ -27,7 +28,7 @@ export default class PositionLineupComponent extends Component {
       await entry.reload();
       this.entry = entry;
     } catch (response) {
-      this.house.handleErrorResponse(response)
+      this.errors.handleErrorResponse(response)
     } finally {
       this.isSubmitting = false;
     }
@@ -48,15 +49,9 @@ export default class PositionLineupComponent extends Component {
       return;
     }
 
-    this.isSubmitting = true;
-    try {
-      await model.save();
+    if (await this.saveModel.save({model, owner: this})) {
       this.args.positionLineups.update();
       this.entry = null;
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 }

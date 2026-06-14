@@ -73,16 +73,12 @@ export default class OpsSurveyManageController extends ClubhouseController {
 
     const isNew = model.isNew;
 
-    try {
-      await model.save();
-      this.toast.success(`The survey group was successfully ${isNew ? 'created' : 'updated'}.`);
+    if (await this.saveModel.save({model, message: `The survey group was successfully ${isNew ? 'created' : 'updated'}.`})) {
       this.groupEntry = null;
       if (isNew) {
         await this.surveyGroups.update();
         this._buildOrderedGroups();
       }
-    } catch (response) {
-      this.house.handleErrorResponse(response, model)
     }
   }
 
@@ -100,7 +96,7 @@ export default class OpsSurveyManageController extends ClubhouseController {
           this._assignQuestions();
           this._buildOrderedGroups()
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         }
       });
   }
@@ -134,7 +130,7 @@ export default class OpsSurveyManageController extends ClubhouseController {
         try {
           await g.save();
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         }
       }
     }
@@ -177,7 +173,7 @@ export default class OpsSurveyManageController extends ClubhouseController {
           await this.surveyQuestions.update();
           this._assignQuestions();
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         }
       });
   }
@@ -190,16 +186,12 @@ export default class OpsSurveyManageController extends ClubhouseController {
 
     const isNew = model.isNew;
 
-    try {
-      await model.save();
-      this.toast.success(`The survey question was successfully ${isNew ? 'created' : 'updated'}.`);
+    if (await this.saveModel.save({model, message: `The survey question was successfully ${isNew ? 'created' : 'updated'}.`})) {
       this.questionEntry = null;
       if (isNew) {
         await this.surveyQuestions.update();
       }
       this._assignQuestions();
-    } catch (response) {
-      this.house.handleErrorResponse(response, model)
     }
   }
 
@@ -230,7 +222,7 @@ export default class OpsSurveyManageController extends ClubhouseController {
         try {
           await q.save();
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         }
       }
     }

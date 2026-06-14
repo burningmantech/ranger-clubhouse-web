@@ -58,8 +58,8 @@ export default class SearchItemBarComponent extends Component {
   @service router;
   @service session;
   @service ajax;
-  @service house;
-
+  @service errors;
+  @service storage;
   @controller('person') personController;
   @controller('hq') hqController;
 
@@ -80,7 +80,7 @@ export default class SearchItemBarComponent extends Component {
 
     const onDutyPosition = this.session.user.onduty_position;
 
-    const savedMode = this.house.getKey(SEARCH_MODE_KEY);
+    const savedMode = this.storage.getKey(SEARCH_MODE_KEY);
     const options = this.modeOptions;
 
     let mode = '';
@@ -90,7 +90,7 @@ export default class SearchItemBarComponent extends Component {
       mode = (onDutyPosition && (onDutyPosition.subtype === 'hq' || onDutyPosition.subtype === 'mentor')) ? 'hq' : 'account';
     }
 
-    this.house.setKey(SEARCH_MODE_KEY, mode);
+    this.storage.setKey(SEARCH_MODE_KEY, mode);
     this.searchMode = mode;
 
     this.router.on('routeDidChange', this, 'trackRouteTransition');
@@ -201,7 +201,7 @@ export default class SearchItemBarComponent extends Component {
     this.searchMode = mode;
     const route = this.router.currentRouteName;
 
-    this.house.setKey(SEARCH_MODE_KEY, mode);
+    this.storage.setKey(SEARCH_MODE_KEY, mode);
     this._buildPlaceholder();
 
     if (!route.startsWith('person.') && !route.startsWith('hq.')) {
@@ -346,7 +346,7 @@ export default class SearchItemBarComponent extends Component {
       }
     } else {
       barcode = query;
-      year = this.house.currentYear();
+      year = this.session.currentYear();
     }
 
     this.searchYear = year;
@@ -369,7 +369,7 @@ export default class SearchItemBarComponent extends Component {
       this.searchResults = searchResults;
       return resolve(searchResults);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       return reject();
     }
   }
@@ -398,7 +398,7 @@ export default class SearchItemBarComponent extends Component {
       number = base;
       event_year = +year;
     } else {
-      event_year = this.house.currentYear();
+      event_year = this.session.currentYear();
     }
 
 
@@ -451,7 +451,7 @@ export default class SearchItemBarComponent extends Component {
       this.searchResults = results;
       return resolve(results);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       return reject();
     }
   }
@@ -556,7 +556,7 @@ export default class SearchItemBarComponent extends Component {
       }
       return resolve(searched);
     } catch (e) {
-      this.house.handleErrorResponse(e);
+      this.errors.handleErrorResponse(e);
       return reject();
     }
   }

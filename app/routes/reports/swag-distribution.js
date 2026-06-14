@@ -14,7 +14,7 @@ export default class ReportsSwagDistributionRoute extends ClubhouseRoute {
   };
 
   model({year}) {
-    this.year = year ?? this.house.currentYear();
+    this.year = year ?? this.session.currentYear();
     const data = {};
     if (this.year !== 'All') {
       data.year = this.year;

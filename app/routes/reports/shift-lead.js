@@ -12,10 +12,10 @@ export default class ReportsShiftLeadRoute extends ClubhouseRoute {
     year: {refreshModel: true}
   };
 
-  model(params) {
+  async model(params) {
     const year = requestYear(params);
-    return this.ajax.request(`slot/dirt-shift-times`, {data: {year}})
-      .then((result) => ({year, shifts: result.shifts}));
+    const result = await this.ajax.request(`slot/dirt-shift-times`, {data: {year}});
+    return {year, shifts: result.shifts};
   }
 
   setupController(controller, model) {

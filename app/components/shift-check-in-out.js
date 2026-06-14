@@ -24,8 +24,8 @@ const escapeExpression = Ember.Handlebars.Utils.escapeExpression;
 
 export default class ShiftCheckInOutComponent extends Component {
   @service ajax;
-  @service hqAction;
-  @service house;
+  @service command;
+  @service errors;
   @service modal;
   @service store;
   @service toast;
@@ -298,7 +298,7 @@ export default class ShiftCheckInOutComponent extends Component {
     const callsign = person.callsign;
     this.isSubmitting = true;
     try {
-      await this.hqAction.perform('timesheet/signin', data, {
+      await this.command.perform('timesheet/signin', data, {
         statusHandlers: {
           success: async (result) => {
             this.toast.success(`${callsign} is on shift. Happy Dusty Adventures!`);
@@ -378,7 +378,7 @@ export default class ShiftCheckInOutComponent extends Component {
       await entry.reload();
       tooShort = entry.duration < TOO_SHORT_DURATION;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       return;
     } finally {
       this.isSubmitting = false;
@@ -431,7 +431,7 @@ export default class ShiftCheckInOutComponent extends Component {
         this.modal.info('Returned To Active Status', `${callsign} has completed a non-training shift, and has been converted back to active status. Welcome them back to the department.`);
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -485,7 +485,7 @@ export default class ShiftCheckInOutComponent extends Component {
           await this._refreshNavIfSelf();
           this.args.endShiftNotify?.(null);
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         }
       });
   }
@@ -581,7 +581,7 @@ export default class ShiftCheckInOutComponent extends Component {
           break;
       }
     } catch (response) {
-      this.house.handleErrorResponse(response)
+      this.errors.handleErrorResponse(response)
     } finally {
       this.isSubmitting = false;
     }

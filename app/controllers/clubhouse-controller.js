@@ -10,10 +10,16 @@ import { service } from '@ember/service';
 
 export default class ClubhouseController extends Controller {
   @service ajax;
-  @service house;
+  @service analytics;
+  @service download;
+  @service errors;
   @service modal;
   @service router;
+  @service saveModel;
+  @service scroll;
   @service session;
+  @service storage;
+  @service storePayload;
   @service store;
   @service toast;
 }

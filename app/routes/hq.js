@@ -3,7 +3,6 @@ import {action} from '@ember/object';
 import {NotFoundError} from '@ember-data/adapter/error'
 import {ADMIN, SHIFT_MANAGEMENT} from 'clubhouse/constants/roles';
 import {setting} from 'clubhouse/utils/setting';
-import {hash} from 'rsvp';
 
 export default class HqRoute extends ClubhouseRoute {
   beforeModel() {
@@ -23,8 +22,8 @@ export default class HqRoute extends ClubhouseRoute {
   }
 
 
-  model({person_id}) {
-    const year = this.house.currentYear();
+  async model({person_id}) {
+    const year = this.session.currentYear();
 
     // hq.js is the shared parent of the shift & timesheet sub-routes, both of which
     // reload `timesheet` records via store.query('timesheet', ...). Clearing the stale
@@ -35,35 +34,32 @@ export default class HqRoute extends ClubhouseRoute {
 
     // Double check to see if the person is really off duty (another HQ worker might
     // have signed them in). When already on duty, resolve undefined so `onduty` keeps a
-    // deterministic shape in the model hash.
+    // deterministic shape in the model. Kicked off before the awaits below so it
+    // resolves while the person-scoped requests run.
     const onduty = this.session.user?.onduty_position
       ? Promise.resolve(undefined)
       : this.session.updateOnDuty();
 
-    // Resolve all person-scoped requests in parallel. person-event uses a composite id
-    // of `${person_id}-${year}`.
-    return hash({
-      person: this.store.findRecord('person', person_id, {reload: true}),
-      personEvent: this.store.findRecord('person-event', `${person_id}-${year}`, {reload: true}),
-      personBanners: this.store.query('person-banner', {person_id, active: 1}),
-      eventInfo: this.ajax.request(`person/${person_id}/event-info`, {data: {year}})
-        .then(({event_info}) => event_info),
+    // person-event uses a composite id of `${person_id}-${year}`.
+    return {
+      person: await this.store.findRecord('person', person_id, {reload: true}),
+      personEvent: await this.store.findRecord('person-event', `${person_id}-${year}`, {reload: true}),
+      personBanners: await this.store.query('person-banner', {person_id, active: 1}),
+      eventInfo: (await this.ajax.request(`person/${person_id}/event-info`, {data: {year}})).event_info,
 
-      positions: this.ajax.request(`person/${person_id}/positions`, {
+      positions: (await this.ajax.request(`person/${person_id}/positions`, {
         data: {include_eligibility: 1}
-      }).then(({positions}) => positions),
+      })).positions,
 
-      unread_message_count: this.ajax.request(`person/${person_id}/unread-message-count`)
-        .then((result) => result.unread_message_count),
+      unread_message_count: (await this.ajax.request(`person/${person_id}/unread-message-count`)).unread_message_count,
 
-      assets: this.store.query('asset-person', {person_id, year}),
+      assets: await this.store.query('asset-person', {person_id, year}),
 
-      attachments: this.store.findAll('asset-attachment', {reload: true}),
-      timesheetSummary: this.ajax.request(`person/${person_id}/timesheet-summary`, {data: {year}})
-        .then((result) => result.summary),
-      photo: this.ajax.request(`person/${person_id}/photo`).then(({photo}) => photo),
-      onduty,
-    });
+      attachments: await this.store.findAll('asset-attachment', {reload: true}),
+      timesheetSummary: (await this.ajax.request(`person/${person_id}/timesheet-summary`, {data: {year}})).summary,
+      photo: (await this.ajax.request(`person/${person_id}/photo`)).photo,
+      onduty: await onduty,
+    };
   }
 
   setupController(controller, model) {
@@ -110,18 +106,19 @@ export default class HqRoute extends ClubhouseRoute {
   }
 
   @action
-  updateTimesheetSummaries() {
+  async updateTimesheetSummaries() {
     const {controller} = this;
     const personId = controller.person.id;
-    this.ajax.request(`person/${personId}/timesheet-summary`, {data: {year: this.house.currentYear()}})
-      .then((result) => {
-        // The request may resolve after the route has torn down.
-        if (this.isDestroying || this.isDestroyed || !this.controller) {
-          return;
-        }
-        this.controller.set('timesheetSummary', result.summary);
-      })
-      .catch((response) => this.house.handleErrorResponse(response))
+    try {
+      const result = await this.ajax.request(`person/${personId}/timesheet-summary`, {data: {year: this.session.currentYear()}});
+      // The request may resolve after the route has torn down.
+      if (this.isDestroying || this.isDestroyed || !this.controller) {
+        return;
+      }
+      this.controller.set('timesheetSummary', result.summary);
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    }
   }
 
   @action
@@ -131,7 +128,7 @@ export default class HqRoute extends ClubhouseRoute {
       this.router.transitionTo('me');
       return false;
     } else {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       return true;
     }
   }

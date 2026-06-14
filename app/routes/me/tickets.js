@@ -1,5 +1,4 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import RSVP from 'rsvp';
 
 export default class MeTicketsRoute extends ClubhouseRoute {
   beforeModel() {
@@ -12,16 +11,14 @@ export default class MeTicketsRoute extends ClubhouseRoute {
     }
   }
 
-  model() {
+  async model() {
     // Record when the user hit the ticketing page, ignore any response.
     this.ajax.request(`person-event/${this.session.userId}/progress`, {method: 'POST', data: {milestone: 'ticket-visited'}});
 
-    return RSVP.hash({
-      ticketingInfo: this.ajax.request('ticketing/info')
-                .then((results) => results.ticketing_info ),
-      ticketingPackage: this.ajax.request(`ticketing/${this.session.userId}/package`)
-                .then((results) => results.package),
-    });
+    return {
+      ticketingInfo: (await this.ajax.request('ticketing/info')).ticketing_info,
+      ticketingPackage: (await this.ajax.request(`ticketing/${this.session.userId}/package`)).package,
+    };
   }
 
   setupController(controller, model) {

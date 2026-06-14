@@ -63,13 +63,9 @@ export default class AdminSettingsController extends ClubhouseController {
       return;
     }
 
-    try {
-      await model.save();
+    if (await this.saveModel.save({model, message: `The setting value has been successfully update.`})) {
       this.editSetting = null;
-      this.toast.success(`The setting value has been successfully update.`);
       this.session.loadConfig(true);
-    } catch (response) {
-      this.house.handleErrorResponse(response, model);
     }
   }
 

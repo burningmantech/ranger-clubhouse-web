@@ -1,5 +1,4 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import RSVP from 'rsvp';
 
 export default class HqShiftRoute extends ClubhouseRoute {
   /**
@@ -46,15 +45,15 @@ export default class HqShiftRoute extends ClubhouseRoute {
     super.deactivate(...arguments);
   }
 
-  model() {
+  async model() {
     const person_id = this.modelFor('hq').person.id;
-    const year = this.house.currentYear();
+    const year = this.session.currentYear();
 
-    return RSVP.hash({
-      upcomingSlots: this.ajax.request(`person/${person_id}/schedule/upcoming`),
-      scheduleRecommendations: this.ajax.request(`person/${person_id}/schedule/recommendations`),
-      timesheets: this.store.query('timesheet', {person_id, year, check_times: 1}),
-    });
+    return {
+      upcomingSlots: await this.ajax.request(`person/${person_id}/schedule/upcoming`),
+      scheduleRecommendations: await this.ajax.request(`person/${person_id}/schedule/recommendations`),
+      timesheets: await this.store.query('timesheet', {person_id, year, check_times: 1}),
+    };
   }
 
   setupController(controller, model) {

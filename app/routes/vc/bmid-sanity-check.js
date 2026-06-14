@@ -1,19 +1,18 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import { ADMIN, EDIT_BMIDS } from 'clubhouse/constants/roles';
 import requestYear from 'clubhouse/utils/request-year';
-import RSVP from 'rsvp';
 
 export default class VcBmidSanityCheckRoute extends ClubhouseRoute {
   roleRequired = [ ADMIN, EDIT_BMIDS];
 
-  model(params) {
+  async model(params) {
     const year = requestYear(params);
 
-    return RSVP.hash({
+    return {
       year,
-      bmidMadHouse: this.ajax.request(`bmid/sanity-check`, { data: { year }}),
-      ticketingInfo: this.ajax.request('ticketing/info').then((result) => result.ticketing_info)
-    });
+      bmidMadHouse: await this.ajax.request(`bmid/sanity-check`, { data: { year }}),
+      ticketingInfo: (await this.ajax.request('ticketing/info')).ticketing_info
+    };
   }
 
   setupController(controller, model) {

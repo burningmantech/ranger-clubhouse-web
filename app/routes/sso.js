@@ -14,7 +14,7 @@ export default class SsoRoute extends ClubhouseRoute {
     code: { refreshModel: true }
   };
 
-  model({ code }) {
+  async model({ code }) {
     // For analytics
     const credentials = {
       sso_code: code,
@@ -24,15 +24,16 @@ export default class SsoRoute extends ClubhouseRoute {
       }
     }
 
-    return this.session.authenticate('authenticator:jwt', credentials)
-      .catch((response) => {
-        if (response.status == 401) {
-          const data = response.json ? response.json : response.payload;
-          return { status: (data ? data.status : `Unknown error ${JSON.stringify(data)}`) };
-        } else {
-          this.house.handleErrorResponse(response)
-        }
-      });
+    try {
+      return await this.session.authenticate('authenticator:jwt', credentials);
+    } catch (response) {
+      if (response.status == 401) {
+        const data = response.json ? response.json : response.payload;
+        return { status: (data ? data.status : `Unknown error ${JSON.stringify(data)}`) };
+      } else {
+        this.errors.handleErrorResponse(response)
+      }
+    }
   }
 
   setupController(controller, model) {

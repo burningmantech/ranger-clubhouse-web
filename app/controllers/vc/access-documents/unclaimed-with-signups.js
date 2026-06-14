@@ -23,6 +23,6 @@ export default class VcAccessDocumentsUnclaimedWithSignupsController extends Clu
       return row;
     });
 
-    this.house.downloadCsv(`${this.house.currentYear()}-unclaimed-tickets.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.session.currentYear()}-unclaimed-tickets.csv`, CSV_COLUMNS, rows);
   }
 }

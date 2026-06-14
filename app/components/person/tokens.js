@@ -5,7 +5,7 @@ import {action} from '@ember/object';
 
 export default class PersonTokensComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
   @service toast;
 
@@ -24,7 +24,7 @@ export default class PersonTokensComponent extends Component {
     try {
       this.tokens = (await this.ajax.request(`person/${this.args.person.id}/tokens`)).tokens;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }
@@ -41,7 +41,7 @@ export default class PersonTokensComponent extends Component {
           this.tokens = this.tokens.filter((t) => t.id !== token.id);
           this.toast.success('Token successfully revoked.');
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }

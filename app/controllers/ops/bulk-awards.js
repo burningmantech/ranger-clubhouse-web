@@ -48,7 +48,7 @@ export default class OpsBulkAwardsController extends ClubhouseController {
       this.records = records;
       this.didCommit = commit;
     } catch (e) {
-      this.house.handleErrorResponse(e);
+      this.errors.handleErrorResponse(e);
     } finally {
       this.isSubmitting = false;
     }
@@ -66,7 +66,7 @@ export default class OpsBulkAwardsController extends ClubhouseController {
           await this.ajax.post('person-award/rebuild-all-awards');
           this.toast.success('All awards were rebuilt successfully.');
         } catch (e) {
-          this.house.handleErrorResponse(e);
+          this.errors.handleErrorResponse(e);
         } finally {
           this.isSubmitting = false;
         }

@@ -101,21 +101,21 @@ export default class AdminTeamsController extends ClubhouseController {
           this.toast.success('The team has been deleted.');
           this.entry = null;
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         }
       });
   }
 
   @action
-  saveTeam(model, isValid) {
+  async saveTeam(model, isValid) {
     if (!isValid) {
       return;
     }
 
-    this.house.saveModel(model, `The team has been ${model.isNew ? 'created' : 'updated'}.`, () => {
+    if (await this.saveModel.save({model, message: `The team has been ${model.isNew ? 'created' : 'updated'}.`})) {
       this.teams.update();
       this.entry = null;
-    });
+    }
   }
 
   @action

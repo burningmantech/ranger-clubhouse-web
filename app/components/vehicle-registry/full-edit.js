@@ -12,7 +12,7 @@ import {ADMIN, VEHICLE_INFO_UPDATE} from "clubhouse/constants/roles";
 
 export default class VehicleRegistryFullEditComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service session;
 
   @tracked isLoading = false;
@@ -118,7 +118,7 @@ export default class VehicleRegistryFullEditComponent extends Component {
         pvr_teams: info.pvr_teams,
       };
     } catch (e) {
-      this.house.handleErrorResponse(e);
+      this.errors.handleErrorResponse(e);
     } finally {
       this.isLoading = false;
     }
@@ -138,7 +138,7 @@ export default class VehicleRegistryFullEditComponent extends Component {
       }
       return reject();
     } catch (e) {
-      this.house.handleErrorResponse(e);
+      this.errors.handleErrorResponse(e);
     }
   }
 

@@ -6,7 +6,7 @@ import {TYPE_VC, TYPE_VC_COMMENT} from "clubhouse/models/prospective-application
 
 export default class VcApplicationNotesComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
   @service session;
   @service toast;
@@ -55,7 +55,7 @@ export default class VcApplicationNotesComponent extends Component {
       this.args.application.reload();
       this.showDialog = false;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -79,7 +79,7 @@ export default class VcApplicationNotesComponent extends Component {
         this.args.application.reload();
         this.toast.success(`The ${name} was successfully deleted.`);
       } catch (response) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       } finally {
         this.isSubmitting = false;
       }

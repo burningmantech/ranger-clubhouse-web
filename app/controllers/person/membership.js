@@ -142,7 +142,7 @@ export default class PersonMembershipController extends ClubhouseController {
 
       this.toast.success('Teams and/or positions successfully updated.');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSaving = false;
     }

@@ -59,6 +59,6 @@ export default class ReportsHqForecastController extends ClubhouseController {
       { title: 'Leads', key: 'leads' }
     ];
 
-    this.house.downloadCsv(`${this.year}-hq-forecast.csv`, CSV_COLUMNS, this.visits);
+    this.download.downloadCsv(`${this.year}-hq-forecast.csv`, CSV_COLUMNS, this.visits);
   }
 }

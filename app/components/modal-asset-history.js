@@ -6,8 +6,7 @@ import { service } from '@ember/service';
 export default class ModalAssetHistoryComponent extends Component {
   @service asset;
   @service ajax;
-  @service house;
-
+  @service errors;
   @tracked isLoading = false;
   @tracked assetHistory = [];
   @tracked submittingRows = new Set();
@@ -16,10 +15,18 @@ export default class ModalAssetHistoryComponent extends Component {
     super(...arguments);
 
     this.isLoading = true;
-    this.ajax.request(`asset/${this.args.assetId}/history`)
-      .then((results) => this.assetHistory = results.asset_history ?? [])
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isLoading = false);
+    this._loadHistory();
+  }
+
+  async _loadHistory() {
+    try {
+      const results = await this.ajax.request(`asset/${this.args.assetId}/history`);
+      this.assetHistory = results.asset_history ?? [];
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   isSubmitting = (row) => this.submittingRows.has(row);

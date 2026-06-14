@@ -46,7 +46,7 @@ export default class MentorAlphaSignoutController extends ClubhouseController {
       }));
       this.selectAll = true;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }

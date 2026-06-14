@@ -38,7 +38,7 @@ export default class VcApplicationsRecordRoute extends ClubhouseRoute {
 
     if (id) {
       later(() => schedule('afterRender', () => {
-        this.house.scrollToElement(`#${id}`)
+        this.scroll.scrollToElement(`#${id}`)
       }), 100);
     }
   }

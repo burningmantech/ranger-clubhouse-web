@@ -9,7 +9,8 @@ import {TYPE_ALPHA, TYPE_MENTEES_FOR_MENTOR, TYPE_MENTOR_FOR_MENTEES, TYPE_TRAIN
 import currentYear from "clubhouse/utils/current-year";
 
 export default class SurveyQuestionnaireComponent extends Component {
-  @service house;
+  @service errors;
+  @service scroll;
   @service ajax;
   @service session;
   @service toast;
@@ -125,7 +126,7 @@ export default class SurveyQuestionnaireComponent extends Component {
   @action
   async submitAction(model, isValid) {
     if (!isValid) {
-      this.house.scrollToElement('.is-invalid');
+      this.scroll.scrollToElement('.is-invalid');
       return;
     }
 
@@ -172,7 +173,7 @@ export default class SurveyQuestionnaireComponent extends Component {
       this.toast.success('Your responses have been successfully saved. Thank you!');
       this.args.onDone();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

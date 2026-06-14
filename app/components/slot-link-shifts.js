@@ -19,7 +19,8 @@ const StatusLabels = {
 }
 export default class SlotLinkShiftsComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
+  @service scroll;
   @service modal;
   @service toast;
 
@@ -57,10 +58,10 @@ export default class SlotLinkShiftsComponent extends Component {
       this.didCommit = commit;
       if (commit) {
         this.toast.success('The slots have been linked');
-        this.house.scrollToTop();
+        this.scroll.scrollToTop();
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

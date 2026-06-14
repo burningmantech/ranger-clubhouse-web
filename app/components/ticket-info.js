@@ -6,7 +6,8 @@ import {service} from '@ember/service';
 
 export default class TicketInfoComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
+  @service storePayload;
   @service toast;
 
   @tracked isSubmitting = false;
@@ -43,10 +44,10 @@ export default class TicketInfoComponent extends Component {
       const {access_document} = await this.ajax.patch(`access-document/${ticket.id}/status`, {
         data: {status}
       });
-      this.house.pushPayload('access-document', access_document);
+      this.storePayload.pushPayload('access-document', access_document);
       return true;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       return false;
     }
   }

@@ -731,10 +731,10 @@ function usingTicket(t) {
 }
 
 
-function buildTickets(milestones, personId, house) {
+function buildTickets(milestones, personId, storePayload) {
   const claimed = [];
 
-  const pkg = new TicketPackage(milestones.ticketing_package, personId, house);
+  const pkg = new TicketPackage(milestones.ticketing_package, personId, storePayload);
 
   pkg.tickets.forEach((t) => {
     if (usingTicket(t)) {
@@ -785,14 +785,14 @@ function buildTickets(milestones, personId, house) {
 export const TICKETING_OPEN = {
   name: 'Claim Tickets, Vehicle Passes, and Setup Access Passes',
   skipPeriod: [POST_EVENT, AFTER_EVENT],
-  check({milestones, person, house}) {
+  check({milestones, person, storePayload}) {
     const period = milestones.ticketing_period;
 
     if (period !== 'open' || !milestones.ticketing_package) {
       return {result: SKIP};
     }
 
-    const tickets = buildTickets(milestones, person.id, house);
+    const tickets = buildTickets(milestones, person.id, storePayload);
 
     if (tickets.qualifiedCount || tickets.noAddress || tickets.notFinished) {
       return {
@@ -820,7 +820,7 @@ export const TICKETING_OPEN = {
 export const TICKETING_CLOSED = {
   name: 'Ticketing has closed',
   period: BEFORE_EVENT,
-  check({milestones, house, person}) {
+  check({milestones, storePayload, person}) {
     if (milestones.ticketing_period !== 'closed' || !milestones.ticketing_package) {
       return {result: SKIP};
     }
@@ -829,7 +829,7 @@ export const TICKETING_CLOSED = {
       result: NOT_AVAILABLE,
       isTicketing: true,
       isTicketingClosed: true,
-      tickets: buildTickets(milestones, person.id, house),
+      tickets: buildTickets(milestones, person.id, storePayload),
     };
   }
 };

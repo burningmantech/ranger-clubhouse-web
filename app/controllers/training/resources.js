@@ -25,7 +25,7 @@ export default class TrainerResourcesController extends ClubhouseController {
       trainingController.training = freshTraining
       this.training = freshTraining;
     } catch (e) {
-      this.house.handleErrorResponse(e);
+      this.errors.handleErrorResponse(e);
     } finally {
       this.isReloading = false;
     }
