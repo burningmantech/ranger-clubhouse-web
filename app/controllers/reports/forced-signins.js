@@ -23,7 +23,7 @@ export default class ReportsForcedSigninsController extends ClubhouseController 
     this.entries.forEach(entry => {
       entry.blockers_human = buildBlockerAuditLabels(entry.blockers).join("\n");
     });
-    this.house.downloadCsv(`${this.year}-forced-signins.csv`, CSV_COLUMNS, this.entries);
+    this.download.downloadCsv(`${this.year}-forced-signins.csv`, CSV_COLUMNS, this.entries);
   }
 
   forceReasons(blockers) {

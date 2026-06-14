@@ -53,14 +53,12 @@ export default class HqSiteCheckinController extends ClubhouseController {
   }
 
   @action
-  saveContactForm(model, callback) {
-    this.saveModel
-      .save({model, message: 'Emergency Contact info successfully saved.', owner: this})
-      .then((ok) => {
-        if (ok) {
-          callback?.();
-        }
-      });
+  async saveContactForm(model, callback) {
+    const ok = await this.saveModel
+      .save({model, message: 'Emergency Contact info successfully saved.', owner: this});
+    if (ok) {
+      callback?.();
+    }
   }
 
   @action

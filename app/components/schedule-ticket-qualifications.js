@@ -3,14 +3,13 @@ import {setting} from 'clubhouse/utils/setting';
 import {service} from '@ember/service';
 
 export default class TicketThresholdComponent extends Component {
-  @service house;
-
+  @service session;
   // Specia Price Ticket threshold
   rpThreshold = parseFloat(setting('SpTicketThreshold'));
   // Staff credentials threshold
   scThreshold = parseFloat(setting('ScTicketThreshold'));
 
-  yearThreshold = this.house.currentYear();
+  yearThreshold = this.session.currentYear();
   ticketYear = this.yearThreshold + 1;
 
   get showForThisYear() {

@@ -8,7 +8,7 @@ export default class ReportsSandmanQualified extends ClubhouseRoute {
   setupController(controller, model) {
     controller.set('sandpeople', model.sandpeople);
     controller.set('cutoff_year', model.cutoff_year);
-    controller.set('year', this.house.currentYear());
+    controller.set('year', this.session.currentYear());
     controller.set('filter', 'all');
   }
 }

@@ -15,18 +15,18 @@ const TicketingPeriodComponents = {
 };
 
 export default class TicketingLandingComponent extends Component {
-  @service house;
-
+  @service storePayload;
+  @service scroll;
   constructor() {
     super(...arguments);
     const {person,ticketingInfo} = this.args;
-    this.ticketPackage = new TicketPackage(this.args.ticketingPackage, this.args.person.id, this.house);
+    this.ticketPackage = new TicketPackage(this.args.ticketingPackage, this.args.person.id, this.storePayload);
     this.ticketComponent = TicketingPeriodComponents[ticketingInfo.period];
     this.showFaqs = !person.isPNV || (ticketingInfo.period !== 'announce');
   }
 
   @action
   scrollToFAQs() {
-    this.house.scrollToElement('#ticketing-faq');
+    this.scroll.scrollToElement('#ticketing-faq');
   }
 }

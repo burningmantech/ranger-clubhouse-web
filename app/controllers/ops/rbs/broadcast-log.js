@@ -33,17 +33,20 @@ export default class OpsRbsBroadcastLogController extends ClubhouseController {
 
   // Try the retry
   @action
-  attemptRetry() {
+  async attemptRetry() {
     const broadcast = this.confirmRetry;
     this.retryingBroadcast = broadcast;
     this.confirmRetry = null;
     this.retryResult = null;
 
     // Okay, server -- go annoy more peoples
-    this.ajax.request('rbs/retry', {method: 'POST', data: {broadcast_id: broadcast.id}})
-      .then((result) => this.retryResult = result)
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.retryingBroadcast = null);
+    try {
+      this.retryResult = await this.ajax.request('rbs/retry', {method: 'POST', data: {broadcast_id: broadcast.id}});
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.retryingBroadcast = null;
+    }
   }
 
   // Close out a retry attempt

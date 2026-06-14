@@ -8,7 +8,7 @@ export default class PersonPersonalInfoRoute extends ClubhouseRoute {
 
   async model() {
     return {
-      shirts: await this.ajax.request('swag/shirts').then(({shirts}) => shirts),
+      shirts: (await this.ajax.request('swag/shirts')).shirts,
       languages: await this.store.query('person-language', { person_id: this.modelFor('person').id })
     };
   }

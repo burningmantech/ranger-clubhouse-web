@@ -16,7 +16,7 @@ export default class ReportsCertificationsController extends ClubhouseController
   }
 
   @action
-  searchCertificationsAction() {
+  async searchCertificationsAction() {
     const form = this.certificationsForm;
     const certification_ids = form.certificationIds;
 
@@ -26,18 +26,21 @@ export default class ReportsCertificationsController extends ClubhouseController
     }
 
     this.isSubmitting = true;
-    this.ajax.request('certification/people', {method: 'POST', data: {certification_ids}})
-      .then(({people,certifications}) => {
-        this.people = people;
-        this.certificationsHeader = certifications;
-        this.certificationsById = {};
-        certifications.forEach((c) => this.certificationsById[c.id] = c);
-        this.people.forEach((person) => {
-          person.certifications.forEach((pc) => pc.title = this.certificationsById[pc.id].title);
-        })
-        this.haveResults = true;
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    try {
+      const {people,certifications} = await this.ajax.request('certification/people', {method: 'POST', data: {certification_ids}});
+      this.people = people;
+      this.certificationsHeader = certifications;
+      this.certificationsById = {};
+      certifications.forEach((c) => this.certificationsById[c.id] = c);
+      this.people.forEach((person) => {
+        person.certifications.forEach((pc) => pc.title = this.certificationsById[pc.id].title);
+      })
+      this.haveResults = true;
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action
@@ -88,6 +91,6 @@ export default class ReportsCertificationsController extends ClubhouseController
       return row;
     });
 
-    this.house.downloadCsv(`credentials.csv`, columns, rows);
+    this.download.downloadCsv(`credentials.csv`, columns, rows);
   }
 }

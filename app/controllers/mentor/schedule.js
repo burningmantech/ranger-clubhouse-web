@@ -75,7 +75,7 @@ export default class MentorScheduleController extends ClubhouseController {
         this.noSearchMatch = query;
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSearching = false;
     }
@@ -96,7 +96,7 @@ export default class MentorScheduleController extends ClubhouseController {
           const {slots} = await this.ajax.request('mentor/alpha-schedule', {data: {year: this.year}});
           this.setupSlot(slots);
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false
         }
@@ -123,7 +123,7 @@ export default class MentorScheduleController extends ClubhouseController {
             this.toast.error(`The server responded with an unknown status code [${status}]`);
           }
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }

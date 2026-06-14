@@ -38,11 +38,11 @@ export default class LoginController extends ClubhouseController {
         this.loginError = (data ? data.error : `Unknown error ${JSON.stringify(data)}`);
         model.password = '';
       } else {
-        this.house.handleErrorResponse(response)
+        this.errors.handleErrorResponse(response)
       }
     } finally {
       this.isSubmitting = false;
-      this.house.scrollToTop();
+      this.scroll.scrollToTop();
     }
   }
 

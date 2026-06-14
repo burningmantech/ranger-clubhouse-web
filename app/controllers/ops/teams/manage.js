@@ -108,7 +108,7 @@ export default class OpsTeamsManageController extends ClubhouseController {
           person.selected = false;
           this.toast.success(`${person.callsign} was successfully removed`);
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.showPerson = null;
         }
@@ -167,6 +167,6 @@ export default class OpsTeamsManageController extends ClubhouseController {
 
     const callsigns = failures.map((p) => p.callsign).join(', ');
     this.toast.error(`Failed to revoke ${failures.length} account(s): ${callsigns}`);
-    this.house.handleErrorResponse(lastError);
+    this.errors.handleErrorResponse(lastError);
   }
 }

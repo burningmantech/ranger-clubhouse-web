@@ -14,7 +14,9 @@ import {TrackedArray} from 'tracked-built-ins';
 
 export default class MessageInboxComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
+  @service storePayload;
+  @service saveModel;
   @service session;
   @service store;
   @service toast;
@@ -67,19 +69,19 @@ export default class MessageInboxComponent extends Component {
       this.messagesHidden[message.id] = message.isHidden;
     });
     try {
-      const mailbox = await this.ajax.request('messages', {data: {person_id: personId}}).then(({person_message}) => person_message);
+      const {person_message: mailbox} = await this.ajax.request('messages', {data: {person_id: personId}});
       this.messages = new TrackedArray(mailbox.map((message) => {
         message.personIdInbox = personId;
         if (this.messagesHidden[message.id] !== undefined) {
           message.isHidden = this.messagesHidden[message.id];
         }
         message.replies = new TrackedArray(
-          (message.replies ?? []).map((reply) => this.house.pushPayload('person-message', reply))
+          (message.replies ?? []).map((reply) => this.storePayload.pushPayload('person-message', reply))
         );
-        return this.house.pushPayload('person-message', message);
+        return this.storePayload.pushPayload('person-message', message);
       }));
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isRetrieving = false;
       this.isLoading = false;
@@ -195,12 +197,7 @@ export default class MessageInboxComponent extends Component {
       return;
     }
     const personId = this.args.person.idNumber;
-    this.isSubmitting = true;
-
-    try {
-      await model.save();
-      this.toast.success(`Message successfully sent`);
-
+    if (await this.saveModel.save({model, message: `Message successfully sent`, owner: this})) {
       if (!this.args.isContact) {
         if (topMessage) {
           topMessage.replies.push(record);
@@ -219,10 +216,6 @@ export default class MessageInboxComponent extends Component {
         onSuccess?.();
       }
       this.newMessage = null;
-    } catch (response) {
-      this.house.handleErrorResponse(response, model);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 
@@ -244,7 +237,7 @@ export default class MessageInboxComponent extends Component {
       this.toast.success(`Message has been marked as ${message.delivered ? 'read' : 'unread'}`);
       this.updateUnreadCount();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

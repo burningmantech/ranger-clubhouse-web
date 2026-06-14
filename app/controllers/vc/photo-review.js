@@ -40,17 +40,7 @@ export default class VcPhotoReviewController extends ClubhouseController {
   @action
   async approveAction(photo) {
     photo.status = 'approved';
-
-    try {
-      this.isSubmitting = true;
-      await photo.save();
-    } catch (response) {
-      photo.rollbackAttributes();
-      this.house.handleErrorResponse(response);
-
-    } finally {
-      this.isSubmitting = false;
-    }
+    await this.saveModel.save({model: photo, owner: this});
   }
 
   /**

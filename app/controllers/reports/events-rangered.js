@@ -56,6 +56,6 @@ export default class ReportsEventsRangeredController extends ClubhouseController
       }
     });
 
-    this.house.downloadCsv(`${this.signed_up_year}-events-rangered.csv`, CSV_COLUMNS, people);
+    this.download.downloadCsv(`${this.signed_up_year}-events-rangered.csv`, CSV_COLUMNS, people);
   }
 }

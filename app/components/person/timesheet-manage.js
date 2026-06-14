@@ -9,7 +9,8 @@ import {APPROVED} from "clubhouse/models/timesheet-missing";
 
 export default class PersonTimesheetManageComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
+  @service saveModel;
   @service modal;
   @service session;
   @service shiftManage;
@@ -88,7 +89,7 @@ export default class PersonTimesheetManageComponent extends Component {
       this.editEntry = timesheet;
       this._markOverlapping();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -187,16 +188,15 @@ export default class PersonTimesheetManageComponent extends Component {
   }
 
   async _performSave(model) {
-    this.house.saveModel(model, 'The timesheet entry has been successfully updated.',
-      async () => {
-        this.editEntry.additional_notes = '';
-        this.editEntry.additional_wrangler_notes = '';
-        this.editEntry.additional_admin_notes = '';
-        this.editEntry = null;
-        await this.args.timesheets.update();
-        this.args.onChange();
-        this._markOverlapping();
-      });
+    if (await this.saveModel.save({model, message: 'The timesheet entry has been successfully updated.'})) {
+      this.editEntry.additional_notes = '';
+      this.editEntry.additional_wrangler_notes = '';
+      this.editEntry.additional_admin_notes = '';
+      this.editEntry = null;
+      await this.args.timesheets.update();
+      this.args.onChange();
+      this._markOverlapping();
+    }
   }
 
   /**
@@ -206,33 +206,35 @@ export default class PersonTimesheetManageComponent extends Component {
    */
 
   @action
-  signoffAction(timesheet) {
-    this.ajax.request(`timesheet/${timesheet.id}/signoff`, {method: 'POST'})
-      .then((result) => {
-        const {onChange, person, endShiftNotify} = this.args;
-        onChange();
-        this._markOverlapping();
-        if (+person.id === +this.session.userId) {
-          // Clear out the position title in user's navigation bar.
-          this.session.loadUser();
-        }
-        switch (result.status) {
-          case 'success':
-            this.toast.success(`${person.callsign} has been successfully signed off.`);
-            if (endShiftNotify) {
-              endShiftNotify();
-            }
-            break;
+  async signoffAction(timesheet) {
+    try {
+      const result = await this.ajax.request(`timesheet/${timesheet.id}/signoff`, {method: 'POST'});
+      const {onChange, person, endShiftNotify} = this.args;
+      onChange();
+      this._markOverlapping();
+      if (+person.id === +this.session.userId) {
+        // Clear out the position title in user's navigation bar.
+        this.session.loadUser();
+      }
+      switch (result.status) {
+        case 'success':
+          this.toast.success(`${person.callsign} has been successfully signed off.`);
+          if (endShiftNotify) {
+            endShiftNotify();
+          }
+          break;
 
-          case 'already-signed-off':
-            this.toast.error(`${person.callsign} was already signed off.`);
-            break;
+        case 'already-signed-off':
+          this.toast.error(`${person.callsign} was already signed off.`);
+          break;
 
-          default:
-            this.toast.error(`Unknown signoff response [${result.status}].`);
-            break;
-        }
-      }).catch((response) => this.house.handleErrorResponse(response))
+        default:
+          this.toast.error(`Unknown signoff response [${result.status}].`);
+          break;
+      }
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    }
   }
 
   /**
@@ -253,7 +255,7 @@ export default class PersonTimesheetManageComponent extends Component {
       this.args.onChange();
       this._markOverlapping();
     } catch (e) {
-      this.house.handleErrorResponse(e);
+      this.errors.handleErrorResponse(e);
     } finally {
       this.deleteEntry = null;
     }

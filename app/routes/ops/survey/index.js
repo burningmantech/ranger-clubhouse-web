@@ -1,21 +1,20 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
-import RSVP from 'rsvp';
 
 export default class OpsSurveyIndexRoute extends ClubhouseRoute {
   queryParams = {
     year: {refreshModel: true}
   };
 
-  model(params) {
+  async model(params) {
     const year = requestYear(params);
     this.year = year;
-    return RSVP.hash({
-      surveys: this.store.query('survey', {year}),
-      positions: this.ajax.request('survey/positions').then(({positions}) => positions),
-      mentorPositions: this.ajax.request('position', {data: {mentor: 1}}).then(({position}) => position),
-      menteePositions: this.ajax.request('position', {data: {mentee: 1}}).then(({position}) => position)
-    });
+    return {
+      surveys: await this.store.query('survey', {year}),
+      positions: (await this.ajax.request('survey/positions')).positions,
+      mentorPositions: (await this.ajax.request('position', {data: {mentor: 1}})).position,
+      menteePositions: (await this.ajax.request('position', {data: {mentee: 1}})).position
+    };
   }
 
   setupController(controller, model) {

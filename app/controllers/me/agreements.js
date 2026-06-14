@@ -12,7 +12,7 @@ export default class MeAgreementsController extends ClubhouseController {
 
   @action
   reviewAgreementToSign(agreement) {
-    this.house.scrollToTop();
+    this.scroll.scrollToTop();
     this.showAgreementForSigning = agreement;
   }
 
@@ -24,7 +24,7 @@ export default class MeAgreementsController extends ClubhouseController {
 
   @action
   showAgreement(agreement) {
-    this.house.scrollToTop();
+    this.scroll.scrollToTop();
     this.showAgreementToView = agreement;
   }
 
@@ -35,7 +35,7 @@ export default class MeAgreementsController extends ClubhouseController {
 
   @action
   openTeamDocument(team) {
-    this.house.scrollToTop();
+    this.scroll.scrollToTop();
     this.showTeam = team;
   }
 

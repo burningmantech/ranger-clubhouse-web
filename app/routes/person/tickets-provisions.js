@@ -6,7 +6,7 @@ export default class PersonTicketsProvisionsRoute extends ClubhouseRoute {
 
   setupController(controller) {
     controller.set('person', this.modelFor('person'));
-    controller.set('year', this.house.currentYear());
+    controller.set('year', this.session.currentYear());
     controller.loadStuff();
   }
 }

@@ -9,7 +9,7 @@ import validateState from "clubhouse/validators/state";
 
 export default class VcApplicationPersonalInfoComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service toast;
 
   @tracked stateOptions = null;
@@ -59,7 +59,7 @@ export default class VcApplicationPersonalInfoComponent extends Component {
       await application.reload();
       this.toast.success('The application has been approved, and the applicant emailed.');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

@@ -1,8 +1,8 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
 export default class VcAccessDocumentsIndexRoute extends ClubhouseRoute {
-  model() {
-     return this.ajax.request(`access-document/current`).then(({documents}) => documents);
+  async model() {
+     return (await this.ajax.request(`access-document/current`)).documents;
   }
 
   setupController(controller, model ) {

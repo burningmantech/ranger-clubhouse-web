@@ -7,10 +7,10 @@ export default class TicketPackage {
   @tracked provisionsBanked = false;
   @tracked provisionsBankable = false;
 
-  constructor(pkg, person_id, house) {
+  constructor(pkg, person_id, storePayload) {
 
     // Build up models for the regular tickets, gift, and LSD.
-    const docs = pkg.access_documents.map((ad) => house.pushPayload('access-document', ad));
+    const docs = pkg.access_documents.map((ad) => storePayload.pushPayload('access-document', ad));
 
     this.accessDocuments = docs;
     this.tickets = docs.filter((d) => d.isRegularTicket);
@@ -20,14 +20,14 @@ export default class TicketPackage {
     this.wap = docs.find((d) => d.isWAP);
     this.wapso = docs.filter((d) => d.isWAPSO);
 
-    const giftItems = pkg.gift_items.map((ad) => house.pushPayload('access-document', ad));
+    const giftItems = pkg.gift_items.map((ad) => storePayload.pushPayload('access-document', ad));
     this.giftTickets = giftItems.filter((i) => i.isGiftTicket);
 
-    const lsdItems = pkg.lsd_items.map((ad) => house.pushPayload('access-document', ad));
+    const lsdItems = pkg.lsd_items.map((ad) => storePayload.pushPayload('access-document', ad));
     this.lsdTickets = lsdItems.filter((i) => i.isLSDTicket);
     this.lsdVPs = lsdItems.filter((i) => i.isVehiclePassLSD);
 
-    this.provision_records = pkg.provision_records.map((p) => house.pushPayload('provision', p));
+    this.provision_records = pkg.provision_records.map((p) => storePayload.pushPayload('provision', p));
     this.provisions = pkg.provisions;
     this.provisionsBankable = pkg.provisions_bankable;
     this.provisionsBanked = pkg.provisions_banked;

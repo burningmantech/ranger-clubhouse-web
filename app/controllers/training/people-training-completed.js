@@ -87,6 +87,6 @@ export default class TrainingPeopleTrainingCompletedController extends Clubhouse
       })
     })
 
-    this.house.downloadCsv(`${this.year}-training-completed`, csvColumns, rows);
+    this.download.downloadCsv(`${this.year}-training-completed`, csvColumns, rows);
   }
 }

@@ -5,14 +5,16 @@ import {action} from '@ember/object';
 import dayjs from 'dayjs';
 
 export default class ScheduleTableComponent extends Component {
-  @service house;
+  @service errors;
+  @service download;
+  @service session;
   @service modal;
   @tracked showAllShifts = true;
   @tracked showCalendarExportAdvisory = false;
 
   constructor() {
     super(...arguments);
-    this.isCurrentYear = (+this.args.year === this.house.currentYear());
+    this.isCurrentYear = (+this.args.year === this.session.currentYear());
     if (this.isCurrentYear) {
       this.showAllShifts = false;
     }
@@ -87,7 +89,7 @@ export default class ScheduleTableComponent extends Component {
     try {
       ical = (await import('ical-generator')).default;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       return;
     }
 
@@ -111,7 +113,7 @@ export default class ScheduleTableComponent extends Component {
     });
 
     this.showCalendarExportAdvisory = false;
-    this.house.downloadFile(`${this.args.year}-ranger-schedule.ics`, calendar.toString(), 'text/calendar');
+    this.download.downloadFile(`${this.args.year}-ranger-schedule.ics`, calendar.toString(), 'text/calendar');
   }
 
   @action

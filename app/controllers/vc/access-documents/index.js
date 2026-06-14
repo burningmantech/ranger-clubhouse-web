@@ -90,7 +90,7 @@ export default class VcAccessDocumentsIndexController extends ClubhouseControlle
     try {
       this.accessDocuments = await this.store.query('access-document', {include_person: 1});
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }
@@ -109,6 +109,6 @@ export default class VcAccessDocumentsIndexController extends ClubhouseControlle
       comments: row.comments,
     }));
 
-    this.house.downloadCsv(`${this.house.currentYear()}-access-documents.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.session.currentYear()}-access-documents.csv`, CSV_COLUMNS, rows);
   }
 }

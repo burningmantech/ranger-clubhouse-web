@@ -37,6 +37,6 @@ export default class ReportsAssetHistoryController extends ClubhouseController {
       });
     });
 
-    return this.house.downloadCsv(`${this.year}-assets-history-non-radio.csv`, CSV_COLUMNS, rows);
+    return this.download.downloadCsv(`${this.year}-assets-history-non-radio.csv`, CSV_COLUMNS, rows);
   }
 }

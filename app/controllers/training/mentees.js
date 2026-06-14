@@ -24,7 +24,7 @@ export default class TrainingMenteesController extends ClubhouseController {
           person.positionsRevoked = true;
           this.toast.success('Mentee position(s) successfully revoked')
         } catch (response) {
-          this.house.handleErrorResponse()
+          this.errors.handleErrorResponse()
         } finally {
           this.isSubmitting = false;
         }
@@ -59,6 +59,6 @@ export default class TrainingMenteesController extends ClubhouseController {
       return row;
     });
 
-    this.house.downloadCsv(`${this.training.title.replace(' Training', '').replaceAll(' ', '-')}-current-mentees.csv`, columns, data);
+    this.download.downloadCsv(`${this.training.title.replace(' Training', '').replaceAll(' ', '-')}-current-mentees.csv`, columns, data);
   }
 }

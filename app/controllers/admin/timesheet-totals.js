@@ -29,6 +29,6 @@ export default class AdminTimesheetTotalsController extends ClubhouseController 
       })
     });
 
-    this.house.downloadCsv(`${year}-timesheet-totals.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${year}-timesheet-totals.csv`, CSV_COLUMNS, rows);
   }
 }

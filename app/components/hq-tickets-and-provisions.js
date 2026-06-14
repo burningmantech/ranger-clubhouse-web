@@ -6,8 +6,7 @@ export default class HqTicketsAndProvisionsComponent extends Component {
   @tracked isLoading = false;
   @tracked isNotRanger = false;
   @service ajax;
-  @service house;
-
+  @service errors;
   constructor() {
     super(...arguments);
 
@@ -17,8 +16,12 @@ export default class HqTicketsAndProvisionsComponent extends Component {
     }
 
     this.isLoading = true;
+    this._loadProgress();
+  }
 
-    this.ajax.request(`person/${this.args.person.id}/tickets-provisions-progress`).then(({progress}) => {
+  async _loadProgress() {
+    try {
+      const {progress} = await this.ajax.request(`person/${this.args.person.id}/tickets-provisions-progress`);
       this.items = progress.items.reduce((items, item) => {
         this._formatItem(item);
         items[item.name] = item;
@@ -26,7 +29,9 @@ export default class HqTicketsAndProvisionsComponent extends Component {
       }, {});
       this.isShinyPenny = progress.is_shiny_penny;
       this.isLoading = false;
-    }).catch((response) => this.house.handleErrorResponse(response));
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    }
   }
 
   _formatItem(item) {

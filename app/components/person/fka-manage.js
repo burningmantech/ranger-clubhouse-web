@@ -7,7 +7,8 @@ import {validatePresence} from 'ember-changeset-validations/validators';
 export default class PersonFkaManageComponent extends Component {
   @service ajax;
   @service modal;
-  @service house;
+  @service errors;
+  @service saveModel;
   @service store;
   @service toast;
 
@@ -51,19 +52,12 @@ export default class PersonFkaManageComponent extends Component {
       return;
     }
 
-    try {
-      const {isNew} = this.entry;
-      this.isSubmitting = true;
-      await model.save();
+    const {isNew} = this.entry;
+    if (await this.saveModel.save({model, message: 'The FKA was successfully saved.', owner: this})) {
       if (isNew) {
         await this.args.personFkas.update();
       }
-      this.toast.success(`The FKA was successfully saved.`);
       this.entry = null;
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 
@@ -77,7 +71,7 @@ export default class PersonFkaManageComponent extends Component {
           await row.destroyRecord();
           this.toast.success('The FKA was deleted.');
         } catch (response) {
-          this.house.handleErrorResponse(response)
+          this.errors.handleErrorResponse(response)
         } finally {
           this.isSubmitting = false;
         }

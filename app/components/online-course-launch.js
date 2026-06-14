@@ -5,7 +5,7 @@ import {service} from '@ember/service';
 import {TRAINING} from "clubhouse/constants/positions";
 
 export default class OnlineCourseLaunchComponent extends Component {
-  @service house;
+  @service errors;
   @service ajax;
 
   @tracked showCreationDialog = false;
@@ -81,7 +81,7 @@ export default class OnlineCourseLaunchComponent extends Component {
         this.toast.error(`Unknown status [${status}]`);
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

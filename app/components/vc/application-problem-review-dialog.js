@@ -8,7 +8,8 @@ import {TYPE_VC_COMMENT} from "clubhouse/models/prospective-application-note";
 
 export default class VcApplicationProblemReviewDialogComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
+  @service saveModel;
   @service toast;
 
   @tracked isSubmitting;
@@ -31,11 +32,12 @@ export default class VcApplicationProblemReviewDialogComponent extends Component
     }
 
     const {application} = this.args;
+    application.why_volunteer_review = WHY_VOLUNTEER_REVIEW_PROBLEM;
+    if (!await this.saveModel.save({model: application, owner: this})) {
+      return;
+    }
 
     try {
-      this.isSubmitting = true;
-      application.why_volunteer_review = WHY_VOLUNTEER_REVIEW_PROBLEM;
-      await application.save();
       await this.ajax.post(`prospective-application/${application.id}/note`, {
         data: {type: TYPE_VC_COMMENT, note: `Why Ranger Review: ${model.message}`}
       });
@@ -43,9 +45,7 @@ export default class VcApplicationProblemReviewDialogComponent extends Component
       this.toast.success('Paragraph marked as problematic.');
       this.args.onClose();
     } catch (response) {
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
+      this.errors.handleErrorResponse(response);
     }
   }
 }

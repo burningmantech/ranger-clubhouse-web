@@ -7,14 +7,14 @@ import dayjs from "dayjs";
 export default class MentorAcceptanceSheetsRoute extends ClubhouseRoute {
   async model() {
     return {
-      alphas: await this.ajax.request('mentor/alphas').then((result) => result.alphas),
-      slots: await this.ajax.request('slot', {
+      alphas: (await this.ajax.request('mentor/alphas')).alphas,
+      slots: (await this.ajax.request('slot', {
         data: {
           position_id: ALPHA,
-          year: this.house.currentYear(),
+          year: this.session.currentYear(),
           active: true
         }
-      }).then((result) => result.slot)
+      })).slot
     }
   }
 
@@ -23,7 +23,7 @@ export default class MentorAcceptanceSheetsRoute extends ClubhouseRoute {
     controller.alphas =  alphas.map((a) => new Selectable(a));
     controller.filter ='all';
     controller.selectAll = true;
-    controller.year =  this.house.currentYear();
+    controller.year =  this.session.currentYear();
     controller.isPrinting = false;
     controller._buildViewAlphas();
 

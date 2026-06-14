@@ -1,16 +1,15 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import shirtOptions from 'clubhouse/utils/shirt-options';
-import RSVP from 'rsvp';
 
 export default class MePersonInfoRoute extends ClubhouseRoute {
-  model({review}) {
+  async model({review}) {
     this.isReviewing = !!review;
-    return RSVP.hash({
-      shirts: this.ajax.request('swag/shirts').then(({shirts}) => shirts),
-      personEvent: this.store.findRecord('person-event', `${this.session.userId}-${this.house.currentYear()}`, {reload: true}),
-      dashboardPeriod: this.ajax.request('config/dashboard-period').then(({period}) => period),
-      languages: this.store.query('person-language', { person_id: this.session.userId })
-    });
+    return {
+      shirts: (await this.ajax.request('swag/shirts')).shirts,
+      personEvent: await this.store.findRecord('person-event', `${this.session.userId}-${this.session.currentYear()}`, {reload: true}),
+      dashboardPeriod: (await this.ajax.request('config/dashboard-period')).period,
+      languages: await this.store.query('person-language', { person_id: this.session.userId })
+    };
   }
 
   setupController(controller, {shirts, personEvent, dashboardPeriod, languages}) {

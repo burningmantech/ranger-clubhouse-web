@@ -16,7 +16,7 @@ import {
 
 export default class AssetCheckoutFormComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
   @service toast;
 
@@ -92,7 +92,7 @@ export default class AssetCheckoutFormComponent extends Component {
       const result = await this.ajax.post('asset/checkout', {data});
       this.handleCheckoutResult(result, barcode, attachment_id);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

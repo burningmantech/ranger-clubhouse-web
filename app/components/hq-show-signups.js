@@ -15,7 +15,7 @@ const POSITIONS = {
 
 export default class HqShowSignupsComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @tracked isLoading = true;
   @tracked isOpen = false;
   @tracked people;
@@ -50,7 +50,7 @@ export default class HqShowSignupsComponent extends Component {
       });
       this.people = people;
     } catch (e) {
-      this.house.handleErrorResponse(e);
+      this.errors.handleErrorResponse(e);
     } finally {
       this.isLoading = false;
     }

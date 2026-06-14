@@ -7,6 +7,6 @@ export default class ReportsVehiclePaperworkRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     controller.set('people', model.people);
-    controller.set('year', this.house.currentYear());
+    controller.set('year', this.session.currentYear());
   }
 }

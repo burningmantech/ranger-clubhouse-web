@@ -3,10 +3,9 @@ import { action } from '@ember/object';
 import {service} from '@ember/service';
 
 export default class CopyToClipboardComponent extends Component {
-  @service house;
-
+  @service browser;
   @action
   copyText() {
-    this.house.copyToClipboard(this.args.text);
+    this.browser.copyToClipboard(this.args.text);
   }
 }

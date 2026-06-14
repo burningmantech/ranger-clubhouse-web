@@ -35,9 +35,7 @@ export default class MePersonalInfoEditController extends ClubhouseController {
     const emailChanged = model.email !== this.person.email;
     const oldEmail = this.person.email;
 
-    try {
-      await model.save();
-      this.toast.success('Your personal information was successfully updated.');
+    if (await this.saveModel.save({model, message: 'Your personal information was successfully updated.'})) {
       if (emailChanged && this.person.isRanger) {
         this.message = '';
         this.showUpdateMailingListsDialog = true;
@@ -45,10 +43,8 @@ export default class MePersonalInfoEditController extends ClubhouseController {
       }
       callBack?.();
       return true;
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-      return false;
     }
+    return false;
   }
 
   @action
@@ -59,14 +55,16 @@ export default class MePersonalInfoEditController extends ClubhouseController {
   }
 
   @action
-  sendMailingListUpdateRequest() {
-    this.ajax.request(`contact/${this.person.id}/update-mailing-lists`,
-      {method: 'POST', data: {old_email: this.oldEmail, message: this.message}})
-      .then(() => {
-        this.showUpdateMailingListsDialog = false;
-        this.toast.success('Request to update mailing lists successfully sent.');
-        this.router.transitionTo('me.homepage');
-      }).catch((response) => this.house.handleErrorResponse(response));
+  async sendMailingListUpdateRequest() {
+    try {
+      await this.ajax.request(`contact/${this.person.id}/update-mailing-lists`,
+        {method: 'POST', data: {old_email: this.oldEmail, message: this.message}});
+      this.showUpdateMailingListsDialog = false;
+      this.toast.success('Request to update mailing lists successfully sent.');
+      this.router.transitionTo('me.homepage');
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    }
   }
 
   @action
@@ -83,7 +81,7 @@ export default class MePersonalInfoEditController extends ClubhouseController {
       }
       await this._savePerson(model,  cb);
     } catch (response) {
-      this.house.handleErrorResponse(response, model)
+      this.errors.handleErrorResponse(response, model)
     }
   }
 
@@ -121,7 +119,7 @@ export default class MePersonalInfoEditController extends ClubhouseController {
     try {
       await this.ajax.post(`person-event/${this.session.userId}/progress`, {data: {milestone: `pii-${milestone}`}});
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 }

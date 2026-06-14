@@ -8,7 +8,7 @@ import {setting} from "clubhouse/utils/setting";
 
 export default class PersonRolesComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service session;
   @service toast;
 
@@ -68,7 +68,7 @@ export default class PersonRolesComponent extends Component {
     try {
       this.cachedRoles = await this.ajax.request('role/inspect-cache', {data: {person_id: this.args.person.id}});
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
@@ -82,10 +82,13 @@ export default class PersonRolesComponent extends Component {
    */
 
   @action
-  clearRoleCacheAction() {
-    this.ajax.request('role/clear-cache', {method: 'POST', data: {person_id: this.args.person.id}}).then(() => {
+  async clearRoleCacheAction() {
+    try {
+      await this.ajax.request('role/clear-cache', {method: 'POST', data: {person_id: this.args.person.id}});
       this.toast.success('Role cache has been cleared.');
-    }).catch((response) => this.house.handleErrorResponse(response));
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    }
   }
 }
 

@@ -126,7 +126,7 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
       });
       successCallback?.();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -161,20 +161,14 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
   async savePod(model) {
     const {isNew} = this.editPod;
     const pod = this.editPod;
-    this.isSubmitting = true;
-    try {
-      await model.save();
-      if (isNew) {
-        this.pods = [...this.pods, this.editPod];
-      }
-      this.editPod = null;
-      this.toast.success('Pod successfully saved.');
-    } catch (response) {
-      this.house.handleErrorResponse(response);
+    if (!await this.saveModel.save({model, message: 'Pod successfully saved.', owner: this})) {
       return;
-    } finally {
-      this.isSubmitting = false;
     }
+
+    if (isNew) {
+      this.pods = [...this.pods, this.editPod];
+    }
+    this.editPod = null;
 
     if (isNew) {
       this.isNewPod = true;
@@ -212,7 +206,7 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
           }
           this.toast.success('The pod has been removed.');
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false
         }
@@ -253,7 +247,7 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
         }
       })).timesheet;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       return;
     } finally {
       this.isSubmitting = false;
@@ -324,11 +318,11 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
           data: {person_id: +personIds[i]}
         })).pod;
       }
-      this.house.pushPayload('pod', pod);
+      this.storePayload.pushPayload('pod', pod);
       this.showAddDialog = false;
       this.toast.success('Person successfully removed.');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -379,9 +373,9 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
             method: 'DELETE',
             data: {person_id: person.id}
           })).pod;
-          this.house.pushPayload('pod', updatedPod);
+          this.storePayload.pushPayload('pod', updatedPod);
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }
@@ -422,7 +416,7 @@ export default class OpsCruiseDirectionController extends ClubhouseController {
       await this._loadSelectedShift();
       this.toast.success('Person successfully moved.');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

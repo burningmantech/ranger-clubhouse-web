@@ -102,7 +102,7 @@ export default class RegisterController extends ClubhouseController {
     const humanAnswer = (model.get('human') ?? '').trim();
     if (!isHumanAnswerValid(humanAnswer)) {
       model.pushErrors('human', HUMAN_ERROR_MSG);
-      this.house.scrollToTop();
+      this.scroll.scrollToTop();
       return;
     }
 
@@ -119,7 +119,7 @@ export default class RegisterController extends ClubhouseController {
       const result = await this.ajax.post('person/register', {data: {person, intent, human: humanAnswer}});
       this.handleRegisterResult(result);
     } catch (response) {
-      this.house.handleErrorResponse(response, model);
+      this.errors.handleErrorResponse(response, model);
     } finally {
       this.isSaving = false;
     }

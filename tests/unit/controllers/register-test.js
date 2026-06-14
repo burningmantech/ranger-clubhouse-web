@@ -74,8 +74,10 @@ module('Unit | Controller | register', function (hooks) {
     });
     this.scrollToTop = spy();
     this.handleErrorResponse = spy();
-    this.owner.register('service:house', class extends Service {
+    this.owner.register('service:scroll', class extends Service {
       scrollToTop = test.scrollToTop;
+    });
+    this.owner.register('service:errors', class extends Service {
       handleErrorResponse = test.handleErrorResponse;
     });
   });

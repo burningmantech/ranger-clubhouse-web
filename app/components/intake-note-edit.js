@@ -7,8 +7,7 @@ export default class IntakeNoteEditComponent extends Component {
   @service ajax;
   @service toast;
   @service modal;
-  @service house;
-
+  @service errors;
   rankingOptions = [
     ["No Ranking", ''],
     ["1 - Green (Above Average)", 1],
@@ -63,7 +62,7 @@ export default class IntakeNoteEditComponent extends Component {
   }
 
   @action
-  submitNoteAction(model, isValid) {
+  async submitNoteAction(model, isValid) {
     if (!isValid) {
       return;
     }
@@ -95,14 +94,18 @@ export default class IntakeNoteEditComponent extends Component {
 
     this.isSubmitting = true;
 
-    this.ajax.request(`intake/${person.id}/note`, {
-      method: 'POST', data
-    }).then(() => {
+    try {
+      await this.ajax.request(`intake/${person.id}/note`, {
+        method: 'POST', data
+      });
       this.toast.success('Note successfully saved.');
       this.args.onSubmit?.(person);
       this.args.closeNoteAction?.();
-    }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
 }

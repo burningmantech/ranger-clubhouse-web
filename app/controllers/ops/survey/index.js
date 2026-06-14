@@ -22,10 +22,13 @@ export default class OpsSurveyIndexController extends ClubhouseController {
   deleteSurveyAction(survey) {
     this.modal.confirm('Confirm Deletion',
       'You are about to delete a survey. All questions and answers will be removed. Are you sure you want to do this?',
-      () => {
-        survey.destroyRecord().then(() => {
+      async () => {
+        try {
+          await survey.destroyRecord();
           this.surveys.update();
-        }).catch((response) => this.house.handleErrorResponse(response));
+        } catch (response) {
+          this.errors.handleErrorResponse(response);
+        }
       });
   }
 
@@ -44,19 +47,21 @@ export default class OpsSurveyIndexController extends ClubhouseController {
 
   @action
   duplicateSurveyAction(survey) {
-    const year = this.house.currentYear();
+    const year = this.session.currentYear();
 
     this.modal.confirm('Duplicate Survey',
       `Are you sure you want to duplicate "${survey.title}"? The survey will be duplicated as a ${year} survey.`,
-      () => {
+      async () => {
         this.isDuplicating = true;
-        this.ajax.request(`survey/${survey.id}/duplicate`, { method: 'POST' })
-          .then((result) => {
-            this.toast.success('Survey was successfully duplicated.');
-            this.router.transitionTo('ops.survey.manage', result.survey_id);
-          })
-          .catch((response) => this.house.handleErrorResponse(response))
-          .finally(() => this.isDuplicating = false);
+        try {
+          const result = await this.ajax.request(`survey/${survey.id}/duplicate`, { method: 'POST' });
+          this.toast.success('Survey was successfully duplicated.');
+          this.router.transitionTo('ops.survey.manage', result.survey_id);
+        } catch (response) {
+          this.errors.handleErrorResponse(response);
+        } finally {
+          this.isDuplicating = false;
+        }
       });
   }
 

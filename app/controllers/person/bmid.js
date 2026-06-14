@@ -13,11 +13,6 @@ export default class PersonBmidController extends ClubhouseController {
       return;
     }
 
-    try {
-      await model.save();
-      this.toast.success('BMID successfully updated.');
-    } catch (response) {
-      this.handleErrorResponse(response);
-    }
+    await this.saveModel.save({model, message: 'BMID successfully updated.'});
   }
 }

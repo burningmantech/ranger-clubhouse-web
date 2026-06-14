@@ -19,13 +19,6 @@ export default class PersonPersonalInfoController extends ClubhouseController {
       return false;
     }
 
-    try {
-      await model.save();
-      this.toast.success('Personal info was successfully updated.');
-      return true;
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-      return false;
-    }
+    return this.saveModel.save({model, message: 'Personal info was successfully updated.'});
   }
 }

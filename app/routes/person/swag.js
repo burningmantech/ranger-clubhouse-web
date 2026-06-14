@@ -6,7 +6,7 @@ export default class PersonSwagRoute extends ClubhouseRoute {
   async model() {
     const person_id = this.modelFor('person').id;
     return {
-      swags: await this.ajax.request('swag').then(({swag}) => swag),
+      swags: (await this.ajax.request('swag')).swag,
       personSwag: await this.store.query('person-swag', {person_id}),
     };
   }

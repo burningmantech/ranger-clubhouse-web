@@ -150,21 +150,21 @@ export default class AdminPositionsController extends ClubhouseController {
           await position.destroyRecord();
           this.toast.success('The position has been deleted.');
           this.position = null;
-          this.house.scrollToTop(true);
+          this.scroll.scrollToTop(true);
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         }
       });
   }
 
   @action
-  saveAction(model, isValid) {
+  async saveAction(model, isValid) {
     if (!isValid) {
       return;
     }
 
     const isNew = model.isNew;
-    this.house.saveModel(model, `The position has been ${isNew ? 'created' : 'updated'}.`, async () => {
+    if (await this.saveModel.save({model, message: `The position has been ${isNew ? 'created' : 'updated'}.`})) {
       try {
         if (isNew) {
           await this.positions.update(); // re-query so the new position appears in the list
@@ -172,9 +172,9 @@ export default class AdminPositionsController extends ClubhouseController {
         this._scrollToPosition(this.position.id);
         this.position = null;
       } catch (response) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       }
-    });
+    }
   }
 
   @action
@@ -184,7 +184,7 @@ export default class AdminPositionsController extends ClubhouseController {
 
     if (position.isNew) {
       position.unloadRecord();
-      this.house.scrollToTop(true);
+      this.scroll.scrollToTop(true);
     } else {
       this._scrollToPosition(position.id);
     }
@@ -197,6 +197,6 @@ export default class AdminPositionsController extends ClubhouseController {
 
   _scrollToPosition(positionId) {
     // Let the list re-render before scrolling to the row.
-    later(() => this.house.scrollToElement(`#position-${positionId}`, true), 100);
+    later(() => this.scroll.scrollToElement(`#position-${positionId}`, true), 100);
   }
 }

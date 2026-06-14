@@ -26,7 +26,8 @@ export default class PersonTimesheetMissingComponent extends Component {
   @tracked isSubmitting = false;
 
   @service ajax;
-  @service house;
+  @service errors;
+  @service saveModel;
   @service modal;
   @service session;
   @service shiftManage;
@@ -141,7 +142,7 @@ export default class PersonTimesheetMissingComponent extends Component {
       this.havePartnerTimesheet = false;
 
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       this.editEntry = null;
     } finally {
       this.isSubmitting = false;
@@ -190,34 +191,33 @@ export default class PersonTimesheetMissingComponent extends Component {
     this.shiftManage.checkForOverlap(this.args.person.id, model.new_on_duty, model.new_off_duty, null, () => this._saveCommon(model, nextEntry));
   }
 
-  _saveCommon(model, nextEntry) {
+  async _saveCommon(model, nextEntry) {
     const createEntry = model.create_entry;
-    this.house.saveModel(model, 'Missing timesheet entry has been successfully updated.',
-      async () => {
-        this.editEntry = null;
-        this.nextEntry = null;
-        this.newEntry = null;
-        this.havePartnerTimesheet = null;
+    if (await this.saveModel.save({model, message: 'Missing timesheet entry has been successfully updated.'})) {
+      this.editEntry = null;
+      this.nextEntry = null;
+      this.newEntry = null;
+      this.havePartnerTimesheet = null;
 
-        const {timesheets, onChange} = this.args;
-        // Refresh the timesheet entries if a new one was created
-        if (createEntry && timesheets) {
-          try {
-            this.isSubmitting = true;
-            await timesheets.update();
-          } catch (response) {
-            this.house.handleErrorResponse(response);
-          } finally {
-            this.isSubmitting = false;
-          }
+      const {timesheets, onChange} = this.args;
+      // Refresh the timesheet entries if a new one was created
+      if (createEntry && timesheets) {
+        try {
+          this.isSubmitting = true;
+          await timesheets.update();
+        } catch (response) {
+          this.errors.handleErrorResponse(response);
+        } finally {
+          this.isSubmitting = false;
         }
+      }
 
-        if (nextEntry) {
-          await this._setupEdit(nextEntry);
-        }
+      if (nextEntry) {
+        await this._setupEdit(nextEntry);
+      }
 
-        onChange();
-      });
+      onChange();
+    }
   }
 
   @action
@@ -269,7 +269,7 @@ export default class PersonTimesheetMissingComponent extends Component {
           this.toast.success('The entry has been deleted.');
           this.editEntry = null;
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }
@@ -296,7 +296,7 @@ export default class PersonTimesheetMissingComponent extends Component {
       this.partnerTimesheet = timesheet;
       this.partnerCallsign = partner.callsign;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -361,27 +361,26 @@ export default class PersonTimesheetMissingComponent extends Component {
     this.shiftManage.checkForOverlap(this.args.person.id, model.on_duty, model.off_duty, null, () => this._createCommon(model));
   }
 
-  _createCommon(model) {
-    this.house.saveModel(model, 'A new missing timesheet request has been successfully created.',
-      async () => {
-        this.newEntry = null;
-        try {
-          const {timesheets, onChange} = this.args;
-          this.isSubmitting = false;
-          model.additional_admin_notes = null;
-          model.additional_wranger_notes = null;
-          model.additional_reviewer_notes = null;
-          await this.args.timesheetMissing.update();
-          if (model.create_entry) {
-            await timesheets?.update();
-          }
-          onChange?.();
-        } catch (response) {
-          this.house.handleErrorResponse(response);
-        } finally {
-          this.isSubmitting = false;
+  async _createCommon(model) {
+    if (await this.saveModel.save({model, message: 'A new missing timesheet request has been successfully created.'})) {
+      this.newEntry = null;
+      try {
+        const {timesheets, onChange} = this.args;
+        this.isSubmitting = false;
+        model.additional_admin_notes = null;
+        model.additional_wranger_notes = null;
+        model.additional_reviewer_notes = null;
+        await this.args.timesheetMissing.update();
+        if (model.create_entry) {
+          await timesheets?.update();
         }
-      });
+        onChange?.();
+      } catch (response) {
+        this.errors.handleErrorResponse(response);
+      } finally {
+        this.isSubmitting = false;
+      }
+    }
   }
 
   get canManageTimesheets() {

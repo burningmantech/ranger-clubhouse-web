@@ -25,7 +25,7 @@ const ELIGIBILITY_REQUIREMENTS_INCOMPLETE = 'requirements-incomplete';
 
 export default class ArtTrainingGraduateComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
   @service toast;
 
@@ -93,7 +93,7 @@ export default class ArtTrainingGraduateComponent extends Component {
         }
       });
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       this.args.onCancel();
     } finally {
       this.isLoading = false;
@@ -142,7 +142,7 @@ export default class ArtTrainingGraduateComponent extends Component {
         }
       });
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

@@ -10,7 +10,7 @@ const UNVERIFIED_MESSAGE = 'Timesheet was successfully un-verified.';
 const SKIPPED_MESSAGE = 'Timesheet review has been skipped.';
 
 export default class HqTimesheetVerificationComponent extends Component {
-  @service hqAction;
+  @service saveModel;
   @service store;
   @service toast;
 
@@ -59,8 +59,9 @@ export default class HqTimesheetVerificationComponent extends Component {
     entry.review_status = (wasVerified ? STATUS_UNVERIFIED : STATUS_VERIFIED);
 
     try {
-      const success = await this.hqAction.saveWithRollback(entry, {
-        successMessage: entry.isVerified ? VERIFIED_MESSAGE : UNVERIFIED_MESSAGE,
+      const success = await this.saveModel.save({
+        model: entry,
+        message: entry.isVerified ? VERIFIED_MESSAGE : UNVERIFIED_MESSAGE,
       });
       if (success) {
         this._finishedCallbacks();

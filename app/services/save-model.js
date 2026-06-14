@@ -1,34 +1,38 @@
 import Service, {service} from '@ember/service';
+import {isChangeset} from 'validated-changeset';
 
 /**
- * Shared helper service for saving an Ember Data record with a centralized
- * double-submit guard and standardized success/error handling.
+ * The record-save seam: the one place an Ember Data record OR an
+ * ember-changeset is persisted. Owns the save → toast → error → rollback
+ * choreography so callers stop re-typing it.
  *
- * Centralizes the save idiom that was previously re-typed across controllers
- * and components: flipping an `isSubmitting` guard, clearing toasts, saving the
- * record, reporting success, and rolling back attributes on failure.
+ * For the command-POST counterpart — a server action that returns a status
+ * rather than a saved record — see the `command` service.
  */
 export default class SaveModelService extends Service {
-  @service house;
+  @service errors;
   @service toast;
 
   /**
-   * Save an Ember Data record, guarding against concurrent saves.
+   * Persist a record or changeset.
    *
    * @param {object} options
-   * @param {Model} options.model the Ember Data record to save
-   * @param {string} [options.message] success toast message; shown only on success
-   * @param {object} options.owner the controller/component exposing a tracked
-   *   `isSubmitting` field, used as the double-submit guard
-   * @returns {Promise<boolean>} true on success, false on failure OR if a save
-   *   is already in flight
+   * @param {Model|Changeset} options.model the record or changeset to save
+   * @param {string} [options.message] success toast; shown only on success
+   * @param {object} [options.owner] optional double-submit guard — a
+   *   controller/component exposing a tracked `isSubmitting`. Omit it when the
+   *   caller owns its own guard (e.g. a differently-named pending flag).
+   * @returns {Promise<boolean>} true on success; false on failure OR if a
+   *   guarded save is already in flight.
    */
   async save({model, message, owner}) {
-    if (owner.isSubmitting) {
+    if (owner?.isSubmitting) {
       return false;
     }
 
-    owner.isSubmitting = true;
+    if (owner) {
+      owner.isSubmitting = true;
+    }
     this.toast.clear();
     try {
       await model.save();
@@ -37,11 +41,19 @@ export default class SaveModelService extends Service {
       }
       return true;
     } catch (response) {
-      this.house.handleErrorResponse(response);
-      model.rollbackAttributes();
+      // A changeset carries the server's field errors back to the form; a bare
+      // record has no changeset to populate, so pass null.
+      this.errors.handleErrorResponse(response, isChangeset(model) ? model : null);
+      // Changesets are throwaway clones (ch-form rebuilds them on the next
+      // render); only a bare record needs its failed edit rolled back.
+      if (!isChangeset(model)) {
+        model.rollbackAttributes();
+      }
       return false;
     } finally {
-      owner.isSubmitting = false;
+      if (owner) {
+        owner.isSubmitting = false;
+      }
     }
   }
 }

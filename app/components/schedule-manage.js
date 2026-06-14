@@ -10,7 +10,7 @@ export default class ScheduleManageComponent extends Component {
   @service ajax;
   @service modal;
   @service toast;
-  @service house;
+  @service errors;
   @service session;
   @service shiftManage;
 
@@ -55,7 +55,7 @@ export default class ScheduleManageComponent extends Component {
     const person_id = this.args.person.id;
     try {
       this.isLoading = true;
-      this.isCurrentYear = (+year === this.house.currentYear());
+      this.isCurrentYear = (+year === this.session.currentYear());
 
       const data = {
         person_id,
@@ -89,7 +89,7 @@ export default class ScheduleManageComponent extends Component {
       this.creditsEarned = 0.0;
       this.scheduleSummary = {};
       this.availableSlots = [];
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }
@@ -313,7 +313,7 @@ export default class ScheduleManageComponent extends Component {
       this._sortAndMarkSignups();
       this.toast.success('The shift has been removed from the schedule.');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       slot.isSubmitting = false;
     }
@@ -367,7 +367,7 @@ export default class ScheduleManageComponent extends Component {
         this._updateLinkedSlots([slot.signUpInfo.child]);
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       slot.isRetrievingSignUps = false
     }

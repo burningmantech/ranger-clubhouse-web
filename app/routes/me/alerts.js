@@ -1,16 +1,14 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import RSVP from 'rsvp';
 
 export default class MeAlertsRoute extends ClubhouseRoute {
-  model() {
+  async model() {
     const personId = this.session.userId;
 
     // Retrieve the alert preferences and SMS numbers
-    return RSVP.hash({
-      alerts: this.ajax.request(`person/${personId}/alerts`).then((result) => result.alerts),
-      numbers: this.ajax.request('sms', { method: 'GET', data: { person_id: personId }})
-                .then((result) => result.numbers)
-    });
+    return {
+      alerts: (await this.ajax.request(`person/${personId}/alerts`)).alerts,
+      numbers: (await this.ajax.request('sms', { method: 'GET', data: { person_id: personId }})).numbers
+    };
   }
 
   setupController(controller, model) {

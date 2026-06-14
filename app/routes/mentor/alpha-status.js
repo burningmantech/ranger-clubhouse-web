@@ -10,7 +10,7 @@ export default class MentorAlphaStatusRoute extends ClubhouseRoute {
     // alpha_position_eligible); the controller and row template read those fields
     // directly, so no client-side re-derivation is needed here.
     controller.set('mentees', model.mentees);
-    controller.set('year', this.house.currentYear());
+    controller.set('year', this.session.currentYear());
 
     controller.set('filter', 'all');
   }

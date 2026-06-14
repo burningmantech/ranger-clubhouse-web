@@ -31,6 +31,6 @@ export default class ReportsShiftSignupsController extends ClubhouseController {
       });
     });
 
-    this.house.downloadCsv(`${this.year}-shift-signups.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.year}-shift-signups.csv`, CSV_COLUMNS, rows);
   }
 }

@@ -14,7 +14,7 @@ export default class MeDocumentReviewComponent extends Component {
   @tracked bodyText;
 
   @service ajax;
-  @service house;
+  @service errors;
   @service session;
 
   constructor() {
@@ -31,7 +31,7 @@ export default class MeDocumentReviewComponent extends Component {
         this.didSign = this.agreement.signature;
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }
@@ -51,7 +51,7 @@ export default class MeDocumentReviewComponent extends Component {
         this.session.loadUser();
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

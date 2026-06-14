@@ -15,6 +15,6 @@ export default class AdminRangerRetentionController extends ClubhouseController 
   @action
   exportToCsv() {
     this.people.forEach((person) => person.name = `${person.first_name} ${person.last_name}`);
-    this.house.downloadCsv(`ranger-retention-${this.end_year}.csv`, CSV_COLUMNS, this.people);
+    this.download.downloadCsv(`ranger-retention-${this.end_year}.csv`, CSV_COLUMNS, this.people);
   }
 }

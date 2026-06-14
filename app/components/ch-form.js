@@ -8,8 +8,7 @@ import {service} from '@ember/service';
 import {schedule} from '@ember/runloop';
 
 export default class ChFormComponent extends Component {
-  @service house;
-
+  @service scroll;
   @tracked changeSetModel;
 
   watchingModel = null;
@@ -69,10 +68,9 @@ export default class ChFormComponent extends Component {
      */
 
     const origSave = this.changeSetModel.save;
-    this.changeSetModel.save = () => {
-      return origSave.call(this.changeSetModel).then(() => {
-        this._buildChangeSet();
-      });
+    this.changeSetModel.save = async () => {
+      await origSave.call(this.changeSetModel);
+      this._buildChangeSet();
     };
   }
 
@@ -129,7 +127,7 @@ export default class ChFormComponent extends Component {
     });
 
     if (scrollToElement) {
-      this.house.scrollToElement(scrollToElement);
+      this.scroll.scrollToElement(scrollToElement);
     }
   }
 
@@ -154,7 +152,7 @@ export default class ChFormComponent extends Component {
    */
 
   @action
-  submitForm(callback = null) {
+  async submitForm(callback = null) {
     if (this.preventSubmit) {
       return;
     }
@@ -165,15 +163,14 @@ export default class ChFormComponent extends Component {
     const submitAction = (callback ?? this.args.onSubmit);
 
     if (model.validate) {
-      model.validate().then(() => {
-        const isValid = this._isValid();
-        if (!isValid) {
-          schedule('afterRender', () => this._scrollToError());
-        }
-        if (submitAction) {
-          submitAction(model, isValid, formFor);
-        }
-      });
+      await model.validate();
+      const isValid = this._isValid();
+      if (!isValid) {
+        schedule('afterRender', () => this._scrollToError());
+      }
+      if (submitAction) {
+        submitAction(model, isValid, formFor);
+      }
     } else if (submitAction) {
       submitAction(model, undefined, formFor);
     }

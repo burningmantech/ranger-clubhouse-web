@@ -46,7 +46,7 @@ export default class VcMaintenanceController extends ClubhouseController {
           this.isSubmitting = true;
           this.results = await this.ajax.request(`${task.controller}/${task.action}`, {method: 'POST'});
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }

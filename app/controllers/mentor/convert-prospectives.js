@@ -26,7 +26,7 @@ export default class MentorConvertController extends ClubhouseController {
       this.toast.success(`${alphas.length} ${alphas.length === 1 ? 'Prospective has' : 'Prospectives have'} been converted to Alpha status`);
       return alphas;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       return [];
     }
   }

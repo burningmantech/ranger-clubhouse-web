@@ -12,9 +12,13 @@ import {ART_INTERFACE_BASE} from "clubhouse/constants/roles";
 
 export default class ClubhouseRoute extends Route {
   @service ajax;
-  @service house;
+  @service browser;
+  @service errors;
   @service modal;
+  @service scroll;
   @service session;
+  @service storage;
+  @service storePayload;
   @service store;
   @service toast;
 

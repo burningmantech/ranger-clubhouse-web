@@ -5,7 +5,7 @@ import { service } from '@ember/service';
 
 export default class AssetTableComponent extends Component {
   @service asset;
-  @service house;
+  @service saveModel;
   @service toast;
 
   // Asset ids with an in-flight check-in, used to disable the per-row button.
@@ -74,12 +74,8 @@ export default class AssetTableComponent extends Component {
       return;
     }
 
-    try {
-      await model.save();
+    if (await this.saveModel.save({model, message: 'Attachment successfully updated.'})) {
       this.updateAsset = null;
-      this.toast.success('Attachment successfully updated.');
-    } catch (response) {
-      this.house.handleErrorResponse(response);
     }
   }
 }

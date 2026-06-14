@@ -40,7 +40,7 @@ export default class AlertsManageComponent extends Component {
   @service toast;
   @service ajax;
   @service modal;
-  @service house;
+  @service errors;
   @service session;
 
   @tracked isSubmitting = false;
@@ -113,7 +113,7 @@ export default class AlertsManageComponent extends Component {
 
   // Update the user preferences
   @action
-  updatePrefsAction() {
+  async updatePrefsAction() {
     const alerts = this.args.alerts.map((alert) => {
       return {
         id: alert.id,
@@ -123,21 +123,22 @@ export default class AlertsManageComponent extends Component {
     });
 
     this.isSubmitting = true;
-    this.ajax.request(`person/${this.args.person.id}/alerts`, {
-      method: 'PATCH',
-      data: {alerts}
-    }).then(() => {
+    try {
+      await this.ajax.request(`person/${this.args.person.id}/alerts`, {
+        method: 'PATCH',
+        data: {alerts}
+      });
       this.toast.success('The alert preferences have been successfully updated.')
-    })
-      .catch((response) => {
-        this.house.handleErrorResponse(response)
-      })
-      .finally(() => this.isSubmitting = false);
+    } catch (response) {
+      this.errors.handleErrorResponse(response)
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   // Confirm a phone number as verified.
   @action
-  confirmCodeAction(model, which) {
+  async confirmCodeAction(model, which) {
     const personId = this.args.person.id;
     const numbers = this.numbers;
 
@@ -154,14 +155,15 @@ export default class AlertsManageComponent extends Component {
     }
 
     this.isSubmitting = true;
-    this.ajax.request('sms/confirm-code', {
-      method: 'POST',
-      data: {
-        type,
-        code,
-        person_id: personId
-      }
-    }).then((result) => {
+    try {
+      const result = await this.ajax.request('sms/confirm-code', {
+        method: 'POST',
+        data: {
+          type,
+          code,
+          person_id: personId
+        }
+      });
       switch (result.status) {
         case 'confirmed':
           this.toast.success(`Phone number has been been confirmed. Thank you.`);
@@ -180,8 +182,11 @@ export default class AlertsManageComponent extends Component {
           this.toast.error(`The response status [${result.status}] from the server was not understood.`);
           break;
       }
-    }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   // Save the phone numbers entered.
@@ -225,7 +230,7 @@ export default class AlertsManageComponent extends Component {
         this.toast.success('The phone number(s) have been successfully updated.');
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -253,7 +258,7 @@ export default class AlertsManageComponent extends Component {
           break;
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false
     }

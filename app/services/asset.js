@@ -8,7 +8,7 @@ import { service } from '@ember/service';
  */
 export default class AssetService extends Service {
   @service ajax;
-  @service house;
+  @service errors;
   @service toast;
 
   /**
@@ -26,7 +26,7 @@ export default class AssetService extends Service {
       this.toast.success('Asset has been successfully checked in.');
       return result;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       throw response;
     }
   }

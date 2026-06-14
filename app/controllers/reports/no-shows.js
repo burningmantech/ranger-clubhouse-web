@@ -25,7 +25,7 @@ export default class NoShowsReportsController extends ClubhouseController {
   }
 
   get yearOptions() {
-    const year = this.house.currentYear();
+    const year = this.session.currentYear();
     const years = [];
 
     for (let y = 2019; y <= year; y++) {
@@ -72,7 +72,7 @@ export default class NoShowsReportsController extends ClubhouseController {
       this.noShowPositions = positions;
       this.searchYear = this.year;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -80,7 +80,7 @@ export default class NoShowsReportsController extends ClubhouseController {
 
   @action
   scrollToResults() {
-    this.house.scrollToElement('#no-show-results');
+    this.scroll.scrollToElement('#no-show-results');
   }
 
   @action
@@ -98,6 +98,6 @@ export default class NoShowsReportsController extends ClubhouseController {
       });
     });
 
-    this.house.downloadCsv(`${this.year}-no-shows-${position.title.replace(/ /g, '-')}.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.year}-no-shows-${position.title.replace(/ /g, '-')}.csv`, CSV_COLUMNS, rows);
   }
 }

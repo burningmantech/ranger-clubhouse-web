@@ -70,7 +70,7 @@ class CopySourceSlot {
 
 export default class AdminSlotCopyComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service toast;
 
   @tracked copyParams;
@@ -169,7 +169,7 @@ export default class AdminSlotCopyComponent extends Component {
       }
       this.args.onCancel();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

@@ -5,7 +5,9 @@ import {tracked} from '@glimmer/tracking';
 
 export default class DocumentEdit extends Component {
   @service ajax;
-  @service house;
+  @service errors;
+  @service storePayload;
+  @service saveModel;
   @service modal;
   @service store;
   @service toast;
@@ -31,27 +33,20 @@ export default class DocumentEdit extends Component {
         }
       })).document;
 
-      this.document = document.id ? this.house.pushPayload('document', document) : this.store.createRecord('document', document);
+      this.document = document.id ? this.storePayload.pushPayload('document', document) : this.store.createRecord('document', document);
       this.isLoading = false;
     } catch (e) {
-      this.house.handleErrorResponse(e);
+      this.errors.handleErrorResponse(e);
       this.args.onClose();
     }
   }
 
   @action
   async saveAction(model) {
-    this.isSubmitting = true;
-    try {
-      model.resource_type = this.args.type;
-      model.resource_entity_id = this.args.entityId;
-      await model.save();
-      this.toast.success('Document has been successfully saved');
+    model.resource_type = this.args.type;
+    model.resource_entity_id = this.args.entityId;
+    if (await this.saveModel.save({model, message: 'Document has been successfully saved', owner: this})) {
       this.args.onClose();
-    } catch (e) {
-      this.house.handleErrorResponse(e);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 
@@ -70,7 +65,7 @@ export default class DocumentEdit extends Component {
         this.toast.success('Document deleted');
         this.args.onClose();
       } catch (e) {
-        this.house.handleErrorResponse(e);
+        this.errors.handleErrorResponse(e);
         this.isDeleting = false;
       }
     })

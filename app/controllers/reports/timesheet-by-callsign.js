@@ -33,14 +33,14 @@ export default class ReportsTimesheetByCallsignController extends ClubhouseContr
   exportAllToCSV() {
     const rows = [];
     this.people.forEach((person) => this._buildTimesheetExport(rows, person));
-    this.house.downloadCsv(`${this.year}-timesheet-by-callsign.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.year}-timesheet-by-callsign.csv`, CSV_COLUMNS, rows);
   }
 
   @action
   exportPersonToCSV(person) {
     const rows = [];
     this._buildTimesheetExport(rows, person);
-    this.house.downloadCsv(`${this.year}-${person.callsign.replace(/ /g, '-')}-timesheet.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.year}-${person.callsign.replace(/ /g, '-')}-timesheet.csv`, CSV_COLUMNS, rows);
   }
 
   @action

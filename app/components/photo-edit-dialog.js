@@ -5,7 +5,7 @@ import {tracked} from '@glimmer/tracking';
 
 export default class PhotoEditDialogComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service toast;
 
   width = 350;
@@ -37,7 +37,7 @@ export default class PhotoEditDialogComponent extends Component {
       await photo.reload();
       this.toast.success('Edited photo successfully uploaded.');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
       this.args?.onClose();

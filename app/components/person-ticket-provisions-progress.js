@@ -4,8 +4,7 @@ import {service} from '@ember/service';
 
 export default class PersonTicketProvisionsProgressComponent extends Component {
   @service ajax;
-  @service house;
-
+  @service errors;
   @tracked isLoading = false;
   @tracked progressInfo;
 
@@ -13,17 +12,23 @@ export default class PersonTicketProvisionsProgressComponent extends Component {
     super(...arguments);
 
     this.isLoading = true;
-    this.ajax.request(`person/${this.args.person.id}/tickets-provisions-progress`)
-      .then(({progress}) => {
-        this.progressInfo = progress;
-        this.items = progress.items.reduce((items, item) => {
-          this._formatItem(item);
-          items[item.name] = item;
-          return items;
-        }, {})
-      })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isLoading = false)
+    this._loadProgress();
+  }
+
+  async _loadProgress() {
+    try {
+      const {progress} = await this.ajax.request(`person/${this.args.person.id}/tickets-provisions-progress`);
+      this.progressInfo = progress;
+      this.items = progress.items.reduce((items, item) => {
+        this._formatItem(item);
+        items[item.name] = item;
+        return items;
+      }, {})
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   get isNotRanger() {

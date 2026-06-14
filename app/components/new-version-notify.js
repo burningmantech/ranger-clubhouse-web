@@ -50,8 +50,9 @@ export default class NewVersionNotifyComponent extends Component {
     }, this.pollSeconds * 1000);
   }
 
-  _checkForNewVersion() {
-    fetch(this.url + `?_=${Date.now()}`).then(async (response) => {
+  async _checkForNewVersion() {
+    try {
+      const response = await fetch(this.url + `?_=${Date.now()}`);
       if (!response.ok) {
         this._pollVersionFile();
         return;
@@ -63,7 +64,9 @@ export default class NewVersionNotifyComponent extends Component {
       } else {
         this._pollVersionFile();
       }
-    }).catch(() => this._pollVersionFile());
+    } catch {
+      this._pollVersionFile();
+    }
   }
 
   @action

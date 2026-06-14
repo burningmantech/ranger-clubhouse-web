@@ -1,19 +1,18 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {ADMIN, VC} from 'clubhouse/constants/roles';
-import RSVP from 'rsvp';
 
 export default class PersonPhotosRoute extends ClubhouseRoute {
   roleRequired = [ADMIN, VC];
 
-  model() {
+  async model() {
     const person_id = this.modelFor('person').id;
 
     this.store.unloadAll('person-photo');
 
-    return RSVP.hash({
-      photos: this.store.query('person-photo', {person_id}),
-      review_config: this.ajax.request('person-photo/review-config').then(({review_config}) => review_config)
-    });
+    return {
+      photos: await this.store.query('person-photo', {person_id}),
+      review_config: (await this.ajax.request('person-photo/review-config')).review_config
+    };
   }
 
   setupController(controller, model) {

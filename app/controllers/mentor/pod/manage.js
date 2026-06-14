@@ -86,12 +86,12 @@ export default class MentorPodManageController extends ClubhouseController {
         method: 'POST',
         data: {slot_id: this.slot.id}
       });
-      const mentorPod = this.house.pushPayload('pod', mentor);
-      mentorPod.mittenPod = this.house.pushPayload('pod', mitten);
-      mentorPod.alphaPod = this.house.pushPayload('pod', alpha);
+      const mentorPod = this.storePayload.pushPayload('pod', mentor);
+      mentorPod.mittenPod = this.storePayload.pushPayload('pod', mitten);
+      mentorPod.alphaPod = this.storePayload.pushPayload('pod', alpha);
       this.pods = [...this.pods, mentorPod];
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -122,7 +122,7 @@ export default class MentorPodManageController extends ClubhouseController {
           }
           this.toast.success('The pod has been removed.');
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false
         }
@@ -189,7 +189,7 @@ export default class MentorPodManageController extends ClubhouseController {
           allMentors.filter((m) => !m.working && !workingById[m.id]).map((p) => ({label: p.callsign, value: p.id}))
         ]);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -245,7 +245,7 @@ export default class MentorPodManageController extends ClubhouseController {
         allMittens.map((p) => ({ label: p.callsign, value: p.id }))
       ]);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -298,7 +298,7 @@ export default class MentorPodManageController extends ClubhouseController {
         currentAlphas, otherAlphas, offDutyAlphas.map((a) => ({label: a.callsign, value: a.id}))
       ]);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -435,11 +435,11 @@ export default class MentorPodManageController extends ClubhouseController {
           data.is_lead = model.is_lead ? 1 : 0;
         }
         const {pod} = await this.ajax.request(`pod/${this.addPod.id}/person`, {method: 'POST', data});
-        this.house.pushPayload('pod', pod);
+        this.storePayload.pushPayload('pod', pod);
       }
       this.showAddDialog = false;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -463,7 +463,7 @@ export default class MentorPodManageController extends ClubhouseController {
       });
       await pod.reload();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -518,7 +518,7 @@ export default class MentorPodManageController extends ClubhouseController {
           data.is_lead = this.isLead ? 1 : 0;
         }
         const {pod: newPod} = await this.ajax.request(`pod/${this.podIndex}/person`, {method: 'POST', data});
-        this.house.pushPayload('pod', newPod);
+        this.storePayload.pushPayload('pod', newPod);
       } else {
         await this.ajax.request(`pod/${pod.id}/person`, {
           method: 'PATCH',
@@ -531,7 +531,7 @@ export default class MentorPodManageController extends ClubhouseController {
       await pod.reload();
       this.toast.success(`${person.callsign} updated successfully`);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

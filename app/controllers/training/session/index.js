@@ -192,7 +192,7 @@ export default class TrainingSessionController extends ClubhouseController {
     try {
       await work();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -387,7 +387,7 @@ export default class TrainingSessionController extends ClubhouseController {
       this.foundPeople = people;
       this.noSearchMatch = people.length ? null : query;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
@@ -431,7 +431,7 @@ export default class TrainingSessionController extends ClubhouseController {
           this.students = _.orderBy(students, [(s) => (s.callsign ?? '').toLowerCase()], ['asc']);
         }
       } catch (e) {
-        this.house.handleErrorResponse(e);
+        this.errors.handleErrorResponse(e);
       }
     });
   }
@@ -490,7 +490,7 @@ export default class TrainingSessionController extends ClubhouseController {
   toggleEmailListAction(closeDropdown) {
     this.showEmails = !this.showEmails;
     if (this.showEmails) {
-      this.house.scrollToElement('#email-list');
+      this.scroll.scrollToElement('#email-list');
     }
     if (closeDropdown) {
       closeDropdown();

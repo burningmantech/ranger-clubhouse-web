@@ -20,8 +20,8 @@ export default class MeAgreementsRoute extends ClubhouseRoute {
   async model() {
     const id = this.session.userId;
     return {
-      agreements: await this.ajax.request(`agreements/${id}`).then(({agreements}) => agreements),
-      membership: await this.ajax.request(`person/${id}/membership`).then(({membership}) => membership)
+      agreements: (await this.ajax.request(`agreements/${id}`)).agreements,
+      membership: (await this.ajax.request(`person/${id}/membership`)).membership
     };
   }
 

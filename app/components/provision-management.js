@@ -16,7 +16,9 @@ import {isEmpty} from "lodash";
 
 export default class ProvisionManagementComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
+  @service session;
+  @service saveModel;
   @service modal;
   @service store;
   @service toast;
@@ -66,7 +68,7 @@ export default class ProvisionManagementComponent extends Component {
       }
       this.isLoaded = true;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -104,7 +106,7 @@ export default class ProvisionManagementComponent extends Component {
   }
 
   get yearOptions() {
-    const currentYear = this.house.currentYear();
+    const currentYear = this.session.currentYear();
     const years = [];
     for (let year = currentYear - 5; year < currentYear + 5; year++) {
       years.push(year);
@@ -134,7 +136,7 @@ export default class ProvisionManagementComponent extends Component {
       await this.loadProvisions();
     }
 
-    const currentYear = this.house.currentYear();
+    const currentYear = this.session.currentYear();
 
     this.entry = this.store.createRecord('provision', {
       person_id: this.args.person.id,
@@ -159,7 +161,7 @@ export default class ProvisionManagementComponent extends Component {
       this.entry = provision;
       provision.additional_comments = '';
     } catch (response) {
-      this.house.handleErrorResponse(response, provision);
+      this.errors.handleErrorResponse(response, provision);
     } finally {
       this.isSubmitting = false;
     }
@@ -178,20 +180,13 @@ export default class ProvisionManagementComponent extends Component {
 
     const {isNew} = model;
 
-    try {
-      this.isSubmitting = true;
-      await model.save();
+    if (await this.saveModel.save({model, message: `The provision was successfully ${isNew ? 'created' : 'updated'}.`, owner: this})) {
       await this._loadPackage();
       this.entry = null;
-      this.toast.success(`The provision was successfully ${isNew ? 'created' : 'updated'}.`);
       if (isNew) {
         await this.provisions.update();
       }
       await this.args.onUpdate?.(this.package);
-    } catch (response) {
-      this.house.handleErrorResponse(response, model);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 
@@ -208,7 +203,7 @@ export default class ProvisionManagementComponent extends Component {
           this.toast.success('The provision was successfully deleted.');
           await this.args.onUpdate?.(this.package);
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }
@@ -228,7 +223,7 @@ export default class ProvisionManagementComponent extends Component {
       this.provisions = await this.store.query('provision', data);
       this.isShowingAll = !this.isShowingAll;
     } catch (response) {
-      this.house.handleErrorResponse(response)
+      this.errors.handleErrorResponse(response)
     } finally {
       this.isSubmitting = false;
     }

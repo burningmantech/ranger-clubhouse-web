@@ -5,7 +5,7 @@ import {service} from '@ember/service';
 import {StatusOptions} from "clubhouse/models/prospective-application";
 
 export default class VcApplicationAdjustStatusDialogComponent extends Component {
-  @service house;
+  @service saveModel;
   @service toast;
 
   @tracked isSubmitting;
@@ -14,15 +14,8 @@ export default class VcApplicationAdjustStatusDialogComponent extends Component 
 
   @action
   async submitStatus(model) {
-    try {
-      this.isSubmitting = true;
-      await model.save();
-      this.toast.success('Status successfully updated.');
+    if (await this.saveModel.save({model, message: 'Status successfully updated.', owner: this})) {
       this.args.onClose();
-    } catch (response) {
-      this.house.handleErrorResponse(response, model);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 }

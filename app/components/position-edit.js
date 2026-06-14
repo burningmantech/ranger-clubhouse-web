@@ -14,7 +14,7 @@ const TRAINER_TITLE = /\btrainer\b/i;
 const BLANK_OPTION = ['-', null];
 
 export default class PositionEditComponent extends Component {
-  @service house;
+  @service scroll;
   @service session;
 
   positionTypes = PositionTypes;
@@ -28,7 +28,7 @@ export default class PositionEditComponent extends Component {
 
   constructor() {
     super(...arguments);
-    this.house.scrollToTop(true);
+    this.scroll.scrollToTop(true);
   }
 
   get isTechNinja() {

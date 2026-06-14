@@ -34,7 +34,7 @@ export default class TrainingCapacityController extends ClubhouseController {
   queryParams = ['year'];
 
   get notCurrentYear() {
-    return (+this.year !== this.house.currentYear());
+    return (+this.year !== this.session.currentYear());
   }
 
   get totalFullPercentage() {
@@ -73,6 +73,6 @@ export default class TrainingCapacityController extends ClubhouseController {
       trainer_count: `${this.uniqueTrainers}\n(unique)`,
     });
 
-    this.house.downloadCsv(`${this.year}-training-capacity.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.year}-training-capacity.csv`, CSV_COLUMNS, rows);
   }
 }

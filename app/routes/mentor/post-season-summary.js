@@ -6,10 +6,10 @@ export default class MentorPostSeasonSummaryRoute extends ClubhouseRoute {
     year: {refreshModel: true}
   };
 
-  model(params) {
+  async model(params) {
     const year = requestYear(params);
     this.year = year;
-    return this.ajax.request('mentor/mentees', {data: {year}}).then((result) => result.mentees);
+    return (await this.ajax.request('mentor/mentees', {data: {year}})).mentees;
   }
 
   setupController(controller, model) {

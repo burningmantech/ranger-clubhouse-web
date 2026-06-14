@@ -6,16 +6,15 @@ export default class TrainingTrainedNoWorkRoute extends ClubhouseRoute {
     year: { refreshModel: true }
   };
 
-  model(params) {
+  async model(params) {
     const year = requestYear(params);
     const training = this.modelFor('training');
 
-    return this.ajax.request(`training/${training.id}/trained-no-work`, {
+    const results = await this.ajax.request(`training/${training.id}/trained-no-work`, {
       data: { year }
-    }).then((results) => {
-      results.year = year;
-      return results;
     });
+    results.year = year;
+    return results;
   }
 
   setupController(controller, model) {
