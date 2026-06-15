@@ -15,7 +15,7 @@ export default class OpsBulkSignInOutController extends ClubhouseController {
   @tracked errorCount = 0;
 
   @action
-  _sendSigninOuts(commit) {
+  async _sendSigninOuts(commit) {
     const lines = this.bulkForm.lines;
 
     this.committed = false;
@@ -26,8 +26,9 @@ export default class OpsBulkSignInOutController extends ClubhouseController {
     }
 
     this.isSubmitting = true;
-    this.ajax.post('timesheet/bulk-sign-in-out', {data}).then((result) => {
-      this.house.scrollToTop();
+    try {
+      const result = await this.ajax.post('timesheet/bulk-sign-in-out', {data});
+      this.scroll.scrollToTop();
       this.haveError = result.status === 'error';
       this.entries = result.entries;
       if (commit && !this.haveError) {
@@ -41,10 +42,11 @@ export default class OpsBulkSignInOutController extends ClubhouseController {
         }
       });
       this.errorCount = errors;
-
-    })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false)
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action

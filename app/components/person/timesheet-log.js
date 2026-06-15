@@ -21,8 +21,7 @@ const ACTION_LABELS = {
 
 export default class PersonTimesheetLogComponent extends Component {
   @service ajax;
-  @service house;
-
+  @service errors;
   @tracked isLoading = true;
   @tracked logs;
   @tracked otherLogs;
@@ -44,7 +43,7 @@ export default class PersonTimesheetLogComponent extends Component {
 
       this.positions = (await this.ajax.request('position')).position;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }

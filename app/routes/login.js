@@ -37,7 +37,7 @@ export default class LoginRoute extends ClubhouseRoute {
         const data = response.responseJSON ? response.responseJSON : response.payload;
         return (data ? data.status : `Unknown error ${JSON.stringify(data)}`);
       } else {
-        this.house.handleErrorResponse(response)
+        this.errors.handleErrorResponse(response)
       }
 
     }
@@ -49,7 +49,7 @@ export default class LoginRoute extends ClubhouseRoute {
       identification: '',
       password: ''
     }));
-    this.house.clearStorage();
+    this.storage.clearStorage();
   }
 
   resetController(controller, isExiting) {

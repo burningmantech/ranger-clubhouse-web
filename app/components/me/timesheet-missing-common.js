@@ -6,7 +6,7 @@ import positionsForTimesheetMissing from "clubhouse/utils/positions-for-timeshee
 
 export default class MeTimesheetMissingCommonComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
   @service session;
   @service shiftManage;
@@ -32,7 +32,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
       this.positionOptions = positionsForTimesheetMissing(positions);
 
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }
@@ -69,7 +69,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
       this.entry = timesheetMissing;
 
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
@@ -93,7 +93,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
       try {
         await this.args.timesheetsMissing.update();
       } catch (response) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       }
     }
     this.entry = null;
@@ -115,7 +115,7 @@ export default class MeTimesheetMissingCommonComponent extends Component {
           await timesheetMissing.destroyRecord();
           this.toast.success('The request has been deleted.');
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         }
       }
     );

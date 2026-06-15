@@ -73,23 +73,21 @@ export default class VcHandleReservationController extends ClubhouseController {
           this.toast.success('The handle reservation has been deleted.');
           this.entry = null;
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         }
       });
   }
 
   @action
-  saveHandleReservation(model, isValid) {
+  async saveHandleReservation(model, isValid) {
     if (!isValid) {
       return;
     }
 
-    this.house.saveModel(model,
-      `The handle reservation has been ${model.isNew ? 'created' : 'updated'}.`,
-      () => {
-        this.handleReservations.update();
-        this.entry = null;
-      });
+    if (await this.saveModel.save({model, message: `The handle reservation has been ${model.isNew ? 'created' : 'updated'}.`})) {
+      this.handleReservations.update();
+      this.entry = null;
+    }
   }
 
   @action
@@ -150,7 +148,7 @@ export default class VcHandleReservationController extends ClubhouseController {
         await this.handleReservations.update();
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -169,7 +167,7 @@ export default class VcHandleReservationController extends ClubhouseController {
           this.modal.info('No Handles Expired', 'No handles were found to have expired.');
         }
       } catch (response) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       } finally {
         this.isSubmitting = false;
       }

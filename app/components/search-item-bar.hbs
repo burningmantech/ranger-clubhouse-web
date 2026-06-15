@@ -24,6 +24,12 @@
           </div>
         </FormRow>
       {{/if}}
+      {{#if this.showHQNotAllowedAtThisTime}}
+        <div class="ms-2">
+          You may not be able to use the HQ Window Interface yet. To get access, you might need to:<br>
+          Pass HQ Window Training, Be signed in to the right positions. You may need one or both of these.
+        </div>
+      {{/if}}
       {{#if (eq this.searchMode "hq")}}
         <div class="ms-2">
           Use the search prefix <code>name:</code> (note the colon) to search by default world name. (e.g., <i>name:Harper Hubcap</i>)

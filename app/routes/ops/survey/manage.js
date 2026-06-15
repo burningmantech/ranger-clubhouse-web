@@ -1,22 +1,19 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import RSVP from 'rsvp';
 
 export default class OpsSurveyManageRoute extends ClubhouseRoute {
-  model({survey_id}) {
+  async model({survey_id}) {
     this.store.unloadAll('survey');
     this.store.unloadAll('survey-group');
     this.store.unloadAll('survey-question');
 
-    return RSVP.hash({
-      survey: this.store.findRecord('survey', survey_id),
-      surveyGroups: this.store.query('survey-group', {survey_id}),
-      surveyQuestions: this.store.query('survey-question', {survey_id}),
-      positions: this.ajax.request('position', {data: {type: 'Training'}}).then(({position}) => {
-        return position.filter((p) => p.title.includes('Training'));
-      }),
-      mentorPositions: this.ajax.request('position', {data: {mentor: 1}}).then(({position}) => position),
-      menteePositions: this.ajax.request('position', {data: {mentee: 1}}).then(({position}) => position)
-    });
+    return {
+      survey: await this.store.findRecord('survey', survey_id),
+      surveyGroups: await this.store.query('survey-group', {survey_id}),
+      surveyQuestions: await this.store.query('survey-question', {survey_id}),
+      positions: (await this.ajax.request('position', {data: {type: 'Training'}})).position.filter((p) => p.title.includes('Training')),
+      mentorPositions: (await this.ajax.request('position', {data: {mentor: 1}})).position,
+      menteePositions: (await this.ajax.request('position', {data: {mentee: 1}})).position
+    };
   }
 
   setupController(controller, model) {

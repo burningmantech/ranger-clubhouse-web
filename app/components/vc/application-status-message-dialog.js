@@ -7,7 +7,7 @@ import {StatusesThatSendEmail} from "clubhouse/models/prospective-application";
 
 export default class VcApplicationStatusMessageDialogComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service toast;
 
   @tracked isSubmitting;
@@ -61,7 +61,7 @@ export default class VcApplicationStatusMessageDialogComponent extends Component
       const {mail} = await this.ajax.request(`prospective-application/${this.args.application.id}/preview-email`, {data});
       this.emailToPreview = mail;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -84,7 +84,7 @@ export default class VcApplicationStatusMessageDialogComponent extends Component
       this.toast.success('Status was successfully updated.');
       this.args.onClose();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

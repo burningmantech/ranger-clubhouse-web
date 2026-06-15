@@ -22,7 +22,7 @@ export default class VcApplicationsRecordController extends ClubhouseController 
   @tracked VCs;
 
   get notCurrentYear() {
-    return this.application.year !== this.house.currentYear();
+    return this.application.year !== this.session.currentYear();
   }
 
   // Review progress strip classes
@@ -68,13 +68,7 @@ export default class VcApplicationsRecordController extends ClubhouseController 
       return false;
     }
 
-    try {
-      await model.save();
-      this.toast.success('Application successfully saved.');
-      return true;
-    } catch (response) {
-      this.house.handleErrorResponse(response, model);
-    }
+    return this.saveModel.save({model, message: 'Application successfully saved.'});
   }
 
   get isAssignedToMe() {
@@ -123,7 +117,7 @@ export default class VcApplicationsRecordController extends ClubhouseController 
       await this.application.save();
       this.toast.success(successMessage);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
@@ -158,7 +152,7 @@ export default class VcApplicationsRecordController extends ClubhouseController 
           this.toast.success('Application was successfully deleted.');
           this.router.transitionTo('vc.applications.index', {queryParams: {year: this.application.year}});
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }
@@ -212,7 +206,7 @@ export default class VcApplicationsRecordController extends ClubhouseController 
       this.showStatusWithMessageDialog = false;
       this.toast.success('Status was successfully updated.');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

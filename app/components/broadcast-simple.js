@@ -19,8 +19,7 @@ export default class BroadcastSimpleComponent extends Component {
   @service ajax;
   @service toast;
   @service modal;
-  @service house;
-
+  @service errors;
   constructor() {
     super(...arguments);
     const message = Broadcasts[this.args.type].message;
@@ -84,7 +83,7 @@ export default class BroadcastSimpleComponent extends Component {
         this.modal.info(null, 'No qualifying people were found.');
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       // Kill the review
       this.isReviewing = false;
     } finally {
@@ -115,7 +114,7 @@ export default class BroadcastSimpleComponent extends Component {
       this.result = await this.ajax.request('rbs/transmit', {method: 'POST', data});
       this.didTransmit = true;
     } catch (response) {
-      this.house.handleErrorResponse(response)
+      this.errors.handleErrorResponse(response)
     } finally {
       this.isSubmitting = false;
     }

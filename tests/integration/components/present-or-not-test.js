@@ -1,24 +1,25 @@
-import { module, skip /* test */ } from 'qunit';
+import { module, test } from 'qunit';
 import { setupRenderingTest } from 'ember-qunit';
 import { render } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import {hbs} from 'ember-cli-htmlbars';
 
-module('Integration | Component | present or not', function(hooks) {
+module('Integration | Component | present-or-not', function(hooks) {
   setupRenderingTest(hooks);
 
-  skip('it renders a present value', async function(assert) {
+  test('it renders a present value', async function(assert) {
     this.set('value', 'something');
 
     await render(hbs`<PresentOrNot @value={{this.value}} />`);
 
-    assert.dom('*').hasText('something');
+    // The component emits the bare value with no wrapping element.
+    assert.strictEqual(this.element.textContent.trim(), 'something');
   });
 
-  skip('it renders a not present/empty value', async function(assert) {
+  test('it renders a not-given placeholder for an empty value', async function(assert) {
     this.set('value', '');
 
     await render(hbs`<PresentOrNot @value={{this.value}} />`);
 
-    assert.dom('i').exists().hasText(/not given/);
+    assert.dom('i').exists().hasText('not given');
   });
 });

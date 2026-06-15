@@ -31,13 +31,13 @@ class Alpha {
 export default class MentorAssignmentRoute extends ClubhouseRoute {
   async model() {
     return {
-      alphas: await this.ajax.request('mentor/alphas').then((result) => result.alphas),
-      mentors: await this.ajax.request('mentor/mentors').then((result) => result.mentors)
+      alphas: (await this.ajax.request('mentor/alphas')).alphas,
+      mentors: (await this.ajax.request('mentor/mentors')).mentors
     };
   }
 
   setupController(controller, model) {
-    const year = this.house.currentYear();
+    const year = this.session.currentYear();
 
     /*
      * Run thru the alphas and find the current mentor assignments

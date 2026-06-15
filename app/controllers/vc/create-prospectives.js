@@ -108,7 +108,7 @@ export default class VcCreateProspectivesRoute extends ClubhouseController {
       this.haveResults = true;
       this._sortApplications(result.applications);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

@@ -77,6 +77,6 @@ export default class PeopleByPositionController extends ClubhouseController {
 
   @action
   exportToCSV(position) {
-    this.house.downloadCsv(`${this.house.currentYear()}-${position.title.replace(/ /g, '-')}.csv`, CSV_COLUMNS, position.people);
+    this.download.downloadCsv(`${this.session.currentYear()}-${position.title.replace(/ /g, '-')}.csv`, CSV_COLUMNS, position.people);
   }
 }

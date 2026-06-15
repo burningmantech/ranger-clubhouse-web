@@ -34,8 +34,7 @@ import validateDateTime from "clubhouse/validators/datetime";
 
 export default class BroadcastComplexComponent extends Component {
   @service ajax;
-  @service house;
-
+  @service errors;
   @tracked broadcastForm;
   @tracked broadcastAlert = null;
   @tracked broadcastSlot = null;
@@ -244,7 +243,7 @@ export default class BroadcastComplexComponent extends Component {
         this.noPeople = true;
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       // Kill the review
       this.isReviewing = false;
     } finally {
@@ -276,7 +275,7 @@ export default class BroadcastComplexComponent extends Component {
       this.result = await this.ajax.request('rbs/transmit', {method: 'POST', data});
       this.didTransmit = true;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

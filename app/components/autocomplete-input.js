@@ -8,8 +8,7 @@ import focusElement from "clubhouse/utils/focus-element";
 const CLICK_DEBOUNCE_MS = 350;
 
 export default class AutocompleteInputComponent extends Component {
-  @service house;
-
+  @service errors;
   /**
    * Is a search running?
    * @type {boolean}
@@ -150,7 +149,7 @@ export default class AutocompleteInputComponent extends Component {
     } catch (response) {
       // An undefined response means no search was done
       if (response !== undefined) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       }
     } finally {
       this.isSearching = false;

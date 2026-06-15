@@ -22,8 +22,8 @@ const TRAINEE_ON_TRAINER_CSV = [
 
 export default class SurveyReport extends Component {
   @service ajax;
-  @service house;
-
+  @service errors;
+  @service download;
   @tracked isLoading = false;
   @tracked reports;
   @tracked report;
@@ -78,7 +78,7 @@ export default class SurveyReport extends Component {
       }
 
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }
@@ -135,7 +135,7 @@ export default class SurveyReport extends Component {
     });
 
 
-    this.house.downloadCsv(`${this.survey.year}-${TypeLabels[this.survey.type].replace(/ /g, '-')}-feedback.csv`, columns, rows);
+    this.download.downloadCsv(`${this.survey.year}-${TypeLabels[this.survey.type].replace(/ /g, '-')}-feedback.csv`, columns, rows);
   }
 
   @action
@@ -178,7 +178,7 @@ export default class SurveyReport extends Component {
     })
 
     const rows = Object.values(responses);
-    this.house.downloadCsv(`${this.survey.year}-${TypeLabels[this.survey.type].replace(/ /g, '-')}-ratings.csv`, columns, rows);
+    this.download.downloadCsv(`${this.survey.year}-${TypeLabels[this.survey.type].replace(/ /g, '-')}-ratings.csv`, columns, rows);
   }
 
   @action
@@ -232,7 +232,7 @@ export default class SurveyReport extends Component {
     });
 
 
-    this.house.downloadCsv(`${this.survey.year}-${TypeLabels[this.survey.type].replace(/ /g, '-')}-feedback.csv`, columns, rows);
+    this.download.downloadCsv(`${this.survey.year}-${TypeLabels[this.survey.type].replace(/ /g, '-')}-feedback.csv`, columns, rows);
   }
 
 
@@ -281,7 +281,7 @@ export default class SurveyReport extends Component {
     });
 
 
-    this.house.downloadCsv(`${this.survey.year}-${TypeLabels[this.survey.type].replace(/ /g, '-')}-feedback.csv`, columns, rows);
+    this.download.downloadCsv(`${this.survey.year}-${TypeLabels[this.survey.type].replace(/ /g, '-')}-feedback.csv`, columns, rows);
   }
 
   @action
@@ -333,7 +333,7 @@ export default class SurveyReport extends Component {
     });
 
 
-    this.house.downloadCsv(`${this.survey.year}-${TypeLabels[this.survey.type].replace(/ /g, '-')}-feedback.csv`, columns, rows);
+    this.download.downloadCsv(`${this.survey.year}-${TypeLabels[this.survey.type].replace(/ /g, '-')}-feedback.csv`, columns, rows);
   }
 
   @action
@@ -371,6 +371,6 @@ export default class SurveyReport extends Component {
     });
 
 
-    this.house.downloadCsv(`${this.survey.year}-${TypeLabels[this.survey.type].replace(/ /g, '-')}-feedback.csv`, columns, rows);
+    this.download.downloadCsv(`${this.survey.year}-${TypeLabels[this.survey.type].replace(/ /g, '-')}-feedback.csv`, columns, rows);
   }
 }

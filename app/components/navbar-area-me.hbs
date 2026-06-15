@@ -21,7 +21,7 @@
       {{else}}
         <NavbarMenuItem @menu={{menu}} @route="me.tickets" @item="Tickets &amp; Stuff"/>
       {{/if}}
-      <NavbarMenuItem @menu={{menu}} @route="me.agreements" @item="Agreements"/>
+      <NavbarMenuItem @menu={{menu}} @route="me.agreements" @item="Agreements / Documents"/>
       {{#if
         (and @user.motorpool_policy_enabled (or @user.mvr_eligible @user.mvr_potential @user.may_request_stickers @user.pvr_potential))}}
         <NavbarMenuItem @menu={{menu}} @route="me.vehicles" @item="Vehicle Dashboard"/>

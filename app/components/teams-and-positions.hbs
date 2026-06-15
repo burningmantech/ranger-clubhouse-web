@@ -1,46 +1,62 @@
-<div class="fs-6 fw-bold p-2">Team Membership</div>
-<div class="masonry-container mt-1">
-  {{#each this.teamMembership as |team|}}
-    <div class="masonry-item mb-1">
-      <div>
-        {{team.title}}
-        {{#if team.is_manager}}
-          <UiBadge @type="success" class="ms-2">manager</UiBadge>
-        {{/if}}
-      </div>
-    </div>
-  {{else}}
-    <div class="masonry-item">
-      <div>
-        You are not a member of any team at this time.
-      </div>
-    </div>
-  {{/each}}
-</div>
-<hr class="py-1">
-<div class="masonry-container">
-  <div class="masonry-item mb-2">
-    <div class="fw-bold mb-1">General Positions</div>
-    <div>
-      {{#each this.positions.generalPositions as |position|}}
-        {{position-label position}}<br>
-      {{else}}
-        <i>None granted.</i>
-      {{/each}}
-    </div>
-  </div>
+{{#if this.showTeamDocument}}
+  <h3>{{this.showTeamDocument.title}} Document</h3>
+  {{!template-lint-disable no-triple-curlies}}
+  {{{this.showTeamDocument.document_body}}}
 
-  {{#each this.positions.teams as |team|}}
-    {{#if team.positions}}
-      <div class="masonry-item mb-2">
-        <div class="fw-bold mb-1">{{team.title}} Positions</div>
+  <div class="mt-2">
+    <UiCloseButton @onClick={{this.closeTeamDocument}} />
+  </div>
+{{else}}
+  <div class="fs-6 fw-bold">Your Teams</div>
+  <div class="masonry-container mt-1">
+    {{#each this.teamMembership as |team|}}
+      <div class="masonry-item">
         <div>
-          {{#each team.positions as |p|}}
+          {{team.title}}
+          {{#if team.is_manager}}
+            <UiBadge @type="success" class="ms-2">manager</UiBadge>
+          {{/if}}
+          {{#if team.document_tag}}
+            {{#if team.document_body}}
+              <UiButton @type="secondary" @onClick={{fn this.viewTeanDocument team}} class="d-block">
+                View Team Document
+              </UiButton>
+            {{else}}
+              <div class="text-muted">has team document</div>
+            {{/if}}
+          {{/if}}
+        </div>
+      </div>
+    {{else}}
+      <div class="masonry-item">
+        <div>
+          You are not on any team yet.
+        </div>
+      </div>
+    {{/each}}
+  </div>
+  <hr class="py-1">
+  <div class="masonry-container">
+    <div class="masonry-item mb-2">
+      <div class="fw-bold mb-1">General Positions</div>
+      <div>
+        {{#each this.positions.generalPositions as |position|}}
+          {{position-label position}}<br>
+        {{else}}
+          <i>None yet.</i>
+        {{/each}}
+      </div>
+    </div>
+
+    {{#each this.positions.teamGroups as |group|}}
+      <div class="masonry-item mb-2">
+        <div class="fw-bold mb-1">{{group.title}} Positions</div>
+        <div>
+          {{#each group.positions as |p|}}
             {{position-label p}}<br>
           {{/each}}
         </div>
       </div>
-    {{/if}}
-  {{/each}}
-</div>
-
+    {{/each}}
+  </div>
+{{/if}}

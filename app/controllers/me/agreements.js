@@ -5,9 +5,14 @@ import {action} from '@ember/object';
 export default class MeAgreementsController extends ClubhouseController {
   @tracked showAgreementForSigning;
   @tracked showAgreementToView;
+  @tracked showTeam;
+
+  @tracked agreements;
+  @tracked teams;
 
   @action
   reviewAgreementToSign(agreement) {
+    this.scroll.scrollToTop();
     this.showAgreementForSigning = agreement;
   }
 
@@ -19,11 +24,23 @@ export default class MeAgreementsController extends ClubhouseController {
 
   @action
   showAgreement(agreement) {
+    this.scroll.scrollToTop();
     this.showAgreementToView = agreement;
   }
 
   @action
   closeAgreementView() {
     this.showAgreementToView = null;
+  }
+
+  @action
+  openTeamDocument(team) {
+    this.scroll.scrollToTop();
+    this.showTeam = team;
+  }
+
+  @action
+  closeTeamDocument() {
+    this.showTeam = null;
   }
 }

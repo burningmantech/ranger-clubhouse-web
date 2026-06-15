@@ -1,0 +1,39 @@
+.card-hover:hover {
+  background-color: #dee2e6 !important;
+}
+
+.form-text-invalid {
+  font-size: 0.9em;
+  color: #dc3545;
+}
+.form-check-label:hover {
+  background-color: #f0f0f0;
+}
+
+@media only screen and (max-width: 799px) {
+  .form-check-inline-responsive .form-check-inline {
+    display: block !important;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+}
+
+.year-select {
+  font-size: 1.4em;
+}
+@include media-breakpoint-down(xl) {
+  .col-form-label-fixed, .col-form-label-fixed-small {
+    width: 100% !important;
+    display: block;
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .col-form-label-fixed {
+    width: 120px !important;
+  }
+
+  .col-form-label-fixed-small {
+    width: 80px !important;
+  }
+}

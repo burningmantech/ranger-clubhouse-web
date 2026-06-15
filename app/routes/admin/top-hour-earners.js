@@ -5,7 +5,7 @@ export default class AdminRangerRetentionRoute extends ClubhouseRoute {
   hasRole = ADMIN;
 
   setupController(controller) {
-    const year = this.house.currentYear();
+    const year = this.session.currentYear();
     controller.set('topEarners', []);
     controller.set('haveResults', false);
     controller.set('isSubmitting', false);

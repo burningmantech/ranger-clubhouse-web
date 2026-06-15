@@ -4,7 +4,7 @@ import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 
 export default class VcApplicationAssignDialogComponent extends Component {
-  @service house;
+  @service errors;
   @service toast;
 
   @tracked isSubmitting;
@@ -31,7 +31,7 @@ export default class VcApplicationAssignDialogComponent extends Component {
       this.toast.success('Assignment update was successful.');
       this.args.onClose();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

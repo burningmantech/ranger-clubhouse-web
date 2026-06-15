@@ -2,24 +2,26 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
 import PositionTypes from 'clubhouse/constants/position-types';
-import {TECH_NINJA} from 'clubhouse/constants/roles';
+import {ADMIN} from 'clubhouse/constants/roles';
+import {ATTR_LABELS, TYPE_FRONTLINE} from 'clubhouse/models/position';
 import _ from 'lodash';
 import {later} from '@ember/runloop';
-import {ATTR_LABELS} from 'clubhouse/models/position';
 
-export default class PositionController extends ClubhouseController {
+export default class AdminPositionsController extends ClubhouseController {
   @tracked positions;
+  @tracked positionLineups;
+  @tracked roles;
+  @tracked teams;
+
   @tracked position = null;
 
-  @tracked typeFilter = 'All';
-  @tracked activeFilter = 'all';
-  @tracked allRangersFilter = '-';
-  @tracked viewAs = 'list';
-  @tracked attrFilters = [];
+  @tracked typeFilter;
+  @tracked activeFilter;
+  @tracked allRangersFilter;
+  @tracked viewAs;
+  @tracked attrFilters;
 
-  @tracked teams;
-  @tracked rolesById;
-  @tracked roleOptions;
+  typeOptions = ['All', ...PositionTypes];
 
   activeOptions = [
     {id: 'all', title: 'All'},
@@ -28,7 +30,7 @@ export default class PositionController extends ClubhouseController {
   ];
 
   allRangersOptions = [
-    ['-', 'all'],
+    ['All', 'all'],
     ['All Rangers', 'all-rangers'],
     ['Not-All Rangers', 'not']
   ];
@@ -42,104 +44,95 @@ export default class PositionController extends ClubhouseController {
 
   constructor() {
     super(...arguments);
+    this.resetFilters();
+  }
 
-    const types = PositionTypes.slice();
-    types.unshift('All');
-    this.typeOptions = types;
+  resetFilters() {
+    this.typeFilter = 'All';
+    this.activeFilter = 'all';
+    this.allRangersFilter = 'all';
+    this.viewAs = 'list';
+    this.attrFilters = [];
   }
 
   get canManagePositions() {
-    return this.session.hasRole(TECH_NINJA)
+    return this.session.hasRole(ADMIN);
   }
 
   @cached
-  get viewByTeams() {
-    const groups = _.groupBy([...this.viewPositions], 'team_id');
+  get teamById() {
+    return _.keyBy(this.teams, 'id');
+  }
 
-    const teams = this.teams.map((team) => ({
-      id: team.id,
-      title: team.title,
-      team_positions: groups[team.id] ?? [],
-    }));
+  @cached
+  get roleById() {
+    return _.keyBy(this.roles, 'id');
+  }
 
-    teams.unshift({
-      title: 'General Positions / Unassociated with Team',
-      team_positions: this.positions.filter((p) => !p.team_id || !groups[p.team_id])
-    });
-
-    return teams;
+  @cached
+  get roleOptions() {
+    return this.roles.map(({id, title}) => ({id, title}));
   }
 
   @cached
   get viewPositions() {
-    let positions = this.positions;
-    const {typeFilter} = this;
+    const {typeFilter, activeFilter, allRangersFilter, attrFilters} = this;
+    const tests = [];
 
     if (typeFilter !== 'All') {
-      positions = positions.filter((p) => p.type === typeFilter);
+      tests.push((p) => p.type === typeFilter);
     }
 
-    switch (this.activeFilter) {
-      case 'active':
-        positions = positions.filter((p) => p.active);
-        break;
-      case 'inactive':
-        positions = positions.filter((p) => !p.active);
-        break;
+    if (activeFilter === 'active') {
+      tests.push((p) => p.active);
+    } else if (activeFilter === 'inactive') {
+      tests.push((p) => !p.active);
     }
 
-    if (this.allRangersFilter === 'all-rangers') {
-      positions = positions.filter((p) => p.all_rangers);
+    if (allRangersFilter === 'all-rangers') {
+      tests.push((p) => p.all_rangers);
+    } else if (allRangersFilter === 'not') {
+      tests.push((p) => !p.all_rangers);
     }
 
-    if (this.attrFilters.length) {
-      positions = positions.filter((p) => {
-        let count = 0;
-        this.attrFilters.forEach(f => {
-          if (p[f]) {
-            count++;
-          }
-        });
-        return (count === this.attrFilters.length);
-      })
+    if (attrFilters.length) {
+      tests.push((p) => attrFilters.every((attr) => p[attr]));
     }
 
-    return positions;
+    return this.positions.filter((p) => tests.every((test) => test(p)));
+  }
+
+  @cached
+  get viewByTeams() {
+    const byTeamId = _.groupBy(this.viewPositions, 'team_id');
+    // A position is "general" when it has no team, or references a team that no longer exists.
+    const general = this.viewPositions.filter((p) => !p.team_id || !this.teamById[p.team_id]);
+
+    return [
+      {title: 'General Positions / Unassociated with Team', team_positions: general},
+      ...this.teams.map((team) => ({
+        id: team.id,
+        title: team.title,
+        team_positions: byTeamId[team.id] ?? [],
+      })),
+    ];
   }
 
   @cached
   get positionScrollItems() {
-    return this.viewPositions.map((p) => ({
-      id: `position-${p.id}`,
-      title: p.title
-    }));
+    return this.viewPositions.map((p) => ({id: `position-${p.id}`, title: p.title}));
   }
 
   @cached
   get teamScrollList() {
-    const list = [];
-
-    this.viewByTeams.forEach((t) => {
-      if (t.id) {
-        list.push({
-          id: `team-${t.id}`,
-          title: t.title
-        });
-      }
-    });
-
-    return list;
-  }
-
-  @action
-  showAsClick(type) {
-    this.showAsPositions = (type === 'positions');
-    this.showAsTeams = !this.showAsPositions;
+    return this.viewByTeams
+      .filter((team) => team.id)
+      .map((team) => ({id: `team-${team.id}`, title: team.title}));
   }
 
   @action
   newAction() {
-    this.position = this.store.createRecord('position', {type: 'Frontline'});
+    this.position = this.store.createRecord('position', {type: TYPE_FRONTLINE});
   }
 
   @action
@@ -149,49 +142,52 @@ export default class PositionController extends ClubhouseController {
 
   @action
   deleteAction() {
-    this.modal.confirm(`Confirm Deleting "${this.position.title}"`,
-      `By deleting this position important historical information will be lost. Are you use you want to do this?`,
+    const {position} = this;
+    this.modal.confirm(`Confirm Deleting "${position.title}"`,
+      'By deleting this position important historical information will be lost. Are you sure you want to do this?',
       async () => {
         try {
-          await this.position.destroyRecord();
+          await position.destroyRecord();
           this.toast.success('The position has been deleted.');
           this.position = null;
-          this.house.scrollToTop(true);
+          this.scroll.scrollToTop(true);
         } catch (response) {
-          this.house.handleErrorResponse(response)
+          this.errors.handleErrorResponse(response);
         }
       });
   }
 
   @action
-  saveAction(model, isValid) {
-    const isNew = model.isNew;
-
+  async saveAction(model, isValid) {
     if (!isValid) {
       return;
     }
 
-    this.house.saveModel(model, `The position has been ${isNew ? 'created' : 'updated'}.`, async () => {
+    const isNew = model.isNew;
+    if (await this.saveModel.save({model, message: `The position has been ${isNew ? 'created' : 'updated'}.`})) {
       try {
         if (isNew) {
-          await this.positions.update(); // refresh the list.
+          await this.positions.update(); // re-query so the new position appears in the list
         }
         this._scrollToPosition(this.position.id);
         this.position = null;
       } catch (response) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       }
-    });
+    }
   }
 
   @action
   cancelAction() {
-    if (!this.position.isNew) {
-      this._scrollToPosition(this.position.id);
-    } else {
-      this.house.scrollToTop(true);
-    }
+    const {position} = this;
     this.position = null;
+
+    if (position.isNew) {
+      position.unloadRecord();
+      this.scroll.scrollToTop(true);
+    } else {
+      this._scrollToPosition(position.id);
+    }
   }
 
   @action
@@ -200,6 +196,7 @@ export default class PositionController extends ClubhouseController {
   }
 
   _scrollToPosition(positionId) {
-    later(() => this.house.scrollToElement(`#position-${positionId}`, true), 100);
+    // Let the list re-render before scrolling to the row.
+    later(() => this.scroll.scrollToElement(`#position-${positionId}`, true), 100);
   }
 }

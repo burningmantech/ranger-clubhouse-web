@@ -1,7 +1,15 @@
+{{!--
+  Thin convenience wrapper over <UiSection> for the HQ shift page: it maps the
+  @requireAction flag onto UiSection's warning styling and prepends a
+  right-arrow marker to the title when action is required, so each shift
+  section doesn't have to repeat that title/icon boilerplate. Kept as its own
+  component because it is invoked many times from hq/shift.hbs; inlining it
+  would require editing every call site there (deferred — see review note).
+--}}
 <UiSection id={{@id}} @isWarning={{@requireAction}}>
   <:title>
     {{#if @requireAction}}
-      {{fa-icon "arrow-right" right=2}}
+      {{fa-icon "arrow-right" class="me-2"}}
     {{/if}}
     {{yield to="title"}}
   </:title>

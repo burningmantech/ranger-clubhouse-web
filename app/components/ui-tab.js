@@ -7,7 +7,7 @@ import {service} from '@ember/service';
  */
 
 export default class UiTabComponent extends BsTab {
-  @service house;
+  @service analytics;
   @service router;
 
   constructor() {
@@ -39,7 +39,7 @@ export default class UiTabComponent extends BsTab {
     const url = window.location.pathname;
     const tab_title = pane ? pane.title : 'unknown';
 
-    this.house.actionRecord('client-route-tab', {
+    this.analytics.actionRecord('client-route-tab', {
       url,
       tab_title,
       tab_id: this.activeId

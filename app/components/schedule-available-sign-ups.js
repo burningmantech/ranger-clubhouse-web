@@ -8,13 +8,12 @@ const allDays = ['All Days', 'all'];
 const upcomingShifts = ['Upcoming Shifts', 'upcoming'];
 
 export default class ScheduleAvailableSignUpsComponent extends Component {
-  @service house;
-
+  @service session;
   @tracked filterDay = 'upcoming';
 
   constructor() {
     super(...arguments);
-    this.isCurrentYear = (+this.args.year === this.house.currentYear());
+    this.isCurrentYear = (+this.args.year === this.session.currentYear());
     if (!this.isCurrentYear) {
       this.filterDay = 'all';
     }

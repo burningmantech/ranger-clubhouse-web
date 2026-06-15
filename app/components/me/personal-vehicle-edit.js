@@ -6,7 +6,7 @@ import { action } from '@ember/object';
 import { service } from '@ember/service';
 
 export default class MePersonalVehicleEditComponent extends Component {
-  @service house;
+  @service saveModel;
   @service toast;
 
   stateOptions = [
@@ -67,15 +67,11 @@ export default class MePersonalVehicleEditComponent extends Component {
 
     const isNew = this.args.entry.isNew;
 
-    try {
-      await model.save();
-      this.toast.success(`The request was successfully ${isNew ? 'submitted' : 'updated'}.`);
+    if (await this.saveModel.save({model, message: `The request was successfully ${isNew ? 'submitted' : 'updated'}.`})) {
       if (isNew) {
         this.args.vehicles.update();
       }
       this.args.onFinish();
-    } catch (response) {
-      this.house.handleErrorResponse(response, model);
     }
   }
 }

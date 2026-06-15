@@ -1,0 +1,27 @@
+.ui-section {
+  // margin-top: 20px;
+  margin-bottom: 20px;
+  scroll-margin-top: 120px;
+  padding: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 1px 5px 0 rgb(50 50 50 / 50%); //rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.ui-section-title {
+  font-size: 1.05rem;
+  font-weight: 400;
+  margin: -10px -10px 10px -10px;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-bottom: 1px solid #eaeded;
+}
+
+.ui-section-title-warning {
+  background-color: rgba(255, 217, 53, 0.38) !important;
+  color: #222 !important;
+}
+
+.ui-section-sub-title {
+  margin: -10px -10px 10px -10px;
+  padding: 10px;
+}

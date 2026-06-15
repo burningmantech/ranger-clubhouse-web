@@ -13,8 +13,7 @@ const SUMMARY_COLUMNS = [
 
 
 export default class SurveyRatingSummaryReportComponent extends Component {
-  @service house;
-
+  @service download;
   constructor() {
     super(...arguments);
 
@@ -60,6 +59,6 @@ export default class SurveyRatingSummaryReportComponent extends Component {
       rows.push(row);
     });
 
-    this.house.downloadCsv(`${this.args.survey.year}-${this.isNormal ? 'sessions' : 'trainer'}-ratings-summary.csv`, columns, rows);
+    this.download.downloadCsv(`${this.args.survey.year}-${this.isNormal ? 'sessions' : 'trainer'}-ratings-summary.csv`, columns, rows);
   }
 }

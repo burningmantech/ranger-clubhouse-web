@@ -15,7 +15,7 @@ import {cached} from '@glimmer/tracking';
 import {SURVEY_MANAGEMENT, SURVEY_MANAGEMENT_BASE} from "clubhouse/constants/roles";
 
 export default class SurveyFormComponent extends Component {
-  @service house;
+  @service saveModel;
   @service session;
   @service toast;
 
@@ -61,12 +61,8 @@ export default class SurveyFormComponent extends Component {
       model.position_id = ALPHA
     }
 
-    try {
-      await model.save();
-      this.toast.success(`Survey was successfully ${isNew ? 'created' : 'updated'}.`);
+    if (await this.saveModel.save({model, message: `Survey was successfully ${isNew ? 'created' : 'updated'}.`})) {
       this.args.onSave();
-    } catch (response) {
-      this.house.handleErrorResponse(response, model);
     }
   }
 

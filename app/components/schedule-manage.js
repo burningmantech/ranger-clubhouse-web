@@ -10,7 +10,7 @@ export default class ScheduleManageComponent extends Component {
   @service ajax;
   @service modal;
   @service toast;
-  @service house;
+  @service errors;
   @service session;
   @service shiftManage;
 
@@ -55,7 +55,7 @@ export default class ScheduleManageComponent extends Component {
     const person_id = this.args.person.id;
     try {
       this.isLoading = true;
-      this.isCurrentYear = (+year === this.house.currentYear());
+      this.isCurrentYear = (+year === this.session.currentYear());
 
       const data = {
         person_id,
@@ -89,7 +89,7 @@ export default class ScheduleManageComponent extends Component {
       this.creditsEarned = 0.0;
       this.scheduleSummary = {};
       this.availableSlots = [];
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }
@@ -211,11 +211,11 @@ export default class ScheduleManageComponent extends Component {
         await this.session.loadUser();
         if (!result.signed_motorpool_agreement) {
           result.agreementWarning = 'To operate the smaller fleet vehicles, such as the UTVs and golf carts,' +
-            ' you must first sign the Motor Pool Agreement. Please complete this step to ensure you are authorized' +
+            ' you must first sign the Vehicle Use Agreement. Please complete this step to ensure you are authorized' +
             ' to drive these vehicles during your shift. Visit the Clubhouse homepage and follow the dashboard' +
             ' instructions to sign the agreement.';
         } else {
-          result.agreementWarning = 'Because you have signed the Motor Pool Agreement,' +
+          result.agreementWarning = 'Because you have signed the Vehicle Use Agreement,' +
             ' you are permitted to operate the smaller vehicles,' +
             ' such as UTVs and golf carts, during your shift.';
         }
@@ -313,7 +313,7 @@ export default class ScheduleManageComponent extends Component {
       this._sortAndMarkSignups();
       this.toast.success('The shift has been removed from the schedule.');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       slot.isSubmitting = false;
     }
@@ -367,7 +367,7 @@ export default class ScheduleManageComponent extends Component {
         this._updateLinkedSlots([slot.signUpInfo.child]);
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       slot.isRetrievingSignUps = false
     }

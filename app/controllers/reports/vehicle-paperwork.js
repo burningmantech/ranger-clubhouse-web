@@ -5,11 +5,11 @@ import {shiftFormat} from 'clubhouse/helpers/shift-format';
 export default class ReportsVehiclePaperworkController extends ClubhouseController {
   @action
   exportToCsv() {
-    const year = this.house.currentYear();
+    const year = this.session.currentYear();
     const CSV_COLUMNS = [
       {title: 'Callsign', key: 'callsign'},
       {title: 'Status', key: 'status'},
-      {title: `Motor Pool Protocol`, key: 'signed_motorpool_agreement', yesno: true},
+      {title: `Vehicle Use Protocol`, key: 'signed_motorpool_agreement', yesno: true},
       {title: `MVR Approved`, key: 'org_vehicle_insurance', yesno: true},
       {title: `MVR Eligible`, key: 'is_mvr_eligible', yesno: true},
       {title: `MVR Checkbox`, key: 'mvr_eligible', yesno: true},
@@ -34,6 +34,6 @@ export default class ReportsVehiclePaperworkController extends ClubhouseControll
       pvr_positions_list: p.pvr_positions ? p.pvr_positions.map((t) => t.title).join("\n") : '',
     }));
 
-    this.house.downloadCsv(`${year}-vehicle-paperwork.csv`, CSV_COLUMNS, people);
+    this.download.downloadCsv(`${year}-vehicle-paperwork.csv`, CSV_COLUMNS, people);
   }
 }

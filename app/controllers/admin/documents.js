@@ -28,28 +28,30 @@ export default class AdminDocumentsController extends ClubhouseController {
   }
 
   @action
-  saveAction(model, isValid) {
+  async saveAction(model, isValid) {
     if (!isValid) {
       return;
     }
 
     const isNew = this.editDocument.isNew;
-    model.save().then(() => {
+    if (await this.saveModel.save({model, message: 'Document was successfully saved.'})) {
       this.editDocument = null;
-      this.toast.success('Document was successfully saved.');
       if (isNew) {
         this.documents.update();
       }
-    }).catch((response) => this.house.handleErrorResponse(response, model));
+    }
   }
 
   @action
   deleteAction() {
-    this.modal.confirm('Confirm Deletion', 'Are you really sure you want to delete this document?', () => {
-      this.editDocument.destroyRecord().then(() => {
+    this.modal.confirm('Confirm Deletion', 'Are you really sure you want to delete this document?', async () => {
+      try {
+        await this.editDocument.destroyRecord();
         this.editDocument = null;
         this.toast.success('Document was successfully deleted.');
-      }).catch((response) => this.house.handleErrorResponse(response));
+      } catch (response) {
+        this.errors.handleErrorResponse(response);
+      }
     });
   }
 }

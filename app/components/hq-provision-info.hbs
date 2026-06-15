@@ -1,31 +1,43 @@
 <div class="d-flex flex-wrap">
   <div class="me-4">
     <h4>{{fa-icon "utensils" right=1 fixed=true}} Meals</h4>
-     <UiTable>
+    <UiTable>
       <thead>
-      <tr>
-        <th>&nbsp;</th>
-        <th>Event Period</th>
-        <th>Pog or has BMID Meal Pass?</th>
-      </tr>
+        <tr>
+          <th>&nbsp;</th>
+          <th>Event Period</th>
+          <th>Pog or has BMID Meal Pass?</th>
+        </tr>
       </thead>
       <tbody>
-      {{this.periodRow "Pre-Event" "pre"}}
-      {{this.periodRow "Event Week" "event"}}
-      {{this.periodRow "Post-Event" "post"}}
+        {{#each this.periodRows as |row|}}
+          {{#let (this.period row.key) as |week|}}
+            <tr class="{{if week.current "table-warning fw-bold" "text-muted"}}">
+              <td>{{#if week.current}}{{fa-icon "arrow-right"}}{{/if}}</td>
+              <td>{{row.label}}{{if week.current " (current period)"}}</td>
+              <td>
+                {{#if week.hasPass}}
+                  {{fa-icon "ban" class="ms-2"}} NO POGS - HAS BMID MEAL PASS
+                {{else}}
+                  Pog for 6+ hours worked
+                {{/if}}
+              </td>
+            </tr>
+          {{/let}}
+        {{/each}}
       </tbody>
     </UiTable>
   </div>
   <div>
     <h4>{{fa-icon "shower" right=1 fixed=true}} Showers</h4>
-    <p>
+    <div>
       {{#if @showers}}
         <b class="text-danger">{{fa-icon "ban" right=1 fixed=true}} NO SHOWER POGS</b><br>
         Has Wet Spot Access BMID
       {{else}}
         <span class="text-success">Pog for every 40 hours worked</span>
       {{/if}}
-    </p>
+    </div>
     The Wet Spot is located on 5:30 towards the DPW Depot.
   </div>
 </div>

@@ -4,8 +4,7 @@ import {action} from '@ember/object';
 import {service} from '@ember/service';
 
 export default class DropdownScrollListComponent extends Component {
-  @service house;
-
+  @service scroll;
   @cached
   get letterOptions() {
     const letters = {};
@@ -50,7 +49,7 @@ export default class DropdownScrollListComponent extends Component {
       }
     }
 
-    this.house.scrollToElement(`#${id}`, true, true);
+    this.scroll.scrollToElement(`#${id}`, true, true);
   }
 
   @action

@@ -54,7 +54,7 @@ export default class AdminBulkSignoutController extends ClubhouseController {
         set(ts, 'credits', entry.credits);
         set(ts, 'selected', false);
       } catch (response) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       } finally {
         this.signOffTimesheet = null;
       }

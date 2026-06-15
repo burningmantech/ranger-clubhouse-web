@@ -8,19 +8,21 @@ export default class SearchVehiclesRoute extends ClubhouseRoute {
     number: {refreshModel: true}
   };
 
-  model({number, id}) {
+  async model({number, id}) {
     this.number = number;
     this.vehicleId = id;
 
     if (id) {
-      return this.store.findRecord('vehicle', id, {reload: true}).catch((response) => {
+      try {
+        return await this.store.findRecord('vehicle', id, {reload: true});
+      } catch (response) {
         if (response instanceof NotFoundError) {
           return null;
         }
         throw response;
-      });
+      }
     } else if (!isEmpty(number)) {
-      return this.store.query('vehicle', {event_year: this.house.currentYear(), number});
+      return this.store.query('vehicle', {event_year: this.session.currentYear(), number});
     } else {
       return null;
     }

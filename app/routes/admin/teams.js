@@ -1,18 +1,17 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {ADMIN, TECH_NINJA} from 'clubhouse/constants/roles';
-import RSVP from 'rsvp';
 import _ from 'lodash';
 
 export default class AdminTeamsRoute extends ClubhouseRoute {
   roleRequired = ADMIN;
 
-  model() {
+  async model() {
     this.store.unloadAll('team');
 
-    return RSVP.hash({
-      teams: this.store.query('team', {include_managers: 1, include_roles: 1}),
-      roles: this.ajax.request('role').then(({role}) => role)
-    });
+    return {
+      teams: await this.store.query('team', {include_managers: 1, include_roles: 1}),
+      roles: (await this.ajax.request('role')).role
+    };
   }
 
   setupController(controller, {teams, roles}) {

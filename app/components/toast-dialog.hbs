@@ -6,7 +6,7 @@
       {{this.message}}
       {{#if this.isDangerType}}
         <div class="mt-2 pt-2 border-top">
-          <button type="button" class="btn btn-primary btn-sm" {{on-click this.closeAction}}>Close</button>
+          <UiButton @type="primary" @size="sm" @onClick={{this.closeAction}}>Close</UiButton>
         </div>
       {{/if}}
     </div>

@@ -8,7 +8,7 @@
       {{#if this.isLoading}}
         <LoadingIndicator @text="Retrieving signups"/>
       {{else}}
-        <table class="table table-width-auto">
+        <UiTable>
           <thead>
           <tr>
             <th>Shift start</th>
@@ -23,7 +23,7 @@
             </tr>
           {{/each}}
           </tbody>
-        </table>
+        </UiTable>
       {{/if}}
     {{/if}}
   </Popover>

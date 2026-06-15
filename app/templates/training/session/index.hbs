@@ -35,7 +35,7 @@
     <FormRow>
       <div class="col-auto">
         Signups: {{this.students.length}} of {{this.slot.max}}
-        {{#if (gte this.students.length this.slot.max)}}
+        {{#if (and this.slot.max (gte this.students.length this.slot.max))}}
           <b class="text-danger"> (FULL)</b>
         {{/if}}
       </div>
@@ -122,7 +122,7 @@
         {{/each}}
       {{else}}
         <tr>
-          <td class="text-danger" colspan={{if this.canAdjustRosters 5 6}}>No signed-up trainers found.</td>
+          <td class="text-danger" colspan={{if this.canAdjustRosters 6 5}}>No signed-up trainers found.</td>
         </tr>
       {{/if}}
       </tbody>
@@ -248,7 +248,7 @@
       <div class="mb-2 d-flex border-bottom pb-2 {{if (or student.is_retired student.is_inactive) "text-bg-warning"}}">
         <div class="me-3 photo-medium">
           {{#if student.photo_url}}
-            <img src={{student.photo_url}} alt="{{student.callsign}} headshot">
+            <img src={{student.photo_url}} alt="{{student.callsign}} headshot" loading="lazy">
           {{else}}
             <UiPhotoNone/>
           {{/if}}
@@ -283,7 +283,7 @@
           {{/if}}
 
           <div class="fs-5 mb-2">
-            {{#if student.passed}}
+            {{#if (and student.scored student.passed)}}
               <UiBadge @type="success" class="me-3">passed</UiBadge>
             {{else}}
               <UiBadge @type="secondary" class="me-3">pending</UiBadge>
@@ -310,11 +310,9 @@
             Signed up at {{shift-format student.signed_up_at}} (Pacific)
           </div>
           {{#each (this.filterNotes student.notes) as |note|}}
-            {{#unless note.is_log}}
-              <div class="mb-2">
-                {{note.note}}
-              </div>
-            {{/unless}}
+            <div class="mb-2">
+              {{note.note}}
+            </div>
           {{else}}
             <div class="mb-2 ">
               <i>no notes given yet</i>
@@ -325,9 +323,12 @@
               FKA: {{join student.fkas ", "}}
             </div>
           {{/if}}
-          <div class="mt-4">
+          <UiButtonRow class="mt-4">
             <UiEditButton @size="sm" @onClick={{fn this.editStudentAction student}} @responsive={{true}}/>
-          </div>
+            {{#if this.canGraduate}}
+              <UiButton @onClick={{fn this.showWorkHistory student}} @type="secondary">Work History</UiButton>
+            {{/if}}
+          </UiButtonRow>
         </div>
       </div>
     {{/each}}
@@ -420,7 +421,7 @@
           {{#unless this.training.is_art}}
             <FormRow>
               <FormLabel>Was feedback delivered to {{studentName}}?</FormLabel>
-              <div clas="col-12">
+              <div class="col-12">
                 <f.radioGroup @name="feedback_delivered"
                               @options={{this.feedbackDeliveredOptions}}
                               @inline={{true}}/>
@@ -547,4 +548,16 @@
   <LoadingDialog>
     Submitting your request
   </LoadingDialog>
+{{/if}}
+
+{{#if this.showWorkHistoryPerson}}
+  <ModalDialog @title="Work History For {{this.showWorkHistoryPerson.callsign}}" @onEscape={{this.closeWorkHistory}} as
+               |Modal|>
+    <Modal.body>
+      <WorkHistory @person={{this.showWorkHistoryPerson}} @trainingId={{this.training.id}} />
+    </Modal.body>
+    <Modal.footer>
+      <UiCancelButton @onClick={{this.closeWorkHistory}}/>
+    </Modal.footer>
+  </ModalDialog>
 {{/if}}

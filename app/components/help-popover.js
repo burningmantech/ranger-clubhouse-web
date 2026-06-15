@@ -13,7 +13,7 @@ export default class HelpPopoverComponent extends Component {
   @tracked body = '';
 
   @action
-  clickHelp(event) {
+  async clickHelp(event) {
     event.preventDefault();
     if (this.isShowing) {
       return;
@@ -21,18 +21,19 @@ export default class HelpPopoverComponent extends Component {
 
     this.isLoading = true;
 
-    this.ajax.request(`help/${this.args.slug}`).then((result) => {
+    try {
+      const result = await this.ajax.request(`help/${this.args.slug}`);
       this.title = result.help.title;
       this.body = result.help.body;
-    })
-    .catch((response) => {
+    } catch (response) {
       if (+response.status === 404) {
         this.title = 'Help not found';
         this.body =  null;
       } else {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       }
-    })
-    .finally(() => this.isLoading = false);
+    } finally {
+      this.isLoading = false;
+    }
   }
 }

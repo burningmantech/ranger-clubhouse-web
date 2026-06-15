@@ -84,7 +84,7 @@ export default class VcBmidPrintController extends ClubhouseController {
   @action
   toggleBmid(bmid) {
     if (bmid) {
-      bmid.set('selected', !bmid.selected);
+      bmid.selected = !bmid.selected;
     }
 
     this._updateSelectedCount();
@@ -153,9 +153,9 @@ export default class VcBmidPrintController extends ClubhouseController {
           });
           const {exports} = await this.ajax.request('bmid/exports', {data: {year: this.year}});
           this.exportList = exports;
-          this.house.downloadUrl(export_url);
+          this.download.downloadUrl(export_url);
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isExporting = false;
         }

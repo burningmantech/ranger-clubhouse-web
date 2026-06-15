@@ -8,7 +8,8 @@ import {tracked} from '@glimmer/tracking';
 
 export default class MeTimesheetMissingEditComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
+  @service saveModel;
   @service modal;
   @service session;
   @service shiftManage;
@@ -43,7 +44,7 @@ export default class MeTimesheetMissingEditComponent extends Component {
         entry.position_id = this.positionOptions[0][1];
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoadingPositions = false;
     }
@@ -77,15 +78,8 @@ export default class MeTimesheetMissingEditComponent extends Component {
   async _saveCommon(model) {
     const isNew = model.isNew;
 
-    try {
-      this.isSubmitting = true;
-      await model.save();
-      this.toast.success(`The request has been successfully ${isNew ? 'submitted' : 'updated'}.`);
+    if (await this.saveModel.save({model, message: `The request has been successfully ${isNew ? 'submitted' : 'updated'}.`, owner: this})) {
       this.args.onSave(isNew);
-    } catch (response) {
-      this.house.handleErrorResponse(response)
-    } finally {
-      this.isSubmitting = false;
     }
   }
 }

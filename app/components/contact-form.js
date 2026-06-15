@@ -7,7 +7,7 @@ import containsEmail from 'clubhouse/utils/contains-email';
 import { validatePresence } from 'ember-changeset-validations/validators';
 
 export default class ContactFormComponent extends Component {
-  @service house;
+  @service errors;
   @service toast;
   @service modal;
   @service ajax;
@@ -24,23 +24,24 @@ export default class ContactFormComponent extends Component {
     return `Send a contact message to ${this.args.callsign}`;
   }
 
-  _sendMessage(message) {
+  async _sendMessage(message) {
     this.isSending = true;
-    this.ajax.request('contact/send', {
-      method: 'POST',
-      data: {
-        recipient_id: this.args.recipientId,
-        message,
-        type: this.args.contactType,
-      }
-    }).then(() => {
+    try {
+      await this.ajax.request('contact/send', {
+        method: 'POST',
+        data: {
+          recipient_id: this.args.recipientId,
+          message,
+          type: this.args.contactType,
+        }
+      });
       this.toast.success(`Your message to ${this.args.callsign} has been sent.`);
       this.args.onDone(true);
-    }).catch((response) => {
-      this.house.handleErrorResponse(response, message);
-    }).finally(() => {
+    } catch (response) {
+      this.errors.handleErrorResponse(response, message);
+    } finally {
       this.isSending = false;
-    });
+    }
   }
 
   @action

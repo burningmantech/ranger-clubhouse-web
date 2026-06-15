@@ -7,8 +7,7 @@ import {TYPE_ALPHA, TYPE_MENTOR} from "clubhouse/models/pod";
 
 export default class MentorAssignmentFromPodComponent extends Component {
   @service ajax;
-  @service house;
-
+  @service errors;
   @tracked isSubmitting = false;
 
   @tracked shiftOptions;
@@ -38,7 +37,7 @@ export default class MentorAssignmentFromPodComponent extends Component {
       this.shiftSelected = 0;
       this.shiftOptions = slot;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -109,7 +108,7 @@ export default class MentorAssignmentFromPodComponent extends Component {
       });
       this.showSelectDialog = false;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

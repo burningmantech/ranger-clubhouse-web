@@ -31,7 +31,7 @@ export default class VcAccessDocumentsExpiringController extends ClubhouseContro
         });
       });
     });
-    this.house.downloadCsv(`${this.house.currentYear()}-expiring-access-documents.csv`, CSV_COLUMNS, data);
+    this.download.downloadCsv(`${this.session.currentYear()}-expiring-access-documents.csv`, CSV_COLUMNS, data);
   }
 
   get emailList() {

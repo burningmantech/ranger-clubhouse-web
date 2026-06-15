@@ -13,7 +13,7 @@ export default class PersonPasswordComponent extends Component {
   @tracked isSubmitting = false;
 
   @service ajax;
-  @service house;
+  @service errors;
   @service toast;
 
   @tracked passwordForm = {password: '', password_confirmation: ''};
@@ -25,12 +25,12 @@ export default class PersonPasswordComponent extends Component {
       validateLength({max: 30, message: 'The password may only be 30 characters or less.'})
     ],
     password_confirmation: [
-      validateConfirmation({on: 'password', message: 'The password do not match.'})
+      validateConfirmation({on: 'password', message: 'The passwords do not match.'})
     ],
   };
 
   @action
-  submitAction(model, isValid) { // eslint-disable-line no-unused-vars
+  async submitAction(model, isValid) { // eslint-disable-line no-unused-vars
     if (!isValid) {
       return;
     }
@@ -42,13 +42,14 @@ export default class PersonPasswordComponent extends Component {
     };
 
     this.isSubmitting = true;
-    return this.ajax.request(`person/${person.id}/password`, {method: 'PATCH', data: passwords})
-      .then(() => {
-        this.toast.success('Password has been changed.');
-        this.args.onClose();
-      }).catch((response) => {
-        this.house.handleErrorResponse(response)
-      })
-      .finally(() => this.isSubmitting = false);
+    try {
+      await this.ajax.request(`person/${person.id}/password`, {method: 'PATCH', data: passwords});
+      this.toast.success('Password has been changed.');
+      this.args.onClose();
+    } catch (response) {
+      this.errors.handleErrorResponse(response)
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 }

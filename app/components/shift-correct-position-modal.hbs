@@ -1,0 +1,33 @@
+<ModalDialog @title="Correct Shift Position" @onEscape={{@onCancel}} as |Modal|>
+  <Modal.body>
+    <p>
+      This action is intended to correct a shift check in where the wrong position was selected.
+    </p>
+    <p>
+      <b>
+        When switching between an on-call shift (e.g., 007 Standby, Tech On Call) and an on-duty shift (e.g., 007,
+        Tech Team), or vice versa, you must end the current shift before starting the new one.
+      </b>
+    </p>
+    Select the new position the shift should be corrected to:
+    <FormRow>
+      <div class="col-auto">
+        <ChForm::Select @name="newPositionId"
+                        @value={{@positionId}}
+                        @options={{@positions}}
+                        @onChange={{@onPositionChange}}/>
+      </div>
+    </FormRow>
+    {{#if @error}}
+      <b class="text-danger">{{@error}}</b>
+    {{/if}}
+  </Modal.body>
+  <Modal.footer @align="start">
+    <UiButtonRow>
+      <UiButton @onClick={{@onUpdate}} @disabled={{@isSubmitting}} @size="md">
+        Update Position
+      </UiButton>
+      <UiCancelButton @onClick={{@onCancel}} @disabled={{@isSubmitting}} @size="md"/>
+    </UiButtonRow>
+  </Modal.footer>
+</ModalDialog>

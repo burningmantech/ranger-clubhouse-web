@@ -66,6 +66,6 @@ export default class ReportsSandmanQualifiedController extends ClubhouseControll
       {title: `${year} Signed Up`, key: 'is_signed_up', yesno: true},
     ];
 
-    this.house.downloadCsv(`${year}-sandman-qualified.csv`, CSV_COLUMNS, this.sandpeople);
+    this.download.downloadCsv(`${year}-sandman-qualified.csv`, CSV_COLUMNS, this.sandpeople);
   }
 }

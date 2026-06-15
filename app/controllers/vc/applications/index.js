@@ -56,7 +56,7 @@ export default class VcApplicationsIndexController extends ClubhouseController {
   ];
 
   get notCurrentYear() {
-    return +this.year !== this.house.currentYear();
+    return +this.year !== this.session.currentYear();
   }
 
   get applicationTypeDescription() {
@@ -139,7 +139,7 @@ export default class VcApplicationsIndexController extends ClubhouseController {
   applyPreset(presetName) {
     this.activePreset = presetName;
     const userId = this.session.userId;
-    const values = this.house.getKey(FILTERS_KEY) || {};
+    const values = this.storage.getKey(FILTERS_KEY) || {};
 
     // Reset all filters first
     this.ageFilter = 'all';
@@ -174,14 +174,14 @@ export default class VcApplicationsIndexController extends ClubhouseController {
     Object.keys(FILTERS_VALUES).forEach((key) => {
       values[key] = this[key];
     });
-    this.house.setKey(FILTERS_KEY, values);
+    this.storage.setKey(FILTERS_KEY, values);
   }
 
   @action
   setFilter(filter, value) {
-    const values = this.house.getKey(FILTERS_KEY) || {};
+    const values = this.storage.getKey(FILTERS_KEY) || {};
     values[filter] = value;
-    this.house.setKey(FILTERS_KEY, values);
+    this.storage.setKey(FILTERS_KEY, values);
     this[filter] = value;
     this.activePreset = null;
   }
