@@ -17,6 +17,14 @@ const JavascriptExceptions = [
   URIError,
 ];
 
+// Extension URL signatures in various browsers
+const extensionSchemes = [
+  'chrome-extension://',
+  'moz-extension://',
+  'safari-extension://'
+];
+
+
 /**
  * Maps an API failure to a user-facing dialog, and field errors back onto a
  * changeset. The one deep module from the legacy house split.
@@ -35,6 +43,7 @@ export default class ErrorsService extends Service {
    * @param {Object} response
    * @param {Changeset} [changeSet=null]
    */
+
   handleErrorResponse(response, changeSet = null) {
     let message, errorType;
     let responseErrors = null;
@@ -42,6 +51,11 @@ export default class ErrorsService extends Service {
     if (ENV.showAjaxErrors) {
       // When debugging - dump all errors to the console.
       console.error(response);
+    }
+
+    if (this.isExtensionInStack(response)) {
+      // Uncaught exceptions in an browser extension are propagated to the application. Uh, why!??!
+      return;
     }
 
     if (isOffline(response)) {
@@ -172,5 +186,13 @@ export default class ErrorsService extends Service {
     }
 
     this.modal.info('An error occurred', htmlSafe(message));
+  }
+
+  isExtensionInStack(error) {
+    // Check if the error object actually has a stack trace
+    if (!error || !error.stack) return false;
+
+    // Search the stack trace string for any extension scheme
+    return extensionSchemes.some(scheme => error.stack.includes(scheme));
   }
 }
