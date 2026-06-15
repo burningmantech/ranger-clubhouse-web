@@ -12,7 +12,8 @@ export default class TicketingOpenComponent extends Component {
   @tracked hasFinished = true;
 
   @service ajax;
-  @service house;
+  @service errors;
+  @service storePayload;
   @service session;
   @service store;
   @service toast;
@@ -62,11 +63,11 @@ export default class TicketingOpenComponent extends Component {
     this.isSavingDocumentStatus = true;
     try {
       const result = await this.ajax.patch(`access-document/${document.id}/status`, {data: {status}});
-      this.house.pushPayload('access-document', result.access_document);
+      this.storePayload.pushPayload('access-document', result.access_document);
       this.toast.success('Your choice has been successfully saved.');
       callback?.();
     } catch (response) {
-      this.house.handleErrorResponse(response)
+      this.errors.handleErrorResponse(response)
     } finally {
       this.isSavingDocumentStatus = false
     }
@@ -78,11 +79,14 @@ export default class TicketingOpenComponent extends Component {
    * @param {string} milestone
    * @private
    */
-  _updateMilestone(milestone) {
+  async _updateMilestone(milestone) {
     const id = +this.args.person.id;
     if (this.session.userId === id) {
-      this.ajax.request(`person-event/${id}/progress`, {method: 'POST', data: {milestone: `ticket-${milestone}`}})
-        .catch((response) => this.house.handleErrorResponse(response));
+      try {
+        await this.ajax.request(`person-event/${id}/progress`, {method: 'POST', data: {milestone: `ticket-${milestone}`}});
+      } catch (response) {
+        this.errors.handleErrorResponse(response);
+      }
     }
   }
 

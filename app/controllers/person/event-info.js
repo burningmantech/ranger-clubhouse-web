@@ -21,7 +21,7 @@ export default class PersonEventInfoController extends ClubhouseController {
   @tracked vehicleInfo;
 
   get isCurrentYear() {
-    return +this.year === this.house.currentYear();
+    return +this.year === this.session.currentYear();
   }
 
   get canManageOnlineCourse() {
@@ -57,7 +57,7 @@ export default class PersonEventInfoController extends ClubhouseController {
       }
       this.toast.success('Course successfully updated.');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -69,17 +69,10 @@ export default class PersonEventInfoController extends ClubhouseController {
       return;
     }
 
-    this.isSubmitting = true;
-    try {
-      await model.save();
+    if (await this.saveModel.save({model, message: 'Information successfully updated.', owner: this})) {
       if (+this.person.id === this.session.userId) {
         await this.session.loadUser();
       }
-      this.toast.success('Information successfully updated.');
-    } catch (response) {
-      this.house.handleErrorResponse(response, model);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 
@@ -97,7 +90,7 @@ export default class PersonEventInfoController extends ClubhouseController {
           this.toast.success('Person has been marked as completing the online course.');
           this.eventInfo = (await this.ajax.request(`person/${this.person.id}/event-info`, {data: {year: this.year}})).event_info;
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }
@@ -112,7 +105,7 @@ export default class PersonEventInfoController extends ClubhouseController {
     try {
       await this._retrieveUserInfo();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -133,7 +126,7 @@ export default class PersonEventInfoController extends ClubhouseController {
 
       await this._retrieveUserInfo();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -171,7 +164,7 @@ export default class PersonEventInfoController extends ClubhouseController {
             this.toast.error(`Unknown status ${status}`);
           }
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }

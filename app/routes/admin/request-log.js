@@ -10,7 +10,7 @@ export default class AdminRequestLogRoute extends ClubhouseRoute {
     message: {refreshModel: true},
   };
 
-  model(params) {
+  async model(params) {
     // Take the query parameters, and build up the action log search parameters
     this.searchParams = Object.keys(this.queryParams).reduce((hash, key) => {
       if (params[key]) {
@@ -19,7 +19,9 @@ export default class AdminRequestLogRoute extends ClubhouseRoute {
       return hash;
     }, {});
 
-    return this.ajax.request('request-log', {data: this.searchParams}).catch((response) => {
+    try {
+      return await this.ajax.request('request-log', {data: this.searchParams});
+    } catch (response) {
       if (response.status !== 422) {
         throw response;
       }
@@ -28,7 +30,7 @@ export default class AdminRequestLogRoute extends ClubhouseRoute {
         request_log: [],
         meta: {}
       }
-    });
+    }
   }
 
   setupController(controller, model) {

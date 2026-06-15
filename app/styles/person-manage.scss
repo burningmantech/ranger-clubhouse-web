@@ -1,0 +1,45 @@
+.person-manage-header {
+  background-color: #f4f4f4 !important;
+  margin: -10px -20px 15px -20px; // Pull the header back so no gaps appear
+  padding: 10px 20px; // Realign text with body
+  border-bottom: 1px solid #e0e0e0;
+}
+.person-manage-header-title {
+  display: flex;
+  justify-content: space-between;
+
+  div {
+    align-self: center;
+  }
+}
+
+
+.person-manage-callsign {
+  font-size: $h4-font-size;
+  font-weight: 500;
+}
+
+.person-manage-pronounce {
+  font-size: $h5-font-size;
+  opacity: 0.75;
+}
+
+.person-manage-pronouns {
+  display: inline-block;
+  font-size: $h5-font-size;
+}
+
+.person-manage-info {
+  width: 100%;
+}
+
+.person-manage-header-interface {
+  font-size: 1.1rem;
+}
+
+@include media-breakpoint-down(lg) {
+  .person-manage-header-title {
+    flex-direction: column;
+    align-items: normal;
+  }
+}

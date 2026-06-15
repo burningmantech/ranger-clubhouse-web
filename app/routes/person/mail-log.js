@@ -1,5 +1,4 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import RSVP from 'rsvp'
 import {ADMIN, VC} from 'clubhouse/constants/roles';
 
 export default class PersonMailLogRoute extends ClubhouseRoute {
@@ -10,20 +9,20 @@ export default class PersonMailLogRoute extends ClubhouseRoute {
     page: {refreshModel: true},
   };
 
-  model(params) {
+  async model(params) {
     const person_id = this.modelFor('person').id;
     const page = params.page ?? 1;
 
-    return RSVP.hash({
-      logs: this.ajax.request(`mail-log`, {data: {person_id, page}}),
-      stats: this.ajax.request('mail-log/stats', {data: {person_id}}),
-      emailHistory: this.ajax.request('email-history', {
+    return {
+      logs: await this.ajax.request(`mail-log`, {data: {person_id, page}}),
+      stats: await this.ajax.request('mail-log/stats', {data: {person_id}}),
+      emailHistory: (await this.ajax.request('email-history', {
         data: {
           person_id,
           include_source_person: 1
         }
-      }).then(({email_history}) => email_history),
-    });
+      })).email_history,
+    };
   }
 
   setupController(controller, model) {

@@ -575,11 +575,11 @@ export const SIGN_BEHAVIORAL_AGREEMENT = {
 };
 
 export const SIGN_MOTOR_POOL_PROTOCOL = {
-  name: 'Sign the Ranger Motor Pool Protocol',
+  name: 'Sign the Ranger Vehicle Use Protocol',
   skipPeriod: [POST_EVENT, AFTER_EVENT],
   check({milestones, isPNV}) {
     const {mvr_eligible} = milestones;
-    const name = `Sign the Ranger Motor Pool Protocol ${mvr_eligible ? '' : '(optional)'}`;
+    const name = `Sign the Ranger Vehicle Use Protocol ${mvr_eligible ? '' : '(optional)'}`;
 
     if (!milestones.motorpool_agreement_available) {
       return {result: SKIP};
@@ -592,18 +592,18 @@ export const SIGN_MOTOR_POOL_PROTOCOL = {
     if (isPNV && milestones.training.status !== 'pass') {
       return {
         result: NOT_AVAILABLE,
-        message: 'You need to pass In-Person Training first before you may sign the Motor Pool Protocol.'
+        message: 'You need to pass In-Person Training first before you may sign the Vehicle Use Protocol.'
       };
     }
 
     let prefix = '';
-    let suffix = 'to review and agree to the Ranger Motor Pool Protocol, which is required to drive a golf cart or UTV ("gator").';
+    let suffix = 'to review and agree to the Ranger Vehicle Use Protocol, which is required to drive a golf cart or UTV ("gator").';
 
     if (isPNV) {
       prefix = 'While most shifts do not involve the use of a Ranger vehicle, sometimes Khaki may ask a Ranger pair to drive a golf cart or UTV for a mission. A Ranger vehicle will NOT be used during your Alpha shift. Visit';
     } else if (mvr_eligible || milestones.mvr_potential) {
       prefix = 'Ranger vehicles are assigned based on operational need rather than convenience, as they are a limited resource issued according to availability. Visit';
-      suffix = htmlSafe(`${suffix}<div class="mt-2">Signing the Motor Pool Protocol is optional. However, if you choose not to sign, you will not be eligible to drive any vehicle on behalf of the Rangers.</div>`);
+      suffix = htmlSafe(`${suffix}<div class="mt-2">Signing the Vehicle Use Protocol is optional. However, if you choose not to sign, you will not be eligible to drive any vehicle on behalf of the Rangers.</div>`);
     }
 
     return {
@@ -731,10 +731,10 @@ function usingTicket(t) {
 }
 
 
-function buildTickets(milestones, personId, house) {
+function buildTickets(milestones, personId, storePayload) {
   const claimed = [];
 
-  const pkg = new TicketPackage(milestones.ticketing_package, personId, house);
+  const pkg = new TicketPackage(milestones.ticketing_package, personId, storePayload);
 
   pkg.tickets.forEach((t) => {
     if (usingTicket(t)) {
@@ -785,14 +785,14 @@ function buildTickets(milestones, personId, house) {
 export const TICKETING_OPEN = {
   name: 'Claim Tickets, Vehicle Passes, and Setup Access Passes',
   skipPeriod: [POST_EVENT, AFTER_EVENT],
-  check({milestones, person, house}) {
+  check({milestones, person, storePayload}) {
     const period = milestones.ticketing_period;
 
     if (period !== 'open' || !milestones.ticketing_package) {
       return {result: SKIP};
     }
 
-    const tickets = buildTickets(milestones, person.id, house);
+    const tickets = buildTickets(milestones, person.id, storePayload);
 
     if (tickets.qualifiedCount || tickets.noAddress || tickets.notFinished) {
       return {
@@ -820,7 +820,7 @@ export const TICKETING_OPEN = {
 export const TICKETING_CLOSED = {
   name: 'Ticketing has closed',
   period: BEFORE_EVENT,
-  check({milestones, house, person}) {
+  check({milestones, storePayload, person}) {
     if (milestones.ticketing_period !== 'closed' || !milestones.ticketing_package) {
       return {result: SKIP};
     }
@@ -829,7 +829,7 @@ export const TICKETING_CLOSED = {
       result: NOT_AVAILABLE,
       isTicketing: true,
       isTicketingClosed: true,
-      tickets: buildTickets(milestones, person.id, house),
+      tickets: buildTickets(milestones, person.id, storePayload),
     };
   }
 };

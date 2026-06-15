@@ -1,0 +1,112 @@
+<div class="uf-row {{this.severityClass}} {{if this.expanded "uf-row-expanded"}}">
+  {{#if @person.personnel_issue}}
+    <div class="uf-flag-banner">
+      {{fa-icon "ban" right=1}}
+      Personnel flag raised on {{@person.callsign}} &mdash; take no actions until resolved
+      {{fa-icon "ban" left=1}}
+    </div>
+  {{/if}}
+
+  <div class="uf-row-anchor">
+    <div class="uf-row-head">
+      {{#if @selectable}}
+        <span class="uf-row-select">
+          {{#if this.isConverted}}
+            <span class="text-success" title="Converted to Alpha">{{fa-icon "check"}}</span>
+          {{else}}
+            <input type="checkbox"
+                   class="form-check-input m-0 uf-row-checkbox"
+                   checked={{this.isSelected}}
+                   aria-label="Select {{@person.callsign}}"
+                   {{on "change" this.onSelectChange}} />
+          {{/if}}
+        </span>
+      {{/if}}
+
+      <button type="button"
+              class="uf-row-toggle"
+              aria-expanded="{{if this.expanded "true" "false"}}"
+              title="{{if this.expanded "Collapse" "Expand"}} {{@person.callsign}}"
+              {{on "click" this.toggle}}>
+        {{fa-icon (if this.expanded "chevron-down" "chevron-right")}}
+      </button>
+
+      <div class="uf-row-identity">
+        <PersonLink @person={{@person}} class="fw-semibold" />
+        <span class="uf-card-status">&lt;{{@person.status}}&gt;</span>
+        <span class="uf-card-id-sep">&middot;</span>
+        <span class="uf-row-name">{{@person.first_name}} {{@person.last_name}}</span>
+        {{#if this.fkaHint}}
+          <span class="uf-card-id-sep">&middot;</span>
+          <span class="uf-row-fka">FKA: {{this.fkaHint}}</span>
+        {{/if}}
+        {{#if this.genderLabel}}
+          <span class="uf-card-id-sep">&middot;</span>
+          <span class="uf-row-gender">{{this.genderLabel}}</span>
+        {{/if}}
+      </div>
+    </div>
+
+    <div class="uf-row-meta">
+      <IntakeChip @rank={{this.trainingStatus.rank}} @label={{this.trainingStatus.text}} @icon={{this.trainingStatus.icon}} />
+
+      {{#if this.mentorBonk}}
+        <IntakeChip @rank={{4}} @label={{this.mentorBonk.text}} />
+      {{/if}}
+
+      <IntakeRankStrip @person={{@person}} @hidePersonnelFlag={{true}} />
+
+      {{#if this.noteBadges}}
+        <div class="uf-row-dots">
+          {{#each this.noteBadges as |badge|}}
+            <IntakeChip @rank={{badge.rank}} @label={{badge.label}}  />
+          {{/each}}
+        </div>
+      {{/if}}
+    </div>
+  </div>
+
+  {{#if this.expanded}}
+    <div class="uf-row-detail">
+      {{#if this.sortedPnvHistory}}
+        <div class="uf-card-pnv">
+          {{#each this.sortedPnvHistory as |entry|}}
+            <span class="uf-card-pnv-year">
+              <span class="fw-semibold">{{entry.year}}</span>
+              {{training-status-badge entry.info.training_status}}
+              {{#if entry.info.was_auditor}}
+                as auditor
+              {{else}}
+                {{mentee-status-badge @person.status entry.info.mentor_status entry.info.have_alpha_shift}}
+              {{/if}}
+            </span>
+          {{/each}}
+        </div>
+      {{/if}}
+
+      <div class="uf-card-teams">
+        <div class="uf-team">
+          <div class="uf-team-label">Personnel</div>
+          <IntakeNotes @type="personnel" @person={{@person}} @viewYear={{@year}} @buttonSize="md" @onSubmit={{@onSubmit}} @readOnly={{or @mentorNotesOnly @trainingNotesOnly}} />
+        </div>
+        <div class="uf-team">
+          <div class="uf-team-label">RRN</div>
+          <IntakeNotes @type="rrn" @person={{@person}} @viewYear={{@year}} @buttonSize="md" @onSubmit={{@onSubmit}} @readOnly={{or @mentorNotesOnly @trainingNotesOnly}} />
+        </div>
+        <div class="uf-team">
+          <div class="uf-team-label">VC</div>
+          <IntakeNotes @type="vc" @person={{@person}} @viewYear={{@year}} @buttonSize="md" @onSubmit={{@onSubmit}} @readOnly={{or @mentorNotesOnly @trainingNotesOnly}} />
+        </div>
+        <div class="uf-team">
+          <div class="uf-team-label">Training</div>
+          <IntakeTraining @trainings={{@person.trainings}} @person={{@person}} @buttonSize="md" />
+        </div>
+        <div class="uf-team">
+          <div class="uf-team-label">Mentor</div>
+          <UnifiedFlaggingBonk @person={{@person}} />
+          <IntakeNotes @type="mentor" @person={{@person}} @viewYear={{@year}} @buttonSize="md" @onSubmit={{@onSubmit}} @readOnly={{@trainingNotesOnly}}/>
+        </div>
+      </div>
+    </div>
+  {{/if}}
+</div>

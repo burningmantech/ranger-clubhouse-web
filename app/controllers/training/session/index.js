@@ -6,15 +6,48 @@ import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 import {isEmpty} from '@ember/utils';
 import _ from 'lodash';
+import countIf from 'clubhouse/utils/count-if';
 import conjunctionFormat from 'clubhouse/utils/conjunction-format';
 import {AUDITOR, PROSPECTIVE} from "clubhouse/constants/person_status";
 import {ADMIN, ART_GRADUATE_BASE} from "clubhouse/constants/roles";
 
 const SEARCH_RATE_MS = 300;
+const MIN_SEARCH_LENGTH = 2;
+const SERVER_STATUS_SUCCESS = 'success';
+
+// A note flagged is_log is a system audit entry, not an editable trainer note.
+const isTrainerNote = (note) => !note.is_log;
 
 export default class TrainingSessionController extends ClubhouseController {
   @service shiftManage;
+
+  // Set by the route's setupController.
+  @tracked training;
+  @tracked slot;
+  @tracked year;
+  @tracked students;
+  @tracked trainers;
+
   @tracked graduateTraining;
+  @tracked showWorkHistoryPerson;
+
+  @tracked showEmails = false;
+  @tracked isSubmitting = false;
+
+  @tracked addingTrainer = false;
+  @tracked addTrainerOptions = null;
+  @tracked addTrainerSlotId = null;
+
+  @tracked editStudent;
+  @tracked studentForm;
+  @tracked editNote;
+
+  @tracked foundPeople = null;
+  @tracked noSearchMatch = null;
+  @tracked addPersonForm = null;
+
+  // Monotonic token used to discard out-of-order search responses.
+  _searchSeq = 0;
 
   rankOptions = [
     ["No Rank", ''],
@@ -40,25 +73,15 @@ export default class TrainingSessionController extends ClubhouseController {
     ['No', 0]
   ];
 
-  @tracked students;
-  @tracked trainers;
+  /**
+   * Are any primary trainers signed up to teach this session?
+   *
+   * @returns {boolean}
+   */
 
-  @tracked showEmails = false;
-  @tracked isSubmitting = false;
-
-
-  @tracked addingTrainer = false;
-  @tracked addTrainerOptions = null;
-  @tracked addTrainerSlotId = null;
-
-  @tracked editStudent;
-  @tracked studentForm;
-  @tracked editNote;
-
-  @tracked foundPeople = null;
-  @tracked noSearchMatch = null;
-  @tracked addPersonForm = null;
-
+  get havePrimaryTrainers() {
+    return this.trainers.some((group) => group.is_primary_trainer && group.trainers.length > 0);
+  }
 
   /**
    * How many people have passed training?
@@ -67,14 +90,7 @@ export default class TrainingSessionController extends ClubhouseController {
    */
 
   get passedCount() {
-    let passed = 0;
-    this.students.forEach((student) => {
-      if (student.scored && student.passed) {
-        passed++;
-      }
-    });
-
-    return passed;
+    return countIf(this.students, (student) => student.scored && student.passed);
   }
 
   /**
@@ -96,20 +112,8 @@ export default class TrainingSessionController extends ClubhouseController {
    */
 
   get vetCount() {
-    let vets = 0;
-    const is_art = this.training.is_art;
-
-    this.students.forEach((student) => {
-      if (is_art) {
-        if (!student.is_art_prospective) {
-          vets++;
-        }
-      } else if (student.years > 1) {
-        vets++;
-      }
-    });
-
-    return vets;
+    return countIf(this.students, (student) =>
+      this.training.is_art ? !student.is_art_prospective : student.years > 1);
   }
 
   /**
@@ -118,37 +122,17 @@ export default class TrainingSessionController extends ClubhouseController {
    */
 
   get prospectiveCount() {
-    const is_art = this.training.is_art;
-    let prospective = 0;
-
-    this.students.forEach((student) => {
-      if (is_art) {
-        if (student.is_art_prospective) {
-          prospective++;
-        }
-      } else if (student.status === PROSPECTIVE) {
-        prospective++;
-      }
-    });
-
-    return prospective;
+    return countIf(this.students, (student) =>
+      this.training.is_art ? student.is_art_prospective : student.status === PROSPECTIVE);
   }
 
   /**
-   * How many Applicants or ART prospectives?
+   * How many auditors?
    * @returns {number}
    */
 
   get auditorCount() {
-    let auditors = 0;
-
-    this.students.forEach((student) => {
-      if (student.status === AUDITOR) {
-        auditors++;
-      }
-    });
-
-    return auditors;
+    return countIf(this.students, (student) => student.status === AUDITOR);
   }
 
   /**
@@ -158,15 +142,7 @@ export default class TrainingSessionController extends ClubhouseController {
    */
 
   get firstYearCount() {
-    let firstYear = 0;
-
-    this.students.forEach((student) => {
-      if (student.years === 1) {
-        firstYear++;
-      }
-    });
-
-    return firstYear;
+    return countIf(this.students, (student) => student.years === 1);
   }
 
   /**
@@ -176,9 +152,7 @@ export default class TrainingSessionController extends ClubhouseController {
    */
 
   get trainerCount() {
-    return this.trainers.reduce((total, group) => {
-      return group.trainers.length + total;
-    }, 0);
+    return this.trainers.reduce((total, group) => total + group.trainers.length, 0);
   }
 
   /**
@@ -203,7 +177,35 @@ export default class TrainingSessionController extends ClubhouseController {
    */
 
   get graduatePositionTitles() {
-    return conjunctionFormat(this.training.graduation_info.positions.map((p) => p.title), 'and');
+    return conjunctionFormat((this.training.graduation_info?.positions ?? []).map((p) => p.title), 'and');
+  }
+
+  /**
+   * Run an async submission with isSubmitting toggled and errors routed to the house service.
+   *
+   * @param {Function} work async callback to run while isSubmitting is true
+   * @private
+   */
+
+  async _withSubmitting(work) {
+    this.isSubmitting = true;
+    try {
+      await work();
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
+  }
+
+  /**
+   * Reload the trainer roster for this session.
+   *
+   * @private
+   */
+
+  async _reloadTrainers() {
+    this.trainers = (await this.ajax.request(`training-session/${this.slot.id}/trainers`)).trainers;
   }
 
   /**
@@ -242,42 +244,34 @@ export default class TrainingSessionController extends ClubhouseController {
   async saveStudentAction(model) {
     const student = this.editStudent;
     const {note, passed} = model;
-
     const rank = +model.rank;
-
-    const score = {
-      id: student.id,
-      note,
-      passed: +passed ? 1 : 0,
-      rank,
-    };
 
     if (!rank && passed && student.need_ranking) {
       model.pushErrors('rank', ['Trainee needs a rank.']);
       return;
     }
 
-    const existingNotes = student.notes.filter((n) => !n.is_log);
-    // Only require a note if the rank set was not 2 (aka normal, average, etc.)
+    const existingNotes = student.notes.filter(isTrainerNote);
+    // A note is required for any non-average rank, unless a prior note already justifies it.
     if ((rank > 0 && rank !== 2) && (isEmpty(note) && !existingNotes.length)) {
       model.addError('note', ['A note needs to be entered if a rank other than 2 is given.']);
       return;
     }
 
-    score.feedback_delivered = model.feedback_delivered ? 1 : 0;
+    const score = {
+      id: student.id,
+      note,
+      passed: +passed ? 1 : 0,
+      rank,
+      feedback_delivered: model.feedback_delivered ? 1 : 0,
+    };
 
-    this.isSubmitting = true;
-
-    try {
+    await this._withSubmitting(async () => {
       const {students} = await this.ajax.post(`training-session/${this.slot.id}/score-student`, {data: score});
       this.editStudent = null;
       this.students = students;
       this.toast.success(`${student.callsign} was successfully saved.`);
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
-    }
+    });
   }
 
   /**
@@ -299,19 +293,14 @@ export default class TrainingSessionController extends ClubhouseController {
       });
     });
 
-    this.isSubmitting = true;
-    try {
+    await this._withSubmitting(async () => {
       this.trainers = (await this.ajax.post(`training-session/${this.slot.id}/trainer-status`, {data: {trainers}})).trainers;
       this.toast.success('Trainer attendance was successfully updated.');
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
-    }
+    });
   }
 
   /**
-   * Show the dialog to add a person
+   * Show the dialog to add a trainee.
    */
 
   @action
@@ -319,20 +308,30 @@ export default class TrainingSessionController extends ClubhouseController {
     this._setupAddPerson(false);
   }
 
+  /**
+   * Show the dialog to add a trainer.
+   */
+
   @action
   showAddTrainerAction() {
     if (this.trainers.length === 0) {
       this.modal.info('No Training Slots Found', 'There are no associated training slots found. Be sure the slots have been activated.');
       return;
     }
-    if (this.trainers.length > 1) {
-      this.addTrainerOptions = this.trainers.map((t) => [t.position_title, t.slot.id]);
-    } else {
-      this.addTrainerOptions = null;
-    }
-    this.addTrainerSlotId = this.trainers[0].slot.id;
+
+    this.addTrainerOptions = this.trainers.length > 1
+      ? this.trainers.map((t) => [t.position_title, t.slot.id])
+      : null;
+    this.addTrainerSlotId = this.trainers[0]?.slot?.id;
     this._setupAddPerson(true);
   }
+
+  /**
+   * Reset the add-person search dialog state.
+   *
+   * @param {boolean} isTrainer true when adding a trainer, false for a trainee
+   * @private
+   */
 
   _setupAddPerson(isTrainer) {
     this.addingTrainer = isTrainer;
@@ -354,7 +353,7 @@ export default class TrainingSessionController extends ClubhouseController {
   }
 
   /**
-   * Perform a callsign lookup
+   * Perform a callsign lookup. Stale (out-of-order) responses are discarded.
    *
    * @param model
    * @private
@@ -363,10 +362,13 @@ export default class TrainingSessionController extends ClubhouseController {
   async _performSearch(model) {
     const query = model.name.trim();
 
-    if (query.length < 2) {
+    if (query.length < MIN_SEARCH_LENGTH) {
+      this.foundPeople = null;
+      this.noSearchMatch = null;
       return;
     }
 
+    const seq = ++this._searchSeq;
     try {
       const people = await this.ajax.request('person/search', {
         data: {
@@ -376,12 +378,16 @@ export default class TrainingSessionController extends ClubhouseController {
           limit: 10
         }
       });
-      this.foundPeople = people;
-      if (!people.length) {
-        this.noSearchMatch = query;
+
+      // A newer search superseded this one while it was in flight.
+      if (seq !== this._searchSeq) {
+        return;
       }
+
+      this.foundPeople = people;
+      this.noSearchMatch = people.length ? null : query;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
@@ -404,30 +410,52 @@ export default class TrainingSessionController extends ClubhouseController {
   @action
   addPersonAction(person, event) {
     event.preventDefault();
-    let slot;
-    if (this.addingTrainer) {
-      slot = this.trainers.find((t) => t.slot.id === +this.addTrainerSlotId)?.slot;
-    } else {
-      slot = this.slot;
+
+    const slot = this.addingTrainer
+      ? this.trainers.find((t) => t.slot.id === +this.addTrainerSlotId)?.slot
+      : this.slot;
+
+    if (!slot) {
+      this.toast.error('Unable to determine which slot to sign up for. Try reopening the dialog.');
+      return;
     }
+
     this.shiftManage.slotSignup(slot, person, async () => {
       this.addPersonForm = null;
-      // Refresh the list
+      // Refresh from the authoritative roster the server returns.
       try {
         if (this.addingTrainer) {
-          this.trainers = (await this.ajax.request(`training-session/${this.slot.id}/trainers`)).trainers;
+          await this._reloadTrainers();
         } else {
-          const results = await this.ajax.request(`training-session/${this.slot.id}`);
-          const student = results.students.find((s) => +s.id === +person.id);
-          if (student) {
-            this.students.push(student);
-            this.students = _.orderBy(this.students, [(s) => s.callsign.toLowerCase()], ['asc']);
-          }
+          const {students} = await this.ajax.request(`training-session/${this.slot.id}`);
+          this.students = _.orderBy(students, [(s) => (s.callsign ?? '').toLowerCase()], ['asc']);
         }
       } catch (e) {
-        this.house.handleErrorResponse(e);
+        this.errors.handleErrorResponse(e);
       }
     });
+  }
+
+  /**
+   * Confirm and remove a person from a slot's schedule.
+   *
+   * @param {object} person the person being removed (needs id & callsign)
+   * @param {object} slot the slot to remove the person from
+   * @param {string} title the modal confirmation title
+   * @param {Function} onSuccess called after a successful removal
+   * @private
+   */
+
+  _removeFromSchedule(person, slot, title, onSuccess) {
+    this.modal.confirm(title, `Are you really sure you want to remove ${person.callsign} from this session?`,
+      () => this._withSubmitting(async () => {
+        const {status} = await this.ajax.delete(`person/${person.id}/schedule/${slot.id}`);
+        if (status === SERVER_STATUS_SUCCESS) {
+          await onSuccess();
+        } else {
+          this.toast.error(`The server responded with an unknown status code [${status}]`);
+        }
+      }));
   }
 
   /**
@@ -437,45 +465,19 @@ export default class TrainingSessionController extends ClubhouseController {
   @action
   removeStudentAction() {
     const student = this.editStudent;
-    this.modal.confirm('Confirm Student Removal', `Are you really sure you want to remove ${student.callsign} from this session?`,
-      async () => {
-        this.isSubmitting = true;
-        try {
-          const {status} = await this.ajax.delete(`person/${student.id}/schedule/${this.slot.id}`);
-          if (status === 'success') {
-            this.students = this.students.filter((s) => s.id !== student.id);
-            this.toast.success(`${student.callsign} was successfully removed from this training session.`);
-            this.editStudent = null;
-          } else {
-            this.toast.error(`The server responded with an unknown status code [${status}]`);
-          }
-        } catch (response) {
-          this.house.handleErrorResponse(response);
-        } finally {
-          this.isSubmitting = false;
-        }
-      });
+    this._removeFromSchedule(student, this.slot, 'Confirm Student Removal', () => {
+      this.students = this.students.filter((s) => s.id !== student.id);
+      this.toast.success(`${student.callsign} was successfully removed from this training session.`);
+      this.editStudent = null;
+    });
   }
 
   @action
   removeTrainerAction(trainer, slot) {
-    this.modal.confirm('Confirm Trainer Removal', `Are you really sure you want to remove ${trainer.callsign} from this session?`,
-      async () => {
-        this.isSubmitting = true;
-        try {
-          const {status} = await this.ajax.delete(`person/${trainer.id}/schedule/${slot.id}`);
-          if (status === 'success') {
-            this.toast.success(`${trainer.callsign} was successfully removed from this training session.`);
-            this.trainers = (await this.ajax.request(`training-session/${this.slot.id}/trainers`)).trainers;
-          } else {
-            this.toast.error(`The server responded with an unknown status code [${status}]`);
-          }
-        } catch (response) {
-          this.house.handleErrorResponse(response);
-        } finally {
-          this.isSubmitting = false;
-        }
-      });
+    this._removeFromSchedule(trainer, slot, 'Confirm Trainer Removal', async () => {
+      this.toast.success(`${trainer.callsign} was successfully removed from this training session.`);
+      await this._reloadTrainers();
+    });
   }
 
   /**
@@ -488,7 +490,7 @@ export default class TrainingSessionController extends ClubhouseController {
   toggleEmailListAction(closeDropdown) {
     this.showEmails = !this.showEmails;
     if (this.showEmails) {
-      this.house.scrollToElement('#email-list');
+      this.scroll.scrollToElement('#email-list');
     }
     if (closeDropdown) {
       closeDropdown();
@@ -504,7 +506,6 @@ export default class TrainingSessionController extends ClubhouseController {
   @action
   editNoteAction(note) {
     this.editNote = note;
-
   }
 
   /**
@@ -523,17 +524,16 @@ export default class TrainingSessionController extends ClubhouseController {
    */
 
   @action
-  updateNoteAction(model) {
-    this.ajax.request(`training-session/${model.id}/update-note`, {
-      method: 'POST',
-      data: {
-        note: model.note
-      }
-    }).then(() => {
+  async updateNoteAction(model) {
+    await this._withSubmitting(async () => {
+      await this.ajax.request(`training-session/${model.id}/update-note`, {
+        method: 'POST',
+        data: {note: model.note}
+      });
       set(this.editNote, 'note', model.note);
       this.toast.success('The note was successfully updated.');
       this.editNote = null;
-    }).catch((response) => this.house.handleErrorResponse(response))
+    });
   }
 
   /**
@@ -544,13 +544,15 @@ export default class TrainingSessionController extends ClubhouseController {
 
   @action
   deleteNoteAction(note) {
-    this.modal.confirm('Confirm Deletion', 'Are you really sure you want to delete this note?', () => {
-      this.ajax.request(`training-session/${note.id}/delete-note`, {method: 'DELETE'})
-        .then(() => {
-          set(this.editStudent, 'notes', this.editStudent.notes.filter((n) => n.id !== note.id));
-          this.toast.success('The note was successfully deleted.');
-        }).catch((response) => this.house.handleErrorResponse(response));
-    });
+    const student = this.editStudent;
+    this.modal.confirm('Confirm Deletion', 'Are you really sure you want to delete this note?',
+      () => this._withSubmitting(async () => {
+        await this.ajax.request(`training-session/${note.id}/delete-note`, {method: 'DELETE'});
+        if (student) {
+          set(student, 'notes', student.notes.filter((n) => n.id !== note.id));
+        }
+        this.toast.success('The note was successfully deleted.');
+      }));
   }
 
   /**
@@ -570,6 +572,16 @@ export default class TrainingSessionController extends ClubhouseController {
   }
 
   filterNotes(notes) {
-    return notes ? notes.filter((n) => !n.is_log) : [];
+    return notes ? notes.filter(isTrainerNote) : [];
+  }
+
+  @action
+  showWorkHistory(person) {
+    this.showWorkHistoryPerson = person;
+  }
+
+  @action
+  closeWorkHistory() {
+    this.showWorkHistoryPerson = null;
   }
 }

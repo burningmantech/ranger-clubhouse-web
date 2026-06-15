@@ -1,6 +1,5 @@
 import ClubhouseRoute from "clubhouse/routes/clubhouse-route";
 import {MANAGE} from "clubhouse/constants/roles";
-import RSVP from 'rsvp';
 import _ from 'lodash';
 import { cached,tracked } from '@glimmer/tracking';
 
@@ -32,11 +31,11 @@ class Team {
 export default class ReportsShiftDropRoute extends ClubhouseRoute {
   roleRequired = MANAGE;
 
-  model() {
-    return RSVP.hash({
-      positions: this.ajax.request('position').then(({position}) => position),
-      teams: this.ajax.request('team').then(({team}) => team)
-    });
+  async model() {
+    return {
+      positions: (await this.ajax.request('position')).position,
+      teams: (await this.ajax.request('team')).team
+    };
   }
 
   setupController(controller,model) {
@@ -62,6 +61,6 @@ export default class ReportsShiftDropRoute extends ClubhouseRoute {
     }
 
     controller.teamOptions = teamOptions;
-    controller.year = this.house.currentYear();
+    controller.year = this.session.currentYear();
   }
 }

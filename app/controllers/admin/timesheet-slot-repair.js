@@ -11,15 +11,18 @@ export default class AdminTimesheetSlotRepairController extends ClubhouseControl
   @tracked repairYear;
 
   @action
-  runRepair() {
+  async runRepair() {
     this.isSubmitting = true;
-    this.ajax.request('timesheet/repair-slot-assoc', {method: 'POST', data: {year: this.year}})
-      .then(({entries}) => {
-        this.entries = entries;
-        this.haveResults = true;
-        this.repairYear = this.year;
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    try {
+      const {entries} = await this.ajax.request('timesheet/repair-slot-assoc', {method: 'POST', data: {year: this.year}});
+      this.entries = entries;
+      this.haveResults = true;
+      this.repairYear = this.year;
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   get yearOptions() {

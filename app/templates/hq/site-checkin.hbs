@@ -12,32 +12,23 @@
 <UiSection>
   <:title>Agreements</:title>
   <:body>
-    {{#if this.personEvent.asset_authorized}}
-      <h4 class="text-success">
-        {{fa-icon "check" right=1 fixed=true}} Radio Checkout Agreement has been signed.
-      </h4>
-    {{else}}
-      <h4 class="text-danger">
-        {{fa-icon "ban" right=1 fixed=true}} Radio Checkout Agreement NOT SIGNED - DO NOT ISSUE RADIOS.
-      </h4>
-      <p>
-        Direct {{this.person.callsign}} to a kiosk and have them agree to the Radio Checkout Agreement. Only after the
-        agreement is signed may they be given a radio.
-      </p>
-    {{/if}}
+    <Hq::RadioAuthorizationStatus @variant="agreement"
+                                  @personEvent={{this.personEvent}}
+                                  @eventInfo={{this.eventInfo}}
+                                  @callsign={{this.person.callsign}}/>
     {{#if this.personEvent.signed_motorpool_agreement}}
       <h4 class="text-success">
-        {{fa-icon "check" right=1 fixed=true}} The Motor Pool Protocol has been signed.
+        {{fa-icon "check" right=1 fixed=true}} The Vehicle Use Protocol has been signed.
       </h4>
     {{else}}
       <h4 class="text-danger">
-        {{fa-icon "ban" right=1 fixed=true}} Motor Pool Protocol NOT SIGNED - Not authorized to drive Ranger gators,
+        {{fa-icon "ban" right=1 fixed=true}} Vehicle Use Protocol NOT SIGNED - Not authorized to drive Ranger gators,
         UTVs, or
         golf carts.
       </h4>
       <p>
         If {{this.person.callsign}} is comfortable driving Ranger gators, UTVs, or golf carts while on duty,
-        direct the person to a kiosk and have them agree to the Motor Pool Protocol.
+        direct the person to a kiosk and have them agree to the Vehicle Use Protocol.
       </p>
     {{/if}}
   </:body>
@@ -45,24 +36,10 @@
 <UiSection>
   <:title>Provisions Summary</:title>
   <:body>
-    {{#if this.eventInfo.radio_max}}
-      {{#if this.personEvent.asset_authorized}}
-        <h4 class="text-success">
-          {{fa-icon "tower-broadcast" right=1 fixed=true}}
-          Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}
-        </h4>
-      {{else}}
-        <h4 class="text-muted">
-          {{fa-icon "ban" right=1 fixed=true}}
-          Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}
-          &mdash; DO NOT ISSUE UNTIL Radio Checkout Agreement IS SIGNED.
-        </h4>
-      {{/if}}
-    {{else}}
-      <h4>
-        {{fa-icon "tower-broadcast" right=1 fixed=true}} Shift Radios only
-      </h4>
-    {{/if}}
+    <Hq::RadioAuthorizationStatus @variant="summary"
+                                  @personEvent={{this.personEvent}}
+                                  @eventInfo={{this.eventInfo}}
+                                  @callsign={{this.person.callsign}}/>
     <hr>
     <HqProvisionInfo @person={{this.person}}
                      @period={{this.eventInfo.event_period}}
@@ -92,8 +69,7 @@
           <f.textarea @name="camp_location"
                       @label="Camp Name & Location (e.g., Camp Specificity, 9:15 &amp; D, Mountainside.)"
                       @autofocus={{true}}
-                      @rows={{6}}
-                      @cols={{80}}/>
+                      @rows={{6}}/>
         </FormRow>
       </w.step>
       <w.step @title="Verify Emergency Contact Information"
@@ -110,8 +86,7 @@
           <FormRow>
             <f.textarea @name="emergency_contact"
                         @label="Emergency Contact Information:"
-                        @rows={{6}}
-                        @cols={{80}}/>
+                        @rows={{6}}/>
           </FormRow>
         {{else}}
           <UiNotice @type="danger"
@@ -122,7 +97,7 @@
         {{/if}}
       </w.step>
     </ChForm>
-    {{#unless (or this.person.isAlpha this.person.isProspective)}}
+    {{#unless this.isAlphaOrProspective}}
       <w.step @title="Radios" @nextAction={{this.checkForRadio}}>
         {{#unless this.eventInfo.radio_info_available}}
           <UiNotice @type="danger">
@@ -166,7 +141,7 @@
       </w.step>
     {{/unless}}
     <w.step @title="Mark Person As On Site" @isLast={{true}} @includeCancel={{true}}>
-      {{#if (or this.person.isAlpha this.person.isProspective)}}
+      {{#if this.isAlphaOrProspective}}
         <p>
           Direct {{this.person.callsign}} to the Hat Rack where The Mentors will take over. They will be responsible
           for checking them into their Alpha shift.
@@ -185,8 +160,8 @@
     </w.step>
   </UiWizard>
 {{else if (and this.siteCheckInStarted (not this.siteCheckInFinished))}}
-  <UiNotice @type="danger" @icon="band" @title="On-Site Registration In Not Completed">
-    You have not gone through all the Site Registration steps. Use the <b>Begin Site Registration</b>
+  <UiNotice @type="danger" @icon="ban" @title="On-Site Registration Not Completed">
+    You have not gone through all the Site Registration steps. Use the <b>Begin On-Site Registration</b>
     button again and make sure all the steps have been completed.
   </UiNotice>
 {{/if}}

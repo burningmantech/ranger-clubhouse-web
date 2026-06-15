@@ -14,6 +14,6 @@ export default class TrainingOnlineCourseProgressController extends ClubhouseCon
 
   @action
   exportToCSV() {
-    return this.house.downloadCsv(`${this.year}-online-course-progress.csv`, CSV_COLUMNS, this.people);
+    return this.download.downloadCsv(`${this.year}-online-course-progress.csv`, CSV_COLUMNS, this.people);
   }
 }

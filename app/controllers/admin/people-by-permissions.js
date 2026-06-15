@@ -84,6 +84,6 @@ export default class AdminPeopleByPermissionController extends ClubhouseControll
       }
     })
 
-    this.house.downloadCsv(`${this.house.currentYear()}-role-${role.title.replace(/(\s+|\(|\)|-)+/g,'-')}-report.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.session.currentYear()}-role-${role.title.replace(/(\s+|\(|\)|-)+/g,'-')}-report.csv`, CSV_COLUMNS, rows);
   }
 }

@@ -10,6 +10,18 @@
         <UiSection>
           <:title>Vehicle Record Type &amp; Assignment</:title>
           <:body>
+            {{#if (and (not @entry.isNew) @entry.person_id)}}
+              <div class="mb-2">
+                <span class="me-2">Arrival Date:</span>
+                {{#if (eq @entry.arrival_date "any")}}
+                  <UiBadge @type="success">any</UiBadge>
+                {{else if @entry.arrival_date}}
+                  {{dayjs-format @entry.arrival_date "ddd, MMM D"}}
+                {{else}}
+                  <UiBadge @type="danger">No SAP</UiBadge>
+                {{/if}}
+              </div>
+            {{/if}}
             <FormRow>
               <div class="col-auto">
                 <FormLabel>Type</FormLabel>

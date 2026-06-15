@@ -34,6 +34,16 @@ const HQ_WINDOW_POSITIONS = [
   HQ_WINDOW_PRE_EVENT,
 ];
 
+// The single source of truth for "is this message/reply unread by this person?".
+// Number-coerced because ember-data stores ids as strings while idNumber/userId
+// are numbers — a strict mismatch would silently hide unread badges.
+export function isMessageUnread(message, personId) {
+  const pid = Number(personId);
+  return Number(message.person_id) === pid
+    && Number(message.sender_person_id) !== pid
+    && !message.delivered;
+}
+
 export default class PersonMessageModel extends Model {
   @tracked isHidden = true;
 
@@ -95,6 +105,10 @@ export default class PersonMessageModel extends Model {
     return this.sender_type === SENDER_TYPE_OTHER;
   }
 
+  get isSenderTeam() {
+    return this.sender_type === SENDER_TYPE_TEAM;
+  }
+
 
   get sentFromHQWindow() {
     return HQ_WINDOW_POSITIONS.includes(this.creator_position_id);
@@ -120,7 +134,7 @@ export default class PersonMessageModel extends Model {
     let replies = 0;
 
     this.replies?.forEach((reply) => {
-      if (reply.person_id === personId && reply.sender_person_id !== personId && !reply.delivered) {
+      if (isMessageUnread(reply, personId)) {
         replies += 1;
       }
     });
@@ -129,7 +143,7 @@ export default class PersonMessageModel extends Model {
   }
 
   isUnread(personId) {
-    return this.person_id === personId && this.sender_person_id !== personId && !this.delivered;
+    return isMessageUnread(this, personId);
   }
 
   get isTopMessage() {

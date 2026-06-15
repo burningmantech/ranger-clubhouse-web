@@ -34,18 +34,12 @@ export default class AdminOauthClientController extends ClubhouseController {
       return;
     }
 
-    this.isSubmitting = true;
-    try {
-      const {isNew} = this.entry;
-      await model.save();
+    const {isNew} = this.entry;
+    if (await this.saveModel.save({model, owner: this})) {
       if (isNew) {
         this.clients.update();
       }
       this.entry = null;
-    } catch (response) {
-      this.house.handleErrorResponse(response, model);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 
@@ -59,7 +53,7 @@ export default class AdminOauthClientController extends ClubhouseController {
           this.entry = null;
           this.toast.success('The document was successfully deleted.');
         } catch (response) {
-          this.house.handleErrorResponse(response)
+          this.errors.handleErrorResponse(response)
         }
       });
   }

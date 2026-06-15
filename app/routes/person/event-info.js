@@ -15,25 +15,25 @@ export default class PersonEventInfoRoute extends ClubhouseRoute {
     this.year = year;
 
     const hash = {
-      eventInfo: await this.ajax.request(`person/${personId}/event-info`, {data: {year}})
-        .then(({event_info}) => event_info),
+      eventInfo: (await this.ajax.request(`person/${personId}/event-info`, {data: {year}}))
+        .event_info,
       personEvent: await this.store.findRecord('person-event', `${personId}-${year}`, {reload: true}),
-      vehicleInfo: await this.ajax.request(`vehicle/info/${personId}`, {data: {include_eligible_teams: 1}}).then(({info}) => info)
+      vehicleInfo: (await this.ajax.request(`vehicle/info/${personId}`, {data: {include_eligible_teams: 1}})).info
     }
 
     if (this.session.hasRole(TECH_NINJA) || this.session.isRealTrainer) {
-      hash.courseInfo = await this.ajax.request(`person-online-course/${personId}/course-info`, {
+      hash.courseInfo = (await this.ajax.request(`person-online-course/${personId}/course-info`, {
         data: {
           year,
           position_id: TRAINING
         }
-      }).then(({online_course}) => online_course);
-      hash.courses = await this.ajax.request('online-course', {
+      })).online_course;
+      hash.courses = (await this.ajax.request('online-course', {
         data: {
           year,
           position_id: TRAINING
         }
-      }).then(({online_course}) => online_course);
+      })).online_course;
     }
 
     return hash;

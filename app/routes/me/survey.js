@@ -10,7 +10,7 @@ export default class MeSurveyRoute extends ClubhouseRoute {
   model({type, slot_id}) {
     const data = {type};
     if (type === TYPE_ALPHA) {
-      data.year = this.house.currentYear();
+      data.year = this.session.currentYear();
     } else {
       data.slot_id = slot_id;
     }

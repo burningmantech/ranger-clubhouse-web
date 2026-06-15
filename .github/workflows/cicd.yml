@@ -5,6 +5,13 @@ name: CI/CD
 
 on: [push]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
+
 
 jobs:
 
@@ -16,7 +23,7 @@ jobs:
     steps:
 
       - name: Harden CI
-        uses: step-security/harden-runner@v2.13.1
+        uses: step-security/harden-runner@v2.15.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -24,14 +31,15 @@ jobs:
             api.github.com:443
             github.com:443
             registry.npmjs.org:443
+            production.cloudfront.docker.com:443
 
       - name: Checkout source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v6.4.0
         with:
-          node-version: 20.x
+          node-version: 24.x
           cache: npm
 
       - name: Install Dependencies
@@ -47,7 +55,7 @@ jobs:
 
     steps:
       - name: Harden CI
-        uses: step-security/harden-runner@v2.13.1
+        uses: step-security/harden-runner@v2.15.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -55,14 +63,15 @@ jobs:
             api.github.com:443
             github.com:443
             registry.npmjs.org:443
+            production.cloudfront.docker.com:443
 
       - name: Checkout source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install Node
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v6.4.0
         with:
-          node-version: 20.x
+          node-version: 24.x
           cache: npm
 
       - name: Install Dependencies
@@ -74,13 +83,15 @@ jobs:
   docker:
     name: Build Docker image
 
+    needs: [lint, test]
+
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
     steps:
 
       - name: Harden CI
-        uses: step-security/harden-runner@v2.13.1
+        uses: step-security/harden-runner@v2.15.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -89,34 +100,28 @@ jobs:
             auth.docker.io:443
             docker.io:443
             github.com:443
-            production.cloudflare.docker.com:443
+            production.cloudfront.docker.com:443
             registry-1.docker.io:443
             registry.npmjs.org:443
+            acghubeus1.actions.githubusercontent.com:443
+            productionresultssa0.blob.core.windows.net:443
+            *.blob.core.windows.net:443
 
       - name: Checkout source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
-      - name: Cache node modules
-        id: cache-npm
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-node-modules
-        with:
-          # npm cache files are stored in `~/.npm` on Linux/macOS
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
-
-      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-        name: List the state of node modules
-        continue-on-error: true
-        run: npm list
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
 
       - name: Build Docker image
         run: ./bin/build
+        env:
+          # Persist the Docker layer cache across ephemeral runners. mode=max is
+          # required so the intermediate development/build stage layers (where
+          # `npm ci` and `ember build` run) are exported, not just the final
+          # nginx layers.
+          BUILD_CACHE_FROM: type=gha
+          BUILD_CACHE_TO: type=gha,mode=max
 
       - name: Save Docker image
         run: docker image save ranger-clubhouse-web:dev | gzip -9 > docker_image.tgz
@@ -138,7 +143,7 @@ jobs:
     steps:
 
       - name: Harden CI
-        uses: step-security/harden-runner@v2.13.1
+        uses: step-security/harden-runner@v2.15.0
         with:
           disable-sudo: true
           egress-policy: block
@@ -147,10 +152,10 @@ jobs:
             github.com:443
 
       - name: Checkout source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Download Docker image artifact
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: docker
 
@@ -172,15 +177,15 @@ jobs:
     steps:
 
       - name: Harden CI
-        uses: step-security/harden-runner@v2.13.1
+        uses: step-security/harden-runner@v2.15.0
         with:
           egress-policy: audit
 
       - name: Checkout source code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Download Docker image artifacts
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v8
         with:
           name: docker
 
@@ -210,8 +215,8 @@ jobs:
           CI: true
           PROJECT_NAME: Ranger Secret Clubhouse Web Application
           REPOSITORY_ID: ${{ github.repository }}
-          BUILD_NUMBER: 0
-          BUILD_URL: https://github.com/burningmantech/ranger-secret-clubhouse/commit/${{ github.sha }}/checks
+          BUILD_NUMBER: ${{ github.run_number }}
+          BUILD_URL: https://github.com/burningmantech/ranger-secret-clubhouse/actions/runs/${{ github.run_id }}
           COMMIT_ID: ${{ github.event.head_commit.id }}
           COMMIT_URL: ${{ github.event.head_commit.url }}
           COMMIT_AUTHOR_USER: ${{ github.event.head_commit.author.username }}

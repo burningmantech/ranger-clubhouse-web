@@ -108,6 +108,13 @@ caption {
   letter-spacing: 0.04em;
 }
 
+.roster-status-never-worked {
+  color: #adb5bd;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
 .roster-status-ng {
   color: #c8cdd3;
   font-size: 1rem;
@@ -145,6 +152,7 @@ caption {
 $col-checkbox-width: 2.25rem;
 $col-callsign-width: 10rem;
 $col-member-width: 6.5rem;
+$col-last-shift-width: 3.75rem;
 
 /* Sticky left columns */
 .roster-col-fixed {
@@ -184,12 +192,20 @@ tr.table-warning > .roster-col-fixed {
 .roster-col-callsign {
   left: $col-checkbox-width;
   width: $col-callsign-width;
+  min-width: $col-callsign-width;
   font-weight: 600;
 }
 
 .roster-col-member {
   left: calc(#{$col-checkbox-width} + #{$col-callsign-width});
   width: $col-member-width;
+  min-width: $col-member-width;
+}
+
+.roster-col-last-shift {
+  left: calc(#{$col-checkbox-width} + #{$col-callsign-width} + #{$col-member-width});
+  width: $col-last-shift-width;
+  min-width: $col-last-shift-width;
   box-shadow: 4px 0 6px -2px rgba(0, 0, 0, 0.12);
   border-right: 2px solid #dee2e6 !important;
 }
@@ -221,7 +237,6 @@ tr.table-warning > .roster-col-fixed {
 }
 
 .roster-last-worked {
-  font-size: 0.72rem;
   color: #495057;
   font-weight: 500;
   line-height: 1;
@@ -242,7 +257,6 @@ tr.table-warning > .roster-col-fixed {
 
 .roster-controls-count {
   font-weight: 700;
-  font-size: 0.85rem;
   color: #3f454d;
   background: white;
   border: 1px solid #dee2e6;
@@ -268,7 +282,6 @@ tr.table-warning > .roster-col-fixed {
   border-left: 3px solid #6c757d;
   border-radius: 0 0.25rem 0.25rem 0;
   margin-bottom: 0.75rem;
-  font-size: 0.78rem;
 }
 
 .roster-legend-item {
@@ -282,9 +295,47 @@ tr.table-warning > .roster-col-fixed {
   font-weight: 600;
   color: #3f454d;
   margin-right: 0.25rem;
-  font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+}
+
+/* Alpha-status grouped triage sections — full-width band header rows that
+   partition the roster into a worst-first "Needs Attention" group above the
+   calm "All Other" majority. */
+.alpha-section-header th {
+  background-color: #f0f2f5;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #212529;
+  padding-top: 0.6rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 2px solid #dee2e6;
+}
+
+.alpha-section-header.alpha-section-attention th {
+  background-color: #fdecec;
+  color: #842029;
+  border-bottom-color: #f5c2c7;
+}
+
+.alpha-section-count {
+  color: #6c757d;
+  font-weight: 400;
+  font-size: 0.9rem;
+}
+
+.alpha-section-attention .alpha-section-count {
+  color: #a86b70;
+}
+
+.alpha-section-toggle {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  font-weight: 600;
+  color: inherit;
+  cursor: pointer;
 }
 
 /* Position column section border */
@@ -300,7 +351,6 @@ tr.table-warning > .roster-col-fixed {
 
 /* Info note */
 .roster-info-note {
-  font-size: 0.78rem;
   color: #6c757d;
   margin-bottom: 0.5rem;
   padding-left: 0.25rem;
@@ -316,7 +366,6 @@ tr.table-warning > .roster-col-fixed {
 }
 
 .roster-revoke-link {
-  font-size: 0.68rem;
   color: #dc3545;
   text-decoration: none;
   opacity: 0.7;

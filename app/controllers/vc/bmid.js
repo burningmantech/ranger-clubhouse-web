@@ -5,6 +5,7 @@ import {schedule, later} from '@ember/runloop';
 import {cached, tracked} from '@glimmer/tracking';
 import {BmidStatusOptions, IN_PREP, READY_TO_PRINT, SUBMITTED} from 'clubhouse/models/bmid';
 import admissionDateOptions from 'clubhouse/utils/admission-date-options';
+import {filterAndSortBmids, bmidTitleFilterOptions, bmidTeamFilterOptions} from 'clubhouse/utils/bmid-view';
 import Changeset from 'ember-changeset';
 
 /*
@@ -26,15 +27,6 @@ const CSV_COLUMNS = [
   'notes',
   'wap_status',
   'access_date',
-];
-
-const TEXT_FILTER_FIELDS = [
-  'person.callsign',
-  'title1',
-  'title2',
-  'title3',
-  'team',
-  'notes'
 ];
 
 export default class VcBmidController extends ClubhouseController {
@@ -81,20 +73,6 @@ export default class VcBmidController extends ClubhouseController {
 
   @tracked entry = null;
 
-  sortOptions = [
-    'callsign',
-    'status',
-    'title1',
-    'title2',
-    'title3',
-    'mvr',
-    'showers',
-    'meals',
-    'wap',
-    'team',
-    'notes'
-  ];
-
   wantFilterOptions = [
     ['', ''],
     ['All Eat', 'all_eat'],
@@ -110,7 +88,7 @@ export default class VcBmidController extends ClubhouseController {
   ]
 
   get notCurrentYear() {
-    return +this.year !== this.house.currentYear();
+    return +this.year !== this.session.currentYear();
   }
 
   /*
@@ -118,129 +96,10 @@ export default class VcBmidController extends ClubhouseController {
    */
 
   _buildViewBmids() {
-    let bmids = this.bmids;
-    const {titleFilter, teamFilter, wantFilter, qualifiedFilter} = this;
-    let key;
-
-    if (titleFilter !== 'All') {
-      bmids = bmids.filter((bmid) => (bmid.title1 === titleFilter || bmid.title2 === titleFilter || bmid.title3 === titleFilter));
-    }
-
-    if (teamFilter !== 'All') {
-      bmids = bmids.filter((bmid) => (!isEmpty(bmid.team) && bmid.team.indexOf(teamFilter) !== -1));
-    }
-
-    switch (wantFilter) {
-      case 'all_eat':
-        bmids = bmids.filter((bmid) => (bmid.meals_granted.pre && bmid.meals_granted.event && bmid.meals_granted.post));
-        break;
-      case 'event_week':
-        bmids = bmids.filter((bmid) => (!bmid.meals_granted.pre && bmid.meals_granted.event && !bmid.meals_granted.post));
-        break;
-      case 'any_eat':
-        bmids = bmids.filter((bmid) => (bmid.meals_granted.pre && bmid.meals_granted.event && bmid.meals_granted.post)
-          || (!bmid.meals_granted.pre && bmid.meals_granted.event && !bmid.meals_granted.post)
-        );
-        break;
-      case 'showers':
-        bmids = bmids.filter((bmid) => bmid.showers_granted);
-        break;
-    }
-
-    switch (qualifiedFilter) {
-      case 'qualified':
-        bmids = bmids.filter((bmid) => !bmid.notQualifiedToPrint);
-        break;
-      case 'unqualified':
-        bmids = bmids.filter((bmid) => bmid.notQualifiedToPrint);
-        break;
-    }
-
-    if (!isEmpty(this.textFilter)) {
-      const regexp = new RegExp(this.textFilter, 'i');
-
-      bmids = bmids.filter((bmid) => {
-        let haveMatch = false;
-        TEXT_FILTER_FIELDS.forEach((field) => {
-          const value = bmid[field];
-
-          if (!isEmpty(value) && regexp.test(value)) {
-            haveMatch = true;
-          }
-        });
-
-        return haveMatch;
-      });
-    }
-
-    switch (this.sortColumn) {
-      case 'callsign':
-        // Sort by callsign
-        bmids.sort((a, b) => a.sortCallsign.localeCompare(b.sortCallsign));
-        break;
-
-      case 'status':
-      case 'title1':
-      case 'title2':
-      case 'title3':
-      case 'team':
-      case 'notes':
-      case 'meals':
-        key = this.sortColumn;
-        if (key === 'meals') {
-          key = 'mealsShortLabel';
-        }
-        bmids.sort((a, b) => {
-          const aCol = a[key], bCol = b[key];
-
-          // Have empty values appear at the end
-          if (isEmpty(aCol)) {
-            return 1;
-          }
-          if (isEmpty(bCol)) {
-            return -1;
-          }
-
-          const result = aCol.toLowerCase().localeCompare(bCol.toLowerCase());
-          if (result) {
-            return result;
-          }
-          return a.sortCallsign.localeCompare(b.sortCallsign);
-        });
-        break;
-
-      case 'mvr':
-        // With Insurance first
-        bmids.sort((a, b) => {
-          const result = b.org_vehicle_insurance - a.org_vehicle_insurance;
-          if (result) {
-            return result;
-          }
-
-          return a.sortCallsign.localeCompare(b.sortCallsign);
-        });
-        break;
-
-      case 'showers_granted':
-        // With showers first
-        bmids.sort((a, b) => {
-          const result = b.showers_granted - a.showers_granted
-          return result ? result : a.sortCallsign.localeCompare(b.sortCallsign);
-        });
-        break;
-
-      case 'wap':
-        bmids.sort((a, b) => {
-          const result = a.access_date_sortable - b.access_date_sortable;
-          if (result) {
-            return result;
-          }
-          return a.sortCallsign.localeCompare(b.sortCallsign);
-        });
-        break;
-    }
-
-    this.viewBmids = bmids;
+    const {titleFilter, teamFilter, wantFilter, qualifiedFilter, textFilter, sortColumn} = this;
+    this.viewBmids = filterAndSortBmids(this.bmids, {
+      titleFilter, teamFilter, wantFilter, qualifiedFilter, textFilter, sortColumn
+    });
     this.startRenderBmids();
   }
 
@@ -311,24 +170,7 @@ export default class VcBmidController extends ClubhouseController {
    */
 
   get titleFilterOptions() {
-    const titles = {};
-
-    this.bmids.forEach((bmid) => {
-      if (!isEmpty(bmid.title1)) {
-        titles[bmid.title1] = true;
-      }
-      if (!isEmpty(bmid.title2)) {
-        titles[bmid.title2] = true;
-      }
-      if (!isEmpty(bmid.title3)) {
-        titles[bmid.title3] = true;
-      }
-    });
-
-    const options = Object.keys(titles).sort();
-    options.unshift('All');
-
-    return options;
+    return bmidTitleFilterOptions(this.bmids);
   }
 
   /*
@@ -337,21 +179,7 @@ export default class VcBmidController extends ClubhouseController {
    */
 
   get teamFilterOptions() {
-    const teams = {};
-
-    this.bmids.forEach((bmid) => {
-      if (!isEmpty(bmid.team)) {
-        bmid.team.split(/(\+|\/)/).forEach((word) => {
-          if (word !== '+' && word !== '/')
-            teams[word] = true;
-        });
-      }
-    });
-
-    const options = Object.keys(teams).sort();
-    options.unshift('All');
-
-    return options;
+    return bmidTeamFilterOptions(this.bmids);
   }
 
   /*
@@ -384,16 +212,14 @@ export default class VcBmidController extends ClubhouseController {
    */
 
   @action
-  saveBmid(model, isValid) {
+  async saveBmid(model, isValid) {
     if (!isValid) {
       return;
     }
 
-    model.save().then(() => {
-      this.toast.success('BMID successfully updated.');
+    if (await this.saveModel.save({model, message: 'BMID successfully updated.'})) {
       this.entry = null;
-    })
-      .catch((response) => this.house.handleErrorResponse(response));
+    }
   }
 
   /*
@@ -401,11 +227,8 @@ export default class VcBmidController extends ClubhouseController {
    */
 
   @action
-  saveInlineBmid(model) {
-    model.save().then(() => {
-      this.toast.success('BMID successfully updated.');
-    })
-      .catch((response) => this.house.handleErrorResponse(response));
+  async saveInlineBmid(model) {
+    await this.saveModel.save({model, message: 'BMID successfully updated.'});
   }
 
 
@@ -526,7 +349,7 @@ export default class VcBmidController extends ClubhouseController {
       }
     });
 
-    this.house.downloadCsv(`bmids-${this.year}-${this.filter}.csv`, CSV_COLUMNS, bmids);
+    this.download.downloadCsv(`bmids-${this.year}-${this.filter}.csv`, CSV_COLUMNS, bmids);
   }
 
   /*

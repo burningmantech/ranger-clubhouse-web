@@ -2,17 +2,21 @@
 <main>
   {{#if (setting 'AuditorRegistrationDisabled')}}
     <UiNotice @type="danger" @icon="hand" @title="Auditor Registration Disabled">
-        Auditor registration is usually open by March and available through late August. The Black Rock Rangers only offer
-        trainings between late April and late August. Training registration will prioritize Prospective Rangers over Auditors.
-      <div class="h3 my-2">
-        No walks-in are allowed.
-      </div>
+      <p>Registration is currently closed. Here's what to know:</p>
+      <ul>
+        <li>Registration is: <b>March</b> and runs through <b>late May</b>.</li>
+        <li>Trainings are: <b>early April through late August</b>.</li>
+        <li><b>Applicant Rangers</b>: get priority over Auditors.</li>
+        <li class="text-danger fw-bold">No walk-ins are allowed.</li>
+      </ul>
       <p>
-        <b class="text-danger">Just attending training as an auditor is not a path to becoming a Ranger.</b> You must
-        apply for and be accepted into the Prospective Ranger program in order to become a Ranger.
+        <b class="text-danger">Auditing training is not a path to becoming a Ranger.</b>
+        To become a Ranger, you must apply for and be accepted into the Prospective Ranger program.
       </p>
-      While you are waiting, please feel free to browse the Ranger Manual located on the main Ranger website:
-      <a href="https://rangers.burningman.org">rangers.burningman.org</a>
+      <p>
+        While you wait, browse the Ranger Manual at
+        <a href="https://rangers.burningman.org">rangers.burningman.org</a>.
+      </p>
     </UiNotice>
   {{else if (eq this.step "ask-intent")}}
     <UiSection>
@@ -27,47 +31,50 @@
         <p>
           Why are you here today?
         </p>
-        <UiButton @responsive={{true}} @onClick={{fn this.stepAction "ranger"}}>
-          To Volunteer With The Rangers
-        </UiButton>
-        <UiButton type="button" @responsive={{true}} @onClick={{fn this.stepAction "audit"}}>
-          To Audit Ranger Training
-        </UiButton>
+        <UiButtonRow>
+          <UiButton @responsive={{true}} @onClick={{fn this.stepAction "ranger"}}>
+            To Volunteer With The Rangers
+          </UiButton>
+          <UiButton type="button" @responsive={{true}} @onClick={{fn this.stepAction "audit"}}>
+            To Audit Ranger Training
+          </UiButton>
+        </UiButtonRow>
       </:body>
     </UiSection>
   {{else if (eq this.step "ranger")}}
     <UiSection>
       <:title>You're in the wrong place to become a Ranger!</:title>
       <:body>
-        <p>
-          <b>All potential Black Rock Rangers need to submit an application first.</b>
-        </p>
-        <p>
-          <b class="text-danger">You do not register in the Clubhouse.</b>
-        </p>
-        <p>
-          Visit
-          <a href="https://rangers.burningman.org/becoming-a-ranger/" rel="noopener noreferrer">
-            Becoming a Ranger
-          </a>
-          to read about the Ranger volunteer requirements, qualifications, and how to submit a volunteer application.
-        </p>
-        Did you mean to <a href {{on-click this.stepAction "audit"}}>audit Ranger training</a> instead?
+        <p><b>You do not create a Clubhouse account to become a Black Rock Ranger.</b></p>
+        <ul class="lh-lg">
+          <li>
+            <b class="text-danger">Do this:</b> go to
+            <ExtLink @href="https://profiles.burningman.org">profiles.burningman.org</ExtLink>
+            and submit a Volunteer Form.
+          </li>
+          <li>The Ranger Volunteer Coordinators will reach out with your next steps once they receive your application.</li>
+          <li>
+            This registration form is only for people who want to <b>audit</b> training, or who are training as a <b>Regional
+            Ranger</b> — not as a BRC Ranger.
+          </li>
+        </ul>
+
+        <UiButton @type="outline-secondary" @responsive={{true}} @onClick={{fn this.stepAction "ask-intent"}}>
+          Back to start
+        </UiButton>
       </:body>
     </UiSection>
   {{else if (eq this.step "audit")}}
     <UiSection>
-      <:title>Register to audit Ranger training</:title>
+      <:title>Register To Audit BRC Ranger Training</:title>
       <:body>
         <p>
-          <b class="text-danger">Auditing is NOT a path to becoming a Black Rock Ranger.</b>
+          <b class="text-danger">{{fa-icon "ban" right=1}} Auditing is NOT:</b> a path to becoming a Black Rock Ranger.
+          (NO EXCEPTIONS!)
         </p>
         <p>
-          Did you mean become a Ranger instead? Visit
-          <a href="https://rangers.burningman.org/becoming-a-ranger/" rel="noopener noreferrer">
-            Becoming a Ranger
-          </a>
-          to find out how to submit a volunteer application.
+          <b>Want to become a BRC Ranger?</b> Fill out a Volunteer Form at
+          <ExtLink @href={{this.profilesUrl}}>profiles.burningman.org</ExtLink>
         </p>
         <UiButton @responsive={{true}} @onClick={{fn this.stepAction "register"}}>
           I understand auditing is not a path to becoming a Ranger
@@ -81,13 +88,14 @@
       information:
     </p>
 
-    <ChForm @formId="register" @formFor={{this.registerForm}} @autocomplete="on" @validator={{this.registerValidations}}
+    <ChForm @formId="register" @formFor={{this.registerForm}} @validator={{this.registerValidations}}
             @onSubmit={{this.createAccount}} as |f|>
       <FormRow>
         <f.text @name="human"
-                @label="First, prove you are human - What is 33 + 2?"
+                @label="First, prove you are human - {{this.humanQuestion}}"
                 @size={{4}}
                 @maxlength={{10}}
+                autocomplete="off"
         />
       </FormRow>
       <FormRow>
@@ -99,19 +107,26 @@
         <f.text @name="email"
                 @label="Email Address"
                 @inputmode="email"
-                @size={{30}}/>
+                @size={{30}}
+                @showCharCount={{true}}
+                @maxlength={{30}}
+                autocomplete="email"/>
       </FormRow>
 
       <FormRow>
         <f.password @name="password"
                     @label="Password"
                     @size={{20}}
-                    @maxlength={{30}} />
+                    @maxlength={{30}}
+                    @showCharCount={{true}}
+                    autocomplete="new-password"/>
         <f.password @name="password_confirmation"
                     @label="Confirm Password"
                     @size={{20}}
                     @maxlength={{30}}
-                />
+                    @showCharCount={{true}}
+                    autocomplete="new-password"
+        />
       </FormRow>
 
       <FormRow>
@@ -138,21 +153,19 @@
                 @inputmode="tel"/>
       </FormRow>
 
-      <f.submit @label="Create My Auditor Account" disabled={{this.iSaving}} />
+      <f.submit @label="Create My Auditor Account" @disabled={{this.isSaving}} />
       {{#if this.isSaving}}
         <LoadingIndicator @text="Creating Account"/>
       {{/if}}
     </ChForm>
   {{else}}
+    <p>Something went wrong. Let's start over.</p>
     <p>
-      Uh oh, I don't understand what the step [{{this.step}}] is. This is a bug and should be reported to the tech team.
-    </p>
-    <p>
-      <UiButton @onClick={{fn this.stepAction "ask-intent"}}>Back</UiButton>
+      <UiButton @onClick={{fn this.stepAction "ask-intent"}}>Start over</UiButton>
     </p>
   {{/if}}
   <p class="mt-2">
     <b>Questions?</b> Contact the Ranger Volunteer Coordinators at
-    <span class="d-inline-block"><VcEmail /></span>.
+    <span class="d-inline-block"><VcEmail/></span>.
   </p>
 </main>

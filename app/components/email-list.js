@@ -3,7 +3,8 @@ import { action } from "@ember/object";
 import { service } from '@ember/service';
 
 export default class EmailListComponent extends Component {
-  @service house;
+  @service scroll;
+  @service browser;
   @service toast;
 
   get showWarning() {
@@ -22,12 +23,12 @@ export default class EmailListComponent extends Component {
       return;
     }
 
-    this.house.scrollToElement(`#${this.listId}-link`);
+    this.scroll.scrollToElement(`#${this.listId}-link`);
   }
 
   @action
   copyToClipboardAction(event) {
-    event.preventDefault();
+    event?.preventDefault();
 
     // Find out the element to copy to the clipboard
     const element = document.querySelector('#'+this.listId);
@@ -37,6 +38,6 @@ export default class EmailListComponent extends Component {
       return;
     }
 
-    this.house.copyToClipboard(element);
+    this.browser.copyToClipboard(element);
   }
 }

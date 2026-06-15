@@ -1,5 +1,5 @@
 import {
-  validatePresence,  validateFormat
+  validatePresence,  validateFormat, validateLength
 } from 'ember-changeset-validations/validators';
 import validateState from 'clubhouse/validators/state';
 import validateCustom from 'clubhouse/validators/custom';
@@ -42,7 +42,7 @@ export default {
 
   home_phone: [
     validatePresence(true),
-    validateFormat({ min: 9 })
+    validateLength({ min: 9 })
   ],
 
   pronouns_custom: [

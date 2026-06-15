@@ -9,7 +9,7 @@ export default class IntakeNotesComponent extends Component {
   @tracked updateNote;
 
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
   @service session;
   @service toast;
@@ -18,6 +18,31 @@ export default class IntakeNotesComponent extends Component {
   get teamNotes() {
     // Might be updated at any time.
     return this.args.person[this.args.type + '_team'];
+  }
+
+  // Callers may request a full-size action button (e.g. the potentials Dense
+  // Triage rows, which must avoid small text). Defaults to the compact button.
+  get noteButtonSize() {
+    return this.args.buttonSize ?? 'sm';
+  }
+
+  get sortedTeamNotes() {
+    const notes = this.teamNotes;
+    if (!notes) {
+      return notes;
+    }
+    return notes.slice().sort((a, b) => b.year - a.year);
+  }
+
+  // Whether to render the action button at all. Pages that show a team's notes
+  // purely for reference (e.g. /mentor/convert-prospectives, where only the
+  // Mentor stream is editable) pass @readOnly to suppress both "Add Note / Rank"
+  // and "View Details" while the notes above still render inline.
+  get showNoteButton() {
+    if (this.args.readOnly) {
+      return false;
+    }
+    return this.canAddNote || this.teamNotes;
   }
 
   // Is the user allowed to add a team note?
@@ -71,16 +96,18 @@ export default class IntakeNotesComponent extends Component {
 
   @action
   deleteNoteAction(note) {
-    this.modal.confirm('Confirm Deletion', 'Are you really sure you want to delete this note?', () => {
-      this.ajax.request(`intake/${note.id}/delete-note`, {method: 'DELETE'})
-        .then(() => {
-          this.teamNotes.forEach((intakeYear) => {
-            if (intakeYear.year === note.year) {
-              set(intakeYear, 'notes', intakeYear.notes.filter((n) => n.id !== note.id));
-            }
-          });
-          this.toast.success('The note was successfully deleted.');
-        }).catch((response) => this.house.handleErrorResponse(response));
+    this.modal.confirm('Confirm Deletion', 'Are you really sure you want to delete this note?', async () => {
+      try {
+        await this.ajax.request(`intake/${note.id}/delete-note`, {method: 'DELETE'});
+        this.teamNotes.forEach((intakeYear) => {
+          if (intakeYear.year === note.year) {
+            set(intakeYear, 'notes', intakeYear.notes.filter((n) => n.id !== note.id));
+          }
+        });
+        this.toast.success('The note was successfully deleted.');
+      } catch (response) {
+        this.errors.handleErrorResponse(response);
+      }
     });
   }
 }

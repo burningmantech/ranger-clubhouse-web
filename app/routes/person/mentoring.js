@@ -20,8 +20,8 @@ export default class PersonMentoringRoute extends ClubhouseRoute {
     const person = this.modelFor('person');
 
     return {
-      mentors: await this.ajax.request(`person/${person.id}/mentors`).then((result) => result.mentors),
-      mentees: await this.ajax.request(`person/${person.id}/mentees`).then((result) => result.mentees),
+      mentors: (await this.ajax.request(`person/${person.id}/mentors`)).mentors,
+      mentees: (await this.ajax.request(`person/${person.id}/mentees`)).mentees,
     };
   }
 

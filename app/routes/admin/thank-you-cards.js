@@ -14,7 +14,7 @@ export default class AdminThankYouCardsRoute extends ClubhouseRoute {
 
   setupController(controller) {
     if (!controller.year) {
-      controller.set('year', this.house.currentYear());
+      controller.set('year', this.session.currentYear());
     }
 
     controller.set('people', null);

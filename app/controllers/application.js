@@ -48,7 +48,7 @@ export default class ApplicationController extends ClubhouseController {
 
   @action
   scrollToTopAction() {
-    this.house.scrollToTop();
+    this.scroll.scrollToTop();
   }
 
   @action

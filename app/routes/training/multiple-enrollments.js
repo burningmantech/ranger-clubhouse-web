@@ -1,5 +1,4 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import RSVP from 'rsvp';
 import requestYear from 'clubhouse/utils/request-year';
 
 export default class TrainingMultipleEnrollmentsRoute extends ClubhouseRoute {
@@ -7,16 +6,18 @@ export default class TrainingMultipleEnrollmentsRoute extends ClubhouseRoute {
     year: { refreshModel: true }
   };
 
-  model(params) {
+  async model(params) {
     const training = this.modelFor('training');
     const year = requestYear(params);
 
-    return RSVP.hash({
-        enrollments: this.ajax.request(`training/${training.id}/multiple-enrollments`, { data: {year} })
-          .then((results) => results.enrollments)
-          .catch((response) => this.house.handleErrorResponse(response)),
-        year
-      });
+    let enrollments;
+    try {
+      enrollments = (await this.ajax.request(`training/${training.id}/multiple-enrollments`, { data: {year} })).enrollments;
+    } catch (response) {
+      enrollments = this.errors.handleErrorResponse(response);
+    }
+
+    return { enrollments, year };
   }
 
   setupController(controller, model) {

@@ -37,6 +37,6 @@ export default class TrainingNotesController extends ClubhouseController {
       });
     })
 
-    this.house.downloadCsv(`${this.year}-trainee-notes`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.year}-trainee-notes`, CSV_COLUMNS, rows);
   }
 }

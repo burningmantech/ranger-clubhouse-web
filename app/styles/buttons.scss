@@ -1,0 +1,53 @@
+.rbs-green-button,
+.rbs-green-button a:visited {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.rbs-yellow-button,
+.rbs-yellow-button a:visited {
+  background-color: #fff3cd;
+  color: #856404;
+  border-color: #ffeeba;
+}
+
+.rbs-red-button,
+.rbs-red-button a:visited {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
+.btn-block {
+  width: 100%;
+  display: block;
+}
+
+@include media-breakpoint-down(lg) {
+  .btn-responsive {
+    display: block;
+    width: 100%;
+  }
+}
+.ui-button-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  align-self: stretch;
+  gap: 1rem;
+  width: 100%;
+
+}
+
+@include media-breakpoint-down(xl) {
+  .ui-button-row {
+    flex-direction: column !important;
+    align-items: start !important;
+
+    button, a {
+      display: block !important;
+      margin-top: 1vh;
+      width: 100%;
+    }
+  }
+}

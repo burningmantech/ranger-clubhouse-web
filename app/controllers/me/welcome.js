@@ -17,12 +17,12 @@ export default class MeWelcomeController extends ClubhouseController {
       validateLength({min: 5, message: 'The password should be 5 characters or more.'})
     ],
     password_confirmation: [
-      validateConfirmation({on: 'password', message: 'The password do not match.'})
+      validateConfirmation({on: 'password', message: 'The passwords do not match.'})
     ]
   };
 
   @action
-  submitAction(model, isValid) {
+  async submitAction(model, isValid) {
     if (!isValid) {
       return;
     }
@@ -34,13 +34,16 @@ export default class MeWelcomeController extends ClubhouseController {
     };
 
     this.isSubmitting = true;
-    return this.ajax.request(`person/${this.session.userId}/password`, {method: 'PATCH', data: passwords})
-      .then(() => {
-        this.session.tempLoginToken = null;
-        this.session.isWelcome = false;
-        this.showSuccessDialog = true;
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    try {
+      await this.ajax.request(`person/${this.session.userId}/password`, {method: 'PATCH', data: passwords});
+      this.session.tempLoginToken = null;
+      this.session.isWelcome = false;
+      this.showSuccessDialog = true;
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action

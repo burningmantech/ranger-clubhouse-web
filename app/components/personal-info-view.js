@@ -1,10 +1,8 @@
 import Component from '@glimmer/component';
 import {GENDER_CUSTOM, GenderIdentityLabels} from "clubhouse/models/person";
 import {action} from '@ember/object';
-import {service} from '@ember/service';
 
 export default class PersonalInfoViewComponent extends Component {
-  @service house;
 
   @action
   shirtTitle(shirtId) {

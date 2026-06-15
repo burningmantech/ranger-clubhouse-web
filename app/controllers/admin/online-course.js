@@ -43,16 +43,9 @@ export default class AdminOnlineCourseController extends ClubhouseController {
       return;
     }
 
-    this.isSubmitting = true;
-    try {
-      await model.save();
+    if (await this.saveModel.save({model, message: 'Entry was successfully saved.', owner: this})) {
       this.entry = null;
       await this.onlineCourses.update();
-      this.toast.success('Entry was successfully saved.');
-    } catch (response) {
-      this.house.handleErrorResponse(response, model);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 
@@ -66,7 +59,7 @@ export default class AdminOnlineCourseController extends ClubhouseController {
         await this.onlineCourses.update();
         this.toast.success('Entry has been deleted.');
       } catch (response) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       } finally {
         this.isSubmitting = false;
       }
@@ -78,10 +71,10 @@ export default class AdminOnlineCourseController extends ClubhouseController {
     this.isSubmitting = true;
     try {
       const result = await this.ajax.request(`online-course/${entry.id}/set-name`, { method: 'POST'});
-      this.house.pushPayload('online-course', result.online_course);
+      this.storePayload.pushPayload('online-course', result.online_course);
       this.toast.success('Name successfully set from the LMS.');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -103,7 +96,7 @@ export default class AdminOnlineCourseController extends ClubhouseController {
       this.haveEnrollment = true;
       this.toast.success('Enrollment ');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -119,7 +112,7 @@ export default class AdminOnlineCourseController extends ClubhouseController {
       this.haveCourseList = true;
       this.toast.success('Course listing successfully retrieved.');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -132,7 +125,7 @@ export default class AdminOnlineCourseController extends ClubhouseController {
       name: course.fullname,
       position_id: TRAINING,
       course_for: COURSE_FOR_ALL,
-      year: this.house.currentYear(),
+      year: this.session.currentYear(),
     });
   }
 }

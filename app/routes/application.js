@@ -47,7 +47,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
     }
 
     try {
-      await this.house.loadScript(`https://www.googletagmanager.com/gtag/js?id=${gaID}`);
+      await this.browser.loadScript(`https://www.googletagmanager.com/gtag/js?id=${gaID}`);
     } catch (_) {
       console.log('Google Analytics failed to load');
       return;
@@ -216,7 +216,7 @@ export default class ApplicationRoute extends ClubhouseRoute {
         } = await this.ajax.request(`person/${this.session.userId}/unread-message-count`);
         this.session.unreadMessageCount = unread_message_count;
         if (message) {
-          message = this.house.pushPayload('person-message', message);
+          message = this.storePayload.pushPayload('person-message', message);
         }
         const oldMessage = this.session.mostRecentMessage;
         if (this.firstMessageCheck) {

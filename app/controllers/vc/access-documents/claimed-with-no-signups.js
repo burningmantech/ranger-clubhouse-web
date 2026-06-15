@@ -48,6 +48,6 @@ export default class VcAccessDocumentsClaimedWithNoSignupsController extends Clu
       };
     });
 
-    this.house.downloadCsv(`${this.house.currentYear()}-claimed-tickets-no-signups.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.session.currentYear()}-claimed-tickets-no-signups.csv`, CSV_COLUMNS, rows);
   }
 }

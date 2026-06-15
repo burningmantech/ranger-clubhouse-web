@@ -6,7 +6,7 @@ export default class PersonUnifiedFlaggingRoute extends ClubhouseRoute {
   roleRequired = [ADMIN, INTAKE, REGIONAL_MANAGEMENT];
 
   model() {
-    const year = this.house.currentYear();
+    const year = this.session.currentYear();
     const personId = this.modelFor('person').id;
 
     this.year = year;

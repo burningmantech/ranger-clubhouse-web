@@ -1,13 +1,3 @@
-{{#if @todo.ignore}}
-    <div class="text-muted me-4">
-        {{fa-icon "ban" fixed=true right=1}} {{@todo.message}}
-    </div>
-{{else if @todo.completed}}
-    <div class="text-success me-4">
-        {{fa-icon "check" fixed=true right=1}} {{@todo.message}}
-    </div>
-{{else}}
-    <div class="me-4 {{if @todo.blink "hq-todo-blink"}}">
-        {{fa-icon "circle" type="far" fixed=true right=1}} {{@todo.message}}
-    </div>
-{{/if}}
+<div class="me-4 {{this.statusClass}}">
+    {{fa-icon this.iconName type=this.iconType fixed=true right=1}} {{or @todo.message @todo.task}}
+</div>

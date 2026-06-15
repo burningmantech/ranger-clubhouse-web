@@ -6,7 +6,7 @@ import {service} from '@ember/service';
 const COLLAPSED_PREF = 'sidebarCollapsed';
 
 export default class ChSidebarComponent extends Component {
-  @service house;
+  @service storage;
   @service session;
 
   get themeClass() {
@@ -20,7 +20,7 @@ export default class ChSidebarComponent extends Component {
   @action
   sidebarInserted() {
     // Does the user want the sidebar collapsed?
-    if (this.house.getKey(COLLAPSED_PREF)) {
+    if (this.storage.getKey(COLLAPSED_PREF)) {
       this.sidebarToggle();
     }
   }
@@ -46,7 +46,7 @@ export default class ChSidebarComponent extends Component {
     this._toggleClass('#collapse-icon', 'fa-angle-double-left fa-angle-double-right');
 
     // Save the collapsed preference
-    this.house.setKey(COLLAPSED_PREF, !this.house.getKey(COLLAPSED_PREF));
+    this.storage.setKey(COLLAPSED_PREF, !this.storage.getKey(COLLAPSED_PREF));
 
     return false;
   }

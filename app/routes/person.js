@@ -24,7 +24,7 @@ export default class PersonRoute extends ClubhouseRoute {
       this.router.transitionTo('me');
       return false;
     } else {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       return true;
     }
   }

@@ -5,7 +5,7 @@ import {service} from '@ember/service';
 import {validatePresence} from 'ember-changeset-validations/validators';
 
 export default class VcApplicationEditHandlesDialogComponent extends Component {
-  @service house;
+  @service saveModel;
   @service toast;
 
   @tracked isSubmitting;
@@ -28,17 +28,9 @@ export default class VcApplicationEditHandlesDialogComponent extends Component {
     }
 
     const {application} = this.args;
-
-    try {
-      this.isSubmitting = true;
-      application.handles = model.handles;
-      await application.save();
-      this.toast.success('The handles list was successfully updated.');
+    application.handles = model.handles;
+    if (await this.saveModel.save({model: application, message: 'The handles list was successfully updated.', owner: this})) {
       this.args.onClose();
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 }

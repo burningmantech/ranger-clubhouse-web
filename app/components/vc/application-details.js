@@ -9,7 +9,8 @@ import {action} from '@ember/object';
 
 
 export default class VcApplicationDetailsComponent extends Component {
-  @service house;
+  @service session;
+  @service saveModel;
   @service toast;
 
   @tracked isSubmitting;
@@ -23,7 +24,7 @@ export default class VcApplicationDetailsComponent extends Component {
   @cached
   get eventYearOptions() {
     const years = [];
-    for (let i = 1986; i <= this.house.currentYear(); i++) {
+    for (let i = 1986; i <= this.session.currentYear(); i++) {
       years.push(i);
     }
 
@@ -36,33 +37,14 @@ export default class VcApplicationDetailsComponent extends Component {
       return false;
     }
 
-    try {
-      this.isSubmitting = true;
-      await model.save();
-      this.toast.success('Application details successfully updated.');
-      return true;
-    } catch (response) {
-      this.house.handleErrorResponse(response, model);
-    } finally {
-      this.isSubmitting = false;
-    }
-
-    return false;
+    return this.saveModel.save({model, message: 'Application details successfully updated.', owner: this});
   }
 
   @action
   async setReviewOkay() {
     const {application} = this.args;
-    try {
-      application.why_volunteer_review = WHY_VOLUNTEER_REVIEW_OKAY;
-      this.isSubmitting = true;
-      await application.save();
-      this.toast.success('Paragraph marked okay.');
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
-    }
+    application.why_volunteer_review = WHY_VOLUNTEER_REVIEW_OKAY;
+    await this.saveModel.save({model: application, message: 'Paragraph marked okay.', owner: this});
   }
 
   get shouldTruncateParagraph() {

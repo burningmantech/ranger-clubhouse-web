@@ -7,11 +7,44 @@
 . "$(dirname "$0")/.common.sh";
 
 #
-# Build and tag each stage
+# Build and tag each stage explicitly. `docker build` honors only ONE --target
+# per invocation, so each stage gets its own build. BuildKit reuses the cached
+# lower layers (development -> build -> application share the same FROM chain),
+# so the later two builds are cheap.
+#
+# In CI, set the cache backend via the environment so layers persist across
+# ephemeral runners:
+#     BUILD_CACHE_FROM, BUILD_CACHE_TO
+# Locally these are unset and the build uses the default local layer cache.
 #
 
-docker build \
-   --target=development --tag="${dev_image_name}" \
-   --target=build --tag="${build_image_name}" \
-   --target=application --tag="${app_image_name}" \
-        "${wd}";
+cache_args="";
+if [ -n "${BUILD_CACHE_FROM:-}" ]; then
+    cache_args="${cache_args} --cache-from=${BUILD_CACHE_FROM}";
+fi
+if [ -n "${BUILD_CACHE_TO:-}" ]; then
+    cache_args="${cache_args} --cache-to=${BUILD_CACHE_TO}";
+fi
+
+# Prefer buildx when available (required for --cache-to / cache mounts in CI).
+if docker buildx version > /dev/null 2>&1; then
+    build="docker buildx build --load";
+else
+    build="docker build";
+    cache_args="";  # classic builder cannot use registry/gha cache backends
+fi
+
+echo "==> Building development stage -> ${dev_image_name}";
+${build} ${cache_args} \
+    --target=development --tag="${dev_image_name}" "${wd}";
+
+echo "==> Building build stage -> ${build_image_name}";
+${build} ${cache_args} \
+    --target=build --tag="${build_image_name}" "${wd}";
+
+echo "==> Building application stage -> ${app_image_name}";
+${build} ${cache_args} \
+    --target=application --tag="${app_image_name}" "${wd}";
+
+echo "==> Built images:";
+docker image ls --filter=reference="${image_repo}*";

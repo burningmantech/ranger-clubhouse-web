@@ -15,4 +15,8 @@ export default class DocumentModel extends Model {
   @attr('number', {readOnly: true}) person_update_id;
   @attr('', {readOnly: true}) person_update;
   @attr('number') refresh_time;
+
+  // Pseudo columns
+  @attr('') resource_type;
+  @attr('') resource_entity_id;
 }

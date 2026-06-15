@@ -14,7 +14,7 @@
   {{#each @assetsCheckedOut as |ap|}}
     <tr>
       <td>
-        {{this.typeLabel ap.asset.type}}
+        {{ap.asset.typeLabel}}
         <AssetDurationLabel @asset={{ap.asset}} />
       </td>
       <td>{{ap.asset.barcode}}</td>
@@ -48,7 +48,7 @@
     </tr>
   {{else}}
     <tr>
-      <td colspan="8">No assets checked out</td>
+      <td colspan="7">No assets checked out</td>
     </tr>
   {{/each}}
   </tbody>

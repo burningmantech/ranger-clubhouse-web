@@ -19,6 +19,20 @@
                     @agreements={{this.agreements}}
                     @debugUpdateAction={{this.debugUpdateAction}} />
 {{else}}
+  {{#if this.signinPositions}}
+    <UiNotice @type="secondary" @title="Sign in before you volunteer for certain positions" @icon="person-walking">
+      <div class="lh-2">
+        To volunteer any of the following positions, you need to be signed in to it.<br>
+        Signing in gives you the Clubhouse permissions that position requires.<br>
+        <b>No one around to sign you in?</b> Call Khaki.
+      </div>
+      <ul class="mt-2 mb-0">
+        {{#each this.signinPositions as |pos|}}
+          <li>{{pos.title}}</li>
+        {{/each}}
+      </ul>
+    </UiNotice>
+  {{/if}}
   <DashboardRanger @milestones={{this.milestones}}
                    @person={{this.person}}
                    @motds={{this.motds}}

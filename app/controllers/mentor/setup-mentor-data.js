@@ -31,7 +31,7 @@ export default class MentorSetupMentorDataController extends ClubhouseController
         this.didSetup = true;
         this.toast.success('Setup was successfully');
       } catch (response) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       } finally {
         this.isSubmitting = false;
       }

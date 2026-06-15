@@ -22,8 +22,12 @@ import {
   MENTOR_SHORT
 } from 'clubhouse/constants/positions';
 
-// Who are the mentors?
-const MENTOR_POSITIONS = [
+// Positions whose workers receive their pogs directly from their Cadre and
+// therefore are not issued pogs at the HQ Window.
+//
+// NOTE: the guidelines copy also names Sandman & Gerlach Patrol, but only the
+// Mentor positions currently drive the self-serve alert. See DEFERRED note.
+const SELF_SERVE_POG_POSITIONS = [
   MENTOR,
   MENTOR_APPRENTICE,
   MENTOR_MITTEN,
@@ -34,19 +38,20 @@ const MENTOR_POSITIONS = [
 
 export default class HqPogsComponent extends Component {
   @service ajax;
-  @service house;
+  @service saveModel;
+  @service errors;
+  @service session;
   @service modal;
   @service store;
-  @service toast;
 
   @tracked isLoading = true;
+  @tracked isSubmitting = false;
 
   @tracked config;
-  @tracked pog;
   @tracked pogToCancel;
   @tracked pogToIssue;
   @tracked pogIssueWarnings;
-  @tracked pogIssueInfo;
+  @tracked pogIssueForm;
   @tracked pogs;
 
   @tracked pogToEdit;
@@ -61,6 +66,12 @@ export default class HqPogsComponent extends Component {
     this._loadPogs();
   }
 
+  // Pog-type constants exposed for template bindings (templates cannot import
+  // module constants directly).
+  POG_MEAL = POG_MEAL;
+  POG_HALF_MEAL = POG_HALF_MEAL;
+  POG_SHOWER = POG_SHOWER;
+
   pogLabel(type) {
     return PogLabels[type] ?? type;
   }
@@ -74,43 +85,17 @@ export default class HqPogsComponent extends Component {
 
   async _loadPogs() {
     try {
-      this.config = await this.ajax.request('person-pog/config').then(({config}) => config);
+      const {config} = await this.ajax.request('person-pog/config');
+      this.config = config;
       this.pogs = await this.store.query('person-pog', {
         person_id: this.args.person.id,
-        year: this.house.currentYear()
+        year: this.session.currentYear()
       });
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }
-  }
-
-  /**
-   * Record a Full Meal Pog
-   */
-
-  @action
-  recordFullMealPog() {
-    this.setupToIssue(POG_MEAL);
-  }
-
-  /**
-   * Record a Half Meal Pog
-   */
-
-  @action
-  recordHalfMealPog() {
-    this.setupToIssue(POG_HALF_MEAL);
-  }
-
-  /**
-   * Record a Shower Pog
-   */
-
-  @action
-  recordShowerPog() {
-    this.setupToIssue(POG_SHOWER);
   }
 
   /**
@@ -121,7 +106,6 @@ export default class HqPogsComponent extends Component {
 
   @action
   setupToIssue(type) {
-    let moreInfo = '';
     const warnings = [];
     const {callsign} = this.args.person;
     switch (type) {
@@ -143,13 +127,16 @@ export default class HqPogsComponent extends Component {
     }
 
     this.pogIssueWarnings = warnings;
-    this.pogIssueInfo = moreInfo;
     this.pogToIssue = type;
     this.pogIssueForm = {notes: ''};
   }
 
   @action
   async savePog(model) {
+    if (this.isSubmitting) {
+      return;
+    }
+
     const type = this.pogToIssue;
     const pog = this.store.createRecord('person-pog', {
       person_id: this.args.person.id,
@@ -161,15 +148,14 @@ export default class HqPogsComponent extends Component {
 
     this.isSubmitting = true;
     try {
-      await pog.save();
-      await this.pogs.update();
-      this.toast.success('Pog successfully created.');
-      this.pogToIssue = null;
-      if (type === POG_MEAL || type === POG_HALF_MEAL) {
-        this.args.onPogIssue?.();
+      // On failure, save-model rolls the never-persisted record back out of the store.
+      if (await this.saveModel.save({model: pog, message: 'Pog successfully created.'})) {
+        await this.pogs.update();
+        this.pogToIssue = null;
+        if (type === POG_MEAL || type === POG_HALF_MEAL) {
+          this.args.onPogIssue?.();
+        }
       }
-    } catch (response) {
-      this.house.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -192,13 +178,15 @@ export default class HqPogsComponent extends Component {
 
   @action
   async updatePog(model) {
+    if (this.isSubmitting) {
+      return;
+    }
+
     this.isSubmitting = true;
     try {
-      await model.save();
-      this.toast.success('Pog successfully updated.');
-      this.pogToEdit = null;
-    } catch (response) {
-      this.house.handleErrorResponse(response);
+      if (await this.saveModel.save({model, message: 'Pog successfully updated.'})) {
+        this.pogToEdit = null;
+      }
     } finally {
       this.isSubmitting = false;
     }
@@ -213,11 +201,24 @@ export default class HqPogsComponent extends Component {
 
   @action
   async redeemForFullMealPog(pog) {
+    if (this.isSubmitting) {
+      return;
+    }
+
     this.modal.confirm('Redeem For Full Meal Pog',
       'Please confirm you wish to redeem this Half Meal Pog for a Full Meal Pog',
       async () => {
-        pog.status = STATUS_REDEEMED;
-        await this._commonPogSave(pog, 'Pog has been redeemed.');
+        if (this.isSubmitting) {
+          return;
+        }
+
+        this.isSubmitting = true;
+        try {
+          pog.status = STATUS_REDEEMED;
+          await this.saveModel.save({model: pog, message: 'Pog has been redeemed.'});
+        } finally {
+          this.isSubmitting = false;
+        }
       });
   }
 
@@ -238,26 +239,6 @@ export default class HqPogsComponent extends Component {
 
   get hasMealPass() {
     return this.args.eventPeriods[this.args.period].hasPass;
-  }
-
-  /**
-   * Common routine to save the pogs!
-   *
-   * @param {PersonPogModel} pog
-   * @param {string} message
-   * @param onSaved
-   * @returns {Promise<void>}
-   * @private
-   */
-
-  async _commonPogSave(pog, message, onSaved = null) {
-    try {
-      await pog.save();
-      this.toast.success(message);
-      onSaved?.();
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-    }
   }
 
   /**
@@ -287,26 +268,34 @@ export default class HqPogsComponent extends Component {
    */
 
   @action
-  saveCancelledPog(pog, isValid) {
-    if (!isValid) {
+  async saveCancelledPog(pog, isValid) {
+    if (!isValid || this.isSubmitting) {
       return;
     }
 
-    pog.status = STATUS_CANCELLED;
-    this._commonPogSave(pog, 'Pog has been cancelled.', () => this.pogToCancel = null);
+    this.isSubmitting = true;
+    try {
+      pog.status = STATUS_CANCELLED;
+      if (await this.saveModel.save({model: pog, message: 'Pog has been cancelled.'})) {
+        this.pogToCancel = null;
+      }
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
 
   /**
-   * Is the person on a Mentor shift? Used to alert the worker the Mentor will be picking up their
-   * pogs from the Mentor Cadre in the Mentor Shack.
+   * Is the person on a self-serve-pog shift (e.g. a Mentor shift)? Used to alert
+   * the worker that they will be picking up their pogs from their Cadre rather
+   * than at the HQ Window.
    *
    * @returns {boolean}
    */
 
   get isMentor() {
     const {onDutyEntry} = this.args;
-    return !!(onDutyEntry && MENTOR_POSITIONS.includes(onDutyEntry.position_id));
+    return !!(onDutyEntry && SELF_SERVE_POG_POSITIONS.includes(onDutyEntry.position_id));
   }
 
 }

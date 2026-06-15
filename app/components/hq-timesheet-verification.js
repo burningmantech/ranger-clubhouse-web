@@ -5,14 +5,21 @@ import {tracked} from '@glimmer/tracking';
 import {HQ_TODO_VERIFY_TIMESHEET} from "clubhouse/constants/hq-todo";
 import {STATUS_UNVERIFIED, STATUS_VERIFIED} from "clubhouse/models/timesheet";
 
+const VERIFIED_MESSAGE = 'Timesheet was successfully marked as verified.';
+const UNVERIFIED_MESSAGE = 'Timesheet was successfully un-verified.';
+const SKIPPED_MESSAGE = 'Timesheet review has been skipped.';
+
 export default class HqTimesheetVerificationComponent extends Component {
-  @service ajax;
-  @service house;
+  @service saveModel;
   @service store;
   @service toast;
 
   @tracked showCorrectionForm = false;
   @tracked entry = null;
+
+  // The entry whose verification action is currently being saved. While set,
+  // all of that entry's action buttons are disabled to prevent a double-fire.
+  @tracked pendingEntry = null;
 
   @tracked timesheetMissingEntry;
 
@@ -30,26 +37,37 @@ export default class HqTimesheetVerificationComponent extends Component {
    */
 
   get hasUnreviewedTimesheet() {
-    return !!this.args.unverifiedTimesheets.find((t) => (t.isUnverified && !t.isIgnoring));
+    return !!(this.args.unverifiedTimesheets ?? []).find((t) => (t.isUnverified && !t.isIgnoring));
   }
 
   /**
-   * Mark a timesheet entry as correct/verified.
+   * Mark a timesheet entry as correct/verified (or toggle it back to unverified).
+   * The mutation is rolled back automatically if the save fails.
    *
    * @param {TimesheetModel} entry
    */
 
   @action
   async toggleEntryVerified(entry) {
+    if (this.pendingEntry) {
+      return;
+    }
+
+    this.pendingEntry = entry;
     entry.isIgnoring = false;
-    const isVerified = entry.review_status === STATUS_VERIFIED;
-    entry.review_status = (isVerified ? STATUS_UNVERIFIED : STATUS_VERIFIED);
+    const wasVerified = entry.isVerified;
+    entry.review_status = (wasVerified ? STATUS_UNVERIFIED : STATUS_VERIFIED);
+
     try {
-      await entry.save();
-      this.toast.success(`Timesheet was successfully ${isVerified ? 'un-verified' : 'marked as verified'}.`);
-      this._finishedCallbacks();
-    } catch (response) {
-      this.house.handleErrorResponse(response);
+      const success = await this.saveModel.save({
+        model: entry,
+        message: entry.isVerified ? VERIFIED_MESSAGE : UNVERIFIED_MESSAGE,
+      });
+      if (success) {
+        this._finishedCallbacks();
+      }
+    } finally {
+      this.pendingEntry = null;
     }
   }
 
@@ -75,6 +93,10 @@ export default class HqTimesheetVerificationComponent extends Component {
 
   @action
   ignoreEntry(entry) {
+    if (this.pendingEntry) {
+      return;
+    }
+
     entry.isIgnoring = true;
     this._finishedCallbacks();
   }
@@ -86,23 +108,37 @@ export default class HqTimesheetVerificationComponent extends Component {
 
   @action
   cancelEntryCorrection() {
-    this.entry.additional_notes = null; // pseudo field, not cleared on save
-    this.showCorrectionForm = false;
+    this._resetCorrectionState();
   }
 
   /**
-   * Mark an entry as incorrect with a note.
-   *
-   * @param {TimesheetModel} model
-   * @param {boolean} isValid
+   * The correction request was submitted successfully. Close the dialog and,
+   * if every entry has now reached a reviewed/ignored state, fire the
+   * completion callbacks. Completion is based on the entry's persisted
+   * review_status, which the correction save has already updated.
    */
 
   @action
   savedEntryCorrection() {
-    this.entry.additional_notes = null; // pseudo field, not cleared on save
-    this.entry.isIgnoring = false;
-    this.showCorrectionForm = false;
+    if (this.entry) {
+      this.entry.isIgnoring = false;
+    }
+    this._resetCorrectionState();
     this._finishedCallbacks();
+  }
+
+  /**
+   * Close the correction dialog and clear its transient state. The
+   * `additional_notes` pseudo field is not cleared by a save, so it must be
+   * reset here for both the cancel and saved paths.
+   */
+
+  _resetCorrectionState() {
+    if (this.entry) {
+      this.entry.additional_notes = null; // pseudo field, not cleared on save
+    }
+    this.entry = null;
+    this.showCorrectionForm = false;
   }
 
   _finishedCallbacks() {
@@ -115,9 +151,9 @@ export default class HqTimesheetVerificationComponent extends Component {
 
   @action
   skipEntireReview() {
-    this.args.unverifiedTimesheets.filter((t) => (t.isUnverified && !t.isIgnoring)).forEach((t) => t.isIgnoring = true);
+    (this.args.unverifiedTimesheets ?? []).filter((t) => (t.isUnverified && !t.isIgnoring)).forEach((t) => t.isIgnoring = true);
     this._finishedCallbacks();
-    this.toast.success('Timesheet review has been skipped.');
+    this.toast.success(SKIPPED_MESSAGE);
   }
 
   /**
@@ -126,11 +162,17 @@ export default class HqTimesheetVerificationComponent extends Component {
 
   @action
   newTimesheetMissingRequest() {
-    this.timesheetMissingEntry = this.store.createRecord('timesheet-missing', {});
+    this.timesheetMissingEntry = this.store.createRecord('timesheet-missing', {
+      person_id: this.args.person.id,
+    });
   }
 
   @action
   closeTimesheetMissing() {
+    // Discard an abandoned (never-saved) record so it does not linger in the store.
+    if (this.timesheetMissingEntry?.isNew) {
+      this.timesheetMissingEntry.deleteRecord();
+    }
     this.timesheetMissingEntry = null;
   }
 }

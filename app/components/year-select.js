@@ -3,10 +3,9 @@ import {service} from '@ember/service';
 import {isEmpty} from '@ember/utils';
 
 export default class YearSelectComponent extends Component {
-  @service house;
-
+  @service session;
   get yearOptions() {
-    const currentYear = this.house.currentYear();
+    const currentYear = this.session.currentYear();
     let years = this.args.years;
     const minYear = this.args.minYear ?? 1998;
     const {skipPandemic} = this.args;

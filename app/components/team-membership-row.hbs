@@ -4,6 +4,7 @@
   </td>
   <td class="roster-col-fixed roster-col-callsign">
     <PersonLink @person={{@person}} />
+    &lt;{{@person.status}}&gt;
   </td>
   <td class="roster-col-fixed roster-col-member text-center text-nowrap">
     {{#if @person.revoked}}
@@ -11,12 +12,18 @@
     {{else if @person.is_member}}
       <div class="roster-member-cell">
         <UiBadge @type="success">member</UiBadge>
-        <a href {{on-click @onRevoke @person}} class="roster-revoke-link">revoke</a>
       </div>
     {{else}}
-      <span class="text-danger small">
-        {{fa-icon "xmark" fixed=true right=1}}not member
-      </span>
+      <div class="roster-member-cell">
+        <UiBadge @type="danger">not member</UiBadge>
+      </div>
+    {{/if}}
+  </td>
+  <td class="roster-col-fixed roster-col-last-shift text-center">
+    {{#if this.lastWorkedOn}}
+      <span class="roster-last-worked">{{year-format this.lastWorkedOn}}</span>
+    {{else}}
+      <span class="roster-status-never-worked">NS</span>
     {{/if}}
   </td>
 
@@ -27,22 +34,20 @@
           <div class="roster-cell-granted">
             {{#if g.joined_on}}
               <span class="roster-grant-date">
-                {{fa-icon "check" fixed=true}} {{mdy-format g.joined_on}}
+                {{fa-icon "check" fixed=true}} {{ymd-format g.joined_on}}
               </span>
             {{else}}
               <span class="roster-grant-date-unknown">
-                {{fa-icon "check" fixed=true}} date unknown
+                {{fa-icon "check" fixed=true right=1}} unknown
               </span>
             {{/if}}
             {{#if g.worked_on}}
-              <span class="roster-last-worked"
-                    title={{if g.is_training "Last trained" (if g.is_trainer "Last taught" "Last rangered")}}>
+              <span class="roster-last-worked" title={{this.workedTitle g true}}>
                 {{year-format g.worked_on}}
               </span>
             {{else}}
-              <span class="roster-status-nw"
-                    title={{if g.is_training "Never trained" (if g.is_trainer "Never taught" "Never rangered")}}>
-                NW
+              <span class="roster-status-nw" title={{this.workedTitle g false}}>
+                NS
               </span>
             {{/if}}
           </div>

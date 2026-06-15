@@ -1,127 +1,59 @@
 <h1>{{this.year}} Potential Alphas</h1>
 
-<FormRow>
-  <FormLabel @auto={{true}}>Filter By:</FormLabel>
-  <div class="col-auto mt-2">
-    <div class="form-check form-check-inline">
+Any prospective or alpha who has signed up for training in the current year is shown here, sorted worst-first.
+<p class="mb-2">
+  {{#if this.personnelIssuesCount}}
+    <b class="text-danger">The Personnel Flag has been raised on {{pluralize this.personnelIssuesCount "person"}}.</b>
+  {{else}}
+    <div class="text-success">{{fa-icon "check" right=1}} Congratulations! No one has the Personnel Flag raised.</div>
+  {{/if}}
+</p>
+
+<div class="roster-controls">
+  <span class="fw-semibold small">Filter By:</span>
+  <div class="roster-controls-divider"></div>
+  <div class="d-flex align-items-center flex-wrap gap-3">
+    <div class="form-check form-check-inline m-0">
       <Input @type="checkbox" @checked={{this.untrained}} id="untrained-flag" class="form-check-input"/>
       <label for="untrained-flag" class="form-check-label">Untrained</label>
     </div>
-    <div class="form-check form-check-inline">
+    <div class="form-check form-check-inline m-0">
       <Input @type="checkbox" @checked={{this.rrnFlagged}} id="rrn-flag" class="form-check-input"/>
       <label for="rrn-flag" class="form-check-label">RRN Flagged</label>
     </div>
-    <div class="form-check form-check-inline">
+    <div class="form-check form-check-inline m-0">
       <Input @type="checkbox" @checked={{this.vcFlagged}} id="vc-flag" class="form-check-input"/>
       <label for="vc-flag" class="form-check-label">VC Flagged</label>
     </div>
-    <div class="form-check form-check-inline">
+    <div class="form-check form-check-inline m-0">
       <Input @type="checkbox" @checked={{this.trainingFlagged}} id="trained-flag" class="form-check-input"/>
       <label for="trained-flag" class="form-check-label">Training Flagged</label>
     </div>
-    <div class="form-check form-check-inline">
+    <div class="form-check form-check-inline m-0">
       <Input @type="checkbox" @checked={{this.mentorFlagged}} id="mentor-flag" class="form-check-input"/>
       <label for="mentor-flag" class="form-check-label">Mentor Flagged</label>
     </div>
-    <div class="form-check form-check-inline">
+    <div class="form-check form-check-inline m-0">
       <Input @type="checkbox" @checked={{this.personnelFlagged}} id="personnel-flag" class="form-check-input"/>
       <label for="personnel-flag" class="form-check-label">Personnel Flagged</label>
     </div>
   </div>
-</FormRow>
+  <div class="roster-controls-divider"></div>
+  <span class="roster-controls-count">Showing {{this.filteredPeople.length}} of {{pluralize this.mentees.length
+                                                                                            "potential alpha"}}</span>
+</div>
 
-<p>
-  Any prospective or alpha who has signed up for training in the current year will be shown here.
-</p>
-<p>
-  Legend: RRN Rank = Ranger Regional Network. VC = Volunteer Coordinators.<br>
-  Rankings: 1/Green = Above Avg., 2/Normal = Average, 3/Yellow = Below Avg., 4/FLAG = Major issue.
-</p>
-<p>
-  {{#if this.personnelIssuesCount}}
-    <b class="text-danger">The Personnel Flag has been raised on {{pluralize this.personnelIssuesCount "person"}}.</b>
-  {{else}}
-    Congratulations! No one has the Personnel Flag raised.
-  {{/if}}
-</p>
 
-Showing {{this.viewPotentials.length}} of {{pluralize this.mentees.length "potential alpha"}}
-<UiTable>
-  <thead>
-  <tr>
-    <th class="w-15">Callsign / Name / Gender</th>
-    <th class="w-10">Mentor History</th>
-    <th class="w-75">Training &amp; Notes</th>
-  </tr>
-  </thead>
-  <tbody>
-  {{#each this.viewPotentials key="id" as |person|}}
-    <tr>
-      <td class="w-15">
-        {{#if person.personnel_issue}}
-          <b class="text-danger">{{fa-icon "flag"}} PERSONNEL FLAG</b><br>
-        {{/if}}
-        <PersonLink @person={{person}} /> &lt;{{person.status}}&gt;<br>
-        {{person.first_name}} {{person.last_name}}<br>
-          {{this.genderIdentityLabel person}}
-      </td>
-      <td class="w-10">
-        {{#each person.mentor_history as |history|}}
-          {{history.year}}
-          {{#if (eq history.status "bonk")~}}
-            Bonk
-          {{~else if (eq history.status "self-bonk")~}}
-            Self-Bonk
-          {{~else if (eq history.status "pending")~}}
-            Pending
-            {{~else~}}
-            Pass
-          {{~/if}}<br>
-        {{else}}
-          <i>no history</i>
-        {{/each}}
-      </td>
-      <td class="w-75">
-        {{#if person.personnel_issue}}
-          <div class="mb-2">
-            <h4 class="text-danger">{{fa-icon "flag"}} PERSONNEL FLAG RAISED &mdash; TAKE NO ACTION UNTIL RESOLVED</h4>
-          </div>
-        {{/if}}
-        FKA:
-        {{#if person.fkas}}
-          {{join person.fkas ", "}}
-        {{else}}
-          <i>none</i>
-        {{/if}}
-        {{#if person.trained}}
-          <div class="text-success">{{fa-icon "check"}} Trained</div>
-        {{else}}
-          <div class="text-danger">{{fa-icon "times"}} NOT Trained</div>
-        {{/if}}
-        <b>Training</b>
-        <IntakeTraining @trainings={{person.trainings}} @person={{person}} />
-        <b>Personnel Notes</b><br>
-        <IntakeNotes @type="personnel" @person={{person}} @viewYear={{@year}}  />
-        <b>RRN Notes</b><br>
-        <IntakeNotes @type="rrn" @person={{person}} @viewYear={{@year}}  />
-        <b>VC Notes</b><br>
-        <IntakeNotes @type="vc" @person={{person}} @viewYear={{@year}} />
-        <b>Mentor Notes</b><br>
-        <IntakeNotes @type="mentor" @person={{person}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
-      </td>
-    </tr>
-  {{else}}
-    <tr>
-      <td colspan="7">
-        <b class="text-danger">
-          {{#if this.mentees}}
-            No potential Alphas matched the filter criteria of {{join this.filterNames ", "}}.
-          {{else}}
-            No potential Alphas were found for this year.
-          {{/if}}
-        </b>
-      </td>
-    </tr>
-  {{/each}}
-  </tbody>
-</UiTable>
+{{#if this.filteredPeople.length}}
+  <UnifiedFlagging @people={{this.filteredPeople}} @year={{this.year}} @showGender={{true}}/>
+{{else}}
+  <p>
+    <b class="text-danger">
+      {{#if this.mentees}}
+        No potential Alphas matched the filter criteria of {{join this.filterNames ", "}}.
+      {{else}}
+        No potential Alphas were found for this year.
+      {{/if}}
+    </b>
+  </p>
+{{/if}}

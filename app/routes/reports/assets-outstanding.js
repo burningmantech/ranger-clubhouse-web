@@ -1,21 +1,20 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
-import RSVP from 'rsvp';
 
 export default class ReportsAssetsOutstandingRoute extends ClubhouseRoute {
   queryParams = {
     year: { refreshModel: true }
   };
 
-  model(params) {
+  async model(params) {
     const year = requestYear(params);
 
-    return RSVP.hash({
-      assets: this.ajax.request('asset', {
+    return {
+      assets: (await this.ajax.request('asset', {
         data: { year, checked_out: 1 },
-      }).then((result) => result.asset ),
+      })).asset,
       year
-    });
+    };
   }
 
   setupController(controller, model) {

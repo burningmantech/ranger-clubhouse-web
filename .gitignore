@@ -31,5 +31,8 @@
 /package-lock.json.ember-try
 /yarn.lock.ember-try
 
+# AI Agents
+/proofshot-artifacts
+
 # broccoli-debug
 /DEBUG/

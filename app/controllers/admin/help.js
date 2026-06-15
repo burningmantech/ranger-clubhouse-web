@@ -27,30 +27,31 @@ export default class AdminHelpController extends ClubhouseController {
   }
 
   @action
-  saveHelp(model, isValid) {
+  async saveHelp(model, isValid) {
     if (!isValid)
       return;
 
     const isNew = model.isNew;
 
-    model.save().then(() => {
-      this.toast.success(`Help document was successfully ${isNew ? 'created' : 'updated'}.`);
+    if (await this.saveModel.save({model, message: `Help document was successfully ${isNew ? 'created' : 'updated'}.`})) {
       this.entry = null;
       this.documents.update().then(() => this._sortDocuments());
-    }).catch((response) => {
-      this.house.handleErrorResponse(response);
-      this.entry.rollbackAttributes();
-    });
+    } else {
+      this.entry?.rollbackAttributes();
+    }
   }
 
   @action
   deleteHelp() {
     this.modal.confirm(`Confirm help document deletion`, `Are you sure you want to delete "${this.entry.slug}?"`,
-      () => {
-        this.entry.destroyRecord().then(() => {
+      async () => {
+        try {
+          await this.entry.destroyRecord();
           this.entry = null;
           this.toast.success(`Help document was successfully deleted.`);
-        }).catch((response) => this.house.handleErrorResponse(response));
+        } catch (response) {
+          this.errors.handleErrorResponse(response);
+        }
       });
   }
 

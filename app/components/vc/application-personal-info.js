@@ -1,5 +1,5 @@
 import Component from '@glimmer/component';
-import {validatePresence, validateFormat} from 'ember-changeset-validations/validators';
+import {validatePresence, validateFormat, validateLength} from 'ember-changeset-validations/validators';
 import {CountryOptions, StateLabels, StateOptions} from 'clubhouse/constants/countries';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
@@ -9,7 +9,7 @@ import validateState from "clubhouse/validators/state";
 
 export default class VcApplicationPersonalInfoComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service toast;
 
   @tracked stateOptions = null;
@@ -26,7 +26,7 @@ export default class VcApplicationPersonalInfoComponent extends Component {
     postal_code: [validatePresence({presence: true})],
     country: [validatePresence({presence: true})],
 
-    phone: [validatePresence(true), validateFormat({min: 9})],
+    phone: [validatePresence(true), validateLength({min: 9})],
     email: [validatePresence(true), validateFormat({type: 'email'})],
   };
 
@@ -59,7 +59,7 @@ export default class VcApplicationPersonalInfoComponent extends Component {
       await application.reload();
       this.toast.success('The application has been approved, and the applicant emailed.');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

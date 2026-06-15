@@ -8,6 +8,7 @@ import currentYear from 'clubhouse/utils/current-year';
 
 export default class MeTimesheetReviewCommonComponent extends Component {
   @service modal;
+  @service saveModel;
   @service session;
   @service shiftManage;
   @service toast;
@@ -36,12 +37,8 @@ export default class MeTimesheetReviewCommonComponent extends Component {
   @action
   async markCorrectAction(timesheet) {
     timesheet.review_status = STATUS_VERIFIED;
-    try {
-      await timesheet.save();
+    if (await this.saveModel.save({model: timesheet, message: 'The entry has been marked as correct.'})) {
       this.args.onVerified?.();
-      this.toast.success('The entry has been marked as correct.');
-    } catch (response) {
-      this.house.handleErrorResponse(response);
     }
   }
 

@@ -16,6 +16,11 @@ export default class MessageNewComponent extends Component {
 
   @tracked choice;
 
+  // Defaults to a person message; only changed when the sender explicitly picks
+  // "An Acquaintance". Declared so it can never be left undefined and clobber the
+  // model's sender_type default on submit.
+  @tracked senderType = SENDER_TYPE_PERSON;
+
   personMessageValidations = PersonMessageValidations;
 
   constructor() {
@@ -40,7 +45,7 @@ export default class MessageNewComponent extends Component {
     }
 
     model.sender_type = this.senderType;
-    this.args.sendMessage(model, true, null, null, this.args.message);
+    this.args.sendMessage(model, true, {record: this.args.message});
   }
 
   @action
@@ -93,11 +98,13 @@ export default class MessageNewComponent extends Component {
 
   @action
   fromNameEntered() {
-    if (this.fromName?.length < 5) {
+    const name = this.args.message.message_from;
+    if ((name?.length ?? 0) < 5) {
       this.fromNameError = "Enter 5 or more characters.";
       return;
     }
 
+    this.fromNameError = null;
     this.askForSender = false;
   }
 

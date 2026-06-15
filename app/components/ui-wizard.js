@@ -7,7 +7,6 @@ import { TrackedArray } from 'tracked-built-ins';
 
 export default class UiWizardComponent extends Component {
   @service session;
-  @service house;
 
   @tracked stepCount = 0;
   @tracked nextLabel = this.args.nextLabel ?? "Next";

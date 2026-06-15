@@ -30,8 +30,7 @@ const CSV_COLUMNS = [
 ];
 
 export default class VcApplicationFailedTableComponent extends Component {
-  @service house;
-
+  @service download;
   @action
   exportTable() {
     const {records} = this.args;
@@ -40,7 +39,7 @@ export default class VcApplicationFailedTableComponent extends Component {
       r.api_error_string = this.apiErrorToMessage(r.api_error);
     });
 
-    this.house.downloadCsv('clubhouse-application-errors.csv', CSV_COLUMNS, records)
+    this.download.downloadCsv('clubhouse-application-errors.csv', CSV_COLUMNS, records)
   }
 
   @action

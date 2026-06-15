@@ -18,8 +18,7 @@ class Motd {
 export default class MeMotd extends Component {
   @service ajax;
   @service toast;
-  @service house;
-
+  @service errors;
   @tracked motds;
   @tracked showMotdDialog = false;
   @tracked motd = null;
@@ -51,7 +50,7 @@ export default class MeMotd extends Component {
       motd.has_read = true;
       this.toast.success('Announcement marked as read.');
     } catch (response) {
-      this.house.handleErrorResponse(response)
+      this.errors.handleErrorResponse(response)
     } finally {
       motd.isMarking = false;
     }

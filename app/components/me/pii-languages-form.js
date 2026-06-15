@@ -8,7 +8,8 @@ import {LANGUAGE_CUSTOM, ProficiencyOptions} from "clubhouse/models/person-langu
 
 export default class MePiiLanguagesFormComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
+  @service saveModel;
   @service modal;
   @service store;
   @service toast;
@@ -37,7 +38,7 @@ export default class MePiiLanguagesFormComponent extends Component {
       const {languages} = await this.ajax.request('person-language/common-languages');
       this.commonLanguages = languages;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -85,18 +86,11 @@ export default class MePiiLanguagesFormComponent extends Component {
       return;
     }
     const {isNew} = this.entry;
-    try {
-      this.isSubmitting = true;
-      await model.save();
+    if (await this.saveModel.save({model, message: `The language was successfully ${isNew ? 'added' : 'updated'}.`, owner: this})) {
       if (isNew) {
         this.args.languages.update();
       }
-      this.toast.success(`The language was successfully ${isNew ? 'added' : 'updated'}.`);
       this.entry = null;
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 
@@ -110,7 +104,7 @@ export default class MePiiLanguagesFormComponent extends Component {
           await this.args.languages.update();
           this.toast.success('The language has been deleted.');
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }
