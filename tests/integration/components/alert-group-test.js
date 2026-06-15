@@ -1,42 +1,32 @@
-import { module, test } from 'qunit';
-import { setupRenderingTest } from 'ember-qunit';
-import { render } from '@ember/test-helpers';
-import hbs from 'htmlbars-inline-precompile';
+import {module, test} from 'qunit';
+import {setupRenderingTest} from 'ember-qunit';
+import {render} from '@ember/test-helpers';
+import {hbs} from 'ember-cli-htmlbars';
 
-module('Integration | Component | alert-group', function(hooks) {
+// Hoisted so the fixture and the assertions share the exact same strings and
+// cannot drift apart (the previous test asserted doesNotIncludeText against a
+// phone number with a trailing digit the fixture never used, making the
+// assertion vacuously true).
+const OFF_PLAYA_PHONE = '444-444-4444';
+const ON_PLAYA_PHONE = '555-555-555';
+const EMAIL = 'ranger@example.com';
+
+module('Integration | Component | alert-group', function (hooks) {
   setupRenderingTest(hooks);
 
-  function setupAlertTest(props) {
-    props.set('heading', 'Test Heading');
-    props.set('description', 'Test Description');
-    props.set('email', 'ranger@example.com');
-    props.set('numbers', { off_playa: { phone: '444-444-4444' }, on_playa: { phone: '555-555-555' } });
-  }
-
-  test('it renders off playa only', async function(assert) {
-    setupAlertTest(this);
-
-    this.set('group', [
-      { title: 'Title1', description: 'Description1', on_playa: true }
-    ]);
-
-
-    await render(hbs`<AlertGroup @group={{this.group}}
-            @email={{this.email}} @numbers={{this.numbers}} @heading={{this.heading}}
-            @description={{this.description}} />`);
-
-    const row = assert.dom('div.row');
-    row.exists();
-    row.hasText(/Title1/);
-    row.hasText(/Description1/);
-    row.hasText(/555-555-555/);
-    row.doesNotIncludeText('444-444-4444');
+  hooks.beforeEach(function () {
+    this.set('heading', 'Test Heading');
+    this.set('description', 'Test Description');
+    this.set('email', EMAIL);
+    this.set('numbers', {
+      off_playa: {phone: OFF_PLAYA_PHONE},
+      on_playa: {phone: ON_PLAYA_PHONE},
+    });
   });
 
-  test('it renders on playa only', async function(assert) {
-    setupAlertTest(this);
+  test('renders the on-playa phone when the alert is on_playa', async function (assert) {
     this.set('group', [
-      { title: 'Title1', description: 'Description1', on_playa: false }
+      {title: 'Title1', description: 'Description1', on_playa: true},
     ]);
 
     await render(hbs`<AlertGroup @group={{this.group}}
@@ -45,14 +35,30 @@ module('Integration | Component | alert-group', function(hooks) {
 
     const row = assert.dom('div.row');
     row.exists();
-    row.hasText(/444-444-4444/);
-    row.doesNotIncludeText('555-555-5555');
+    row.includesText('Title1');
+    row.includesText('Description1');
+    row.includesText(ON_PLAYA_PHONE);
+    row.doesNotIncludeText(OFF_PLAYA_PHONE);
   });
 
-  test('it renders not optout', async function(assert) {
-    setupAlertTest(this);
+  test('renders the off-playa phone when the alert is not on_playa', async function (assert) {
     this.set('group', [
-      { title: 'Title1', description: 'Description1', on_playa: true, no_opt_out: true }
+      {title: 'Title1', description: 'Description1', on_playa: false},
+    ]);
+
+    await render(hbs`<AlertGroup @group={{this.group}}
+            @email={{this.email}} @numbers={{this.numbers}} @heading={{this.heading}}
+            @description={{this.description}} />`);
+
+    const row = assert.dom('div.row');
+    row.exists();
+    row.includesText(OFF_PLAYA_PHONE);
+    row.doesNotIncludeText(ON_PLAYA_PHONE);
+  });
+
+  test('renders opt-out notices and no phone/email when no_opt_out is set', async function (assert) {
+    this.set('group', [
+      {title: 'Title1', description: 'Description1', on_playa: true, no_opt_out: true},
     ]);
 
     await render(hbs`<AlertGroup @group={{this.group}}
@@ -63,14 +69,13 @@ module('Integration | Component | alert-group', function(hooks) {
     row.exists();
     row.includesText('SMS cannot be opted out of');
     row.includesText('Email cannot be opted out of');
-    row.doesNotIncludeText('444-444-4444');
-    row.doesNotIncludeText('555-555-5555');
+    row.doesNotIncludeText(OFF_PLAYA_PHONE);
+    row.doesNotIncludeText(ON_PLAYA_PHONE);
   });
 
-  test('it renders email only', async function(assert) {
-    setupAlertTest(this);
+  test('renders only the email when email_only is set', async function (assert) {
     this.set('group', [
-      { title: 'Title1', description: 'Description1', email_only: true }
+      {title: 'Title1', description: 'Description1', email_only: true},
     ]);
 
     await render(hbs`<AlertGroup @group={{this.group}}
@@ -79,14 +84,13 @@ module('Integration | Component | alert-group', function(hooks) {
 
     const row = assert.dom('div.row');
     row.exists();
-    row.includesText('ranger@example.com');
+    row.includesText(EMAIL);
     row.includesText('only email used');
   });
 
-  test('it renders sms only', async function(assert) {
-    setupAlertTest(this);
+  test('renders only SMS and omits the email when sms_only is set', async function (assert) {
     this.set('group', [
-      { title: 'Title1', description: 'Description1', sms_only: true }
+      {title: 'Title1', description: 'Description1', sms_only: true, on_playa: false},
     ]);
 
     await render(hbs`<AlertGroup @group={{this.group}}
@@ -95,7 +99,44 @@ module('Integration | Component | alert-group', function(hooks) {
 
     const row = assert.dom('div.row');
     row.exists();
-    row.doesNotIncludeText('ranger@example.com');
+    row.doesNotIncludeText(EMAIL);
     row.includesText('only SMS used');
+  });
+
+  test('renders one row per alert when the group has multiple alerts', async function (assert) {
+    this.set('group', [
+      {title: 'First Alert', description: 'First Description', on_playa: true},
+      {title: 'Second Alert', description: 'Second Description', on_playa: false},
+    ]);
+
+    await render(hbs`<AlertGroup @group={{this.group}}
+            @email={{this.email}} @numbers={{this.numbers}} @heading={{this.heading}}
+            @description={{this.description}} />`);
+
+    assert.dom('div.row').exists({count: 2});
+    assert.dom(this.element).includesText('First Alert');
+    assert.dom(this.element).includesText('Second Alert');
+    // A separator <hr> is rendered between (but not before) alerts.
+    assert.dom('hr').exists({count: 1});
+  });
+
+  test('renders the heading but no rows when the group is empty', async function (assert) {
+    this.set('group', []);
+
+    await render(hbs`<AlertGroup @group={{this.group}}
+            @email={{this.email}} @numbers={{this.numbers}} @heading={{this.heading}}
+            @description={{this.description}} />`);
+
+    assert.dom('.card-header').includesText('Test Heading - Test Description');
+    assert.dom('div.row').doesNotExist();
+  });
+
+  test('renders the heading but no rows when the group is undefined', async function (assert) {
+    await render(hbs`<AlertGroup @group={{this.group}}
+            @email={{this.email}} @numbers={{this.numbers}} @heading={{this.heading}}
+            @description={{this.description}} />`);
+
+    assert.dom('.card-header').includesText('Test Heading - Test Description');
+    assert.dom('div.row').doesNotExist();
   });
 });

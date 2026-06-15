@@ -17,6 +17,6 @@ export default class VcShinyPennyReportController extends ClubhouseController {
 
   @action
   exportToCSV() {
-    this.house.downloadCsv(`${this.year}-shiny-pennies.csv`, CSV_COLUMNS, this.people);
+    this.download.downloadCsv(`${this.year}-shiny-pennies.csv`, CSV_COLUMNS, this.people);
   }
 }

@@ -46,7 +46,7 @@ export default class PersonAwardsController extends ClubhouseController {
 
   @cached
   get yearOptions() {
-    const currentYear = this.house.currentYear();
+    const currentYear = this.session.currentYear();
     const years = [];
     for (let year = currentYear; year >= 1996; year--) {
       years.push(year);
@@ -106,24 +106,17 @@ export default class PersonAwardsController extends ClubhouseController {
       return;
     }
 
-    this.isSubmitting = true;
-    try {
-      await model.save();
-      this.toast.success('Award successfully saved.');
+    if (await this.saveModel.save({model, message: 'Award successfully saved.', owner: this})) {
       await this.personAwards.update();
       await this.person.reload();
       this.entry = null;
-    } catch (e) {
-      this.house.handleErrorResponse(e);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 
   _setupAward(type) {
     this.entry = this.store.createRecord('person-award', {
       person_id: this.person.id,
-      year: this.house.currentYear,
+      year: this.session.currentYear,
     });
 
     this.entryType = type;
@@ -141,7 +134,7 @@ export default class PersonAwardsController extends ClubhouseController {
           await this.personAwards.update();
           await this.person.reload();
         } catch (e) {
-          this.house.handleErrorResponse(e);
+          this.errors.handleErrorResponse(e);
         } finally {
           this.isSubmitting = false;
         }
@@ -159,7 +152,7 @@ export default class PersonAwardsController extends ClubhouseController {
           await this.person.reload();
           this.toast.success('Award rebuild was successfully.');
         } catch (e) {
-          this.house.handleErrorResponse(e);
+          this.errors.handleErrorResponse(e);
         } finally {
           this.isSubmitting = false;
         }

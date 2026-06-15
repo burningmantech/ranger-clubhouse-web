@@ -28,26 +28,26 @@
 
   {{! Workflow Presets }}
   <div class="vc-app-presets d-print-none">
-    <button type="button"
-            class="btn btn-sm {{if (eq this.activePreset 'my-queue') 'btn-primary' 'btn-outline-secondary'}}"
-            {{on "click" (fn this.applyPreset "my-queue")}}>
+    <UiButton @size="sm"
+              @type={{if (eq this.activePreset "my-queue") "primary" "secondary"}}
+              @onClick={{fn this.applyPreset "my-queue"}}>
       {{fa-icon "user" right=1}} My Queue
-    </button>
-    <button type="button"
-            class="btn btn-sm {{if (eq this.activePreset 'needs-triage') 'btn-primary' 'btn-outline-secondary'}}"
-            {{on "click" (fn this.applyPreset "needs-triage")}}>
+    </UiButton>
+    <UiButton @size="sm"
+              @type={{if (eq this.activePreset "needs-triage") "primary" "secondary"}}
+              @onClick={{fn this.applyPreset "needs-triage"}}>
       {{fa-icon "inbox" right=1}} Needs Triage
-    </button>
-    <button type="button"
-            class="btn btn-sm {{if (eq this.activePreset 'awaiting-response') 'btn-primary' 'btn-outline-secondary'}}"
-            {{on "click" (fn this.applyPreset "awaiting-response")}}>
+    </UiButton>
+    <UiButton @size="sm"
+              @type={{if (eq this.activePreset "awaiting-response") "primary" "secondary"}}
+              @onClick={{fn this.applyPreset "awaiting-response"}}>
       {{fa-icon "hourglass-half" right=1}} Awaiting Response
-    </button>
-    <button type="button"
-            class="btn btn-sm {{if (eq this.activePreset 'ready-for-callsign') 'btn-primary' 'btn-outline-secondary'}}"
-            {{on "click" (fn this.applyPreset "ready-for-callsign")}}>
+    </UiButton>
+    <UiButton @size="sm"
+              @type={{if (eq this.activePreset "ready-for-callsign") "primary" "secondary"}}
+              @onClick={{fn this.applyPreset "ready-for-callsign"}}>
       {{fa-icon "id-badge" right=1}} Ready for Callsign
-    </button>
+    </UiButton>
   </div>
 
   {{! Filter Bar }}

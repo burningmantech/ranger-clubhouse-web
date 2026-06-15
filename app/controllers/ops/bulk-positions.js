@@ -54,9 +54,9 @@ export default class OpsBulkPositionsController extends ClubhouseController {
 
       this.errorCount = people.filter((p) => p.errors).length;
       this.successCount = people.filter((p) => p.success).length;
-      this.house.scrollToTop();
+      this.scroll.scrollToTop();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

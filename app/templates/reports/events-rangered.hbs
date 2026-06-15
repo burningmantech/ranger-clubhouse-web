@@ -1,0 +1,52 @@
+<h1>Events Rangered Report</h1>
+
+<p>
+  <RadioGroup @options={{this.showOptions}} @onChange={{set-value this 'showAll'}} @value={{this.showAll}} />
+</p>
+
+<p>
+  Report on people's service based on years rangered. The "Signed Up" column
+  indicates if ANY shift sign up (training, dirt shift, etc) was found for the
+  current year which may indicate the person will be working the event.
+</p>
+
+<p>
+  <UiExportToCSVButton @onClick={{this.exportToCsv}} />
+</p>
+
+Showing {{this.totalPeople}} people over {{this.events.length}} years.
+{{#each this.events_rangered as |event|}}
+  <div class="max-width-700">
+    <UiAccordion as |accordion|>
+      <accordion.title>{{pluralize event.years "year"}} - {{pluralize event.people.length "person"}}</accordion.title>
+      <accordion.body>
+        <UiTable>
+          <thead>
+          <tr>
+            <th class="w-20">Callsign</th>
+            <th class="w-25">Name</th>
+            <th class="w-10">Status</th>
+            <th>First Year</th>
+            <th>Last Year</th>
+            <th>Signed Up {{this.signed_up_year}}</th>
+          </tr>
+          </thead>
+          <tbody>
+          {{#each event.people key="id" as |person| }}
+            <tr>
+              <td class="w-20">
+                <PersonLink @person={{person}} />
+              </td>
+              <td class="w-25">{{person.first_name}} {{person.last_name}}</td>
+              <td class="w-10">{{person.status}}</td>
+              <td>{{person.first_year}}</td>
+              <td>{{person.last_year}}</td>
+              <td class="text-center">{{yesno person.signed_up}}</td>
+            </tr>
+          {{/each}}
+          </tbody>
+        </UiTable>
+      </accordion.body>
+    </UiAccordion>
+  </div>
+{{/each}}

@@ -48,20 +48,21 @@ export default class AdminBulkUploadController extends ClubhouseController {
     this.uploadHelp = option.help;
   }
 
-  _submitCallsigns(commit) {
+  async _submitCallsigns(commit) {
     this.toast.clear();
 
     this.isSubmitting = true;
     this.isCommitting = commit;
     this.actionResults = [];
-    this.ajax.request('bulk-upload', {
-      method: 'POST',
-      data: {
-        action: this.uploadAction,
-        records: this.records,
-        commit
-      }
-    }).then((results) => {
+    try {
+      const results = await this.ajax.request('bulk-upload', {
+        method: 'POST',
+        data: {
+          action: this.uploadAction,
+          records: this.records,
+          commit
+        }
+      });
       this.actionResults = results.results;
       this.resultsCommitted = results.commit;
       this.commit = false;
@@ -79,11 +80,12 @@ export default class AdminBulkUploadController extends ClubhouseController {
           this.toast.error('1 or more uploads were not successful.');
         }
       }
-    }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => {
-        this.isSubmitting = false;
-        this.isCommitting = false;
-      });
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+      this.isCommitting = false;
+    }
   }
 
   @action

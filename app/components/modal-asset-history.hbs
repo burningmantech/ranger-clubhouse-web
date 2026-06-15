@@ -14,7 +14,7 @@
       <tbody>
       {{#if this.isLoading}}
         <tr>
-          <td colspan="5">
+          <td colspan="6">
             <LoadingIndicator @text="Loading asset history"/>
           </td>
         </tr>
@@ -42,17 +42,23 @@
                 {{shift-format row.checked_in}}
               </td>
               <td>
-                <PersonLink @person={{row.check_in_person}} />
+                {{#if row.check_in_person}}
+                  <PersonLink @person={{row.check_in_person}} />
+                {{else}}
+                  -
+                {{/if}}
               </td>
             {{else}}
               <td colspan="2" class="text-center">
-                <UiButton @size="sm" @onClick={{fn this.checkin row}}>Check In</UiButton>
+                <UiButton @size="sm"
+                          @onClick={{fn this.checkin row}}
+                          @disabled={{this.isSubmitting row}}>Check In</UiButton>
               </td>
             {{/if}}
           </tr>
         {{else}}
           <tr>
-            <td colspan="5" class="text-danger">
+            <td colspan="6" class="text-danger">
               No asset history was found - this asset has not been checked out.
             </td>
           </tr>

@@ -15,7 +15,7 @@ export default class MePasswordController extends ClubhouseController {
         validateLength({max: 30, message: 'The password may only be 30 characters or less.'})
       ],
       password_confirmation: [
-        validateConfirmation({on: 'password', message: 'The password do not match.'})
+        validateConfirmation({on: 'password', message: 'The passwords do not match.'})
       ]
     };
 
@@ -30,7 +30,7 @@ export default class MePasswordController extends ClubhouseController {
   }
 
   @action
-  submitAction(model, isValid) { // eslint-disable-line no-unused-vars
+  async submitAction(model, isValid) { // eslint-disable-line no-unused-vars
     if (!isValid) {
       return;
     }
@@ -48,13 +48,17 @@ export default class MePasswordController extends ClubhouseController {
     }
 
     this.isSubmitting = true;
-    return this.ajax.request(`person/${personId}/password`, {method: 'PATCH', data: passwords}).then(() => {
+    try {
+      await this.ajax.request(`person/${personId}/password`, {method: 'PATCH', data: passwords});
       this.session.tempLoginToken = null;
       this.session.isWelcome = false;
       this.toast.success('Password has been successfully changed.');
       this.router.transitionTo('me.homepage');
-    }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action

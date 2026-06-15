@@ -69,9 +69,9 @@ export default class AdminPositionSanityCheckerController extends ClubhouseContr
       } else {
         this.toast.success('The repair was successful!');
       }
-      this.house.scrollToElement(`#${thing}-table`);
+      this.scroll.scrollToElement(`#${thing}-table`);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

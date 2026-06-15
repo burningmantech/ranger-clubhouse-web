@@ -6,7 +6,7 @@ import {tracked} from '@glimmer/tracking';
 export default class PhotoUploadComponent extends Component {
   @service ajax;
   @service session;
-  @service house;
+  @service errors;
   @service toast;
 
   @tracked showUploadDialog = false;
@@ -51,19 +51,22 @@ export default class PhotoUploadComponent extends Component {
       !navigator.mediaDevices.enumerateDevices) {
       this.hasCamera = false;
     } else {
-      navigator.mediaDevices.enumerateDevices().then(devices => {
-        if (devices.some(device => 'videoinput' === device.kind)) {
-          if (!this.hasCamera) {
-            //I can haz camera!
-            this.hasCamera = true;
-          }
-        }
-      });
+      this._detectCamera();
     }
 
     if (this.args.isPersonManage) {
       // Skip showing guidelines
       this.step = 'source';
+    }
+  }
+
+  async _detectCamera() {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    if (devices.some(device => 'videoinput' === device.kind)) {
+      if (!this.hasCamera) {
+        //I can haz camera!
+        this.hasCamera = true;
+      }
     }
   }
 
@@ -113,7 +116,7 @@ export default class PhotoUploadComponent extends Component {
       this.args.refreshPhoto();
       this.args.closeAction();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -145,7 +148,7 @@ export default class PhotoUploadComponent extends Component {
       this.step = 'edit-photo';
     } catch (response) {
       element.value = null;
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

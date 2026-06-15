@@ -1,6 +1,4 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import {set} from '@ember/object';
-import RSVP from 'rsvp';
 import {ADMIN, EDIT_BMIDS} from 'clubhouse/constants/roles';
 import {
   ACTIVE,
@@ -32,16 +30,16 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
     filter: {refreshModel: true},
   };
 
-  model(params) {
+  async model(params) {
     const year = requestYear(params);
     const filter = params.filter || 'special';
 
-    return RSVP.hash({
+    return {
       year,
       filter,
-      bmids: this.ajax.request(`bmid/manage`, {data: {year, filter}}).then((result) => result.bmids),
-      exportList: this.ajax.request('bmid/exports', {data: {year}}).then((result) => result.exports)
-    });
+      bmids: (await this.ajax.request(`bmid/manage`, {data: {year, filter}})).bmids,
+      exportList: (await this.ajax.request('bmid/exports', {data: {year}})).exports
+    };
   }
 
   setupController(controller, model) {
@@ -56,7 +54,7 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
     this.store.unloadAll('bmid');
 
     model.bmids.forEach((bmid) => {
-      bmid = bmid.id ? this.house.pushPayload('bmid', bmid) : this.store.createRecord('bmid', bmid);
+      bmid = bmid.id ? this.storePayload.pushPayload('bmid', bmid) : this.store.createRecord('bmid', bmid);
       switch (bmid.status) {
         case DO_NOT_PRINT:
           doNotPrint.push(bmid);
@@ -82,7 +80,7 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
       }
 
       if (bmid.has_approved_photo && !bmid.notQualifiedToPrint) {
-        set(bmid, 'selected', 1);
+        bmid.selected = 1;
       } else if (!bmid.has_approved_photo) {
         noPhoto.push(bmid);
       } else {

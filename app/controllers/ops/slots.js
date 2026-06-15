@@ -1,9 +1,10 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import dayjs from 'dayjs';
-import _, {filter, isEmpty} from 'lodash';
+import _ from 'lodash';
 import {cached, tracked} from '@glimmer/tracking';
 import {debounce} from '@ember/runloop';
+import {filterAndSortSlots} from 'clubhouse/utils/slots-view';
 
 const allDays = {id: 'all', title: 'All'};
 const DATETIME_FORMAT = 'YYYY-MM-DD HH:mm:ss';
@@ -86,31 +87,11 @@ export default class OpsSlotsController extends ClubhouseController {
 
   @cached
   get viewSlots() {
-    let slots = this.slots;
-    const dayFilter = this.dayFilter;
-    const activeFilter = this.activeFilter;
-    let filterByDescription = this.filterByDescription
-
-    if (activeFilter === 'active') {
-      slots = slots.filter((s) => s.active);
-    } else if (activeFilter === 'inactive') {
-      slots = slots.filter((s) => !s.active);
-    }
-
-    if (dayFilter) {
-      if (dayFilter === 'upcoming') {
-        slots = slots.filter((s) => s.has_started);
-      } else if (dayFilter !== 'all') {
-        slots = slots.filter((s) => s.slotDay === dayFilter);
-      }
-    }
-
-    if (!isEmpty(filterByDescription)) {
-      filterByDescription = filterByDescription.toLowerCase();
-      slots = filter(slots, (slot) => slot.description.toLowerCase().indexOf(filterByDescription) !== -1);
-    }
-
-    return _.sortBy(slots, 'begins');
+    return filterAndSortSlots(this.slots, {
+      activeFilter: this.activeFilter,
+      dayFilter: this.dayFilter,
+      filterByDescription: this.filterByDescription,
+    });
   }
 
   @cached
@@ -208,7 +189,7 @@ export default class OpsSlotsController extends ClubhouseController {
       try {
         await slot.save();
       } catch (response) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       }
     }
     this.activatingSlot = null;
@@ -218,7 +199,7 @@ export default class OpsSlotsController extends ClubhouseController {
 
   @action
   newSlot() {
-    if (this.year !== this.house.currentYear()) {
+    if (this.year !== this.session.currentYear()) {
       this.modal.confirm('Not Current Year',
         `You are able to create a slot for a prior year (${this.year}). Are you sure you want to do this? `,
         () => this._setupNewSlot()
@@ -238,18 +219,17 @@ export default class OpsSlotsController extends ClubhouseController {
   }
 
   @action
-  saveSlot(model, isValid) {
+  async saveSlot(model, isValid) {
     const isNew = model.isNew;
 
     if (!isValid) {
       return;
     }
 
-    this.house.saveModel(model, `The slot has been ${isNew ? 'created' : 'updated'}.`,
-      () => {
-        this.slot = null;
-        this._updateSlots();
-      })
+    if (await this.saveModel.save({model, message: `The slot has been ${isNew ? 'created' : 'updated'}.`})) {
+      this.slot = null;
+      this._updateSlots();
+    }
   }
 
   @action
@@ -257,7 +237,7 @@ export default class OpsSlotsController extends ClubhouseController {
     try {
       await this.slots.update();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
@@ -276,13 +256,12 @@ export default class OpsSlotsController extends ClubhouseController {
   }
 
   @action
-  repeatSlot(slot) {
+  async repeatSlot(slot) {
     const duplicate = this._duplicateSlot(slot);
 
-    duplicate.save().then(() => {
+    if (await this.saveModel.save({model: duplicate, message: 'Slot was successfully repeated.'})) {
       this._updateSlots();
-      this.toast.success('Slot was successfully repeated.');
-    }).catch((response) => this.house.handleErrorResponse(response));
+    }
   }
 
   @action
@@ -292,12 +271,8 @@ export default class OpsSlotsController extends ClubhouseController {
     duplicate.begins = dayjs(slot.begins).add(24, 'hours').format(DATETIME_FORMAT);
     duplicate.ends = dayjs(slot.ends).add(24, 'hours').format(DATETIME_FORMAT);
 
-    try {
-      await duplicate.save();
+    if (await this.saveModel.save({model: duplicate, message: 'Slot was successfully repeated with 24 hour addition.'})) {
       this._updateSlots();
-      this.toast.success('Slot was successfully repeated with 24 hour addition.');
-    } catch (response) {
-      this.house.handleErrorResponse(response)
     }
   }
 
@@ -311,7 +286,7 @@ export default class OpsSlotsController extends ClubhouseController {
           await slot.destroyRecord();
           this.toast.success('Slot has been deleted.');
         } catch (response) {
-          this.house.handleErrorResponse(response)
+          this.errors.handleErrorResponse(response)
         }
       });
   }
@@ -323,13 +298,9 @@ export default class OpsSlotsController extends ClubhouseController {
     }
 
     const duplicate = this._duplicateSlot(model);
-    try {
-      await duplicate.save();
+    if (await this.saveModel.save({model: duplicate, message: 'Slot successfully created from existing slot.'})) {
       this._updateSlots();
-      this.toast.success(`Slot successfully created from existing slot.`);
       this.slot = duplicate;
-    } catch (response) {
-      this.house.handleErrorResponse(response)
     }
   }
 
@@ -350,7 +321,7 @@ export default class OpsSlotsController extends ClubhouseController {
 
   @action
   openSlotCopy(positionId) {
-    if (this.year === this.house.currentYear()) {
+    if (this.year === this.session.currentYear()) {
       this.modal.confirm('Current Year',
         `You are about to copy slots from the current year (${this.year}) instead of a prior year. Are you sure you want to do this?`,
         () => {
@@ -400,7 +371,7 @@ export default class OpsSlotsController extends ClubhouseController {
       try {
         await this.slots.update();
       } catch (e) {
-        this.house.handleErrorResponse(e);
+        this.errors.handleErrorResponse(e);
       }
     }
   }

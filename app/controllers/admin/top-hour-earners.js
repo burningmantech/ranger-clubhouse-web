@@ -16,7 +16,7 @@ export default class AdminRangerRetentionController extends ClubhouseController 
   @cached
   get yearOptions() {
     const years = [];
-    for (let year = 2010; year <= this.house.currentYear(); year++) {
+    for (let year = 2010; year <= this.session.currentYear(); year++) {
       if (year !== 2020 && year !== 2021) {
         years.push(year);
       }
@@ -64,7 +64,7 @@ export default class AdminRangerRetentionController extends ClubhouseController 
       this.topEarners = top_earners;
       this.haveResults = true;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -87,6 +87,6 @@ export default class AdminRangerRetentionController extends ClubhouseController 
       person.top_hour = (+person.top_duration / 3600.0).toFixed(2);
       person.years.forEach((event) => person[`year_${event.year}`] = (+event.duration / 3600.0).toFixed(2))
     });
-    this.house.downloadCsv(`top-earners-${this.startYear}-${this.endYear}.csv`, CSV_COLUMNS, this.topEarners);
+    this.download.downloadCsv(`top-earners-${this.startYear}-${this.endYear}.csv`, CSV_COLUMNS, this.topEarners);
   }
 }

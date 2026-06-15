@@ -1,14 +1,13 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import RSVP from 'rsvp';
 import BmidModel from "clubhouse/models/bmid";
 
 export default class PersonBmidRoute extends ClubhouseRoute {
-  model() {
+  async model() {
     const person_id = this.modelFor('person').id;
-    return RSVP.hash({
-      bmid: this.ajax.request(`bmid/manage-person`, { data: { person_id, year: this.house.currentYear() }}).then((result) => result.bmid),
-      ticketingInfo: this.ajax.request('ticketing/info').then((result) => result.ticketing_info)
-    });
+    return {
+      bmid: (await this.ajax.request(`bmid/manage-person`, { data: { person_id, year: this.session.currentYear() }})).bmid,
+      ticketingInfo: (await this.ajax.request('ticketing/info')).ticketing_info
+    };
   }
 
   setupController(controller, {bmid, ticketingInfo}) {
@@ -16,7 +15,7 @@ export default class PersonBmidRoute extends ClubhouseRoute {
 
     controller.bmid = BmidModel.pushToStore(this, bmid);
     controller.person = this.modelFor('person');
-    controller.year = this.house.currentYear();
+    controller.year = this.session.currentYear();
     controller.ticketingInfo = ticketingInfo;
   }
 }

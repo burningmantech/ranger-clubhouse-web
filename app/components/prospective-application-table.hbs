@@ -25,7 +25,7 @@
           </LinkTo>
         </td>
         <td>
-          <span class="badge {{application-status-color row.status}}">{{row.statusLabel}}</span>
+          <UiBadge @type={{application-status-color row.status}}>{{row.statusLabel}}</UiBadge>
         </td>
         <td>
           {{row.first_name}} {{row.last_name}}

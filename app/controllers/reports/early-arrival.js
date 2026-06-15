@@ -36,6 +36,6 @@ export default class ReportsEarlyArrivalController extends ClubhouseController {
       }
     })
 
-    this.house.downloadCsv(`${this.house.currentYear()}-early-arrivals.csv`, CSV_COLUMNS, this.arrivals);
+    this.download.downloadCsv(`${this.session.currentYear()}-early-arrivals.csv`, CSV_COLUMNS, this.arrivals);
   }
 }

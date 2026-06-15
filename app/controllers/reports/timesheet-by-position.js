@@ -29,7 +29,7 @@ export default class ReportsTimesheetByPositionController extends ClubhouseContr
     }
 
     this._buildExportPosition(position, rows);
-    this.house.downloadCsv(`${this.year}-${position.title.replace(/ /g, '-')}.csv`, columns, rows);
+    this.download.downloadCsv(`${this.year}-${position.title.replace(/ /g, '-')}.csv`, columns, rows);
   }
 
 
@@ -42,7 +42,7 @@ export default class ReportsTimesheetByPositionController extends ClubhouseContr
 
     this.positions.forEach((position) => this._buildExportPosition(position, rows, true));
 
-    this.house.downloadCsv(`${this.year}-all-timesheets.csv`, columns, rows);
+    this.download.downloadCsv(`${this.year}-all-timesheets.csv`, columns, rows);
   }
 
   _buildExportPosition(position, rows, includeTitle = false) {

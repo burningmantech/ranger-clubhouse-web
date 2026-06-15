@@ -6,7 +6,7 @@ import {tracked} from '@glimmer/tracking';
 
 export default class TicketProvisionsComponent extends Component {
   @service ajax;
-  @service house
+  @service errors;
   @service toast;
 
   @tracked isSubmitting = false;
@@ -32,7 +32,7 @@ export default class TicketProvisionsComponent extends Component {
       this.toast.success('Your choice has been successfully saved.');
       this.args.ticketPackage.provisionsBanked = (desire === 'bank');
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

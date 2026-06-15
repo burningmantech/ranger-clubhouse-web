@@ -77,7 +77,7 @@ export default class OpsAssetsController extends ClubhouseController {
   assetValidations = {barcode: [validatePresence(true)]};
 
   get isCurrentYear() {
-    return this.house.currentYear() === +this.year;
+    return this.session.currentYear() === +this.year;
   }
 
   @cached
@@ -203,7 +203,7 @@ export default class OpsAssetsController extends ClubhouseController {
     try {
       this.assetHistory = (await this.ajax.request(`asset/${asset.id}/history`)).asset_history;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoadingHistory = false;
     }
@@ -220,7 +220,7 @@ export default class OpsAssetsController extends ClubhouseController {
       type: TYPE_RADIO,
       group_name: 'Operations',
       perm_assign: false,
-      year: this.house.currentYear(),
+      year: this.session.currentYear(),
     });
   }
 
@@ -251,7 +251,7 @@ export default class OpsAssetsController extends ClubhouseController {
       try {
         await record.save();
       } catch (response) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
         this.isSubmitting = false;
         this.creatingBarcode = null;
         return;
@@ -261,7 +261,7 @@ export default class OpsAssetsController extends ClubhouseController {
     try {
       await this.assets.update();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
 
     this.isSubmitting = false;
@@ -301,18 +301,11 @@ export default class OpsAssetsController extends ClubhouseController {
       return;
     }
 
-    this.isSubmitting = true;
-    try {
-      await model.save();
+    if (await this.saveModel.save({model, message: `The asset was successfully ${isNew ? 'created' : 'updated'}`, owner: this})) {
       if (isNew) {
         await this.assets.update();
       }
-      this.toast.success(`The asset was successfully ${isNew ? 'created' : 'updated'}`);
       this.entry = null;
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 
@@ -333,7 +326,7 @@ export default class OpsAssetsController extends ClubhouseController {
           this.toast.success('Asset was successfully deleted');
           this.entry = null;
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }
@@ -350,6 +343,6 @@ export default class OpsAssetsController extends ClubhouseController {
       }
     });
 
-    this.house.downloadCsv(`${this.year}-${type}-assets-csv`, CSV_COLUMNS, assets);
+    this.download.downloadCsv(`${this.year}-${type}-assets-csv`, CSV_COLUMNS, assets);
   }
 }

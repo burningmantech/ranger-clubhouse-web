@@ -5,12 +5,12 @@ import shirtGroupsSort from 'clubhouse/utils/shirt-groups-sort';
 export default class ReportsAlphaShirtsRoute extends ClubhouseRoute {
   roleRequired = [MANAGE];
 
-  model() {
-    return this.ajax.request(`person/alpha-shirts`).then((result) => result.alphas);
+  async model() {
+    return (await this.ajax.request(`person/alpha-shirts`)).alphas;
   }
 
   setupController(controller, model) {
-    controller.set('year', this.house.currentYear());
+    controller.set('year', this.session.currentYear());
     controller.set('alphas', model);
     controller.set('shirtGroups', shirtGroupsSort(model));
   }

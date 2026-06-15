@@ -46,7 +46,7 @@ export default class OpsBulkTeamsController extends ClubhouseController {
 
     try {
       const {people} = await this.ajax.post(`team/${this.teamId}/bulk-grant-revoke`, {data});
-      this.house.scrollToTop();
+      this.scroll.scrollToTop();
       this.people = people;
       if (commit && !this.errorCount) {
         this.committed = true;
@@ -55,7 +55,7 @@ export default class OpsBulkTeamsController extends ClubhouseController {
       this.errorCount = people.filter((p) => p.errors).length;
       this.successCount = people.filter((p) => p.success).length;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

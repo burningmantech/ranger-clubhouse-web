@@ -5,7 +5,7 @@ import {service} from '@ember/service';
 
 export default class PhotoTableComponent extends Component {
   @service ajax;
-  @service house;
+  @service saveModel;
 
   @tracked showPhoto = null;
   @tracked rejectPhoto = null;
@@ -45,16 +45,7 @@ export default class PhotoTableComponent extends Component {
   @action
   async approveAction(photo) {
     photo.status = 'approved';
-
-    try {
-      this.isSubmitting = true;
-      await photo.save();
-    } catch (response) {
-      photo.rollbackAttributes();
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
-    }
+    await this.saveModel.save({model: photo, owner: this});
   }
 
   @action

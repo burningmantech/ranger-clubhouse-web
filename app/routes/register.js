@@ -5,10 +5,10 @@ export default class RegisterRoute extends ClubhouseRoute {
     this.session.prohibitAuthentication('me.homepage');
   }
 
+  // Controllers are singletons, so reset the wizard on every visit to avoid
+  // showing a stale step or a half-filled form to a returning visitor.
   setupController(controller) {
     super.setupController(...arguments);
-    controller.set('isSaving', false);
-    controller.set('step', 'ask-intent');
-    controller.set('registerForm', {});
+    controller.resetWizard();
   }
 }

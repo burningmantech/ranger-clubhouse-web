@@ -1,20 +1,19 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
-import RSVP from 'rsvp'
 
 export default class PersonBroadcastLogRoute extends ClubhouseRoute {
   queryParams = {
     year: { refreshModel: true }
   };
 
-  model(params) {
+  async model(params) {
     const person_id = this.modelFor('person').id;
     const year = requestYear(params);
 
-    return RSVP.hash({
-      messages: this.ajax.request(`broadcast/messages`, { data: { person_id, year } }).then((result) => result.messages),
+    return {
+      messages: (await this.ajax.request(`broadcast/messages`, { data: { person_id, year } })).messages,
       year,
-    });
+    };
   }
 
   setupController(controller, model) {

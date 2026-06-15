@@ -10,6 +10,6 @@ export default class TrainingTrainedNoWorkController extends ClubhouseController
 
   @action
   exportToCSV() {
-    this.house.downloadCsv(`${this.year}-trained-no-work.csv`, CSV_COLUMNS, this.people);
+    this.download.downloadCsv(`${this.year}-trained-no-work.csv`, CSV_COLUMNS, this.people);
   }
 }

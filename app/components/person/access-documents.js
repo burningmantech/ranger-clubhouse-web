@@ -30,7 +30,9 @@ import {
 
 export default class PersonAccessDocumentsComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
+  @service session;
+  @service saveModel;
   @service modal;
   @service store;
   @service toast;
@@ -95,7 +97,7 @@ export default class PersonAccessDocumentsComponent extends Component {
   }
 
   get yearOptions() {
-    const currentYear = this.house.currentYear();
+    const currentYear = this.session.currentYear();
     const years = [];
     for (let year = currentYear - 5; year < currentYear + 10; year++) {
       years.push(year);
@@ -105,12 +107,12 @@ export default class PersonAccessDocumentsComponent extends Component {
   }
 
   get admissionDateOptions() {
-    return admissionDateOptions(this.house.currentYear(), this.args.ticketingInfo.wap_date_range, this.entry.admission_date);
+    return admissionDateOptions(this.session.currentYear(), this.args.ticketingInfo.wap_date_range, this.entry.admission_date);
   }
 
   @action
   newAccessDocument() {
-    const currentYear = this.house.currentYear();
+    const currentYear = this.session.currentYear();
 
     this.showingChanges = null;
     this.entry = this.store.createRecord('access-document', {
@@ -131,7 +133,7 @@ export default class PersonAccessDocumentsComponent extends Component {
       document.set('additional_comments', '');
       this.entry = document;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
@@ -148,15 +150,11 @@ export default class PersonAccessDocumentsComponent extends Component {
 
     const {isNew} = model;
 
-    try {
-      await model.save();
+    if (await this.saveModel.save({model, message: `The access document was successfully ${isNew ? 'created' : 'updated'}.`})) {
       this.entry = null;
-      this.toast.success(`The access document was successfully ${isNew ? 'created' : 'updated'}.`);
       if (isNew) {
         this.documents.update();
       }
-    } catch (response) {
-      this.house.handleErrorResponse(response);
     }
   }
 
@@ -176,7 +174,7 @@ export default class PersonAccessDocumentsComponent extends Component {
           this.entry = null;
           this.toast.success('The document was successfully deleted.');
         } catch (response) {
-          this.house.handleErrorResponse(response)
+          this.errors.handleErrorResponse(response)
         }
       });
   }
@@ -194,7 +192,7 @@ export default class PersonAccessDocumentsComponent extends Component {
       this.documents = await this.store.query('access-document', data);
       this.isShowingAll = !this.isShowingAll;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }
@@ -212,7 +210,7 @@ export default class PersonAccessDocumentsComponent extends Component {
       this.entryChanges = (await this.ajax.request(`access-document/${this.entry.id}/changes`)).changes;
       this.showingChanges = true;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }

@@ -182,6 +182,10 @@ Router.map(function () {
       this.route('index', { path: '/'});
       this.route('manage', { path: '/:team_id'});
     });
+    this.route('team-resources',function() {
+      this.route('index', { path: '/'});
+      this.route('manage', { path: '/:team_id'});
+    });
     this.route('vehicle-registry');
   });
 
@@ -218,7 +222,7 @@ Router.map(function () {
     this.route('event-stats');
     this.route('flakes');
     this.route('forced-signins');
-    this.route('freaking-years');
+    this.route('events-rangered');
     this.route('hq-forecast');
     this.route('languages');
     this.route('no-shows');
@@ -233,7 +237,7 @@ Router.map(function () {
     this.route('sandman-qualified');
     this.route('schedule-by-callsign');
     this.route('schedule-by-position');
-    this.route('service-years');
+    this.route('freaking-years');
     this.route('shift-coverage');
     this.route('shift-drop');
     this.route('shift-lead');

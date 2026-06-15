@@ -5,7 +5,8 @@ import {action} from '@ember/object';
 import {POG_HALF_MEAL, POG_MEAL, POG_SHOWER, StatusOptions} from 'clubhouse/models/person-pog';
 
 export default class PersonPogsComponent extends Component {
-  @service house;
+  @service errors;
+  @service saveModel;
   @service modal;
   @service session;
   @service store;
@@ -39,28 +40,31 @@ export default class PersonPogsComponent extends Component {
   }
 
   @action
-  saveEntry(model, isValid) {
+  async saveEntry(model, isValid) {
     if (!isValid) {
       return;
     }
 
     const isNew = this.entry.isNew;
-    model.save().then(() => {
+    if (await this.saveModel.save({model})) {
       if (isNew) {
         this.args.personPogs.update();
         this.toast.success('Pog successfully saved');
       }
       this.entry = null;
-    }).catch((response) => this.house.handleErrorResponse(response));
+    }
   }
 
   @action
   deleteEntry() {
-    this.modal.confirm('Delete Pog?', `Are you sure you want to delete this pog?`, () => {
-      this.entry.destroyRecord().then(() => {
+    this.modal.confirm('Delete Pog?', `Are you sure you want to delete this pog?`, async () => {
+      try {
+        await this.entry.destroyRecord();
         this.entry = null;
         this.toast.success('Pog was successfully deleted.');
-      }).catch((response) => this.house.handleErrorResponse(response));
+      } catch (response) {
+        this.errors.handleErrorResponse(response);
+      }
     })
   }
 }

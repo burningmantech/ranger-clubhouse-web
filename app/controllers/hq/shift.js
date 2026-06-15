@@ -4,7 +4,7 @@ import {validatePresence} from 'ember-changeset-validations/validators';
 import {ALPHA, BURN_PERIMETER} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 import {
-  HQ_TODO_COLLECT_RADIO, HQ_TODO_COLLECT_RADIO_IF_DONE,
+  HQ_TODO_COLLECT_RADIO, HQ_TODO_COLLECT_RADIO_IF_DONE, HQ_TODO_DELIVERY_MESSAGE,
   HQ_TODO_END_SHIFT, HQ_TODO_ISSUE_RADIO, HQ_TODO_MEAL_POG, HQ_TODO_MEAL_POG_NONE, HQ_TODO_NO_RADIO, HQ_TODO_OFF_SITE,
   HQ_TODO_START_SHIFT,
   HQ_TODO_VERIFY_TIMESHEET,
@@ -12,6 +12,7 @@ import {
 } from "clubhouse/constants/hq-todo";
 import {TYPE_RADIO} from "clubhouse/models/asset";
 import {schedule} from '@ember/runloop';
+import {radioAccounting, computeRadioTodo} from 'clubhouse/utils/radio-accounting';
 
 export default class HqShiftController extends ClubhouseController {
   @tracked isMarkingOffSite = false;
@@ -36,6 +37,13 @@ export default class HqShiftController extends ClubhouseController {
 
   @tracked showNoShiftHandled = false;
 
+  // Imperative flags read only in JS (never in a template), so plain fields.
+  noShiftHandled = false;
+  shiftTransition = null;
+
+  // Callback registered by the timesheet-correction child component; may be unset.
+  correctionCallback = null;
+
   correctionValidations = {
     additional_notes: [validatePresence(true)]
   };
@@ -48,7 +56,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get isShinyPenny() {
-    return this.timesheets.find((t) => t.position_id === ALPHA) && this.person.isActive;
+    return !!(this.timesheets.find((t) => t.position_id === ALPHA) && this.person.isActive);
   }
 
   /**
@@ -108,6 +116,18 @@ export default class HqShiftController extends ClubhouseController {
   }
 
   /**
+   * Radio checkout/collection accounting derived from the checked-out assets and
+   * the event radio_max limit. Single source for the radio-related getters below.
+   *
+   * @returns {{shiftRadios: number, eventRadios: number, collectCount: number,
+   *   collectAtShiftEnd: number, overMax: number}}
+   */
+
+  get radioAccounting() {
+    return radioAccounting(this.assetsCheckedOut, this.eventInfo.radio_max);
+  }
+
+  /**
    * How many radios are currently checked out?
    *
    * @returns {number}
@@ -124,15 +144,11 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get collectRadioCount() {
-    return this.shiftRadios + this.collectEventRadiosAtShiftEnd;
+    return this.radioAccounting.collectCount;
   }
 
   get collectEventRadiosAtShiftEnd() {
-    if (this.eventRadios > this.eventInfo.radio_max) {
-      return this.eventRadios - this.eventInfo.radio_max;
-    } else {
-      return 0;
-    }
+    return this.radioAccounting.collectAtShiftEnd;
   }
 
   /**
@@ -142,9 +158,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get collectEventRadios() {
-    const count = this.eventRadios;
-
-    return (count > this.eventInfo.radio_max) ? this.eventInfo.radio_max : count;
+    return this.radioAccounting.overMax;
   }
 
   /**
@@ -155,7 +169,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get shiftRadios() {
-    return this.assetsCheckedOut.filter((a) => a.asset.type === TYPE_RADIO && !a.asset.perm_assign).length;
+    return this.radioAccounting.shiftRadios;
   }
 
   /**
@@ -165,7 +179,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get eventRadios() {
-    return this.assetsCheckedOut.filter((a) => a.asset.type === TYPE_RADIO && a.asset.perm_assign).length;
+    return this.radioAccounting.eventRadios;
   }
 
   /**
@@ -211,12 +225,12 @@ export default class HqShiftController extends ClubhouseController {
         this._scrollToAssets();
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
   _scrollToAssets() {
-    this.house.scrollToAccordion('assets');
+    this.scroll.scrollToAccordion('assets');
     schedule('afterRender', () => document.querySelector('#checkout-barcode')?.focus());
   }
 
@@ -231,19 +245,7 @@ export default class HqShiftController extends ClubhouseController {
     try {
       this.noShiftHandled = false;
       await this.timesheets.update();
-      const ignored = {}, previousReview = {};
-      this.timesheetsToReview.forEach((t) => {
-        previousReview[t.id] = true;
-        if (t.isIgnoring) {
-          ignored[t.id] = true;
-        }
-      })
-      this.timesheetsToReview = this.timesheets.filter((t) => previousReview[t.id] || t.isUnverified);
-      this.timesheetsToReview.forEach((t) => {
-        if (ignored[t.id]) {
-          t.isIgnoring = true;
-        }
-      });
+      this._reconcileTimesheetsToReview();
       this._findOnDuty()
       if (timesheet) {
         this.completeTodo(HQ_TODO_END_SHIFT);
@@ -264,11 +266,35 @@ export default class HqShiftController extends ClubhouseController {
       this.send('updateTimesheetSummaries');
       this.endedShiftEntry = timesheet;
       if (submitCorrection) {
-        this.correctionCallback(timesheet);
+        this.correctionCallback?.(timesheet);
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
+  }
+
+  /**
+   * Re-derive the list of timesheets needing review after a shift update,
+   * preserving entries that were already under review and re-applying any
+   * "ignoring" flags that were set on them.
+   *
+   * @private
+   */
+
+  _reconcileTimesheetsToReview() {
+    const ignored = {}, previousReview = {};
+    this.timesheetsToReview.forEach((t) => {
+      previousReview[t.id] = true;
+      if (t.isIgnoring) {
+        ignored[t.id] = true;
+      }
+    });
+    this.timesheetsToReview = this.timesheets.filter((t) => previousReview[t.id] || t.isUnverified);
+    this.timesheetsToReview.forEach((t) => {
+      if (ignored[t.id]) {
+        t.isIgnoring = true;
+      }
+    });
   }
 
   @action
@@ -290,7 +316,7 @@ export default class HqShiftController extends ClubhouseController {
       await this.person.save();
       this.toast.success(`${this.person.callsign} has been successfully marked ${isOnSite ? 'ON' : 'OFF'} SITE.`);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isMarkingOffSite = false
     }
@@ -339,25 +365,7 @@ export default class HqShiftController extends ClubhouseController {
       items++;
     }
 
-    return items++;
-  }
-
-  /**
-   * Go ahead and force the off site even tho there are outstanding items.
-   */
-
-  @action
-  forceMarkOffSite() {
-    this._updateOnSite(false);
-  }
-
-  /**
-   * Mark the person as on site.
-   */
-
-  @action
-  markOnSite() {
-    this._updateOnSite(true);
+    return items;
   }
 
   /**
@@ -367,7 +375,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   _findOnDuty() {
-    this.onDutyEntry = this.timesheets.find((t) => t.off_duty == null);
+    this.onDutyEntry = this.timesheets.find((t) => t.stillOnDuty);
   }
 
   /**
@@ -409,13 +417,56 @@ export default class HqShiftController extends ClubhouseController {
   }
 
   /**
+   * Build the initial suggested-task (todo) list for the person, based on their
+   * messages, unverified timesheets, on/off duty state, upcoming shifts, and
+   * radio accounting. Called once by the route after the model is wired up.
+   *
+   * @param {object} model the route model (provides `upcomingSlots`)
+   */
+
+  initializeTodos(model) {
+    this.todos = [];
+
+    if (this.person.unread_message_count) {
+      this.setupTodo(HQ_TODO_DELIVERY_MESSAGE);
+    }
+
+    if (this.timesheetsToReview.length) {
+      this.setupTodo(HQ_TODO_VERIFY_TIMESHEET);
+    }
+
+    const {upcomingSlots} = model;
+
+    let noMoreScheduled = false;
+    if (!upcomingSlots.imminent.length && !upcomingSlots.upcoming.length) {
+      this.askIfDone = new HqTodoTask(HQ_TODO_OFF_SITE, false, true);
+      noMoreScheduled = true;
+    } else {
+      this.askIfDone = null;
+    }
+
+    const {isOffDuty} = this;
+    this.setupTodo(isOffDuty ? HQ_TODO_START_SHIFT : HQ_TODO_END_SHIFT);
+
+    const radioTask = computeRadioTodo({
+      isOffDuty,
+      noMoreScheduled,
+      accounting: this.radioAccounting,
+    });
+
+    if (radioTask) {
+      this.setupTodo(radioTask);
+    }
+  }
+
+  /**
    * Used by the route to build up the todo list.
    *
    * @param task
    */
 
   setupTodo(task) {
-    this.todos.push(new HqTodoTask(task, false));
+    this.todos = [...this.todos, new HqTodoTask(task, false)];
   }
 
   /**
@@ -444,13 +495,13 @@ export default class HqShiftController extends ClubhouseController {
   @action
   afterShiftReview() {
     if (this.endedShiftEntry) {
-      this.house.scrollToAccordion('assets', 'todo-list');
-      this.house.openAccordion('pogs');
+      this.scroll.scrollToAccordion('assets', 'todo-list');
+      this.scroll.openAccordion('pogs');
     }
   }
 
   @action
-  updateBarocde(name, value) {
+  updateBarcode(name, value) {
     this.unsubmittedBarcode = value?.trim();
   }
 

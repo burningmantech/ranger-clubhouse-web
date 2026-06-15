@@ -8,18 +8,21 @@
   <div class="roster-legend mb-2">
     <span class="roster-legend-label">Legend:</span>
     <span class="roster-legend-item">
-      {{fa-icon "check" color="success" fixed=true}}
-      <span>position granted (date shown if known)</span>
+      {{fa-icon "check" color="success" right=1}}
+      position granted (date shown if known)
     </span>
     <span class="roster-legend-item">
-      <span class="roster-status-nw">NW</span>
-      <span>= granted, never rangered</span>
+      <span class="roster-status-nw">NS</span>
+      <span>= granted, no shift worked</span>
     </span>
     <span class="roster-legend-item">
-      <span class="roster-status-ng">—</span>
-      <span>= not granted</span>
+      <span class="roster-status-never-worked">NS</span>
+      <span>= never worked any position</span>
     </span>
-    <span class="roster-legend-item text-muted">
+    <span class="roster-legend-item">
+      — = not granted
+    </span>
+    <span class="roster-legend-item">
       Training positions show year last trained or taught.
     </span>
   </div>
@@ -40,7 +43,8 @@
     <a href {{on-click this.selectAll}} class="small">select all</a>
     <a href {{on-click this.deselectAll}} class="small">deselect all</a>
     <div class="roster-controls-divider"></div>
-    <UiButton @size="sm" @type="danger" @onClick={{this.revokeSelected}}>
+    <UiButton @size="sm" @type="danger" @onClick={{this.revokeSelected}}
+              @disabled={{not this.selectedPeople.length}}>
       {{fa-icon "user-minus" right=1}} Revoke Selected ({{this.selectedPeople.length}})
     </UiButton>
   </div>
@@ -58,6 +62,7 @@
         <th rowspan="2" class="roster-col-fixed roster-col-checkbox">&nbsp;</th>
         <th rowspan="2" class="roster-col-fixed roster-col-callsign">Callsign</th>
         <th rowspan="2" class="roster-col-fixed roster-col-member text-center">Member?</th>
+        <th rowspan="2" class="roster-col-fixed roster-col-last-shift text-center">Last Shift</th>
         {{#if this.allMembersPositions.length}}
           <th colspan={{this.allMembersPositions.length}}
               class="text-center roster-section-recommended roster-group-border">
@@ -87,14 +92,14 @@
       <tbody>
       {{#each this.viewPeople key="id" as |person|}}
         <TeamMembershipRow @person={{person}}
-                           @allMembershipPositions={{this.allMembersPositions}}
+                           @allMembersPositions={{this.allMembersPositions}}
                            @optionalPositions={{this.optionalPositions}}
                            @publicPositions={{this.publicPositions}}
                            @onRevoke={{this.revokeMembership}}
         />
       {{else}}
         <tr>
-          <td colspan="3" class="text-danger py-3">
+          <td colspan="4" class="text-danger py-3">
             {{fa-icon "triangle-exclamation" right=1}} No people match the filter criteria.
           </td>
         </tr>
@@ -104,10 +109,9 @@
   </div>
 
 {{else}}
-  <div class="alert alert-warning d-inline-flex align-items-center gap-2">
-    {{fa-icon "circle-info"}}
+  <UiAlert @type="warning" @icon="circle-info">
     This team has no members and no team positions have been granted.
-  </div>
+  </UiAlert>
 {{/if}}
 
 <div class="mt-4">

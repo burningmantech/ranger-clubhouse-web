@@ -49,7 +49,7 @@ export default class VcApplicationImportController extends ClubhouseController {
         this.modal.info('Serious processing error occurred', `The following error occurred:<br>Message: ${result.message}`);
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

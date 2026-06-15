@@ -1,6 +1,7 @@
 import {
   validatePresence,
-  validateNumber
+  validateNumber,
+  validateFormat
 } from 'ember-changeset-validations/validators';
 
 export default {
@@ -16,4 +17,11 @@ export default {
     validateNumber({ integer: true, message: 'Enter a number' }),
   ],
 
+  contact_email: [
+    validateFormat({ type: 'email', allowBlank: true, message: 'Enter a valid email address.' }),
+  ],
+
+  sign_out_hour_cap: [
+    validateNumber({ gte: 0, allowBlank: true, message: 'Enter zero or a positive number of hours.' }),
+  ],
 };

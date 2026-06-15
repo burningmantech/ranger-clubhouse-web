@@ -32,16 +32,13 @@ export default class AdminAlertsController extends ClubhouseController {
 
     const isNew = model.isNew;
 
-    try {
-      await model.save();
+    if (await this.saveModel.save({model, message: `Alert was successfully ${isNew ? 'created' : 'updated'}.`})) {
       if (isNew) {
         await this.alerts.update();
       }
-      this.toast.success(`Alert was successfully ${isNew ? 'created' : 'updated'}.`);
       this.entry = null;
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-      this.entry.rollbackAttributes();
+    } else {
+      this.entry?.rollbackAttributes();
     }
   }
 
@@ -54,7 +51,7 @@ export default class AdminAlertsController extends ClubhouseController {
           this.entry = null;
           this.toast.success('Alert has been deleted.');
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         }
       });
   }

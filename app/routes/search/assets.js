@@ -11,7 +11,7 @@ export default class SearchAssetsRoute extends ClubhouseRoute {
     this.barcode = barcode;
 
     if (!year) {
-      year = this.house.currentYear();
+      year = this.session.currentYear();
     }
 
     this.year = year;

@@ -1,7 +1,5 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import {action} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
-import {GENDER_CUSTOM, GenderIdentityLabels} from "clubhouse/models/person";
 
 export default class MentorPotentialsController extends ClubhouseController {
   @tracked mentees;
@@ -13,7 +11,7 @@ export default class MentorPotentialsController extends ClubhouseController {
   @tracked trainingFlagged;
   @tracked mentorFlagged;
 
-  get viewPotentials() {
+  get filteredPeople() {
     let mentees = this.mentees;
 
     if (this.untrained) {
@@ -33,7 +31,7 @@ export default class MentorPotentialsController extends ClubhouseController {
     }
 
     if (this.mentorFlagged) {
-      mentees = mentees.filter((p) => p.mentor_team.find((m) => m.rank >= 3));
+      mentees = mentees.filter((p) => (p.mentor_team ? p.mentor_team.find((m) => m.rank >= 3) : false));
     }
 
     if (this.trainingFlagged) {
@@ -78,22 +76,5 @@ export default class MentorPotentialsController extends ClubhouseController {
     }
 
     return names;
-  }
-
-  @action
-  noteSubmitted(person) {
-    // Refresh the mentee
-    this.ajax.request('mentor/mentees', {data: {year: this.year, person_id: person.id}}).then(({mentee}) => {
-      this.mentees = this.mentees.map((m) => m.id == person.id ? mentee : m);
-    }).catch((response) => this.house.handleErrorResponse(response));
-  }
-
-  genderIdentityLabel(person) {
-    switch (person.gender_identity) {
-      case GENDER_CUSTOM:
-        return person.gender_custom;
-      default:
-        return GenderIdentityLabels[person.gender_identity] ?? person.gender_identity;
-    }
   }
 }

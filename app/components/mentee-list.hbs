@@ -7,13 +7,11 @@
     <:body>
       <div class="d-flex flex-wrap">
         {{#each year.mentees key="person_id" as |mentee|}}
-        {{! template-lint-disable no-inline-styles}}
-          <div class="card mb-2 me-2" style="width: 12rem;">
+          <div class="card card-12rem mb-2 me-2">
             {{#if mentee.profile_url}}
               <img src={{mentee.profile_url}} class="card-img-top" alt="profile" loading="lazy">
             {{else}}
-            {{! template-lint-disable no-inline-styles}}
-              <div class="text-center" style="height: 244px;">
+              <div class="text-center">
                 <UiPhotoNone class="my-4" />
                 <div class="card-text text-center mb-3">(No Photo)</div>
               </div>

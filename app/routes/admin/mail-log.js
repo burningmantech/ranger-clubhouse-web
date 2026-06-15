@@ -1,18 +1,17 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import RSVP from 'rsvp';
 
 export default class AdminMailLogRoute extends ClubhouseRoute {
   queryParams = {
     page: {refreshModel: true},
   };
 
-  model(params) {
+  async model(params) {
     const page = params.page ?? 1;
 
-    return RSVP.hash({
-      logs: this.ajax.request(`mail-log`, {data: {page}}),
-      stats: this.ajax.request('mail-log/stats'),
-    });
+    return {
+      logs: await this.ajax.request(`mail-log`, {data: {page}}),
+      stats: await this.ajax.request('mail-log/stats'),
+    };
   }
 
   setupController(controller, model) {

@@ -65,6 +65,6 @@ export default class ReportsShiftCoveragController extends ClubhouseController {
       rows.push(row);
     })
 
-    this.house.downloadCsv(`${this.year}-${this.type}.csv`, columns, rows);
+    this.download.downloadCsv(`${this.year}-${this.type}.csv`, columns, rows);
   }
 }

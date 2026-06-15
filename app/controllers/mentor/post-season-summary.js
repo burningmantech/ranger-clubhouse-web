@@ -116,7 +116,7 @@ export default class MentorPostSeasonSummaryController extends ClubhouseControll
       people.push(person);
     });
 
-    this.house.downloadCsv(`${this.year}-mentees-${this.filter}.csv`, CSV_COLUMNS, people);
+    this.download.downloadCsv(`${this.year}-mentees-${this.filter}.csv`, CSV_COLUMNS, people);
   }
 
   setupMentees() {
@@ -134,12 +134,15 @@ export default class MentorPostSeasonSummaryController extends ClubhouseControll
   }
 
   @action
-  noteSubmitted(person) {
+  async noteSubmitted(person) {
     // Refresh the potentials
-    this.ajax.request('mentor/mentees', {data: {year: this.year, person_id: person.id}}).then(({mentee}) => {
+    try {
+      const {mentee} = await this.ajax.request('mentor/mentees', {data: {year: this.year, person_id: person.id}});
       this.mentees = this.mentees.map((m) => m.id == person.id ? mentee : m);
       this.setupMentees();
-    }).catch((response) => this.house.handleErrorResponse(response));
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    }
   }
 
   @action

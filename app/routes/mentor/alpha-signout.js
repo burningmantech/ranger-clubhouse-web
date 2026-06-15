@@ -4,11 +4,11 @@ import dayjs from 'dayjs';
 
 export default class MentorAlphaSignoutRoute extends ClubhouseRoute {
   model() {
-    return this.ajax.request('slot', { data: { position_id: ALPHA, year: this.house.currentYear() }});
+    return this.ajax.request('slot', { data: { position_id: ALPHA, year: this.session.currentYear() }});
   }
 
   setupController(controller, model) {
-    const year = this.house.currentYear();
+    const year = this.session.currentYear();
     const slotOptions = model.slot.map((s) => ([
       dayjs(s.begins).format('ddd MMM DD [@] HH:mm'), s.begins
     ]));

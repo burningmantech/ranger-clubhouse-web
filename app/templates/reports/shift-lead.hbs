@@ -40,28 +40,28 @@
 
   <div class="d-flex">
     <section class="flex-fill ui-section">
-      <h3>{{pluralize this.dirt_signups.length "Dirt Ranger"}},
-        {{#if this.green_dot_total}}
-          including {{pluralize this.green_dot_total "Green Dot"}}
+      <h3>{{pluralize this.dirtSignups.length "Dirt Ranger"}},
+        {{#if this.greenDotTotal}}
+          including {{pluralize this.greenDotTotal "Green Dot"}}
         {{else}}
           and no Green Dots
         {{/if}}
       </h3>
-      {{#if this.green_dot_total}}
+      {{#if this.greenDotTotal}}
         <p>
-          {{#if this.green_dot_females}}
-            {{pluralize this.green_dot_females "female Green Dot"}}
+          {{#if this.greenDotFemales}}
+            {{pluralize this.greenDotFemales "female Green Dot"}}
           {{else}}
             No female green dots are signed up.
           {{/if}}
         </p>
       {{/if}}
-      <h3>{{pluralize this.command_staff_signups.length "Command Staff Ranger"}}</h3>
-      <h3>{{pluralize this.non_dirt_signups.length "Special Team Ranger"}}</h3>
+      <h3>{{pluralize this.commandStaffSignups.length "Command Staff Ranger"}}</h3>
+      <h3>{{pluralize this.nonDirtSignups.length "Special Team Ranger"}}</h3>
     </section>
 
     <section class="flex-fill ui-section">
-      <h3>{{pluralize this.below_min_positions.length "position"}} BELOW MIN. STAFFING</h3>
+      <h3>{{pluralize this.belowMinPositions.length "position"}} BELOW MIN. STAFFING</h3>
       <UiTable>
         <thead>
         <tr>
@@ -84,7 +84,7 @@
               {{/if}}
             </td>
             <td class="text-end">
-              {{#if @isOnDuty}}
+              {{#if this.isOnDuty}}
                 {{if position.on_duty position.on_duty "NONE"}}
               {{else}}
                 {{if position.signed_up position.signed_up "NONE"}}
@@ -105,13 +105,13 @@
   </div>
   <p>
     Gender = F: Female, M: Male, NB: Non-binary, Q: Queer (unspecified), GF: Gender Fluid, - (dash): not stated<br>
-    GTR? = Indicates person signed the Motor Pool Protocol. Veh? = Indicates person has BM Org insurance.<br>
+    GTR? = Indicates person signed the Vehicle Use Protocol. Veh? = Indicates person has BM Org insurance.<br>
     {{fa-icon "ban" color="danger"}} = Person not marked as being on site. <b>Note</b>: person could be
     on playa however has not visited HQ Window yet for an On-Site Registration.
   </p>
-  <ShiftLeadTable @title="DIRT/GREEN DOTS" @people={{this.dirt_signups}} @isOnDuty={{this.isOnDuty}}/>
-  <ShiftLeadTable @title="COMMAND STAFF" @people={{this.command_staff_signups}} @isOnDuty={{this.isOnDuty}}/>
-  <ShiftLeadTable @title="SPECIAL TEAMS" @people={{this.non_dirt_signups}} @isOnDuty={{this.isOnDuty}}/>
+  <ShiftLeadTable @title="DIRT/GREEN DOTS" @people={{this.dirtSignups}} @isOnDuty={{this.isOnDuty}}/>
+  <ShiftLeadTable @title="COMMAND STAFF" @people={{this.commandStaffSignups}} @isOnDuty={{this.isOnDuty}}/>
+  <ShiftLeadTable @title="SPECIAL TEAMS" @people={{this.nonDirtSignups}} @isOnDuty={{this.isOnDuty}}/>
   <p>
     <b>Secret decoder ring:</b>
     Dspch = Dispatcher,

@@ -27,7 +27,7 @@ export default class ReportsPotentialShirtsController extends ClubhouseControlle
         long_sleeve: row.earned_ls ? row.longsleeveshirt_size_style : 'not earned',
       }
     });
-    this.house.downloadCsv(`${this.year}-earn-shirts.csv`, CSV_COLUMNS, data);
+    this.download.downloadCsv(`${this.year}-earn-shirts.csv`, CSV_COLUMNS, data);
   }
 
   @action
@@ -37,6 +37,6 @@ export default class ReportsPotentialShirtsController extends ClubhouseControlle
       { title: 'Count', key: 'count' },
     ];
 
-    this.house.downloadCsv(`${this.year}-${shirts.exportName}-counts.csv`, CSV_COLUMNS, shirts.types);
+    this.download.downloadCsv(`${this.year}-${shirts.exportName}-counts.csv`, CSV_COLUMNS, shirts.types);
   }
 }

@@ -4,16 +4,16 @@ import { tracked } from '@glimmer/tracking';
 import { service } from '@ember/service';
 
 export default class PersonEmergencyContactComponent extends Component {
-  @service house;
+  @service saveModel;
   @tracked isSaved = false;
 
   @action
-  saveAction(model, isValid) {
+  async saveAction(model, isValid) {
     if (!isValid) {
       return;
     }
-    this.house.saveModel(model, 'Emergency contact info successfully updated.',
-      () => this.isSaved = true
-    )
+    if (await this.saveModel.save({model, message: 'Emergency contact info successfully updated.'})) {
+      this.isSaved = true;
+    }
   }
 }

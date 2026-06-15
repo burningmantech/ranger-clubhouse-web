@@ -1,0 +1,48 @@
+<ModalDialog @title="{{@title}}" @onEscape={{@onCancel}} as |Modal|>
+  <ChForm @formFor={{@form}}
+          @onSubmit={{@onConfirm}}
+          @validator={{@validations}} as |f|>
+    <Modal.body>
+      <b class="text-danger">
+        {{fa-icon "hand" right=1}} The {{@blockedPhrase}}  is blocked for
+        the following reason(s):
+      </b>
+      <ul class="mt-2">
+        {{#each @blockers as |blocker|}}
+          <li>{{blocker}}</li>
+        {{/each}}
+      </ul>
+      {{#if @userCanForceCheckIn}}
+        <p>
+          Since you either have the Admin or Force Shift Start permissions, you can force the {{@forcePhrase}}.
+        </p>
+        <p>
+          <b class="text-danger">All forced actions are logged and reviewed.</b>
+        </p>
+        <p>
+          Are you sure you want to force this through? A reason must be given below if you wish to proceed.
+        </p>
+        <FormRow>
+          <f.textarea @name="reason"
+                      @label="Enter a reason why this is being forced:"
+                      @autofocus={{true}}
+                      @rows={{4}}
+                      @cols={{80}}
+          />
+        </FormRow>
+      {{else}}
+        Refer the person to the HQ Lead, who has the authority to force the
+        {{@referPhrase}}.
+        If no HQ Lead is on duty, contact Khaki on Control 1 for assistance.
+      {{/if}}
+    </Modal.body>
+    <Modal.footer @align="start">
+      <UiButtonRow>
+        {{#if @userCanForceCheckIn}}
+          <f.submit @label="Confirm Force " @type="warning"/>
+        {{/if}}
+        <UiCancelButton @onClick={{@onCancel}} />
+      </UiButtonRow>
+    </Modal.footer>
+  </ChForm>
+</ModalDialog>

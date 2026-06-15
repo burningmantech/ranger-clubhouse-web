@@ -164,6 +164,7 @@ export default class BmidModel extends Model {
 
 
   @tracked showProvisionDialog;  // For the BMID management interface.
+  @tracked selected;
 
   get admission_date() {
     if (this.access_any_time) {

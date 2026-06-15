@@ -1,0 +1,36 @@
+{{#if this.isLoading}}
+  <LoadingDialog>
+    Retrieving document
+  </LoadingDialog>
+{{else}}
+  <h1>Edit {{this.document.description}}</h1>
+  {{yield}}
+  <ChForm @formId="document"
+          @formFor={{this.document}}
+          @validator={{this.validations}}
+          @onSubmit={{this.saveAction}}
+          as |f|>
+    <FormRow>
+      <f.editor @name="body"
+                @label="Document Text"
+                @cols={{80}}
+                @rows={{100}}
+      />
+    </FormRow>
+    <UiButtonRow>
+      <f.submit @disabled={{this.document.isSaving}} />
+      <UiCancelButton @onClick={{@onClose}}  />
+      {{#unless this.document.isNew}}
+        <div class="ms-4">
+          <UiDeleteButton @onClick={{this.deleteAction}} />
+        </div>
+      {{/unless}}
+    </UiButtonRow>
+  </ChForm>
+{{/if}}
+
+{{#if (or this.document.isSaving this.isDeleting)}}
+  <LoadingDialog>
+    Submitting request . . .
+  </LoadingDialog>
+{{/if}}

@@ -8,8 +8,7 @@ export default class PersonAlertsController extends ClubhouseController {
   }
 
   @action
-  savePerson(model) {
-    model.save().then(() => this.toast.success("SMS Flags updated"))
-    .catch((response) => this.house.handleErrorResponse(response, model));
+  async savePerson(model) {
+    await this.saveModel.save({model, message: 'SMS Flags updated'});
   }
 }

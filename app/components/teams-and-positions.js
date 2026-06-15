@@ -1,62 +1,75 @@
 import Component from '@glimmer/component';
-import {cached} from '@glimmer/tracking';
+import {cached, tracked} from '@glimmer/tracking';
+import {action} from '@ember/object';
+
+const UNKNOWN_TEAM_TITLE = 'Unknown Team';
 
 export default class TeamsAndPositions extends Component {
-  get hasNoTeamOrPositions() {
-    const {membership} = this.args;
+  @tracked showTeamDocument;
 
-    return (!membership.positions.length && !membership.teams.length);
+  // Single source of truth for team-by-id lookups. Includes not_member_teams so
+  // that team-scoped positions can resolve a title even for teams the person
+  // isn't a member of. Shared by both derived getters below.
+  @cached
+  get teamsById() {
+    const {teams, not_member_teams} = this.args.membership;
+
+    return new Map(
+      [...teams, ...not_member_teams].map((team) => [team.id, team])
+    );
   }
 
+  // Derived view-model: plain objects, no mutation of the source models.
   @cached
   get teamMembership() {
-    const {membership} = this.args;
-    const {teams} = membership;
+    const {teams, management} = this.args.membership;
+    const managerIds = new Set(management.map((m) => m.id));
 
-    teams.forEach((t) => t.is_member = true);
-
-    membership.management.forEach((m) => {
-      const team = teams.find((t) => t.id === m.id)
-      if (team) {
-        team.is_manager = true;
-      }
-    })
-
-    return teams;
+    return teams.map((team) => ({
+      title: team.title,
+      document_tag: team.document_tag,
+      document_body: team.document_body,
+      is_manager: managerIds.has(team.id),
+    }));
   }
 
   @cached
   get positions() {
-    const {membership} = this.args;
-    const {positions} =membership;
-    const teamsById = membership.teams.reduce((hash, team) => {
-      hash[team.id] = team;
-      return hash
-    }, {});
-    const teamPositions = {};
+    const {positions} = this.args.membership;
+    const {teamsById} = this;
+
     const generalPositions = [];
+    const groupsByTeamId = new Map();
 
-    membership.not_member_teams.forEach((t) => {teamsById[t.id] = t;})
-
-    positions.forEach((p) => {
-      if (p.team_id) {
-        if (!teamPositions[p.team_id]) {
-          teamPositions[p.team_id] = {title: teamsById[p.team_id].title, positions: []};
-        }
-        teamPositions[p.team_id].positions.push(p);
-      } else {
-        generalPositions.push(p);
+    positions.forEach((position) => {
+      if (!position.team_id) {
+        generalPositions.push(position);
+        return;
       }
+
+      let group = groupsByTeamId.get(position.team_id);
+      if (!group) {
+        const team = teamsById.get(position.team_id);
+        group = {title: team?.title ?? UNKNOWN_TEAM_TITLE, positions: []};
+        groupsByTeamId.set(position.team_id, group);
+      }
+      group.positions.push(position);
     });
 
-    const teams = Object.keys(teamPositions).map(id => teamPositions[id]);
-    teams.sort((a, b) => a.title.localeCompare(b.title));
+    const teamGroups = [...groupsByTeamId.values()].sort((a, b) =>
+      (a.title || '').localeCompare(b.title || '')
+    );
 
-    return {
-      generalPositions,
-      teams
-    }
+    return {generalPositions, teamGroups};
   }
 
+  @action
+  viewTeanDocument(team) {
+    this.showTeamDocument = team;
+  }
 
+  @action
+  closeTeamDocument() {
+    this.showTeamDocument = null;
+  }
 }

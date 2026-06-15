@@ -6,7 +6,7 @@ import {tracked} from '@glimmer/tracking';
 
 export default class PersonFullFormComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
   @service router;
   @service store;
@@ -35,7 +35,7 @@ export default class PersonFullFormComponent extends Component {
           f.reloadForm();
           this.toast.success('The callsign was successfully released.');
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         }
       })
   }
@@ -58,7 +58,7 @@ export default class PersonFullFormComponent extends Component {
     try {
       await this.args.personBanners.update();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 }

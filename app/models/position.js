@@ -24,6 +24,10 @@ export const ATTR_LABELS = [
     label: 'Requires ART to be passed before roles are granted.'
   },
   {
+    id: 'require_signin_for_roles',
+    label: 'Permissions are only granted while signed into this position'
+  },
+  {
     id: 'new_user_eligible',
     label: 'Grant to New Accounts',
   },
@@ -87,16 +91,6 @@ export const ATTR_LABELS = [
     id: 'has_online_course',
     label: 'Has Online Course',
   },
-  /*
-  {
-    id: 'awards_auto_grant',
-    label: 'Awards will be automatically granted',
-  },
-  {
-    id: 'awards_grants_service_year',
-    label: 'Awards year counts as a service year.',
-  },
-  */
   {
     id: 'allow_echelon',
     label: 'Echelon volunteers permitted to work position even if In-Person Training or ART was not completed.'
@@ -118,6 +112,7 @@ export default class PositionModel extends Model {
   @attr('string', {defaultValue: TEAM_CATEGORY_OPTIONAL}) team_category;
 
   @attr('boolean', {defaultValue: false}) require_training_for_roles;
+  @attr('boolean', {defaultValue: false}) require_signin_for_roles;
 
   @attr('boolean', {defaultValue: false}) no_training_required;
 

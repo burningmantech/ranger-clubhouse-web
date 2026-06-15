@@ -10,7 +10,7 @@ export default class ResetPasswordController extends ClubhouseController {
   resetPasswordValidations = ResetPasswordValidations;
 
   @action
-  submit(model, isValid) {
+  async submit(model, isValid) {
     if (!isValid)
       return;
 
@@ -18,14 +18,15 @@ export default class ResetPasswordController extends ClubhouseController {
 
     this.tokenError = null;
     this.isSubmitting = true;
-    return this.ajax.request('/auth/reset-password', {
-      method: 'POST',
-      data: {identification}
-    }).then(() => {
+    try {
+      await this.ajax.request('/auth/reset-password', {
+        method: 'POST',
+        data: {identification}
+      });
       this.modal.info('Reset password instructions sent.',
         `Instructions to reset your password will be sent to you shortly. Please check your email '${identification}'.`);
       this.router.transitionTo('login');
-    }).catch((response) => {
+    } catch (response) {
       switch (response.status) {
         case 400:
           this.modal.info(null, 'Sorry, no account was found with the email address entered.');
@@ -36,9 +37,11 @@ export default class ResetPasswordController extends ClubhouseController {
           break;
 
         default:
-          this.house.handleErrorResponse(response)
+          this.errors.handleErrorResponse(response)
           break;
       }
-    }).finally(() => this.isSubmitting = false);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 }

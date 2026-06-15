@@ -29,8 +29,8 @@ const NOT_FOUND_CSV_COLUMNS = [
 
 export default class AdminBulkLookupController extends Controller {
   @service ajax;
-  @service house;
-
+  @service errors;
+  @service download;
   @tracked isSubmitting = false;
   @tracked bulkForm;
 
@@ -39,31 +39,33 @@ export default class AdminBulkLookupController extends Controller {
   @tracked peopleNotFound;
 
   @action
-  lookupAction() {
+  async lookupAction() {
     // Filter out blank lines.
     const people = this.bulkForm.lines.split("\n")
       .map((l) => l.trim())
       .filter((l) => l !== '');
 
     this.isSubmitting = true;
-    this.ajax.request('person/bulk-lookup', {method: 'POST', data: {people}})
-      .then(({people}) => {
-        this.people = people;
-        this.peopleFound = people.filter((p) => p.result === 'success');
-        this.peopleNotFound = people.filter((p) => p.result !== 'success').map((p) => p.person);
-      })
-      .catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    try {
+      const result = await this.ajax.request('person/bulk-lookup', {method: 'POST', data: {people}});
+      this.people = result.people;
+      this.peopleFound = result.people.filter((p) => p.result === 'success');
+      this.peopleNotFound = result.people.filter((p) => p.result !== 'success').map((p) => p.person);
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action
   exportFoundToCSV() {
-    this.house.downloadCsv('bulk-lookup-found.csv', FOUND_CSV_COLUMNS, this.peopleFound);
+    this.download.downloadCsv('bulk-lookup-found.csv', FOUND_CSV_COLUMNS, this.peopleFound);
   }
 
   @action
   exportNotFoundToCSV() {
     const people = this.peopleNotFound.map((person) => ({person}));
-    this.house.downloadCsv('bulk-lookup-not-found.csv', NOT_FOUND_CSV_COLUMNS, people);
+    this.download.downloadCsv('bulk-lookup-not-found.csv', NOT_FOUND_CSV_COLUMNS, people);
   }
 }

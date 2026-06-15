@@ -5,9 +5,27 @@
   </LinkTo>
 </p>
 
-{{#if this.training.resource_tag}}
-  <DocumentShow @tag={{this.training.resource_tag}} />
+{{#if this.isReloading}}
+  <LoadingDialog>
+    Reloading training information . . .
+  </LoadingDialog>
 {{else}}
-  This page can be used as a freeform document to provide helpful links to a trainer. Contact the Tech Team to
-  set up this resource.
+  {{#if this.editDocument}}
+    <DocumentEdit @type="position" @entityId={{this.training.id}} @onClose={{this.close}} />
+  {{else}}
+    {{#if this.canEditTrainerResource}}
+      <p>
+        <UiButton @onClick={{this.edit}} @onClose={{this.close}}>
+          Edit Trainer Resource Document
+        </UiButton>
+      </p>
+      <hr class="text-muted"/>
+    {{/if}}
+
+    {{#if this.training.resource_tag}}
+      <DocumentShow @tag={{this.training.resource_tag}} />
+    {{else}}
+      No trainer resource document has been setup.
+    {{/if}}
+  {{/if}}
 {{/if}}

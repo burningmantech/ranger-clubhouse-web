@@ -7,7 +7,7 @@ import {STATUS_VERIFIED} from "clubhouse/models/timesheet";
 
 export default class PersonTimesheetBackfillComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
   @service session;
   @service store;
@@ -62,7 +62,7 @@ export default class PersonTimesheetBackfillComponent extends Component {
           backFill.push(year);
         }
       } catch (response) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
         this.isSubmitting = false;
         return;
       }
@@ -98,7 +98,7 @@ export default class PersonTimesheetBackfillComponent extends Component {
       this.modal.info('Year(s) Back Filled', message);
       this.yearsForm = null;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

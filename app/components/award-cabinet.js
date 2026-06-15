@@ -4,8 +4,7 @@ import {tracked} from '@glimmer/tracking';
 
 export default class AwardCabinetComponent extends Component {
   @service ajax;
-  @service house;
-
+  @service errors;
   @tracked isLoading = false;
   @tracked special;
   @tracked positions;
@@ -26,7 +25,7 @@ export default class AwardCabinetComponent extends Component {
       this.special = special;
       this.positions = positions;
     } catch (e) {
-      this.house.handleErrorResponse(e);
+      this.errors.handleErrorResponse(e);
     } finally {
       this.isLoading = false;
     }

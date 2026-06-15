@@ -22,15 +22,15 @@ export default class PersonTimesheetRoute extends ClubhouseRoute {
     return {
       year: year,
       timesheets: await this.store.query('timesheet', timesheetQuery),
-      timesheetInfo: await this.ajax.request('timesheet/info', { data: { person_id } })
-        .then((result) => result.info),
+      timesheetInfo: (await this.ajax.request('timesheet/info', { data: { person_id } }))
+        .info,
       timesheetMissing: await this.store.query('timesheet-missing', { person_id, year, check_times: 1}),
-      positions: await this.ajax.request(`person/${person_id}/positions`,{ data: { include_past_grants: 1, include_eligibility: 1, year } })
-        .then((results) => results.positions.filter((p) => !p.not_timesheet_eligible)),
-      timesheetSummary: await this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }})
-        .then((result) => result.summary),
-      eventInfo: await this.ajax.request(`person/${person_id}/event-info`, { data: { year } })
-        .then((result) => result.event_info)
+      positions: (await this.ajax.request(`person/${person_id}/positions`,{ data: { include_past_grants: 1, include_eligibility: 1, year } }))
+        .positions.filter((p) => !p.not_timesheet_eligible),
+      timesheetSummary: (await this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }}))
+        .summary,
+      eventInfo: (await this.ajax.request(`person/${person_id}/event-info`, { data: { year } }))
+        .event_info
     };
   }
 

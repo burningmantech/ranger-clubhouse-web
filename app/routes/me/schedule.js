@@ -21,6 +21,6 @@ export default class MeScheduleRoute extends ClubhouseRoute {
 
   setupController(controller) {
     controller.person = this.modelFor('me');
-    controller.year = this.year || this.house.currentYear();
+    controller.year = this.year || this.session.currentYear();
   }
 }

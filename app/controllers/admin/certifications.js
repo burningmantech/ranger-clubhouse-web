@@ -23,30 +23,32 @@ export default class AdminCertificationsController extends ClubhouseController {
   }
 
   @action
-  saveCertificationAction(model, isValid) {
+  async saveCertificationAction(model, isValid) {
     if (!isValid) {
       return;
     }
 
     const {isNew} = model;
 
-    model.save().then(() => {
-      this.toast.success(`Certification was successfully ${isNew ? 'created' : 'updated'}.`);
+    if (await this.saveModel.save({model, message: `Certification was successfully ${isNew ? 'created' : 'updated'}.`})) {
       this.entry = null;
       if (isNew) {
-        return this.certifications.update();
+        this.certifications.update();
       }
-    }).catch((response) => this.house.handleErrorResponse(response, model));
+    }
   }
 
   @action
   deleteCertificationAction() {
     this.modal.confirm(`Confirm certification deletion`, `Are you sure you want to delete "${this.entry.title}?"`,
-      () => {
-        this.entry.destroyRecord().then(() => {
+      async () => {
+        try {
+          await this.entry.destroyRecord();
           this.entry = null;
           this.toast.success(`Certification was successfully deleted.`);
-        }).catch((response) => this.house.handleErrorResponse(response));
+        } catch (response) {
+          this.errors.handleErrorResponse(response);
+        }
       });
   }
 }

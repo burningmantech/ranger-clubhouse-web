@@ -28,7 +28,7 @@ export default class ReportsSwagDistributionController extends ClubhouseControll
       other: this._buildColumn((person.other)),
     }))
 
-    this.house.downloadCsv(`${this.year}-swag-distribution.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.year}-swag-distribution.csv`, CSV_COLUMNS, rows);
   }
 
   _buildColumn(items) {
