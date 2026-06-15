@@ -62,6 +62,7 @@ export default function logError(error, type, additionalData = null) {
   const data = {
     name: error.name,
     exception: message,
+    stack: error.stack,
     build_timestamp: config.APP.buildTimestamp,
     version: config.APP.version,
   };

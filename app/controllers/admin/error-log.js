@@ -38,11 +38,10 @@ export default class AdminErrorLogController extends ClubhouseController {
   exceptionDetails(data) {
     try {
       const parsed = JSON.parse(data);
-      const details = JSON.parse(parsed.details);
       return {
         exceptionName: parsed.name,
         exceptionMessage: parsed.exception,
-        stack: details.stack,
+        stack: parsed.stack ?? parsed.additional?.stack,
       }
     } catch (SyntaxError) {
       return data;

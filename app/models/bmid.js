@@ -117,7 +117,7 @@ export default class BmidModel extends Model {
 
   static createFromPayload(context, payload) {
     if (payload.id) {
-      return context.house.pushPayload('bmid', payload);
+      return context.storePayload.pushPayload('bmid', payload);
     } else {
       return context.store.createRecord('bmid', payload);
     }
