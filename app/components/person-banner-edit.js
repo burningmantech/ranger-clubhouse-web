@@ -5,7 +5,8 @@ import {service} from '@ember/service';
 import {validatePresence} from 'ember-changeset-validations/validators';
 
 export default class PersonBannerEdit extends Component {
-  @service house;
+  @service errors;
+  @service saveModel;
   @service modal;
   @service toast;
 
@@ -25,15 +26,8 @@ export default class PersonBannerEdit extends Component {
     if (!isValid)
       return;
 
-    this.isSubmitting = true;
-    try {
-      await model.save();
-      this.toast.success(`Person note was successfully save.`);
+    if (await this.saveModel.save({model, message: `Person note was successfully save.`, owner: this})) {
       this.args.onFinished(true);
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 
@@ -48,7 +42,7 @@ export default class PersonBannerEdit extends Component {
           this.toast.success(`Banner message was successfully deleted.`);
           this.args.onFinished();
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }

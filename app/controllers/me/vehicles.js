@@ -60,7 +60,7 @@ export default class MeVehiclesController extends ClubhouseController {
       });
       this.vehicleInfo = {...this.vehicleInfo, [field]: newValue};
     } catch (e) {
-      this.house.handleErrorResponse(e);
+      this.errors.handleErrorResponse(e);
     } finally {
       this.isSubmitting = false;
     }

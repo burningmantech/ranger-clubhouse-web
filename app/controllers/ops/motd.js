@@ -50,7 +50,7 @@ export default class OpsMotdController extends ClubhouseController {
   }
 
   @action
-  saveEntry(model, isValid) {
+  async saveEntry(model, isValid) {
     if (!isValid) {
       return;
     }
@@ -61,20 +61,22 @@ export default class OpsMotdController extends ClubhouseController {
       return;
     }
 
-    model.save().then(() => {
-      this.toast.success(`MOTD was successfully ${isNew ? 'created' : 'updated'}.`);
+    if (await this.saveModel.save({model, message: `MOTD was successfully ${isNew ? 'created' : 'updated'}.`})) {
       this.motds.update();
       this.entry = null;
-    }).catch((response) => this.house.handleErrorResponse(response, model));
+    }
   }
 
   @action
   deleteEntry() {
-    this.modal.confirm('Delete MOTD entry', 'Are you sure?', () => {
-      this.entry.destroyRecord().then(() => {
+    this.modal.confirm('Delete MOTD entry', 'Are you sure?', async () => {
+      try {
+        await this.entry.destroyRecord();
         this.toast.success('MOTD has been removed.');
         this.entry = null;
-      }).catch((response) => this.house.handleErrorResponse(response));
+      } catch (response) {
+        this.errors.handleErrorResponse(response);
+      }
     })
   }
 

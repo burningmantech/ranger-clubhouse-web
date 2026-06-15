@@ -31,7 +31,7 @@ export default class VcApplicationsController extends ClubhouseController {
         this.noneFound = true;
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

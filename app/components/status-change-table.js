@@ -5,7 +5,8 @@ import {service} from '@ember/service';
 
 export default class StatusChangeTableComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
+  @service download;
   @service toast;
 
   @tracked isSubmitting = false;
@@ -24,7 +25,7 @@ export default class StatusChangeTableComponent extends Component {
   }
 
   @action
-  submit() {
+  async submit() {
     const callsigns = [];
     const people = this.args.people;
 
@@ -37,14 +38,15 @@ export default class StatusChangeTableComponent extends Component {
     const records = callsigns.join("\n");
     this.isSubmitting = true;
 
-    this.ajax.request('bulk-upload', {
-      method: 'POST',
-      data: {
-        action: this.isVintage ? 'vintage' : this.args.newStatus,
-        records,
-        commit: 1
-      }
-    }).then((results) => {
+    try {
+      const results = await this.ajax.request('bulk-upload', {
+        method: 'POST',
+        data: {
+          action: this.isVintage ? 'vintage' : this.args.newStatus,
+          records,
+          commit: 1
+        }
+      });
       let failures = 0;
 
       results.results.forEach((r) => {
@@ -68,8 +70,11 @@ export default class StatusChangeTableComponent extends Component {
         this.toast.error(`${failures} status changes were not successful.`);
       }
       this._buildSelectedCount();
-    }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action
@@ -112,6 +117,6 @@ export default class StatusChangeTableComponent extends Component {
       }
     }
 
-    this.house.downloadCsv(`${this.args.year}-${this.isVintage ? 'vintage' : newStatus.replace(' ', '-')}-convert.csv`, COLUMNS, people);
+    this.download.downloadCsv(`${this.args.year}-${this.isVintage ? 'vintage' : newStatus.replace(' ', '-')}-convert.csv`, COLUMNS, people);
   }
 }

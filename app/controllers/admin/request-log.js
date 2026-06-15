@@ -83,7 +83,7 @@ export default class AdminRequestLogController extends ClubhouseController {
         this.toast.success('Log expired successfully');
         this.send('refreshRoute');
       } catch (response) {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       }
     });
   }

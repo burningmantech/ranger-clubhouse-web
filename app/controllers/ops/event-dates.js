@@ -25,7 +25,7 @@ export default class AdminEventDatesController extends ClubhouseController {
   }
 
   @action
-  save(model, isValid) {
+  async save(model, isValid) {
     if (!isValid)
       return;
 
@@ -48,13 +48,12 @@ export default class AdminEventDatesController extends ClubhouseController {
 
     const isNew = this.entry.isNew;
 
-    model.save().then(() => {
+    if (await this.saveModel.save({model, message: `Event Date was successfully ${isNew ? 'created' : 'updated'}.`})) {
       this.entry = null;
       this.eventDates.update()
-        .catch((response) => this.house.handleErrorResponse(response))
+        .catch((response) => this.errors.handleErrorResponse(response))
         .finally(() => this.entry = null);
-      this.toast.success(`Event Date was successfully ${isNew ? 'created' : 'updated'}.`);
-    }).catch((response) => this.house.handleErrorResponse(response, model));
+    }
   }
 
   @action

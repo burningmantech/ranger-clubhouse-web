@@ -62,24 +62,27 @@ export default class OpsSwagController extends ClubhouseController {
 
   @action
   removeSwag() {
-    this.modal.confirm('Delete Swag', `Are you sure you wish to delete "${this.entry.title}"? This operation cannot be undone.`, () => {
-      this.entry.destroyRecord().then(() => {
+    this.modal.confirm('Delete Swag', `Are you sure you wish to delete "${this.entry.title}"? This operation cannot be undone.`, async () => {
+      try {
+        await this.entry.destroyRecord();
         this.toast.success('The swag has been deleted.');
         this.entry = null;
-      }).catch((response) => this.house.handleErrorResponse(response));
+      } catch (response) {
+        this.errors.handleErrorResponse(response);
+      }
     })
   }
 
   @action
-  saveSwag(model, isValid) {
+  async saveSwag(model, isValid) {
     if (!isValid) {
       return;
     }
 
-    this.house.saveModel(model, `The swag has been ${model.isNew ? 'created' : 'updated'}.`, () => {
+    if (await this.saveModel.save({model, message: `The swag has been ${model.isNew ? 'created' : 'updated'}.`})) {
       this.entry = null;
       this.swags.update(); // refresh the lists.
-    });
+    }
   }
 
   @action

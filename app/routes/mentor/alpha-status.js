@@ -6,19 +6,11 @@ export default class MentorAlphaStatusRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    const mentees = model.mentees;
-
-    mentees.forEach((person) => {
-      if (person.callsign_approved && person.photo_approved && person.trained) {
-        person.position_eligible = true;
-
-        if (person.status == 'prospective') {
-          person.status_eligible = true;
-        }
-      }
-    });
+    // Eligibility is computed authoritatively by the API (alpha_status_eligible /
+    // alpha_position_eligible); the controller and row template read those fields
+    // directly, so no client-side re-derivation is needed here.
     controller.set('mentees', model.mentees);
-    controller.set('year', this.house.currentYear());
+    controller.set('year', this.session.currentYear());
 
     controller.set('filter', 'all');
   }

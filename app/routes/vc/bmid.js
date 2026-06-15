@@ -1,7 +1,6 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {ADMIN, EDIT_BMIDS} from 'clubhouse/constants/roles';
 import requestYear from 'clubhouse/utils/request-year';
-import RSVP from 'rsvp';
 import BmidModel from "clubhouse/models/bmid";
 
 export default class VcBmidRoute extends ClubhouseRoute {
@@ -12,18 +11,18 @@ export default class VcBmidRoute extends ClubhouseRoute {
     filter: {refreshModel: true},
   };
 
-  model(params) {
+  async model(params) {
     const year = requestYear(params);
     const filter = params.filter || 'special';
 
     this.store.unloadAll('bmid');
 
-    return RSVP.hash({
+    return {
       year,
       filter,
-      bmids: this.ajax.request(`bmid/manage`, {data: {year, filter}}).then((result) => result.bmids),
-      ticketingInfo: this.ajax.request('ticketing/info').then((result) => result.ticketing_info)
-    });
+      bmids: (await this.ajax.request(`bmid/manage`, {data: {year, filter}})).bmids,
+      ticketingInfo: (await this.ajax.request('ticketing/info')).ticketing_info
+    };
   }
 
   setupController(controller, model) {

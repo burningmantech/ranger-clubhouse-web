@@ -7,8 +7,7 @@ export default class PodSortControlsComponent extends Component {
   @tracked isSubmitting = false;
 
   @service ajax;
-  @service house;
-
+  @service errors;
   @action
   async movePerson(direction) {
     const {pod,person} = this.args;
@@ -42,7 +41,7 @@ export default class PodSortControlsComponent extends Component {
             data: {person_id: p.id, sort_index: p.sort_index}
           });
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         }
       }
     }
@@ -50,7 +49,7 @@ export default class PodSortControlsComponent extends Component {
     try {
       await pod.reload();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
 
     this.isSubmitting = false;

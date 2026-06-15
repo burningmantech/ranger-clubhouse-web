@@ -6,7 +6,7 @@ import {STATUS_PENDING, TYPE_PERSONAL} from "clubhouse/models/vehicle";
 
 export default class MePersonalVehicleComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
   @service session;
   @service store;
@@ -19,7 +19,7 @@ export default class MePersonalVehicleComponent extends Component {
   newAction() {
     this.entry = this.store.createRecord('vehicle', {
       type: TYPE_PERSONAL,
-      event_year: this.house.currentYear(),
+      event_year: this.session.currentYear(),
       person_id: this.session.userId,
       status: STATUS_PENDING,
       vehicle_class: 'Pickup Truck',
@@ -46,7 +46,7 @@ export default class MePersonalVehicleComponent extends Component {
           await entry.destroyRecord();
           this.toast.success('Request was successfully deleted.');
         } catch (response) {
-          this.house.handleErrorResponse(response);
+          this.errors.handleErrorResponse(response);
         } finally {
           this.isSubmitting = false;
         }

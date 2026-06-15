@@ -76,6 +76,6 @@ export default class VcAccessDocumentsProvisionsController extends ClubhouseCont
       source_year: p.source_year
     }));
 
-    this.house.downloadCsv(`${this.house.currentYear()}-current-provisions.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.session.currentYear()}-current-provisions.csv`, CSV_COLUMNS, rows);
   }
 }

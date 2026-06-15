@@ -1,28 +1,41 @@
 <h1>{{this.year}} Prospective And Alpha Status</h1>
 
-<FormRow>
-    <FormLabel>Filter</FormLabel>
-    <div class="col-auto">
+{{! ── Legend card (safety-critical instruction reads first) ── }}
+<div class="roster-legend">
+    <span class="roster-legend-label">Legend:</span>
+    <span class="roster-legend-item">
+        {{fa-icon "exclamation-triangle" color="danger"}}
+        Personnel Black Flag Raised &mdash; take no actions until resolved.
+    </span>
+</div>
+
+{{! ── Controls bar (Filter select + live count pill) ── }}
+<div class="roster-controls">
+    <div class="d-flex align-items-center gap-2">
+        <span class="fw-semibold small">Filter:</span>
         <ChForm::Select @name="filter"
                         @value={{this.filter}}
                         @options={{this.filterOptions}}
-                        @onChange={{set-value this 'filter'}} />
+                        @onChange={{set-value this 'filter'}}
+                        @fieldSize="sm" />
     </div>
-</FormRow>
-<p class="mt-2">
-    Legend:{{fa-icon "exclamation-triangle" color="danger"}} = Personnel Black Flag Raised. Take no actions until
-    resolved.
-</p>
+    <div class="roster-controls-divider"></div>
+    <span class="roster-controls-count">
+        Showing {{this.viewPotentials.length}} of {{this.mentees.length}}
+    </span>
+</div>
 
-Showing {{this.viewPotentials.length}} of {{this.mentees.length}}.
-Current alphas: {{this.alphaCount}}, Potential Alpha status: {{this.statusEligibleCount}},
-Potential Alpha position: {{this.positionEligibleCount}}.
+<p class="roster-info-note">
+    <span class="me-3">Current alphas: <strong>{{this.alphaCount}}</strong></span>
+    <span class="me-3">Status eligible: <strong>{{this.statusEligibleCount}}</strong></span>
+    <span>Position eligible: <strong>{{this.positionEligibleCount}}</strong></span>
+</p>
+<div class="table-responsive">
 <UiTable>
     <thead>
     <tr>
         <th>Callsign</th>
         <th>Name</th>
-        <th>Email</th>
         <th>Status</th>
         <th>Mentor Issue<br>(Rank >=3)</th>
         <th class="text-center">Trained?</th>
@@ -31,61 +44,42 @@ Potential Alpha position: {{this.positionEligibleCount}}.
     </tr>
     </thead>
     <tbody>
-    {{#each this.viewPotentials as |person|}}
-    <tr class={{if person.personnel_issue "table-danger"}}>
-        <td>
-            {{#if person.personnel_issue}}
-          {{fa-icon "exclamation-triangle" color="danger"}}
-        {{/if}}
-            <PersonLink @person={{person}} />
-        </td>
-        <td>{{person.first_name}} {{person.last_name}}</td>
-        <td><MailTo @to={{person.email}} /></td>
-        <td>{{person.status}}</td>
-        <td>
-            {{#if person.have_mentor_flags}}
-          {{#each person.mentor_team as |info|}}
-            {{#if (gte info.rank 3)}}
-              {{info.year}}
-                <IntakeRanking @type="mentor" @rank={{info.rank}} />
-            {{/if}}
-          {{/each}}
-        {{else}}
-                -
-            {{/if}}
-        </td>
-        <td class="text-center">
-            {{#if person.trained}}
-                <span class="text-success">{{fa-icon "check"}}</span>
-            {{else}}
-                <span class="text-danger">{{fa-icon "times"}}</span>
-            {{/if}}
-        </td>
-        <td class="text-center">
-            {{#if person.alpha_status_eligible}}
-                <span class="text-success">{{fa-icon "check"}}</span>
-            {{else}}
-                <span class="text-danger">{{fa-icon "times"}}</span>
-            {{/if}}
-        </td>
-        <td class="text-center">
-            {{#if person.alpha_position_eligible}}
-                <span class="text-success">{{fa-icon "check"}}</span>
-            {{else}}
-                <span class="text-danger">{{fa-icon "times"}} missing</span>
-            {{/if}}
-        </td>
-    </tr>
-    {{else}}
-    <tr>
-        <td colspan="10">
-            {{#if this.potentials}}
-                <b class="text-danger">No Alphas or Prospectives matched the filter criteria.</b>
-            {{else}}
-                <b class="text-danger">No Alpha or Prospectives were found for {{this.year}}.</b>
-            {{/if}}
-        </td>
-    </tr>
+    {{#each this.sections key="key" as |section|}}
+        <tr class="alpha-section-header {{if section.isAttention "alpha-section-attention"}}">
+            <th colspan="7">
+                {{#if section.collapsible}}
+                    <button type="button" class="alpha-section-toggle"
+                            aria-expanded="{{unless section.collapsed "true" "false"}}"
+                            {{on "click" (fn this.toggleSection section.key)}}>
+                        {{fa-icon (if section.collapsed "chevron-right" "chevron-down") right=1}}
+                        {{section.title}}
+                        <span class="alpha-section-count">({{section.people.length}})</span>
+                    </button>
+                {{else}}
+                    {{#if section.isAttention}}{{fa-icon "exclamation-triangle" right=1}}{{/if}}
+                    {{section.title}}
+                    <span class="alpha-section-count">({{section.people.length}})</span>
+                {{/if}}
+            </th>
+        </tr>
+        {{#unless section.collapsed}}
+            {{#each section.people key="id" as |person|}}
+                <AlphaStatusRow @person={{person}} />
+            {{/each}}
+        {{/unless}}
     {{/each}}
+
+    {{#unless this.viewPotentials.length}}
+        <tr>
+            <td colspan="7">
+                {{#if this.mentees.length}}
+                    <b class="text-danger">No Alphas or Prospectives matched the filter criteria.</b>
+                {{else}}
+                    <b class="text-danger">No Alpha or Prospectives were found for {{this.year}}.</b>
+                {{/if}}
+            </td>
+        </tr>
+    {{/unless}}
     </tbody>
 </UiTable>
+</div>

@@ -23,6 +23,6 @@ export default class AdminRadioEligibilityController extends ClubhouseController
       {title: `${this.year} Signed Up`, key: 'signed_up', yesno: true}
     ];
 
-    this.house.downloadCsv(`${this.year}-radio-eligibility.csv`, CSV_COLUMNS, this.people);
+    this.download.downloadCsv(`${this.year}-radio-eligibility.csv`, CSV_COLUMNS, this.people);
   }
 }

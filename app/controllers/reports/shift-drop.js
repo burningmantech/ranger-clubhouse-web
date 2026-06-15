@@ -38,7 +38,7 @@ export default class ReportsShiftDropController extends ClubhouseController {
   }
 
   get yearOptions() {
-    const year = this.house.currentYear();
+    const year = this.session.currentYear();
     const years = [];
 
     for (let y = 2019; y <= year; y++) {
@@ -85,7 +85,7 @@ export default class ReportsShiftDropController extends ClubhouseController {
       this.haveResults = true;
       this.people = people;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -93,11 +93,11 @@ export default class ReportsShiftDropController extends ClubhouseController {
 
   @action
   scrollToResults() {
-    this.house.scrollToElement('#drop-results');
+    this.scroll.scrollToElement('#drop-results');
   }
 
   @action
   exportToCSV() {
-    this.house.downloadCsv(`${this.year}-shift-drops.csv`, CSV_COLUMNS, this.people);
+    this.download.downloadCsv(`${this.year}-shift-drops.csv`, CSV_COLUMNS, this.people);
   }
 }

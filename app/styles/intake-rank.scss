@@ -1,0 +1,57 @@
+.intake-rank-strip {
+  display: flex;
+  flex-wrap: wrap;
+ gap: 0.5rem;
+}
+
+.intake-rank-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+
+.intake-rank-chip-label {
+  font-weight: 600;
+}
+
+.intake-rank-chip-sep {
+  color: #999999;
+}
+
+.intake-rank-chip-value {
+  font-weight: 600;
+}
+
+.intake-rank-chip-rank-1 {
+  border-color: #28a745;
+  background-color: #e8f6ec;
+  color: #1c5b2c;
+}
+
+.intake-rank-chip-rank-2 {
+  border-color: #6c757d;
+  background-color: #f1f3f5;
+  color: #495057;
+}
+
+.intake-rank-chip-rank-3 {
+  border-color: #9a9005;
+  background-color: #fff8d7;
+  color: #9f6800;
+}
+
+.intake-rank-chip-rank-4 {
+  border-color: #dc3545;
+  background-color: #f8d7da;
+  color: #842029;
+  font-weight: 700;
+}
+
+.intake-rank-chip-empty-note {
+  color: #6c757d;
+  font-style: italic;
+}

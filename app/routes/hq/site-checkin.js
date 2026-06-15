@@ -3,13 +3,18 @@ import {EDIT_EMERGENCY_CONTACT} from "clubhouse/constants/roles";
 
 export default class HqSiteCheckinRoute extends ClubhouseRoute {
   setupController(controller, model) {
-    const {person} = model;
-    controller.setProperties(model);
-    controller.contactSaved = false;
-    controller.isOnSite = person.on_site;
-    controller.showSiteCheckInWizard = false;
-    controller.siteCheckInStarted = false;
-    controller.siteCheckInFinished = false;
+    super.setupController(controller, model);
+
+    const {person, personEvent, eventInfo, assets, attachments, eventPeriods} = model;
+    // Explicit allow-list: the leaf has no model() hook, so only fan the keys it
+    // actually consumes onto the controller (avoids hidden, untracked props).
+    controller.setProperties({person, personEvent, eventInfo, assets, attachments, eventPeriods});
+
+    // Single owner for per-entry reset of all wizard/submit state.
+    controller.resetState(model.person);
+
+    // PII gate is UX-only; ranger-clubhouse-api enforces the actual write
+    // authorization on emergency_contact/camp_location.
     controller.canEditEmergencyContact =
       this.session.isAdmin
       || this.session.isEMOPEnabled

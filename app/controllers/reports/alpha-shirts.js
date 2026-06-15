@@ -15,7 +15,7 @@ export default class ReportsAlphaShirtsController extends ClubhouseController {
       { title: `Long Sleeve Shirt`, key: 'longsleeveshirt_size_style' },
     ];
 
-    this.house.downloadCsv(`${this.year}-alpha-shirts.csv`, CSV_COLUMNS, this.alphas);
+    this.download.downloadCsv(`${this.year}-alpha-shirts.csv`, CSV_COLUMNS, this.alphas);
   }
 
   @action
@@ -25,6 +25,6 @@ export default class ReportsAlphaShirtsController extends ClubhouseController {
       { title: 'Count', key: 'count' },
     ];
 
-    this.house.downloadCsv(`${this.year}-alpha-${shirts.exportName}-counts.csv`, CSV_COLUMNS, shirts.types);
+    this.download.downloadCsv(`${this.year}-alpha-${shirts.exportName}-counts.csv`, CSV_COLUMNS, shirts.types);
   }
 }

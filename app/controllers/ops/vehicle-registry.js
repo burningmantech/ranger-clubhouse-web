@@ -3,6 +3,32 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {isEmpty} from '@ember/utils';
 import {ADMIN, VEHICLE_INFO_UPDATE} from "clubhouse/constants/roles";
+import dayjs from 'dayjs';
+
+const CSV_COLUMNS = [
+  {key: 'callsign_team', title: 'Person/Team'},
+  {key: 'status', title: 'Status'},
+  {key: 'arrival_date', title: 'SAP'},
+  {key: 'vehicle_year', title: 'Vehicle Year'},
+  {key: 'vehicle_make', title: 'Vehicle Make'},
+  {key: 'vehicle_model', title: 'Vehicle Model'},
+  {key: 'vehicle_color', title: 'Vehicle Color'},
+  {key: 'rental_number', title: 'DPW Request ID'},
+  {key: 'driving_sticker', title: 'Driving Permit'},
+  {key: 'sticker_number', title: 'Permit #'},
+  {key: 'license_state', title: 'License State'},
+  {key: 'license_number', title: 'License #'},
+  {key: 'ranger_logo', title: 'Ranger Logo'},
+  {key: 'fuel_chit', title: 'Fuel Chit'},
+  {key: 'amber_light', title: 'Amber Light'},
+  {key: 'SAP', title: 'SAP'},
+  {key: 'pvr_teams', title: 'PVR Teams'},
+  {key: 'pvr_positions', title: 'PVR Positions'},
+  {key: 'notes', title: 'Notes'},
+  {key: 'response', title: 'Response to person'},
+  {key: 'request_comment', title: 'Requester Comment'},
+];
+
 
 export default class OpsPersonVehiclesController extends ClubhouseController {
   queryParams = ['year'];
@@ -102,15 +128,18 @@ export default class OpsPersonVehiclesController extends ClubhouseController {
     this._commonEdit(entry, false);
   }
 
-  _commonEdit(entry, isSticker) {
-    entry.reload().then(() => {
+  async _commonEdit(entry, isSticker) {
+    try {
+      await entry.reload();
       if (isSticker) {
         this.stickerEditEntry = entry;
       } else {
         this.editEntry = entry;
       }
       entry.callsign = entry.person ? entry.person.callsign : '';
-    }).catch((response) => this.house.handleErrorResponse(response));
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    }
   }
 
   @action
@@ -124,7 +153,7 @@ export default class OpsPersonVehiclesController extends ClubhouseController {
   }
 
   @action
-  _commonSaveEntry(model, isValid, isSticker) {
+  async _commonSaveEntry(model, isValid, isSticker) {
     if (!isValid) {
       return;
     }
@@ -133,17 +162,16 @@ export default class OpsPersonVehiclesController extends ClubhouseController {
     if (model.type === 'fleet') {
       model.driving_sticker = 'staff';
     }
-    this.house.saveModel(model, 'Vehicle successfully saved',
-      () => {
-        if (isSticker) {
-          this.stickerEditEntry = null;
-        } else {
-          this.editEntry = null;
-        }
-        if (isNew) {
-          this.person_vehicle.update().catch((response) => this.house.handleErrorResponse(response));
-        }
-      });
+    if (await this.saveModel.save({model, message: 'Vehicle successfully saved'})) {
+      if (isSticker) {
+        this.stickerEditEntry = null;
+      } else {
+        this.editEntry = null;
+      }
+      if (isNew) {
+        this.person_vehicle.update().catch((response) => this.errors.handleErrorResponse(response));
+      }
+    }
   }
 
   get canEditVehicles() {
@@ -152,11 +180,14 @@ export default class OpsPersonVehiclesController extends ClubhouseController {
 
   @action
   deleteAction(entry) {
-    this.modal.confirm('Delete Entry', 'Are you sure you want to delete this entry?', () => {
-      entry.destroyRecord().then(() => {
+    this.modal.confirm('Delete Entry', 'Are you sure you want to delete this entry?', async () => {
+      try {
+        await entry.destroyRecord();
         this.editEntry = null;
         this.toast.success('Vehicle record has been deleted.');
-      }).catch((response) => this.house.handleErrorResponse(response));
+      } catch (response) {
+        this.errors.handleErrorResponse(response);
+      }
     });
   }
 
@@ -172,30 +203,11 @@ export default class OpsPersonVehiclesController extends ClubhouseController {
 
   @action
   exportToCSV() {
-    const COLUMNS = [
-      {key: 'callsign_team', title: 'Person/Team'},
-      {key: 'status', title: 'Status'},
-      {key: 'vehicle_year', title: 'Vehicle Year'},
-      {key: 'vehicle_make', title: 'Vehicle Make'},
-      {key: 'vehicle_model', title: 'Vehicle Model'},
-      {key: 'vehicle_color', title: 'Vehicle Color'},
-      {key: 'rental_number', title: 'DPW Request ID'},
-      {key: 'driving_sticker', title: 'Driving Permit'},
-      {key: 'sticker_number', title: 'Permit #'},
-      {key: 'license_state', title: 'License State'},
-      {key: 'license_number', title: 'License #'},
-      {key: 'ranger_logo', title: 'Ranger Logo'},
-      {key: 'fuel_chit', title: 'Fuel Chit'},
-      {key: 'amber_light', title: 'Amber Light'},
-      {key: 'notes', title: 'Notes'},
-      {key: 'response', title: 'Response to person'},
-      {key: 'request_comment', title: 'Requester Comment'},
-    ];
-
     const rows = this.viewVehicles.map((v) => {
       return {
         callsign_team: (v.isFleet ? v.team_assignment : (v.person ? v.person.callsign : `Deleted Person #${v.person_id}`)),
         status: v.status,
+        arrival_date: v.arrival_date ? (v.arrival_date === 'any' ? 'any' : dayjs(v.arrival_date).format('MM-DD-YYYY')) : 'none',
         vehicle_year: v.vehicle_year,
         vehicle_make: v.vehicle_make,
         vehicle_model: v.vehicle_model,
@@ -211,9 +223,12 @@ export default class OpsPersonVehiclesController extends ClubhouseController {
         notes: v.notes,
         response: v.response,
         request_comment: v.request_comment,
-      };
+        sap: v.arrival_date,
+        pvr_teams: v.pvr_teams?.map((p) => p.title).join("\n"),
+        pvr_positions: v.pvr_positions?.map((p) => p.title).join("\n"),
+       };
     });
 
-    this.house.downloadCsv(`${this.year}-vehicles.csv`, COLUMNS, rows);
+    this.download.downloadCsv(`${this.year}-vehicles.csv`, CSV_COLUMNS, rows);
   }
 }

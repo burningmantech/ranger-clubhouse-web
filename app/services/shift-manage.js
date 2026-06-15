@@ -13,7 +13,7 @@ const REFRESH_PAGE_MESSAGE = 'Please refresh the page to ensure the most up to d
 
 export default class ShiftManageService extends Service {
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
   @service session;
   @service toast;
@@ -81,7 +81,7 @@ export default class ShiftManageService extends Service {
       }
     } catch (response) {
       slot.isSubmitting = false;
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
@@ -279,7 +279,7 @@ export default class ShiftManageService extends Service {
         finished_status
       } = await this.ajax.request('slot/check-datetime', {data: {position_id, start, finished}}));
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       return;
     }
 
@@ -330,7 +330,7 @@ export default class ShiftManageService extends Service {
       }
       ({status, timesheets} = await this.ajax.request('timesheet/check-overlap', {data}));
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
       return;
     }
 

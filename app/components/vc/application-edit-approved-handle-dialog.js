@@ -4,7 +4,7 @@ import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 
 export default class VcApplicationEditApprovedHandleDialogComponent extends Component {
-  @service house;
+  @service saveModel;
   @service toast;
 
   @tracked isSubmitting;
@@ -25,17 +25,9 @@ export default class VcApplicationEditApprovedHandleDialogComponent extends Comp
     }
 
     const {application} = this.args;
-
-    try {
-      this.isSubmitting = true;
-      application.approved_handle = model.approved_handle;
-      await application.save();
-      this.toast.success('The accepted handle was successfully updated.');
+    application.approved_handle = model.approved_handle;
+    if (await this.saveModel.save({model: application, message: 'The accepted handle was successfully updated.', owner: this})) {
       this.args.onClose();
-    } catch (response) {
-      this.house.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 }

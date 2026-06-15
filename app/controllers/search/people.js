@@ -60,7 +60,7 @@ export default class SearchPeopleController extends ClubhouseController {
 
   constructor() {
     super(...arguments);
-    const currentYear = this.house.currentYear();
+    const currentYear = this.session.currentYear();
     this.year = currentYear;
     this.yearCreatedOptions = _.range(currentYear, 2010);
     this.yearCreatedOptions.unshift(['Any', 0]);
@@ -176,7 +176,7 @@ export default class SearchPeopleController extends ClubhouseController {
       this.people = people;
       this.haveResults = true;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -230,6 +230,6 @@ export default class SearchPeopleController extends ClubhouseController {
       CSV_COLUMNS.push({title: 'Created On', key: 'created_at', format: 'date'});
     }
 
-    this.house.downloadCsv('people-search.csv', CSV_COLUMNS, this.people);
+    this.download.downloadCsv('people-search.csv', CSV_COLUMNS, this.people);
   }
 }

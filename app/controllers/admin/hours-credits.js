@@ -41,6 +41,6 @@ export default class AdminHoursCreditsController extends ClubhouseController {
 
       });
 
-      this.house.downloadCsv(`${this.year}-hours-credits.csv`, COLUMNS, rows);
+      this.download.downloadCsv(`${this.year}-hours-credits.csv`, COLUMNS, rows);
     }
 }

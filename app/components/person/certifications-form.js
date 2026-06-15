@@ -18,7 +18,7 @@ class Certification {
 
 export default class PersonRoleFormComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
   @service session;
   @tracked isLoading = false;
@@ -29,7 +29,12 @@ export default class PersonRoleFormComponent extends Component {
     super(...arguments);
 
     this.isLoading = true;
-    this.ajax.request('certification').then(({certification}) => {
+    this._loadCertifications();
+  }
+
+  async _loadCertifications() {
+    try {
+      const {certification} = await this.ajax.request('certification');
       const {personCertifications} = this.args;
 
       this.certifications = certification.map((cert) => {
@@ -45,7 +50,9 @@ export default class PersonRoleFormComponent extends Component {
         return record;
       });
       this.isLoading = false;
-    }).catch((response) => this.house.handleErrorResponse(response));
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    }
   }
 
   @action

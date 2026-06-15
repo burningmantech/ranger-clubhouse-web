@@ -1,4 +1,5 @@
 import Component from '@glimmer/component';
+import {service} from '@ember/service';
 import PositionTypes from 'clubhouse/constants/position-types';
 import PositionValidations from 'clubhouse/validations/position';
 import {
@@ -6,12 +7,14 @@ import {
   TEAM_CATEGORY_OPTIONAL,
   TEAM_CATEGORY_PUBLIC,
   TYPE_TRAINING
-} from "clubhouse/models/position";
-import {service} from '@ember/service';
-import {TECH_NINJA} from "clubhouse/constants/roles";
+} from 'clubhouse/models/position';
+import {TECH_NINJA} from 'clubhouse/constants/roles';
+
+const TRAINER_TITLE = /\btrainer\b/i;
+const BLANK_OPTION = ['-', null];
 
 export default class PositionEditComponent extends Component {
-  @service house;
+  @service scroll;
   @service session;
 
   positionTypes = PositionTypes;
@@ -25,35 +28,26 @@ export default class PositionEditComponent extends Component {
 
   constructor() {
     super(...arguments);
+    this.scroll.scrollToTop(true);
+  }
 
-    const {positions} = this.args;
+  get isTechNinja() {
+    return this.session.hasRole(TECH_NINJA);
+  }
 
-    this.teamPositionOptions = [
-      ['-', null]
-    ];
+  get teamOptions() {
+    return [BLANK_OPTION, ...this.args.teams.map((team) => [team.title, team.id])];
+  }
 
-    this.args.teams.forEach((team) => this.teamPositionOptions.push([team.title, team.id]));
+  get trainingOptions() {
+    const trainings = this.args.positions.filter(
+      (p) => p.type === TYPE_TRAINING && !TRAINER_TITLE.test(p.title ?? '')
+    );
+    return [BLANK_OPTION, ...trainings.map((p) => [p.title, p.id])];
+  }
 
-    this.trainingOptions = [
-      ['-', '']
-    ];
-
-    positions.forEach((position) => {
-      if (position.type === TYPE_TRAINING && !position.title.match(/\btrainer\b/i)) {
-        this.trainingOptions.push([position.title, position.id]);
-      }
-    });
-
-    this.parentPositionOptions = [
-      ['-', null]
-    ];
-
-    positions.forEach((position) => {
-        this.parentPositionOptions.push([position.title, position.id]);
-    })
-
-    this.house.scrollToTop(true);
-
-    this.isTechNinja = this.session.hasRole(TECH_NINJA);
+  get parentPositionOptions() {
+    const others = this.args.positions.filter((p) => p.id !== this.args.position.id);
+    return [BLANK_OPTION, ...others.map((p) => [p.title, p.id])];
   }
 }

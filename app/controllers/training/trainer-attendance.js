@@ -26,6 +26,6 @@ export default class TrainingTrainerAttendanceController extends ClubhouseContro
       })
     });
 
-    this.house.downloadCsv(`${this.year}-${this.training.title.replace(/ /g, '-')}-trainer-attendance.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.year}-${this.training.title.replace(/ /g, '-')}-trainer-attendance.csv`, CSV_COLUMNS, rows);
   }
 }

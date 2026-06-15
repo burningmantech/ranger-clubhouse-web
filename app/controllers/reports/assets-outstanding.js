@@ -32,6 +32,6 @@ export default class ReportsAssetsOutstandingController extends ClubhouseControl
         };
     });
 
-    return this.house.downloadCsv(`${this.year}-assets-outstanding.csv`, CSV_COLUMNS, rows);
+    return this.download.downloadCsv(`${this.year}-assets-outstanding.csv`, CSV_COLUMNS, rows);
   }
 }

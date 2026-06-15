@@ -1,0 +1,54 @@
+@media print {
+  h1 {
+    font-size: 1.2rem !important;
+  }
+
+  body {
+    margin: 0.1cm !important;
+    line-height: 1.3 !important;
+    background-color: #f6f6f6;
+    color: #000 !important;
+  }
+
+  section {
+    padding: 0 !important;
+  }
+
+  .ui-section {
+    box-shadow: none !important;
+    padding: 0 !important;
+  }
+
+  .d-print-page-break {
+    page-break-before: always !important;
+  }
+
+  main {
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: #ffffff !important;
+  }
+
+  a {
+    text-decoration: none !important;
+    color: #000 !important;
+  }
+
+  ul.nav-tabs {
+    display: none;
+  }
+}
+/*
+ * Safari printing work around
+ */
+
+@media print {
+  .container {
+    width: auto;
+  }
+}
+@media print {
+  .person-manage-header {
+    display: none;
+  }
+}

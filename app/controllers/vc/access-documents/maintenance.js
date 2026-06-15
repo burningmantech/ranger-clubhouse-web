@@ -148,7 +148,7 @@ export default class AdminMaintenanceController extends ClubhouseController {
   @action
   executeTask(task) {
     this.taskParam = null;
-    this.modal.confirm('Execute Task', `Are you sure you want to '${task.title}'?`, () => {
+    this.modal.confirm('Execute Task', `Are you sure you want to '${task.title}'?`, async () => {
       const data = {};
       this.task = task;
       this.taskAction = task.action;
@@ -158,12 +158,14 @@ export default class AdminMaintenanceController extends ClubhouseController {
         data[task.param.name] = this.paramValue;
       }
 
-      this.ajax.request(`${task.controller}/${task.action}`, {method: 'POST', data})
-        .then((results) => this.results = results)
-        .catch((response) => {
-          this.house.handleErrorResponse(response);
-          this.task = null;
-        }).finally(() => this.isSubmitting = false);
+      try {
+        this.results = await this.ajax.request(`${task.controller}/${task.action}`, {method: 'POST', data});
+      } catch (response) {
+        this.errors.handleErrorResponse(response);
+        this.task = null;
+      } finally {
+        this.isSubmitting = false;
+      }
     });
   }
 

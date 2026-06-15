@@ -20,6 +20,6 @@
   {{#if @person.isSaving}}
     <LoadingIndicator/>
   {{else if this.isSaved}}
-    {{fa-icon "check" color="success"}}
+    <span data-test-saved>{{fa-icon "check" color="success"}}</span>
   {{/if}}
 </ChForm>

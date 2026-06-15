@@ -12,11 +12,11 @@ export default class MeRangerInfoRoute extends ClubhouseRoute {
 
     this.year = year;
     return {
-      eventInfo: await this.ajax.request(`person/${person_id}/event-info`, {data: {year}}).then(({event_info}) => event_info),
+      eventInfo: (await this.ajax.request(`person/${person_id}/event-info`, {data: {year}})).event_info,
       personEvent: await this.store.findRecord('person-event', `${person_id}-${year}`, {reload: true}),
-      personPositions: await this.ajax.request(`person/${person_id}/positions`).then(({positions}) => positions),
-      personCertifications: await this.ajax.request('person-certification', {data: {person_id}}).then(({person_certification}) => person_certification),
-      personMembership: await this.ajax.request(`person/${person_id}/membership`).then(({membership}) => membership),
+      personPositions: (await this.ajax.request(`person/${person_id}/positions`)).positions,
+      personCertifications: (await this.ajax.request('person-certification', {data: {person_id}})).person_certification,
+      personMembership: (await this.ajax.request(`person/${person_id}/membership`)).membership,
     };
   }
 

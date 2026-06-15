@@ -11,7 +11,7 @@ export default class VcApplicationsIndexRoute extends ClubhouseRoute {
 
   async model({year}) {
     if (!year) {
-      year = this.house.currentYear();
+      year = this.session.currentYear();
     } else {
       year = +year;
     }
@@ -30,7 +30,7 @@ export default class VcApplicationsIndexRoute extends ClubhouseRoute {
     controller.applications = model.applications;
     controller.year = model.year;
     controller.VCs = model.VCs;
-    const existingValues = this.house.getKey(FILTERS_KEY) || {};
+    const existingValues = this.storage.getKey(FILTERS_KEY) || {};
     const newValues = {};
 
     forEach(FILTERS_VALUES, (value, key) => {
@@ -43,6 +43,6 @@ export default class VcApplicationsIndexRoute extends ClubhouseRoute {
       controller[key] = newValues[key];
     });
 
-    this.house.setKey(FILTERS_KEY, newValues);
+    this.storage.setKey(FILTERS_KEY, newValues);
   }
 }

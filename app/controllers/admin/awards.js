@@ -22,24 +22,27 @@ export default class AdminAwardsIndexController extends ClubhouseController {
 
   @action
   removeAward() {
-    this.modal.confirm('Delete Award', `Are you sure you wish to delete "${this.entry.title}"? This operation cannot be undone.`, () => {
-      this.entry.destroyRecord().then(() => {
+    this.modal.confirm('Delete Award', `Are you sure you wish to delete "${this.entry.title}"? This operation cannot be undone.`, async () => {
+      try {
+        await this.entry.destroyRecord();
         this.toast.success('The award has been deleted.');
         this.entry = null;
-      }).catch((response) => this.house.handleErrorResponse(response));
+      } catch (response) {
+        this.errors.handleErrorResponse(response);
+      }
     })
   }
 
   @action
-  saveAward(model, isValid) {
+  async saveAward(model, isValid) {
     if (!isValid) {
       return;
     }
 
-    this.house.saveModel(model, `The award has been ${model.isNew ? 'created' : 'updated'}.`, () => {
+    if (await this.saveModel.save({model, message: `The award has been ${model.isNew ? 'created' : 'updated'}.`})) {
       this.entry = null;
       this.awards.update(); // refresh the list.
-    });
+    }
   }
 
   @action

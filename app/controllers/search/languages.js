@@ -83,7 +83,7 @@ export default class SearchLanguagesController extends ClubhouseController {
       if (response.status === 404) {
         this.notFound = language;
       } else {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       }
     } finally {
       this.isLoading = false;

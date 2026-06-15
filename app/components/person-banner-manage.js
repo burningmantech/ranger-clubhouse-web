@@ -5,7 +5,6 @@ import {ADMIN, VC} from "clubhouse/constants/roles";
 import {service} from '@ember/service';
 
 export default class PersonBannerManage extends Component {
-  @service house;
   @service session;
   @tracked entry;
 

@@ -40,7 +40,7 @@ export default class MentorConvertController extends ClubhouseController {
   }
 
   @action
-  convertAction(people, status) {
+  async convertAction(people, status) {
     const selected = people.filter((a) => a.selected);
 
     if (!selected) {
@@ -51,24 +51,27 @@ export default class MentorConvertController extends ClubhouseController {
     const alphas = selected.map((s) => ({id: s.id, status}));
 
     this.isSubmitting = true;
-    this.ajax.request('mentor/convert-alphas', {method: 'POST', data: {alphas}})
-      .then((result) => {
-        const converted = result.alphas;
+    try {
+      const result = await this.ajax.request('mentor/convert-alphas', {method: 'POST', data: {alphas}});
+      const converted = result.alphas;
 
-        converted.forEach((convert) => {
-          const person = selected.find((s) => s.id == convert.id);
+      converted.forEach((convert) => {
+        const person = selected.find((s) => s.id == convert.id);
 
-          if (!person) {
-            return;
-          }
+        if (!person) {
+          return;
+        }
 
-          set(person, 'status', convert.status);
-          set(person, 'converted', true);
-          set(person, 'selected', false);
-        });
+        set(person, 'status', convert.status);
+        set(person, 'converted', true);
+        set(person, 'selected', false);
+      });
 
-        this.toast.success(`${converted.length} Alpha(s) have been converted`);
-      }).catch((response) => this.handleErrorResponse(response))
-      .finally(() => this.isSubmitting = false);
+      this.toast.success(`${converted.length} Alpha(s) have been converted`);
+    } catch (response) {
+      this.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 }

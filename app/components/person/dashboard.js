@@ -5,7 +5,7 @@ import { tracked } from '@glimmer/tracking';
 
 export default class PersonDashboardComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
 
   @tracked isLoading = true;
@@ -21,10 +21,12 @@ export default class PersonDashboardComponent extends Component {
   async _loadDashboard() {
     const personId = this.args.person.id;
     try {
-      this.milestones = await this.ajax.request(`person/${personId}/milestones`).then(({milestones}) => milestones);
-      this.photo = await this.ajax.request(`person/${personId}/photo`).then(({photo}) => photo);
+      const {milestones} = await this.ajax.request(`person/${personId}/milestones`);
+      this.milestones = milestones;
+      const {photo} = await this.ajax.request(`person/${personId}/photo`);
+      this.photo = photo;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }

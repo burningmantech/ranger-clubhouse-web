@@ -48,6 +48,6 @@ export default class ReportsEarlyLateCheckinsController extends ClubhouseControl
       via: e.createdVia
     }));
 
-    this.house.downloadCsv(`${this.year}-early-late-checkins`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.year}-early-late-checkins`, CSV_COLUMNS, rows);
   }
 }

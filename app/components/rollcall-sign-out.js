@@ -26,8 +26,7 @@ class PersonShift {
 export default class RollcallSignOutComponent extends Component {
   @service ajax;
   @service toast;
-  @service house;
-
+  @service errors;
   @tracked isLoading;
 
   @tracked positions = [];
@@ -47,43 +46,46 @@ export default class RollcallSignOutComponent extends Component {
    * @private
    */
 
-  _loadTimesheets() {
+  async _loadTimesheets() {
     this.isLoading = true;
-    this.ajax.request('timesheet', {data: {is_on_duty: 1, include_photo: 1}})
-      .then((result) => {
-        this.timesheets = result.timesheet;
-        this.positions = _.map(
-          _.groupBy(this.timesheets, 'position_id'),
-          (entries, positionId) => ({
-            id: positionId,
-            title: entries[0].position.title,
-            people: entries.map((entry) => new PersonShift(entry))
-          })
-        );
-        this.positions.sort((a, b) => a.title.localeCompare(b.title));
-        const options = this.positions.map((p) => [p.title, +p.id]);
-        const burnPositions = [];
-        [SANDMAN, BURN_PERIMETER, ART_CAR_WRANGLER].forEach((burnPosition) => {
-          const found = options.find((p) => p[1] === burnPosition);
-          if (found) {
-            burnPositions.unshift(found);
-            _.pull(options, found);
-          }
-        });
+    try {
+      const result = await this.ajax.request('timesheet', {data: {is_on_duty: 1, include_photo: 1}});
+      this.timesheets = result.timesheet;
+      this.positions = _.map(
+        _.groupBy(this.timesheets, 'position_id'),
+        (entries, positionId) => ({
+          id: positionId,
+          title: entries[0].position.title,
+          people: entries.map((entry) => new PersonShift(entry))
+        })
+      );
+      this.positions.sort((a, b) => a.title.localeCompare(b.title));
+      const options = this.positions.map((p) => [p.title, +p.id]);
+      const burnPositions = [];
+      [SANDMAN, BURN_PERIMETER, ART_CAR_WRANGLER].forEach((burnPosition) => {
+        const found = options.find((p) => p[1] === burnPosition);
+        if (found) {
+          burnPositions.unshift(found);
+          _.pull(options, found);
+        }
+      });
 
-        this.positionOptions = [
-          ['Select Position', 0],
-          {
-            groupName: 'Burn Positions',
-            options: burnPositions
-          },
-          {
-            groupName: 'Everything Else',
-            options
-          }
-        ];
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => this.isLoading = false);
+      this.positionOptions = [
+        ['Select Position', 0],
+        {
+          groupName: 'Burn Positions',
+          options: burnPositions
+        },
+        {
+          groupName: 'Everything Else',
+          options
+        }
+      ];
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
+    }
   }
 
   /**
@@ -123,29 +125,32 @@ export default class RollcallSignOutComponent extends Component {
    * @param {PersonShift} person
    */
 
-  _signOutPerson(person) {
+  async _signOutPerson(person) {
     person.isSubmitting = true;
-    this.ajax.request(`timesheet/${person.timesheetId}/signoff`, {method: 'POST'})
-      .then((result) => {
-        const {timesheet} = result;
-        person.isSignedIn = false;
-        person.duration = timesheet.duration;
-        switch (result.status) {
-          case 'success':
-            this.toast.success(`${person.callsign} has been signed off`);
-            break;
+    try {
+      const result = await this.ajax.request(`timesheet/${person.timesheetId}/signoff`, {method: 'POST'});
+      const {timesheet} = result;
+      person.isSignedIn = false;
+      person.duration = timesheet.duration;
+      switch (result.status) {
+        case 'success':
+          this.toast.success(`${person.callsign} has been signed off`);
+          break;
 
-          case 'already-signed-off':
-            this.toast.error(`${person.callsign} was already signed off.`);
-            person.isSignedIn = false;
-            break;
+        case 'already-signed-off':
+          this.toast.error(`${person.callsign} was already signed off.`);
+          person.isSignedIn = false;
+          break;
 
-          default:
-            this.toast.error(`Unknown signoff response [${result.status}].`);
-            break;
-        }
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => person.isSubmitting = false)
+        default:
+          this.toast.error(`Unknown signoff response [${result.status}].`);
+          break;
+      }
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      person.isSubmitting = false;
+    }
   }
 
   /**
@@ -153,31 +158,33 @@ export default class RollcallSignOutComponent extends Component {
    * @param {PersonShift} person
    */
 
-  _signInPerson(person) {
+  async _signInPerson(person) {
     person.isSubmitting = true;
-    this.ajax.request(`timesheet/${person.timesheetId}/resignin`, {method: 'POST', data: {person_id: person.person_id}})
-      .then((result) => {
-        const {timesheet, status} = result;
-        switch (status) {
-          case 'success':
-            person.isSignedIn = true;
-            person.duration = timesheet.duration;
-            person.backOnShift = true;
-            this.toast.success(`${person.callsign} is BACK ON SHIFT`);
-            break;
+    try {
+      const result = await this.ajax.request(`timesheet/${person.timesheetId}/resignin`, {method: 'POST', data: {person_id: person.person_id}});
+      const {timesheet, status} = result;
+      switch (status) {
+        case 'success':
+          person.isSignedIn = true;
+          person.duration = timesheet.duration;
+          person.backOnShift = true;
+          this.toast.success(`${person.callsign} is BACK ON SHIFT`);
+          break;
 
-          case 'already-on-duty':
-            this.toast.error(`${person.callsign} is already on shift.`);
-            person.isSignedIn = true;
-            person.duration = timesheet.duration;
-            break;
+        case 'already-on-duty':
+          this.toast.error(`${person.callsign} is already on shift.`);
+          person.isSignedIn = true;
+          person.duration = timesheet.duration;
+          break;
 
-          default:
-            this.toast.error(`Unknown signoff response [${status}].`);
-            break;
-        }
-
-      }).catch((response) => this.house.handleErrorResponse(response))
-      .finally(() => person.isSubmitting = false)
+        default:
+          this.toast.error(`Unknown signoff response [${status}].`);
+          break;
+      }
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    } finally {
+      person.isSubmitting = false;
+    }
   }
 }

@@ -6,14 +6,13 @@ import shirtGroupsSort from 'clubhouse/utils/shirt-groups-sort';
 
 const ALPHAS_PER_PAGE = 28;
 export default class MentorAlphaAparelSheetComponent extends Component {
-  @service house;
-
+  @service session;
   constructor() {
     super(...arguments);
 
     const people = this.args.slot.people.filter((p) => p.on_alpha_shift);
     // Figure out the mentor status
-    const year = this.house.currentYear();
+    const year = this.session.currentYear();
 
     people.forEach((person) => {
       const mentor = person.mentor_history.find((h) => h.year == year);

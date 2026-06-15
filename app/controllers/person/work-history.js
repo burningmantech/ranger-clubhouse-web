@@ -46,25 +46,23 @@ export default class PersonWorkHistoryController extends ClubhouseController {
   }
 
   @action
-  saveTeamHistory(entry, isValid) {
+  async saveTeamHistory(entry, isValid) {
     if (!isValid) {
       return;
     }
 
-    entry.save().then(() => {
-      this.toast.success('Entry was successfully saved.');
+    if (await this.saveModel.save({model: entry, message: 'Entry was successfully saved.'})) {
       this.teamEntry = null;
       this.membershipHistory.update();
-    }).catch((response) => this.house.handleErrorResponse(response));
+    }
   }
 
   @action
   deleteTeamHistory() {
-    this.modal.confirm('Delete Team History Record', 'Are you sure you want to delete this record?', () => {
-      this.teamEntry.destroyRecord().then(() => {
-        this.teamEntry = null;
-        this.toast.success('Team History record has been deleted.');
-      })
+    this.modal.confirm('Delete Team History Record', 'Are you sure you want to delete this record?', async () => {
+      await this.teamEntry.destroyRecord();
+      this.teamEntry = null;
+      this.toast.success('Team History record has been deleted.');
     });
   }
 }

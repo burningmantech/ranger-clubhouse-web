@@ -1,0 +1,101 @@
+// Slot information icon
+.info-icon {
+  // readjust the size - the schedule listing reduces the font.
+  color: $link-color;
+  font-size: 1rem;
+}
+
+// Unified Flagging View Ranking styling
+
+.rank-none {
+  font-style: italic;
+  color: $gray-600;
+}
+
+// Rank 1 / Green, above average
+.rank-1 {
+  color: #28a745;
+  border-color: #28a745;
+}
+
+// Rank 2 - no styling
+
+// Rank 3 - Yellow / Problem
+.rank-3 {
+  color: #9f6800;
+  border-color: #9a9005;
+}
+
+// Rank 4 - FLAG
+.rank-4 {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.rank-1, .rank-2, .rank-3, .rank-4, .rank-none {
+  display: inline-block;
+  border: 1px solid;
+  padding: 0.35em 0.65em;
+  border-radius: 15px;
+  font-size: 0.85em;
+}
+
+.note-button {
+  width: 25ch;
+}
+
+// Full-width alarm bleeding to the row edges — a Personnel flag means
+// "take no actions", so it must be impossible to miss.
+.uf-flag-banner {
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 0.5rem;
+  margin: -1rem -1.25rem 1rem;
+  padding: 0.65rem 1rem;
+  background-color: #dc3545;
+  color: #ffffff;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-radius: 0px 5px 0 0;
+}
+
+.uf-card-status {
+  color: #6c757d;
+}
+
+.uf-card-id-sep {
+  color: #adb5bd;
+  margin: 0 0.25rem;
+}
+
+.uf-card-pnv {
+  margin-top: 0.35rem;
+}
+
+.uf-card-pnv-year {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-right: 1rem;
+}
+
+.uf-card-teams {
+  margin-top: 0.5rem;
+}
+
+.uf-team {
+  padding: 0.6rem 0;
+  border-top: 1px solid #f0f0f0;
+}
+
+.uf-team:first-child {
+  border-top: 0;
+}
+
+.uf-team-label {
+  font-weight: 600;
+  font-size: 1.15rem;
+  margin-bottom: 0.25rem;
+}

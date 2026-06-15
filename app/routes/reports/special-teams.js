@@ -1,5 +1,4 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import RSVP from 'rsvp';
 import _ from "lodash";
 import {cached, tracked} from '@glimmer/tracking';
 
@@ -29,15 +28,15 @@ class Team {
 }
 
 export default class ReportsSpecialTeamsRoute extends ClubhouseRoute {
-  model() {
-    return RSVP.hash({
-      positions: this.ajax.request('position').then(({position}) => position),
-      teams: this.ajax.request('team').then(({team}) => team)
-    });
+  async model() {
+    return {
+      positions: (await this.ajax.request('position')).position,
+      teams: (await this.ajax.request('team')).team
+    };
   }
 
   setupController(controller, {positions, teams}) {
-    const year = this.house.currentYear();
+    const year = this.session.currentYear();
     controller.positions = positions;
     controller.teams = teams;
 

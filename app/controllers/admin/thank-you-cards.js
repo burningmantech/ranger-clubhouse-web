@@ -12,23 +12,26 @@ export default class AdminThankYouCardsController extends ClubhouseController {
   @tracked people = null;
 
   @action
-  submit() {
+  async submit() {
     if (isEmpty(this.password)) {
       this.modal.info(null, 'No password entered.');
       return;
     }
 
     this.isSubmitting = true;
-    this.ajax.request('timesheet/thank-you', { data: { password: this.password, year: this.year }}).then(({people}) => {
+    try {
+      const {people} = await this.ajax.request('timesheet/thank-you', { data: { password: this.password, year: this.year }});
       this.people = people;
       this.passwordOkay = true;
-    }).catch((response) => {
+    } catch (response) {
       if (response.status === 403) {
         this.modal.info(null, 'Sorry, the password is incorrect.');
       } else {
-        this.house.handleErrorResponse(response);
+        this.errors.handleErrorResponse(response);
       }
-    }).finally(() => this.isSubmitting = false);
+    } finally {
+      this.isSubmitting = false;
+    }
   }
 
   @action
@@ -55,6 +58,6 @@ export default class AdminThankYouCardsController extends ClubhouseController {
       person.playa_name = `Ranger ${person.callsign}`
     });
 
-    this.house.downloadCsv(`${this.year}-thank-you-cards.csv`, CSV_COLUMNS, this.people);
+    this.download.downloadCsv(`${this.year}-thank-you-cards.csv`, CSV_COLUMNS, this.people);
   }
 }

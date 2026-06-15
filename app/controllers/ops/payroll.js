@@ -147,7 +147,7 @@ export default class OpsPayrollController extends ClubhouseController {
       this.reportWasRun = true;
       this.mealBreak = model.break_duration;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }
@@ -205,7 +205,7 @@ export default class OpsPayrollController extends ClubhouseController {
       })
     });
 
-    this.house.downloadCsv(`${this.house.currentYear()}-payroll-raw.csv`, CSV_TABLE_COLUMNS, rows);
+    this.download.downloadCsv(`${this.session.currentYear()}-payroll-raw.csv`, CSV_TABLE_COLUMNS, rows);
   }
 
   /**
@@ -236,7 +236,7 @@ export default class OpsPayrollController extends ClubhouseController {
       });
     });
 
-    this.house.downloadCsv(`${this.house.currentYear()}-payroll-${adjustEntries ? 'adjusted' : 'unadjusted'}.csv`, PAYROLL_CSV, rows);
+    this.download.downloadCsv(`${this.session.currentYear()}-payroll-${adjustEntries ? 'adjusted' : 'unadjusted'}.csv`, PAYROLL_CSV, rows);
   }
 
   /**

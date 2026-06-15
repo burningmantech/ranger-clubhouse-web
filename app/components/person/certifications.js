@@ -7,7 +7,8 @@ import {ADMIN, CERTIFICATION_MGMT} from 'clubhouse/constants/roles';
 
 export default class PersonCertificationsComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
+  @service saveModel;
   @service modal;
   @service session;
   @service store;
@@ -44,7 +45,7 @@ export default class PersonCertificationsComponent extends Component {
       this.certificationOptions = certification.map((c) => [c.title, c.id]);
       this.certificationOptions.unshift({id: null, title: 'Select Certification', disabled: true});
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }
@@ -77,26 +78,29 @@ export default class PersonCertificationsComponent extends Component {
     this.modal.confirm(
       'Confirm Deletion',
       `Are you sure you want to delete ${this.editEntry.certification.title}?`,
-      () => {
-        this.editEntry.destroyRecord()
-          .catch((response) => this.house.handleErrorResponse(response))
-          .finally(() => this.editEntry = null);
+      async () => {
+        try {
+          await this.editEntry.destroyRecord();
+        } catch (response) {
+          this.errors.handleErrorResponse(response);
+        } finally {
+          this.editEntry = null;
+        }
       });
   }
 
   @action
-  saveAction(model, isValid) {
+  async saveAction(model, isValid) {
     if (!isValid) {
       return;
     }
     const {isNew} = model;
-    model.save().then(() => {
+    if (await this.saveModel.save({model, message: `Certification was successfully ${isNew ? 'created' : 'updated'}.`})) {
       this.editEntry = null;
-      this.toast.success(`Certification was successfully ${isNew ? 'created' : 'updated'}.`);
       if (isNew) {
         this.personCertifications.update();
       }
-    }).catch((response) => this.house.handleErrorResponse(response))
+    }
   }
 
   @action

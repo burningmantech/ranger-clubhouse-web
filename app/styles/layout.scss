@@ -1,0 +1,30 @@
+main {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 10px 20px;
+}
+#body-row {
+  display: flex;
+  //flex-direction: row;
+  flex-wrap: wrap;
+}
+
+@include media-breakpoint-down(lg) {
+  // Reduce padding on small screens.
+  main {
+    padding: 5px;
+  }
+
+}
+
+@media not print {
+  body {
+    background-color: #f9f9f9;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+  #body-row {
+    flex: 1;
+  }
+}

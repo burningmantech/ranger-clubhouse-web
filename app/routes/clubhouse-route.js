@@ -2,7 +2,7 @@ import Route from '@ember/routing/route';
 import {service} from '@ember/service';
 import {isArray} from '@ember/array';
 import {action} from '@ember/object';
-import {ART_TRAINER_BASE} from "clubhouse/constants/roles";
+import {ART_INTERFACE_BASE} from "clubhouse/constants/roles";
 
 /**
  * Base Clubhouse Route
@@ -12,9 +12,13 @@ import {ART_TRAINER_BASE} from "clubhouse/constants/roles";
 
 export default class ClubhouseRoute extends Route {
   @service ajax;
-  @service house;
+  @service browser;
+  @service errors;
   @service modal;
+  @service scroll;
   @service session;
+  @service storage;
+  @service storePayload;
   @service store;
   @service toast;
 
@@ -65,7 +69,7 @@ export default class ClubhouseRoute extends Route {
       return;
     }
 
-    if (this.session.hasRole(ART_TRAINER_BASE | position_id)) {
+    if (this.session.hasRole(ART_INTERFACE_BASE | position_id)) {
       return;
     }
 

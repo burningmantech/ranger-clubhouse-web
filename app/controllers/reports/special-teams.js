@@ -23,7 +23,7 @@ export default class ReportsSpecialTeamsController extends ClubhouseController {
   }
 
   get yearOptions() {
-    const endYear = this.house.currentYear();
+    const endYear = this.session.currentYear();
 
     const years = [];
     for (let year = endYear; year >= 2010; year--) {
@@ -106,7 +106,7 @@ export default class ReportsSpecialTeamsController extends ClubhouseController {
       this.totalsList = totals;
       this.grandTotal = this.people.reduce((total, p) => p.total_duration + total, 0);
     } catch (response) {
-      this.house.handleErrorResponse(response)
+      this.errors.handleErrorResponse(response)
     } finally {
       this.isSubmitting = false;
     }
@@ -143,11 +143,11 @@ export default class ReportsSpecialTeamsController extends ClubhouseController {
       return row;
     });
 
-    this.house.downloadCsv(`special-teams-${this.startYear}-${this.endYear}`, columns, rows);
+    this.download.downloadCsv(`special-teams-${this.startYear}-${this.endYear}`, columns, rows);
   }
 
   @action
   scrollToOnRender() {
-    this.house.scrollToElement('#people');
+    this.scroll.scrollToElement('#people');
   }
 }

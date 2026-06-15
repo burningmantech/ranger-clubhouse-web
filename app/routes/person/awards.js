@@ -5,10 +5,10 @@ export default class PersonAwardsRoute extends ClubhouseRoute {
   async model() {
     if (this.session.hasRole([ADMIN, AWARD_MANAGEMENT])) {
       return {
-        awards: await this.ajax.request('award').then(({award}) => award),
+        awards: (await this.ajax.request('award')).award,
         personAwards: await this.store.query('person-award', {person_id: this.modelFor('person').id}),
-        positions: await this.ajax.request('position', {data: {awards_eligible: 1}}).then(({position}) => position),
-        teams: await this.ajax.request('team', {data: {awards_eligible: 1}}).then(({team}) => team),
+        positions: (await this.ajax.request('position', {data: {awards_eligible: 1}})).position,
+        teams: (await this.ajax.request('team', {data: {awards_eligible: 1}})).team,
       };
     } else {
       return null;

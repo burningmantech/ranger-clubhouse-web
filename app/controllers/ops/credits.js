@@ -210,7 +210,7 @@ export default class OpsCreditsController extends ClubhouseController {
           await newCredit.save();
           this.toast.success(`${newCredit.positionTitle} position credit created.`);
         } catch (response) {
-          this.house.handleErrorResponse(response, model);
+          this.errors.handleErrorResponse(response, model);
           break;
         }
       }
@@ -219,17 +219,20 @@ export default class OpsCreditsController extends ClubhouseController {
         .then(() => this.credit = null)
         .finally(() => this.isCreditSubmitting = false);
     } else {
-      this.house.saveModel(model, 'The position credit has been successfully updated.', () => {
+      if (await this.saveModel.save({model, message: 'The position credit has been successfully updated.'})) {
         this.credit = null;
         this._buildDisplay();
-      });
+      }
     }
   }
 
-  _updateCredits() {
-    return this.credits.update()
-      .then(() => this._buildDisplay())
-      .catch((response) => this.house.handleErrorResponse(response));
+  async _updateCredits() {
+    try {
+      await this.credits.update();
+      this._buildDisplay();
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    }
   }
 
   @action
@@ -237,13 +240,14 @@ export default class OpsCreditsController extends ClubhouseController {
     this.modal.confirm(
       'Confirm Credit Deletion',
       `Are you sure you want to delete Position ${credit.positionTitle} ${credit.description} Time ${credit.start_time} - ${credit.end_time} Credits ${credit.credits_per_hour}?`,
-      () => {
-        credit.destroyRecord()
-          .then(() => {
-            this._buildDisplay();
-            this.toast.success('Credit has been deleted.')
-          })
-          .catch((response) => this.house.handleErrorResponse(response))
+      async () => {
+        try {
+          await credit.destroyRecord();
+          this._buildDisplay();
+          this.toast.success('Credit has been deleted.')
+        } catch (response) {
+          this.errors.handleErrorResponse(response);
+        }
       }
     );
   }
@@ -301,7 +305,7 @@ export default class OpsCreditsController extends ClubhouseController {
   }
 
   @action
-  performCopy() {
+  async performCopy() {
     const params = this.copyParams;
     const sourceCredits = this.copySourcePositions.flatMap((p) => p.selectedCredits);
     const sourceIds = sourceCredits.map((c) => c.source.id);
@@ -322,27 +326,27 @@ export default class OpsCreditsController extends ClubhouseController {
       }
     });
     this.isCopying = true;
-    this.ajax.request(`position-credit/copy`, {method: 'POST', data: data})
-      .then((result) => {
-        if (!result.position_credit.length) {
-          this.toast.error('No credits copied');
-          return;
-        }
-        this.toast.success(`Copied ${result.position_credit.length} credits`);
-        // refresh the list
-        this._updateCredits()
-          .finally(() => {
-            this.isCopying = false
-            this.copySourcePositions = null;
-            this.copyParams = null;
+    try {
+      const result = await this.ajax.request(`position-credit/copy`, {method: 'POST', data: data});
+      if (!result.position_credit.length) {
+        this.toast.error('No credits copied');
+        return;
+      }
+      this.toast.success(`Copied ${result.position_credit.length} credits`);
+      // refresh the list
+      this._updateCredits()
+        .finally(() => {
+          this.isCopying = false
+          this.copySourcePositions = null;
+          this.copyParams = null;
 
-          });
-      }).catch((response) => {
-      this.house.handleErrorResponse(response);
+        });
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
       this.isCopying = false;
       this.copySourcePositions = null;
       this.copyParams = null;
-    });
+    }
   }
 
   @action
@@ -356,14 +360,14 @@ export default class OpsCreditsController extends ClubhouseController {
   exportToCSV(position) {
     const rows = [];
     this._buildPositionExport(position, rows)
-    this.house.downloadCsv(`${this.year}-${position.title.replace(' ', '-')}-credits.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.year}-${position.title.replace(' ', '-')}-credits.csv`, CSV_COLUMNS, rows);
   }
 
   @action
   exportAllToCSV() {
     const rows = [];
     this.positionCredits.forEach((position) =>  this._buildPositionExport(position, rows));
-    this.house.downloadCsv(`${this.year}-all-credits.csv`, CSV_COLUMNS, rows);
+    this.download.downloadCsv(`${this.year}-all-credits.csv`, CSV_COLUMNS, rows);
   }
 
   _buildPositionExport(position, rows) {

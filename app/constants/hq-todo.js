@@ -27,9 +27,11 @@ export const HqTodoLabels = {
 };
 
 export class HqTodoTask {
+  @tracked blink = false;
   @tracked completed = false;
   @tracked ignore = false;
   @tracked message;
+  @tracked task;
 
   constructor(task, ignore = false, blink = false) {
     this.task = task;

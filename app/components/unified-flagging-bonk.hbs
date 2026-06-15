@@ -1,0 +1,15 @@
+{{#if this.bonkedYears}}
+  <div class="mb-2 hstack gap-3">
+    {{#each this.bonkedYears as |event|}}
+      <UiBadge @type="danger" @size="md">
+        {{#if (eq event.status "bonk")}}
+          {{event.year}} bonk
+        {{else}}
+          {{event.year}} self-bonkw
+        {{/if}}
+      </UiBadge>
+    {{/each}}
+  </div>
+{{else}}
+  <div class="text-muted mb-2">No Bonks</div>
+{{/if}}

@@ -24,9 +24,16 @@
                           @options={{this.activeOptions}}
                           @onChange={{set-value this 'activeFilter'}} />
         </div>
+        <FormLabel @auto={{true}}>All Rangers</FormLabel>
+        <div class="col-auto">
+          <ChForm::Select @name="allRangersFilter"
+                          @value={{this.allRangersFilter}}
+                          @options={{this.allRangersOptions}}
+                          @onChange={{set-value this 'allRangersFilter'}} />
+        </div>
         <FormLabel @auto={{true}}>View as</FormLabel>
         <div class="col-auto">
-          <ChForm::Select @name="activeFilter"
+          <ChForm::Select @name="viewAs"
                           @value={{this.viewAs}}
                           @options={{this.viewAsOptions}}
                           @onChange={{set-value this 'viewAs'}} />

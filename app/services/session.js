@@ -7,6 +7,7 @@ import SessionService from "ember-simple-auth/services/session";
 import User from "clubhouse/records/user";
 import ENV from 'clubhouse/config/environment';
 import {setting} from 'clubhouse/utils/setting';
+import currentYear from 'clubhouse/utils/current-year';
 import {
   ADMIN,
   MANAGE,
@@ -29,7 +30,8 @@ const MAILBOX_KEY = 'clubhouse_mailbox';
 
 export default class extends SessionService {
   @service ajax;
-  @service house;
+  @service errors;
+  @service storage;
   @service modal;
   @service router;
 
@@ -166,16 +168,15 @@ export default class extends SessionService {
    * @returns {Promise<void>}
    */
 
-  handleAuthentication() {
-    return this.loadUser(true).then(() => {
-      if (this.tempLoginToken) {
-        // Go to the PNV Welcome Page or password reset page.
-        this.router.transitionTo(this.isWelcome ? 'me.welcome' : 'me.password');
-      } else {
-        // Allow the addon to transition to the page visited before user was logged in.
-        super.handleAuthentication(...arguments);
-      }
-    });
+  async handleAuthentication() {
+    await this.loadUser(true);
+    if (this.tempLoginToken) {
+      // Go to the PNV Welcome Page or password reset page.
+      this.router.transitionTo(this.isWelcome ? 'me.welcome' : 'me.password');
+    } else {
+      // Allow the addon to transition to the page visited before user was logged in.
+      super.handleAuthentication(...arguments);
+    }
   }
 
   /**
@@ -184,7 +185,7 @@ export default class extends SessionService {
 
   sessionExpiredNotification() {
     alert('Your session has expired. Please login again.');
-    this.session.invalidate();
+    this.invalidate();
   }
 
   /**
@@ -195,7 +196,7 @@ export default class extends SessionService {
 
   handleInvalidate() {
     this.user = null;
-    this.house.clearStorage();
+    this.storage.clearStorage();
     super.handleInvalidate(...arguments);
   }
 
@@ -239,7 +240,7 @@ export default class extends SessionService {
         this._signalMailbox();
       }
     } catch (response) {
-      this.house.handleErrorResponse(response)
+      this.errors.handleErrorResponse(response)
     }
   }
 
@@ -257,7 +258,7 @@ export default class extends SessionService {
         this._signalMailbox();
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
@@ -470,6 +471,14 @@ export default class extends SessionService {
   @action
   refreshMessages() {
     this.loadMessages?.();
+  }
+
+  /**
+   * Obtain the current year
+   */
+
+  currentYear() {
+    return currentYear();
   }
 }
 

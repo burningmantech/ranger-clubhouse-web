@@ -44,7 +44,7 @@
             <div class="p-2 border {{if idx "mt-4"}}">
               <h3>{{shift-format slot.begins slot.ends}} - {{slot.description}}</h3>
               Sign ups {{slot.signed_up}} of {{slot.max}}
-              <div style="grid-template-columns: repeat(auto-fit,170px)" class="d-grid gap-2 mt-2">
+              <div class="d-grid grid-auto-170 gap-2 mt-2">
                 <div>
                   <b>Flakes ({{slot.not_present.length}}):</b>
                   {{#if slot.not_present}}

@@ -371,6 +371,92 @@ function routes() {
     return {};
   });
 
+  // ---- Asset checkout / history endpoints ------------------------------
+
+  // Static reference list used to populate the "Change Attachment" select.
+  this.get('/api/asset-attachment', ({assetAttachments}) => {
+    return {asset_attachment: assetAttachments.all().models.map((m) => m.attrs)};
+  });
+
+  // Backs store.query('asset-person', {person_id, year}). Returns one row per
+  // checkout episode, each carrying its embedded asset/attachment/people.
+  this.get('/api/asset-person', ({assetPeople}, request) => {
+    const {person_id, year} = request.queryParams;
+    let rows = assetPeople.all().models.map((m) => m.attrs);
+
+    if (person_id !== undefined) {
+      rows = rows.filter((ap) => String(ap.person_id) === String(person_id));
+    }
+
+    if (year !== undefined) {
+      rows = rows.filter((ap) => !ap.asset || String(ap.asset.year) === String(year));
+    }
+
+    return {asset_person: rows};
+  });
+
+  // model.save() update. The RESTAdapter issues a PUT for updateRecord, so the
+  // handler is registered on PUT. Echo back the updated record including the
+  // embedded attachment that matches the new attachment_id, so the displayed
+  // description refreshes from the save response (no assets.update() needed).
+  const updateAssetPerson = ({assetPeople, assetAttachments}, request) => {
+    const record = assetPeople.find(request.params.id);
+
+    if (!record) {
+      return new Response(404, {'Content-Type': 'application/json'}, {
+        errors: [{status: 404, title: 'Record does not exist.'}]
+      });
+    }
+
+    const body = JSON.parse(request.requestBody);
+    const attrs = body.asset_person ?? {};
+
+    record.update(attrs);
+
+    if ('attachment_id' in attrs) {
+      const attachmentId = attrs.attachment_id;
+      let attachment = null;
+      if (attachmentId !== null && attachmentId !== undefined && attachmentId !== '') {
+        const found = assetAttachments.find(attachmentId);
+        attachment = found ? found.attrs : null;
+      }
+      record.update({attachment});
+    }
+
+    return {asset_person: record.attrs};
+  };
+
+  this.put('/api/asset-person/:id', updateAssetPerson);
+  this.patch('/api/asset-person/:id', updateAssetPerson);
+
+  // Check an asset in. The component applies checked_in / check_in_person to
+  // the row from this response.
+  this.post('/api/asset/:id/checkin', () => {
+    return {
+      checked_in: now(),
+      check_in_person: {id: 1, callsign: 'Checkin Hubcap'},
+    };
+  });
+
+  // Check an asset out by barcode.
+  this.post('/api/asset/checkout', (schema, request) => {
+    const data = JSON.parse(request.requestBody);
+    return {
+      status: 'success',
+      asset: {
+        id: 999,
+        barcode: data.barcode ?? 'B-9999',
+        type: 'radio',
+        description: 'Checked-out asset',
+      },
+    };
+  });
+
+  // Asset history for the ModalAssetHistory launcher.
+  this.get('/api/asset/:id/history', () => {
+    return {asset_history: []};
+  });
+
   /*
     Shorthand cheatsheet:
 

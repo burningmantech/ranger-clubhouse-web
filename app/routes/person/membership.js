@@ -1,5 +1,4 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
-import RSVP from 'rsvp';
 import Selectable from 'clubhouse/utils/selectable';
 import {tracked} from '@glimmer/tracking';
 import {TEAM_CATEGORY_ALL_MEMBERS, TEAM_CATEGORY_PUBLIC} from "clubhouse/models/position";
@@ -15,19 +14,18 @@ class SelectItem extends Selectable {
 }
 
 export default class PersonMembershipRoute extends ClubhouseRoute {
-  model() {
-    return RSVP.hash({
-      personMembership: this.ajax.request(`person/${this.modelFor('person').id}/membership`, {data: {include_management: 1}})
-        .then(({membership}) => membership),
-      roles: this.ajax.request('role').then(({role}) => role),
-      positions: this.ajax.request('position', {
+  async model() {
+    return {
+      personMembership: (await this.ajax.request(`person/${this.modelFor('person').id}/membership`, {data: {include_management: 1}})).membership,
+      roles: (await this.ajax.request('role')).role,
+      positions: (await this.ajax.request('position', {
         data: {
           can_manage: 1,
           include_roles: 1
         }
-      }).then(({position}) => position),
-      teams: this.ajax.request('team', {data: {can_manage: 1, include_roles: 1}}).then(({team}) => team)
-    })
+      })).position,
+      teams: (await this.ajax.request('team', {data: {can_manage: 1, include_roles: 1}})).team
+    };
   }
 
   setupController(controller, model) {

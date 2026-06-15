@@ -7,7 +7,7 @@ import {STATUS_APPROVED, STATUS_PII_ISSUE} from "clubhouse/models/prospective-ap
 
 export default class VcApplicationApproveCallsignDialogComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
   @service modal;
   @service toast;
 
@@ -51,7 +51,7 @@ export default class VcApplicationApproveCallsignDialogComponent extends Compone
       }
       this.args.onClose();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

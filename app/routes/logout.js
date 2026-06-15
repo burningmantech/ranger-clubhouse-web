@@ -4,7 +4,7 @@ export default class LogoutRoute extends ClubhouseRoute {
   requireAuthentication = false;
 
   beforeModel() {
-    this.house.clearStorage();
+    this.storage.clearStorage();
 
     // Bu-bye!
     this.session.invalidate();

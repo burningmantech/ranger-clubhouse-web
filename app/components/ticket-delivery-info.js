@@ -11,7 +11,8 @@ export default class TicketDeliverInfoComponent extends Component {
   @tracked isSaving = false;
 
   @service ajax;
-  @service house;
+  @service errors;
+  @service storePayload;
   @service store;
   @service toast;
 
@@ -236,10 +237,10 @@ export default class TicketDeliverInfoComponent extends Component {
 
     try {
       const {access_document} = await this.ajax.post(`ticketing/${this.args.person.id}/delivery`, {data})
-      this.house.pushPayload('access-document', access_document);
+      this.storePayload.pushPayload('access-document', access_document);
       this.toast.success(message);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSaving = false;
     }

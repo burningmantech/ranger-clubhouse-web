@@ -4,24 +4,10 @@ import {action} from '@ember/object';
 import {service} from '@ember/service';
 
 export default class MessageShowComponent extends Component {
-  @service ajax;
-  @service house;
-  @service toast;
+  @service session;
 
   @tracked showReplyForm;
-  //@tracked messageIsHidden = true;
   @tracked replyToMessage;
-
-  constructor() {
-    super(...arguments);
-
-    //this.messageIsHidden = this.args.message.isHidden;
-  }
-
-  @action
-  async toggleRead() {
-    this.args.toggleRead(this.args.message);
-  }
 
   @action
   openReplyForm() {
@@ -42,7 +28,11 @@ export default class MessageShowComponent extends Component {
 
   @action
   sendReply(model, isValid) {
-    this.args.sendMessage(model, isValid, this.replySent, this.args.message, this.replyToMessage);
+    this.args.sendMessage(model, isValid, {
+      onSuccess: this.replySent,
+      topMessage: this.args.message,
+      record: this.replyToMessage,
+    });
   }
 
   @action
@@ -62,10 +52,10 @@ export default class MessageShowComponent extends Component {
   }
 
   get haveUnread() {
-    const {idNumber} = this.args.person;
+    const idNumber = this.args.person?.idNumber;
     const {message} = this.args;
 
-    return message.isUnread(idNumber) || message.unreadReplyCount(idNumber);
+    return message.isUnread(idNumber) || message.unreadReplyCount(idNumber) > 0;
   }
 
   get messageIsHidden() {

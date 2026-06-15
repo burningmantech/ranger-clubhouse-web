@@ -1,0 +1,26 @@
+# --- Heavy / generated trees never needed by the image build ---
+node_modules
+dist
+tmp
+.git
+.github
+coverage
+
+# --- CI / build artifacts ---
+docker_image.tgz
+*.tgz
+*.log
+npm-debug.log*
+
+# --- Loose data files that live in the working tree ---
+*.csv
+.npm-upgrade.json
+
+# --- Editor / OS cruft ---
+.DS_Store
+.vscode
+.idea
+
+# --- Docker / tooling meta (not consumed by any COPY) ---
+Dockerfile
+.dockerignore

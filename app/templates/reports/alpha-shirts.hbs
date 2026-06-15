@@ -48,7 +48,7 @@
     </tab.pane>
 
     <tab.pane @id="shirt-totals" @title="Shirt Totals">
-      <div style="grid-template-columns: repeat(auto-fill, 250px)" class="d-grid gap-3">
+      <div class="d-grid grid-auto-250 gap-3">
         {{#each this.shirtGroups as |shirts|}}
           <div>
             <h4>{{shirts.name}} Totals</h4>

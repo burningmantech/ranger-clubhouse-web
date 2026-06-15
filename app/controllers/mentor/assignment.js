@@ -169,7 +169,7 @@ export default class MentorAssignmentController extends ClubhouseController {
     if (errors) {
       this.toast.error(`${errors} duplicate mentor assignments encountered.`);
       schedule('afterRender', () => {
-        this.house.scrollToElement('.is-invalid');
+        this.scroll.scrollToElement('.is-invalid');
       });
 
       return;
@@ -193,7 +193,7 @@ export default class MentorAssignmentController extends ClubhouseController {
     this.isSubmitting = true;
     try {
       const result = await this.ajax.post('mentor/mentor-assignment', {
-        data: {assignments, year: this.house.currentYear()}
+        data: {assignments, year: this.session.currentYear()}
       });
 
       result.assignments.forEach((assignment) => {
@@ -210,9 +210,9 @@ export default class MentorAssignmentController extends ClubhouseController {
         }
       });
       this.toast.success('Assignments successfully saved.');
-      this.house.scrollToTop();
+      this.scroll.scrollToTop();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;
     }

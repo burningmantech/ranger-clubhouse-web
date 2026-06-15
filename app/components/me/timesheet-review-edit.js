@@ -8,7 +8,8 @@ import dayjs from "dayjs";
 
 export default class MeTimesheetReviewEditComponent extends Component {
   @service ajax;
-  @service house;
+  @service errors;
+  @service saveModel;
   @service modal;
   @service shiftManage;
   @service toast;
@@ -35,7 +36,7 @@ export default class MeTimesheetReviewEditComponent extends Component {
       this.desiredPositionOptions = positions.map((p) => [p.title, p.id]);
       this.desiredPositionOptions.unshift([`${entry.position.title} is correct`, null]);
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }
@@ -79,14 +80,10 @@ export default class MeTimesheetReviewEditComponent extends Component {
   }
 
   async _performSave(model) {
-    try {
-      model.review_status = STATUS_PENDING;
-      await model.save();
+    model.review_status = STATUS_PENDING;
+    if (await this.saveModel.save({model, message: 'The correction note has been submitted.'})) {
       this.args.entry.additional_notes = null;
       this.args.onUpdate?.();
-      this.toast.success('The correction note has been submitted.');
-    } catch (response) {
-      this.house.handleErrorResponse(response);
     }
   }
 }

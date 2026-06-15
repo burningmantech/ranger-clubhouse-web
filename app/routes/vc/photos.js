@@ -1,6 +1,5 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import {ADMIN, VC} from 'clubhouse/constants/roles';
-import RSVP from 'rsvp';
 
 export default class VcPhotosRoute extends ClubhouseRoute {
   roleRequired = [ADMIN, VC];
@@ -9,11 +8,11 @@ export default class VcPhotosRoute extends ClubhouseRoute {
   };
 
 
-  model({page}) {
-    return RSVP.hash({
-      person_photo: this.ajax.request('person-photo', {method: 'GET', data: {page}}),
-      review_config: this.ajax.request('person-photo/review-config').then((result) => result.review_config)
-    });
+  async model({page}) {
+    return {
+      person_photo: await this.ajax.request('person-photo', {method: 'GET', data: {page}}),
+      review_config: (await this.ajax.request('person-photo/review-config')).review_config
+    };
   }
 
   setupController(controller, model) {

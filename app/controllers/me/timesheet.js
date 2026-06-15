@@ -107,7 +107,7 @@ export default class MeTimesheetController extends ClubhouseController {
       this.toast.success(`Your timesheet has been marked as CONFIRMED.`);
       window.scrollTo(0, 0);
     } catch (response) {
-      this.house.handleErrorResponse(response)
+      this.errors.handleErrorResponse(response)
     } finally {
       this.isSubmitting = false;
     }
@@ -118,7 +118,7 @@ export default class MeTimesheetController extends ClubhouseController {
     try {
       await this.timesheets.update();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 
@@ -127,7 +127,7 @@ export default class MeTimesheetController extends ClubhouseController {
     try {
       await this.timesheets.update();
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
     await this._updateTimesheetSummary();
   }
@@ -140,7 +140,7 @@ export default class MeTimesheetController extends ClubhouseController {
         this.timesheetInfo.correction_enabled = true;
       }
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     }
   }
 

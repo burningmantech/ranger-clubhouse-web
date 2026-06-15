@@ -58,7 +58,7 @@
         <td colspan="4">
           {{#if entry.timesOutsideRange}}
             <div class="text-bg-warning p-2">
-              Entry times is outside the scheduled times.
+              Entry times are outside the scheduled times.
             </div>
           {{/if}}
           {{#if entry.isTooLong}}
@@ -75,48 +75,52 @@
               {{fa-icon "hourglass" fixed=1 right=1}} A correction request has been submitted.
             </div>
           {{else if entry.isIgnoring}}
-            {{fa-icon "clock" type="r" fixed=1 right=1}} Entry will be reviewed at a later time.
+            <div>
+              {{fa-icon "clock" type="r" fixed=1 right=1}} Entry will be reviewed at a later time.
+            </div>
           {{else}}
             <div class="text-danger">
               {{fa-icon "arrow-right" fixed=1 right=1}} Entry requires review.
             </div>
           {{/if}}
-          <div class=" d-flex justify-between align-items-center mt-1">
-            <UiButton @type="success" class="btn-timesheet"
-                      @onClick={{fn this.toggleEntryVerified entry}}
-                      @disabled={{entry.isSaving}}
-                      @size="md">
-              {{#if entry.isVerified}}
-                Un-Verify Entry
-              {{else}}
-                Mark Entry As Correct
-              {{/if}}
-            </UiButton>
-            <UiButton @type="secondary"
-                      class="btn-timesheet"
-                      @onClick={{fn this.markEntryIncorrect entry}}
-                      @size="md"
-                      @disabled={{entry.isSaving}}>
-              Submit Correction
-              {{#if entry.isPending}}
-                {{fa-icon "check" left=1}}
-              {{/if}}
-            </UiButton>
-            <UiButton @type="secondary"
-                      class="btn-timesheet"
-                      @onClick={{fn this.ignoreEntry entry}}
-                      @size="md"
-                      @disabled={{or entry.isSaving entry.isVerified entry.isPending}}>
-              Skip Review
-              {{#if entry.isIgnoring}}
-                {{fa-icon "check" left=1}}
-              {{/if}}
-            </UiButton>
-            {{#if entry.isSaving}}
-              <SpinIcon/>
-            {{else}}
-              &nbsp;
-            {{/if}}
+          <div class="d-flex justify-content-between align-items-center mt-1">
+            {{#let (or entry.isSaving (eq entry this.pendingEntry)) as |isBusy|}}
+              <UiButton @type="success" class="btn-timesheet"
+                        @onClick={{fn this.toggleEntryVerified entry}}
+                        @disabled={{isBusy}}
+                        @size="md">
+                {{#if entry.isVerified}}
+                  Un-Verify Entry
+                {{else}}
+                  Mark Entry As Correct
+                {{/if}}
+              </UiButton>
+              <UiButton @type="secondary"
+                        class="btn-timesheet"
+                        @onClick={{fn this.markEntryIncorrect entry}}
+                        @size="md"
+                        @disabled={{isBusy}}>
+                Submit Correction
+                {{#if entry.isPending}}
+                  {{fa-icon "check" left=1}}
+                {{/if}}
+              </UiButton>
+              <UiButton @type="secondary"
+                        class="btn-timesheet"
+                        @onClick={{fn this.ignoreEntry entry}}
+                        @size="md"
+                        @disabled={{or isBusy entry.isVerified entry.isPending}}>
+                Skip Review
+                {{#if entry.isIgnoring}}
+                  {{fa-icon "check" left=1}}
+                {{/if}}
+              </UiButton>
+              <div class="ms-2">
+                {{#if isBusy}}
+                  <SpinIcon/>
+                {{/if}}
+              </div>
+            {{/let}}
           </div>
         </td>
       </tr>

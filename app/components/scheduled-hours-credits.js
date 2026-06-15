@@ -4,8 +4,7 @@ import {tracked} from '@glimmer/tracking';
 
 export default class ScheduledHoursCreditsComponent extends Component {
   @service ajax;
-  @service house;
-
+  @service errors;
   @tracked scheduleSummary;
   @tracked isLoading = true;
 
@@ -17,10 +16,10 @@ export default class ScheduledHoursCreditsComponent extends Component {
 
   async _loadSummary() {
     try {
-      this.scheduleSummary = await this.ajax.request(`person/${this.args.person.id}/schedule/summary`, {data: {year: this.args.year}})
-        .then(({summary}) => summary);
+      const {summary} = await this.ajax.request(`person/${this.args.person.id}/schedule/summary`, {data: {year: this.args.year}});
+      this.scheduleSummary = summary;
     } catch (response) {
-      this.house.handleErrorResponse(response);
+      this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
     }

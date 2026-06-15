@@ -1,0 +1,15 @@
+/**
+ * Progress bars with centered text
+ */
+
+.progress span {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+}
+
+.progress-h25 {
+  height: 25px;
+}
