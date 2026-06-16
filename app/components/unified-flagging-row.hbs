@@ -7,7 +7,10 @@
     </div>
   {{/if}}
 
-  <div class="uf-row-anchor">
+  <a class="uf-row-anchor"
+     aria-expanded="{{if this.expanded "true" "false"}}"
+     title="{{if this.expanded "Collapse" "Expand"}} {{@person.callsign}}"
+    {{on "click" this.toggle}}>
     <div class="uf-row-head">
       {{#if @selectable}}
         <span class="uf-row-select">
@@ -23,16 +26,12 @@
         </span>
       {{/if}}
 
-      <button type="button"
-              class="uf-row-toggle"
-              aria-expanded="{{if this.expanded "true" "false"}}"
-              title="{{if this.expanded "Collapse" "Expand"}} {{@person.callsign}}"
-              {{on "click" this.toggle}}>
+      <div class="uf-row-toggle">
         {{fa-icon (if this.expanded "chevron-down" "chevron-right")}}
-      </button>
+      </div>
 
       <div class="uf-row-identity">
-        <PersonLink @person={{@person}} class="fw-semibold" />
+        <PersonLink @person={{@person}} class="fw-semibold" class="uf-callsign"/>
         <span class="uf-card-status">&lt;{{@person.status}}&gt;</span>
         <span class="uf-card-id-sep">&middot;</span>
         <span class="uf-row-name">{{@person.first_name}} {{@person.last_name}}</span>
@@ -64,7 +63,7 @@
         </div>
       {{/if}}
     </div>
-  </div>
+  </a>
 
   {{#if this.expanded}}
     <div class="uf-row-detail">
