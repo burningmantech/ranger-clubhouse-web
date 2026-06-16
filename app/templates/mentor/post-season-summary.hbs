@@ -3,76 +3,120 @@
             @minYear={{2008}}
             @skipPandemic={{true}}
             @onChange={{set-value this 'year'}}  />
-<FormRow class="my-2">
-  <FormLabel @auto={{true}}>Filter</FormLabel>
-  <div class="col-auto">
-    <ChForm::Select @name="filter"
-                    @value={{this.filter}}
-                    @options={{this.filterOptions}}
-                    @onChange={{set-value this 'filter'}}
-    />
-  </div>
-  <FormLabel @auto={{true}}>Callsign Filter:</FormLabel>
-  <div class="col-auto">
-    <Input @type="text"
-           @value={{this.callsignFilter}}
-           class="form-control"
-    />
-  </div>
-  <div class="col-auto mt-1">
-    <UiButtonRow>
-      <UiButton @onClick={{this.clearFiltersAction}} @type="secondary">Clear Filters</UiButton>
-      <UiExportToCSVButton @onClick={{this.exportToCSV}} />
-    </UiButtonRow>
-  </div>
-</FormRow>
 
-Showing {{this.viewMentees.length}} of {{this.mentees.length}}. {{this.passedCount}} passed. {{this.bonkedCount}}
-bonked.
-<UiTable>
-  <thead>
-  <tr>
-    <th class="no-wrap">Mentee / FKAs</th>
-    <th class="no-wrap text-center">Outcome</th>
-    <th class="no-wrap">Mentors</th>
-    <th>Mentor Notes/Flags</th>
-  </tr>
-  </thead>
-  <tbody>
-  {{#each this.viewMentees key="id" as |mentee|}}
-    <tr>
-      <td class="no-wrap">
-        <PersonLink @person={{mentee}} />
-        <br>
-        &lt;{{mentee.status}}&gt;<br>
-        {{#each mentee.fkas as |name|}}
-          {{name}}<br>
-        {{/each}}
-      </td>
-      <td class="no-wrap text-center">
-        {{mentee-status-badge mentee.status mentee.mentor_status mentee.alpha_slots}}
-      </td>
-      <td class="no-wrap">
-        {{#each mentee.mentors as |mentor idx| ~}}
-          {{#if idx}} / {{/if}}
-          <PersonLink @person={{mentor}} />
-        {{else}}
-          <i>none</i>
-        {{/each}}
-      </td>
-      <td>
-        <IntakeNotes @type="mentor" @person={{mentee}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
-      </td>
-    </tr>
-  {{else}}
-    <tr>
-      <td colspan="7"><b class="text-danger">
-        No mentees found for {{this.year}} with filter "{{this.filter}}"
-        {{#if this.callsignFilter}}
-          AND callsign matching "{{this.callsignFilter}}"
-        {{/if}}
-      </b></td>
-    </tr>
-  {{/each}}
-  </tbody>
-</UiTable>
+<div class="roster-controls post-season-filters">
+  <span class="fw-semibold">Filter By:</span>
+  <ChForm::Select @name="signup-filter" @options={{this.signupOptions}} @value={{this.signupFilter}}
+                  @onChange={{set-value this 'signupFilter'}} @controlClass="form-select w-auto" />
+  <ChForm::Select @name="status-filter" @options={{this.statusOptions}} @value={{this.statusFilter}}
+                  @onChange={{set-value this 'statusFilter'}} @controlClass="form-select w-auto" />
+  <ChForm::Select @name="rank-filter" @options={{this.rankOptions}} @value={{this.rankFilter}}
+                  @onChange={{set-value this 'rankFilter'}} @controlClass="form-select w-auto" />
+  <ChForm::Select @name="notes-filter" @options={{this.notesOptions}} @value={{this.notesFilter}}
+                  @onChange={{set-value this 'notesFilter'}} @controlClass="form-select w-auto" />
+  <label class="d-flex align-items-center gap-1 fw-semibold mb-0">
+    Mentors
+    <ChForm::Select @name="mentor-filter" @options={{this.mentorOptions}} @value={{this.selectedMentorIds}}
+                    @multiple={{true}} @size={{4}} @onChange={{this.updateSelectedMentorIds}}
+                    @controlClass="form-select" />
+  </label>
+  <label class="d-flex align-items-center gap-1 fw-semibold mb-0">
+    Applicant Callsign
+    <Input @type="text" @value={{this.callsignFilter}} class="form-control post-season-callsign" />
+  </label>
+  <span class="roster-controls-count ms-auto">Showing {{this.filteredMentees.length}} of {{this.mentees.length}}</span>
+</div>
+
+{{#if this.filteredMentees.length}}
+  <div class="post-season-summary">
+    {{#if this.flaggedMentees.length}}
+      <div class="uf-row-section">
+        <div class="uf-row-section-title">Bonked or Mentor Rank 3/4</div>
+        <div class="uf-row-stack">
+          {{#each this.flaggedMentees key="id" as |mentee|}}
+            <div class="uf-row">
+              <div class="uf-row-anchor">
+                <div class="uf-row-head">
+                  <div class="uf-row-identity">
+                    <PersonLink @person={{mentee}} class="uf-callsign"/>
+                    <span class="uf-card-status">&lt;{{mentee.status}}&gt;</span>
+                    <span class="badge uf-row-badge text-bg-{{mentee.alphaColor}}">{{mentee.alphaLabel}}</span>
+                    {{#if mentee.mentorRankFlagged}}
+                      {{#if (eq mentee.mentorRank 4)}}
+                        <IntakeChip @rank={{4}} @label="Rank 4/FLAG" @icon="flag" />
+                      {{else}}
+                        <IntakeChip @rank={{3}} @label="Rank 3/Yellow" @icon="bell" />
+                      {{/if}}
+                    {{/if}}
+                  </div>
+                </div>
+                <div class="uf-row-meta">
+                  <span class="fw-semibold">Mentors:</span>
+                  {{#each mentee.mentors as |mentor idx| ~}}
+                    {{#if idx}} / {{/if}}
+                    <PersonLink @person={{mentor}} />
+                  {{else}}
+                    <i>none</i>
+                  {{/each}}
+                </div>
+              </div>
+              <div class="uf-row-detail">
+                <IntakeNotes @type="mentor" @person={{mentee}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    {{/if}}
+
+    {{#if this.otherMentees.length}}
+      <div class="uf-row-section">
+        <div class="uf-row-section-title">Other Mentees</div>
+        <div class="uf-row-stack">
+          {{#each this.otherMentees key="id" as |mentee|}}
+            <div class="uf-row">
+              <div class="uf-row-anchor">
+                <div class="uf-row-head">
+                  <div class="uf-row-identity">
+                    <PersonLink @person={{mentee}} class="uf-callsign"/>
+                    <span class="uf-card-status">&lt;{{mentee.status}}&gt;</span>
+                    <span class="badge uf-row-badge text-bg-{{mentee.alphaColor}}">{{mentee.alphaLabel}}</span>
+                    {{#if mentee.mentorRankFlagged}}
+                      {{#if (eq mentee.mentorRank 4)}}
+                        <IntakeChip @rank={{4}} @label="Rank 4/FLAG" @icon="flag" />
+                      {{else}}
+                        <IntakeChip @rank={{3}} @label="Rank 3/Yellow" @icon="bell" />
+                      {{/if}}
+                    {{/if}}
+                  </div>
+                </div>
+                <div class="uf-row-meta">
+                  <span class="fw-semibold">Mentors:</span>
+                  {{#each mentee.mentors as |mentor idx| ~}}
+                    {{#if idx}} / {{/if}}
+                    <PersonLink @person={{mentor}} />
+                  {{else}}
+                    <i>none</i>
+                  {{/each}}
+                </div>
+              </div>
+              <div class="uf-row-detail">
+                <IntakeNotes @type="mentor" @person={{mentee}} @viewYear={{this.year}} @onSubmit={{this.noteSubmitted}} />
+              </div>
+            </div>
+          {{/each}}
+        </div>
+      </div>
+    {{/if}}
+  </div>
+{{else}}
+  <p>
+    <b class="text-danger">
+      {{#if this.mentees.length}}
+        No mentees matched the filter criteria{{#if this.filterNames}} of {{join this.filterNames ", "}}{{/if}}.
+      {{else}}
+        No mentees found for {{this.year}}.
+      {{/if}}
+    </b>
+  </p>
+{{/if}}

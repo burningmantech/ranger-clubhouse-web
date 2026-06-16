@@ -225,3 +225,52 @@
 .uf-row-mentor-history {
   margin-bottom: 0.35rem;
 }
+
+// Post Season Summary reuses the uf-* card vocabulary but has no expand toggle
+// and no severity stripe, so neutralize the 6px severity left-stripe to a plain
+// thin border and drop the chevron-indent on the meta line (there is no chevron).
+.post-season-summary {
+  .uf-row {
+    border-left: 1px solid #dcdcdc;
+  }
+
+  .uf-row-meta {
+    padding-left: 0;
+    font-size: inherit; // use the page default, not the dense-row 0.8rem
+  }
+
+  // Normalize the two header indicator chips so the rank chip reads at the same
+  // size as the "walked"/"no signup" badge and the callsign/status text. Font
+  // size is already the 0.9rem page base on all of them; the rank chip only
+  // looked bigger because its taller line-height let "Rank N" wrap to two lines.
+  // Match the badge's compact box and keep it on one line. Color/weight (the
+  // rank-3/4 severity cue) is left untouched.
+  .uf-row-head .intake-rank-chip {
+    padding: 0.35rem 0.5rem;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  // Make the identity (callsign + status) the prominent token on the row, a
+  // step up from the 0.9rem page base used by the chips and meta line.
+  .uf-row-identity {
+    .uf-callsign,
+    .uf-card-status {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// Compact mentor multi-select in the filter bar: keep the listbox tidy and wide
+// enough that callsigns are not truncated, without letting it dominate the bar.
+.post-season-filters select[multiple] {
+  min-width: 9rem;
+  max-width: 14rem;
+}
+
+// Keep the callsign field wide enough for its "Applicant Callsign" placeholder
+// so it neither truncates nor collapses when the bar wraps on narrow screens.
+.post-season-filters .post-season-callsign {
+  min-width: 11rem;
+  flex: 0 0 auto;
+}

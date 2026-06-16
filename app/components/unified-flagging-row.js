@@ -183,7 +183,13 @@ export default class UnifiedFlaggingRowComponent extends Component {
   }
 
   @action
-  toggle() {
+  toggle(event) {
+    if (event.target.type === 'checkbox' || event.target.classList.contains('uf-callsign')) {
+      // Either the user clicked on the checkbox or
+      // clicked on the callsign to navigate to the Person Management page.
+      // Don't do anything
+      return;
+    }
     this.userExpanded = !this.expanded;
   }
 }

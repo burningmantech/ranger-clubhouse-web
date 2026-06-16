@@ -15,7 +15,7 @@
       </UiNotice>
     {{/unless}}
 
-    {{#if (and this.isCurrentYearthis.showScheduleBlocker)}}
+    {{#if (and this.isCurrentYear this.showScheduleBlocker)}}
       <ScheduleBlocked @requirements={{this.permission.requirements}}
                        @person={{@person}}
                        @overrideAction={{this.overrideAction}}
