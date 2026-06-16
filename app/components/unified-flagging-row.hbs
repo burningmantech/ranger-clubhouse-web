@@ -7,8 +7,7 @@
     </div>
   {{/if}}
 
-  <a class="uf-row-anchor"
-     aria-expanded="{{if this.expanded "true" "false"}}"
+  <a class="uf-row-anchor" href="#"
      title="{{if this.expanded "Collapse" "Expand"}} {{@person.callsign}}"
     {{on "click" this.toggle}}>
     <div class="uf-row-head">
@@ -31,7 +30,7 @@
       </div>
 
       <div class="uf-row-identity">
-        <PersonLink @person={{@person}} class="fw-semibold" class="uf-callsign"/>
+        <PersonLink @person={{@person}} class="fw-semibold uf-callsign"/>
         <span class="uf-card-status">&lt;{{@person.status}}&gt;</span>
         <span class="uf-card-id-sep">&middot;</span>
         <span class="uf-row-name">{{@person.first_name}} {{@person.last_name}}</span>
