@@ -20,6 +20,12 @@
   </UiNotice>
 {{/if}}
 
+{{#if (and (not this.training.is_art) this.inactiveRetireCount)}}
+  <UiAlert @icon="hand" @type="warning" @title="Inactive / Retired Sign-up(s)">
+    One or more Rangers signed up are status inactive or retired. Ensure they will attend the full day.
+  </UiAlert>
+{{/if}}
+
 {{#unless this.slot.active}}
   <UiNotice @type="danger" @title="Training session not activated" @icon="hand">
     Sign ups are disabled until the session (aka slot) has been activated.
@@ -32,35 +38,38 @@
 <UiSection>
   <:title>Session Information</:title>
   <:body>
-    <FormRow>
-      <div class="col-auto">
+    <div class="d-flex gap-3">
+      <div>
         Signups: {{this.students.length}} of {{this.slot.max}}
         {{#if (and this.slot.max (gte this.students.length this.slot.max))}}
           <b class="text-danger"> (FULL)</b>
         {{/if}}
       </div>
       {{#if this.training.is_art}}
-        <div class="col-auto">
+        <div>
           ART Vets: {{this.vetCount}}
         </div>
-        <div class="col-auto">
+        <div>
           ART Prospectives: {{this.prospectiveCount}}
         </div>
       {{else}}
-        <div class="col-auto">
+        <div>
           Vets: {{this.vetCount}}
         </div>
-        <div class="col-auto">
+        <div>
+          Inactive / Retired: {{this.inactiveRetireCount}}
+        </div>
+        <div>
           First years: {{this.firstYearCount}}
         </div>
-        <div class="col-auto">
+        <div>
           Prospectives: {{this.prospectiveCount}}
         </div>
-        <div class="col-auto">
+        <div>
           Auditors: {{this.auditorCount}}
         </div>
       {{/if}}
-    </FormRow>
+    </div>
     <p>
       Be sure to make the Trainer as having "Attended" to ensure the person is considered trained for the year.<br>
       Is Lead Trainer = the primary Trainer(s) responsible for the session.

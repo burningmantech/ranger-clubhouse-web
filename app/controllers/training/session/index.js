@@ -8,7 +8,7 @@ import {isEmpty} from '@ember/utils';
 import _ from 'lodash';
 import countIf from 'clubhouse/utils/count-if';
 import conjunctionFormat from 'clubhouse/utils/conjunction-format';
-import {AUDITOR, PROSPECTIVE} from "clubhouse/constants/person_status";
+import {AUDITOR, INACTIVE, PROSPECTIVE, RETIRED} from "clubhouse/constants/person_status";
 import {ADMIN, ART_GRADUATE_BASE} from "clubhouse/constants/roles";
 
 const SEARCH_RATE_MS = 300;
@@ -133,6 +133,14 @@ export default class TrainingSessionController extends ClubhouseController {
 
   get auditorCount() {
     return countIf(this.students, (student) => student.status === AUDITOR);
+  }
+
+  /**
+   * How many inactive / retires are there?
+   */
+
+  get inactiveRetireCount() {
+    return countIf(this.students, (student) => (student.status === INACTIVE || student.status === RETIRED));
   }
 
   /**
