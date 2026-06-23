@@ -23,7 +23,7 @@ jobs:
     steps:
 
       - name: Harden CI
-        uses: step-security/harden-runner@v2.15.0
+        uses: step-security/harden-runner@v2.19.4
         with:
           disable-sudo: true
           egress-policy: block
@@ -34,7 +34,7 @@ jobs:
             production.cloudfront.docker.com:443
 
       - name: Checkout source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install Node
         uses: actions/setup-node@v6.4.0
@@ -55,7 +55,7 @@ jobs:
 
     steps:
       - name: Harden CI
-        uses: step-security/harden-runner@v2.15.0
+        uses: step-security/harden-runner@v2.19.4
         with:
           disable-sudo: true
           egress-policy: block
@@ -66,7 +66,7 @@ jobs:
             production.cloudfront.docker.com:443
 
       - name: Checkout source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Install Node
         uses: actions/setup-node@v6.4.0
@@ -91,7 +91,7 @@ jobs:
     steps:
 
       - name: Harden CI
-        uses: step-security/harden-runner@v2.15.0
+        uses: step-security/harden-runner@v2.19.4
         with:
           disable-sudo: true
           egress-policy: block
@@ -108,10 +108,10 @@ jobs:
             *.blob.core.windows.net:443
 
       - name: Checkout source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Build Docker image
         run: ./bin/build
@@ -143,7 +143,7 @@ jobs:
     steps:
 
       - name: Harden CI
-        uses: step-security/harden-runner@v2.15.0
+        uses: step-security/harden-runner@v2.19.4
         with:
           disable-sudo: true
           egress-policy: block
@@ -152,7 +152,7 @@ jobs:
             github.com:443
 
       - name: Checkout source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Download Docker image artifact
         uses: actions/download-artifact@v8
@@ -177,12 +177,12 @@ jobs:
     steps:
 
       - name: Harden CI
-        uses: step-security/harden-runner@v2.15.0
+        uses: step-security/harden-runner@v2.19.4
         with:
           egress-policy: audit
 
       - name: Checkout source code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Download Docker image artifacts
         uses: actions/download-artifact@v8

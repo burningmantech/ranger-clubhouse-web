@@ -115,6 +115,7 @@ Router.map(function () {
     this.route('potentials');
     this.route('setup-mentor-data');
     this.route('schedule');
+    this.route('shift-report');
     this.route('pod', function () {
       this.route('index', {path: '/'});
       this.route('manage', {path: '/:slot_id'});

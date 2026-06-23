@@ -1,0 +1,32 @@
+<tr>
+  <td>
+    <PersonLink @person={{@person}} />
+  </td>
+  <td>
+    {{shift-format @began}}
+  </td>
+  <td class="text-end">
+    {{hour-minute-format @duration}}
+  </td>
+  {{#if (eq @position.id @alphaPosition)}}
+    <td>
+      {{#if @person.bonks}}
+        <div class="hstack gap-2">
+          {{#each @person.bonks as |year|}}
+            <UiBadge @type="warning">{{year}}</UiBadge>
+          {{/each}}
+        </div>
+      {{else}}
+        -
+      {{/if}}
+    </td>
+  {{else}}
+    <td>
+      {{#if @person.years_as_ranger}}
+        {{pluralize @person.years_as_ranger.length "event"}} [{{year-range @person.years_as_ranger}}]
+      {{else}}
+        No Ranger experience?!?
+      {{/if}}
+    </td>
+  {{/if}}
+</tr>
