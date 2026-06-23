@@ -1,0 +1,36 @@
+{{#each @groups as |group|}}
+  <UiSection>
+    <:title>{{group.title}}</:title>
+    <:body>
+      <UiTable>
+        {{#each group.positions as |position|}}
+          {{#if position.slots}}
+            {{#each position.slots as |slot|}}
+              {{#if slot.people}}
+                <tbody>
+                  <Mentor::ShiftReportHeader @position={{position}} @alphaPosition={{@alphaPosition}} @startedLabel="Shift" />
+                  {{#each slot.people as |person|}}
+                    <Mentor::ShiftReportRow @person={{person}} @position={{position}} @alphaPosition={{@alphaPosition}}
+                                            @began={{slot.begins}} @duration={{slot.duration}} />
+                  {{/each}}
+                </tbody>
+              {{/if}}
+            {{/each}}
+          {{else}}
+            <tbody>
+            <tr>
+              <td colspan="4">No shifts located for {{position.title}}</td>
+            </tr>
+            </tbody>
+          {{/if}}
+        {{else}}
+          <tbody>
+          <tr>
+            <td colspan="4">No signups found in this category.</td>
+          </tr>
+          </tbody>
+        {{/each}}
+      </UiTable>
+    </:body>
+  </UiSection>
+{{/each}}

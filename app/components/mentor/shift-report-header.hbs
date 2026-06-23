@@ -1,0 +1,10 @@
+<tr>
+  <th>{{@position.title}}</th>
+  <th>{{@startedLabel}}</th>
+  <th class="text-end">Duration</th>
+  {{#if (eq @position.id @alphaPosition)}}
+    <th>Prior Bonks</th>
+  {{else}}
+    <th>Rangered Events</th>
+  {{/if}}
+</tr>
