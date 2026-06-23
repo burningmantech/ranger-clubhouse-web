@@ -1,0 +1,38 @@
+<div class="d-print-none">
+  <YearSelect @title="Mentor Shift Report"
+              @year={{this.year}}
+              @minYear={{2010}}
+              @skipPandemic={{true}}
+              @onChange={{this.setYear}}  />
+</div>
+
+<FormRow class="d-print-none mb-4">
+  <div class="col-auto">
+    <ChForm::Select @name="slot_id"
+                    @value={{this.slot_id}}
+                    @options={{this.slotOptions}}
+                    @onChange={{this.setSlotId}} />
+  </div>
+  <div class="col-auto">
+    <UiButton @onClick={{this.onDutyAction}}>Currently On Duty</UiButton>
+  </div>
+</FormRow>
+
+{{#if this.report}}
+  {{#if this.on_duty}}
+    <h2><span class="text-danger">On Duty</span> at {{shift-format this.report.now}}</h2>
+  {{else}}
+    <h2><span class="text-success me-2">SCHEDULED for Alpha Shift</span> {{shift-format this.report.slot.begins}}</h2>
+  {{/if}}
+
+  {{#if this.report.groups.length}}
+    {{#if this.on_duty}}
+      <Mentor::ShiftReportOnDuty @groups={{this.report.groups}} @alphaPosition={{this.ALPHA_POSITION}} />
+    {{else}}
+      <Mentor::ShiftReportSections @groups={{this.report.groups}} @alphaPosition={{this.ALPHA_POSITION}} />
+    {{/if}}
+  {{else}}
+    <p class="text-muted">{{if this.on_duty "No one is currently on duty." "No signups found for this shift."}}</p>
+  {{/if}}
+{{/if}}
+
