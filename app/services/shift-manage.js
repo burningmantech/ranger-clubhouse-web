@@ -204,13 +204,15 @@ export default class ShiftManageService extends Service {
     const signupCallback = () => this.slotSignup(slot, person, callback, true);
 
     switch (result.status) {
-      case 'full':
+      case 'full': {
+        const fullShift = result.full_position_title ? `The ${result.full_position_title} shift` : 'The shift';
         this.modal.confirm(
           'Shift is at capacity',
-          `The shift is full, however you have the privileges to add this shift to the schedule. ${CONFIRM_FORCE_MESSAGE}`,
+          `${fullShift} is full, however you have the privileges to add this shift to the schedule. ${CONFIRM_FORCE_MESSAGE}`,
           signupCallback
         );
         return;
+      }
 
       case 'has-started':
       case 'has-ended': {
