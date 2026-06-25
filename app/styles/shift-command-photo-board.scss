@@ -1,0 +1,89 @@
+// Shift Command Photo Board — unattended wall-monitor view.
+// Bootstrap utilities cover the mandated box (border-2 / fs-4 / fw-semibold) and the
+// success/secondary states; this partial is UX polish, scroll offset, fixed card sizing,
+// and responsiveness.
+
+// Bootstrap has no min-width:0 utility; needed so the flex content column can shrink and
+// its children can truncate instead of forcing horizontal overflow.
+.min-w-0 { min-width: 0; }
+
+.scphoto {
+  // Single source of truth for the sticky-header height: drives both the scroll offset
+  // (so a group lands comfortably below the header, not under it) and where the rail sticks.
+  --scphoto-header-h: 6.5rem;
+  font-size: 1rem; // bump from the app's 0.9rem base for at-a-distance legibility
+}
+
+// Pinned page title — stays visible while groups auto-scroll beneath it.
+.scphoto-header {
+  background-color: #fff;
+  box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.08); // separation as cards tuck under
+}
+
+.scphoto-group {
+  scroll-margin-top: var(--scphoto-header-h); // lands the group below the sticky header
+  background-color: #fff;
+  transition: box-shadow 0.3s ease;
+}
+
+.scphoto-group.border-success {
+  // Green glow on the current group — a distance cue layered on top of the honest 2px border.
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.25);
+}
+
+.scphoto-group-title {
+  font-size: 1.6rem;
+  line-height: 1.2;
+}
+
+// Fixed-width cards so flex-wrap fills rows cleanly and a row can never overflow.
+.scphoto-card {
+  width: 12rem;
+}
+
+.scphoto-img {
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
+  border-radius: 0.5rem 0.5rem 0 0;
+  background-color: #f0f0f0;
+}
+
+.scphoto-callsign {
+  font-size: 1.5rem;
+  line-height: 1.15;
+}
+
+// Sticky right progress rail.
+.scphoto-rail {
+  width: 18rem;
+  position: sticky;
+  top: var(--scphoto-header-h); // sit below the sticky header, not under it
+  max-height: calc(100vh - var(--scphoto-header-h) - 1rem);
+  overflow-y: auto;
+}
+
+.scphoto-rail-item {
+  font-size: 1.15rem;
+  transition: background-color 0.3s ease;
+}
+
+.scphoto-rail-dot {
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+// Stack the rail under the column on narrow screens.
+@media (max-width: 992px) {
+  .scphoto-layout {
+    flex-direction: column;
+  }
+
+  .scphoto-rail {
+    position: static;
+    width: 100%;
+    max-height: none;
+  }
+}

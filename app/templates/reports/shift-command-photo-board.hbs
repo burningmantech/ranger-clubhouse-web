@@ -1,0 +1,71 @@
+<main class="scphoto">
+  <div class="scphoto-header sticky-top d-flex justify-content-between align-items-baseline flex-wrap gap-3 mb-3 px-2 py-2">
+    <div class="display-5 fw-bold mb-0">Shift Command Photo Board</div>
+    <div class="fs-3 fw-semibold mb-0">Loaded {{shift-format this.serverTime}}</div>
+    <div class="fs-5 text-muted">Refresh in {{this.countDown}}s</div>
+  </div>
+
+  {{#if this.groups}}
+    <div class="scphoto-layout d-flex gap-4 align-items-start">
+      <div class="flex-grow-1 min-w-0">
+        {{#each this.groups as |group index|}}
+          <div id="scphoto-group-{{index}}"
+               class="scphoto-group border border-2 rounded-3 p-3 mb-4 fs-4 fw-semibold
+                      {{if (eq index this.currentGroupIndex) 'border-success' 'border-secondary'}}">
+            <div class="d-flex align-items-center gap-3 mb-3 pb-2 border-bottom">
+              {{#if (eq index this.currentGroupIndex)}}
+                <span class="badge text-bg-success fs-6 align-middle">NOW SHOWING</span>
+              {{/if}}
+              <span class="scphoto-group-title">{{group.title}}</span>
+              <span class="ms-auto text-muted fs-6 fw-normal">{{group.people.length}} on duty</span>
+            </div>
+
+            {{#if group.people.length}}
+              <div class="d-flex flex-wrap gap-3 justify-content-center">
+                {{#each group.people as |person|}}
+                  <div class="card scphoto-card border-0">
+                    {{#if person.photo_url}}
+                      <img src={{person.photo_url}} alt={{person.callsign}}
+                           class="card-img-top scphoto-img" loading="lazy">
+                    {{else}}
+                      <div class="scphoto-img d-flex align-items-center justify-content-center text-secondary">
+                        <UiPhotoNone/>
+                      </div>
+                    {{/if}}
+                    <div class="card-body p-2 text-center">
+                      <div class="fw-bold scphoto-callsign text-truncate">{{person.callsign}}</div>
+                      <div class="fw-normal small text-muted text-truncate">{{person.position.title}}</div>
+                    </div>
+                  </div>
+                {{/each}}
+              </div>
+            {{else}}
+              <div class="text-center text-muted fw-normal fs-5 py-4">
+                <i class="far fa-circle-user fa-3x d-block mb-2 opacity-50"></i>
+                No one on duty in this position.
+              </div>
+            {{/if}}
+          </div>
+        {{/each}}
+      </div>
+
+      <nav class="scphoto-rail flex-shrink-0 align-self-start">
+        <div class="text-uppercase text-muted small fw-semibold mb-2 px-2">Groups</div>
+        <ol class="list-unstyled mb-0">
+          {{#each this.groups as |group index|}}
+            <li class="scphoto-rail-item d-flex align-items-center gap-2 rounded-2 px-2 py-2 mb-1
+                       {{if (eq index this.currentGroupIndex)
+                            'scphoto-rail-active bg-success-subtle text-success fw-bold'
+                            'text-body'}}">
+              <span class="scphoto-rail-dot {{if (eq index this.currentGroupIndex) 'bg-success' 'bg-secondary'}}"></span>
+              <span class="text-truncate">{{group.title}}</span>
+              <span class="ms-auto small opacity-75">{{group.people.length}}</span>
+            </li>
+          {{/each}}
+        </ol>
+      </nav>
+    </div>
+  {{else}}
+    <LoadingDialog>Loading Shift Command Personnel</LoadingDialog>
+  {{/if}}
+</main>

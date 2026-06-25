@@ -238,6 +238,7 @@ Router.map(function () {
     this.route('sandman-qualified');
     this.route('schedule-by-callsign');
     this.route('schedule-by-position');
+    this.route('shift-command-photo-board');
     this.route('freaking-years');
     this.route('shift-coverage');
     this.route('shift-drop');

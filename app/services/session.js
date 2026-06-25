@@ -65,6 +65,7 @@ export default class extends SessionService {
 
   @tracked isOffline = false;
   @tracked showingBookmark = false;
+  @tracked showingPhotoBoard = false;
 
   @tracked showNewMessageDialog = false;
   @tracked mostRecentMessage = null;
