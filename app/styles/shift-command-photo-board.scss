@@ -7,22 +7,29 @@
 // its children can truncate instead of forcing horizontal overflow.
 .min-w-0 { min-width: 0; }
 
+
 .scphoto {
   // Single source of truth for the sticky-header height: drives both the scroll offset
   // (so a group lands comfortably below the header, not under it) and where the rail sticks.
   --scphoto-header-h: 6.5rem;
+  --scphoto-bg: #121215;
+
   font-size: 1rem; // bump from the app's 0.9rem base for at-a-distance legibility
+  background-color: var(--scphoto-bg);
+  color: #fff;
+  padding: 0.5rem;
 }
 
 // Pinned page title — stays visible while groups auto-scroll beneath it.
 .scphoto-header {
-  background-color: #fff;
+  background-color: var(--scphoto-bg);
   box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.08); // separation as cards tuck under
+  border-bottom: 2px solid #000000;
 }
 
 .scphoto-group {
   scroll-margin-top: var(--scphoto-header-h); // lands the group below the sticky header
-  background-color: #fff;
+  background-color: var(--scphoto-bg);
   transition: box-shadow 0.3s ease;
 }
 
@@ -56,7 +63,7 @@
 
 // Sticky right progress rail.
 .scphoto-rail {
-  width: 18rem;
+  width: 14rem;
   position: sticky;
   top: var(--scphoto-header-h); // sit below the sticky header, not under it
   max-height: calc(100vh - var(--scphoto-header-h) - 1rem);
@@ -64,19 +71,19 @@
 }
 
 .scphoto-rail-item {
-  font-size: 1.15rem;
+  font-size: 0.85rem;
   transition: background-color 0.3s ease;
 }
 
 .scphoto-rail-dot {
-  width: 0.6rem;
-  height: 0.6rem;
+  width: 0.5rem;
+  height: 0.5rem;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
 // Stack the rail under the column on narrow screens.
-@media (max-width: 992px) {
+@include media-breakpoint-down(lg) {
   .scphoto-layout {
     flex-direction: column;
   }

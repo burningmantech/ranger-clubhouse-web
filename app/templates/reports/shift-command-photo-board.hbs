@@ -1,8 +1,9 @@
-<main class="scphoto">
-  <div class="scphoto-header sticky-top d-flex justify-content-between align-items-baseline flex-wrap gap-3 mb-3 px-2 py-2">
-    <div class="display-5 fw-bold mb-0">Shift Command Photo Board</div>
+<div class="scphoto">
+  <div
+    class="scphoto-header sticky-top d-flex justify-content-between align-items-baseline flex-wrap gap-3 mb-3 px-2 py-2">
     <div class="fs-3 fw-semibold mb-0">Loaded {{shift-format this.serverTime}}</div>
-    <div class="fs-5 text-muted">Refresh in {{this.countDown}}s</div>
+    <div class="fs-3 fw-bold mb-0">Shift Command Photo Board</div>
+    <div class="fs-5">Refresh in {{this.countDown}}s</div>
   </div>
 
   {{#if this.groups}}
@@ -21,7 +22,7 @@
             </div>
 
             {{#if group.people.length}}
-              <div class="d-flex flex-wrap gap-3 justify-content-center">
+              <div class="d-flex flex-wrap gap-3 ">
                 {{#each group.people as |person|}}
                   <div class="card scphoto-card border-0">
                     {{#if person.photo_url}}
@@ -33,7 +34,7 @@
                       </div>
                     {{/if}}
                     <div class="card-body p-2 text-center">
-                      <div class="fw-bold scphoto-callsign text-truncate">{{person.callsign}}</div>
+                      <div class="fw-semibold scphoto-callsign text-truncate">{{person.callsign}}</div>
                       <div class="fw-normal small text-muted text-truncate">{{person.position.title}}</div>
                     </div>
                   </div>
@@ -50,22 +51,49 @@
       </div>
 
       <nav class="scphoto-rail flex-shrink-0 align-self-start">
-        <div class="text-uppercase text-muted small fw-semibold mb-2 px-2">Groups</div>
+        <div class="text-uppercase small fw-semibold mb-2 px-2">Groups</div>
         <ol class="list-unstyled mb-0">
           {{#each this.groups as |group index|}}
             <li class="scphoto-rail-item d-flex align-items-center gap-2 rounded-2 px-2 py-2 mb-1
                        {{if (eq index this.currentGroupIndex)
-                            'scphoto-rail-active bg-success-subtle text-success fw-bold'
-                            'text-body'}}">
-              <span class="scphoto-rail-dot {{if (eq index this.currentGroupIndex) 'bg-success' 'bg-secondary'}}"></span>
+                            'bg-success-subtle text-success fw-bold'
+            }}">
+              <span
+                class="scphoto-rail-dot {{if (eq index this.currentGroupIndex) 'bg-success' 'bg-secondary'}}"></span>
               <span class="text-truncate">{{group.title}}</span>
               <span class="ms-auto small opacity-75">{{group.people.length}}</span>
             </li>
           {{/each}}
         </ol>
+        {{#if this.hosts}}
+          <div class="text-uppercase small fw-semibold my-2 px-2 mt-2">Have Questions?</div>
+          <div>
+            {{#each this.hosts as |person|}}
+              <div class="card scphoto-card border-0">
+                {{#if person.photo_url}}
+                  <img src={{person.photo_url}} alt={{person.callsign}} class="card-img-top scphoto-img" loading="lazy">
+                {{else}}
+                  <div class="scphoto-img d-flex align-items-center justify-content-center text-secondary">
+                    <UiPhotoNone/>
+                  </div>
+                {{/if}}
+                <div class="card-body p-2 text-center">
+                  <div class="fw-semibold scphoto-callsign text-truncate">{{person.callsign}}</div>
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        {{else}}
+          <div class="text-danger mt-4">
+            No ROC Star (aka host) is on duty to field questions.
+            <div class="mt-2">
+              Talk with a Khaki.
+            </div>
+          </div>
+        {{/if}}
       </nav>
     </div>
   {{else}}
     <LoadingDialog>Loading Shift Command Personnel</LoadingDialog>
   {{/if}}
-</main>
+</div>
