@@ -1,6 +1,6 @@
 <ToastRegistry/>
 <ModalRegistry/>
-{{#unless (or this.session.isOffline this.session.showingBookmark)}}
+{{#unless (or this.session.isOffline this.session.showingBookmark this.session.showingPhotoBoard)}}
   <header class="d-print-none">
     <Navbar/>
     {{#if (has-role "admin" "manage" "vc" "mentor")}}
@@ -29,7 +29,7 @@
 
 <div id="body-row" {{on-insert this.bodyRowInserted}}>{{outlet}}</div>
 
-{{#unless (or this.session.isOffline this.session.showingBookmark)}}
+{{#unless (or this.session.isOffline this.session.showingBookmark this.session.showingPhotoBoard)}}
   <footer class="d-print-none">
     &copy; 2008-{{dayjs-format "" "YYYY"}} Black Rock City, LLC.
     <span class="d-inline-block">
