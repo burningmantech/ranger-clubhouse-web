@@ -1,6 +1,6 @@
 {{#if (or  @message.isTopMessage (not @isHidden))}}
   <div id="message-{{@message.id}}" class="d-flex w-100 {{this.messageClass}}"
-    {{on-click @onMessageClick active=(and @message.isHidden @message.isTopMessage)}}
+    {{on-click @onMessageClick active=(and @isHidden @message.isTopMessage)}}
   >
     <div class="message-photo-container">
       {{#if (and @message.isSenderPerson @message.sender_photo_url)}}
@@ -42,7 +42,7 @@
       {{/if}}
       <div class="fs-6">
         {{#if (and @message.isTopMessage (eq @person.idNumber @message.sender_person_id))}}
-          Sent to {{@message.person.callsign}} at
+          Sent to {{or @message.person.callsign @message.recipient_callsign}} at
         {{else}}
           From {{@message.fromName}}
           {{#if @message.sentFromHQWindow}}
@@ -119,7 +119,7 @@
             {{/if}}
           </UiAlert>
         {{/if}}
-        <div class="mb-3 me-4 {{if @message.isTopMessage "ms-2" "me-4"}}">
+        <div class="mb-3 me-4 {{if @message.isTopMessage "ms-2"}}">
           {{nl2br @message.body}}
         </div>
         <div class="d-flex justify-content-between">
@@ -129,7 +129,7 @@
                 <UiButton @type={{if @message.delivered "secondary" "success"}}
                           @responsive={{true}}
                           @onClick={{@toggleRead}}
-                          @disabled={{@message.isSubmitting}}>
+                          @disabled={{@isSubmitting}}>
                   {{#if @message.delivered}}
                     {{fa-icon "envelope-circle-check" type="s" right=1}} Mark As Unread
                   {{else}}

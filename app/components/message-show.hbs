@@ -1,35 +1,35 @@
 <div class="border border-2 rounded p-1 mb-2 {{this.messageClasses}}">
   <MessageThread @message={{@message}}
                  @person={{@person}}
-                 @updateUnreadCount={{@updateUnreadCount}}
                  @isHidden={{this.messageIsHidden}}
                  @onMessageClick={{this.messageOpen}}
-                 @replyCount={{@message.replies.length}}
                  @onClose={{this.closeMessage}}
                  @openReplyForm={{this.openReplyForm}}
                  @toggleRead={{fn @toggleRead @message}}
+                 @isSubmitting={{@isSubmitting}}
                  @isLast={{not @message.replies.length}}
                  @isSenderPerson={{@message.isSenderPerson}}
-                 @haveUnread={{this.haveUnread}}
   />
 
   {{#each @message.replies as |reply idx|}}
     <MessageThread @message={{reply}}
                    @person={{@person}}
-                   @updateUnreadCount={{@updateUnreadCount}}
                    @isHidden={{this.messageIsHidden}}
                    @onMessageClick={{this.messageOpen}}
                    @openReplyForm={{if (this.isLastMessage idx) this.openReplyForm}}
                    @toggleRead={{fn @toggleRead reply}}
+                   @isSubmitting={{@isSubmitting}}
                    @isLast={{this.isLastMessage idx}}
                    @isSenderPerson={{@message.isSenderPerson}}
-                   @haveUnread={{this.haveUnread}}
     />
   {{/each}}
 
   {{#if (and this.showReplyForm @canSendMessages @message.isSenderPerson (not this.messageIsHidden))}}
     <div class=" mt-2 p-2 mail-reply-form">
-      <ChForm @formId="reply-form" @formFor={{this.replyToMessage}} @onSubmit={{this.sendReply}} as |f|>
+      <ChForm @formId="reply-form"
+              @formFor={{this.replyToMessage}}
+              @validator={{this.replyValidations}}
+              @onSubmit={{this.sendReply}} as |f|>
         <FormRow>
           <FormLabel>
             {{#if (or @isMe (eq @person.idNumber this.session.userId))}}

@@ -6,24 +6,20 @@ export default class MessageThread extends Component {
   @service session;
 
   @cached
-  get isMyMessage() {
-    return this.args.person.idNumber === this.args.message.sender_person_id;
-  }
-
-  @cached
   get isMe() {
     return this.args.person.idNumber === this.session.userId;
   }
 
   @cached
   get hasBeenRead() {
-    const {message} = this.args;
-    return (this.isMyMessage && message?.delivered)
-      || message?.replies?.some((r) => r.delivered);
+    const {message, person} = this.args;
+    const pid = person?.idNumber;
+    // Single source of truth: read == not unread by this person and no unread replies.
+    return !message.isUnread(pid) && message.unreadReplyCount(pid) === 0;
   }
 
   @cached
   get messageClass() {
-    return this.args.message.isTopMessage ? '' : "mt-1 pt-2 ms-xl-4";
+    return this.args.message.isTopMessage ? '' : 'mt-1 pt-2 ms-xl-4';
   }
 }
