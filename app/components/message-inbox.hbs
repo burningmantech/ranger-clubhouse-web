@@ -47,11 +47,11 @@
       {{#each this.messages key="id" as |message|}}
         <MessageShow @message={{message}}
                      @person={{@person}}
-                     @updateUnreadCount={{this.updateUnreadCount}}
                      @canSendMessages={{this.canSendMessages}}
                      @createReplyMessage={{this.createReplyMessage}}
                      @sendMessage={{this.sendMessage}}
                      @toggleRead={{this.toggleRead}}
+                     @isSubmitting={{this.isSubmitting}}
         />
       {{/each}}
     {{else}}

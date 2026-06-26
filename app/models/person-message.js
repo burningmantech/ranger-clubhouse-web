@@ -127,7 +127,7 @@ export default class PersonMessageModel extends Model {
       return this.sender_team.callsign;
     }
 
-    return this.message_from;
+    return this.message_from ?? 'Unknown sender';
   }
 
   unreadReplyCount(personId) {

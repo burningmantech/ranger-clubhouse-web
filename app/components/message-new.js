@@ -6,6 +6,8 @@ import PersonMessageValidations from 'clubhouse/validations/person-message';
 import {SENDER_TYPE_OTHER, SENDER_TYPE_PERSON} from "clubhouse/models/person-message";
 import {isEmpty} from "lodash";
 
+const MIN_FROM_NAME_LENGTH = 5;
+
 export default class MessageNewComponent extends Component {
   @service session;
 
@@ -64,7 +66,7 @@ export default class MessageNewComponent extends Component {
   selectMe() {
     this.choice = 'me';
     this.senderType = SENDER_TYPE_PERSON;
-    this.args.message.message_from = this.session.user.callsign;
+    this.args.message.message_from = this.session.user?.callsign;
   }
 
   @action
@@ -96,21 +98,19 @@ export default class MessageNewComponent extends Component {
     this.askForRecipient = false;
   }
 
+  get fromNameTooShort() {
+    return (this.args.message.message_from?.length ?? 0) < MIN_FROM_NAME_LENGTH;
+  }
+
   @action
   fromNameEntered() {
-    const name = this.args.message.message_from;
-    if ((name?.length ?? 0) < 5) {
-      this.fromNameError = "Enter 5 or more characters.";
+    if (this.fromNameTooShort) {
+      this.fromNameError = `Enter ${MIN_FROM_NAME_LENGTH} or more characters.`;
       return;
     }
 
     this.fromNameError = null;
     this.askForSender = false;
-  }
-
-  @action
-  updateMessageFrom(event) {
-    this.args.message.message_from = event.target.value;
   }
 
   @action

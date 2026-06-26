@@ -2,12 +2,15 @@ import Component from '@glimmer/component';
 import {tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
 import {service} from '@ember/service';
+import {PersonMessageReplyValidations} from 'clubhouse/validations/person-message';
 
 export default class MessageShowComponent extends Component {
   @service session;
 
-  @tracked showReplyForm;
-  @tracked replyToMessage;
+  @tracked showReplyForm = false;
+  @tracked replyToMessage = null;
+
+  replyValidations = PersonMessageReplyValidations;
 
   @action
   openReplyForm() {
@@ -24,6 +27,7 @@ export default class MessageShowComponent extends Component {
   @action
   replySent() {
     this.showReplyForm = false;
+    this.replyToMessage = null;
   }
 
   @action
@@ -37,8 +41,9 @@ export default class MessageShowComponent extends Component {
 
   @action
   isLastMessage(idx) {
-    const replies = this.args.message.replies.length;
-    return this.args.message.isSenderPerson && (!replies || (replies === (idx + 1)));
+    // Always called from within {{#each replies}}, so there is at least one reply;
+    // the message is last when its index is the final one.
+    return this.args.message.isSenderPerson && (idx + 1 === this.args.message.replies.length);
   }
 
   @action
@@ -53,6 +58,9 @@ export default class MessageShowComponent extends Component {
 
   get haveUnread() {
     const idNumber = this.args.person?.idNumber;
+    if (idNumber == null) {
+      return false;
+    }
     const {message} = this.args;
 
     return message.isUnread(idNumber) || message.unreadReplyCount(idNumber) > 0;
@@ -63,6 +71,6 @@ export default class MessageShowComponent extends Component {
   }
 
   get messageClasses() {
-    return this.messageIsHidden ? 'message-hover border-secondary-subtle ' : 'message-opened border-success'
+    return this.messageIsHidden ? 'message-hover border-secondary-subtle' : 'message-opened border-success'
   }
 }

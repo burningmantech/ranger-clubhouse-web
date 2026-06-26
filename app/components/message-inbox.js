@@ -71,14 +71,17 @@ export default class MessageInboxComponent extends Component {
     try {
       const {person_message: mailbox} = await this.ajax.request('messages', {data: {person_id: personId}});
       this.messages = new TrackedArray(mailbox.map((message) => {
-        message.personIdInbox = personId;
-        if (this.messagesHidden[message.id] !== undefined) {
-          message.isHidden = this.messagesHidden[message.id];
-        }
         message.replies = new TrackedArray(
           (message.replies ?? []).map((reply) => this.storePayload.pushPayload('person-message', reply))
         );
-        return this.storePayload.pushPayload('person-message', message);
+        const record = this.storePayload.pushPayload('person-message', message);
+        // isHidden is a @tracked view field, not an @attr, so it must be restored
+        // on the pushed model instance. Setting it on the raw payload (as before)
+        // is silently discarded by store.normalize, collapsing every thread on reload.
+        if (this.messagesHidden[record.id] !== undefined) {
+          record.isHidden = this.messagesHidden[record.id];
+        }
+        return record;
       }));
     } catch (response) {
       this.errors.handleErrorResponse(response);
@@ -130,11 +133,12 @@ export default class MessageInboxComponent extends Component {
   @action
   updateUnreadCount() {
     const {person} = this.args;
+    if (!person) {
+      return;
+    }
 
     const count = this.unreadMessageCount + this.unreadReplyCount;
-    if (person) {
-      set(person, 'unread_message_count', count);
-    }
+    set(person, 'unread_message_count', count);
 
     if (this.session.userId === person.idNumber) {
       this.session.unreadMessageCount = count;
@@ -200,6 +204,11 @@ export default class MessageInboxComponent extends Component {
     if (await this.saveModel.save({model, message: `Message successfully sent`, owner: this})) {
       if (!this.args.isContact) {
         if (topMessage) {
+          // A locally-composed top message has no replies array yet (the model attr
+          // has no default; only _loadMessages seeds it), so guard before pushing.
+          if (!topMessage.replies) {
+            topMessage.replies = new TrackedArray([]);
+          }
           topMessage.replies.push(record);
         } else {
           this.messages.unshift(record);
@@ -227,16 +236,20 @@ export default class MessageInboxComponent extends Component {
 
   @action
   async toggleRead(message) {
+    if (this.isSubmitting) {
+      return;
+    }
     const personId = this.args.person.idNumber;
+    this.isSubmitting = true;
+    message.delivered = !message.delivered;
     try {
-      this.isSubmitting = true;
-      message.delivered = !message.delivered;
       await this.ajax.patch(`messages/${message.id}/markread`, {
         data: {person_id: personId, delivered: message.delivered}
       })
       this.toast.success(`Message has been marked as ${message.delivered ? 'read' : 'unread'}`);
       this.updateUnreadCount();
     } catch (response) {
+      message.delivered = !message.delivered; // roll back the optimistic flip
       this.errors.handleErrorResponse(response);
     } finally {
       this.isSubmitting = false;

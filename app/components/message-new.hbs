@@ -83,7 +83,7 @@
   <ModalDialog @onEscape={{@onCancel}} @position="top" as |Modal|>
     <Modal.title>
       Enter the
-      {{if this.askForRecipient "recipient's callsign" "sender's name"}}
+      {{if this.askForSender "sender's name" "recipient's callsign"}}
     </Modal.title>
     <Modal.body>
       {{#if this.askForSender}}
@@ -150,7 +150,7 @@
                 <UiButton @onClick={{this.fromNameEntered}}
                           @type="gray"
                           @size="md"
-                          disabled={{not @message.message_from}}>
+                          disabled={{this.fromNameTooShort}}>
                   Continue
                 </UiButton>
               </div>

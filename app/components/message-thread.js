@@ -17,9 +17,10 @@ export default class MessageThread extends Component {
 
   @cached
   get hasBeenRead() {
-    const {message} = this.args;
-    return (this.isMyMessage && message?.delivered)
-      || message?.replies?.some((r) => r.delivered);
+    const {message, person} = this.args;
+    const pid = person?.idNumber;
+    // Single source of truth: read == not unread by this person and no unread replies.
+    return !message.isUnread(pid) && message.unreadReplyCount(pid) === 0;
   }
 
   @cached
