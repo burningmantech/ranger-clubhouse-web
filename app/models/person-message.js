@@ -1,5 +1,4 @@
 import Model, {attr} from '@ember-data/model';
-import {tracked} from '@glimmer/tracking';
 
 import {
   HQ_LEAD,
@@ -45,8 +44,6 @@ export function isMessageUnread(message, personId) {
 }
 
 export default class PersonMessageModel extends Model {
-  @tracked isHidden = true;
-
   @attr('number') person_id;
   @attr('', {readOnly: true}) person;
 

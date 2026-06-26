@@ -6,11 +6,6 @@ export default class MessageThread extends Component {
   @service session;
 
   @cached
-  get isMyMessage() {
-    return this.args.person.idNumber === this.args.message.sender_person_id;
-  }
-
-  @cached
   get isMe() {
     return this.args.person.idNumber === this.session.userId;
   }
@@ -25,6 +20,6 @@ export default class MessageThread extends Component {
 
   @cached
   get messageClass() {
-    return this.args.message.isTopMessage ? '' : "mt-1 pt-2 ms-xl-4";
+    return this.args.message.isTopMessage ? '' : 'mt-1 pt-2 ms-xl-4';
   }
 }

@@ -6,6 +6,7 @@ import {PersonMessageReplyValidations} from 'clubhouse/validations/person-messag
 
 export default class MessageShowComponent extends Component {
   @service session;
+  @service('messages') mailbox;
 
   @tracked showReplyForm = false;
   @tracked replyToMessage = null;
@@ -48,12 +49,12 @@ export default class MessageShowComponent extends Component {
 
   @action
   messageOpen() {
-    this.args.message.isHidden = false;
+    this.mailbox.setExpanded(this.args.message.id, true);
   }
 
   @action
   closeMessage() {
-    this.args.message.isHidden = true;
+    this.mailbox.setExpanded(this.args.message.id, false);
   }
 
   get haveUnread() {
@@ -67,7 +68,7 @@ export default class MessageShowComponent extends Component {
   }
 
   get messageIsHidden() {
-    return this.args.message.isHidden;
+    return !this.mailbox.isExpanded(this.args.message.id);
   }
 
   get messageClasses() {

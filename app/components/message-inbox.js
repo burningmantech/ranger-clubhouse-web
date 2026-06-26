@@ -1,51 +1,39 @@
 import Component from '@glimmer/component';
-import {action, set} from '@ember/object';
+import {action} from '@ember/object';
 import {service} from '@ember/service';
-import {cached, tracked} from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
 import {
-  isMessageUnread,
   MESSAGE_TYPE_CONTACT,
   MESSAGE_TYPE_NORMAL,
   SENDER_TYPE_PERSON
 } from "clubhouse/models/person-message";
 import {ALLOW_TO_MESSAGE} from "clubhouse/constants/person_status";
 import {pluralize} from 'ember-inflector';
-import {TrackedArray} from 'tracked-built-ins';
 
 export default class MessageInboxComponent extends Component {
-  @service ajax;
-  @service errors;
-  @service storePayload;
-  @service saveModel;
+  @service('messages') mailbox;
   @service session;
   @service store;
-  @service toast;
 
-  @tracked isLoading;
-  @tracked isSubmitting;
-
-  @tracked newMessage;
-
-  @tracked messages = new TrackedArray([]);
-
-  isRetrieving = false;
-
-  // Keep track of the message that are open.
-  messagesHidden = {};
+  @tracked newMessage = null;
 
   constructor() {
     super(...arguments);
 
     if (this.args.isContact) {
-      this._newMessageSetup({to: this.args.contactCallsign, from: this.args.person.callsign});
+      this._newMessageSetup({to: this.args.contactCallsign, from: this.args.person?.callsign});
     } else {
-      this.session.loadMessages = this._loadMessages;
-      this._loadMessages();
+      // Register this inbox as the session's refresh target; restored on teardown
+      // only if we're still the registered owner (don't clobber a later inbox).
+      this.session.loadMessages = this.refresh;
+      this.refresh();
     }
   }
 
   willDestroy() {
-    this.session.loadMessages = null;
+    if (this.session.loadMessages === this.refresh) {
+      this.session.loadMessages = null;
+    }
     super.willDestroy(...arguments);
   }
 
@@ -53,96 +41,43 @@ export default class MessageInboxComponent extends Component {
     return ALLOW_TO_MESSAGE.includes(this.session.user.status);
   }
 
-  @action
-  async _loadMessages() {
-    if (this.isRetrieving) {
-      return;
-    }
-
-    this.store.unloadAll('person-message');
-    const personId = this.args.person.idNumber;
-
-    this.isLoading = true;
-    this.isRetrieving = true; // EmberJS get cranky when a tracked variable is read then written. here the second variable
-
-    this.messages.forEach((message) => {
-      this.messagesHidden[message.id] = message.isHidden;
-    });
-    try {
-      const {person_message: mailbox} = await this.ajax.request('messages', {data: {person_id: personId}});
-      this.messages = new TrackedArray(mailbox.map((message) => {
-        message.replies = new TrackedArray(
-          (message.replies ?? []).map((reply) => this.storePayload.pushPayload('person-message', reply))
-        );
-        const record = this.storePayload.pushPayload('person-message', message);
-        // isHidden is a @tracked view field, not an @attr, so it must be restored
-        // on the pushed model instance. Setting it on the raw payload (as before)
-        // is silently discarded by store.normalize, collapsing every thread on reload.
-        if (this.messagesHidden[record.id] !== undefined) {
-          record.isHidden = this.messagesHidden[record.id];
-        }
-        return record;
-      }));
-    } catch (response) {
-      this.errors.handleErrorResponse(response);
-    } finally {
-      this.isRetrieving = false;
-      this.isLoading = false;
-    }
+  // Thin view bindings over the MessagesService.
+  get messages() {
+    return this.mailbox.messages;
   }
 
-  @cached
+  get isLoading() {
+    return !this.args.isContact && this.mailbox.isLoading;
+  }
+
+  get isSending() {
+    return this.mailbox.isSending;
+  }
+
+  get isMarkingRead() {
+    return this.mailbox.isMarkingRead;
+  }
+
   get unreadCount() {
+    const {messages, replies} = this.mailbox.unreadCounts(this.args.person?.idNumber);
     const info = [];
-    if (this.unreadMessageCount) {
-      info.push(pluralize(this.unreadMessageCount, 'unread message'));
+    if (messages) {
+      info.push(pluralize(messages, 'unread message'));
     }
-
-    if (this.unreadReplyCount) {
-      info.push(pluralize(this.unreadReplyCount, 'unread reply'));
+    if (replies) {
+      info.push(pluralize(replies, 'unread reply'));
     }
-
     return info.join(' and ');
   }
 
-  @cached
-  get unreadMessageCount() {
-    const personId = this.args.person.idNumber;
-    let count = 0;
-
-    this.messages.forEach((message) => {
-      if (isMessageUnread(message, personId)) {
-        count++;
-      }
-    });
-
-    return count;
-  }
-
-  @cached
-  get unreadReplyCount() {
-    let count = 0;
-
-    this.messages.forEach((message) => {
-      count += message.unreadReplyCount(this.args.person.idNumber);
-    });
-
-    return count;
+  @action
+  refresh() {
+    return this.mailbox.load(this.args.person?.idNumber);
   }
 
   @action
   updateUnreadCount() {
-    const {person} = this.args;
-    if (!person) {
-      return;
-    }
-
-    const count = this.unreadMessageCount + this.unreadReplyCount;
-    set(person, 'unread_message_count', count);
-
-    if (this.session.userId === person.idNumber) {
-      this.session.unreadMessageCount = count;
-    }
+    this.mailbox.pushUnreadToOwner(this.args.person);
   }
 
   _newMessageSetup(initialName, isReply = false) {
@@ -196,33 +131,18 @@ export default class MessageInboxComponent extends Component {
   }
 
   @action
-  async sendMessage(model, isValid, {onSuccess = null, topMessage = null, record = null} = {}) {
-    if (!isValid) {
-      return;
-    }
-    const personId = this.args.person.idNumber;
-    if (await this.saveModel.save({model, message: `Message successfully sent`, owner: this})) {
-      if (!this.args.isContact) {
-        if (topMessage) {
-          // A locally-composed top message has no replies array yet (the model attr
-          // has no default; only _loadMessages seeds it), so guard before pushing.
-          if (!topMessage.replies) {
-            topMessage.replies = new TrackedArray([]);
-          }
-          topMessage.replies.push(record);
-        } else {
-          this.messages.unshift(record);
-        }
-      }
+  async sendMessage(model, isValid, options = {}) {
+    const ok = await this.mailbox.send(model, isValid, {
+      ...options,
+      isContact: this.args.isContact,
+      person: this.args.person,
+    });
 
-      if (!this.args.isContact && this.session.userId === personId) {
-        this.updateUnreadCount();
-      }
-
+    if (ok) {
       if (this.args.onFinished) {
         this.args.onFinished();
       } else {
-        onSuccess?.();
+        options.onSuccess?.();
       }
       this.newMessage = null;
     }
@@ -235,24 +155,7 @@ export default class MessageInboxComponent extends Component {
   }
 
   @action
-  async toggleRead(message) {
-    if (this.isSubmitting) {
-      return;
-    }
-    const personId = this.args.person.idNumber;
-    this.isSubmitting = true;
-    message.delivered = !message.delivered;
-    try {
-      await this.ajax.patch(`messages/${message.id}/markread`, {
-        data: {person_id: personId, delivered: message.delivered}
-      })
-      this.toast.success(`Message has been marked as ${message.delivered ? 'read' : 'unread'}`);
-      this.updateUnreadCount();
-    } catch (response) {
-      message.delivered = !message.delivered; // roll back the optimistic flip
-      this.errors.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
-    }
+  toggleRead(message) {
+    return this.mailbox.markRead(this.args.person, message);
   }
 }

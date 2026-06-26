@@ -51,7 +51,7 @@
                      @createReplyMessage={{this.createReplyMessage}}
                      @sendMessage={{this.sendMessage}}
                      @toggleRead={{this.toggleRead}}
-                     @isSubmitting={{this.isSubmitting}}
+                     @isSubmitting={{this.isMarkingRead}}
         />
       {{/each}}
     {{else}}
@@ -72,10 +72,10 @@
               @onCancel={{this.cancelNewMessage}}
               @isMe={{@isMe}}
               @isContact={{@isContact}}
-              @isSubmitting={{this.isSubmitting}}
+              @isSubmitting={{this.isSending}}
   />
 {{/if}}
 
-{{#if this.isSubmitting}}
+{{#if this.isSending}}
   <LoadingDialog>Sending the message</LoadingDialog>
 {{/if}}
