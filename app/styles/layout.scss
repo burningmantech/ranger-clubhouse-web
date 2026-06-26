@@ -1,8 +1,12 @@
 main {
   flex: 1 1 0;
   min-width: 0;
+}
+
+main:not(.main-no-padding) {
   padding: 10px 20px;
 }
+
 #body-row {
   display: flex;
   //flex-direction: row;
@@ -11,7 +15,7 @@ main {
 
 @include media-breakpoint-down(lg) {
   // Reduce padding on small screens.
-  main {
+  main  {
     padding: 5px;
   }
 
