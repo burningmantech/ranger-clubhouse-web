@@ -2,10 +2,9 @@ import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {buildBlockerAuditLabels} from "clubhouse/models/timesheet";
-import {htmlSafe} from '@ember/template';
 
 const CSV_COLUMNS = [
-  {title: 'Callsign', key: 'callsign'},
+  {title: 'Person', key: 'callsign'},
   {title: 'Position', key: 'position_title'},
   {title: 'Shift Start', key: 'on_duty'},
   {title: 'Forced By', key: 'forced_by_callsign'},
@@ -20,13 +19,11 @@ export default class ReportsForcedSigninsController extends ClubhouseController 
 
   @action
   exportToCSV() {
-    this.entries.forEach(entry => {
-      entry.blockers_human = buildBlockerAuditLabels(entry.blockers).join("\n");
-    });
-    this.download.downloadCsv(`${this.year}-forced-signins.csv`, CSV_COLUMNS, this.entries);
+    const rows = this.entries.map((e) => ({...e, blockers_human: buildBlockerAuditLabels(e.blockers).join("\n")}));
+    this.download.downloadCsv(`${this.year}-forced-signins.csv`, CSV_COLUMNS, rows);
   }
 
   forceReasons(blockers) {
-    return htmlSafe(buildBlockerAuditLabels(blockers).map(blocker => `<div >${blocker}</div>`).join(''));
+    return buildBlockerAuditLabels(blockers);
   }
 }
