@@ -39,7 +39,7 @@
           <PersonLink @callsign={{entry.forced_by_callsign}} @personId={{entry.forced_by_id}} />
         </td>
         <td>
-          {{this.forceReasons entry.blockers}}
+          {{#each (this.forceReasons entry.blockers) as |label|}}<div>{{label}}</div>{{/each}}
         </td>
         <td>
           {{#if entry.signin_force_reason}}

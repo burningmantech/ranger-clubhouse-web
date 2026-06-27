@@ -81,6 +81,14 @@ export function buildBlockerLabels(blockers) {
 }
 
 export function buildBlockerAuditLabels(blockers) {
+  if (!Array.isArray(blockers)) {
+    if (typeof blockers === 'string') {
+      blockers = [{blocker: blockers}];
+    } else {
+      return [];
+    }
+  }
+
   return blockers.map(b => {
     switch (b.blocker) {
       case BLOCKED_NOT_CHEETAH_CUB:
