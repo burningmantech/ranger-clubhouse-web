@@ -7,6 +7,12 @@
       "runtimeArgs": ["ember", "serve", "--port", "${PORT}"],
       "port": 4200,
       "autoPort": true
+    },
+    {
+      "name": "ember3000",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["ember", "serve", "--port", "3000"],
+      "port": 3000
     }
   ]
 }

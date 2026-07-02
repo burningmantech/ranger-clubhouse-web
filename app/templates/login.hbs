@@ -134,6 +134,21 @@
           </div>
         </FormRow>
       </ChForm>
+      {{#if this.session.isDevelopment}}
+        <div class="mt-4 p-3 border border-warning rounded">
+          <p class="fw-bold mb-2">Dev Login (development only)</p>
+          <div class="input-group" style="max-width: 320px;">
+            <input type="text" class="form-control" placeholder="callsign"
+                   {{on "input" this.updateDevCallsign}} />
+            <button class="btn btn-warning" type="button" {{on "click" this.devLogin}}>
+              Log In As
+            </button>
+          </div>
+          {{#if this.devLoginError}}
+            <p class="text-danger mt-2">{{this.devLoginError}}</p>
+          {{/if}}
+        </div>
+      {{/if}}
     </div>
     {{#unless this.session.isTraining}}
       <div class="p-lg-4">
