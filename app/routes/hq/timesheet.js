@@ -7,22 +7,26 @@ export default class HqTimesheetRoute extends ClubhouseRoute {
 
     this.store.unloadAll('timesheet-missing');
 
-    return {
-      timesheetInfo: (await this.ajax.request('timesheet/info', {
+    const [timesheetInfo, timesheetsMissing, timesheets] = await Promise.all([
+      this.ajax.request('timesheet/info', {
         method: 'GET',
         data: { person_id }
-      })).info,
-      timesheetsMissing: await this.store.query('timesheet-missing', { person_id, year }),
-      correctionPositions: (await this.ajax.request(`person/${person_id}/positions`,{ data: { include_past_grants: 1 } })).positions,
-      timesheetSummary: (await this.ajax.request(`person/${person_id}/timesheet-summary`, { data: { year }})).summary,
-      timesheets: await this.store.query('timesheet', { person_id, year }),
+      }),
+      this.store.query('timesheet-missing', { person_id, year }),
+      this.store.query('timesheet', { person_id, year }),
+    ]);
+
+    return {
+      timesheetInfo: timesheetInfo.info,
+      timesheetsMissing,
+      timesheets,
     };
   }
 
   setupController(controller, model) {
     super.setupController(...arguments);
 
-    controller.setProperties(this.modelFor('hq'));
+    controller.set('person', this.modelFor('hq').person);
     controller.setProperties(model);
     controller.set('year', this.session.currentYear());
   }

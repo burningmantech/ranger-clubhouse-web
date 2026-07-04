@@ -4,16 +4,13 @@ import {service} from '@ember/service';
 
 export default class HqTicketsAndProvisionsComponent extends Component {
   @tracked isLoading = false;
-  @tracked isNotRanger = false;
+  @tracked items;
+  @tracked isShinyPenny;
+  @tracked otherHours;
   @service ajax;
   @service errors;
   constructor() {
     super(...arguments);
-
-    if (!this.args.person.isRanger) {
-      this.isNotRanger = true;
-      return; // Nope!
-    }
 
     this.isLoading = true;
     this._loadProgress();
@@ -28,9 +25,11 @@ export default class HqTicketsAndProvisionsComponent extends Component {
         return items;
       }, {});
       this.isShinyPenny = progress.is_shiny_penny;
-      this.isLoading = false;
+      this.otherHours = progress.other_duration;
     } catch (response) {
       this.errors.handleErrorResponse(response);
+    } finally {
+      this.isLoading = false;
     }
   }
 

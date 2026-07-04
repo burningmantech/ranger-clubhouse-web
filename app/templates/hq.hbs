@@ -53,18 +53,11 @@
 
     <div class="me-auto px-4 d-print-none order-0 order-lg-1">
       <div class="photo-medium">
-        {{#if this.photo}}
-          {{#if this.photo.photo_url}}
-            <img src="{{or this.photo.profile_url this.photo.photo_url}}" class="d-block" alt="profile">
-          {{else}}
-            <UiPhoneNone/>
-            No Photo Uploaded
-          {{/if}}
-          {{#if this.photo.message}}
-            <div class="text-danger">ERROR: {{this.photo.message}}</div>
-          {{/if}}
+        {{#if this.photo.photo_url}}
+          <img src="{{or this.photo.profile_url this.photo.photo_url}}" class="d-block" alt="profile">
         {{else}}
-          <LoadingIndicator @text="Loading photo"/>
+          <UiPhotoNone/>
+          No Photo Uploaded
         {{/if}}
       </div>
       <dl class="mt-2">
@@ -137,7 +130,7 @@
           radios, and is NOT ALLOWED TO PERFORM RANGER SHIFTS.
         </b>
       </p>
-      The HQ Window Interface cannot be for this person. Contact the HQ Lead, HQ Supervisor or the Personnel Manager.
+      The HQ Window Interface cannot be used for this person. Contact the HQ Lead, HQ Supervisor or the Personnel Manager.
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeNotAllowedToWork}} @size="md"/>

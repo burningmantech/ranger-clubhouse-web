@@ -46,6 +46,7 @@ export default class HqPogsComponent extends Component {
 
   @tracked isLoading = true;
   @tracked isSubmitting = false;
+  @tracked loadFailed = false;
 
   @tracked config;
   @tracked pogToCancel;
@@ -83,15 +84,22 @@ export default class HqPogsComponent extends Component {
    * @private
    */
 
+  @action
   async _loadPogs() {
+    this.isLoading = true;
     try {
-      const {config} = await this.ajax.request('person-pog/config');
+      const [{config}, pogs] = await Promise.all([
+        this.ajax.request('person-pog/config'),
+        this.store.query('person-pog', {
+          person_id: this.args.person.id,
+          year: this.session.currentYear()
+        })
+      ]);
       this.config = config;
-      this.pogs = await this.store.query('person-pog', {
-        person_id: this.args.person.id,
-        year: this.session.currentYear()
-      });
+      this.pogs = pogs;
+      this.loadFailed = false;
     } catch (response) {
+      this.loadFailed = true;
       this.errors.handleErrorResponse(response);
     } finally {
       this.isLoading = false;
@@ -150,10 +158,14 @@ export default class HqPogsComponent extends Component {
     try {
       // On failure, save-model rolls the never-persisted record back out of the store.
       if (await this.saveModel.save({model: pog, message: 'Pog successfully created.'})) {
-        await this.pogs.update();
         this.pogToIssue = null;
         if (type === POG_MEAL || type === POG_HALF_MEAL) {
           this.args.onPogIssue?.();
+        }
+        try {
+          await this.pogs.update();
+        } catch (response) {
+          this.errors.handleErrorResponse(response);
         }
       }
     } finally {
@@ -177,18 +189,13 @@ export default class HqPogsComponent extends Component {
   }
 
   @action
-  async updatePog(model) {
-    if (this.isSubmitting) {
+  async updatePog(model, isValid) {
+    if (!isValid) {
       return;
     }
 
-    this.isSubmitting = true;
-    try {
-      if (await this.saveModel.save({model, message: 'Pog successfully updated.'})) {
-        this.pogToEdit = null;
-      }
-    } finally {
-      this.isSubmitting = false;
+    if (await this.saveModel.save({model, message: 'Pog successfully updated.', owner: this})) {
+      this.pogToEdit = null;
     }
   }
 
@@ -263,24 +270,21 @@ export default class HqPogsComponent extends Component {
   /**
    * Attempt to save the pog as a cancelled pog (with note on why).
    *
-   * @param pog
+   * @param model
    * @param isValid
+   * @param pog the bare person-pog record backing the changeset
    */
 
   @action
-  async saveCancelledPog(pog, isValid) {
-    if (!isValid || this.isSubmitting) {
+  async saveCancelledPog(model, isValid, pog) {
+    if (!isValid) {
       return;
     }
 
-    this.isSubmitting = true;
-    try {
-      pog.status = STATUS_CANCELLED;
-      if (await this.saveModel.save({model: pog, message: 'Pog has been cancelled.'})) {
-        this.pogToCancel = null;
-      }
-    } finally {
-      this.isSubmitting = false;
+    pog.status = STATUS_CANCELLED;
+    pog.notes = model.notes;
+    if (await this.saveModel.save({model: pog, message: 'Pog has been cancelled.', owner: this})) {
+      this.pogToCancel = null;
     }
   }
 

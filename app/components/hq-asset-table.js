@@ -6,10 +6,12 @@ import {tracked} from '@glimmer/tracking';
 export default class HqAssetTableComponent extends Component {
   @service ajax;
   @service errors;
+  @service saveModel;
   @service toast;
 
   @tracked updateAsset = null;
   @tracked isSubmitting = false;
+  @tracked submittingIds = new Set();
 
   /**
    * The options shown in the "Change Attachment" select, derived from the
@@ -25,6 +27,8 @@ export default class HqAssetTableComponent extends Component {
     return options;
   }
 
+  isRowSubmitting = (assetId) => this.submittingIds.has(assetId);
+
   /**
    * Check in a checked out asset.
    *
@@ -33,17 +37,24 @@ export default class HqAssetTableComponent extends Component {
 
   @action
   async assetCheckInAction(ap) {
-    set(ap, 'isSubmitting', true);
+    this.submittingIds = new Set(this.submittingIds).add(ap.asset.id);
 
     try {
       const result = await this.ajax.request(`asset/${ap.asset.id}/checkin`, {method: 'POST'});
+
+      if (this.isDestroying) {
+        return;
+      }
+
       set(ap, 'checked_in', result.checked_in);
       this.toast.success('Asset has been successfully checked in.');
       this.args.onCheckIn?.(ap.asset);
     } catch (response) {
       this.errors.handleErrorResponse(response)
     } finally {
-      set(ap, 'isSubmitting', false);
+      const next = new Set(this.submittingIds);
+      next.delete(ap.asset.id);
+      this.submittingIds = next;
     }
   }
 
@@ -84,17 +95,15 @@ export default class HqAssetTableComponent extends Component {
     this.isSubmitting = true;
 
     try {
-      const record = await model.save();
-      // The `attachment` association is read-only and is not necessarily
-      // re-embedded by the save response. Re-derive the displayed attachment
-      // from the chosen option so the table reflects the new selection.
-      const attachmentId = record.attachment_id;
-      const attachment = (this.args.attachments ?? []).find((a) => `${a.id}` === `${attachmentId}`) ?? null;
-      set(record, 'attachment', attachment);
-      this.updateAsset = null;
-      this.toast.success('Attachment successfully updated.');
-    } catch (response) {
-      this.errors.handleErrorResponse(response)
+      if (await this.saveModel.save({model, message: 'Attachment successfully updated.'})) {
+        // The `attachment` association is read-only and is not necessarily
+        // re-embedded by the save response. Re-derive the displayed attachment
+        // from the chosen option so the table reflects the new selection.
+        const attachmentId = model.attachment_id;
+        const attachment = (this.args.attachments ?? []).find((a) => `${a.id}` === `${attachmentId}`) ?? null;
+        set(model, 'attachment', attachment);
+        this.updateAsset = null;
+      }
     } finally {
       this.isSubmitting = false;
     }

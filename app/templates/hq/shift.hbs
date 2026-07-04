@@ -96,7 +96,6 @@
                      @endShiftNotify={{this.endShiftNotify}}
                      @onDutyEntry={{this.onDutyEntry}}
                      @eventInfo={{this.eventInfo}}
-                     @year={{this.session.currentYear}}
                      @allowCorrectionOnEnd={{true}}
     />
   </:body>
@@ -215,8 +214,8 @@
                 {{pluralize this.assetsCheckedOut.length "asset"}} (radios, gear, etc.) not collected.
               </li>
             {{/if}}
-            {{#if this.timesheetsToReview}}
-              <li>{{pluralize this.timesheetsToReview.length "timesheet entry"}} not reviewed.</li>
+            {{#if this.unreviewedTimesheetCount}}
+              <li>{{pluralize this.unreviewedTimesheetCount "timesheet entry"}} not reviewed.</li>
             {{/if}}
           </ul>
           You may choose to ignore this warning and proceed to mark this person off site. However, you

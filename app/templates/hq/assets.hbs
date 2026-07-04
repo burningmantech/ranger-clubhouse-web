@@ -1,2 +1,8 @@
+<h3>Asset Checkout</h3>
+<AssetTable @assets={{this.assets}}
+            @attachments={{this.attachments}}
+            @year={{this.year}}
+            @mode="checkout" />
+
 <h3>Asset Check In/Out History</h3>
-<AssetTable @assets={{this.assets}} @year={{this.year}} />
+<AssetTable @assets={{this.assets}} @attachments={{this.attachments}} @year={{this.year}} @mode="history" />

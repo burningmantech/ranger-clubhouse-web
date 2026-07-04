@@ -4,6 +4,7 @@ import {service} from '@ember/service';
 import {tracked} from '@glimmer/tracking';
 import {HQ_TODO_VERIFY_TIMESHEET} from "clubhouse/constants/hq-todo";
 import {STATUS_UNVERIFIED, STATUS_VERIFIED} from "clubhouse/models/timesheet";
+import {isUnreviewedTimesheet} from "clubhouse/controllers/hq/shift";
 
 const VERIFIED_MESSAGE = 'Timesheet was successfully marked as verified.';
 const UNVERIFIED_MESSAGE = 'Timesheet was successfully un-verified.';
@@ -37,7 +38,7 @@ export default class HqTimesheetVerificationComponent extends Component {
    */
 
   get hasUnreviewedTimesheet() {
-    return !!(this.args.unverifiedTimesheets ?? []).find((t) => (t.isUnverified && !t.isIgnoring));
+    return !!(this.args.unverifiedTimesheets ?? []).find(isUnreviewedTimesheet);
   }
 
   /**
@@ -151,7 +152,7 @@ export default class HqTimesheetVerificationComponent extends Component {
 
   @action
   skipEntireReview() {
-    (this.args.unverifiedTimesheets ?? []).filter((t) => (t.isUnverified && !t.isIgnoring)).forEach((t) => t.isIgnoring = true);
+    (this.args.unverifiedTimesheets ?? []).filter(isUnreviewedTimesheet).forEach((t) => t.isIgnoring = true);
     this._finishedCallbacks();
     this.toast.success(SKIPPED_MESSAGE);
   }

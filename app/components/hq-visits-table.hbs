@@ -15,40 +15,42 @@
       </thead>
       <tbody>
       {{#each @visits key="period" as |visit|}}
-        <tr class="{{if (and (not visit.windows) (not visit.shorts) (not visit.leads)) "table-warning"}}">
-          <td>
-            {{#if (and (not visit.windows) (not visit.shorts) (not visit.leads))}}
-              {{fa-icon "exclamation-triangle" right=1}}
-            {{/if}}
-            {{shift-format visit.period}}
-          </td>
-          <td class="text-end">{{visit.checkin}}</td>
-          <td class="text-end">{{visit.checkout}}</td>
-          <td class="text-end">
-            <HqShowSignups @count={{visit.leads}}
-                           @period={{visit.period}}
-                           @interval={{@interval}}
-                           @type="lead"/>
-          </td>
-          <td class="text-end">
-            <HqShowSignups @count={{visit.shorts}}
-                           @period={{visit.period}}
-                           @interval={{@interval}}
-                           @type="short"/>
-          </td>
-          <td class="text-end">
-            <HqShowSignups @count={{visit.windows}}
-                           @period={{visit.period}}
-                           @interval={{@interval}}
-                           @type="window"/>
-          </td>
-          <td class="text-end">
-            <HqShowSignups @count={{visit.runners}}
-                           @period={{visit.period}}
-                           @interval={{@interval}}
-                           @type="runner"/>
-          </td>
-        </tr>
+        {{#let (and (not visit.windows) (not visit.shorts) (not visit.leads)) as |isUnstaffed|}}
+          <tr class="{{if isUnstaffed "table-warning"}}">
+            <td>
+              {{#if isUnstaffed}}
+                {{fa-icon "exclamation-triangle" right=1}}
+              {{/if}}
+              {{shift-format visit.period}}
+            </td>
+            <td class="text-end">{{visit.checkin}}</td>
+            <td class="text-end">{{visit.checkout}}</td>
+            <td class="text-end">
+              <HqShowSignups @count={{visit.leads}}
+                             @period={{visit.period}}
+                             @interval={{@interval}}
+                             @type="lead"/>
+            </td>
+            <td class="text-end">
+              <HqShowSignups @count={{visit.shorts}}
+                             @period={{visit.period}}
+                             @interval={{@interval}}
+                             @type="short"/>
+            </td>
+            <td class="text-end">
+              <HqShowSignups @count={{visit.windows}}
+                             @period={{visit.period}}
+                             @interval={{@interval}}
+                             @type="window"/>
+            </td>
+            <td class="text-end">
+              <HqShowSignups @count={{visit.runners}}
+                             @period={{visit.period}}
+                             @interval={{@interval}}
+                             @type="runner"/>
+            </td>
+          </tr>
+        {{/let}}
       {{/each}}
       </tbody>
     </UiTable>

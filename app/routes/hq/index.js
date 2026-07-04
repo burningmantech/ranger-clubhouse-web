@@ -3,11 +3,10 @@ import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 /*
  * A pure route-router
  *
- * Three possible routes depending on what's happening with the person:
+ * Two possible routes depending on what's happening with the person:
  *
  * If the person is not on site, go to the check in page.
- * If the person is on shift, go to the shift end page.
- * If the person is not on shift, go to the shift start page.
+ * Otherwise, go to the shift page.
  */
 
 export default class HqIndexRoute extends ClubhouseRoute {
