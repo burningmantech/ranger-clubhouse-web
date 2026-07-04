@@ -6,6 +6,7 @@
 $asset-expired-color: var(--bs-danger);
 $asset-note-color: var(--bs-blue);
 $asset-normal-color: var(--bs-gray-500);
+$asset-checked-out-color: var(--bs-warning);
 
 .asset-controls {
   display: flex;
@@ -83,6 +84,7 @@ $asset-normal-color: var(--bs-gray-500);
 // Row severity stripe on the first cell (robust regardless of border-collapse).
 // Precedence: expired > note > normal. Reuses the same semantic colors as the swatches.
 .asset-row-expired > td:first-child { border-left: 6px solid $asset-expired-color; }
+.asset-row-checked-out > td:first-child { border-left: 6px solid $asset-checked-out-color; }
 .asset-row-note    > td:first-child { border-left: 6px solid $asset-note-color; }
 .asset-row-normal  > td:first-child { border-left: 6px solid transparent; }
 
