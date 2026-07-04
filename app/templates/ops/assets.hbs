@@ -51,7 +51,6 @@
         <UiTable @stickyHeader={{true}} @normalSize={{true}}>
           <thead>
           <tr>
-            <th>Status</th>
             <th>Barcode</th>
             <th>Description</th>
             <th>Notes</th>
@@ -60,6 +59,7 @@
             <th>Asset Group</th>
             <th>Order #</th>
             <th>Expires On</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
           </thead>
@@ -67,11 +67,6 @@
           <tbody>
           {{#each group.assets key="id" as |asset|}}
             <tr class="asset-row-{{asset.statusClass}}">
-              <td>
-                {{#if asset.statusLabel}}
-                  <span class="asset-status-chip asset-status-chip-{{asset.statusClass}} small">{{asset.statusLabel}}</span>
-                {{/if}}
-              </td>
               <td>{{asset.barcode}}</td>
               <td>
                 <PresentOrNot @value={{asset.description}} @empty="-"/>
@@ -94,6 +89,11 @@
                   {{ymd-format asset.expires_on}}
                 {{else}}
                   -
+                {{/if}}
+              </td>
+              <td>
+                {{#if asset.statusLabel}}
+                  <span class="asset-status-chip asset-status-chip-{{asset.statusClass}} small">{{asset.statusLabel}}</span>
                 {{/if}}
               </td>
               <td>
