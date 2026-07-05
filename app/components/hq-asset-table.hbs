@@ -18,33 +18,35 @@
         <AssetDurationLabel @asset={{ap.asset}} />
       </td>
       <td>{{ap.asset.barcode}}</td>
-      <td>
-        <PresentOrNot @value={{ap.attachment.description}} @empty="none"/>
-        <br>
-        <UiButton @onClick={{fn this.changeAssetAttachment ap}} @type="secondary" class="mt-1"
-                  @disabled={{ap.isSubmitting}}>
-          Change Attachment
-        </UiButton>
-      </td>
-      <td>
-        <PresentOrNot @value={{ap.asset.description}} @empty="-"/>
-        <br>
-        <PresentOrNot @value={{ap.asset.group_name}} @empty="-"/>
-        <br>
-      </td>
-      <td>{{shift-format ap.checked_out}}</td>
-      <td>
-        <UiButton @onClick={{fn this.assetCheckInAction ap}} @disabled={{ap.isSubmitting}} @size="md">
-          Check In
-        </UiButton>
-      </td>
-      <td class="w-5">
-        {{#if ap.isSubmitting}}
-          <SpinIcon/>
-        {{else}}
-          &nbsp;
-        {{/if}}
-      </td>
+      {{#let (this.isRowSubmitting ap.asset.id) as |submitting|}}
+        <td>
+          <PresentOrNot @value={{ap.attachment.description}} @empty="none"/>
+          <br>
+          <UiButton @onClick={{fn this.changeAssetAttachment ap}} @type="secondary" class="mt-1"
+                    @disabled={{submitting}}>
+            Change Attachment
+          </UiButton>
+        </td>
+        <td>
+          <PresentOrNot @value={{ap.asset.description}} @empty="-"/>
+          <br>
+          <PresentOrNot @value={{ap.asset.group_name}} @empty="-"/>
+          <br>
+        </td>
+        <td>{{shift-format ap.checked_out}}</td>
+        <td>
+          <UiButton @onClick={{fn this.assetCheckInAction ap}} @disabled={{submitting}} @size="md">
+            Check In
+          </UiButton>
+        </td>
+        <td class="w-5">
+          {{#if submitting}}
+            <SpinIcon/>
+          {{else}}
+            &nbsp;
+          {{/if}}
+        </td>
+      {{/let}}
     </tr>
   {{else}}
     <tr>

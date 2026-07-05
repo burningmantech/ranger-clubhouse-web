@@ -1,7 +1,4 @@
-{{#if this.isNotRanger}}
-  <b class="text-danger">{{@person.callsign}} has the status "{{@person.status}}" is not eligible to earn tickets and
-    provisions.</b>
-{{else if this.isLoading}}
+{{#if this.isLoading}}
   <LoadingIndicator/>
 {{else}}
   {{#if this.otherHours}}

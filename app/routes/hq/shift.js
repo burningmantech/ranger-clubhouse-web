@@ -49,17 +49,22 @@ export default class HqShiftRoute extends ClubhouseRoute {
     const person_id = this.modelFor('hq').person.id;
     const year = this.session.currentYear();
 
-    return {
-      upcomingSlots: await this.ajax.request(`person/${person_id}/schedule/upcoming`),
-      scheduleRecommendations: await this.ajax.request(`person/${person_id}/schedule/recommendations`),
-      timesheets: await this.store.query('timesheet', {person_id, year, check_times: 1}),
-    };
+    const [upcomingSlots, scheduleRecommendations, timesheets] = await Promise.all([
+      this.ajax.request(`person/${person_id}/schedule/upcoming`),
+      this.ajax.request(`person/${person_id}/schedule/recommendations`),
+      this.store.query('timesheet', {person_id, year, check_times: 1}),
+    ]);
+
+    return {upcomingSlots, scheduleRecommendations, timesheets};
   }
 
   setupController(controller, model) {
     const hqModel = this.modelFor('hq');
+    const {person, personEvent, eventInfo, positions, assets, attachments, eventPeriods} = hqModel;
+    // Explicit allow-list: only fan the keys the controller/template actually
+    // consume onto the controller (avoids hidden, untracked props).
+    controller.setProperties({person, personEvent, eventInfo, positions, assets, attachments, eventPeriods});
     controller.setProperties(model);
-    controller.setProperties(hqModel);
     controller.endedShiftEntry = null;
     controller.unsubmittedBarcode = '';
     controller._findOnDuty();
@@ -68,6 +73,6 @@ export default class HqShiftRoute extends ClubhouseRoute {
 
     controller.initializeTodos(model);
 
-    controller.showIsAlpha = (!this.controllerFor('hq').userIsMentor && hqModel.person.isPNV);
+    controller.showIsAlpha = (!this.controllerFor('hq').userIsMentor && person.isPNV);
   }
 }

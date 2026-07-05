@@ -1,6 +1,5 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
-import {validatePresence} from 'ember-changeset-validations/validators';
 import {ALPHA, BURN_PERIMETER} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 import {
@@ -13,6 +12,36 @@ import {
 import {TYPE_RADIO} from "clubhouse/models/asset";
 import {schedule} from '@ember/runloop';
 import {radioAccounting, computeRadioTodo} from 'clubhouse/utils/radio-accounting';
+
+/**
+ * Escape a user-controlled string before interpolating it into a message
+ * that will be rendered with htmlSafe (e.g. modal/toast messages).
+ *
+ * @param {string} str
+ * @returns {string}
+ */
+
+function escapeHtml(str) {
+  return String(str)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+/**
+ * Is a timesheet entry unreviewed, i.e. unverified and not being ignored?
+ * Shared predicate so hasUnreviewedTimesheet/unreviewedTimesheetCount here and
+ * in hq-timesheet-verification.js can't drift apart.
+ *
+ * @param {TimesheetModel} t
+ * @returns {boolean}
+ */
+
+export function isUnreviewedTimesheet(t) {
+  return !t.isIgnoring && t.isUnverified;
+}
 
 export default class HqShiftController extends ClubhouseController {
   @tracked isMarkingOffSite = false;
@@ -44,10 +73,6 @@ export default class HqShiftController extends ClubhouseController {
   // Callback registered by the timesheet-correction child component; may be unset.
   correctionCallback = null;
 
-  correctionValidations = {
-    additional_notes: [validatePresence(true)]
-  };
-
   /**
    * Figure out if the person is a Shiny Penny - i.e. their status is active, and
    * an Alpha shift was worked/walked.
@@ -67,7 +92,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get hasUnreviewedTimesheet() {
-    return !!this.timesheetsToReview.find((t) => (!t.isIgnoring && t.isUnverified));
+    return !!this.timesheetsToReview.find(isUnreviewedTimesheet);
   }
 
   /**
@@ -77,7 +102,7 @@ export default class HqShiftController extends ClubhouseController {
    */
 
   get unreviewedTimesheetCount() {
-    return this.timesheetsToReview.filter((t) => (!t.isIgnoring && t.isUnverified)).length;
+    return this.timesheetsToReview.filter(isUnreviewedTimesheet).length;
   }
 
   /**
@@ -105,11 +130,13 @@ export default class HqShiftController extends ClubhouseController {
 
   /**
    * Called when an asset has been checked in.
+   *
+   * @param asset
    */
 
   @action
-  onAssetCheckIn() {
-    if (!this.collectRadioCount) {
+  onAssetCheckIn(asset) {
+    if (asset.type === TYPE_RADIO && !this.collectRadioCount) {
       this.completeTodo(HQ_TODO_COLLECT_RADIO);
       this.completeTodo(HQ_TODO_COLLECT_RADIO_IF_DONE);
     }
@@ -312,13 +339,13 @@ export default class HqShiftController extends ClubhouseController {
   async _updateOnSite(isOnSite) {
     this.isMarkingOffSite = true;
     this.person.on_site = isOnSite;
-    try {
-      await this.person.save();
-      this.toast.success(`${this.person.callsign} has been successfully marked ${isOnSite ? 'ON' : 'OFF'} SITE.`);
-    } catch (response) {
-      this.errors.handleErrorResponse(response);
-    } finally {
-      this.isMarkingOffSite = false
+    const success = await this.saveModel.save({
+      model: this.person,
+      message: `${escapeHtml(this.person.callsign)} has been successfully marked ${isOnSite ? 'ON' : 'OFF'} SITE.`,
+    });
+    this.isMarkingOffSite = false;
+    if (success && !isOnSite) {
+      this.completeTodo(HQ_TODO_OFF_SITE);
     }
   }
 
@@ -331,7 +358,7 @@ export default class HqShiftController extends ClubhouseController {
   markOffSite() {
     // No outstanding items -- confirm just to be sure.
     this.modal.confirm('Confirm Marking Person Off Site',
-      `Are you sure you wish to mark ${this.person.callsign} as OFF SITE?`,
+      `Are you sure you wish to mark ${escapeHtml(this.person.callsign)} as OFF SITE?`,
       () => this._updateOnSite(false)
     );
   }

@@ -1,5 +1,12 @@
 {{#if this.isLoading}}
   <LoadingIndicator @text="Loading pogs"/>
+{{else if this.loadFailed}}
+  <UiAlert @type="danger" @icon="hand">
+    Unable to load pogs.
+    <UiButton @onClick={{this._loadPogs}} @size="sm" class="ms-2">
+      Retry
+    </UiButton>
+  </UiAlert>
 {{else}}
   {{#if @endedShiftEntry}}
     <div>
@@ -41,7 +48,7 @@
     {{/if}}
   {{/if}}
   <UiButtonRow class="mb-2">
-    <UiButton @onClick={{fn this.setupToIssue this.POG_MEAL}} @disabled={{this.isSubmitting}} @size="md">
+    <UiButton @onClick={{fn this.setupToIssue this.POG_MEAL}} @disabled={{or this.isSubmitting (not this.pogs)}} @size="md">
       {{#if this.config.meal_half_pog_enabled}}
         Record Full Meal Pog
       {{else}}
@@ -49,11 +56,11 @@
       {{/if}}
     </UiButton>
     {{#if this.config.meal_half_pog_enabled}}
-      <UiButton @onClick={{fn this.setupToIssue this.POG_HALF_MEAL}} @disabled={{this.isSubmitting}} @size="md">
+      <UiButton @onClick={{fn this.setupToIssue this.POG_HALF_MEAL}} @disabled={{or this.isSubmitting (not this.pogs)}} @size="md">
         Record &half; Meal Pog
       </UiButton>
     {{/if}}
-    <UiButton @onClick={{fn this.setupToIssue this.POG_SHOWER}} @disabled={{this.isSubmitting}} @size="md">
+    <UiButton @onClick={{fn this.setupToIssue this.POG_SHOWER}} @disabled={{or this.isSubmitting (not this.pogs)}} @size="md">
       Record Shower Pog
     </UiButton>
   </UiButtonRow>
@@ -98,11 +105,10 @@
               <UiButton @onClick={{fn this.redeemForFullMealPog pog}} @disabled={{this.isSubmitting}} @size="sm">
                 Redeem for Full Meal Pog
               </UiButton>
-            {{else}}
-              <UiButton @onClick={{fn this.confirmPogCancel pog}} @size="sm" @type="gray" class="btn-link">
-                Cancel
-              </UiButton>
             {{/if}}
+            <UiButton @onClick={{fn this.confirmPogCancel pog}} @size="sm" @type="gray" class="btn-link">
+              Cancel
+            </UiButton>
           {{/if}}
         </td>
       </tr>
@@ -118,8 +124,8 @@
 {{/if}}
 
 {{#if this.pogToIssue}}
-  <ModalDialog @position="top" as |Modal|>
-    <ChForm @formId="pog"
+  <ModalDialog @position="top" @onEscape={{this.cancelPogIssue}} as |Modal|>
+    <ChForm @formId="pog-issue"
             @changeSet={{false}}
             @formFor={{this.pogIssueForm}}
             @onSubmit={{this.savePog}} as |f|>
@@ -159,16 +165,22 @@
 
 {{#if this.pogToCancel}}
   <ModalDialog @onEscape={{this.cancelCancelPog}} as |Modal|>
-    <ChForm @formId="pog"
+    <ChForm @formId="pog-cancel"
             @formFor={{this.pogToCancel}}
             @validator={{this.pogValidations}}
             @onSubmit={{this.saveCancelledPog}} as |f|>
       <Modal.title>Confirm Pog Cancel</Modal.title>
       <Modal.body>
-        <UiAlert @type="danger" @icon="hand-point-right">
-          This will NOT actually cancel the PHYSICAL pog -- just the record in the Clubhouse. The physical pog
-          can still be used.
-        </UiAlert>
+        {{#if this.pogToCancel.isHalfMealPog}}
+          <UiAlert @type="danger" @icon="hand-point-right">
+            This will cancel the digital 1/2 Meal Pog record in the Clubhouse.
+          </UiAlert>
+        {{else}}
+          <UiAlert @type="danger" @icon="hand-point-right">
+            This will NOT actually cancel the PHYSICAL pog -- just the record in the Clubhouse. The physical pog
+            can still be used.
+          </UiAlert>
+        {{/if}}
         <p>
           This action is intended to mark a pog record as being accidentally issued.
         </p>
@@ -192,7 +204,7 @@
 
 {{#if this.pogToEdit}}
   <ModalDialog @onEscape={{this.cancelPogEdit}} as |Modal|>
-    <ChForm @formId="pog"
+    <ChForm @formId="pog-edit"
             @formFor={{this.pogToEdit}}
             @validator={{this.pogValidations}}
             @onSubmit={{this.updatePog}} as |f|>
