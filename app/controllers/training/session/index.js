@@ -1,6 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import EmberObject from '@ember/object';
-import {debounce} from '@ember/runloop';
+import {cancel, debounce} from '@ember/runloop';
 import {action, set} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
@@ -252,7 +252,7 @@ export default class TrainingSessionController extends ClubhouseController {
   async saveStudentAction(model) {
     const student = this.editStudent;
     const {note, passed} = model;
-    const rank = +model.rank;
+    const rank = model.rank === '' ? null : +model.rank;
 
     if (!rank && passed && student.need_ranking) {
       model.pushErrors('rank', ['Trainee needs a rank.']);
@@ -342,6 +342,8 @@ export default class TrainingSessionController extends ClubhouseController {
    */
 
   _setupAddPerson(isTrainer) {
+    cancel(this._searchTimer);
+    this._searchSeq++;
     this.addingTrainer = isTrainer;
     this.foundPeople = null;
     this.noSearchMatch = null;
@@ -357,7 +359,7 @@ export default class TrainingSessionController extends ClubhouseController {
 
   @action
   searchPeopleAction(field, model) {
-    debounce(this, this._performSearch, model, SEARCH_RATE_MS);
+    this._searchTimer = debounce(this, this._performSearch, model, SEARCH_RATE_MS);
   }
 
   /**
@@ -405,6 +407,8 @@ export default class TrainingSessionController extends ClubhouseController {
    */
   @action
   cancelSearchAction() {
+    cancel(this._searchTimer);
+    this._searchSeq++;
     this.addPersonForm = null;
   }
 

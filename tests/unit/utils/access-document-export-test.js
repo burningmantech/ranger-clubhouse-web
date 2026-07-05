@@ -41,7 +41,7 @@ module('Unit | Utility | access-document-export', function () {
     test('paid tickets follow the postal method', function (assert) {
       assert.strictEqual(deliveryTypeForDocument({type: SPT, delivery_method: DELIVERY_POSTAL}), 'USPS');
       assert.strictEqual(deliveryTypeForDocument({type: SPT, delivery_method: DELIVERY_PRIORITY}), 'USPS Priority');
-      assert.strictEqual(deliveryTypeForDocument({type: SPT, delivery_method: 'will-call'}), '', 'non-postal → empty');
+      assert.strictEqual(deliveryTypeForDocument({type: SPT, delivery_method: 'will-call'}), 'Will Call', 'non-postal → Will Call');
     });
 
     test('gift VP is credential pickup only when paired with a SC', function (assert) {

@@ -32,10 +32,4 @@ export default class TrainingRoute extends ClubhouseRoute {
     controller.set('canManageSurveys', this.session.isAdmin || (isInPersonTraining && this.session.hasRole(SURVEY_MANAGEMENT)) || this.session.hasRole(SURVEY_MANAGEMENT_BASE | model.id));
     controller.set('showOnlineCourseProgress', (isInPersonTraining && this.session.hasTrueRole(TRAINER)));
   }
-
-  resetController(controller, isExiting) {
-    if (isExiting) {
-      controller.set('year', null);
-    }
-  }
 }

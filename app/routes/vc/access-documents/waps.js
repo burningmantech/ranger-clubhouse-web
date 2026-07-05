@@ -6,7 +6,7 @@ export default class VcAccessDocumentsWapsRoute extends ClubhouseRoute {
   }
 
   setupController(controller, model) {
-    controller.set('people', model.people);
-    controller.set('startYear', model.start_year);
+    controller.people = model.people;
+    controller.startYear = model.start_year;
   }
 }

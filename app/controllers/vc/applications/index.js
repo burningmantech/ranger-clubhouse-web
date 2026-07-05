@@ -25,7 +25,6 @@ export default class VcApplicationsIndexController extends ClubhouseController {
   queryParams = ['year'];
 
   @tracked applications;
-  @tracked editApp;
 
   @tracked ageFilter;
   @tracked assignedToFilter;
@@ -40,6 +39,14 @@ export default class VcApplicationsIndexController extends ClubhouseController {
 
   statusFilterOptions = [
     ['All', 'all'],
+    {
+      groupName: 'Dashboard Groups',
+      options: [
+        ['Callsign Processing', '_callsign'],
+        ['On Hold', '_held'],
+        ['Rejected', '_rejected'],
+      ],
+    },
     ...StatusOptions
   ];
 
@@ -164,10 +171,6 @@ export default class VcApplicationsIndexController extends ClubhouseController {
         this.assignedToFilter = 'all';
         this.experienceFilter = 'qualified';
         break;
-      case 'why-ranger-issues':
-        this.statusFilter = 'all';
-        this.assignedToFilter = 'all';
-        break;
     }
 
     // Persist all filter values
@@ -188,11 +191,10 @@ export default class VcApplicationsIndexController extends ClubhouseController {
 
   @action
   resetFilters() {
-    this.ageFilter = 'all';
-    this.assignedToFilter = 'all';
-    this.experienceFilter = 'all';
-    this.nameFilter = 'all';
-    this.statusFilter = 'pending';
+    Object.keys(FILTERS_VALUES).forEach((key) => {
+      this[key] = FILTERS_VALUES[key];
+    });
+    this.storage.setKey(FILTERS_KEY, {...FILTERS_VALUES});
     this.activePreset = null;
     this.toast.success('Filters have been reset.');
   }
@@ -221,16 +223,6 @@ export default class VcApplicationsIndexController extends ClubhouseController {
       return ''
     }
     return `w/last name starting with ${this.nameFilter}`;
-  }
-
-  @action
-  editAction(app) {
-    this.editApp = app;
-  }
-
-  @action
-  finishEdit() {
-    this.editApp = null;
   }
 
   @cached
@@ -320,7 +312,7 @@ export default class VcApplicationsIndexController extends ClubhouseController {
   get assignedToCallsign() {
     switch (this.assignedToFilter) {
       case 'unassigned':
-        return 'Unsigned';
+        return 'unassigned';
       case 'all':
         return '';
     }

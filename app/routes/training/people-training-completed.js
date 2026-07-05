@@ -20,6 +20,8 @@ export default class TrainingPeopleTrainingCompletedRoute extends ClubhouseRoute
   setupController(controller, model) {
     controller.setProperties(model);
     controller.set('training', this.modelFor('training'));
+    controller.set('isExpanding', false);
+    controller.set('expandAll', false);
   }
 
   // Don't allow the year parameter to bleed over to other routes.

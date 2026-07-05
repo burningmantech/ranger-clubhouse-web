@@ -8,6 +8,7 @@ export default class TrainerResourcesController extends ClubhouseController {
   @tracked editDocument;
   @tracked isReloading;
   @tracked training;
+  @tracked canEditTrainerResource;
 
   @action
   edit() {
@@ -20,10 +21,7 @@ export default class TrainerResourcesController extends ClubhouseController {
 
     try {
       this.isReloading = true;
-      const trainingController = getOwner(this).lookup('controller:training');
-      const freshTraining = await this.ajax.request(`training/${this.training.id}`);
-      trainingController.training = freshTraining
-      this.training = freshTraining;
+      await getOwner(this).lookup('route:training').refresh();
     } catch (e) {
       this.errors.handleErrorResponse(e);
     } finally {

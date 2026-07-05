@@ -45,7 +45,7 @@ Showing {{pluralize this.viewProvisions.length "provision"}} <UiExportToCSVButto
     <tr>
       <td>RP-{{row.id}}</td>
       <td>{{row.person.callsign}}</td>
-      <td>{{this.typeLabel row.type}}</td>
+      <td>{{this.typeLabel row}}</td>
       <td>{{row.status}}</td>
       <td class="text-end">
         {{or row.item_count "-"}}
@@ -55,7 +55,7 @@ Showing {{pluralize this.viewProvisions.length "provision"}} <UiExportToCSVButto
     </tr>
   {{else}}
     <tr>
-      <td colspan="6" class="text-danger">
+      <td colspan="7" class="text-danger">
         No provisions found matching the criteria.
       </td>
     </tr>

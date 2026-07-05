@@ -254,7 +254,7 @@ export default class AccessDocumentModel extends Model {
   }
 
   get expiryYear() {
-    return dayjs(this.expiry_date).format('YYYY');
+    return this.expiry_year;
   }
 
   get accessDateFormatted() {
@@ -282,7 +282,7 @@ export default class AccessDocumentModel extends Model {
   }
 
   get expiry_year() {
-    return dayjs(this.expiry_date).format('YYYY');
+    return isEmpty(this.expiry_date) ? '' : dayjs(this.expiry_date).format('YYYY');
   }
 
   set expiry_year(year) {

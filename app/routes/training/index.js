@@ -23,16 +23,6 @@ export default class TrainingIndexRoute extends ClubhouseRoute {
     controller.set('year', this.year);
 
     const trainingSessions = model.sessions;
-    trainingSessions.forEach((session) => {
-      session.havePrimaryTrainers = false;
-      session.trainers.forEach((group) => {
-        // Is this trainer group a bunch of primary trainers (Trainer, Uber Trainer, any ART trainer, but NOT associate trainers)
-        if (group.is_primary_trainer && group.trainers.length > 0) {
-          session.havePrimaryTrainers = true;
-        }
-      });
-    });
-
 
     controller.set('upcomingSessions', trainingSessions.filter((t) => (!t.slot.has_started || !t.slot.has_day_ended)));
     controller.set('pastSessions', trainingSessions.filter((t) => t.slot.has_day_ended));

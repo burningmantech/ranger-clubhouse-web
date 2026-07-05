@@ -22,41 +22,38 @@
   </tr>
   </thead>
   <tbody>
-  {{#each this.people as |person|}}
+  {{#each this.peopleWithTrainingSlots as |row|}}
     <tr>
       <td>
-        <PersonLink @person={{person}} />
+        <PersonLink @person={{row.person}} />
       </td>
       <td>
-        {{person.status}}
+        {{row.person.status}}
       </td>
       <td>
-        {{person.first_name}} {{person.last_name}}
-        {{#if person.preferred_name}}
-          (<i>{{person.preferred_name}}</i>)
+        {{row.person.first_name}} {{row.person.last_name}}
+        {{#if row.person.preferred_name}}
+          (<i>{{row.person.preferred_name}}</i>)
         {{/if}}
         <br>
-        <MailTo @to={{person.email}} />
+        <MailTo @to={{row.person.email}} />
       </td>
       <td>
-        {{ticket-type-human person.type}}<br>
-        RAD-{{person.access_document_id}}
+        {{ticket-type-human row.person.type}}<br>
+        RAD-{{row.person.access_document_id}}
       </td>
       <td class="text-center">
-        {{yesno person.ot_completed}}
+        {{yesno row.person.ot_completed}}
       </td>
       <td class="text-center">
-        {{yesno person.has_signups}}
+        {{yesno row.person.has_signups}}
       </td>
       <td>
-        {{yesno person.have_trained}}
+        {{yesno row.person.have_trained}}
       </td>
       <td>
-        {{#if (or person.trainings person.teachings)}}
-          {{#each person.trainings as |slot|}}
-            {{ymd-format slot.begins}}<br>
-          {{/each}}
-          {{#each person.teachings as |slot|}}
+        {{#if row.trainingSlots.length}}
+          {{#each row.trainingSlots as |slot|}}
             {{ymd-format slot.begins}}<br>
           {{/each}}
         {{else}}
@@ -64,12 +61,9 @@
         {{/if}}
       </td>
       <td>
-        {{#if (or person.trainings person.teachings)}}
-          {{#each person.trainings as |slot|}}
+        {{#if row.trainingSlots.length}}
+          {{#each row.trainingSlots as |slot|}}
             {{slot.status}}<br>
-          {{/each}}
-          {{#each person.teachings as |slot|}}
-            {{slot.status}} (as trainer)<br>
           {{/each}}
         {{else}}
           -

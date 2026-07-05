@@ -22,6 +22,7 @@ export default class VcApplicationHandlesComponent extends Component {
   @tracked showEditAndApproveCallsign;
   @tracked approveCallsignHandle;
   @tracked extractedHandlesForm = null;
+  priorProblemHandles;
 
   @action
   openMoreHandlesDialog() {
@@ -91,6 +92,7 @@ export default class VcApplicationHandlesComponent extends Component {
       this.isSubmitting = true;
       const {handles} = await this.ajax.request(`prospective-application/handles-extract`, {data: {text: application.handles}});
       this.extractedHandlesForm = EmberObject.create({handles: handles.map((h) => h[0]).join("\n") });
+      this.priorProblemHandles = application.problem_handles;
       application.problem_handles = handles.filter((h) => h[1].length > 0).map((h) => ({ handle: h[0], problems: h[1]}));
     } catch (response) {
       this.errors.handleErrorResponse(response);
@@ -101,6 +103,13 @@ export default class VcApplicationHandlesComponent extends Component {
 
   @action
   cancelExtractedHandles() {
+    const {application} = this.args;
+    // If the extraction was not saved, revert the problem_handles mutation that
+    // extractHandles made on the shared record so it does not ride along on a
+    // later save. A successful save leaves the attribute clean, so leave it be.
+    if ('problem_handles' in application.changedAttributes()) {
+      application.problem_handles = this.priorProblemHandles;
+    }
     this.extractedHandlesForm = null;
   }
 }

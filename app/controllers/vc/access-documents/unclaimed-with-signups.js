@@ -1,6 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
-import {TypeLabels} from 'clubhouse/models/access-document';
+import {ticketTypeHuman} from 'clubhouse/helpers/ticket-type-human';
 
 const CSV_COLUMNS = [
   {title: 'Callsign', key: 'callsign'},
@@ -9,7 +9,7 @@ const CSV_COLUMNS = [
   {title: 'Type', key: 'type'},
   {title: 'RAD', key: 'rad_id'},
   {title: 'Expires', key: 'expiry_date'},
-  {title: 'Has Sign Up', key: 'has_signup'}
+  {title: 'Has Sign Up', key: 'has_signup', yesno: true}
 ];
 
 export default class VcAccessDocumentsUnclaimedWithSignupsController extends ClubhouseController {
@@ -17,9 +17,8 @@ export default class VcAccessDocumentsUnclaimedWithSignupsController extends Clu
   exportToCSV() {
     const rows = this.tickets.map((ticket) => {
       const row = {...ticket};
-      row.type = TypeLabels[row.type] || row.type;
+      row.type = ticketTypeHuman([row.type], {});
       row.rad_id = `RAD-${row.access_document_id}`;
-      row.has_signup = row.has_signup ? 'Y' : 'N';
       return row;
     });
 

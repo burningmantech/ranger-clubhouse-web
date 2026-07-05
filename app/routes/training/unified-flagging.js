@@ -3,7 +3,7 @@ import requestYear from 'clubhouse/utils/request-year';
 import { INTAKE } from 'clubhouse/constants/roles';
 
 export default class TrainingUnifiedFlaggingRoute extends ClubhouseRoute {
-  roles = [ INTAKE ];
+  roleRequired = INTAKE;
 
   queryParams = {
     year: { refreshModel: true }

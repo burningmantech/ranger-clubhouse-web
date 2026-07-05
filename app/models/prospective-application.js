@@ -72,6 +72,7 @@ export const StatusOptions = [
       ['Personal Info Issue', STATUS_PII_ISSUE],
       ['Awaiting Event Confirmation', STATUS_HOLD_QUALIFICATION_ISSUE],
       ['Awaiting Age Confirmation', STATUS_HOLD_AGE_ISSUE],
+      ['Awaiting RRN Verification', STATUS_HOLD_RRN_CHECK],
       ['Why Ranger Answer Issue', STATUS_HOLD_WHY_RANGER_QUESTION],
     ]
   },
@@ -97,6 +98,7 @@ export const StatusLabels = {
   [STATUS_HOLD_AGE_ISSUE]: 'Awaiting Age Confirmation',
   [STATUS_HOLD_MORE_HANDLES]: 'More Handles Requested',
   [STATUS_HOLD_QUALIFICATION_ISSUE]: 'Awaiting Event Confirmation',
+  [STATUS_HOLD_RRN_CHECK]: 'Awaiting RRN Verification',
   [STATUS_HOLD_WHY_RANGER_QUESTION]: 'Why Ranger Answer Issue',
   [STATUS_PENDING]: 'Awaiting Review',
   [STATUS_PII_ISSUE]: 'Personal Info Issue',
@@ -186,12 +188,11 @@ export const ColumnLabels = {
 };
 
 export const BadHandleRegexps = [
-  // [/^\d\s*[.)-]?\s*\b/, 'Priority indicators detected (e.g., 1., 2), 3 -, etc) - remove the indicators.'],
   [/\branger\b/i, 'The word "Ranger" detected - remove the word.'],
   [/[,"!()]/, 'Punctuation (commas, periods, double quote, exclamations, parentheses) detected - remove all punctuations. Dashes are okay IF its part of the actual handle'],
 ];
 export default class ProspectiveApplicationModel extends Model {
-  @attr('string', {defaultVault: STATUS_PENDING}) status;
+  @attr('string', {defaultValue: STATUS_PENDING}) status;
 
   @attr('string') events_attended;
   @attr('string') salesforce_name;
@@ -263,7 +264,8 @@ export default class ProspectiveApplicationModel extends Model {
       || this.status === STATUS_HOLD_MORE_HANDLES
       || this.status === STATUS_HOLD_WHY_RANGER_QUESTION
       || this.status === STATUS_HOLD_RRN_CHECK
-      || this.status === STATUS_HOLD_AGE_ISSUE;
+      || this.status === STATUS_HOLD_AGE_ISSUE
+      || this.status === STATUS_PII_ISSUE;
   }
 
   get eventsList() {
@@ -356,42 +358,10 @@ export default class ProspectiveApplicationModel extends Model {
     }
 
     return null;
-    /*
-          switch (this.experience) {
-          case EXPERIENCE_NONE:
-            return 'NO BRC OR REGIONAL EXPERIENCE';
-
-          case EXPERIENCE_BRC2:
-            if (this.qualifiedEvents.length < 2) {
-              return 'LESS THAN TWO BRC QUALIFIED EVENTS';
-            } else if (!this.hasQualifiedEventYear) {
-              return 'NO EVENT YEAR WITHIN THE LAST 10';
-            } else {
-              return null;
-            }
-          case EXPERIENCE_BRC1R1:
-            if (!this.qualifiedEvents.length) {
-              return 'NO BRC EVENTS';
-            } else if (!this.hasQualifiedEventYear) {
-              return 'NO EVENT YEAR WITHIN THE LAST 10';
-            } else if (isEmpty(this.regional_experience)) {
-              return 'NO REGIONAL EXP. LISTED';
-            }
-
-            return null;
-
-          default:
-            return null;
-        }
-     */
   }
 
   get isBRCExperienceOkay() {
     return this.qualifiedEvents.length > 0 && this.hasQualifiedEventYear;
-  }
-
-  get handlesList() {
-    return this.handles.split("\n");
   }
 
   get applicationId() {
@@ -399,7 +369,7 @@ export default class ProspectiveApplicationModel extends Model {
   }
 
   get eventYears() {
-    return this.events_attended.split(';').map((y) => +y);
+    return this.eventsList;
   }
 
   set eventYears(years) {

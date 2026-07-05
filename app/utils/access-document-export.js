@@ -141,9 +141,9 @@ const UNPAID_EXPORT_FORMAT = [
   ['Request: Staff Credential Pickup 8/21 &amp; After', 'sc_0821'],
   ['Request: Staff Credential Pickup 8/22 &amp; After', 'sc_0822'],
   ['Request: Staff Credential Pickup 8/23 &amp; After', 'sc_0823'],
-  ['Request: Staff Credential Pickup 8/24 &amp; After', 'sc_0823'],
+  ['Request: Staff Credential Pickup 8/24 &amp; After', 'sc_0824'],
   ['Request: Staff Credential Pickup Anytime', 'sc_anytime'],
-  ['Request: Staff Credential Pickup 8/25 &amp; After', 'sc_0803'],
+  ['Request: Staff Credential Pickup 8/25 &amp; After', 'sc_0825'],
 ];
 
 const LSD_EXPORT_FORMAT = [
@@ -219,9 +219,10 @@ export function trsColumnAndDate(doc) {
 
 export function deliveryTypeForDocument(doc) {
   const isPostal = (doc.delivery_method === DELIVERY_POSTAL || doc.delivery_method === DELIVERY_PRIORITY);
-  let postalCode = '';
+  // Non-postal delivery (e.g. will_call) is box-office Will Call, matching combinedDeliveryType().
+  let postalDeliveryType = WILL_CALL;
   if (isPostal) {
-    postalCode = doc.delivery_method === DELIVERY_PRIORITY ? USPS_PRIORITY : USPS_STANDARD;
+    postalDeliveryType = doc.delivery_method === DELIVERY_PRIORITY ? USPS_PRIORITY : USPS_STANDARD;
   }
 
   switch (doc.type) {
@@ -229,14 +230,14 @@ export function deliveryTypeForDocument(doc) {
     case GIFT_TICKET:
     case LSD_TICKET:
     case VEHICLE_PASS_LSD:
-      return postalCode;
+      return postalDeliveryType;
 
     case VEHICLE_PASS_GIFT:
       // a Gift VP should always be paired with a SC but ya never know.
-      return doc.has_staff_credential ? CREDENTIAL_PICKUP : postalCode;
+      return doc.has_staff_credential ? CREDENTIAL_PICKUP : postalDeliveryType;
 
     case VEHICLE_PASS_SP:
-      return postalCode;
+      return postalDeliveryType;
 
     case STAFF_CREDENTIAL:
       return CREDENTIAL_PICKUP;

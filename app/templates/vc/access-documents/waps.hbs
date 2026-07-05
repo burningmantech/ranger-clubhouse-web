@@ -23,7 +23,7 @@
         <td>
           {{#if person.has_rpt}}
             {{#each person.tickets as |ticket|}}
-              RAD-{{ticket.id}} {{or (get this.typeShortLabels ticket.type) ticket.type}} {{ticket.status}}<br>
+              RAD-{{ticket.id}} {{ticket-type-human ticket.type short=true}} {{ticket.status}}<br>
             {{/each}}
           {{else}}
             NO SPT
@@ -31,7 +31,7 @@
         </td>
         <td>
           {{#if person.years}}
-            {{join person.years ", "}}
+            {{join ", " person.years}}
           {{else}}
             No Years
           {{/if}}

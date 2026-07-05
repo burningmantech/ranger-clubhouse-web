@@ -1,8 +1,8 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
-import {TypeLabels} from 'clubhouse/models/access-document';
+import {ticketTypeHuman} from 'clubhouse/helpers/ticket-type-human';
+import {ymdFormat} from 'clubhouse/helpers/ymd-format';
 import {tracked} from '@glimmer/tracking';
-import dayjs from "dayjs";
 
 const CSV_COLUMNS = [
   {title: 'Callsign', key: 'callsign'},
@@ -21,30 +21,37 @@ const CSV_COLUMNS = [
   {title: 'Training Status', key: 'training_status'}
 ];
 
+// Build a single combined, chronologically-sorted list of training slots for a
+// person so the on-page columns and the CSV export always agree. Trainee slots
+// come from `trainings`, trainer slots from `teachings` (flagged so their status
+// reads "... (as trainer)").
+function trainingSlotsFor(person) {
+  const slots = [
+    ...(person.trainings ?? []).map((slot) => ({begins: slot.begins, status: slot.status})),
+    ...(person.teachings ?? []).map((slot) => ({begins: slot.begins, status: `${slot.status} (as trainer)`}))
+  ];
+
+  return slots.sort((a, b) => (a.begins < b.begins ? -1 : (a.begins > b.begins ? 1 : 0)));
+}
+
 export default class VcAccessDocumentsClaimedWithNoSignupsController extends ClubhouseController {
   @tracked people;
+
+  get peopleWithTrainingSlots() {
+    return this.people.map((person) => ({person, trainingSlots: trainingSlotsFor(person)}));
+  }
 
   @action
   exportToCSV() {
     const rows = this.people.map((person) => {
-      const slots = [], status = [];
-
-      person.teachings?.forEach((t) => {
-        slots.push(dayjs(t.begins).format('YYYY-MM-DD'));
-        status.push(`${t.status} (as trainer)`);
-      });
-
-      person.trainings?.forEach((t) => {
-        slots.push(dayjs(t.begins).format('YYYY-MM-DD'));
-        status.push(t.status);
-      });
+      const trainingSlots = trainingSlotsFor(person);
 
       return {
         ...person,
-        type: TypeLabels[person.type] ?? person.type,
+        type: ticketTypeHuman([person.type], {}),
         rad_id: `RAD-${person.access_document_id}`,
-        training_list: slots.join("\n"),
-        training_status: status.join("\n")
+        training_list: trainingSlots.map((slot) => ymdFormat([slot.begins])).join("\n"),
+        training_status: trainingSlots.map((slot) => slot.status).join("\n")
       };
     });
 

@@ -1,4 +1,4 @@
-<SurveyReport @surveyId={{this.surveyId}} @reportId={{this.reportId}} as |survey|>
+<SurveyReport @surveyId={{this.surveyId}} @reportId={{this.reportId}} @training={{this.training}} as |survey|>
   <h1 id="top">{{survey.title}} (Year {{survey.year}})</h1>
   <p>
     <LinkTo @route="training.survey.index" @query={{hash year=survey.year}} @model={{this.training.id}}>
