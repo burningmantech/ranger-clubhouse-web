@@ -20,4 +20,11 @@ export default class TrainingOnlineCourseProgressRoute extends ClubhouseRoute {
     controller.set('year', this.year);
     controller.set('people', model.people);
   }
+
+  // Don't allow the year parameter to bleed over to other routes.
+  resetController(controller, isExiting) {
+    if (isExiting) {
+      controller.set('year', null);
+    }
+  }
 }

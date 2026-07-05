@@ -41,7 +41,7 @@
     </UiAlert>
   {{else if this.application.isReturningRanger}}
     <UiAlert @type="danger" @icon="hand-point-right">
-      Application may to belong to a returning Ranger. Verify this is not a mistake.
+      Application may belong to a returning Ranger. Verify this is not a mistake.
       <PersonLink @person={{this.application.existingAccount}} @showStatus={{true}} />
     </UiAlert>
   {{else}}
@@ -129,7 +129,7 @@
 
   {{!-- Row 3: Review progress strip --}}
   <div class="vc-record-progress-strip">
-    <a href="#details" class="vc-progress-item {{this.brcEventsCheckClass}}">
+    <a href="#section-details" class="vc-progress-item {{this.brcEventsCheckClass}}">
       {{#if this.application.eventsList.length}}
         {{#if this.application.isBRCExperienceOkay}}
           {{fa-icon "check"}} BRC Events
@@ -140,14 +140,14 @@
         {{fa-icon "ban"}} No Events
       {{/if}}
     </a>
-    <a href="#details" class="vc-progress-item {{this.ageCheckClass}}">
+    <a href="#section-details" class="vc-progress-item {{this.ageCheckClass}}">
       {{#if this.application.is_over_18}}
         {{fa-icon "check"}} Age 18+
       {{else}}
         {{fa-icon "xmark"}} Under 18
       {{/if}}
     </a>
-    <a href="#details" class="vc-progress-item {{this.paragraphCheckClass}}">
+    <a href="#section-details" class="vc-progress-item {{this.paragraphCheckClass}}">
       {{#if (eq this.application.why_volunteer_review 'okay')}}
         {{fa-icon "check"}} Paragraph
       {{else if (eq this.application.why_volunteer_review 'problem')}}
@@ -156,7 +156,7 @@
         {{fa-icon "question"}} Paragraph
       {{/if}}
     </a>
-    <a href="#personal-info" class="vc-progress-item {{this.piiCheckClass}}">
+    <a href="#section-personal-info" class="vc-progress-item {{this.piiCheckClass}}">
       {{#if this.application.hasPersonalInfoIssues}}
         {{fa-icon "exclamation"}} PII
       {{else}}

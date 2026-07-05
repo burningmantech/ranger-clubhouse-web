@@ -4,8 +4,7 @@ import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
 
 export default class VcApplicationAssignDialogComponent extends Component {
-  @service errors;
-  @service toast;
+  @service saveModel;
 
   @tracked isSubmitting;
 
@@ -24,16 +23,10 @@ export default class VcApplicationAssignDialogComponent extends Component {
       return;
     }
 
-    try {
-      this.isSubmitting = true;
-      this.args.application.assigned_person_id = model.assigned_person_id;
-      await this.args.application.save();
-      this.toast.success('Assignment update was successful.');
+    const {application} = this.args;
+    application.assigned_person_id = model.assigned_person_id;
+    if (await this.saveModel.save({model: application, message: 'Assignment update was successful.', owner: this})) {
       this.args.onClose();
-    } catch (response) {
-      this.errors.handleErrorResponse(response);
-    } finally {
-      this.isSubmitting = false;
     }
   }
 }

@@ -28,7 +28,7 @@
         <AccessDocumentsForPerson @person={{person.person}} @documents={{person.documents}} />
       {{else}}
         <tr>
-          <td colspan="7" class="text-danger">
+          <td colspan="8" class="text-danger">
             Odd, I cannot find any current access documents.
           </td>
         </tr>
@@ -39,7 +39,7 @@
   <tab.pane @title="Current Records" @id="records">
     {{#if this.isLoading}}
       <LoadingIndicator @text="Loading Access Documents"/>
-    {{else}}
+    {{else if this.accessDocuments}}
       <p>
         The following shows all current access documents (not expired, cancelled, or used)
       </p>
@@ -113,8 +113,6 @@
             </td>
           </tr>
         {{/each}}
-        <tr>
-        </tr>
         </tbody>
       </UiTable>
     {{/if}}

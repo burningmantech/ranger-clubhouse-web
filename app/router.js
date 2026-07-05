@@ -272,7 +272,6 @@ Router.map(function () {
     this.route('applications', function() {
       this.route('index', {path: '/'});
       this.route('record', { path: '/:application_id'});
-      this.route('create');
     });
 
     this.route('bmid');

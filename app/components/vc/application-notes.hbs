@@ -27,7 +27,7 @@
             @validator={{this.noteValidation}}
             @onSubmit={{this.submit}} as |f|>
       <Modal.title>
-        {{if this.editNote "Edit" "Update"}}
+        {{if this.editNote "Edit" "Add"}}
         {{if @isComment "Comment" "Unified Flagging Note"}}
       </Modal.title>
       <Modal.body>

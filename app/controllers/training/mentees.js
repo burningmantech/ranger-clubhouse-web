@@ -1,6 +1,7 @@
 import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
 import {action} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
+import {escape} from 'lodash';
 import {ADMIN, ART_GRADUATE_BASE} from "clubhouse/constants/roles";
 
 export default class TrainingMenteesController extends ClubhouseController {
@@ -16,7 +17,7 @@ export default class TrainingMenteesController extends ClubhouseController {
   @action
   revokePositions(person) {
     this.modal.confirm('Revoke Mentee Position(s)',
-      `Are you sure you want to revoke the mentees position(s) from <b>${person.callsign}</b>?`,
+      `Are you sure you want to revoke the mentees position(s) from <b>${escape(person.callsign)}</b>?`,
       async () => {
         this.isSubmitting = true;
         try {
@@ -24,7 +25,7 @@ export default class TrainingMenteesController extends ClubhouseController {
           person.positionsRevoked = true;
           this.toast.success('Mentee position(s) successfully revoked')
         } catch (response) {
-          this.errors.handleErrorResponse()
+          this.errors.handleErrorResponse(response)
         } finally {
           this.isSubmitting = false;
         }

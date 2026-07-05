@@ -15,8 +15,14 @@
       </div>
     </Modal.body>
     <Modal.footer @align="start">
-      <f.submit @label="Mark As Problem"/>
+      <f.submit @label="Mark As Problem" @disabled={{this.isSubmitting}} />
       <UiCancelButton @onClick={{@onClose}} />
     </Modal.footer>
   </ChForm>
 </ModalDialog>
+
+{{#if this.isSubmitting}}
+  <LoadingDialog>
+    Submitting your request
+  </LoadingDialog>
+{{/if}}

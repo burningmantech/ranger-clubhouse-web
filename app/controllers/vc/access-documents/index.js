@@ -1,6 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
+import dayjs from 'dayjs';
 import {
   BANKED, CLAIMED,
   GIFT_TICKET,
@@ -69,6 +70,10 @@ export default class VcAccessDocumentsIndexController extends ClubhouseControlle
   get viewDocuments() {
     let documents = this.accessDocuments;
 
+    if (!documents) {
+      return [];
+    }
+
     if (this.filterType !== 'all') {
       documents = documents.filter((d) => d.type === this.filterType);
     }
@@ -86,6 +91,10 @@ export default class VcAccessDocumentsIndexController extends ClubhouseControlle
       return;
     }
 
+    if (this.isLoading || this.accessDocuments) {
+      return;
+    }
+
     this.isLoading = true;
     try {
       this.accessDocuments = await this.store.query('access-document', {include_person: 1});
@@ -96,13 +105,24 @@ export default class VcAccessDocumentsIndexController extends ClubhouseControlle
     }
   }
 
+  // Mirror the on-screen Arrival column so the CSV matches what the table shows.
+  arrivalLabel(row) {
+    if (row.access_any_time) {
+      return 'Anytime';
+    } else if (row.access_date) {
+      return dayjs(row.access_date).format('ddd MMM DD');
+    } else {
+      return 'Missing';
+    }
+  }
+
   @action
   exportToCSV() {
     const rows = this.viewDocuments.map((row) => ({
       rad: `RAD-${row.id}`,
       callsign: row.person.callsign,
       type: row.typeLabel,
-      arrival: (row.isWAP || row.isWAPSO || row.isStaffCredential) ? row.admission_date : '',
+      arrival: row.hasAccessDate ? this.arrivalLabel(row) : '',
       name: row.isWAPSO ? row.name : '',
       source_year: row.source_year,
       expires: row.expiry_year,

@@ -5,7 +5,6 @@ import {service} from '@ember/service';
 
 export default class VcApplicationEditApprovedHandleDialogComponent extends Component {
   @service saveModel;
-  @service toast;
 
   @tracked isSubmitting;
 

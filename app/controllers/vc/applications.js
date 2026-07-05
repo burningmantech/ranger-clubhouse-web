@@ -10,9 +10,14 @@ export default class VcApplicationsController extends ClubhouseController {
 
   @action
   async searchForStuff(model) {
+    if (this.isSubmitting) {
+      return;
+    }
+
     const query = model.query.trim();
 
     if (query.length < 3) {
+      this.toast.warning('Please enter at least 3 characters to search.');
       return;
     }
 

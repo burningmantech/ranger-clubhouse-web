@@ -32,7 +32,7 @@ export default class TrainingNotesController extends ClubhouseController {
           begins: s.begins,
           description: s.description,
           rank: s.rank ? s.rank : '',
-          notes: s.notes.length > 1 ? s.notes.map((n, idx) => `Note #${idx+1}:\n${n}\n`) : s.notes[0],
+          notes: s.notes.length > 1 ? s.notes.map((n, idx) => `Note #${idx+1}:\n${n}\n`).join('') : s.notes[0],
         })
       });
     })

@@ -43,6 +43,10 @@ export default class VcApplicationsIndexRoute extends ClubhouseRoute {
       controller[key] = newValues[key];
     });
 
+    if (model.yearDidChange) {
+      controller.activePreset = null;
+    }
+
     this.storage.setKey(FILTERS_KEY, newValues);
   }
 }

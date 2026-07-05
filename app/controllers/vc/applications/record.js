@@ -6,6 +6,7 @@ import {
   STATUS_HANDLE_CHECK,
   STATUS_REJECT_RETURNING_RANGER,
   WHY_VOLUNTEER_REVIEW_OKAY,
+  WHY_VOLUNTEER_REVIEW_PROBLEM,
 } from "clubhouse/models/prospective-application";
 
 export default class VcApplicationsRecordController extends ClubhouseController {
@@ -18,6 +19,7 @@ export default class VcApplicationsRecordController extends ClubhouseController 
   @tracked showStatusWithMessageDialog;
   @tracked newStatus;
   @tracked askForMessage;
+  @tracked isSubmitting = false;
 
   @tracked VCs;
 
@@ -39,10 +41,10 @@ export default class VcApplicationsRecordController extends ClubhouseController 
 
   get paragraphCheckClass() {
     const review = this.application.why_volunteer_review;
-    if (review === 'okay') {
+    if (review === WHY_VOLUNTEER_REVIEW_OKAY) {
       return 'vc-progress-success';
     }
-    if (review === 'problem') {
+    if (review === WHY_VOLUNTEER_REVIEW_PROBLEM) {
       return 'vc-progress-danger';
     }
     return 'vc-progress-warning';
@@ -112,13 +114,11 @@ export default class VcApplicationsRecordController extends ClubhouseController 
 
   @action
   async assignApplication(personId, successMessage) {
-    try {
-      this.application.assigned_person_id = personId;
-      await this.application.save();
-      this.toast.success(successMessage);
-    } catch (response) {
-      this.errors.handleErrorResponse(response);
+    if (this.isSubmitting) {
+      return;
     }
+    this.application.assigned_person_id = personId;
+    await this.saveModel.save({model: this.application, message: successMessage, owner: this});
   }
 
   @action
@@ -203,7 +203,6 @@ export default class VcApplicationsRecordController extends ClubhouseController 
       this.isSubmitting = true;
       await this.ajax.post(`prospective-application/${this.application.id}/status`, {data});
       await this.application.reload();
-      this.showStatusWithMessageDialog = false;
       this.toast.success('Status was successfully updated.');
     } catch (response) {
       this.errors.handleErrorResponse(response);

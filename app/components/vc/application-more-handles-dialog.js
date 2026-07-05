@@ -40,13 +40,23 @@ export default class VcApplicationMoreHandlesDialogComponent extends Component {
           message: model.message
         }
       });
-      await application.reload();
-      this.toast.success('More Handles request successfully submitted.');
-      this.args.onClose();
     } catch (response) {
       this.errors.handleErrorResponse(response);
-    } finally {
       this.isSubmitting = false;
+      return;
     }
+
+    // The status POST is non-idempotent (records a rejection and emails the
+    // applicant). Now that it has succeeded, reload the record then close the
+    // dialog unconditionally so a failed reload cannot leave the form open and
+    // invite a duplicate request.
+    try {
+      await application.reload();
+    } catch (response) {
+      this.errors.handleErrorResponse(response);
+    }
+    this.isSubmitting = false;
+    this.toast.success('More Handles request successfully submitted.');
+    this.args.onClose();
   }
 }

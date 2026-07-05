@@ -5,7 +5,6 @@ import { tracked } from '@glimmer/tracking';
 import { severityWeight, worstRank, mentorBonkYear } from 'clubhouse/utils/intake-summaries';
 
 export default class UnifiedFlaggingComponent extends Component {
-  queryParams=['year'];
   @service ajax;
   @service errors;
   // Locally-merged note/history updates, keyed by person id. Kept separate from

@@ -27,17 +27,19 @@ export default class VcApplicationProblemReviewDialogComponent extends Component
 
   @action
   async submitProblemReview(model, isValid) {
-    if (!isValid) {
+    if (!isValid || this.isSubmitting) {
       return;
     }
 
     const {application} = this.args;
-    application.why_volunteer_review = WHY_VOLUNTEER_REVIEW_PROBLEM;
-    if (!await this.saveModel.save({model: application, owner: this})) {
-      return;
-    }
-
+    this.isSubmitting = true;
     try {
+      // saveModel owns the record's rollback-on-failure; the owner guard is
+      // handled here so isSubmitting stays set through the follow-up note POST.
+      application.why_volunteer_review = WHY_VOLUNTEER_REVIEW_PROBLEM;
+      if (!await this.saveModel.save({model: application})) {
+        return;
+      }
       await this.ajax.post(`prospective-application/${application.id}/note`, {
         data: {type: TYPE_VC_COMMENT, note: `Why Ranger Review: ${model.message}`}
       });
@@ -46,6 +48,8 @@ export default class VcApplicationProblemReviewDialogComponent extends Component
       this.args.onClose();
     } catch (response) {
       this.errors.handleErrorResponse(response);
+    } finally {
+      this.isSubmitting = false;
     }
   }
 }
