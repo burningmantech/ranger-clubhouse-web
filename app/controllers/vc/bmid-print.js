@@ -3,9 +3,13 @@ import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {isEmpty} from '@ember/utils';
 import {IN_PREP, READY_TO_PRINT} from "clubhouse/models/bmid";
+import {filterByText} from 'clubhouse/utils/bmid-view';
+import Ember from 'ember';
+
+const escapeExpression = Ember.Handlebars.Utils.escapeExpression;
 
 export default class VcBmidPrintController extends ClubhouseController {
-  queryParams = ['filter'];
+  queryParams = ['year', 'filter'];
 
   @tracked batchForm = {};
 
@@ -23,15 +27,7 @@ export default class VcBmidPrintController extends ClubhouseController {
     },
   ];
 
-  textFilterFields = [
-    'person.callsign',
-    'title1',
-    'title2',
-    'title3',
-    'teams',
-    'notes'
-  ];
-
+  @tracked year;
   @tracked bmids;
 
   @tracked textFilter;
@@ -55,29 +51,7 @@ export default class VcBmidPrintController extends ClubhouseController {
   @tracked notQualifiedToPrint;
 
   _buildViewBmids() {
-    let bmids = this.bmids;
-
-    if (isEmpty(this.textFilter)) {
-      this.viewBmids = bmids;
-      this._updateSelectedCount();
-    }
-
-    const regexp = new RegExp(this.textFilter, 'i');
-
-    bmids = bmids.filter((bmid) => {
-      let haveMatch = false;
-      this.textFilterFields.forEach((field) => {
-        const value = bmid.get(field);
-
-        if (!isEmpty(value) && regexp.test(value)) {
-          haveMatch = true;
-        }
-      });
-
-      return haveMatch;
-    });
-
-    this.viewBmids = bmids;
+    this.viewBmids = filterByText(this.bmids, this.textFilter);
     this._updateSelectedCount();
   }
 
@@ -131,7 +105,7 @@ export default class VcBmidPrintController extends ClubhouseController {
 
     const batchText = isEmpty(model.batchInfo) ?
       '<b class="text-danger">You have not entered any text into the Batch Information field.</b> Please confirm this is your intent.' :
-      `<b>The batch information entered is "<i>${model.batchInfo}</i>"</b>`;
+      `<b>The batch information entered is "<i>${escapeExpression(model.batchInfo)}</i>"</b>`;
 
     this.modal.confirm('Confirm Export',
       `<p>${batchText}</p>${person_ids.length} BMID(s) have been selected to download and marked as SUBMITTED. Are you sure you want to do this?`,

@@ -1,10 +1,10 @@
 import Component from '@glimmer/component';
 import {IN_PREP} from "clubhouse/models/bmid";
-import {action} from '@ember/object';
+import {cached} from '@glimmer/tracking';
 
 export default class BmidViewRowComponent extends Component {
-  @action
-  rowColor() {
+  @cached
+  get rowColor() {
     const {bmid} = this.args;
 
     if (!bmid.has_approved_photo) {
