@@ -17,11 +17,16 @@ export default class VcBmidRoute extends ClubhouseRoute {
 
     this.store.unloadAll('bmid');
 
+    const [manage, ticketing] = await Promise.all([
+      this.ajax.request(`bmid/manage`, {data: {year, filter}}),
+      this.ajax.request('ticketing/info'),
+    ]);
+
     return {
       year,
       filter,
-      bmids: (await this.ajax.request(`bmid/manage`, {data: {year, filter}})).bmids,
-      ticketingInfo: (await this.ajax.request('ticketing/info')).ticketing_info
+      bmids: manage.bmids,
+      ticketingInfo: ticketing.ticketing_info
     };
   }
 
@@ -36,6 +41,8 @@ export default class VcBmidRoute extends ClubhouseRoute {
     controller.set('sortColumn', 'callsign');
     controller.set('titleFilter', 'All');
     controller.set('teamFilter', 'All');
+    controller.set('qualifiedFilter', 'all');
+    controller.set('wantFilter', '');
     controller.set('textFilterInput', '');
     controller.set('textFilter', '');
     controller.set('textFilterError', '');
@@ -49,7 +56,9 @@ export default class VcBmidRoute extends ClubhouseRoute {
     // when refreshing the route where the same record(s) is shown between
     // two different views.
     controller.set('bmids', []);
-    controller.set('renderedBmids', []);
+    controller.set('renderBmids', []);
+    controller.set('viewBmids', []);
+    controller.set('editableBmids', []);
     controller.set('entry', null);
 
     this.store.unloadAll('bmid');
