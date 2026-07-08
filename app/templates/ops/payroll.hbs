@@ -27,11 +27,11 @@
     </FormRow>
     <FormRow>
       <f.datetime @name="start_time"
-                  @label="Start Date & Time:"
+                  @label="Start Date & Time"
                   @size={{20}}
       />
       <f.datetime @name="end_time"
-                  @label="Ending Date & Time:"
+                  @label="End Date & Time"
                   @size={{20}}
       />
       <f.select @name="break_after"
@@ -61,7 +61,7 @@
             <PersonLink @person={{person}} />
           {{/each}}
         </div>
-        <UiButton @onClick={{fn this.exportPayroll true this.peopleWithoutIds}} @size="sm" @type="secondary">
+        <UiButton @onClick={{fn this._exportPayroll true this.peopleWithoutIds}} @size="sm" @type="secondary">
           Export the above without ids
         </UiButton>
       </UiAlert>
@@ -95,6 +95,11 @@
           </UiButtonRow>
         </div>
       </div>
+      <div class="form-text">
+        "Export Payroll w/Meal Breaks" and "Export Unadjusted Payroll" produce the Paycom punch file for
+        upload to the external payroll system. "Export On Screen Table" is a raw dump of the table below
+        for reference only, and is not a payroll import format.
+      </div>
       <UiTable class="mt-2">
         <thead>
         <tr>
@@ -109,13 +114,15 @@
         </thead>
         <tbody>
         {{#each this.viewPeople as |person|}}
-          {{#each person.shifts as |row|}}
+          {{#each person.shifts as |row idx|}}
             <tr class={{if row.still_on_duty "table-warning"}}>
-              <td>
-                <PersonLink @person={{person}} />
-                <br>
-                {{person.employee_id}}
-              </td>
+              {{#unless idx}}
+                <td rowspan="{{add person.shifts.length 1}}">
+                  <PersonLink @person={{person}} />
+                  <br>
+                  {{person.employee_id}}
+                </td>
+              {{/unless}}
               <td class="text-center">
                 {{#if row.still_on_duty}}
                   <UiBadge @text="still on duty" @type="warning"/>
@@ -134,6 +141,9 @@
               </td>
               <td class="text-end">
                 {{hour-minute-format row.orig_duration}}
+                {{#if row.meal_adjusted}}
+                  <div class="small text-muted">{{hour-minute-format (sub row.orig_duration this.mealBreakSeconds)}}</div>
+                {{/if}}
               </td>
               <td>
                 {{#if row.meal_adjusted}}
@@ -153,8 +163,20 @@
               </td>
             </tr>
           {{/each}}
+          <tr>
+            <td colspan="3" class="text-end"><b>Total Hours</b></td>
+            <td class="text-end"><b>{{hour-minute-format (this.totalDurationForPerson person)}}</b></td>
+            <td colspan="2"></td>
+          </tr>
         {{/each}}
         </tbody>
+        <tfoot>
+        <tr>
+          <td colspan="4" class="text-end"><b>Grand Total</b></td>
+          <td class="text-end"><b>{{hour-minute-format this.grandTotalDuration}}</b></td>
+          <td colspan="2"></td>
+        </tr>
+        </tfoot>
       </UiTable>
     {{else}}
       <b class="text-danger">
