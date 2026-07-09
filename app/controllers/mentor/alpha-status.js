@@ -1,6 +1,6 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
-import { action } from '@ember/object';
-import { cached, tracked } from '@glimmer/tracking';
+import {action} from '@ember/object';
+import {cached, tracked} from '@glimmer/tracking';
 
 const PERSONNEL_WEIGHT = 100;
 
@@ -33,33 +33,27 @@ export default class MentorAlphaStatusController extends ClubhouseController {
   @tracked collapsedUntrained = false;
 
   filterOptions = [
-    [ 'All', 'all' ],
-    [ 'Status eligible', 'status' ],
-    [ 'Position eligible', 'position' ],
-    [ 'Status & Position eligible', 'both' ],
-    [ 'Alpha status', 'alpha' ],
-    [' Mentor Flagged', 'mentor-flag' ]
+    ['All', 'all'],
+    ['Status eligible', 'status'],
+    ['Alpha status', 'alpha'],
+    [' Mentor Flagged', 'mentor-flag']
   ];
 
   get viewPotentials() {
     const mentees = this.mentees;
 
     switch (this.filter) {
-    case 'status':
-      return mentees.filter((p) => p.alpha_status_eligible);
-    case 'position':
-      return mentees.filter((p) => p.alpha_position_eligible);
-    case 'both':
-      return mentees.filter((p) => p.alpha_status_eligible && p.alpha_position_eligible);
+      case 'status':
+        return mentees.filter((p) => p.trained && !p.is_alpha);
 
-    case 'alpha':
-      return mentees.filter((p) => p.status == 'alpha');
+      case 'alpha':
+        return mentees.filter((p) => p.is_alpha);
 
-    case 'mentor-flag':
-      return mentees.filter((p) => p.have_mentor_flags);
+      case 'mentor-flag':
+        return mentees.filter((p) => p.have_mentor_flags);
 
-    default:
-      return mentees;
+      default:
+        return mentees;
     }
   }
 
@@ -107,7 +101,7 @@ export default class MentorAlphaStatusController extends ClubhouseController {
     if (this.trainedPotentials.length) {
       sections.push({
         key: 'trained',
-        title: 'Trained — Pending Alpha Status & Position',
+        title: 'Trained And Alpha Status Indication',
         people: this.trainedPotentials,
         isAttention: false,
         collapsible: true,
@@ -139,14 +133,10 @@ export default class MentorAlphaStatusController extends ClubhouseController {
   }
 
   get statusEligibleCount() {
-    return this.mentees.reduce((total,p) => (p.alpha_status_eligible ? 1 : 0)+total, 0);
-  }
-
-  get positionEligibleCount() {
-    return this.mentees.reduce((total,p) => (p.alpha_position_eligible ? 1 : 0)+total, 0);
+    return this.mentees.reduce((total, p) => (p.is_trained ? 1 : 0) + total, 0);
   }
 
   get alphaCount() {
-    return this.mentees.reduce((total,p) => (p.status == 'alpha' ? 1 : 0)+total, 0);
+    return this.mentees.reduce((total, p) => (p.status === 'alpha' ? 1 : 0) + total, 0);
   }
 }
