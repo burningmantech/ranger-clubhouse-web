@@ -35,17 +35,10 @@
     {{/if}}
   </td>
   <td class="text-center">
-    {{#if @person.alpha_status_eligible}}
-      <span class="text-success" title="Status eligible">{{fa-icon "check"}}</span>
+    {{#if @person.is_alpha}}
+      <span class="text-success" title="is alpha">{{fa-icon "check"}}</span>
     {{else}}
-      <span class="text-muted" title="Not status eligible">&mdash;</span>
-    {{/if}}
-  </td>
-  <td class="text-center">
-    {{#if @person.alpha_position_eligible}}
-      <span class="text-success" title="Position eligible">{{fa-icon "check"}}</span>
-    {{else}}
-      <span class="text-muted" title="Position missing">&mdash;</span>
+      <span class="text-muted" title="no alpha status">&mdash;</span>
     {{/if}}
   </td>
 </tr>

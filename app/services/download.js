@@ -20,7 +20,7 @@ export default class DownloadService extends Service {
 
   downloadCsv(filename, columns, data) {
     const headers = columns.map((column) => {
-      let header = typeof column === 'string' ? column : column.title;
+      let header = typeof column === 'string' ? column : (column.title || column.label);
       header = header.replace(/"/g, '""');
       if (header.search(/("|,|\n)/g) >= 0) {
         header = `"${header}"`;
