@@ -180,6 +180,7 @@ export default class OpsPayrollController extends ClubhouseController {
    * @returns {Number}
    */
 
+  @action
   totalDurationForPerson(person) {
     return person.shifts.reduce((sum, s) => sum + (s.meal_adjusted ? s.orig_duration - this.mealBreakSeconds : s.orig_duration), 0);
   }
