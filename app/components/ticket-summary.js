@@ -112,8 +112,8 @@ export default class TicketSummaryComponent extends Component {
       claimed.push(htmlSafe(`A Setup Access Pass for yourself<br>${text}`));
     }
 
-    const {wapso} = pkg;
-    if (wapso && wapso.find((w) => w.isClaimed)) {
+    const wapso = pkg.wapso.filter((w) => w.isUsing);
+    if (wapso.length) {
       let text = `${wapso.length} Setup Access Pass${wapso.length > 1 ? 'es' : ''} for Significant Others`;
       claimed.push(htmlSafe(text));
     }
@@ -158,8 +158,8 @@ export default class TicketSummaryComponent extends Component {
       unclaimed.push(`No Setup Access Pass for yourself`);
     }
 
-    const wapso = pkg.wapso;
-    if (!wapso || !wapso.length) {
+    const wapso = pkg.wapso.filter((w) => w.isUsing);
+    if (!wapso.length) {
       unclaimed.push('No Setup Access Passes for Significant Others');
     }
 

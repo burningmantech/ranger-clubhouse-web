@@ -53,7 +53,10 @@ export default class TicketOverviewComponent extends Component {
       this.deliveryMethod = DELIVERY_NONE;
     }
 
-    this.wapSOList = ticketPackage.wapso;
+    // Only SO SAPs that have actually been claimed/submitted should be shown as
+    // "claimed" — mirror the regular SAP gate (usingWAP) below. A merely
+    // qualified WAPSO must not render the "SAPs For Significant Other Claimed" card.
+    this.wapSOList = ticketPackage.wapso.filter((so) => so.isUsing);
 
     // Find the effective WAP - either claimed SC or actual WAP.
     if (this.usingStaffCredential) {
