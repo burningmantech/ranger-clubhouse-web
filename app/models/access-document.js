@@ -250,6 +250,9 @@ export default class AccessDocumentModel extends Model {
   }
 
   get deliveryMethodLabel() {
+    if (this.type === GIFT_TICKET && this.delivery_method === DELIVERY_PRIORITY) {
+      return 'UPS';
+    }
     return DeliveryMethodLabels[this.delivery_method] ?? this.delivery_method;
   }
 
