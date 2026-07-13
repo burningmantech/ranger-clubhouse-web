@@ -32,8 +32,10 @@ export const LSD_TICKET_VP = 'lsd_vp';
 // Delivery-type strings as TRS expects them.
 const CREDENTIAL_PICKUP = 'Credential Pick Up'; // Pick up in Gerlach before Box Office is running
 const WILL_CALL = 'Will Call';  // Box office
-const USPS_STANDARD = 'USPS'; // For paid items
+const USPS_STANDARD = 'Standard Mail'; // For paid items
 const USPS_PRIORITY = 'USPS Priority'; // For paid items
+const USPS_STANDARD_FOR_GIFT = 'USPS (Standard Mail)';
+const UPS = 'UPS';
 const PRINT_AT_HOME = 'Print At Home';
 
 const TRS_COLUMN = {
@@ -207,14 +209,13 @@ export function deliveryTypeForDocument(doc) {
 
   switch (doc.type) {
     case SPT:
-    case GIFT_TICKET:
     case LSD_TICKET:
     case VEHICLE_PASS_LSD:
       return postalDeliveryType;
 
     case VEHICLE_PASS_GIFT:
       // a Gift VP should always be paired with a SC but ya never know.
-      return doc.has_staff_credential ? CREDENTIAL_PICKUP : postalDeliveryType;
+      return doc.has_staff_credential ? CREDENTIAL_PICKUP : (isPostal ? USPS_STANDARD_FOR_GIFT : UPS);
 
     case VEHICLE_PASS_SP:
       return postalDeliveryType;
@@ -225,6 +226,9 @@ export function deliveryTypeForDocument(doc) {
     case WAP:
     case WAPSO:
       return PRINT_AT_HOME;
+
+    case GIFT_TICKET:
+      return isPostal ? USPS_STANDARD_FOR_GIFT : UPS;
   }
 
   return undefined;
