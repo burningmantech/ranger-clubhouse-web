@@ -14,6 +14,7 @@ export default class VcApplicationPersonalInfoComponent extends Component {
 
   @tracked stateOptions = null;
   @tracked stateLabel = null;
+  @tracked isSubmitting = false;
 
   countryOptions = CountryOptions;
 
@@ -36,7 +37,10 @@ export default class VcApplicationPersonalInfoComponent extends Component {
   }
 
   @action
-  countryChange(field, country) {
+  countryChange(field, country, model) {
+    // Clear the now-stale state value so the new country's <select> does not
+    // display its placeholder while silently retaining the old country's code.
+    model.set('state', '');
     this._buildOptions(country);
   }
 
@@ -51,6 +55,10 @@ export default class VcApplicationPersonalInfoComponent extends Component {
 
   @action
   async confirmApproval() {
+    if (this.isSubmitting) {
+      return;
+    }
+
     const {application} = this.args;
 
     try {

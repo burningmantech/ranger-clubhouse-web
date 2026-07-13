@@ -16,6 +16,25 @@ export default class LoginController extends ClubhouseController {
     return (this.session.attemptedTransition?.targetName === 'me.oauth2-grant');
   }
 
+  @tracked devCallsign = '';
+  @tracked devLoginError = null;
+
+  @action
+  updateDevCallsign(event) {
+    this.devCallsign = event.target.value;
+  }
+
+  @action
+  async devLogin() {
+    this.devLoginError = null;
+    try {
+      await this.session.authenticate('authenticator:dev', this.devCallsign);
+    } catch (response) {
+      const data = response.responseJSON ?? response.payload;
+      this.devLoginError = data?.error ?? `Unknown error ${JSON.stringify(data)}`;
+    }
+  }
+
   @action
   async submit(model, isValid) {
     if (!isValid)

@@ -2,6 +2,7 @@ import Component from '@glimmer/component';
 import EmberObject, {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {service} from '@ember/service';
+import {validatePresence} from 'ember-changeset-validations/validators';
 import {TYPE_VC, TYPE_VC_COMMENT} from "clubhouse/models/prospective-application-note";
 
 export default class VcApplicationNotesComponent extends Component {
@@ -16,6 +17,10 @@ export default class VcApplicationNotesComponent extends Component {
   @tracked showDialog;
 
   @tracked isSubmitting;
+
+  noteValidation = {
+    note: [validatePresence({presence: true, message: 'Please enter some text.'})]
+  };
 
   get notes() {
     const type = this.args.isComment ? TYPE_VC_COMMENT : TYPE_VC;
@@ -52,7 +57,7 @@ export default class VcApplicationNotesComponent extends Component {
         data.type = this.args.isComment ? TYPE_VC_COMMENT : TYPE_VC;
         await this.ajax.post(this.url, {data});
       }
-      this.args.application.reload();
+      await this.args.application.reload();
       this.showDialog = false;
     } catch (response) {
       this.errors.handleErrorResponse(response);
@@ -76,7 +81,7 @@ export default class VcApplicationNotesComponent extends Component {
             prospective_application_note_id: note.id
           }
         });
-        this.args.application.reload();
+        await this.args.application.reload();
         this.toast.success(`The ${name} was successfully deleted.`);
       } catch (response) {
         this.errors.handleErrorResponse(response);

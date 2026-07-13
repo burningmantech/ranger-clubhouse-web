@@ -16,6 +16,8 @@ export const ISSUES = 'issues';
 export const DO_NOT_PRINT = 'do_not_print';
 // BMID was submitted
 export const SUBMITTED = 'submitted';
+// BMID was printed
+export const PRINTED = 'printed';
 
 // Deprecated statuses.
 // BMID was changed (name, photos, titles, etc.) and needs to be reprinted
@@ -271,6 +273,7 @@ export default class BmidModel extends Model {
     return this.status === DO_NOT_PRINT || this.status === ISSUES;
   }
 
+  @cached
   get notQualifiedToPrint() {
     if (this.person?.status === ECHELON) {
       return !this.has_signups;

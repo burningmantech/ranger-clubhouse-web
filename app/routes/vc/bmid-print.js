@@ -11,7 +11,7 @@ import {
   RETIRED,
 } from 'clubhouse/constants/person_status';
 import requestYear from 'clubhouse/utils/request-year';
-import {DO_NOT_PRINT, ISSUES, SUBMITTED} from "clubhouse/models/bmid";
+import BmidModel, {DO_NOT_PRINT, ISSUES, PRINTED, SUBMITTED} from "clubhouse/models/bmid";
 
 const ALLOWED_STATUSES = [
   ACTIVE,
@@ -27,6 +27,7 @@ const ALLOWED_STATUSES = [
 export default class VcBmidPrintRoute extends ClubhouseRoute {
   roleRequired = [ADMIN, EDIT_BMIDS];
   queryParams = {
+    year: {refreshModel: true},
     filter: {refreshModel: true},
   };
 
@@ -34,11 +35,16 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
     const year = requestYear(params);
     const filter = params.filter || 'special';
 
+    const [{bmids}, {exports}] = await Promise.all([
+      this.ajax.request(`bmid/manage`, {data: {year, filter}}),
+      this.ajax.request('bmid/exports', {data: {year}})
+    ]);
+
     return {
       year,
       filter,
-      bmids: (await this.ajax.request(`bmid/manage`, {data: {year, filter}})).bmids,
-      exportList: (await this.ajax.request('bmid/exports', {data: {year}})).exports
+      bmids,
+      exportList: exports
     };
   }
 
@@ -53,8 +59,7 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
 
     this.store.unloadAll('bmid');
 
-    model.bmids.forEach((bmid) => {
-      bmid = bmid.id ? this.storePayload.pushPayload('bmid', bmid) : this.store.createRecord('bmid', bmid);
+    BmidModel.pushToStore(this, model.bmids).forEach((bmid) => {
       switch (bmid.status) {
         case DO_NOT_PRINT:
           doNotPrint.push(bmid);
@@ -64,7 +69,7 @@ export default class VcBmidPrintRoute extends ClubhouseRoute {
           issues.push(bmid);
           return;
 
-        case 'printed':
+        case PRINTED:
           printed.push(bmid);
           return;
 

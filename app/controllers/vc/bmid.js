@@ -147,7 +147,7 @@ export default class VcBmidController extends ClubhouseController {
     if (this.viewBmids.length < 200) {
       // Don't bother with smaller batches
       this.renderBmids = this.viewBmids;
-      this.editableBmids = this.viewBmids;
+      this.editableBmids = this.viewBmids.map((r) => new Changeset(r));
       return;
     }
 
@@ -360,6 +360,5 @@ export default class VcBmidController extends ClubhouseController {
   sortBmidsAction(column) {
     this.sortColumn = column;
     this._buildViewBmids();
-    this.startRenderBmids();
   }
 }

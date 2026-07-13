@@ -21,7 +21,7 @@
           <div class="mb-2">
             <LinkTo @route="training.survey.report"
                     @models={{array this.training.id survey.id}}
-                    @query={{hash type=report.type report_id=report.id}}>
+                    @query={{hash report_id=report.id}}>
               {{report.title}}
             </LinkTo>
           </div>
@@ -30,7 +30,7 @@
     </tr>
   {{else}}
     <tr>
-      <td colspan="4"><b class="text-danger">No surveys found for {{this.year}}</b></td>
+      <td colspan="3"><b class="text-danger">No surveys found for {{this.year}}</b></td>
     </tr>
   {{/each}}
   </tbody>

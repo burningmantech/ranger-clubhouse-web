@@ -6,7 +6,6 @@ import {validatePresence} from 'ember-changeset-validations/validators';
 
 export default class VcApplicationEditHandlesDialogComponent extends Component {
   @service saveModel;
-  @service toast;
 
   @tracked isSubmitting;
 

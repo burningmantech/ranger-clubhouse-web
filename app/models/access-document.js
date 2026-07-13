@@ -250,11 +250,14 @@ export default class AccessDocumentModel extends Model {
   }
 
   get deliveryMethodLabel() {
+    if (this.type === GIFT_TICKET && this.delivery_method === DELIVERY_PRIORITY) {
+      return 'UPS';
+    }
     return DeliveryMethodLabels[this.delivery_method] ?? this.delivery_method;
   }
 
   get expiryYear() {
-    return dayjs(this.expiry_date).format('YYYY');
+    return this.expiry_year;
   }
 
   get accessDateFormatted() {
@@ -282,7 +285,7 @@ export default class AccessDocumentModel extends Model {
   }
 
   get expiry_year() {
-    return dayjs(this.expiry_date).format('YYYY');
+    return isEmpty(this.expiry_date) ? '' : dayjs(this.expiry_date).format('YYYY');
   }
 
   set expiry_year(year) {

@@ -7,7 +7,7 @@ import {isEmpty} from '@ember/utils';
  * tracked state and rendering; this owns the data shaping it used to inline.
  */
 
-const TEXT_FILTER_FIELDS = [
+export const TEXT_FILTER_FIELDS = [
   'sortCallsign',
   'title1',
   'title2',
@@ -15,6 +15,30 @@ const TEXT_FILTER_FIELDS = [
   'team',
   'notes'
 ];
+
+/**
+ * Filter a BMID list by a case-insensitive text match across the given fields.
+ * Render-free and shared by the roster and print controllers. Supports both
+ * Ember models (bmid.get(field)) and plain objects (bmid[field]).
+ *
+ * @param {Object[]} bmids the list to filter
+ * @param {string} text the search text (empty returns the list unchanged)
+ * @param {string[]} [fields] the fields to search
+ * @returns {Object[]} the matching bmids
+ */
+
+export function filterByText(bmids, text, fields = TEXT_FILTER_FIELDS) {
+  if (isEmpty(text)) {
+    return bmids;
+  }
+  const regexp = new RegExp(text, 'i');
+  return bmids.filter((bmid) =>
+    fields.some((field) => {
+      const v = bmid.get ? bmid.get(field) : bmid[field];
+      return !isEmpty(v) && regexp.test(v);
+    })
+  );
+}
 
 /**
  * Filter and sort the BMID roster.
@@ -69,22 +93,7 @@ export function filterAndSortBmids(bmids, {
       break;
   }
 
-  if (!isEmpty(textFilter)) {
-    const regexp = new RegExp(textFilter, 'i');
-
-    result = result.filter((bmid) => {
-      let haveMatch = false;
-      TEXT_FILTER_FIELDS.forEach((field) => {
-        const value = bmid[field];
-
-        if (!isEmpty(value) && regexp.test(value)) {
-          haveMatch = true;
-        }
-      });
-
-      return haveMatch;
-    });
-  }
+  result = filterByText(result, textFilter);
 
   switch (sortColumn) {
     case 'callsign':

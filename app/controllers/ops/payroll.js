@@ -4,6 +4,7 @@ import validateDateTime from "clubhouse/validators/datetime";
 import {action} from '@ember/object';
 import {cached, tracked} from '@glimmer/tracking';
 import {hourMinuteFormat} from "clubhouse/helpers/hour-minute-format";
+import {pluralize} from 'ember-inflector';
 import dayjs from 'dayjs';
 
 const DEPARTMENT_CODE = '660';  // the Ranger department code
@@ -130,6 +131,7 @@ export default class OpsPayrollController extends ClubhouseController {
     }
 
     this.reportWasRun = false;
+    this.filterPerson = 'all';
     this.isSubmitting = true;
 
     try {
@@ -161,6 +163,40 @@ export default class OpsPayrollController extends ClubhouseController {
   }
 
   /**
+   * How many seconds is the configured meal break?
+   *
+   * @returns {Number}
+   */
+
+  @cached
+  get mealBreakSeconds() {
+    return this.mealBreak * 60;
+  }
+
+  /**
+   * Total duration (in seconds), meal break adjusted, for a person across all their shifts.
+   *
+   * @param {*} person
+   * @returns {Number}
+   */
+
+  @action
+  totalDurationForPerson(person) {
+    return person.shifts.reduce((sum, s) => sum + (s.meal_adjusted ? s.orig_duration - this.mealBreakSeconds : s.orig_duration), 0);
+  }
+
+  /**
+   * Grand total duration (in seconds), meal break adjusted, across all the people currently shown.
+   *
+   * @returns {Number}
+   */
+
+  @cached
+  get grandTotalDuration() {
+    return this.viewPeople.reduce((sum, person) => sum + this.totalDurationForPerson(person), 0);
+  }
+
+  /**
    * Export the raw table
    */
 
@@ -178,7 +214,7 @@ export default class OpsPayrollController extends ClubhouseController {
           'code': entry.paycode,
           'orig_on_duty': entry.on_duty,
           'orig_off_duty': entry.off_duty,
-          'duration': hourMinuteFormat([entry.orig_duration]),
+          'orig_duration': hourMinuteFormat([entry.orig_duration]),
           notes: entry.notes,
         };
 
@@ -209,12 +245,44 @@ export default class OpsPayrollController extends ClubhouseController {
   }
 
   /**
-   * Export the payroll spreadsheet with the adjusted times, or unadjusted.
+   * Export the payroll spreadsheet with the adjusted times, or unadjusted -- confirming first
+   * if any of the entries are unverified or still on duty.
    *
+   * @param {boolean} adjustEntries
+   * @param {[]} people
    */
 
   @action
   exportPayroll(adjustEntries, people) {
+    const unverifiedCount = people.reduce(
+      (count, person) => count + person.shifts.filter((s) => s.still_on_duty || !s.verified).length,
+      0
+    );
+
+    if (!unverifiedCount) {
+      this._exportPayroll(adjustEntries, people);
+      return;
+    }
+
+    this.modal.confirm(
+      'Export unverified entries?',
+      `${pluralize(unverifiedCount, 'entry')} unverified or still on duty. Export anyway?`,
+      () => this._exportPayroll(adjustEntries, people)
+    );
+  }
+
+  /**
+   * Actually build & download the payroll spreadsheet with the adjusted times, or unadjusted.
+   * Called directly (bypassing the unverified/still-on-duty confirmation) by the "export without
+   * ids" button, and indirectly via exportPayroll() after the user has confirmed.
+   *
+   * @param {boolean} adjustEntries
+   * @param {[]} people
+   * @private
+   */
+
+  @action
+  _exportPayroll(adjustEntries, people) {
     const rows = [];
 
     people.forEach((person) => {

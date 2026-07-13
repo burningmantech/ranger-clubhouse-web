@@ -190,6 +190,7 @@ export default class UnifiedFlaggingRowComponent extends Component {
       // Don't do anything
       return;
     }
+    event.preventDefault();
     this.userExpanded = !this.expanded;
   }
 }

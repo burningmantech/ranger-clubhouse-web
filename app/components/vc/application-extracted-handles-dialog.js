@@ -6,7 +6,6 @@ import {validatePresence} from 'ember-changeset-validations/validators';
 
 export default class VcApplicationExtractedHandlesDialogComponent extends Component {
   @service saveModel;
-  @service toast;
 
   @tracked isSubmitting;
 
@@ -15,7 +14,11 @@ export default class VcApplicationExtractedHandlesDialogComponent extends Compon
   };
 
   @action
-  async saveExtractedHandles(model) {
+  async saveExtractedHandles(model, isValid) {
+    if (!isValid) {
+      return;
+    }
+
     const {application} = this.args;
     application.handles = model.handles;
     if (await this.saveModel.save({model: application, message: 'The handles has been saved successfully.', owner: this})) {

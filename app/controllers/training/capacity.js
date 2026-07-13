@@ -22,7 +22,6 @@ export default class TrainingCapacityController extends ClubhouseController {
 
   @tracked uniqueTrainers;
 
-  @tracked totalSeats;
   @tracked totalSignups;
   @tracked totalMax;
   @tracked totalPNVs;
@@ -33,16 +32,12 @@ export default class TrainingCapacityController extends ClubhouseController {
 
   queryParams = ['year'];
 
-  get notCurrentYear() {
-    return (+this.year !== this.session.currentYear());
-  }
-
   get totalFullPercentage() {
     const slots = this.slots;
     const signups = slots.reduce((total, slot) => slot.signed_up + total, 0);
     const seats = slots.reduce((total, slot) => slot.max + total, 0);
 
-    return Math.round((signups / seats) * 100);
+    return seats ? Math.round((signups / seats) * 100) : 0;
   }
 
   bgColor(filled) {

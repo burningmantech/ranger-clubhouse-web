@@ -5,7 +5,7 @@ export const TYPE_VC = 'vc';
 export const TYPE_VC_FLAG = 'vc-flag';
 export const TYPE_VC_COMMENT = 'vc-comment';
 
-export default class ProspectiveApplicationModel extends Model {
+export default class ProspectiveApplicationNoteModel extends Model {
   @attr('string') type;
   @attr('string') note;
   @attr('number')person_id;

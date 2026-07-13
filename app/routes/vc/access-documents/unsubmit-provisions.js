@@ -4,11 +4,9 @@ import {tracked} from '@glimmer/tracking';
 
 class PersonSelect extends Selectable {
   @tracked didUnsubmit = false;
-  @tracked errors;
 
   constructor(person) {
-    super(person);
-    this.selected = true;
+    super(person, true);
   }
 }
 

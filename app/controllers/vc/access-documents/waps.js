@@ -1,6 +1,7 @@
 import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
-import {TypeShortLabels} from 'clubhouse/models/access-document';
+import {tracked} from '@glimmer/tracking';
 
 export default class VcAccessDocumentsWapsController extends ClubhouseController {
-  typeShortLabels = TypeShortLabels;
+  @tracked people;
+  @tracked startYear;
 }

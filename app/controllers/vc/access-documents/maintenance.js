@@ -135,7 +135,7 @@ const TASK_GROUPS = [
   }
 ];
 
-export default class AdminMaintenanceController extends ClubhouseController {
+export default class VcAccessDocumentsMaintenanceController extends ClubhouseController {
   @tracked isSubmitting = false;
   @tracked task = null;
   @tracked taskAction = null;
@@ -145,15 +145,18 @@ export default class AdminMaintenanceController extends ClubhouseController {
 
   taskGroups = TASK_GROUPS;
 
+  get isParamValid() {
+    return (this.paramValue ?? '').trim().length > 0;
+  }
+
   @action
   executeTask(task) {
-    this.taskParam = null;
     this.modal.confirm('Execute Task', `Are you sure you want to '${task.title}'?`, async () => {
       const data = {};
+      this.taskParam = null;
       this.task = task;
       this.taskAction = task.action;
       this.isSubmitting = true;
-      this.askParam = null;
       if (task.param) {
         data[task.param.name] = this.paramValue;
       }

@@ -1,7 +1,6 @@
 import ClubhouseRoute from "clubhouse/routes/clubhouse-route";
 import {PAYROLL} from "clubhouse/constants/roles";
 import EmberObject from '@ember/object';
-import _ from 'lodash';
 import dayjs from 'dayjs';
 
 export default class OpsPayrollRoute extends ClubhouseRoute {
@@ -13,7 +12,7 @@ export default class OpsPayrollRoute extends ClubhouseRoute {
 
   setupController(controller, model) {
     controller.positions = model.position;
-    const paycodes = _.uniq(model.position.map((p) => p.paycode));
+    const paycodes = [...new Set(model.position.map((p) => p.paycode))];
     paycodes.sort();
     controller.paycodeOptions = paycodes;
     controller.positionOptions = model.position.map((p) => [ `${p.title} (code ${p.paycode})`, p.id ]);
@@ -22,14 +21,13 @@ export default class OpsPayrollRoute extends ClubhouseRoute {
 
     controller.payrollWeekStart = this._buildWeek(payrollWeekStart);
     controller.payrollWeekEnd = this._buildWeek(payrollWeekEnd);
-    controller.defaultWeekLabel = `${payrollWeekStart.format('ddd MMM D')} 00:00 to ${payrollWeekEnd.format('ddd MMM D')} @ 00:00`;
+    controller.defaultWeekLabel = `${payrollWeekStart.format('ddd MMM D')} @ 00:00 to ${payrollWeekEnd.format('ddd MMM D')} @ 00:00`;
 
     controller.datesForm = EmberObject.create({
       start_time: controller.payrollWeekStart,
       end_time: controller.payrollWeekEnd,
       break_duration: 60,
       position_ids: model.position.map((p) => p.id),
-      hour_cap: 8,
       break_after: 4,
     });
     controller.people = [];

@@ -13,6 +13,7 @@ export default class VcAccessDocumentsIndexRoute extends ClubhouseRoute {
     if (isExiting) {
       controller.filterStatus = 'all';
       controller.filterType = 'all';
+      controller.accessDocuments = null;
     }
   }
 }

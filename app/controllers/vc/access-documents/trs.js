@@ -1,8 +1,7 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action, set} from '@ember/object';
-import {isBlank} from '@ember/utils';
 import dayjs from 'dayjs';
-import {cached, tracked} from '@glimmer/tracking';
+import {tracked} from '@glimmer/tracking';
 import {
   DELIVERY_SC,
   GIFT_TICKET,
@@ -14,13 +13,12 @@ import {
   VEHICLE_PASS_LSD,
   WAP,
   WAPSO,
-  TypeShortLabels, DeliveryMethodLabels
+  TypeShortLabels, DeliveryMethodLabels, DELIVERY_PRIORITY
 } from 'clubhouse/models/access-document';
 import {ALPHA, PROSPECTIVE} from 'clubhouse/constants/person_status';
 import {
   STAFF_CREDENTIAL_VP,
   SPT_VP,
-  GIFT_TICKET_VP,
   LSD_TICKET_VP,
   trsColumnAndDate,
   deliveryTypeForDocument,
@@ -34,6 +32,11 @@ const WAP_PNV = 'work_access_pass_pnv';
 const WAP_RANGER = 'work_access_pass_ranger';
 const WAP_RANGER_PLUS_SO = 'work_access_pass_ranger_plus_so';
 
+// Composite "ticket + VP" filters whose rows carry a combined {person, documents}
+// shape. Shared by _filterRecords (builds them) and _performExport (exports them)
+// so the two stay in lockstep.
+const COMBINED_VP_FILTERS = [STAFF_CREDENTIAL_VP, SPT_VP, LSD_TICKET_VP];
+
 export default class VcAccessDocumentsTrsController extends ClubhouseController {
   @tracked filter = 'all';
   @tracked accessDocuments = [];
@@ -42,6 +45,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
   @tracked viewRecords;
   @tracked selectedCount = 0;
   @tracked viewBadRecords = [];
+  @tracked badRecords = [];
 
   MAX_BATCH_SIZE = 2000;
 
@@ -87,22 +91,6 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     }
   ];
 
-  @cached
-  get badRecords() {
-    const records = [];
-
-    this.people.forEach((human) => {
-      human.documents.forEach((document) => {
-        if (document.has_error) {
-          document.shortType = TypeShortLabels[document.type];
-          records.push({person: human.person, document});
-        }
-      })
-    });
-
-    return records;
-  }
-
   @action
   changeFilter(value) {
     this.filter = value;
@@ -124,6 +112,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
   _setupRecords() {
     const records = [];
+    const badRecords = [];
 
     this.people.forEach((human) => {
       const person = human.person;
@@ -146,8 +135,13 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         doc.trsNote = note;
         doc.trsColumn = trsColumn;
         doc.person = person;
+        doc.shortType = shortType;
 
         records.push(doc);
+
+        if (doc.has_error) {
+          badRecords.push({person, document: doc});
+        }
 
         if (!documentTypes[type]) {
           documentTypes[type] = [];
@@ -158,6 +152,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     });
 
     this.accessDocuments = records;
+    this.badRecords = badRecords;
     this._buildViewRecords();
     this.selectedCount = 0;
   }
@@ -188,7 +183,6 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
       case STAFF_CREDENTIAL_VP:
       case SPT_VP:
-      case GIFT_TICKET_VP:
       case LSD_TICKET_VP: {
         const rows = [];
         const isSC = (filter === STAFF_CREDENTIAL_VP);
@@ -200,9 +194,6 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         } else if (filter === SPT_VP) {
           ticketType = SPT;
           vpType = VEHICLE_PASS_SP;
-        } else if (filter === GIFT_TICKET_VP) {
-          ticketType = GIFT_TICKET;
-          vpType = VEHICLE_PASS_GIFT;
         } else {
           ticketType = LSD_TICKET;
           vpType = VEHICLE_PASS_LSD;
@@ -259,37 +250,19 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     this.selectAll = selected;
     this.viewRecords.forEach((r) => {
       if (selected) {
-        if (!r.has_error) {
+        if (!r.has_error && !r.submitted) {
           set(r, 'selected', true);
         }
       } else {
         set(r, 'selected', false);
       }
     });
-    this.selectedCount = selected ? this.viewRecords.length : 0;
-  }
-
-  _fillAddress(person, row) {
-    // Provide a dummy address in case one is missing.
-    row.address1 = isBlank(person.street1) ? '1 Street Address Unknown' : person.street1;
-    row.address2 = person.street2;
-    row.city = isBlank(person.city) ? 'Small Town' : person.city;
-    row.state = isBlank(person.state) ? 'CA' : person.state;
-    row.zip = isBlank(person.zip) ? '94111' : person.zip;
-    row.country = isBlank(person.country) ? 'US' : person.country;
-
-    row.phone = isBlank(person.home_phone) ? '415-555-1212' : person.home_phone;
+    this._buildSelectedCount();
   }
 
   _fillName(person, row) {
-    /*   if (isWAPSO) {
-         const matches = soname.match(/^\s*([\w-]+)\s*(.*)$/);
-         row.first_name = matches[1];
-         row.last_name = !isEmpty(matches[2]) ? matches[2] : person.last_name;
-       } else */
     row.first_name = person.first_name;
     row.last_name = person.last_name;
-    row.full_name = `${person.first_name} ${person.last_name}`;
     row.email = person.email;
     row.project_name = `Ranger ${person.callsign}`;
   }
@@ -330,9 +303,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     const exportedIds = [];
     const exportedBy = `exported by CHID #${this.session.user.id}`;
 
-    if (this.filter === STAFF_CREDENTIAL_VP
-      || this.filter === SPT_VP
-      || this.filter === LSD_TICKET_VP) {
+    if (COMBINED_VP_FILTERS.includes(this.filter)) {
       rows = [];
       records.forEach((rec) => {
         const {person, documents} = rec;
@@ -343,8 +314,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
           note: `${rec.trsNote} ${exportedBy}`,
         };
 
-        this._fillName(person, row, false);
-        this._fillAddress(person, row);
+        this._fillName(person, row);
 
         let docCount = 0;
         rec.documents.forEach((doc) => {
@@ -367,14 +337,14 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
         }
       });
     } else {
-      rows = records.map((doc) => {
+      rows = records.filter((doc) => !doc.submitted).map((doc) => {
         const person = doc.person;
 
         const row = {note: `${doc.trsNote} ${exportedBy}`};
 
         exportedIds.push(doc.id);
 
-        this._fillName(person, row, (doc.type === WAPSO), doc.name);
+        this._fillName(person, row);
 
         row.delivery_type = deliveryTypeForDocument(doc);
 
@@ -429,7 +399,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
     });
 
 
-    this.modal.confirm('Confirm mask as submitted',
+    this.modal.confirm('Confirm mark as submitted',
       `Are you sure you want to mark the ${itemCount} item(s) as submitted?`,
       async () => {
         this.isSubmitting = true;
@@ -448,6 +418,8 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
               rec.documents.forEach((doc) => set(doc, 'submitted', true));
             }
           })
+          this.selectedCount = 0;
+          this.selectAll = false;
         } catch (response) {
           this.errors.handleErrorResponse(response);
         } finally {
@@ -458,6 +430,9 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
   @action
   deliveryLabel(row) {
+    if (row.type === GIFT_TICKET && row.delivery_type === DELIVERY_PRIORITY) {
+      return 'UPS';
+    }
     return DeliveryMethodLabels[row.delivery_type] ?? row.delivery_type;
   }
 }

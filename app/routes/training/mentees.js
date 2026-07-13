@@ -17,7 +17,7 @@ export default class TrainingMenteesRoute extends ClubhouseRoute {
   }
 
   setupController(controller, {people,positions}) {
-    controller.training = this.modelFor('training');
+    controller.set('training', this.modelFor('training'));
     controller.people = people.map((p) => new MenteePerson(p));
     controller.positions = positions;
     controller.people.forEach((person) => {

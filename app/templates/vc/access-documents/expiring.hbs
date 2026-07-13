@@ -22,21 +22,19 @@ Showing {{pluralize this.expiring.length "person"}}
   </thead>
 
   <tbody>
-    {{#each this.expiring as |person|}}
-      {{#each person.tickets as |ticket|}}
-        <tr>
-          <td><PersonLink @person={{person.person}} @page="tickets-provisions" /></td>
-          <td>{{person.person.status}}</td>
-          <td><MailTo @to={{person.person.email}} /></td>
-          <td>RAD-{{ticket.id}}</td>
-          <td>{{ticket-type-human ticket.type}}</td>
-          <td>{{ticket.status}}</td>
-          <td>{{mdy-format ticket.expiry_date}}</td>
-        </tr>
-      {{/each}}
+    {{#each this.expiringRows as |row|}}
+      <tr>
+        <td><PersonLink @person={{row.person}} @page="tickets-provisions" /></td>
+        <td>{{row.person.status}}</td>
+        <td><MailTo @to={{row.person.email}} /></td>
+        <td>{{row.rad}}</td>
+        <td>{{row.ticket_type}}</td>
+        <td>{{row.ticket_status}}</td>
+        <td>{{row.good_through}}</td>
+      </tr>
     {{else}}
       <tr>
-        <td colspan="6" class="text-danger">
+        <td colspan="7" class="text-danger">
           Huh, I could not find any expiring tickets for this year.
         </td>
       </tr>

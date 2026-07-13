@@ -19,172 +19,41 @@
   </tr>
   </tbody>
 </UiTable>
+{{#let (array
+  (hash title="Special Price Tickets" prefix="spt" hasBanked=true)
+  (hash title="Staff Credentials" prefix="sc" hasBanked=true)
+  (hash title="Special Price Vehicle Passes" prefix="sp_vp")
+  (hash title="Gift Vehicle Passes" prefix="gift_vp")
+  (hash title="LSD Tickets" prefix="lsd")
+  (hash title="LSD Vehicle Passes" prefix="lsd_vp")
+  (hash title="Gift Tickets" prefix="gift")
+  (hash title="Setup Access Passes" prefix="wap")
+) as |ticketStatistics|}}
 <div class="row">
-  <div class="col-auto">
-    <b>Special Price Tickets</b>
-    <UiTable>
-      <thead>
-      <tr>
-        <th>Claimed</th>
-        <th>Unclaimed</th>
-        <th>Banked</th>
-        <th>Submitted</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td class="text-end">{{this.statistics.spt_claimed}}</td>
-        <td class="text-end">{{this.statistics.spt_unclaimed}}</td>
-        <td class="text-end">{{this.statistics.spt_banked}}</td>
-        <td class="text-end">{{this.statistics.spt_submitted}}</td>
-      </tr>
-      </tbody>
-    </UiTable>
-  </div>
+  {{#each ticketStatistics as |stat|}}
+    <div class="col-auto">
+      <b>{{stat.title}}</b>
+      <UiTable>
+        <thead>
+        <tr>
+          <th>Claimed</th>
+          <th>Unclaimed</th>
+          {{#if stat.hasBanked}}<th>Banked</th>{{/if}}
+          <th>Submitted</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td class="text-end">{{get this.statistics (concat stat.prefix "_claimed")}}</td>
+          <td class="text-end">{{get this.statistics (concat stat.prefix "_unclaimed")}}</td>
+          {{#if stat.hasBanked}}<td class="text-end">{{get this.statistics (concat stat.prefix "_banked")}}</td>{{/if}}
+          <td class="text-end">{{get this.statistics (concat stat.prefix "_submitted")}}</td>
+        </tr>
+        </tbody>
+      </UiTable>
+    </div>
+  {{/each}}
 
-  <div class="col-auto">
-    <b>Staff Credentials</b>
-    <UiTable>
-      <thead>
-      <tr>
-        <th>Claimed</th>
-        <th>Unclaimed</th>
-        <th>Banked</th>
-        <th>Submitted</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td class="text-end">{{this.statistics.sc_claimed}}</td>
-        <td class="text-end">{{this.statistics.sc_unclaimed}}</td>
-        <td class="text-end">{{this.statistics.sc_banked}}</td>
-        <td class="text-end">{{this.statistics.sc_submitted}}</td>
-      </tr>
-      </tbody>
-    </UiTable>
-  </div>
-  <div class="col-auto">
-    <b>Special Price Vehicle Passes</b>
-    <UiTable>
-      <thead>
-      <tr>
-        <th>Claimed</th>
-        <th>Unclaimed</th>
-        <th>Submitted</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td class="text-end">{{this.statistics.sp_vp_claimed}}</td>
-        <td class="text-end">{{this.statistics.sp_vp_unclaimed}}</td>
-        <td class="text-end">{{this.statistics.sp_vp_submitted}}</td>
-      </tr>
-      </tbody>
-    </UiTable>
-  </div>
-  <div class="col-auto">
-    <b>Gift Vehicle Passes</b>
-    <UiTable>
-      <thead>
-      <tr>
-        <th>Claimed</th>
-        <th>Unclaimed</th>
-        <th>Submitted</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td class="text-end">{{this.statistics.gift_vp_claimed}}</td>
-        <td class="text-end">{{this.statistics.gift_vp_unclaimed}}</td>
-        <td class="text-end">{{this.statistics.gift_vp_submitted}}</td>
-      </tr>
-      </tbody>
-    </UiTable>
-  </div>
-</div>
-<div class="row">
-  <div class="col-auto">
-    <b>LSD Tickets</b>
-    <UiTable>
-      <thead>
-      <tr>
-        <th>Claimed</th>
-        <th>Unclaimed</th>
-        <th>Submitted</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td class="text-end">{{this.statistics.lsd_claimed}}</td>
-        <td class="text-end">{{this.statistics.lsd_unclaimed}}</td>
-        <td class="text-end">{{this.statistics.lsd_submitted}}</td>
-      </tr>
-      </tbody>
-    </UiTable>
-  </div>
-  <div class="col-auto">
-    <b>LSD Vehicle Passes</b>
-    <UiTable>
-      <thead>
-      <tr>
-        <th>Claimed</th>
-        <th>Unclaimed</th>
-        <th>Submitted</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td class="text-end">{{this.statistics.lsd_vp_claimed}}</td>
-        <td class="text-end">{{this.statistics.lsd_vp_unclaimed}}</td>
-        <td class="text-end">{{this.statistics.lsd_vp_submitted}}</td>
-      </tr>
-      </tbody>
-    </UiTable>
-  </div>
-</div>
-<div class="row">
-  <div class="col-auto">
-    <b>Gift Tickets</b>
-    <UiTable>
-      <thead>
-      <tr>
-        <th>Claimed</th>
-        <th>Unclaimed</th>
-        <th>Submitted</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td class="text-end">{{this.statistics.gift_claimed}}</td>
-        <td class="text-end">{{this.statistics.gift_unclaimed}}</td>
-        <td class="text-end">{{this.statistics.gift_submitted}}</td>
-      </tr>
-      </tbody>
-    </UiTable>
-  </div>
-
-</div>
-
-<div class="row">
-  <div class="col-auto">
-    <b>Setup Access Passes</b>
-    <UiTable>
-      <thead>
-      <tr>
-        <th>Claimed</th>
-        <th>Unclaimed</th>
-        <th>Submitted</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr>
-        <td class="text-end">{{this.statistics.wap_claimed}}</td>
-        <td class="text-end">{{this.statistics.wap_unclaimed}}</td>
-        <td class="text-end">{{this.statistics.wap_submitted}}</td>
-      </tr>
-      </tbody>
-    </UiTable>
-  </div>
   <div class="col-auto">
     <b>Significant Other Setup Access Passes</b>
     <UiTable>
@@ -205,6 +74,7 @@
     </UiTable>
   </div>
 </div>
+{{/let}}
 
 <b>Provisions</b>
 <UiTable>

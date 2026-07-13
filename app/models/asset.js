@@ -55,6 +55,8 @@ export default class AssetModel extends Model {
   @attr('string') expires_on;
   @attr('boolean', {readOnly: true}) has_expired;
 
+  @attr('', { readOnly: true }) checked_out;
+
   get isRadio() {
     return this.type === TYPE_RADIO;
   }
@@ -73,5 +75,37 @@ export default class AssetModel extends Model {
     } else {
       return this.perm_assign ? 'Permanent' : 'Temporary';
     }
+  }
+
+  get statusClass() {
+    if (this.checked_out) {
+      return 'checked-out';
+    }
+
+    if (this.has_expired) {
+      return 'expired';
+    }
+
+    if (this.notes) {
+      return 'note';
+    }
+
+    return 'normal';
+  }
+
+  get statusLabel() {
+    if (this.checked_out) {
+      return 'Checked Out';
+    }
+
+    if (this.has_expired) {
+      return 'Expired';
+    }
+
+    if (this.notes) {
+      return 'Note';
+    }
+
+    return '';
   }
 }

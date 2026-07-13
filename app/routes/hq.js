@@ -6,6 +6,8 @@ import {setting} from 'clubhouse/utils/setting';
 
 export default class HqRoute extends ClubhouseRoute {
   beforeModel() {
+    const result = super.beforeModel(...arguments);
+
     if (!setting('HQWindowInterfaceEnabled')) {
       this.modal.info('HQ Interface not available.', 'The HQ Window Interface is only enabled while on playa event operations are going.');
       this.router.transitionTo('me.homepage');
@@ -18,7 +20,7 @@ export default class HqRoute extends ClubhouseRoute {
       return false;
     }
 
-    return super.beforeModel(...arguments);
+    return result;
   }
 
 
@@ -41,24 +43,44 @@ export default class HqRoute extends ClubhouseRoute {
       : this.session.updateOnDuty();
 
     // person-event uses a composite id of `${person_id}-${year}`.
+    const [
+      person,
+      personEvent,
+      personBanners,
+      eventInfo,
+      positions,
+      unreadMessageCount,
+      assets,
+      attachments,
+      timesheetSummary,
+      photo,
+      ondutyResult,
+    ] = await Promise.all([
+      this.store.findRecord('person', person_id, {reload: true}),
+      this.store.findRecord('person-event', `${person_id}-${year}`, {reload: true}),
+      this.store.query('person-banner', {person_id, active: 1}),
+      this.ajax.request(`person/${person_id}/event-info`, {data: {year}}),
+      this.ajax.request(`person/${person_id}/positions`, {data: {include_eligibility: 1}}),
+      this.ajax.request(`person/${person_id}/unread-message-count`),
+      this.store.query('asset-person', {person_id, year}),
+      this.store.findAll('asset-attachment'),
+      this.ajax.request(`person/${person_id}/timesheet-summary`, {data: {year}}),
+      this.ajax.request(`person/${person_id}/photo`),
+      onduty,
+    ]);
+
     return {
-      person: await this.store.findRecord('person', person_id, {reload: true}),
-      personEvent: await this.store.findRecord('person-event', `${person_id}-${year}`, {reload: true}),
-      personBanners: await this.store.query('person-banner', {person_id, active: 1}),
-      eventInfo: (await this.ajax.request(`person/${person_id}/event-info`, {data: {year}})).event_info,
-
-      positions: (await this.ajax.request(`person/${person_id}/positions`, {
-        data: {include_eligibility: 1}
-      })).positions,
-
-      unread_message_count: (await this.ajax.request(`person/${person_id}/unread-message-count`)).unread_message_count,
-
-      assets: await this.store.query('asset-person', {person_id, year}),
-
-      attachments: await this.store.findAll('asset-attachment', {reload: true}),
-      timesheetSummary: (await this.ajax.request(`person/${person_id}/timesheet-summary`, {data: {year}})).summary,
-      photo: (await this.ajax.request(`person/${person_id}/photo`)).photo,
-      onduty: await onduty,
+      person,
+      personEvent,
+      personBanners,
+      eventInfo: eventInfo.event_info,
+      positions: positions.positions,
+      unread_message_count: unreadMessageCount.unread_message_count,
+      assets,
+      attachments,
+      timesheetSummary: timesheetSummary.summary,
+      photo: photo.photo,
+      onduty: ondutyResult,
     };
   }
 
@@ -103,6 +125,7 @@ export default class HqRoute extends ClubhouseRoute {
     controller.set('showSignInWarning', !onduty);
 
     controller.set('showNotAllowedToWork', !person.canStartShift);
+    controller.set('showTicketsAndProvisions', false);
   }
 
   @action
@@ -111,8 +134,9 @@ export default class HqRoute extends ClubhouseRoute {
     const personId = controller.person.id;
     try {
       const result = await this.ajax.request(`person/${personId}/timesheet-summary`, {data: {year: this.session.currentYear()}});
-      // The request may resolve after the route has torn down.
-      if (this.isDestroying || this.isDestroyed || !this.controller) {
+      // The request may resolve after the route has torn down, or after the person
+      // was switched out from under this controller.
+      if (this.isDestroying || this.isDestroyed || !this.controller || this.controller.person?.id !== personId) {
         return;
       }
       this.controller.set('timesheetSummary', result.summary);

@@ -14,10 +14,10 @@
     <div>
       Navigation:
     </div>
-    <LinkTo @route="vc.bmid-sanity-check" class="d-inline-block">
+    <LinkTo @route="vc.bmid-sanity-check" @query={{hash year=this.year}} class="d-inline-block">
       {{fa-icon "user-check" right=1}} Sanity Check
     </LinkTo>
-    <LinkTo @route="vc.bmid-print" class="d-inline-block">
+    <LinkTo @route="vc.bmid-print" @query={{hash year=this.year}} class="d-inline-block">
       {{fa-icon "print" right=1}} Export To Eventree
     </LinkTo>
   </div>
@@ -49,7 +49,7 @@
     <div class="col-auto">
       <label>Want Filter:</label>
       <ChForm::Select @name="wantFilter"
-                      @value={{this.wantsFilter}}
+                      @value={{this.wantFilter}}
                       @options={{this.wantFilterOptions}}
                       @onChange={{fn this.changeFilter 'wantFilter'}}
                       @fieldSize="sm"/>
@@ -280,7 +280,7 @@
       {{/if}}
     {{else}}
       <tr>
-        <td colspan="12">
+        <td colspan="13">
           <b class="text-danger">
             {{#if this.bmids}}
               No BMIDs match the filter criteria.

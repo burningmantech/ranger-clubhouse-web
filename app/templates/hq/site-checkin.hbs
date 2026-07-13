@@ -50,7 +50,7 @@
   </:body>
 </UiSection>
 
-<UiButton @onClick={{this.startSiteCheckIn}} class="btn-block my-4" @size="lg">
+<UiButton @onClick={{this.startSiteCheckIn}} @disabled={{this.isOnSite}} class="btn-block my-4" @size="lg">
   Begin On-Site Registration
 </UiButton>
 
@@ -61,7 +61,7 @@
     <ChForm @formId="person" @formFor={{this.person}} as |f|>
       <w.step @title="Verify Camp Information"
               @nextLabel="Save & Next"
-              @nextAction={{fn this.saveContactForm f.model}}>
+              @nextAction={{fn this.saveContactForm f.model "Camp information saved."}}>
         <p>
           Enter the camp's name, the street address, and street side (man-side, mountainside, plaza, etc.).
         </p>
@@ -74,7 +74,7 @@
       </w.step>
       <w.step @title="Verify Emergency Contact Information"
               @nextLabel="Save & Next"
-              @nextAction={{fn this.saveContactForm f.model}}>
+              @nextAction={{fn this.saveContactForm f.model "Emergency Contact info successfully saved."}}>
         {{#if this.canEditEmergencyContact}}
           <p class="ms-2">
             <b>Off-Playa:</b>
@@ -104,39 +104,41 @@
             Warning: Event radio information has not been posted yet. Radio eligibility cannot be determined.
           </UiNotice>
         {{/unless}}
-        {{#if this.eventInfo.radio_eligible}}
-          {{#if this.personEvent.asset_authorized}}
-            <p class="text-success">
-              <b>Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}</b>
-            </p>
-            <p>
-              The radio may be checked out now, or at the start of their first shift.
-            </p>
-            <AssetCheckoutForm @person={{this.person}}
-                               @assets={{this.assets}}
-                               @attachments={{this.attachments}}
-                               @eventInfo={{this.eventInfo}}
-            />
-            {{#if this.activeAssets}}
-              {{pluralize this.activeAssets.length "asset"}} checked out.
-              <HqAssetTable @assetsCheckedOut={{this.activeAssets}}
-                            @attachments={{this.attachments}}
+        {{#if this.eventInfo.radio_info_available}}
+          {{#if this.eventInfo.radio_eligible}}
+            {{#if this.personEvent.asset_authorized}}
+              <p class="text-success">
+                <b>Authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}}</b>
+              </p>
+              <p>
+                The radio may be checked out now, or at the start of their first shift.
+              </p>
+              <AssetCheckoutForm @person={{this.person}}
+                                 @assets={{this.assets}}
+                                 @attachments={{this.attachments}}
+                                 @eventInfo={{this.eventInfo}}
               />
-            {{/if}}
-            {{#if this.assets.isUpdating}}
-              <LoadingIndicator @text="Refreshing assets"/>
+              {{#if this.activeAssets}}
+                {{pluralize this.activeAssets.length "asset"}} checked out.
+                <HqAssetTable @assetsCheckedOut={{this.activeAssets}}
+                              @attachments={{this.attachments}}
+                />
+              {{/if}}
+              {{#if this.assets.isUpdating}}
+                <LoadingIndicator @text="Refreshing assets"/>
+              {{/if}}
+            {{else}}
+              <div class="text-danger">
+                While {{this.person.callsign}} is authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}},
+                {{this.person.callsign}} may not be issued radios and other gear until the Radio Checkout Agreement is
+                signed.
+              </div>
             {{/if}}
           {{else}}
-            <div class="text-danger">
-              While {{this.person.callsign}} is authorized for {{pluralize this.eventInfo.radio_max "Event Radio"}},
-              {{this.person.callsign}} may not be issued radios and other gear until the Radio Checkout Agreement is
-              signed.
-            </div>
+            <h3>Shift Radios Only</h3>
+            {{this.person.callsign}} is only authorized for a shift radio.
+            A radio will need to be checked out for each shift, and then returned at the end of the shift.
           {{/if}}
-        {{else}}
-          <h3>Shift Radios Only</h3>
-          {{this.person.callsign}} is only authorized for a shift radio.
-          A radio will need to be checked out for each shift, and then returned at the end of the shift.
         {{/if}}
       </w.step>
     {{/unless}}
@@ -159,7 +161,7 @@
       {{/if}}
     </w.step>
   </UiWizard>
-{{else if (and this.siteCheckInStarted (not this.siteCheckInFinished))}}
+{{else if this.siteCheckInStarted}}
   <UiNotice @type="danger" @icon="ban" @title="On-Site Registration Not Completed">
     You have not gone through all the Site Registration steps. Use the <b>Begin On-Site Registration</b>
     button again and make sure all the steps have been completed.

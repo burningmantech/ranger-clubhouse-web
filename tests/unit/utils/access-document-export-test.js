@@ -39,14 +39,14 @@ module('Unit | Utility | access-document-export', function () {
 
   module('deliveryTypeForDocument', function () {
     test('paid tickets follow the postal method', function (assert) {
-      assert.strictEqual(deliveryTypeForDocument({type: SPT, delivery_method: DELIVERY_POSTAL}), 'USPS');
+      assert.strictEqual(deliveryTypeForDocument({type: SPT, delivery_method: DELIVERY_POSTAL}), 'Standard Mail');
       assert.strictEqual(deliveryTypeForDocument({type: SPT, delivery_method: DELIVERY_PRIORITY}), 'USPS Priority');
-      assert.strictEqual(deliveryTypeForDocument({type: SPT, delivery_method: 'will-call'}), '', 'non-postal → empty');
+      assert.strictEqual(deliveryTypeForDocument({type: SPT, delivery_method: 'will-call'}), 'Will Call', 'non-postal → Will Call');
     });
 
     test('gift VP is credential pickup only when paired with a SC', function (assert) {
       assert.strictEqual(deliveryTypeForDocument({type: VEHICLE_PASS_GIFT, has_staff_credential: true}), 'Credential Pick Up');
-      assert.strictEqual(deliveryTypeForDocument({type: VEHICLE_PASS_GIFT, delivery_method: DELIVERY_POSTAL}), 'USPS');
+      assert.strictEqual(deliveryTypeForDocument({type: VEHICLE_PASS_GIFT, delivery_method: DELIVERY_POSTAL}), 'USPS (Standard Mail)');
     });
 
     test('SC is pickup, SAP is print-at-home', function (assert) {
@@ -58,7 +58,7 @@ module('Unit | Utility | access-document-export', function () {
   module('combinedDeliveryType', function () {
     test('SC pairs are credential pickup; others follow the ticket method', function (assert) {
       assert.strictEqual(combinedDeliveryType(STAFF_CREDENTIAL_VP, [{delivery_method: DELIVERY_POSTAL}]), 'Credential Pick Up');
-      assert.strictEqual(combinedDeliveryType(SPT_VP, [{delivery_method: DELIVERY_POSTAL}]), 'USPS');
+      assert.strictEqual(combinedDeliveryType(SPT_VP, [{delivery_method: DELIVERY_POSTAL}]), 'Standard Mail');
       assert.strictEqual(combinedDeliveryType(SPT_VP, [{delivery_method: DELIVERY_PRIORITY}]), 'USPS Priority');
       assert.strictEqual(combinedDeliveryType(SPT_VP, [{delivery_method: 'box-office'}]), 'Will Call');
     });

@@ -32,8 +32,10 @@ export const LSD_TICKET_VP = 'lsd_vp';
 // Delivery-type strings as TRS expects them.
 const CREDENTIAL_PICKUP = 'Credential Pick Up'; // Pick up in Gerlach before Box Office is running
 const WILL_CALL = 'Will Call';  // Box office
-const USPS_STANDARD = 'USPS'; // For paid items
+const USPS_STANDARD = 'Standard Mail'; // For paid items
 const USPS_PRIORITY = 'USPS Priority'; // For paid items
+const USPS_STANDARD_FOR_GIFT = 'USPS (Standard Mail)';
+const UPS = 'UPS';
 const PRINT_AT_HOME = 'Print At Home';
 
 const TRS_COLUMN = {
@@ -55,16 +57,6 @@ const PAID_AND_GIFT_TICKET_EXPORT_FORMAT = [
   ['Question: Method Of Delivery:', 'delivery_type'],
   ['Question: Nickname/Project:', 'project_name'],
   ['Question: Notes:', 'note'],
-  // Shipping addresses are not used in 2022, however the headers are still present. sigh.
-  // removed 'not_used_' prefix if later events requires address
-  ['Shipping Address (Required if Mail Delivery type selected):: Country', 'not_used_country'],
-  ['Shipping Address (Required if Mail Delivery type selected):: Full Name', 'not_used_full_name'],
-  ['Shipping Address (Required if Mail Delivery type selected):: Address', 'not_used_address1'],
-  ['Shipping Address (Required if Mail Delivery type selected):: Address Line 2', 'not_used_address2'],
-  ['Shipping Address (Required if Mail Delivery type selected):: City', 'not_used_city'],
-  ['Shipping Address (Required if Mail Delivery type selected):: State', 'not_used_state'],
-  ['Shipping Address (Required if Mail Delivery type selected):: Zip', 'not_used_zip'],
-  ['Shipping Address (Required if Mail Delivery type selected):: Phone', 'not_used_phone'],
   ['Request: $250 Ticket', 'spt'],
   ['Request: $165 Vehicle Pass', 'paid_vp'],
   ['Request: Gift Ticket', 'not_used_gift_ticket'], // We use the transfferrable gift ticket
@@ -86,41 +78,31 @@ const UNPAID_EXPORT_FORMAT = [
   ['Question: Method of Delivery:', 'delivery_type'],
   ['Question: Nickname/Project:', 'project_name'],   // callsign
   ['Question: Notes:', 'note'],
-  // Shipping addresses are not used in 2022; however, the headers are still present. Sigh.
-  // Remove the 'not_used_' prefix if later events require addresses
-  ['Shipping Address (Required if Mail Delivery type selected):: Country', 'not_used_country'],
-  ['Shipping Address (Required if Mail Delivery type selected):: Full Name', 'not_used_full_name'],
-  ['Shipping Address (Required if Mail Delivery type selected):: Address', 'not_used_address1'],
-  ['Shipping Address (Required if Mail Delivery type selected):: Address Line 2', 'not_used_address2'],
-  ['Shipping Address (Required if Mail Delivery type selected):: City', 'not_used_city'],
-  ['Shipping Address (Required if Mail Delivery type selected):: State', 'not_used_state'],
-  ['Shipping Address (Required if Mail Delivery type selected):: Zip', 'not_used_zip'],
-  ['Shipping Address (Required if Mail Delivery type selected):: Phone', 'not_used_phone'],
   //['Request: Gift Ticket', 'gift_ticket'],
   ['Request: Gift Vehicle Pass', 'gift_vp'],
-  ['Request: Setup Access Pass (SAP) 8/26 &amp; Later', 'sap_0826'],
-  ['Request: Setup Access Pass (SAP) 8/27 &amp; Later', 'sap_0827'],
-  ['Request: Setup Access Pass (SAP) 8/28 &amp; Later', 'sap_0828'],
-  ['Request: Setup Access Pass (SAP) 8/29 &amp; Later', 'sap_0829'],
-  ['Request: Setup Access Pass (SAP) 8/8 &amp; Later', 'sap_0808'],
-  ['Request: Setup Access Pass (SAP) 8/9 &amp; Later', 'sap_0809'],
-  ['Request: Setup Access Pass (SAP) 8/10 &amp; Later', 'sap_0810'],
-  ['Request: Setup Access Pass (SAP) 8/11 &amp; Later', 'sap_0811'],
-  ['Request: Setup Access Pass (SAP) 8/12 &amp; Later', 'sap_0812'],
-  ['Request: Setup Access Pass (SAP) 8/13 &amp; Later', 'sap_0813'],
-  ['Request: Setup Access Pass (SAP) 8/14 &amp; Later', 'sap_0814'],
-  ['Request: Setup Access Pass (SAP)  8/15 &amp; Later', 'sap_0815'],
-  ['Request: Setup Access Pass (SAP) 8/16 &amp; Later', 'sap_0816'],
-  ['Request: Setup Access Pass (SAP) 8/17 &amp; Later', 'sap_0817'],
-  ['Request: Setup Access Pass (SAP) 8/18 &amp; Later', 'sap_0818'],
-  ['Request: Setup Access Pass (SAP) 8/19 &amp; Later', 'sap_0819'],
-  ['Request: Setup Access Pass (SAP) 8/20 &amp; Later', 'sap_0820'],
-  ['Request: Setup Access Pass (SAP) 8/21 &amp; Later', 'sap_0821'],
-  ['Request: Setup Access Pass (SAP) 8/22 &amp; Later', 'sap_0822'],
-  ['Request: Setup Access Pass (SAP) 8/23 &amp; Later', 'sap_0823'],
-  ['Request: Setup Access Pass (SAP) 8/24 &amp; Later', 'sap_0824'],
-  ['Request: Setup Access Pass (SAP) 8/25 &amp; Later', 'sap_0825'],
-  ['Request: Setup Access Pass (SAP) - Anytime', 'sap_anytime'],
+  ['Request: Setup Access Pass 8/26 &amp; Later', 'sap_0826'],
+  ['Request: Setup Access Pass 8/27 &amp; Later', 'sap_0827'],
+  ['Request: Setup Access Pass 8/28 &amp; Later', 'sap_0828'],
+  ['Request: Setup Access Pass 8/29 &amp; Later', 'sap_0829'],
+  ['Request: Setup Access Pass 8/8 &amp; Later', 'sap_0808'],
+  ['Request: Setup Access Pass 8/9 &amp; Later', 'sap_0809'],
+  ['Request: Setup Access Pass 8/10 &amp; Later', 'sap_0810'],
+  ['Request: Setup Access Pass 8/11 &amp; Later', 'sap_0811'],
+  ['Request: Setup Access Pass 8/12 &amp; Later', 'sap_0812'],
+  ['Request: Setup Access Pass 8/13 &amp; Later', 'sap_0813'],
+  ['Request: Setup Access Pass 8/14 &amp; Later', 'sap_0814'],
+  ['Request: Setup Access Pass  8/15 &amp; Later', 'sap_0815'],
+  ['Request: Setup Access Pass 8/16 &amp; Later', 'sap_0816'],
+  ['Request: Setup Access Pass 8/17 &amp; Later', 'sap_0817'],
+  ['Request: Setup Access Pass 8/18 &amp; Later', 'sap_0818'],
+  ['Request: Setup Access Pass 8/19 &amp; Later', 'sap_0819'],
+  ['Request: Setup Access Pass 8/20 &amp; Later', 'sap_0820'],
+  ['Request: Setup Access Pass 8/21 &amp; Later', 'sap_0821'],
+  ['Request: Setup Access Pass 8/22 &amp; Later', 'sap_0822'],
+  ['Request: Setup Access Pass 8/23 &amp; Later', 'sap_0823'],
+  ['Request: Setup Access Pass 8/24 &amp; Later', 'sap_0824'],
+  ['Request: Setup Access Pass 8/25 &amp; Later', 'sap_0825'],
+  ['Request: Setup Access Pass - Anytime', 'sap_anytime'],
   ['Request: Staff Credential Pickup 8/14 &amp; After', 'sc_0814'],
   ['Request: Staff Credential Pickup 8/13 &amp; After', 'sc_0813'],
   ['Request: Staff Credential Pickup 8/26 &amp; After', 'sc_0826'],
@@ -141,9 +123,9 @@ const UNPAID_EXPORT_FORMAT = [
   ['Request: Staff Credential Pickup 8/21 &amp; After', 'sc_0821'],
   ['Request: Staff Credential Pickup 8/22 &amp; After', 'sc_0822'],
   ['Request: Staff Credential Pickup 8/23 &amp; After', 'sc_0823'],
-  ['Request: Staff Credential Pickup 8/24 &amp; After', 'sc_0823'],
+  ['Request: Staff Credential Pickup 8/24 &amp; After', 'sc_0824'],
   ['Request: Staff Credential Pickup Anytime', 'sc_anytime'],
-  ['Request: Staff Credential Pickup 8/25 &amp; After', 'sc_0803'],
+  ['Request: Staff Credential Pickup 8/25 &amp; After', 'sc_0825'],
 ];
 
 const LSD_EXPORT_FORMAT = [
@@ -219,24 +201,24 @@ export function trsColumnAndDate(doc) {
 
 export function deliveryTypeForDocument(doc) {
   const isPostal = (doc.delivery_method === DELIVERY_POSTAL || doc.delivery_method === DELIVERY_PRIORITY);
-  let postalCode = '';
+  // Non-postal delivery (e.g. will_call) is box-office Will Call, matching combinedDeliveryType().
+  let postalDeliveryType = WILL_CALL;
   if (isPostal) {
-    postalCode = doc.delivery_method === DELIVERY_PRIORITY ? USPS_PRIORITY : USPS_STANDARD;
+    postalDeliveryType = doc.delivery_method === DELIVERY_PRIORITY ? USPS_PRIORITY : USPS_STANDARD;
   }
 
   switch (doc.type) {
     case SPT:
-    case GIFT_TICKET:
     case LSD_TICKET:
     case VEHICLE_PASS_LSD:
-      return postalCode;
+      return postalDeliveryType;
 
     case VEHICLE_PASS_GIFT:
       // a Gift VP should always be paired with a SC but ya never know.
-      return doc.has_staff_credential ? CREDENTIAL_PICKUP : postalCode;
+      return doc.has_staff_credential ? CREDENTIAL_PICKUP : (isPostal ? USPS_STANDARD_FOR_GIFT : UPS);
 
     case VEHICLE_PASS_SP:
-      return postalCode;
+      return postalDeliveryType;
 
     case STAFF_CREDENTIAL:
       return CREDENTIAL_PICKUP;
@@ -244,6 +226,9 @@ export function deliveryTypeForDocument(doc) {
     case WAP:
     case WAPSO:
       return PRINT_AT_HOME;
+
+    case GIFT_TICKET:
+      return isPostal ? USPS_STANDARD_FOR_GIFT : UPS;
   }
 
   return undefined;

@@ -36,3 +36,6 @@
 
 # broccoli-debug
 /DEBUG/
+
+/.claude/launch.json
+

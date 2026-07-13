@@ -2,10 +2,10 @@
   <h1>Export {{this.year}} BMIDs To Eventree</h1>
   <nav class="nav">
     <div class="nav-text">Navigation:</div>
-    <LinkTo @route="vc.bmid-sanity-check" class="nav-link">
+    <LinkTo @route="vc.bmid-sanity-check" @query={{hash year=this.year}} class="nav-link">
       {{fa-icon "user-check"}} Sanity Check
     </LinkTo>
-    <LinkTo @route="vc.bmid" class="nav-link">
+    <LinkTo @route="vc.bmid" @query={{hash year=this.year}} class="nav-link">
       {{fa-icon "edit" right=1}} Manage BMIDs
     </LinkTo>
     <a href="#export-list" class="nav-link">Jump to previous exports</a>
@@ -159,7 +159,7 @@
 
         <tbody>
         {{#each this.viewBmids as |bmid|}}
-          <tr class="{{if (eq bmid.status "failed") "bg-danger"}}">
+          <tr>
             <td><Input @type="checkbox" @checked={{bmid.selected}} {{on "change" (fn this.toggleBmid bmid)}}/></td>
             <td>
               {{bmid.statusLabel}}
@@ -186,12 +186,6 @@
             </td>
             <td class="text-center">{{if bmid.org_vehicle_insurance "M" "-"}}</td>
             <td class="text-center">
-              {{#if bmid.allocated_showers}}
-                <AllocatedProvisionIcon/>
-              {{/if}}
-              {{#if bmid.earned_showers}}
-                <EarnedProvisionIcon/>
-              {{/if}}
               {{if bmid.showers_granted "S" "-"}}
             </td>
             <td>

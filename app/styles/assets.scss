@@ -1,0 +1,115 @@
+// /ops/assets — controls bar, legend, status stripes/chips, notes cell.
+// Mirrors the scan-first vocabulary in DESIGN-SKILLS.md (.roster-controls,
+// .roster-legend, .uf-row severity stripes, .intake-rank-chip pills).
+
+// Semantic severity colors, defined once so swatch and row stripe stay in sync.
+$asset-expired-color: var(--bs-danger);
+$asset-note-color: var(--bs-blue);
+$asset-normal-color: var(--bs-gray-500);
+$asset-checked-out-color: var(--bs-warning);
+
+.asset-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  background: #f0f2f5;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.375rem;
+}
+
+.asset-controls-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.asset-controls-label {
+  font-weight: 600;
+  color: var(--bs-gray-700);
+}
+
+.asset-controls-count {
+  padding: 0.375rem 0.75rem;
+  background: var(--bs-white);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 1rem;
+  font-weight: 600;
+  color: #3f454d;
+}
+
+.asset-controls-divider {
+  width: 1px;
+  align-self: stretch;
+  background: var(--bs-border-color);
+  flex-shrink: 0;
+}
+
+.asset-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.375rem;
+}
+
+.asset-legend-label {
+  font-weight: 600;
+  color: #3f454d;
+}
+
+.asset-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  color: var(--bs-gray-700);
+}
+
+.asset-legend-swatch {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.asset-legend-swatch-expired { background: $asset-expired-color; }
+.asset-legend-swatch-note    { background: $asset-note-color; }
+.asset-legend-swatch-normal  { background: $asset-normal-color; }
+
+// Row severity stripe on the first cell (robust regardless of border-collapse).
+// Precedence: expired > note > normal. Reuses the same semantic colors as the swatches.
+.asset-row-expired > td:first-child { border-left: 6px solid $asset-expired-color; }
+.asset-row-checked-out > td:first-child { border-left: 6px solid $asset-checked-out-color; }
+.asset-row-note    > td:first-child { border-left: 6px solid $asset-note-color; }
+.asset-row-normal  > td:first-child { border-left: 6px solid transparent; }
+
+.asset-notes-cell {
+  max-width: 22rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.asset-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 1rem;
+  font-weight: 600;
+}
+
+.asset-status-chip-expired { color: var(--bs-danger-text-emphasis); background: var(--bs-danger-bg-subtle); }
+.asset-status-chip-note    { color: var(--bs-primary-text-emphasis); background: var(--bs-primary-bg-subtle); }
+.asset-status-chip-checked-out    { color: var(--bs-warning-text-emphasis); background: var(--bs-warning-bg-subtle); }
+
+.asset-badge {
+  font-size: 0.9rem;
+  padding: 0.35rem 0.7rem;
+}

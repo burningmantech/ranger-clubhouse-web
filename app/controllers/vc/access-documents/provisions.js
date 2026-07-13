@@ -1,7 +1,8 @@
 import ClubhouseController from "clubhouse/controllers/clubhouse-controller";
 import {cached, tracked} from '@glimmer/tracking';
 import {action} from '@ember/object';
-import {AVAILABLE, CLAIMED, BANKED, SUBMITTED, TypeOptions, TypeLabels} from "clubhouse/models/provision";
+import {AVAILABLE, CLAIMED, BANKED, SUBMITTED, MEALS, TypeOptions, TypeLabels} from "clubhouse/models/provision";
+import {buildMealsLabel, MEALS_FULL_LABELS} from "clubhouse/models/bmid";
 
 const TYPE_OPTIONS_WITH_ALL = [...TypeOptions];
 TYPE_OPTIONS_WITH_ALL.unshift(['All', 'all']);
@@ -60,8 +61,16 @@ export default class VcAccessDocumentsProvisionsController extends ClubhouseCont
   }
 
   @action
-  typeLabel(type) {
-    return TypeLabels[type] ?? type;
+  typeLabel(provision) {
+    if (provision.type === MEALS) {
+      return buildMealsLabel({
+        pre: provision.pre_event_meals,
+        event: provision.event_week_meals,
+        post: provision.post_event_meals
+      }, MEALS_FULL_LABELS) + ' Eat Pass';
+    }
+
+    return TypeLabels[provision.type] ?? provision.type;
   }
 
   @action
@@ -69,7 +78,7 @@ export default class VcAccessDocumentsProvisionsController extends ClubhouseCont
     const rows = this.viewProvisions.map((p) => ({
       id: `RP-${p.id}`,
       callsign: p.person.callsign,
-      type: this.typeLabel(p.type),
+      type: this.typeLabel(p),
       status: p.status,
       is_allocated: p.is_allocated,
       item_count: p.item_count > 0 ? p.item_count : '',

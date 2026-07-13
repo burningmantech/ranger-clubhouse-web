@@ -18,7 +18,6 @@ export default class TrainingCapacityRoute extends ClubhouseRoute {
     controller.slots = slots;
     controller.uniqueTrainers = unique_trainers;
     controller.training = this.modelFor('training');
-    controller.totalSeats = _.sumBy(slots, 'max');
     controller.totalSignups = _.sumBy(slots, 'signed_up');
     controller.totalMax = _.sumBy(slots, 'max');
     controller.totalPNVs = _.sumBy(slots, 'pnv_count');

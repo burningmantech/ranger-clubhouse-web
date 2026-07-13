@@ -462,7 +462,6 @@
             @formFor={{this.addPersonForm}}
             @changeSet={{false}}
             @onFormChange={{this.searchPeopleAction}}
-            @onEscape={{this.cancelSearchAction}}
             as |f|>
       <Modal.body>
         {{#if (and this.addingTrainer this.addTrainerOptions)}}

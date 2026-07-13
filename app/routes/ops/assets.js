@@ -1,6 +1,7 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 import requestYear from 'clubhouse/utils/request-year';
 import {ADMIN, EDIT_ASSETS} from 'clubhouse/constants/roles';
+import {FILTER_NAMES} from 'clubhouse/controllers/ops/assets';
 
 export default class OpsAssetsRoute extends ClubhouseRoute {
   roleRequired = [ADMIN, EDIT_ASSETS];
@@ -13,20 +14,17 @@ export default class OpsAssetsRoute extends ClubhouseRoute {
     const year = requestYear(params);
     this.year = year;
     this.store.unloadAll('asset');
-    return this.store.query('asset', {year});
+    return this.store.query('asset', {year, include_checked_out: 1});
   }
 
   setupController(controller, model) {
     controller.assetForHistory = null;
     controller.assets = model;
-    controller.descriptionFilter = 'all';
-    controller.entityAssignmentFilter = 'all';
     controller.entry = null;
-    controller.expireFilter = 'all';
-    controller.groupFilter = 'all';
-    controller.tempIdFilter = 'all';
-    controller.typeFilter = 'all';
-    controller.orderNumberFilter = 'all';
+
+    // year is a refreshModel queryParam, so reset all filters on (re)entry.
+    FILTER_NAMES.forEach((name) => (controller[name] = 'all'));
+
     controller.year = this.year;
   }
 }

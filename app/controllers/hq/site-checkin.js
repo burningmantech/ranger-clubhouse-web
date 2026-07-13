@@ -2,6 +2,11 @@ import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 import {inject as service} from '@ember/service';
+import {TYPE_RADIO} from 'clubhouse/models/asset';
+import {EDIT_EMERGENCY_CONTACT} from 'clubhouse/constants/roles';
+import Ember from 'ember';
+
+const escapeExpression = Ember.Handlebars.Utils.escapeExpression;
 
 // User-facing copy kept out of control flow.
 const NO_RADIO_CHECKED_OUT_TITLE = 'No Event Radios Checked Out';
@@ -14,24 +19,31 @@ export default class HqSiteCheckinController extends ClubhouseController {
   @service saveModel;
 
   @tracked isSubmitting = false;
-  @tracked isOnSite = false;
   @tracked showSiteCheckInWizard = false;
   @tracked siteCheckInStarted = false;
   @tracked siteCheckInFinished = false;
+  @tracked canEditEmergencyContact = false;
 
   /**
    * Single per-entry reset; called from the route's setupController so the field
    * names live once, next to their @tracked declarations. Resets the full set
    * (including isSubmitting) so nothing leaks across person navigation.
-   *
-   * @param {Model} person the person record being checked in
    */
-  resetState(person) {
+  resetState() {
     this.isSubmitting = false;
-    this.isOnSite = person?.on_site ?? false;
     this.showSiteCheckInWizard = false;
     this.siteCheckInStarted = false;
     this.siteCheckInFinished = false;
+    // PII gate is UX-only; ranger-clubhouse-api enforces the actual write
+    // authorization on emergency_contact/camp_location.
+    this.canEditEmergencyContact =
+      this.session.isAdmin
+      || this.session.isEMOPEnabled
+      || this.session.hasRole(EDIT_EMERGENCY_CONTACT);
+  }
+
+  get isOnSite() {
+    return this.person?.on_site;
   }
 
   get activeAssets() {
@@ -53,9 +65,8 @@ export default class HqSiteCheckinController extends ClubhouseController {
   }
 
   @action
-  async saveContactForm(model, callback) {
-    const ok = await this.saveModel
-      .save({model, message: 'Emergency Contact info successfully saved.', owner: this});
+  async saveContactForm(model, message, callback) {
+    const ok = await this.saveModel.save({model, message, owner: this});
     if (ok) {
       callback?.();
     }
@@ -87,8 +98,10 @@ export default class HqSiteCheckinController extends ClubhouseController {
       message: 'Person has been successfully marked as ON SITE.',
       owner: this,
     });
+    if (this.person !== person) {
+      return;
+    }
     if (ok) {
-      this.isOnSite = true;
       this.showSiteCheckInWizard = false;
       this.siteCheckInFinished = true;
       this.siteCheckInStarted = false;
@@ -97,10 +110,11 @@ export default class HqSiteCheckinController extends ClubhouseController {
 
   @action
   checkForRadio(callback) {
-    if (this.allowedEventRadio && !this.activeAssets.length) {
+    const hasRadio = this.activeAssets.some((ap) => ap.asset?.type === TYPE_RADIO);
+    if (this.allowedEventRadio && !hasRadio) {
       this.modal.confirm(
         NO_RADIO_CHECKED_OUT_TITLE,
-        NO_RADIO_CHECKED_OUT_BODY(this.person.callsign),
+        NO_RADIO_CHECKED_OUT_BODY(escapeExpression(this.person.callsign)),
         () => callback()
       );
     } else {

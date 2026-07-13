@@ -7,10 +7,14 @@ export default class VcApplicationsRecordRoute extends ClubhouseRoute {
   async model({application_id}) {
     try {
       const application = await this.store.queryRecord('prospective-application', {application_id});
+      const [related, VCs] = await Promise.all([
+        this.ajax.request(`prospective-application/${application.id}/related`),
+        this.ajax.request(`position/${VOLUNTEER_COORDINATOR}/grants`),
+      ]);
       return {
         application,
-        related: (await this.ajax.request(`prospective-application/${application.id}/related`)).applications,
-        VCs: (await this.ajax.request(`position/${VOLUNTEER_COORDINATOR}/grants`)).people,
+        related: related.applications,
+        VCs: VCs.people,
       };
     } catch (response) {
       if (response.status === 404 || response instanceof NotFoundError) {
@@ -31,9 +35,9 @@ export default class VcApplicationsRecordRoute extends ClubhouseRoute {
     if (application.isProcessingCallsign) {
       id = 'handles';
     } else if ((application.isStatusApproved && application.hasPersonalInfoIssues) || application.isStatusHoldPiiIssues) {
-      id = 'personal-info';
+      id = 'section-personal-info';
     } else {
-      id = 'details';
+      id = 'section-details';
     }
 
     if (id) {
@@ -41,5 +45,15 @@ export default class VcApplicationsRecordRoute extends ClubhouseRoute {
         this.scroll.scrollToElement(`#${id}`)
       }), 100);
     }
+  }
+
+  resetController(controller) {
+    controller.showSendEmailDialog = false;
+    controller.showAssignDialog = false;
+    controller.showStatusDialog = false;
+    controller.showStatusWithMessageDialog = false;
+    controller.newStatus = null;
+    controller.askForMessage = null;
+    controller.isSubmitting = false;
   }
 }

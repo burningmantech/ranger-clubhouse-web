@@ -4,10 +4,10 @@
   <ul class="list-inline">
     <li class="list-inline-item">Navigation:</li>
     <li class="list-inline-item">
-      <LinkTo @route="vc.bmid">{{fa-icon "id-card"}} Manage BMIDs</LinkTo>
+      <LinkTo @route="vc.bmid" @query={{hash year=this.year}}>{{fa-icon "id-card"}} Manage BMIDs</LinkTo>
     </li>
     <li class="list-inline-item">
-      <LinkTo @route="vc.bmid-print">{{fa-icon "print"}} Export To Eventree</LinkTo>
+      <LinkTo @route="vc.bmid-print" @query={{hash year=this.year}}>{{fa-icon "print"}} Export To Eventree</LinkTo>
     </li>
   </ul>
   </p>

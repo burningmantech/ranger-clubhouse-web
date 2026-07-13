@@ -2,7 +2,6 @@
   @formId="application"
   @sectionId="details"
   @formFor={{@application}}
-  @validator={{this.applicationValidation}}
   @onSubmit={{this.saveApplication}}
   @editButtonNoRightAlign={{true}}
 >
@@ -85,7 +84,6 @@
           <UiBadge @type="success">
             {{fa-icon "check" right=1}} paragraph okay
           </UiBadge>
-          <span class="text-success"></span>
         {{else if (eq @application.why_volunteer_review 'problem')}}
           <UiBadge @type="danger">
             {{fa-icon "ban" right=1}} problem paragraph
@@ -141,18 +139,6 @@
     </UiGridTable>
   </:view>
   <:edit as |f|>
-    {{!--
-    <FormRow>
-      <FormLabel @fixed={{true}}>
-        Experience
-      </FormLabel>
-      <div class="col-auto">
-        <f.select @name="experience"
-                  @options={{this.experienceOptions}}
-        />
-      </div>
-    </FormRow>
-    --}}
     <FormRow>
       <FormLabel @fixed={{true}}>
         BRC Events Attended
