@@ -13,7 +13,7 @@ import {
   VEHICLE_PASS_LSD,
   WAP,
   WAPSO,
-  TypeShortLabels, DeliveryMethodLabels
+  TypeShortLabels, DeliveryMethodLabels, DELIVERY_PRIORITY
 } from 'clubhouse/models/access-document';
 import {ALPHA, PROSPECTIVE} from 'clubhouse/constants/person_status';
 import {
@@ -430,6 +430,9 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
 
   @action
   deliveryLabel(row) {
+    if (row.type === GIFT_TICKET && row.delivery_type === DELIVERY_PRIORITY) {
+      return 'UPS';
+    }
     return DeliveryMethodLabels[row.delivery_type] ?? row.delivery_type;
   }
 }
