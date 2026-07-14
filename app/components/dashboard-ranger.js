@@ -62,11 +62,16 @@ const STEPS = [
       return {
         result: URGENT,
         message: htmlSafe(`
-<p>Because no ticket has been claimed, nor an In-Person Training signup found,
-your BMID will NOT be printed.</p>
-<p>
-This warning will disappear and your BMID will be sent to the printers once you either sign up for an In-Person Training or claim a ticket or SAP (excluding Significant Other SAPs).
-</p>
+  <b>To fix this, you can:</b>
+<div class="space-y-1 my-2">
+  <div>
+    &bullet; Sign up for In-Person Training
+  </div>
+  <div class="font-semibold ms-5">&mdash; OR &mdash;</div>
+  <div>
+    &bullet; Claim a ticket or SAP (not Significant Other SAP)
+  </div>
+  </div>
 Email the Volunteer Coordinators ASAP if you intend to Ranger this event.
 `),
         email: 'VCEmail'
@@ -359,6 +364,7 @@ function matchPeriod(actionPeriod, currentPeriod, doesNotEqual) {
 export default class DashboardRangerComponent extends Component {
   @service session;
   @service storePayload;
+
   constructor() {
     super(...arguments);
     this.isAfterEvent = this.args.milestones.period === AFTER_EVENT;
