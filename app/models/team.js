@@ -20,6 +20,7 @@ export default class TeamModel extends Model {
   @attr('boolean', {defaultValue: false}) awards_eligible;
   @attr('boolean', {defaultValue: false}) awards_auto_grant;
   @attr('boolean', {defaultValue: false}) awards_grants_service_year;
+  @attr('boolean', {defaultValue: false}) include_in_directory;
   @attr('string') description;
   @attr('string') email;
 
