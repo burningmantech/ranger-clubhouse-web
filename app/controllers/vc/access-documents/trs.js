@@ -20,6 +20,7 @@ import {
   STAFF_CREDENTIAL_VP,
   SPT_VP,
   LSD_TICKET_VP,
+  UPS,
   trsColumnAndDate,
   deliveryTypeForDocument,
   combinedDeliveryType,
@@ -431,7 +432,7 @@ export default class VcAccessDocumentsTrsController extends ClubhouseController 
   @action
   deliveryLabel(row) {
     if (row.type === GIFT_TICKET && row.delivery_type === DELIVERY_PRIORITY) {
-      return 'UPS';
+      return UPS;
     }
     return DeliveryMethodLabels[row.delivery_type] ?? row.delivery_type;
   }
