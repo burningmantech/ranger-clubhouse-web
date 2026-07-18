@@ -182,7 +182,7 @@ export function trsColumnAndDate(doc) {
         trsColumn = dayjs(doc.access_date).format('MMDD');
       }
       trsColumn = TRS_COLUMN[doc.type] + '_' + trsColumn;
-      break;
+       break;
 
     default:
       trsColumn = TRS_COLUMN[doc.type];
@@ -235,9 +235,7 @@ export function deliveryTypeForDocument(doc) {
       } else if (doc.delivery_method === DELIVERY_WILL_CALL) {
         return WILL_CALL;
       }
-
-      this.modal.info('A bug tripped over', `I don't know what ${doc.delivery_method} is for access doc id #{doc.id}`);
-      return undefined;
+      break;
   }
 
   return undefined;

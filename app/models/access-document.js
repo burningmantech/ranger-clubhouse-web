@@ -1,7 +1,6 @@
 import Model, {attr} from '@ember-data/model';
 import {isEmpty} from '@ember/utils';
 import dayjs from 'dayjs';
-import {UPS} from "clubhouse/utils/access-document-export";
 
 export const GIFT_TICKET = 'gift_ticket';
 export const LSD_TICKET = 'lsd_ticket';
@@ -252,7 +251,7 @@ export default class AccessDocumentModel extends Model {
 
   get deliveryMethodLabel() {
     if (this.type === GIFT_TICKET && this.delivery_method === DELIVERY_PRIORITY) {
-      return UPS;
+      return 'UPS';
     }
     return DeliveryMethodLabels[this.delivery_method] ?? this.delivery_method;
   }
