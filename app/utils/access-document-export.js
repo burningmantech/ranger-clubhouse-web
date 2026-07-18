@@ -11,7 +11,7 @@ import {
   VEHICLE_PASS_GIFT,
   VEHICLE_PASS_LSD,
   WAP,
-  WAPSO,
+  WAPSO, DELIVERY_WILL_CALL,
 } from 'clubhouse/models/access-document';
 
 /**
@@ -35,7 +35,7 @@ const WILL_CALL = 'Will Call';  // Box office
 const USPS_STANDARD = 'Standard Mail'; // For paid items
 const USPS_PRIORITY = 'USPS Priority'; // For paid items
 const USPS_STANDARD_FOR_GIFT = 'USPS (Standard Mail)';
-const UPS = 'UPS';
+export const UPS = 'UPS';
 const PRINT_AT_HOME = 'Print At Home';
 
 const TRS_COLUMN = {
@@ -182,7 +182,7 @@ export function trsColumnAndDate(doc) {
         trsColumn = dayjs(doc.access_date).format('MMDD');
       }
       trsColumn = TRS_COLUMN[doc.type] + '_' + trsColumn;
-      break;
+       break;
 
     default:
       trsColumn = TRS_COLUMN[doc.type];
@@ -228,7 +228,14 @@ export function deliveryTypeForDocument(doc) {
       return PRINT_AT_HOME;
 
     case GIFT_TICKET:
-      return isPostal ? USPS_STANDARD_FOR_GIFT : UPS;
+      if (doc.delivery_method === DELIVERY_POSTAL) {
+        return USPS_STANDARD_FOR_GIFT
+      } else if (doc.delivery_method === DELIVERY_PRIORITY) {
+        return UPS;
+      } else if (doc.delivery_method === DELIVERY_WILL_CALL) {
+        return WILL_CALL;
+      }
+      break;
   }
 
   return undefined;
