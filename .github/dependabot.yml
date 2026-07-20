@@ -10,6 +10,8 @@ updates:
       - dependency-type: "direct"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 1
     labels:
       - "Task"
@@ -18,5 +20,7 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    cooldown:
+      default-days: 7
     labels:
       - "Task"
