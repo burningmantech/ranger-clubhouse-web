@@ -19,6 +19,9 @@ export default class DatetimePickerComponent extends Component {
       today: 'Today',
       clear: 'Clear',
       locale: localeEn,
+      // Let arrow keys / Shift+arrows move and highlight text in the input
+      // instead of navigating the calendar grid, which steals keyboard focus.
+      keyboardNav: false,
       onSelect:  ({formattedDate})  => this.args.onChange(formattedDate),
     }
 
