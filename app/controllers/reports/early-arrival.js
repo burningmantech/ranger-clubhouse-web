@@ -10,7 +10,7 @@ const CSV_COLUMNS = [
   {title: 'BMID Status', key: 'bmid_status_label'},
   {title: 'On Site', key: 'on_site', yesno: true},
   {title: 'Radio Agreement', key: 'radio_agreement', yesno: true},
-  {title: 'Radio Count', key: 'radio_count'},
+  {title: 'Radio Count', key: 'radios_allowed'},
   {title: 'Radio Barcode', key: 'radio_barcodes'},
   {title: 'Radio Type', key: 'radio_types'},
 ];
