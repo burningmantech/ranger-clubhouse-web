@@ -6,6 +6,7 @@ export const HQ_TODO_END_SHIFT = 'end-shift';
 export const HQ_TODO_ISSUE_RADIO = 'issue-radio';
 export const HQ_TODO_MEAL_POG = 'meal-pog';
 export const HQ_TODO_MEAL_POG_NONE = 'no-meal-pog';
+export const HQ_TODO_MEAL_POG_SELF_SERVE = 'self-serve-meal-pog';
 export const HQ_TODO_NO_RADIO = 'no-radio';
 export const HQ_TODO_START_SHIFT = 'start-shift';
 export const HQ_TODO_VERIFY_TIMESHEET = 'verify-timesheet';
@@ -20,6 +21,7 @@ export const HqTodoLabels = {
   [HQ_TODO_ISSUE_RADIO]: 'Checkout Radio',
   [HQ_TODO_MEAL_POG]: 'Issue Meal Pog (if qualified)',
   [HQ_TODO_MEAL_POG_NONE]: 'No Meal Pog - Has Meal Pass',
+  [HQ_TODO_MEAL_POG_SELF_SERVE]: 'No Meal Pog - Cadre Issues The Pogs',
   [HQ_TODO_NO_RADIO]: 'Working Burn Perimeter - May not need a radio',
   [HQ_TODO_START_SHIFT]: 'Start A Shift',
   [HQ_TODO_VERIFY_TIMESHEET]: 'Review Timesheet',

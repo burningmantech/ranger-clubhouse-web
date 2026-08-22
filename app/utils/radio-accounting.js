@@ -50,9 +50,11 @@ export function radioAccounting(assetsCheckedOut, radioMax) {
  * @param {boolean} options.isOffDuty true when the person is NOT currently on duty
  * @param {boolean} options.noMoreScheduled true when there are no more upcoming shifts
  * @param {object} options.accounting result of {@link radioAccounting}
+ * @param {boolean} [options.assetAuthorized] false when the Radio Checkout Agreement has
+ *   not been signed - no radio may be issued, so never suggest issuing one.
  * @returns {string|null} an HQ_TODO_* radio task constant, or null when none applies
  */
-export function computeRadioTodo({isOffDuty, noMoreScheduled, accounting}) {
+export function computeRadioTodo({isOffDuty, noMoreScheduled, accounting, assetAuthorized = true}) {
   const {collectCount, eventRadios, radioMax} = accounting;
 
   if (!isOffDuty) {
@@ -75,7 +77,7 @@ export function computeRadioTodo({isOffDuty, noMoreScheduled, accounting}) {
       return HQ_TODO_COLLECT_RADIO_IF_DONE;
     } else if (eventRadios < radioMax) {
       // Below their event radio issue count,
-      return HQ_TODO_ISSUE_RADIO;
+      return assetAuthorized ? HQ_TODO_ISSUE_RADIO : null;
     }
     // else, has an event radio, and still working - don't nag.
     return null;
@@ -84,5 +86,5 @@ export function computeRadioTodo({isOffDuty, noMoreScheduled, accounting}) {
     return HQ_TODO_COLLECT_RADIO;
   }
   // No radio - Give 'em one.
-  return HQ_TODO_ISSUE_RADIO;
+  return assetAuthorized ? HQ_TODO_ISSUE_RADIO : null;
 }

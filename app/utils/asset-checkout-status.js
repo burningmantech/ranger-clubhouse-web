@@ -17,7 +17,3 @@ export const ENTITY_ASSIGNED_MESSAGE = (barcode, entity) =>
 
 export const UNKNOWN_STATUS_MESSAGE = (status) =>
   `A bug was tripped over. The status ${status} is not known.`;
-
-export const NAVIGATE_AWAY_WARNING =
-  'A barcode was entered, yet was not checked out. Either complete the check out process, ' +
-  'or blank the barcode field before clicking on another tab.';

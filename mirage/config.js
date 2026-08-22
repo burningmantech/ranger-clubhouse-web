@@ -206,6 +206,7 @@ function routes() {
           date: now(),
           status: 'pass'
         }],
+        event_period: 'event',
         radio_eligible: 1,
         radio_max: 1,
         meals: '',
@@ -369,6 +370,50 @@ function routes() {
 
   this.get('/api/person-certification', () => {
     return {};
+  });
+
+  // ---- HQ shift page endpoints -----------------------------------------
+
+  // Backs the hq.shift route's model() hook.
+  this.get('/api/person/:id/schedule/upcoming', () => {
+    return {
+      upcoming: [],
+      imminent: [],
+      locate_start_minutes: 45,
+      may_start_minutes: 15,
+    };
+  });
+
+  this.get('/api/person/:id/schedule/recommendations', () => {
+    return {burn_weekend_shift: false};
+  });
+
+  // Backs store.query('timesheet', {person_id, year, check_times: 1}).
+  this.get('/api/timesheet', ({timesheets}, request) => {
+    const {person_id} = request.queryParams;
+    let rows = timesheets.all().models.map((m) => m.attrs);
+
+    if (person_id !== undefined) {
+      rows = rows.filter((t) => String(t.person_id) === String(person_id));
+    }
+
+    return {timesheet: rows};
+  });
+
+  // Pog config + the person's pogs, loaded by <HqPogs> when it renders.
+  this.get('/api/person-pog/config', () => {
+    return {config: {meal_half_pog_enabled: false, shower_pog_threshold: 40}};
+  });
+
+  this.get('/api/person-pog', ({personPogs}, request) => {
+    const {person_id} = request.queryParams;
+    let rows = personPogs.all().models.map((m) => m.attrs);
+
+    if (person_id !== undefined) {
+      rows = rows.filter((p) => String(p.person_id) === String(person_id));
+    }
+
+    return {person_pog: rows};
   });
 
   // ---- Asset checkout / history endpoints ------------------------------

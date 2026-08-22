@@ -1,24 +1,12 @@
-<ModalDialog @title="Outstanding Item(s)" @onEscape={{@onClose}} as |modal|>
+<ModalDialog @title="Outstanding Item(s)" @isInline={{@isInline}} @modalId={{@modalId}} as |modal|>
   <modal.body>
-    <strong class="text-danger">{{pluralize this.pendingItems "item"}} still needs to be dealt with before marking this
-      person off site:</strong>
+    <strong class="text-danger">
+      The following still needs to be dealt with before marking this person off site:
+    </strong>
     <ul class="mt-2 mb-2">
-      {{#if this.isOnDuty}}
-        <li>
-          Person is still listed as being on duty.
-        </li>
-      {{/if}}
-      {{#if this.assetsCheckedOut}}
-        <li>
-          {{pluralize this.assetsCheckedOut.length "asset"}} has not been collected.
-        </li>
-      {{/if}}
-      {{#if this.unreviewedTimesheetCount}}
-        <li>
-          {{if (eq this.unreviewedTimesheetCount 1) "A timesheet entry has"
-               (concat  this.unreviewedTimesheetCount " timesheet entries have")}} not been verified.
-        </li>
-      {{/if}}
+      {{#each @dialog.data as |item|}}
+        <li>{{item}}</li>
+      {{/each}}
     </ul>
     <p>
       You may choose to ignore this warning and proceed to mark this person off site. However, you really should take
@@ -27,9 +15,9 @@
   </modal.body>
 
   <modal.footer>
-    <UiButton @type="warning" @onClick={{@onConfirm}}>
-      Mark Person As Off Site
-    </UiButton>
-    <UiButton @onClick={{@onClose}}>Deal With Items</UiButton>
+    <UiButtonRow>
+      <UiButton @type="warning" @onClick={{@onConfirm}} @size="md">Mark Person As Off Site</UiButton>
+      <UiButton @onClick={{@onClose}} @size="md">Deal With Items</UiButton>
+    </UiButtonRow>
   </modal.footer>
 </ModalDialog>

@@ -129,3 +129,20 @@ export const ONE_RSCI = 136;
 export const ONE_HQ_WINDOW = 137;
 export const ONE_OPS_MANAGER = 140;
 export const ONE_OPS_DEPUTY = 141;
+
+/*
+ * Positions whose workers receive their pogs directly from their Cadre and
+ * therefore are not issued pogs at the HQ Window.
+ *
+ * NOTE: the guidelines copy also names Sandman & Gerlach Patrol, but only the
+ * Mentor positions currently drive the self-serve handling.
+ */
+
+export const SELF_SERVE_POG_POSITIONS = [
+  MENTOR,
+  MENTOR_APPRENTICE,
+  MENTOR_MITTEN,
+  MENTOR_LEAD,
+  MENTOR_KHAKI,
+  MENTOR_SHORT,
+];

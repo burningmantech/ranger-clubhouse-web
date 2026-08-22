@@ -404,6 +404,12 @@ export default class ShiftCheckInOutComponent extends Component {
     }
 
     const {onDutyEntry, endShiftNotify} = this.args;
+    if (!onDutyEntry) {
+      // Someone else signed the person off while this dialog was up.
+      this.toast.error(`${this.args.person.callsign} was already signed off.`);
+      return;
+    }
+
     this.isSubmitting = true;
     try {
       const result = await this.ajax.request(`timesheet/${onDutyEntry.id}/signoff`, {method: 'POST'});
