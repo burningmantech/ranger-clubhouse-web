@@ -18,6 +18,20 @@ const NO_RADIO_CHECKED_OUT_BODY = (callsign) =>
 export default class HqSiteCheckinController extends ClubhouseController {
   @service saveModel;
 
+  /*
+   * Supplied by the route's setupController via setProperties. These MUST be @tracked:
+   * the getters below read them from native getter bodies, which consume no tag unless
+   * the field is tracked. Without this, switching person via the search bar re-runs
+   * setupController but never invalidates the getters, because the hq route is not
+   * exited and this controller instance is reused.
+   */
+  @tracked person;
+  @tracked personEvent;
+  @tracked eventInfo;
+  @tracked assets;
+  @tracked attachments;
+  @tracked eventPeriods;
+
   @tracked isSubmitting = false;
   @tracked showSiteCheckInWizard = false;
   @tracked siteCheckInStarted = false;

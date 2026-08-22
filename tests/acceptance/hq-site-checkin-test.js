@@ -97,6 +97,54 @@ module('Acceptance | hq site-checkin', function (hooks) {
       .exists('the Start Shift Check-In action is a button-styled link');
   });
 
+  // Regression guard. The notice and the Begin button's disabled state are both
+  // driven by the controller's `isOnSite` getter. Switching person via the search
+  // bar re-runs setupController but never exits the hq route, so the controller
+  // instance and the rendered template are reused -- only tracked invalidation can
+  // update the DOM. While `person` was not declared @tracked, the native getter
+  // body consumed no tag, so the notice survived the switch and the button stayed
+  // disabled. Every other test here uses a fresh visit(), which rebuilds the
+  // controller and hides the bug entirely.
+  test('clears the completion notice when switching to a person who is not on site', async function (assert) {
+    await authenticateUser(this.user.id);
+
+    const onSitePerson = this.server.create('person', {
+      callsign: 'Softwarez',
+      status: 'active',
+      on_site: true,
+    });
+
+    await visit(`/hq/${onSitePerson.id}/site-checkin`);
+    assert
+      .dom(this.element)
+      .includesText('Softwarez Marked On Site', 'notice renders for the on-site person');
+
+    // Switch person the way the search bar does: transitionTo hq.index, which
+    // routes a not-on-site person onward to hq.site-checkin. Deliberately NOT a
+    // second visit(). The onward redirect aborts this transition, so the
+    // rejection is swallowed; settled() waits for the router to come to rest.
+    this.owner
+      .lookup('service:router')
+      .transitionTo('hq.index', this.subject.id)
+      .catch(() => {});
+    await settled();
+
+    assert.strictEqual(
+      currentURL(),
+      `/hq/${this.subject.id}/site-checkin`,
+      'lands on site-checkin for the not-on-site person'
+    );
+    assert
+      .dom(this.element)
+      .doesNotIncludeText('Marked On Site', 'stale completion notice is gone after the switch');
+
+    const beginButton = [...document.querySelectorAll('button')].find((el) =>
+      el.textContent.includes('Begin On-Site Registration')
+    );
+    assert.ok(beginButton, 'begin button renders for the new person');
+    assert.false(beginButton.disabled, 'begin button is re-enabled for the new person');
+  });
+
   test('walking the wizard to the end marks the person on site', async function (assert) {
     await authenticateUser(this.user.id);
 

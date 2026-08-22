@@ -44,6 +44,21 @@ export function isUnreviewedTimesheet(t) {
 }
 
 export default class HqShiftController extends ClubhouseController {
+  /*
+   * Supplied by the route's setupController via setProperties. These MUST be @tracked
+   * for the same reason as in hq/site-checkin.js: getters such as isShinyPenny and
+   * pendingItems read them from native getter bodies, which consume no tag unless the
+   * field is tracked. Switching person via the search bar re-runs setupController but
+   * reuses this controller instance, so only tracked invalidation updates the DOM.
+   */
+  @tracked person;
+  @tracked personEvent;
+  @tracked positions;
+  @tracked attachments;
+  @tracked eventPeriods;
+  @tracked upcomingSlots;
+  @tracked scheduleRecommendations;
+
   @tracked isMarkingOffSite = false;
 
   @tracked timesheets;
