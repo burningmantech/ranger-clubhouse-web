@@ -144,6 +144,8 @@ export default class HqTimesheetVerificationComponent extends Component {
 
   _finishedCallbacks() {
     if (this.hasUnreviewedTimesheet) {
+      // An entry became reviewable again (e.g. it was un-verified).
+      this.args.reopenTodo?.(HQ_TODO_VERIFY_TIMESHEET);
       return;
     }
     this.args.completeTodo(HQ_TODO_VERIFY_TIMESHEET);

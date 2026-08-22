@@ -14,9 +14,9 @@
     </div>
   {{/if}}
 
-  {{#if this.todoCount}}
+  {{#if this.todos}}
     <div class="d-flex justify-content-start">
-      <div class="flex-shrink-0 me-2">
+      <div class="flex-shrink-0 me-2 {{unless this.todoCount "text-success"}}">
         {{pluralize this.todoCount "suggested task"}}:
       </div>
       <div class="d-flex justify-content-start flex-wrap flex-shrink-1">
@@ -82,6 +82,7 @@
   <:body>
     <HqTimesheetVerification @unverifiedTimesheets={{this.timesheetsToReview}}
                              @completeTodo={{this.completeTodo}}
+                             @reopenTodo={{this.reopenTodo}}
                              @onFinished={{this.afterShiftReview}}
                              @positions={{this.positions}}
                              @person={{this.person}}
@@ -118,10 +119,10 @@
     {{/unless}}
 
     {{#if this.mayNotNeedRadio}}
-      <UiAlert @type="warning" @title="Radio May Not Be Required" @icon="hand">
+      <UiNotice @type="warning" @title="Radio May Not Be Required" @icon="hand">
         {{this.person.callsign}} is working a shift that may not require a radio.
         Check with the HQ Short or Lead if in doubt.
-      </UiAlert>
+      </UiNotice>
     {{/if}}
 
     {{#if (or this.shiftRadios this.collectEventRadiosAtShiftEnd this.collectEventRadios)}}
@@ -199,24 +200,14 @@
   </:title>
   <:body>
     {{#if this.person.on_site}}
-      {{#if this.pendingItems}}
+      {{#if this.pendingItems.length}}
         <UiNotice @icon="hand" @type="danger" @title="Pending Item(s)">
-          {{pluralize this.pendingItems "item"}} still needs to be dealt with before marking
+          {{pluralize this.pendingItems.length "item"}} to be dealt with before marking
           this person off site:
           <ul class="mt-2 mb-2">
-            {{#unless this.isOffDuty}}
-              <li>
-                {{this.person.callsign}} is still on duty.
-              </li>
-            {{/unless}}
-            {{#if this.assetsCheckedOut.length}}
-              <li>
-                {{pluralize this.assetsCheckedOut.length "asset"}} (radios, gear, etc.) not collected.
-              </li>
-            {{/if}}
-            {{#if this.unreviewedTimesheetCount}}
-              <li>{{pluralize this.unreviewedTimesheetCount "timesheet entry"}} not reviewed.</li>
-            {{/if}}
+            {{#each this.pendingItems as |item|}}
+              <li>{{item}}</li>
+            {{/each}}
           </ul>
           You may choose to ignore this warning and proceed to mark this person off site. However, you
           really should take care of the items listed above.

@@ -11,7 +11,6 @@ import {
   CHECKOUT_ENTITY_ASSIGNED,
   ENTITY_ASSIGNED_MESSAGE,
   UNKNOWN_STATUS_MESSAGE,
-  NAVIGATE_AWAY_WARNING,
 } from 'clubhouse/utils/asset-checkout-status';
 
 export default class AssetCheckoutFormComponent extends Component {
@@ -44,7 +43,6 @@ export default class AssetCheckoutFormComponent extends Component {
     const options = this.args.attachments.map((a) => [a.description, a.id]);
     options.unshift(['-', '']);
     this.attachmentOptions = options;
-    this.args.registerCallback?.(this.checkForBlankOnNavigate);
   }
 
   /**
@@ -90,7 +88,7 @@ export default class AssetCheckoutFormComponent extends Component {
         data.force = 1;
       }
       const result = await this.ajax.post('asset/checkout', {data});
-      this.handleCheckoutResult(result, barcode, attachment_id);
+      await this.handleCheckoutResult(result, barcode, attachment_id);
     } catch (response) {
       this.errors.handleErrorResponse(response);
     } finally {
@@ -106,8 +104,11 @@ export default class AssetCheckoutFormComponent extends Component {
       case CHECKOUT_SUCCESS:
         this.toast.success('Asset was successfully checked out.');
         this.assetForm = EmberObject.create({barcode: ''});
-        await this.args.assets.update();
+        // Tell the parent the field is clear and the asset is out BEFORE the
+        // refresh: a failed refresh must not leave a stale navigate-away guard.
+        this.args.onBarcodeChange?.('barcode', '');
         this.args.onCheckOut?.(result.asset);
+        await this.args.assets.update();
         break;
 
       case CHECKOUT_NOT_FOUND:
@@ -139,20 +140,6 @@ export default class AssetCheckoutFormComponent extends Component {
   forceCheckout() {
     this.assetExpired = null;
     this.performCheckout(this.forceBarcode, this.forceAttachmentId, true);
-  }
-
-  /**
-   * Check whether the barcode field is blank, allowing navigation away.
-   * @param resume
-   */
-  @action
-  checkForBlankOnNavigate(resume) {
-    if (this.assetForm.barcode.trim() === '') {
-      resume();
-      return;
-    }
-
-    this.modal.info('Asset not checked out', NAVIGATE_AWAY_WARNING);
   }
 
   /**

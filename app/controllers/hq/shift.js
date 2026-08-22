@@ -1,15 +1,18 @@
 import ClubhouseController from 'clubhouse/controllers/clubhouse-controller';
 import {action} from '@ember/object';
-import {ALPHA, BURN_PERIMETER} from 'clubhouse/constants/positions';
+import {ALPHA, BURN_PERIMETER, SELF_SERVE_POG_POSITIONS} from 'clubhouse/constants/positions';
 import {tracked} from '@glimmer/tracking';
 import {
   HQ_TODO_COLLECT_RADIO, HQ_TODO_COLLECT_RADIO_IF_DONE, HQ_TODO_DELIVERY_MESSAGE,
-  HQ_TODO_END_SHIFT, HQ_TODO_ISSUE_RADIO, HQ_TODO_MEAL_POG, HQ_TODO_MEAL_POG_NONE, HQ_TODO_NO_RADIO, HQ_TODO_OFF_SITE,
+  HQ_TODO_END_SHIFT, HQ_TODO_ISSUE_RADIO, HQ_TODO_MEAL_POG, HQ_TODO_MEAL_POG_NONE, HQ_TODO_MEAL_POG_SELF_SERVE,
+  HQ_TODO_NO_RADIO, HQ_TODO_OFF_SITE,
   HQ_TODO_START_SHIFT,
   HQ_TODO_VERIFY_TIMESHEET,
   HqTodoTask
 } from "clubhouse/constants/hq-todo";
 import {TYPE_RADIO} from "clubhouse/models/asset";
+import ModalSiteLeaveComponent from 'clubhouse/components/modal-site-leave';
+import {pluralize} from 'ember-inflector';
 import {schedule} from '@ember/runloop';
 import {radioAccounting, computeRadioTodo} from 'clubhouse/utils/radio-accounting';
 
@@ -43,12 +46,21 @@ export function isUnreviewedTimesheet(t) {
   return !t.isIgnoring && t.isUnverified;
 }
 
+// Suggested tasks the pending item list already spells out in its own words.
+const PendingItemTasks = [
+  HQ_TODO_END_SHIFT,
+  HQ_TODO_VERIFY_TIMESHEET,
+  HQ_TODO_COLLECT_RADIO,
+  HQ_TODO_COLLECT_RADIO_IF_DONE,
+];
+
 export default class HqShiftController extends ClubhouseController {
+  @tracked person;
+  
   @tracked isMarkingOffSite = false;
 
   @tracked timesheets;
   @tracked timesheetsToReview;
-  @tracked onDutyEntry;
 
   @tracked assets;
   @tracked eventInfo;
@@ -72,6 +84,21 @@ export default class HqShiftController extends ClubhouseController {
 
   // Callback registered by the timesheet-correction child component; may be unset.
   correctionCallback = null;
+
+  /**
+   * Per-entry reset of everything that must not leak from the previously viewed
+   * person. Called by the route's setupController so the field names live once,
+   * next to their declarations above.
+   */
+
+  resetState() {
+    this.endedShiftEntry = null;
+    this.unsubmittedBarcode = '';
+    this.showUnsubmittedBarcodeDialog = false;
+    this.showNoShiftHandled = false;
+    this.shiftTransition = null;
+    this.isMarkingOffSite = false;
+  }
 
   /**
    * Figure out if the person is a Shiny Penny - i.e. their status is active, and
@@ -221,13 +248,25 @@ export default class HqShiftController extends ClubhouseController {
   }
 
   /**
+   * The entry the person is currently signed into, if any. Derived live from
+   * the timesheets so it cannot drift from isOffDuty when an entry is signed
+   * off (by this window or another) without a re-query.
+   *
+   * @returns {TimesheetModel|undefined}
+   */
+
+  get onDutyEntry() {
+    return this.timesheets.find((t) => t.stillOnDuty);
+  }
+
+  /**
    * Is person off duty
    *
    * @returns {boolean}
    */
 
   get isOffDuty() {
-    return !this.timesheets.find((t) => t.stillOnDuty);
+    return !this.onDutyEntry;
   }
 
   /**
@@ -239,13 +278,17 @@ export default class HqShiftController extends ClubhouseController {
 
     try {
       this.noShiftHandled = false;
-      await this.timesheets.update();
+      const {timesheets} = this;
+      const personId = this.person?.id;
+      await timesheets.update();
+      if (this._personChanged(timesheets, personId)) {
+        return;
+      }
       this.completeTodo(HQ_TODO_START_SHIFT);
-      this._findOnDuty();
       if (this.askIfDone) {
         this.askIfDone.ignore = true;
       }
-      if (this.onDutyEntry?.position_id === BURN_PERIMETER) {
+      if (this.mayNotNeedRadio) {
         this.removeTodo(HQ_TODO_ISSUE_RADIO);
         this.addTodo(HQ_TODO_NO_RADIO, true);
       } else {
@@ -256,9 +299,26 @@ export default class HqShiftController extends ClubhouseController {
     }
   }
 
+  /**
+   * Did the operator switch to another person (or leave) while an update was in
+   * flight? The controller is a singleton, so an unguarded continuation would
+   * write one person's shift outcome onto another person's page.
+   *
+   * @param {object} timesheets the collection captured before the await
+   * @param {string} personId the person id captured before the await
+   * @returns {boolean}
+   * @private
+   */
+
+  _personChanged(timesheets, personId) {
+    return (this.isDestroying || this.isDestroyed
+      || this.timesheets !== timesheets || this.person?.id !== personId);
+  }
+
   _scrollToAssets() {
-    this.scroll.scrollToAccordion('assets');
-    schedule('afterRender', () => document.querySelector('#checkout-barcode')?.focus());
+    this.scroll.scrollToElement('#assets');
+    // The scroll above owns the viewport movement - don't let focus() fight it.
+    schedule('afterRender', () => document.querySelector('#checkout-barcode')?.focus({preventScroll: true}));
   }
 
   /**
@@ -270,33 +330,63 @@ export default class HqShiftController extends ClubhouseController {
   @action
   async endShiftNotify(timesheet, submitCorrection) {
     try {
-      this.noShiftHandled = false;
-      await this.timesheets.update();
+      if (timesheet) {
+        // A deleted entry (an accidental check-in) is not a handled shift.
+        this.noShiftHandled = false;
+      }
+      const {timesheets} = this;
+      const personId = this.person?.id;
+      await timesheets.update();
+      if (this._personChanged(timesheets, personId)) {
+        return;
+      }
       this._reconcileTimesheetsToReview();
-      this._findOnDuty()
       if (timesheet) {
         this.completeTodo(HQ_TODO_END_SHIFT);
         this.addTodo(HQ_TODO_VERIFY_TIMESHEET);
-        const {eventPeriods, eventInfo: {event_period}} = this;
-        if (eventPeriods[event_period].hasPass) {
+        if (SELF_SERVE_POG_POSITIONS.includes(timesheet.position_id)) {
+          // The Cadre issues the pogs for these shifts, not the HQ Window.
+          this.addTodo(HQ_TODO_MEAL_POG_SELF_SERVE, true);
+        } else if (this.currentPeriodHasPass) {
           this.addTodo(HQ_TODO_MEAL_POG_NONE, true);
         } else {
           this.addTodo(HQ_TODO_MEAL_POG);
+        }
+        if (this.collectRadioCount) {
+          // Radios may have been checked out after the todo list was built.
+          this.addTodo(HQ_TODO_COLLECT_RADIO);
         }
         if (timesheet.position_id !== BURN_PERIMETER && !this.radioCount) {
           this.modal.info('No Radios Checked Out?',
             `It appears no radios were checked out for the shift. Please ask if they have a radio to return. If they have an authorized Event Radio, record it.`);
         }
       } else {
+        // The entry was deleted - the person is off duty and back to square one.
         this.removeTodo(HQ_TODO_END_SHIFT);
+        this.addTodo(HQ_TODO_START_SHIFT);
+        this._setupRadioTodo();
       }
-      this.send('updateTimesheetSummaries');
+      this._updateTimesheetSummaries();
       this.endedShiftEntry = timesheet;
       if (submitCorrection) {
         this.correctionCallback?.(timesheet);
       }
     } catch (response) {
       this.errors.handleErrorResponse(response);
+    }
+  }
+
+  /**
+   * Ask the hq route to refresh the sidebar timesheet summaries. The action
+   * lives on the parent route, and send() throws when the operator has already
+   * navigated off the HQ pages while the update was in flight.
+   *
+   * @private
+   */
+
+  _updateTimesheetSummaries() {
+    if (this.router.currentRouteName?.startsWith('hq.')) {
+      this.send('updateTimesheetSummaries');
     }
   }
 
@@ -345,6 +435,8 @@ export default class HqShiftController extends ClubhouseController {
     });
     this.isMarkingOffSite = false;
     if (success && !isOnSite) {
+      // Marking off site is a terminal HQ action - no shift is expected.
+      this.noShiftHandled = false;
       this.completeTodo(HQ_TODO_OFF_SITE);
     }
   }
@@ -356,6 +448,14 @@ export default class HqShiftController extends ClubhouseController {
 
   @action
   markOffSite() {
+    const {pendingItems} = this;
+
+    if (pendingItems.length) {
+      // Outstanding work - spell it out before the person walks away.
+      this.modal.open(ModalSiteLeaveComponent, pendingItems, () => this._updateOnSite(false));
+      return;
+    }
+
     // No outstanding items -- confirm just to be sure.
     this.modal.confirm('Confirm Marking Person Off Site',
       `Are you sure you wish to mark ${escapeHtml(this.person.callsign)} as OFF SITE?`,
@@ -369,40 +469,35 @@ export default class HqShiftController extends ClubhouseController {
   }
 
   /**
-   * Count how many of the following items the person has to deal with:
-   * - Unverified timesheet entries
-   * - Checked out assets
-   * - Still on duty
+   * Everything still outstanding for the person, worded for display: what has to
+   * be dealt with (still on duty, uncollected gear, unreviewed timesheet
+   * entries), plus any suggested task not done yet.
    *
-   * @returns {number}
+   * @returns {string[]}
    */
 
   get pendingItems() {
-    let items = 0;
+    const items = [];
 
     if (!this.isOffDuty) {
-      items++;
+      items.push(`${this.person.callsign} is still on duty.`);
     }
 
     if (this.unreviewedTimesheetCount) {
-      items++;
+      items.push(`${pluralize(this.unreviewedTimesheetCount, 'timesheet entry')} not reviewed.`);
     }
 
     if (this.assetsCheckedOut.length) {
-      items++;
+      items.push(`${pluralize(this.assetsCheckedOut.length, 'asset')} (radios, gear, etc.) not collected.`);
     }
 
+    this.todos.forEach((todo) => {
+      if (!todo.completed && !todo.ignore && !PendingItemTasks.includes(todo.task)) {
+        items.push(`Suggested task not done: ${todo.message}`);
+      }
+    });
+
     return items;
-  }
-
-  /**
-   * Find the on duty entry
-   *
-   * @private
-   */
-
-  _findOnDuty() {
-    this.onDutyEntry = this.timesheets.find((t) => t.stillOnDuty);
   }
 
   /**
@@ -423,6 +518,18 @@ export default class HqShiftController extends ClubhouseController {
     if (todo) {
       todo.completed = true;
     }
+  }
+
+  /**
+   * Re-open a todo that was completed but has become outstanding again (e.g. a
+   * verified timesheet entry was un-verified).
+   *
+   * @param {string} task
+   */
+
+  @action
+  reopenTodo(task) {
+    this.addTodo(task);
   }
 
   /**
@@ -458,31 +565,39 @@ export default class HqShiftController extends ClubhouseController {
       this.setupTodo(HQ_TODO_DELIVERY_MESSAGE);
     }
 
-    if (this.timesheetsToReview.length) {
+    if (this.hasUnreviewedTimesheet) {
       this.setupTodo(HQ_TODO_VERIFY_TIMESHEET);
     }
 
     const {upcomingSlots} = model;
 
-    let noMoreScheduled = false;
     if (!upcomingSlots.imminent.length && !upcomingSlots.upcoming.length) {
       this.askIfDone = new HqTodoTask(HQ_TODO_OFF_SITE, false, true);
-      noMoreScheduled = true;
     } else {
       this.askIfDone = null;
     }
 
-    const {isOffDuty} = this;
-    this.setupTodo(isOffDuty ? HQ_TODO_START_SHIFT : HQ_TODO_END_SHIFT);
+    this.setupTodo(this.isOffDuty ? HQ_TODO_START_SHIFT : HQ_TODO_END_SHIFT);
+    this._setupRadioTodo();
+  }
 
+  /**
+   * Derive the radio task (if any) from the current radio accounting, duty
+   * state, and whether the person may be handed a radio at all.
+   *
+   * @private
+   */
+
+  _setupRadioTodo() {
     const radioTask = computeRadioTodo({
-      isOffDuty,
-      noMoreScheduled,
+      isOffDuty: this.isOffDuty,
+      noMoreScheduled: !!this.askIfDone,
       accounting: this.radioAccounting,
+      assetAuthorized: !!this.personEvent?.asset_authorized,
     });
 
     if (radioTask) {
-      this.setupTodo(radioTask);
+      this.addTodo(radioTask);
     }
   }
 
@@ -522,8 +637,7 @@ export default class HqShiftController extends ClubhouseController {
   @action
   afterShiftReview() {
     if (this.endedShiftEntry) {
-      this.scroll.scrollToAccordion('assets', 'todo-list');
-      this.scroll.openAccordion('pogs');
+      this.scroll.scrollToElement('#assets');
     }
   }
 
@@ -539,14 +653,29 @@ export default class HqShiftController extends ClubhouseController {
   }
 
   /**
+   * Does the person hold a BMID meal pass for the current event period?
+   * Null-safe: the period may be missing or not one of pre/event/post.
+   *
+   * @returns {boolean}
+   */
+
+  get currentPeriodHasPass() {
+    return !!this.eventPeriods?.[this.eventInfo?.event_period]?.hasPass;
+  }
+
+  /**
    * Should the Meals and Showers section be highlighted?
    *
-   * @returns {null|boolean}
+   * @returns {boolean}
    */
 
   get highlightMealShowers() {
-    const {eventPeriods, eventInfo: {event_period}} = this;
-    return (this.endedShiftEntry && !eventPeriods[event_period].hasPass);
+    if (!this.endedShiftEntry || this.currentPeriodHasPass) {
+      return false;
+    }
+
+    // The Cadre issues the pogs for a self-serve shift - nothing to do here.
+    return !SELF_SERVE_POG_POSITIONS.includes(this.endedShiftEntry.position_id);
   }
 
   @action

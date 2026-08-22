@@ -13,28 +13,7 @@ import {
 } from 'clubhouse/models/person-pog';
 import {EventPeriodLabels} from 'clubhouse/models/event-date';
 import {validatePresence} from 'ember-changeset-validations/validators';
-import {
-  MENTOR,
-  MENTOR_APPRENTICE,
-  MENTOR_KHAKI,
-  MENTOR_MITTEN,
-  MENTOR_LEAD,
-  MENTOR_SHORT
-} from 'clubhouse/constants/positions';
-
-// Positions whose workers receive their pogs directly from their Cadre and
-// therefore are not issued pogs at the HQ Window.
-//
-// NOTE: the guidelines copy also names Sandman & Gerlach Patrol, but only the
-// Mentor positions currently drive the self-serve alert. See DEFERRED note.
-const SELF_SERVE_POG_POSITIONS = [
-  MENTOR,
-  MENTOR_APPRENTICE,
-  MENTOR_MITTEN,
-  MENTOR_LEAD,
-  MENTOR_KHAKI,
-  MENTOR_SHORT,
-];
+import {SELF_SERVE_POG_POSITIONS} from 'clubhouse/constants/positions';
 
 export default class HqPogsComponent extends Component {
   @service ajax;
@@ -245,7 +224,7 @@ export default class HqPogsComponent extends Component {
    */
 
   get hasMealPass() {
-    return this.args.eventPeriods[this.args.period].hasPass;
+    return !!this.args.eventPeriods?.[this.args.period]?.hasPass;
   }
 
   /**
@@ -298,8 +277,10 @@ export default class HqPogsComponent extends Component {
    */
 
   get isMentor() {
-    const {onDutyEntry} = this.args;
-    return !!(onDutyEntry && SELF_SERVE_POG_POSITIONS.includes(onDutyEntry.position_id));
+    // Once the shift is ended onDutyEntry is cleared, so fall back to the entry
+    // just worked - that is exactly when a pog would be issued.
+    const entry = this.args.onDutyEntry ?? this.args.endedShiftEntry;
+    return !!(entry && SELF_SERVE_POG_POSITIONS.includes(entry.position_id));
   }
 
 }

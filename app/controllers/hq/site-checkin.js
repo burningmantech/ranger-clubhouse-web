@@ -23,6 +23,7 @@ export default class HqSiteCheckinController extends ClubhouseController {
   @tracked siteCheckInStarted = false;
   @tracked siteCheckInFinished = false;
   @tracked canEditEmergencyContact = false;
+  @tracked person;
 
   /**
    * Single per-entry reset; called from the route's setupController so the field

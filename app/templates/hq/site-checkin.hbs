@@ -69,6 +69,7 @@
           <f.textarea @name="camp_location"
                       @label="Camp Name & Location (e.g., Camp Specificity, 9:15 &amp; D, Mountainside.)"
                       @autofocus={{true}}
+                      @cols={{100}}
                       @rows={{6}}/>
         </FormRow>
       </w.step>
@@ -86,6 +87,7 @@
           <FormRow>
             <f.textarea @name="emergency_contact"
                         @label="Emergency Contact Information:"
+                        @cols={{100}}
                         @rows={{6}}/>
           </FormRow>
         {{else}}

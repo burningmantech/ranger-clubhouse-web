@@ -1,5 +1,21 @@
 import ClubhouseRoute from 'clubhouse/routes/clubhouse-route';
 
+// Pages this one hands off to (deliver the messages, run the site
+// registration). Going there is part of dealing with the person, not walking
+// away from an unhandled shift.
+const HandoffRoutes = ['hq.messages', 'hq.site-checkin'];
+
+/**
+ * The person a transition's `to`/`from` route info is showing.
+ *
+ * @param {object} routeInfo
+ * @returns {string|undefined}
+ */
+
+function personIdFor(routeInfo) {
+  return routeInfo?.find(route => route.name === 'hq')?.params?.person_id;
+}
+
 export default class HqShiftRoute extends ClubhouseRoute {
   /**
    * Guard against navigating away with an unhandled shift or an unsubmitted
@@ -8,8 +24,12 @@ export default class HqShiftRoute extends ClubhouseRoute {
   routeWillChange = (transition) => {
     const controller = this.controllerFor('hq.shift');
 
-    if (transition.to?.find(route => route.name === this.routeName) ||
-      transition.to?.find(route => route.name.match(/loading/))) {
+    // abort() emits a synthetic transition where `to` is where we already are.
+    if (transition.isAborted || transition.to === transition.from) {
+      return;
+    }
+
+    if (transition.to?.find(route => route.name.match(/loading/))) {
       return;
     }
 
@@ -17,8 +37,17 @@ export default class HqShiftRoute extends ClubhouseRoute {
       return;
     }
 
-    if (controller.noShiftHandled && !controller.showNoShiftHandled) {
+    // Re-entering the SAME person's shift page is not leaving it. Another
+    // person's shift page (e.g. the browser back button) is.
+    if (transition.to?.find(route => route.name === this.routeName)
+      && personIdFor(transition.to) === personIdFor(transition.from)) {
+      return;
+    }
+
+    if (controller.noShiftHandled
+      && !transition.to?.find(route => HandoffRoutes.includes(route.name))) {
       controller.showNoShiftHandled = true;
+      // Always hold the newest transition - the dialog retries it.
       controller.shiftTransition = transition;
       transition.abort();
       return;
@@ -28,11 +57,8 @@ export default class HqShiftRoute extends ClubhouseRoute {
       return;
     }
 
-    if (!controller.showUnsubmittedBarcodeDialog) {
-      // May see multiple route transitions, only abort once.
-      controller.showUnsubmittedBarcodeDialog = true;
-      transition.abort();
-    }
+    controller.showUnsubmittedBarcodeDialog = true;
+    transition.abort();
   };
 
   activate() {
@@ -65,11 +91,12 @@ export default class HqShiftRoute extends ClubhouseRoute {
     // consume onto the controller (avoids hidden, untracked props).
     controller.setProperties({person, personEvent, eventInfo, positions, assets, attachments, eventPeriods});
     controller.setProperties(model);
-    controller.endedShiftEntry = null;
-    controller.unsubmittedBarcode = '';
-    controller._findOnDuty();
+    // Single owner for the per-entry reset of the dialog & guard state.
+    controller.resetState();
     controller.timesheetsToReview = model.timesheets.filter((t) => t.isUnverified);
-    controller.noShiftHandled = true;
+    // Only ask about an unhandled shift when a shift could be worked at all -
+    // an off site person is directed to Site Registration first.
+    controller.noShiftHandled = !!person.on_site;
 
     controller.initializeTodos(model);
 

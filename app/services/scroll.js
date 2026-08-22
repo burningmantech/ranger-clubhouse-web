@@ -2,7 +2,7 @@ import Service from '@ember/service';
 import {run, later} from '@ember/runloop';
 
 /**
- * Page scroll + Bootstrap accordion control.
+ * Page scroll control.
  */
 
 export default class ScrollService extends Service {
@@ -38,60 +38,5 @@ export default class ScrollService extends Service {
         window.scroll({top: top + window.scrollY - 100, behavior});
       }
     }, 100);
-  }
-
-  /**
-   * Scroll to an accordion and, if closed, open it
-   * @param {string} id
-   */
-
-  scrollToAccordion(id) {
-    if (this.openAccordion(id)) {
-      // Accordion was opened, delay the scroll in case the accordion body needs to be rendered.
-      setTimeout(() => {
-        this.scrollToElement(`#${id}`);
-      }, 350);
-    } else {
-      // Accordion already opened, scroll immediately.
-      this.scrollToElement(`#${id}`);
-    }
-  }
-
-  /**
-   * Open an accordion. Return true if the accordion was previously closed.
-   *
-   * @param id
-   * @returns {boolean}
-   */
-  openAccordion(id) {
-    return this.toggleAccordion(id, true);
-  }
-
-  /**
-   * Close up an accordion. Return true if the accordion was previously opened.
-   *
-   * @param id
-   * @returns {boolean}
-   */
-
-  closeAccordion(id) {
-    return this.toggleAccordion(id, false);
-  }
-
-  /**
-   * Toggle an accordion.
-   * @param id
-   * @param {boolean} open
-   * @returns {boolean}
-   */
-  toggleAccordion(id, open) {
-    const accordion = document.querySelector(`#${id} .accordion-body`);
-    if (open !== !!accordion?.classList.contains('show')) {
-      document.querySelector(`#${id} .accordion-title`)?.click();
-      return true;
-    }
-
-    return false;
-
   }
 }
