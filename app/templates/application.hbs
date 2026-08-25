@@ -53,6 +53,17 @@
       Sorry, your browser,
       {{this.session.browserDetect.browser.name}} version {{this.session.browserDetect.browser.version}},
       might be too old to run the Clubhouse. Please upgrade the browser to the current version.
+      <div class="form-check mt-3">
+        <input class="form-check-input"
+               type="checkbox"
+               id="skip-browser-check"
+               checked={{this.skipBrowserCheck}}
+               {{on "click" this.toggleSkipBrowserCheck}}
+        />
+        <label class="form-check-label" for="skip-browser-check">
+          Don't warn me about this browser again.
+        </label>
+      </div>
     </Modal.body>
     <Modal.footer>
       <UiCloseButton @onClick={{this.closeBrowserNotSupported}} />
