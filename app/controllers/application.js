@@ -4,9 +4,12 @@ import ENV from 'clubhouse/config/environment';
 import {action} from '@ember/object';
 import {tracked} from '@glimmer/tracking';
 
+const BROWSER_CHECK_SKIP = 'browser-check-skip';
+
 export default class ApplicationController extends ClubhouseController {
   @tracked groundHogDayTime = null;
   @tracked showBrowserNotSupported = false;
+  @tracked skipBrowserCheck = false;
   @tracked showSearchBar;
 
   applicationVersion = ENV.APP.version;
@@ -43,7 +46,8 @@ export default class ApplicationController extends ClubhouseController {
       }
     });
 
-    this.showBrowserNotSupported = !this.session.browserDetect.isSupported();
+    this.showBrowserNotSupported = !this.session.browserDetect.isSupported()
+      && !this._browserCheckWasSkipped();
   }
 
   @action
@@ -81,9 +85,38 @@ export default class ApplicationController extends ClubhouseController {
   }
 
 
+  /**
+   * Has the user already asked not to be warned about the browser they're running?
+   *
+   * The name & version are recorded rather than a bare flag so switching browsers,
+   * or moving to a different (still unsupported) version, warns again.
+   */
+
+  _browserCheckWasSkipped() {
+    const skipped = this.storage.getDeviceKey(BROWSER_CHECK_SKIP);
+
+    if (!skipped) {
+      return false;
+    }
+
+    const {name, version} = this.session.browserDetect.browser;
+
+    return skipped.name === name && skipped.version === version;
+  }
+
   @action
   closeBrowserNotSupported() {
+    if (this.skipBrowserCheck) {
+      const {name, version} = this.session.browserDetect.browser;
+      this.storage.setDeviceKey(BROWSER_CHECK_SKIP, {name, version});
+    }
+
     this.showBrowserNotSupported = false;
+  }
+
+  @action
+  toggleSkipBrowserCheck(event) {
+    this.skipBrowserCheck = event.target.checked;
   }
 
   @action
