@@ -48,7 +48,7 @@
     {{/if}}
   {{/if}}
   <UiButtonRow class="mb-2">
-    <UiButton @onClick={{fn this.setupToIssue this.POG_MEAL}} @disabled={{or this.isSubmitting (not this.pogs)}} @size="md">
+    <UiButton @onClick={{fn this.setupToIssue this.POG_MEAL}} @disabled={{this.isSubmitting}} @size="md">
       {{#if this.config.meal_half_pog_enabled}}
         Record Full Meal Pog
       {{else}}
@@ -56,11 +56,11 @@
       {{/if}}
     </UiButton>
     {{#if this.config.meal_half_pog_enabled}}
-      <UiButton @onClick={{fn this.setupToIssue this.POG_HALF_MEAL}} @disabled={{or this.isSubmitting (not this.pogs)}} @size="md">
+      <UiButton @onClick={{fn this.setupToIssue this.POG_HALF_MEAL}} @disabled={{this.isSubmitting}} @size="md">
         Record &half; Meal Pog
       </UiButton>
     {{/if}}
-    <UiButton @onClick={{fn this.setupToIssue this.POG_SHOWER}} @disabled={{or this.isSubmitting (not this.pogs)}} @size="md">
+    <UiButton @onClick={{fn this.setupToIssue this.POG_SHOWER}} @disabled={{this.isSubmitting}} @size="md">
       Record Shower Pog
     </UiButton>
   </UiButtonRow>
