@@ -88,7 +88,7 @@ export default class ShiftCheckInOutComponent extends Component {
         return true;
       }
 
-      return  (p.id === TOW_TRUCK_TRAINING || p.id === TROUBLESHOOTER_TRAINING || p.id === SANDMAN_TRAINING);
+      return (p.id === TOW_TRUCK_TRAINING || p.id === TROUBLESHOOTER_TRAINING || p.id === SANDMAN_TRAINING);
     });
     this.noTrainingRequiredPositions = positions.filter((p) => isEmpty(p.blockers));
     if (this.noTrainingRequiredPositions.length && this.args.isSelfServe) {
@@ -320,6 +320,10 @@ export default class ShiftCheckInOutComponent extends Component {
 
           'position-not-held': () => {
             this.modal.info('Position Not Held', `${callsign} does NOT hold the '${position.title}' and cannot start the shift.`);
+          },
+
+          'position-not-eligible': () => {
+            this.modal.info('The position is only used for scheduling, and cannot be checked into.');
           },
 
           'missing-force-reason': () => {
