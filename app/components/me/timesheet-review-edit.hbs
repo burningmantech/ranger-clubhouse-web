@@ -4,6 +4,7 @@
   <ModalDialog @title="Timesheet Correction" as |Modal|>
     <ChForm @formId="correction"
             @formFor={{@entry}}
+            @validator={{this.timesheetValidations}}
             @onSubmit={{this.save}} as |f|>
       <Modal.body>
         {{#if @entry.isRejected}}
