@@ -21,7 +21,10 @@ export default class PersonTimesheetEditModalComponent extends Component {
   ];
 
   timesheetValidations = {
+    on_duty: [validateDateTime()],
     off_duty: [validateDateTime({after: 'on_duty'})],
+    desired_off_duty: [validateDateTime({after: 'desired_on_duty'})],
+    desired_on_duty: [validateDateTime({before: 'desired_off_duty'})],
   };
 
   constructor() {

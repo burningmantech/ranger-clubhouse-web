@@ -5,6 +5,7 @@ import {action} from '@ember/object';
 import {STATUS_PENDING} from "clubhouse/models/timesheet";
 import {isEmpty} from 'lodash';
 import dayjs from "dayjs";
+import validateDateTime from "clubhouse/validators/datetime";
 
 export default class MeTimesheetReviewEditComponent extends Component {
   @service ajax;
@@ -17,6 +18,11 @@ export default class MeTimesheetReviewEditComponent extends Component {
   @tracked isSubmitting = false;
   @tracked isLoading = true;
   @tracked desiredPositionOptions;
+
+  timesheetValidations = {
+    desired_off_duty: [validateDateTime()],
+    desired_on_duty: [validateDateTime()],
+  };
 
   constructor() {
     super(...arguments);
@@ -44,7 +50,11 @@ export default class MeTimesheetReviewEditComponent extends Component {
 
   // Save correction notes
   @action
-  save(model) {
+  save(model, isValid) {
+    if (!isValid) {
+      return;
+    }
+
     if (!model.desired_position_id && !model.desired_on_duty && !model.desired_off_duty) {
       this.modal.info('No corrections entered',
         'You did not select a position, and/or enter the correct start or ending times');
