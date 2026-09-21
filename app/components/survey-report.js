@@ -20,6 +20,20 @@ const TRAINEE_ON_TRAINER_CSV = [
   {title: 'Respondent', key: 'trainee_callsign'},
 ];
 
+const ANONYMOUS_CALLSIGN = '(anonymous)';
+
+let anonymousCount = 0;
+
+// Respondents who declined to share their name come back with no person, so their answers
+// can't be tied together — each one gets its own row. Imported pre-2020 answers may have a
+// person id of 0 with only a raw callsign.
+function respondentKey(person) {
+  if (!person) {
+    return `anon${++anonymousCount}`;
+  }
+  return person.id || `cs_${person.callsign}`;
+}
+
 export default class SurveyReport extends Component {
   @service ajax;
   @service errors;
@@ -97,11 +111,11 @@ export default class SurveyReport extends Component {
         q.slots?.forEach((s) => {
           s.responses?.forEach((r) => {
             const {person} = r;
-            const row = (responses[`s${s.slot_id}_t${trainer.id}_${person.id}`] ||= {
+            const row = (responses[`s${s.slot_id}_t${trainer.id}_${respondentKey(person)}`] ||= {
               begins: s.slot_begins,
               description: s.slot_description,
               trainer_callsign: trainer.callsign,
-              trainee_callsign: person.callsign,
+              trainee_callsign: person?.callsign ?? ANONYMOUS_CALLSIGN,
             });
             foundQuestions[q.id] = true;
             row[`q_${q.id}`] = r.answer;
@@ -199,11 +213,11 @@ export default class SurveyReport extends Component {
         q.slots?.forEach((s) => {
           s.responses?.forEach((r) => {
             const {person} = r;
-            const row = (responses[`s${s.slot_id}_t${trainer.id}_${person.id}`] ||= {
+            const row = (responses[`s${s.slot_id}_t${trainer.id}_${respondentKey(person)}`] ||= {
               begins: s.slot_begins,
               description: s.slot_description,
               trainer_callsign: trainer.callsign,
-              trainee_callsign: person.callsign,
+              trainee_callsign: person?.callsign ?? ANONYMOUS_CALLSIGN,
             });
             foundQuestions[q.id] = true;
             row[`q_${q.id}`] = r.answer;
@@ -248,9 +262,9 @@ export default class SurveyReport extends Component {
         }
         q.responses?.forEach((r) => {
           const {person} = r;
-          const row = (responses[`${mentor.id}_${person.id}`] ||= {
+          const row = (responses[`${mentor.id}_${respondentKey(person)}`] ||= {
             mentor_callsign: mentor.callsign,
-            alpha_callsign: person.callsign,
+            alpha_callsign: person?.callsign ?? ANONYMOUS_CALLSIGN,
           });
           foundQuestions[q.id] = true;
           row[`q_${q.id}`] = r.answer;
@@ -302,10 +316,10 @@ export default class SurveyReport extends Component {
       q.slots?.forEach((s) => {
         s.responses?.forEach((r) => {
           const {person} = r;
-          const row = (responses[`s${s.slot_id}_${person.id}`] ||= {
+          const row = (responses[`s${s.slot_id}_${respondentKey(person)}`] ||= {
             begins: s.slot_begins,
             description: s.slot_description,
-            trainee_callsign: person.callsign,
+            trainee_callsign: person?.callsign ?? ANONYMOUS_CALLSIGN,
           });
           foundQuestions[q.id] = true;
           row[`q_${q.id}`] = r.answer;
@@ -347,8 +361,8 @@ export default class SurveyReport extends Component {
       }
       q.responses?.forEach((r) => {
         const {person} = r;
-        const row = (responses[person.id] ||= {
-          callsign: person.callsign,
+        const row = (responses[respondentKey(person)] ||= {
+          callsign: person?.callsign ?? ANONYMOUS_CALLSIGN,
         });
         foundQuestions[q.id] = true;
         row[`q_${q.id}`] = r.answer;
